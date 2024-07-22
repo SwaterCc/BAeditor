@@ -15,6 +15,7 @@ namespace Script.Editor
         public int RootId;
         public Dictionary<int,EditorBattleAbilityTreeNode> AllNodes  = new();
         public Dictionary<int, EditorBattleAbilityLogicEditorData> AllLogicNodes = new();
+        public Dictionary<int, EditorBattleTempValue> AllLocalValue = new();
     }
     
     public class EditorBattleAbilityTreeNode
@@ -27,6 +28,16 @@ namespace Script.Editor
     public class EditorBattleAbilityLogicEditorData
     {
         public BattleAbilityLogicNode.ENodeType ENodeType;
+        public int NodeBehaveType;
+        public List<int> ParamList;
+    }
+
+    public struct EditorBattleTempValue
+    {
+        public string Name;
+        public string Type;
+        public string Value;
+        public int EnableRange;
     }
     
 }
