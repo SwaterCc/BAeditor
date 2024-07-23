@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Script.Battle
+namespace BattleAbility
 {
     /// <summary>
     /// 战斗能力类

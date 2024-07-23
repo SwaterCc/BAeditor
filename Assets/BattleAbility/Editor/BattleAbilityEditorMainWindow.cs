@@ -7,7 +7,7 @@ using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace Script.Editor
+namespace BattleAbility.Editor
 {
     /// <summary>
     /// 战斗编辑器主窗口

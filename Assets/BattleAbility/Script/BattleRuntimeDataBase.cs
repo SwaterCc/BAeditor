@@ -1,4 +1,4 @@
-﻿namespace Script.Battle
+﻿namespace BattleAbility
 {
     /// <summary>
     /// 战斗RT数据存储基类

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Script.Battle
+namespace BattleAbility
 {
     /// <summary>
     /// 定义了节点通用函数
