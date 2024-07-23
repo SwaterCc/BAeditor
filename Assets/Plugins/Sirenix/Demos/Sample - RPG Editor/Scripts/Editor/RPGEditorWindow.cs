@@ -60,7 +60,7 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
 
         private void AddDragHandles(OdinMenuItem menuItem)
         {
-            menuItem.OnDrawItem += x => DragAndDropUtilities.DragZone(menuItem.Rect, menuItem.Value, false, false);
+            menuItem.OnDrawItem += x => DragAndDropUtilities.DragZone(menuItem.Rect, menuItem.Value, true, true);
         }
 
         protected override void OnBeginDrawEditors()

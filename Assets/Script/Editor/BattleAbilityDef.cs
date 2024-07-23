@@ -8,10 +8,9 @@ using UnityEngine;
 
 namespace Script.Editor
 {
-    
+    [CreateAssetMenu(fileName = "EditorBattleAbilityTree",menuName = "战斗编辑器/EditorBattleAbilityTree")] 
     public class EditorBattleAbilityTree : SerializedScriptableObject
     {
-        [OdinSerialize]
         public int RootId;
         public Dictionary<int,EditorBattleAbilityTreeNode> AllNodes  = new();
         public Dictionary<int, EditorBattleAbilityLogicEditorData> AllLogicNodes = new();

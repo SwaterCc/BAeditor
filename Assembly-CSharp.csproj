@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Assets\Script\Battle\BattleAbilityLogicNode.cs" />
     <Compile Include="Assets\Script\Battle\CharacterBattleAbilityBlock.cs" />
+    <Compile Include="Assets\EditorData\BattleEditorData\BattleAbilityConfigItemList.cs" />
     <Compile Include="Assets\Script\Battle\BattleRuntimeDataBase.cs" />
     <Compile Include="Assets\Script\Battle\BattleAbilityLogicTree.cs" />
     <Reference Include="UnityEngine">
