@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using EditorData.BattleEditorData;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -31,10 +32,15 @@ namespace BattleAbility.Editor
         private const string ASSET_NAME_SKILL = "Skills";
         private const string ASSET_NAME_BUFF = "Buffs";
         private const string ASSET_NAME_BULLET = "Bullets";
-        
+
+        private const string SKILL_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Skill/";
+        private const string BUFF_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Buff/";
+        private const string BULLET_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Bullet/";
+
         private BattleAbilityConfigItemList _skills;
         private BattleAbilityConfigItemList _buffs;
         private BattleAbilityConfigItemList _bullets;
+
         protected override void Initialize()
         {
             _skills = LoadBattleAbilityConfigList(ASSET_NAME_SKILL);
@@ -44,23 +50,59 @@ namespace BattleAbility.Editor
 
         private BattleAbilityConfigItemList LoadBattleAbilityConfigList(string abilityTypeStr)
         {
-           return AssetDatabase.LoadAssetAtPath($"Assets/EditorData/BattleEditorData/Config/{abilityTypeStr}.asset",
-                typeof(BattleAbilityConfigItemList)) as BattleAbilityConfigItemList;;
+            return AssetDatabase.LoadAssetAtPath($"Assets/EditorData/BattleEditorData/Config/{abilityTypeStr}.asset",
+                typeof(BattleAbilityConfigItemList)) as BattleAbilityConfigItemList;
+            ;
         }
 
-        private void AddTreeItem(string rootMenu,BattleAbilityConfigItemList data)
+        private void AddTreeItem(string rootMenu, BattleAbilityConfigItemList data)
         {
             if (_treeInstance == null)
             {
                 return;
             }
-            
+
             foreach (var itemPair in data.Items)
             {
-                _treeInstance.Add($"{rootMenu}/{itemPair.Value.ConfigId}",null);
+                //测试用
+                var config = LoadBattleAbilitySerializable(data.abilityType, itemPair.Value.configId);
+                if (config != null)
+                {
+                    var battleSHowView =
+                        new BattleAbilityItemShowView(config, new BattleAbilitySerializableTree());
+                    _treeInstance.Add($"{rootMenu}/{battleSHowView.GetOdinMenuTreeItemLabel()}",
+                        config);
+                }
             }
         }
-        
+
+        private BattleAbilityBaseConfig LoadBattleAbilitySerializable(EAbilityType eAbilityType, int id)
+        {
+            switch (eAbilityType)
+            {
+                case EAbilityType.Skill:
+                {
+                    var asset = AssetDatabase.LoadAssetAtPath($"{SKILL_DATA_PATH}{id}.asset",
+                        typeof(BattleAbilityData)) as BattleAbilityData;
+                    return !asset ? null : asset.baseConfig;
+                }
+                case EAbilityType.Buff:
+                {
+                    var asset = AssetDatabase.LoadAssetAtPath($"{BUFF_DATA_PATH}{id}.asset",
+                        typeof(BattleAbilityData)) as BattleAbilityData;
+                    return !asset ? null : asset.baseConfig;
+                }
+                case EAbilityType.Bullet:
+                {
+                    var asset = AssetDatabase.LoadAssetAtPath($"{BULLET_DATA_PATH}{id}.asset",
+                        typeof(BattleAbilityData)) as BattleAbilityData;
+                    return !asset ? null : asset.baseConfig;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(eAbilityType), eAbilityType, null);
+            }
+        }
+
         protected override OdinMenuTree BuildMenuTree()
         {
             if (_treeInstance == null)
@@ -72,11 +114,11 @@ namespace BattleAbility.Editor
                     { MENU_BULLET, null, EditorIcons.Clouds }
                 };
             }
-            
-            AddTreeItem(MENU_SKILL,_skills);
-            AddTreeItem(MENU_BUFF,_buffs);
-            AddTreeItem(MENU_BULLET,_bullets);
-            
+
+            AddTreeItem(MENU_SKILL, _skills);
+            AddTreeItem(MENU_BUFF, _buffs);
+            AddTreeItem(MENU_BULLET, _bullets);
+
             return _treeInstance;
         }
 
@@ -95,12 +137,10 @@ namespace BattleAbility.Editor
 
                 if (SirenixEditorGUI.ToolbarButton(new GUIContent("Create Item")))
                 {
-
                 }
 
                 if (SirenixEditorGUI.ToolbarButton(new GUIContent("Create Character")))
                 {
-
                 }
             }
             SirenixEditorGUI.EndHorizontalToolbar();

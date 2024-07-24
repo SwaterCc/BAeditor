@@ -1,11 +1,11 @@
 ﻿namespace BattleAbility.Editor
 {
+
     /// <summary>
-    /// 能力配置界面 （基础配置 + 逻辑配置）
+    /// Root 节点列出全部能力，然后管理批量删除之类的
     /// </summary>
     public class BattleAbilityRootItemView
     {
-        private BattleAbilityBaseConfig _baseConfig;
-        
+       
     }
 }

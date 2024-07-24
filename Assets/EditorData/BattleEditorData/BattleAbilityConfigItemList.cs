@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BattleAbility;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -12,17 +13,23 @@ namespace EditorData.BattleEditorData
         /// <summary>
         /// 配置ID 策划手输入
         /// </summary>
-        public int ConfigId;
+        public int configId;
 
+        /// <summary>
+        /// 能力名字
+        /// </summary>
+        public int name;
+        
         /// <summary>
         /// 配置描述
         /// </summary>
-        public string Desc;
+        public string desc;
     }
     
     [CreateAssetMenu(menuName = "战斗编辑器/BattleAbilityConfigItemList")] 
     public class  BattleAbilityConfigItemList : SerializedScriptableObject
     {
+        public EAbilityType abilityType = EAbilityType.UnInit;
         public Dictionary<int, BattleAbilityConfigItem> Items = new();
     }
 }

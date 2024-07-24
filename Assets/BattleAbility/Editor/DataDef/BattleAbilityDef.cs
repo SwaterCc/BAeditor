@@ -8,12 +8,22 @@ using UnityEngine;
 
 namespace BattleAbility.Editor
 {
-    [CreateAssetMenu(fileName = "EditorBattleAbilityTree",menuName = "战斗编辑器/EditorBattleAbilityTree")] 
-    public class EditorBattleAbilityTree : SerializedScriptableObject
+    [CreateAssetMenu(fileName = "BattleAbilityData",menuName = "战斗编辑器/BattleAbilityData")] 
+    public class BattleAbilityData : SerializedScriptableObject
+    {
+        public BattleAbilityBaseConfig baseConfig;
+        public BattleAbilitySerializableTree treeData;
+    }
+    
+    [Serializable]
+    public class BattleAbilitySerializableTree
     {
         public int rootId;
+        [OdinSerialize]
         public Dictionary<int,EditorBattleAbilityTreeNode> allNodes  = new();
+        [OdinSerialize]
         public Dictionary<int, EditorBattleAbilityLogicEditorData> allLogicNodes = new();
+        [OdinSerialize]
         public Dictionary<int, EditorBattleTempValue> allLocalValue = new();
     }
     

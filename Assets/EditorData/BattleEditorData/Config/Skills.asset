@@ -34,7 +34,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 7
       Data: 
@@ -44,12 +44,15 @@ MonoBehaviour:
     - Name: $v
       Entry: 7
       Data: 2|EditorData.BattleEditorData.BattleAbilityConfigItem, Assembly-CSharp
-    - Name: ConfigId
+    - Name: configId
       Entry: 3
       Data: 1
-    - Name: Desc
-      Entry: 1
-      Data: "\u6280\u80FD\u6D4B\u8BD511111111"
+    - Name: name
+      Entry: 3
+      Data: 0
+    - Name: desc
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -65,12 +68,39 @@ MonoBehaviour:
     - Name: $v
       Entry: 7
       Data: 3|EditorData.BattleEditorData.BattleAbilityConfigItem, Assembly-CSharp
-    - Name: ConfigId
+    - Name: configId
       Entry: 3
       Data: 2
-    - Name: Desc
-      Entry: 1
-      Data: "\u6280\u80FD\u6D4B\u8BD5\u5C71\u83A8\u83EA\u78B1\u963F\u65AF\u5229\u5EB7\u5927\u5BB6\u5B89\u5229\u7684\u7A7A\u95F4\u53EF\u62C9\u4F38\u7684"
+    - Name: name
+      Entry: 3
+      Data: 0
+    - Name: desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2231
+    - Name: $v
+      Entry: 7
+      Data: 4|EditorData.BattleEditorData.BattleAbilityConfigItem, Assembly-CSharp
+    - Name: configId
+      Entry: 3
+      Data: 2231
+    - Name: name
+      Entry: 3
+      Data: 0
+    - Name: desc
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -83,3 +113,4 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  abilityType: 1
