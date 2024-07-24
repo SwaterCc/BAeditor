@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine.Serialization;
 
 namespace BattleAbility.Editor
@@ -7,7 +8,7 @@ namespace BattleAbility.Editor
     /// <summary>
     /// 能力的基础数据，抽象基类，具体的数据由子类实现
     /// </summary>
-    [Serializable]
+    
     public abstract class BattleAbilityBaseConfig
     {
         /// <summary>
@@ -18,11 +19,13 @@ namespace BattleAbility.Editor
         /// <summary>
         /// 配置id
         /// </summary>
+        [LabelText("配置ID（不可修改）")]
         public int ConfigId = -1;
 
         /// <summary>
         /// 能力名字
         /// </summary>
+        
         public string Name = "NoName";
 
         /// <summary>
@@ -34,7 +37,6 @@ namespace BattleAbility.Editor
         public int Tag = -1;
     }
 
-    [Serializable]
     public class SkillBaseConfig : BattleAbilityBaseConfig
     {
         public new EAbilityType ConfigType => EAbilityType.Skill;
@@ -44,7 +46,6 @@ namespace BattleAbility.Editor
         public string AnimPath;
     }
 
-    [Serializable]
     public class BuffBaseConfig : BattleAbilityBaseConfig
     {
         public new EAbilityType ConfigType => EAbilityType.Buff;
@@ -55,7 +56,7 @@ namespace BattleAbility.Editor
     /// <summary>
     /// 投射物，涵盖了子弹与虚拟体的结合体
     /// </summary>
-    [Serializable]
+
     public class BulletBaseConfig : BattleAbilityBaseConfig
     {
         public new EAbilityType ConfigType => EAbilityType.Bullet;

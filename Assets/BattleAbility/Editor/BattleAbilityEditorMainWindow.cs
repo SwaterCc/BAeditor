@@ -71,7 +71,7 @@ namespace BattleAbility.Editor
                     var battleSHowView =
                         new BattleAbilityItemShowView(config, new BattleAbilitySerializableTree());
                     _treeInstance.Add($"{rootMenu}/{battleSHowView.GetOdinMenuTreeItemLabel()}",
-                        config);
+                        battleSHowView);
                 }
             }
         }

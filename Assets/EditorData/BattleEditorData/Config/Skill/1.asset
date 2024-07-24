@@ -74,5 +74,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  treeData:
-    rootId: 0
+    - Name: treeData
+      Entry: 6
+      Data: 

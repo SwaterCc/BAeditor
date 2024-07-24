@@ -8,26 +8,23 @@ using UnityEngine;
 
 namespace BattleAbility.Editor
 {
-    [CreateAssetMenu(fileName = "BattleAbilityData",menuName = "战斗编辑器/BattleAbilityData")] 
+    [CreateAssetMenu(fileName = "BattleAbilityData", menuName = "战斗编辑器/BattleAbilityData")]
     public class BattleAbilityData : SerializedScriptableObject
     {
         public BattleAbilityBaseConfig baseConfig;
         public BattleAbilitySerializableTree treeData;
     }
-    
-    [Serializable]
+
+
     public class BattleAbilitySerializableTree
     {
         public int rootId;
-        [OdinSerialize]
-        public Dictionary<int,EditorBattleAbilityTreeNode> allNodes  = new();
-        [OdinSerialize]
+        public Dictionary<int, EditorBattleAbilityTreeNode> allNodes = new();
         public Dictionary<int, EditorBattleAbilityLogicEditorData> allLogicNodes = new();
-        [OdinSerialize]
         public Dictionary<int, EditorBattleTempValue> allLocalValue = new();
     }
-    
-    [Serializable]
+
+
     public class EditorBattleAbilityTreeNode
     {
         public int parentId;
@@ -35,7 +32,7 @@ namespace BattleAbility.Editor
         public List<int> logicNodeIds = new();
     }
 
-    [Serializable]
+
     public class EditorBattleAbilityLogicEditorData
     {
         public BattleAbilityLogicNode.ENodeType eNodeType;
@@ -43,7 +40,7 @@ namespace BattleAbility.Editor
         public List<int> paramList;
     }
 
-    [Serializable]
+
     public struct EditorBattleTempValue
     {
         public string name;
@@ -51,5 +48,4 @@ namespace BattleAbility.Editor
         public string value;
         public int enableRange;
     }
-    
 }
