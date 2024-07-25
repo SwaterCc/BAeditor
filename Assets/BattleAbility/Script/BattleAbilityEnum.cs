@@ -19,13 +19,14 @@ namespace BattleAbility
         Normal,
         Singing,
     }
-
+    
     /// <summary>
     /// 战斗资源的类型
     /// </summary>
     public enum EBattleResourceType
     {
-        
+        Energy,
+        Buff,
     }
 
     /// <summary>

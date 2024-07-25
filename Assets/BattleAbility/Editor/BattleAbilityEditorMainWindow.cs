@@ -69,7 +69,7 @@ namespace BattleAbility.Editor
                 if (config != null)
                 {
                     var battleSHowView =
-                        new BattleAbilityItemShowView(config, new BattleAbilitySerializableTree());
+                        new BattleAbilityItemView(config, new BattleAbilitySerializableTree());
                     _treeInstance.Add($"{rootMenu}/{battleSHowView.GetOdinMenuTreeItemLabel()}",
                         battleSHowView);
                 }
@@ -124,7 +124,7 @@ namespace BattleAbility.Editor
 
         protected override void OnBeginDrawEditors()
         {
-            //绘制顶部栏数据
+            //绘制顶部创建按钮
             var selected = this.MenuTree.Selection.FirstOrDefault();
             var toolbarHeight = this.MenuTree.Config.SearchToolbarHeight;
 

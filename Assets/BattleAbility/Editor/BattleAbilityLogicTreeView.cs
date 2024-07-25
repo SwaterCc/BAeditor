@@ -17,21 +17,13 @@ namespace BattleAbility.Editor
         {
             _serializableTree = serializableTree;
         }
-    }
 
-    public class BattleAbilityLogicTreeViewDrawer : OdinValueDrawer<BattleAbilityLogicTreeView>
-    {
-        protected override void Initialize()
+        /// <summary>
+        /// 绘制树
+        /// </summary>
+        public void BuildTree()
         {
-            base.Initialize();
-        }
-
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
-            var valueSerializableTree = this.ValueEntry.SmartValue.SerializableTree;
-            SirenixEditorGUI.BeginBox();
-            SirenixEditorGUI.InfoMessageBox("這是一顆叔叔世俗叔叔叔叔和叔叔和");
-            SirenixEditorGUI.EndBox();
+            
         }
     }
 }
