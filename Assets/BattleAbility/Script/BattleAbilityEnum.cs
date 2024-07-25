@@ -11,6 +11,11 @@ namespace BattleAbility
         Bullet,
     }
 
+    public enum EStageTag
+    {
+        
+    }
+
     /// <summary>
     /// 技能类型
     /// </summary>

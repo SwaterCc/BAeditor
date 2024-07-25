@@ -58,8 +58,6 @@ namespace BattleAbility.Editor
         [BattleAbilityDrawerCollectionEditor("GetNewSkillCostInfo")]
         public List<SkillCostInfo> CostResourceTypeWithValue = new();
 
-        [BattleAbilityLabelTagEditor("动画路径")] public string AnimPath;
-
         public override EAbilityType GetAbilityType()
         {
             return EAbilityType.Skill;

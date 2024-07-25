@@ -65,42 +65,38 @@ namespace BattleAbility.Editor
             foreach (var itemPair in data.Items)
             {
                 //测试用
-                var config = LoadBattleAbilitySerializable(data.abilityType, itemPair.Value.configId);
-                if (config != null)
+                var battleAbilityData = LoadBattleAbilitySerializable(data.abilityType, itemPair.Value.configId);
+                if (data != null)
                 {
                     var battleSHowView =
-                        new BattleAbilityItemView(config, new BattleAbilitySerializableTree());
+                        new BattleAbilityItemView(battleAbilityData.baseConfig, battleAbilityData.stageDatas);
                     _treeInstance.Add($"{rootMenu}/{battleSHowView.GetOdinMenuTreeItemLabel()}",
                         battleSHowView);
                 }
             }
         }
 
-        private BattleAbilityBaseConfig LoadBattleAbilitySerializable(EAbilityType eAbilityType, int id)
+        private BattleAbilityData LoadBattleAbilitySerializable(EAbilityType eAbilityType, int id)
         {
+            BattleAbilityData asset = null;
             switch (eAbilityType)
             {
                 case EAbilityType.Skill:
-                {
-                    var asset = AssetDatabase.LoadAssetAtPath($"{SKILL_DATA_PATH}{id}.asset",
+                    asset = AssetDatabase.LoadAssetAtPath($"{SKILL_DATA_PATH}{id}.asset",
                         typeof(BattleAbilityData)) as BattleAbilityData;
-                    return !asset ? null : asset.baseConfig;
-                }
+                    break;
                 case EAbilityType.Buff:
-                {
-                    var asset = AssetDatabase.LoadAssetAtPath($"{BUFF_DATA_PATH}{id}.asset",
+                    asset = AssetDatabase.LoadAssetAtPath($"{BUFF_DATA_PATH}{id}.asset",
                         typeof(BattleAbilityData)) as BattleAbilityData;
-                    return !asset ? null : asset.baseConfig;
-                }
+                    break;
                 case EAbilityType.Bullet:
-                {
-                    var asset = AssetDatabase.LoadAssetAtPath($"{BULLET_DATA_PATH}{id}.asset",
+                    asset = AssetDatabase.LoadAssetAtPath($"{BULLET_DATA_PATH}{id}.asset",
                         typeof(BattleAbilityData)) as BattleAbilityData;
-                    return !asset ? null : asset.baseConfig;
-                }
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(eAbilityType), eAbilityType, null);
             }
+            return !asset ? null : asset;
         }
 
         protected override OdinMenuTree BuildMenuTree()

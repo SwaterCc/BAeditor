@@ -1,75 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using BattleAbility.Editor.BattleAbilityCustomAttribute;
-using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
-using Sirenix.Serialization;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
-using UnityEngine;
-using Object = System.Object;
 
 namespace BattleAbility.Editor
 {
-    /// <summary>
-    /// 能力配置界面 （基础配置 + 逻辑配置）
-    /// </summary>
-    public class BattleAbilityItemView
-    {
-        /// <summary>
-        /// 能力基础数据
-        /// </summary>
-        public readonly BattleAbilityBaseConfig BaseConfig;
-
-        /// <summary>
-        /// 逻辑树对象
-        /// </summary>
-        public BattleAbilityLogicTreeView LogicTreeView;
-
-        public BattleAbilityItemView(BattleAbilityBaseConfig baseConfig, BattleAbilitySerializableTree serializableTree)
-        {
-            BaseConfig = baseConfig;
-            LogicTreeView = new BattleAbilityLogicTreeView(serializableTree);
-        }
-
-        public string GetOdinMenuTreeItemLabel()
-        {
-            return $"{BaseConfig.ConfigId}->{BaseConfig.Name}";
-        }
-    }
-
-    public class BattleAbilityItemViewDrawer : OdinValueDrawer<BattleAbilityItemView>
+    public class BattleAbilityConfigDrawer
     {
         private bool _baseFoldout = true;
-        private bool _logicFoldout = true;
+        private BattleAbilityBaseConfig _config;
 
-        protected override void DrawPropertyLayout(GUIContent label)
+        public BattleAbilityConfigDrawer(BattleAbilityBaseConfig config)
         {
-            var itemShowView = this.ValueEntry.SmartValue;
-
-            GUILayout.BeginScrollView(Vector2.zero, false, true);
-
-            drawBaseConfig(itemShowView.BaseConfig);
-
-            SirenixEditorGUI.BeginBox();
-            SirenixEditorGUI.EndBox();
-
-            SirenixEditorGUI.BeginBox();
-            SirenixEditorGUI.BeginBoxHeader();
-            _logicFoldout = SirenixEditorGUI.Foldout(_logicFoldout, "逻辑开发");
-            SirenixEditorGUI.EndBoxHeader();
-            if (_logicFoldout)
-            {
-            }
-
-            SirenixEditorGUI.EndBox();
-
-            GUILayout.EndScrollView();
+            _config = config;
         }
-
-        private void drawBaseConfig(BattleAbilityBaseConfig config)
+        
+        public void DrawBaseConfig()
         {
             SirenixEditorGUI.BeginBox();
             SirenixEditorGUI.BeginBoxHeader();
@@ -79,22 +25,22 @@ namespace BattleAbility.Editor
             {
                 SirenixEditorGUI.BeginVerticalList();
                 //反射基类定义
-                var baseFieldInfos = config.GetType().BaseType.GetFields(BindingFlags.Public |
+                var baseFieldInfos = _config.GetType().BaseType.GetFields(BindingFlags.Public |
                                                                          BindingFlags.NonPublic |
                                                                          BindingFlags.Static |
                                                                          BindingFlags.DeclaredOnly |
                                                                          BindingFlags.Instance);
                 foreach (var fieldInfo in baseFieldInfos)
                 {
-                    drawVerticalItem(ref config, fieldInfo);
+                    drawVerticalItem(fieldInfo);
                 }
 
 
-                foreach (var fieldInfo in config.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic |
+                foreach (var fieldInfo in _config.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic |
                                                                      BindingFlags.Static | BindingFlags.DeclaredOnly |
                                                                      BindingFlags.Instance))
                 {
-                    drawVerticalItem(ref config, fieldInfo);
+                    drawVerticalItem(fieldInfo);
                 }
 
                 SirenixEditorGUI.EndVerticalList();
@@ -103,7 +49,7 @@ namespace BattleAbility.Editor
             SirenixEditorGUI.EndBox();
         }
 
-        private void drawVerticalItem(ref BattleAbilityBaseConfig config, FieldInfo fieldInfo)
+        private void drawVerticalItem(FieldInfo fieldInfo)
         {
             bool hasLabelTag = false;
             string label = "";
@@ -133,9 +79,9 @@ namespace BattleAbility.Editor
             SirenixEditorGUI.BeginListItem();
             if (labeType == BattleAbilityLabelTagEditor.ELabeType.List)
             {
-                if (config.GetAbilityType() == EAbilityType.Skill)
+                if (_config.GetAbilityType() == EAbilityType.Skill)
                 {
-                    var skillBase = (SkillBaseConfig)config;
+                    var skillBase = (SkillBaseConfig)_config;
 
                     foreach (var attr in fieldInfo.GetCustomAttributes())
                     {
@@ -161,12 +107,11 @@ namespace BattleAbility.Editor
             }
             else
             {
-                var afterValue = BattleAbilitEditorHelper.DrawLabelAndUpdateValueByAttr(config, fieldInfo, label, labeType);
-                fieldInfo.SetValue(config, afterValue);
+                var afterValue = BattleAbilitEditorHelper.DrawLabelAndUpdateValueByAttr(_config, fieldInfo, label, labeType);
+                fieldInfo.SetValue(_config, afterValue);
             }
 
             SirenixEditorGUI.EndListItem();
         }
-        
     }
 }

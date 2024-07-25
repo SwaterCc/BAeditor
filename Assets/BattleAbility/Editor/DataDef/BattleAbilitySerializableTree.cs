@@ -33,7 +33,7 @@ namespace BattleAbility.Editor
     }
 
 
-    public struct EditorBattleTempValue
+    public class EditorBattleTempValue
     {
         public string name;
         public string valueType;
