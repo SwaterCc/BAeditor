@@ -91,7 +91,7 @@ namespace BattleAbility.Editor
                     afterUpdateValue = EditorGUILayout.IntField(label, (int)fieldInfo.GetValue(classObj));
                     break;
                 case BattleAbilityLabelTagEditor.ELabeType.Long:
-                    checkFieldType(fieldInfo, typeof(int), labeType);
+                    checkFieldType(fieldInfo, typeof(long), labeType);
                     afterUpdateValue = EditorGUILayout.LongField(label, (long)fieldInfo.GetValue(classObj));
                     break;
                 case BattleAbilityLabelTagEditor.ELabeType.String:
