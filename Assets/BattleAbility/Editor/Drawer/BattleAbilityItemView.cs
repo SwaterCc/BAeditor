@@ -53,7 +53,7 @@ namespace BattleAbility.Editor
         protected override void DrawPropertyLayout(GUIContent label)
         {
             var itemShowView = this.ValueEntry.SmartValue;
-            //_scrollViewPos = GUILayout.BeginScrollView(_scrollViewPos, false, true);
+            _scrollViewPos = GUILayout.BeginScrollView(_scrollViewPos, false, true);
 
             _configDrawer.DrawBaseConfig();
 
@@ -86,7 +86,7 @@ namespace BattleAbility.Editor
                 _removeObj = null;
             }
             SirenixEditorGUI.EndBox();
-            //GUILayout.EndScrollView();
+            GUILayout.EndScrollView();
         }
 
         public void removeStage(LogicStageDrawer removeDrawer)

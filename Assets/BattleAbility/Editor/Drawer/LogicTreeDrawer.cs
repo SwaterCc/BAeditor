@@ -46,31 +46,24 @@ namespace BattleAbility.Editor
             SirenixEditorGUI.BeginVerticalList();
             if (_logicTreeFoldout)
             {
-                SirenixEditorGUI.BeginListItem(false);
+                SirenixEditorGUI.BeginListItem();
                 
                 if (Event.current.type == EventType.MouseDown)
                 {
                     var rect = GUIHelper.GetCurrentLayoutRect();
-                    Debug.Log(rect);
-                    if (rect.Contains(Event.current.mousePosition))
+                    if (rect.Contains(Event.current.mousePosition) && Event.current.button == 1)
                     {
-                        EditorGUILayout.LabelField($"click count {++test}");
+                        Debug.Log($"curent KeyCode {Event.current.keyCode}");
+                       AddLogicTreeNodeWindow.OpenWindow();
                     }
                 }
-                if (Event.current.OnKeyDown(KeyCode.Mouse0))
-                {
-                    var rect = GUIHelper.GetCurrentLayoutRect();
-                    Debug.Log(rect);
-                    if (rect.Contains(Event.current.mousePosition))
-                    {
-                        EditorGUILayout.LabelField($"click count {--test}");
-                    }
-                }
+              
                 if (_rootDrawer == null && _rootDrawerIdx == -1)
                 {
                     SirenixEditorGUI.BeginIndentedHorizontal(GUILayout.Width(120));
                     EditorGUILayout.LabelField("+",GUILayout.Width(15));
                     SirenixEditorGUI.Button("添加事件", ButtonSizes.Medium);
+                    
                     SirenixEditorGUI.EndIndentedHorizontal();
                 }
                 SirenixEditorGUI.EndListItem();
