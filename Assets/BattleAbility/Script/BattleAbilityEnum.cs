@@ -52,4 +52,19 @@ namespace BattleAbility
     {
         
     }
+
+    /// <summary>
+    /// 技能编辑器中配置的临时变量生效范围
+    /// </summary>
+    public enum ELocalValueRange
+    {
+        //战场全局变量
+        Battleground,
+        //仅角色
+        Char,
+        //单个能力
+        Ability,
+        //单个阶段
+        Stage,
+    }
 }

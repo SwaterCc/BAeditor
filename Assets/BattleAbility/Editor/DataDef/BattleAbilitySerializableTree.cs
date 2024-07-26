@@ -10,34 +10,33 @@ namespace BattleAbility.Editor
 {
     public class BattleAbilitySerializableTree
     {
+        public int treeId;
         public int rootId;
-        public Dictionary<int, EditorBattleAbilityTreeNode> allNodes = new();
-        public Dictionary<int, EditorBattleAbilityLogicEditorData> allLogicNodes = new();
+        public Dictionary<int, TreeNodeIndex> allNodes = new();
+        public Dictionary<int, NodeData> allNodeLogics = new();
         public Dictionary<int, EditorBattleTempValue> allLocalValue = new();
+        
+        public class TreeNodeIndex
+        {
+            public int parentId;
+            public int dataIndex;
+            public List<int> childIds = new();
+        }
+        
+        public class NodeData
+        {
+            public BattleAbilityLogicNode.ENodeType eNodeType;
+            public List<int> paramList;
+        }
     }
 
-
-    public class EditorBattleAbilityTreeNode
-    {
-        public int parentId;
-        public List<int> childIds = new();
-        public List<int> logicNodeIds = new();
-    }
-
-
-    public class EditorBattleAbilityLogicEditorData
-    {
-        public BattleAbilityLogicNode.ENodeType eNodeType;
-        public int nodeBehaveType;
-        public List<int> paramList;
-    }
-
-
+    
     public class EditorBattleTempValue
     {
         public string name;
         public string valueType;
         public string value;
-        public int enableRange;
+        public ELocalValueRange enableRange;
+        //public 
     }
 }

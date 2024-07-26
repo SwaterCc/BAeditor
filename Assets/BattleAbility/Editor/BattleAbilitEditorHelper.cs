@@ -88,18 +88,18 @@ namespace BattleAbility.Editor
             {
                 case BattleAbilityLabelTagEditor.ELabeType.Int32:
                     checkFieldType(fieldInfo, typeof(int), labeType);
-                    afterUpdateValue = EditorGUILayout.IntField(label, (int)fieldInfo.GetValue(classObj));
+                    afterUpdateValue = SirenixEditorFields.IntField(label, (int)fieldInfo.GetValue(classObj));
                     break;
                 case BattleAbilityLabelTagEditor.ELabeType.Long:
                     checkFieldType(fieldInfo, typeof(long), labeType);
-                    afterUpdateValue = EditorGUILayout.LongField(label, (long)fieldInfo.GetValue(classObj));
+                    afterUpdateValue = SirenixEditorFields.LongField(label, (long)fieldInfo.GetValue(classObj));
                     break;
                 case BattleAbilityLabelTagEditor.ELabeType.String:
                     string text = fieldInfo.GetValue(classObj) == null ? "" : fieldInfo.GetValue(classObj).ToString();
-                    afterUpdateValue = EditorGUILayout.TextField(label, text);
+                    afterUpdateValue = SirenixEditorFields.TextField(label, text);
                     break;
                 case BattleAbilityLabelTagEditor.ELabeType.Enum:
-                    afterUpdateValue = EditorGUILayout.EnumPopup(label, (Enum)fieldInfo.GetValue(classObj));
+                    afterUpdateValue = SirenixEditorFields.EnumDropdown(label, (Enum)fieldInfo.GetValue(classObj));
                     break;
             }
             return afterUpdateValue;

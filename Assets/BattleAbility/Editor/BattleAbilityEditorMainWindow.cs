@@ -139,6 +139,7 @@ namespace BattleAbility.Editor
                 {
                 }
             }
+            EditorGUILayout.LabelField($"mousePOs {Event.current.mousePosition}");
             SirenixEditorGUI.EndHorizontalToolbar();
         }
     }

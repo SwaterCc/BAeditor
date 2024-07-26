@@ -5,12 +5,12 @@ using UnityEditor;
 
 namespace BattleAbility.Editor
 {
-    public class BattleAbilityConfigDrawer
+    public class ConfigDrawer
     {
         private bool _baseFoldout = true;
         private BattleAbilityBaseConfig _config;
 
-        public BattleAbilityConfigDrawer(BattleAbilityBaseConfig config)
+        public ConfigDrawer(BattleAbilityBaseConfig config)
         {
             _config = config;
         }
