@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UnityEditor;
 using UnityEngine;
 
 namespace BattleAbility.Editor

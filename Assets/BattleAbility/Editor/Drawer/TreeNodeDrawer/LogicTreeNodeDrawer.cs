@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -12,22 +14,40 @@ namespace BattleAbility.Editor
     {
         //private 
         private LogicTreeNodeDrawer _parent = null;
+
         public LogicTreeNodeDrawer Parent
         {
             get => _parent;
             set => _parent = value;
         }
+
         private List<LogicTreeNodeDrawer> _children = new();
-        
+
         private BattleAbilitySerializableTree _serializableTree;
         private readonly BattleAbilitySerializableTree.TreeNode _treeNode;
-        
-        public LogicTreeNodeDrawer(BattleAbilitySerializableTree treeData,BattleAbilitySerializableTree.TreeNode treeNode)
+
+        public LogicTreeNodeDrawer(BattleAbilitySerializableTree treeData,
+            BattleAbilitySerializableTree.TreeNode treeNode)
         {
             _serializableTree = treeData;
             _treeNode = treeNode;
         }
-        
+
+        public void InitTree()
+        {
+        }
+
+        private void treeButton(string btnText, float buttonWidth, Action action)
+        {
+            if (GUILayout.Button(btnText, GUILayout.Width(buttonWidth)))
+            {
+                if (Event.current.button == 0)
+                {
+                    action.Invoke();
+                }
+            }
+        }
+
         public void Draw()
         {
             SirenixEditorGUI.BeginListItem();
@@ -51,6 +71,7 @@ namespace BattleAbility.Editor
             {
                 EditorGUILayout.LabelField("∟");
             }
+
             drawSelf();
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.LabelField("(点击右键，添加对应节点)");
@@ -61,6 +82,7 @@ namespace BattleAbility.Editor
             {
                 child.Draw();
             }
+
             EditorGUI.indentLevel--;
         }
 

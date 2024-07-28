@@ -14,11 +14,8 @@ namespace BattleAbility.Editor
         protected override void drawSelf()
         {
             var text = "创建变量（后续要加事件部分参数预览）";
-            if (GUILayout.Button(text, GUILayout.Width(150)))
-            {
-                //打开事件配置页面
-                LogicTreeVariableNodeWindow.OpenWindow();
-            }
+           
+            
         }
     }
     

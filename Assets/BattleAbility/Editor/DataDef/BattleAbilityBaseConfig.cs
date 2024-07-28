@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BattleAbility.Editor.BattleAbilityCustomAttribute;
-using Sirenix.OdinInspector;
-using UnityEngine.Serialization;
 
 namespace BattleAbility.Editor
 {

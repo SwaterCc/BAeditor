@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -16,19 +13,19 @@ namespace BattleAbility.Editor
     {
         public readonly BattleAbilitySerializableTree TreeData;
         private bool _logicTreeFoldout = true;
-        private readonly int _rootDrawerIdx = -1;
-        private LogicTreeNodeDrawer _rootDrawer;
+        private readonly LogicTreeNodeDrawer _rootDrawer;
         private readonly LogicStageDrawer _parentDrawer;
-        private List<LogicTreeNodeDrawer> _nodeDrawers = new List<LogicTreeNodeDrawer>();
-        private int test = 1;
-
-        private Vector2 _soroll = Vector2.zero;
-
+        
         public LogicTreeDrawer(LogicStageDrawer parentDrawer, BattleAbilitySerializableTree treeData)
         {
             TreeData = treeData;
             _parentDrawer = parentDrawer;
-            
+
+            if (treeData.rootIdx >= 0)
+            {
+                _rootDrawer = new LogicTreeEventNodeDrawer(treeData, treeData.allNodes[treeData.rootIdx]);
+                _rootDrawer.InitTree();
+            }
         }
 
         /// <summary>
@@ -51,9 +48,7 @@ namespace BattleAbility.Editor
             SirenixEditorGUI.BeginVerticalList();
             if (_logicTreeFoldout)
             {
-                
-
-                if (_rootDrawer == null && _rootDrawerIdx == -1)
+                if (_rootDrawer == null)
                 {
                     SirenixEditorGUI.BeginListItem();
                     if (Event.current.type == EventType.MouseDown)
@@ -69,10 +64,8 @@ namespace BattleAbility.Editor
                 }
                 else
                 {
-                    //_rootDrawer.Draw();
+                    _rootDrawer.Draw();
                 }
-
-              
             }
 
             SirenixEditorGUI.EndVerticalList();

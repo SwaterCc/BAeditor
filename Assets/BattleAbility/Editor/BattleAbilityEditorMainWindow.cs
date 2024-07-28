@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using EditorData.BattleEditorData;
-using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
