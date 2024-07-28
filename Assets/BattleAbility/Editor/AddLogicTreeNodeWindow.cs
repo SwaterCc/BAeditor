@@ -8,10 +8,10 @@ namespace BattleAbility.Editor
 {
     public class AddLogicTreeNodeWindow : OdinEditorWindow
     {
-        public static void OpenWindow()
+        public static void OpenWindow(ENodeType nodeType)
         {
             var window = GetWindow<AddLogicTreeNodeWindow>();
-            window.position = new Rect(Event.current.mousePosition,new Vector2(400,300));
+            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(400, 300);
             window.titleContent = new GUIContent("选择节点");
         }
 

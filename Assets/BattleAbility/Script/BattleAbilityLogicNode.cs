@@ -7,29 +7,6 @@ namespace BattleAbility
     /// </summary>
     public abstract class BattleAbilityLogicNode
     {
-        public enum ENodeType
-        {
-            /// <summary>
-            /// 触发时机节点
-            /// </summary>
-            TriggerTiming,
-
-            /// <summary>
-            /// 逻辑判定语句
-            /// </summary>
-            Condition,
-
-            /// <summary>
-            /// 行为
-            /// </summary>
-            Action,
-
-            /// <summary>
-            /// 创建临时变量
-            /// </summary>
-            CreateTempField,
-        }
-        
         /// <summary>
         /// 逻辑数据的抽象基类
         /// </summary>
@@ -46,7 +23,7 @@ namespace BattleAbility
         private readonly ENodeType _nodeType;
         protected BattleAbilityLogicNodeData _data;
         
-        public BattleAbilityLogicNode.ENodeType GetNodeType() => _nodeType;
+        public ENodeType GetNodeType() => _nodeType;
         public BattleAbilityLogicNode.BattleAbilityLogicNodeData GetData() => _data;
     }
 

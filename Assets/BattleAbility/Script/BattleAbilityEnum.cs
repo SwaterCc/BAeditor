@@ -67,4 +67,27 @@ namespace BattleAbility
         //单个阶段
         Stage,
     }
+    
+    public enum ENodeType
+    {
+        /// <summary>
+        /// 事件节点
+        /// </summary>
+        Event,
+
+        /// <summary>
+        /// 逻辑判定节点
+        /// </summary>
+        Condition,
+
+        /// <summary>
+        /// 具体动作
+        /// </summary>
+        Action,
+
+        /// <summary>
+        /// 创建变量
+        /// </summary>
+        Variable,
+    }
 }

@@ -14,17 +14,21 @@ namespace BattleAbility.Editor
     /// </summary>
     public class LogicTreeDrawer
     {
-        public BattleAbilitySerializableTree TreeData;
+        public readonly BattleAbilitySerializableTree TreeData;
         private bool _logicTreeFoldout = true;
-        private int _rootDrawerIdx = -1;
+        private readonly int _rootDrawerIdx = -1;
         private LogicTreeNodeDrawer _rootDrawer;
-        private LogicStageDrawer _parentDrawer;
+        private readonly LogicStageDrawer _parentDrawer;
         private List<LogicTreeNodeDrawer> _nodeDrawers = new List<LogicTreeNodeDrawer>();
         private int test = 1;
-        public LogicTreeDrawer(LogicStageDrawer parentDrawer,BattleAbilitySerializableTree treeData)
+
+        private Vector2 _soroll = Vector2.zero;
+
+        public LogicTreeDrawer(LogicStageDrawer parentDrawer, BattleAbilitySerializableTree treeData)
         {
             TreeData = treeData;
             _parentDrawer = parentDrawer;
+            
         }
 
         /// <summary>
@@ -33,46 +37,46 @@ namespace BattleAbility.Editor
         public void BuildTree()
         {
             SirenixEditorGUI.HorizontalLineSeparator();
-            
+
 
             var mainBox = SirenixEditorGUI.BeginBox();
             SirenixEditorGUI.BeginBoxHeader();
             _logicTreeFoldout = SirenixEditorGUI.Foldout(_logicTreeFoldout, "(事件类型预览)");
-            if(SirenixEditorGUI.Button("删除", ButtonSizes.Medium))
+            if (SirenixEditorGUI.Button("删除", ButtonSizes.Medium))
             {
                 _parentDrawer.RemoveTree(this);
             }
+
             SirenixEditorGUI.EndBoxHeader();
             SirenixEditorGUI.BeginVerticalList();
             if (_logicTreeFoldout)
             {
-                SirenixEditorGUI.BeginListItem();
                 
-                if (Event.current.type == EventType.MouseDown)
-                {
-                    var rect = GUIHelper.GetCurrentLayoutRect();
-                    if (rect.Contains(Event.current.mousePosition) && Event.current.button == 1)
-                    {
-                        Debug.Log($"curent KeyCode {Event.current.keyCode}");
-                       AddLogicTreeNodeWindow.OpenWindow();
-                    }
-                }
-              
+
                 if (_rootDrawer == null && _rootDrawerIdx == -1)
                 {
-                    SirenixEditorGUI.BeginIndentedHorizontal(GUILayout.Width(120));
-                    EditorGUILayout.LabelField("+",GUILayout.Width(15));
-                    SirenixEditorGUI.Button("添加事件", ButtonSizes.Medium);
-                    
-                    SirenixEditorGUI.EndIndentedHorizontal();
+                    SirenixEditorGUI.BeginListItem();
+                    if (Event.current.type == EventType.MouseDown)
+                    {
+                        var rect = GUIHelper.GetCurrentLayoutRect();
+                        if (rect.Contains(Event.current.mousePosition) && Event.current.button == 1)
+                        {
+                            AddLogicTreeNodeWindow.OpenWindow(ENodeType.Event);
+                        }
+                    }
+                    EditorGUILayout.LabelField("（右键点击这里创建事件节点）");
+                    SirenixEditorGUI.EndListItem();
                 }
-                SirenixEditorGUI.EndListItem();
-               
-             
+                else
+                {
+                    //_rootDrawer.Draw();
+                }
+
+              
             }
+
             SirenixEditorGUI.EndVerticalList();
             SirenixEditorGUI.EndBox();
-
         }
     }
 }
