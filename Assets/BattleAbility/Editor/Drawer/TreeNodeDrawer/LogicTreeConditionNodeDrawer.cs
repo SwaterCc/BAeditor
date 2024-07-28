@@ -7,7 +7,9 @@ namespace BattleAbility.Editor
 {
     public class LogicTreeConditionNodeDrawer : LogicTreeNodeDrawer
     {
-        public LogicTreeConditionNodeDrawer(BattleAbilitySerializableTree treeData, BattleAbilitySerializableTree.TreeNode treeNode) : base(treeData, treeNode)
+        public LogicTreeConditionNodeDrawer(BattleAbilitySerializableTree treeData,
+            BattleAbilitySerializableTree.TreeNode treeNode, LogicTreeNodeDrawer parent) : base(treeData, treeNode,
+            parent)
         {
         }
 
@@ -20,7 +22,7 @@ namespace BattleAbility.Editor
                 LogicTreeConditionNodeWindow.OpenWindow();
             }
         }
-        
+
         public class LogicTreeConditionNodeWindow : OdinEditorWindow
         {
             public static void OpenWindow()

@@ -7,7 +7,7 @@ namespace BattleAbility.Editor
 {
     public class LogicTreeEventNodeDrawer : LogicTreeNodeDrawer
     {
-        public LogicTreeEventNodeDrawer(BattleAbilitySerializableTree treeData, BattleAbilitySerializableTree.TreeNode treeNode) : base(treeData, treeNode)
+        public LogicTreeEventNodeDrawer(BattleAbilitySerializableTree treeData, BattleAbilitySerializableTree.TreeNode treeNode) : base(treeData, treeNode,null)
         {
         }
 

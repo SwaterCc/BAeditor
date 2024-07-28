@@ -7,7 +7,9 @@ namespace BattleAbility.Editor
 {
     public class LogicTreeActionNodeDrawer : LogicTreeNodeDrawer
     {
-        public LogicTreeActionNodeDrawer(BattleAbilitySerializableTree treeData, BattleAbilitySerializableTree.TreeNode treeNode) : base(treeData, treeNode)
+        public LogicTreeActionNodeDrawer(BattleAbilitySerializableTree treeData,
+            BattleAbilitySerializableTree.TreeNode treeNode, LogicTreeNodeDrawer parent) : base(treeData, treeNode,
+            parent)
         {
         }
 
@@ -21,7 +23,7 @@ namespace BattleAbility.Editor
             }
         }
     }
-    
+
     public class LogicTreeActionNodeWindow : OdinEditorWindow
     {
         public static void OpenWindow()

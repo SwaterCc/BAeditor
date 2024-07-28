@@ -21,10 +21,9 @@ namespace BattleAbility.Editor
             TreeData = treeData;
             _parentDrawer = parentDrawer;
 
-            if (treeData.rootIdx >= 0)
+            if (treeData.rootIdx > 0 && treeData.allNodes.Count > 0) 
             {
                 _rootDrawer = new LogicTreeEventNodeDrawer(treeData, treeData.allNodes[treeData.rootIdx]);
-                _rootDrawer.InitTree();
             }
         }
 

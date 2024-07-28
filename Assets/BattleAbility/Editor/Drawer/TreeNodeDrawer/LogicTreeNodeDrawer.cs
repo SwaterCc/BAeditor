@@ -13,31 +13,45 @@ namespace BattleAbility.Editor
     public abstract class LogicTreeNodeDrawer
     {
         //private 
-        private LogicTreeNodeDrawer _parent = null;
-
-        public LogicTreeNodeDrawer Parent
-        {
-            get => _parent;
-            set => _parent = value;
-        }
-
-        private List<LogicTreeNodeDrawer> _children = new();
+        private readonly LogicTreeNodeDrawer _parent;
+        
+        private List<LogicTreeNodeDrawer> _childrenDrawer = new();
 
         private BattleAbilitySerializableTree _serializableTree;
-        private readonly BattleAbilitySerializableTree.TreeNode _treeNode;
+        private readonly BattleAbilitySerializableTree.TreeNode _nodeData;
 
         public LogicTreeNodeDrawer(BattleAbilitySerializableTree treeData,
-            BattleAbilitySerializableTree.TreeNode treeNode)
+            BattleAbilitySerializableTree.TreeNode nodeData, LogicTreeNodeDrawer parent)
         {
             _serializableTree = treeData;
-            _treeNode = treeNode;
+            _nodeData = nodeData;
+            _parent = parent;
+            foreach (var idx in _nodeData.childIds)
+            {
+                if (_serializableTree.allNodes.TryGetValue(idx, out var node))
+                {
+                    LogicTreeNodeDrawer drawer = null;
+                    switch (node.eNodeType)
+                    {
+                        case ENodeType.Event:
+                            drawer = new LogicTreeEventNodeDrawer(_serializableTree, node);
+                            break;
+                        case ENodeType.Condition:
+                            drawer = new LogicTreeConditionNodeDrawer(_serializableTree, node, this);
+                            break;
+                        case ENodeType.Action:
+                            drawer = new LogicTreeActionNodeDrawer(_serializableTree, node, this);
+                            break;
+                        case ENodeType.Variable:
+                            drawer = new LogicTreeVariableNodeDrawer(_serializableTree, node, this);
+                            break;
+                    }
+                    _childrenDrawer.Add(drawer);
+                }
+            }
         }
 
-        public void InitTree()
-        {
-        }
-
-        private void treeButton(string btnText, float buttonWidth, Action action)
+        protected void treeButton(string btnText, float buttonWidth, Action action)
         {
             if (GUILayout.Button(btnText, GUILayout.Width(buttonWidth)))
             {
@@ -57,7 +71,7 @@ namespace BattleAbility.Editor
                 if (rect.Contains(Event.current.mousePosition) && Event.current.button == 1)
                 {
                     //点击当前Item创建添加节点页面
-                    AddLogicTreeNodeWindow.OpenWindow(_treeNode.eNodeType);
+                    AddLogicTreeNodeWindow.OpenWindow(_nodeData.eNodeType);
                 }
             }
 
@@ -78,7 +92,7 @@ namespace BattleAbility.Editor
             SirenixEditorGUI.EndListItem();
 
             EditorGUI.indentLevel++;
-            foreach (var child in _children)
+            foreach (var child in _childrenDrawer)
             {
                 child.Draw();
             }
