@@ -7,8 +7,8 @@ namespace BattleAbility.Editor
 {
     public class LogicTreeVariableNodeDrawer : LogicTreeNodeDrawer
     {
-        public LogicTreeVariableNodeDrawer(BattleAbilitySerializableTree treeData,
-            BattleAbilitySerializableTree.TreeNode nodeData, LogicTreeNodeDrawer parent) : base(treeData, nodeData,
+        public LogicTreeVariableNodeDrawer(LogicTreeDrawer treeDrawer,
+            BattleAbilitySerializableTree.TreeNode nodeData, LogicTreeNodeDrawer parent) : base(treeDrawer, nodeData,
             parent)
         {
         }
@@ -16,7 +16,7 @@ namespace BattleAbility.Editor
         protected override void drawSelf()
         {
             var text = "创建变量（后续要加事件部分参数预览）";
-           treeButton(text,120, LogicTreeVariableNodeWindow.OpenWindow);
+            treeButton(text, new Color(1, 0.5f, 0.1f), LogicTreeVariableNodeWindow.OpenWindow);
         }
     }
 

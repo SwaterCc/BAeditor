@@ -68,7 +68,9 @@ namespace BattleAbility.Editor
 
     public class BuffBaseConfig : BattleAbilityBaseConfig
     {
+        [BattleAbilityLabelTagEditor("Buff生命时长(-1为无限)", BattleAbilityLabelTagEditor.ELabeType.Long)]
         public long BuffLife;
+        [BattleAbilityLabelTagEditor("Buff添加规则", BattleAbilityLabelTagEditor.ELabeType.Enum)]
         public EBuffAddRule AddRule;
 
         public override EAbilityType GetAbilityType()
@@ -82,7 +84,7 @@ namespace BattleAbility.Editor
     /// </summary>
     public class BulletBaseConfig : BattleAbilityBaseConfig
     {
-        public new EAbilityType ConfigType => EAbilityType.Bullet;
+        [BattleAbilityLabelTagEditor("子弹类型", BattleAbilityLabelTagEditor.ELabeType.Enum)]
         public EBulletType bulletType;
 
         public override EAbilityType GetAbilityType()

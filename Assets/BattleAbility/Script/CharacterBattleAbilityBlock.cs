@@ -39,6 +39,6 @@ namespace BattleAbility
 
     public class CharacterBattleAbilityBlock<TBattleRTData> : BattleAbilityBlock where TBattleRTData : BattleRuntimeDataBase
     {
-        public new TBattleRTData RTData => base.BlockRTData == null ? null : base.BlockRTData as TBattleRTData;
+        public new TBattleRTData BlockRTData => base.BlockRTData == null ? null : base.BlockRTData as TBattleRTData;
     }
 }

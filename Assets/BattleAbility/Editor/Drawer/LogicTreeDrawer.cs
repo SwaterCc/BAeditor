@@ -13,18 +13,23 @@ namespace BattleAbility.Editor
     {
         public readonly BattleAbilitySerializableTree TreeData;
         private bool _logicTreeFoldout = true;
-        private readonly LogicTreeNodeDrawer _rootDrawer;
+        private LogicTreeNodeDrawer _rootDrawer;
         private readonly LogicStageDrawer _parentDrawer;
-        
+
         public LogicTreeDrawer(LogicStageDrawer parentDrawer, BattleAbilitySerializableTree treeData)
         {
             TreeData = treeData;
             _parentDrawer = parentDrawer;
 
-            if (treeData.rootIdx > 0 && treeData.allNodes.Count > 0) 
+            if (treeData.rootKey >= 0 && treeData.allNodes.Count > 0)
             {
-                _rootDrawer = new LogicTreeEventNodeDrawer(treeData, treeData.allNodes[treeData.rootIdx]);
+                SetRootDrawer(new LogicTreeEventNodeDrawer(this, treeData.allNodes[treeData.rootKey]));
             }
+        }
+
+        public void SetRootDrawer(LogicTreeNodeDrawer rootDrawer)
+        {
+            _rootDrawer = rootDrawer;
         }
 
         /// <summary>
@@ -34,8 +39,7 @@ namespace BattleAbility.Editor
         {
             SirenixEditorGUI.HorizontalLineSeparator();
 
-
-            var mainBox = SirenixEditorGUI.BeginBox();
+            SirenixEditorGUI.BeginBox();
             SirenixEditorGUI.BeginBoxHeader();
             _logicTreeFoldout = SirenixEditorGUI.Foldout(_logicTreeFoldout, "(事件类型预览)");
             if (SirenixEditorGUI.Button("删除", ButtonSizes.Medium))
@@ -55,9 +59,10 @@ namespace BattleAbility.Editor
                         var rect = GUIHelper.GetCurrentLayoutRect();
                         if (rect.Contains(Event.current.mousePosition) && Event.current.button == 1)
                         {
-                            AddLogicTreeNodeWindow.OpenWindow(ENodeType.Event);
+                            LogicTreeNodeSelectionWindow.OpenWindow(this, null);
                         }
                     }
+
                     EditorGUILayout.LabelField("（右键点击这里创建事件节点）");
                     SirenixEditorGUI.EndListItem();
                 }

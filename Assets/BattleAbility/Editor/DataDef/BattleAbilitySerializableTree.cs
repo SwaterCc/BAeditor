@@ -11,12 +11,13 @@ namespace BattleAbility.Editor
         /// <summary>
         /// root节点在allNodes中的下标
         /// </summary>
-        public int rootIdx;
+        public int rootKey = -1;
         public Dictionary<int, TreeNode> allNodes = new();
         public Dictionary<int, EditorBattleTempValue> allLocalValue = new();
         
         public class TreeNode
         {
+            public int nodeId;
             public int parentId;
             public List<int> childIds = new();
             public ENodeType eNodeType;
@@ -31,5 +32,10 @@ namespace BattleAbility.Editor
         public string valueType;
         public string value;
         public ELocalValueRange enableRange;
+    }
+
+    public class LogicTreeNodeDataBase
+    {
+        
     }
 }

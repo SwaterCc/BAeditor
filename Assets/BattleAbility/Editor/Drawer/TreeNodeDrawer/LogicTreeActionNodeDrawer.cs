@@ -7,8 +7,8 @@ namespace BattleAbility.Editor
 {
     public class LogicTreeActionNodeDrawer : LogicTreeNodeDrawer
     {
-        public LogicTreeActionNodeDrawer(BattleAbilitySerializableTree treeData,
-            BattleAbilitySerializableTree.TreeNode treeNode, LogicTreeNodeDrawer parent) : base(treeData, treeNode,
+        public LogicTreeActionNodeDrawer(LogicTreeDrawer treeDrawer,
+            BattleAbilitySerializableTree.TreeNode treeNode, LogicTreeNodeDrawer parent) : base(treeDrawer, treeNode,
             parent)
         {
         }
@@ -16,11 +16,7 @@ namespace BattleAbility.Editor
         protected override void drawSelf()
         {
             var text = "Action节点（后续要加事件部分参数预览）";
-            if (GUILayout.Button(text, GUILayout.Width(150)))
-            {
-                //打开事件配置页面
-                LogicTreeActionNodeWindow.OpenWindow();
-            }
+            treeButton(text, Color.red, LogicTreeActionNodeWindow.OpenWindow);
         }
     }
 

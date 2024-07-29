@@ -7,8 +7,8 @@ namespace BattleAbility.Editor
 {
     public class LogicTreeConditionNodeDrawer : LogicTreeNodeDrawer
     {
-        public LogicTreeConditionNodeDrawer(BattleAbilitySerializableTree treeData,
-            BattleAbilitySerializableTree.TreeNode treeNode, LogicTreeNodeDrawer parent) : base(treeData, treeNode,
+        public LogicTreeConditionNodeDrawer(LogicTreeDrawer treeDrawer,
+            BattleAbilitySerializableTree.TreeNode treeNode, LogicTreeNodeDrawer parent) : base(treeDrawer, treeNode,
             parent)
         {
         }
@@ -16,11 +16,7 @@ namespace BattleAbility.Editor
         protected override void drawSelf()
         {
             var text = "条件按钮（后续要加事件部分参数预览）";
-            if (GUILayout.Button(text, GUILayout.Width(150)))
-            {
-                //打开事件配置页面
-                LogicTreeConditionNodeWindow.OpenWindow();
-            }
+            treeButton(text, Color.green, LogicTreeConditionNodeWindow.OpenWindow);
         }
 
         public class LogicTreeConditionNodeWindow : OdinEditorWindow
