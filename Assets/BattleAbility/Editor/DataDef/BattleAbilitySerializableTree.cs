@@ -11,7 +11,7 @@ namespace BattleAbility.Editor
         /// <summary>
         /// root节点在allNodes中的下标
         /// </summary>
-        public int rootKey = -1;
+        public int rootKey;
         public Dictionary<int, TreeNode> allNodes = new();
         public Dictionary<int, EditorBattleTempValue> allLocalValue = new();
         
