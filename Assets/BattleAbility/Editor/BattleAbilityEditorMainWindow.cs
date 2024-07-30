@@ -54,7 +54,7 @@ namespace BattleAbility.Editor
             ;
         }
 
-        private void AddTreeItem(string rootMenu, BattleAbilityConfigItemList data)
+        private void AddMenuItem(string rootMenu, BattleAbilityConfigItemList data)
         {
             if (_treeInstance == null)
             {
@@ -110,9 +110,9 @@ namespace BattleAbility.Editor
                 };
             }
 
-            AddTreeItem(MENU_SKILL, _skills);
-            AddTreeItem(MENU_BUFF, _buffs);
-            AddTreeItem(MENU_BULLET, _bullets);
+            AddMenuItem(MENU_SKILL, _skills);
+            AddMenuItem(MENU_BUFF, _buffs);
+            AddMenuItem(MENU_BULLET, _bullets);
 
             return _treeInstance;
         }

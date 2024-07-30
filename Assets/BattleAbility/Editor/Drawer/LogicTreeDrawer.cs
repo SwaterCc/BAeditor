@@ -1,6 +1,8 @@
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
+using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using SirenixEditorGUI = Sirenix.Utilities.Editor.SirenixEditorGUI;
 
@@ -13,23 +15,32 @@ namespace BattleAbility.Editor
     {
         public readonly BattleAbilitySerializableTree TreeData;
         private bool _logicTreeFoldout = true;
-        private LogicTreeNodeDrawer _rootDrawer;
+      
         private readonly LogicStageDrawer _parentDrawer;
+        private LogicTreeView _treeView;
+        [SerializeField]
+        private TreeViewState _treeViewState;
 
         public LogicTreeDrawer(LogicStageDrawer parentDrawer, BattleAbilitySerializableTree treeData)
         {
             TreeData = treeData;
             _parentDrawer = parentDrawer;
-
+            _treeViewState = new TreeViewState();
+           
             if (treeData.rootKey >= 0 && treeData.allNodes.Count > 0)
             {
-                SetRootDrawer(new LogicTreeEventNodeDrawer(this, treeData.allNodes[treeData.rootKey]));
+                CreateLogicTreeView(treeData.allNodes[treeData.rootKey]);
             }
         }
 
-        public void SetRootDrawer(LogicTreeNodeDrawer rootDrawer)
+        public void CreateLogicTreeView(BattleAbilitySerializableTree.TreeNode eventNode)
         {
-            _rootDrawer = rootDrawer;
+            _treeView = new LogicTreeView(_treeViewState, TreeData);
+        }
+
+        private float GetHeight()
+        {
+            return 200f;
         }
 
         /// <summary>
@@ -40,7 +51,9 @@ namespace BattleAbility.Editor
             SirenixEditorGUI.HorizontalLineSeparator();
 
             SirenixEditorGUI.BeginBox();
+            var mainRect = GUIHelper.GetCurrentLayoutRect();
             SirenixEditorGUI.BeginBoxHeader();
+            var headHeight = GUIHelper.GetCurrentLayoutRect().height;
             _logicTreeFoldout = SirenixEditorGUI.Foldout(_logicTreeFoldout, "(事件类型预览)");
             if (SirenixEditorGUI.Button("删除", ButtonSizes.Medium))
             {
@@ -48,10 +61,11 @@ namespace BattleAbility.Editor
             }
 
             SirenixEditorGUI.EndBoxHeader();
-            SirenixEditorGUI.BeginVerticalList();
+            
+            GUILayout.BeginVertical();
             if (_logicTreeFoldout)
             {
-                if (_rootDrawer == null)
+                if (_treeView == null)
                 {
                     SirenixEditorGUI.BeginListItem();
                     if (Event.current.type == EventType.MouseDown)
@@ -59,7 +73,11 @@ namespace BattleAbility.Editor
                         var rect = GUIHelper.GetCurrentLayoutRect();
                         if (rect.Contains(Event.current.mousePosition) && Event.current.button == 1)
                         {
-                            LogicTreeNodeSelectionWindow.OpenWindow(this, null);
+                            var newEventNode = BattleAbilitySerializableTree.GetNode(TreeData, ENodeType.Event);
+                            newEventNode.depth = 0;
+                            newEventNode.parentKey = -1;
+                            TreeData.rootKey = newEventNode.nodeId;
+                            CreateLogicTreeView(newEventNode);
                         }
                     }
 
@@ -68,11 +86,14 @@ namespace BattleAbility.Editor
                 }
                 else
                 {
-                    _rootDrawer.Draw();
+                    GUILayout.Box("asdasd", GUILayout.Height(GetHeight())); //无所谓这个盒子，只是占位用的
+                    var boxRect = GUIHelper.GetCurrentLayoutRect();
+                    var treeRect = new Rect(boxRect.x, boxRect.y + headHeight - 23f, mainRect.width - 8, GetHeight());
+                    _treeView.OnGUI(treeRect);
                 }
             }
 
-            SirenixEditorGUI.EndVerticalList();
+            GUILayout.EndVertical();
             SirenixEditorGUI.EndBox();
         }
     }
