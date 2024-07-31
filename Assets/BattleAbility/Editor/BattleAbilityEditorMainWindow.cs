@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using EditorData.BattleEditorData;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -104,9 +103,9 @@ namespace BattleAbility.Editor
             {
                 _treeInstance = new OdinMenuTree(true)
                 {
-                    { MENU_SKILL, null, EditorIcons.Clouds },
-                    { MENU_BUFF, null, EditorIcons.Clouds },
-                    { MENU_BULLET, null, EditorIcons.Clouds }
+                    { MENU_SKILL, new BattleAbilityRootView(_skills), EditorIcons.Clouds },
+                    { MENU_BUFF, new BattleAbilityRootView(_buffs), EditorIcons.Clouds },
+                    { MENU_BULLET, new BattleAbilityRootView(_bullets), EditorIcons.Clouds }
                 };
             }
 
@@ -132,13 +131,9 @@ namespace BattleAbility.Editor
 
                 if (SirenixEditorGUI.ToolbarButton(new GUIContent("Create Item")))
                 {
-                }
-
-                if (SirenixEditorGUI.ToolbarButton(new GUIContent("Create Character")))
-                {
+                    
                 }
             }
-            EditorGUILayout.LabelField($"mousePOs {Event.current.mousePosition}");
             SirenixEditorGUI.EndHorizontalToolbar();
         }
     }

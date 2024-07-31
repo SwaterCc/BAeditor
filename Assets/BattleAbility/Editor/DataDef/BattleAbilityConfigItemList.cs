@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using BattleAbility;
 using Sirenix.OdinInspector;
-using UnityEditor;
 using UnityEngine;
 
-namespace EditorData.BattleEditorData
+namespace BattleAbility.Editor
 {
     [Serializable]
     public class BattleAbilityConfigItem

@@ -89,55 +89,7 @@ MonoBehaviour:
         Assembly-CSharp-Editor]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 5|BattleAbility.Editor.BattleAbilitySerializableTree, Assembly-CSharp-Editor
-    - Name: treeId
-      Entry: 3
       Data: 0
-    - Name: rootIdx
-      Entry: 3
-      Data: -1
-    - Name: allNodes
-      Entry: 7
-      Data: 6|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[BattleAbility.Editor.BattleAbilitySerializableTree+TreeNode,
-        Assembly-CSharp-Editor]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 7|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: allLocalValue
-      Entry: 7
-      Data: 8|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[BattleAbility.Editor.EditorBattleTempValue,
-        Assembly-CSharp-Editor]], mscorlib
-    - Name: comparer
-      Entry: 9
-      Data: 7
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: 
       Entry: 13
       Data: 
