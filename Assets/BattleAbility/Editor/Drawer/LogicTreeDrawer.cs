@@ -40,7 +40,8 @@ namespace BattleAbility.Editor
 
         private float GetHeight()
         {
-            return 200f;
+            ///36是树的行高，2是树节点的间隔
+            return TreeData.allNodes.Count * (36 + 1) + 1;
         }
 
         /// <summary>
@@ -71,8 +72,9 @@ namespace BattleAbility.Editor
                     if (Event.current.type == EventType.MouseDown)
                     {
                         var rect = GUIHelper.GetCurrentLayoutRect();
-                        if (rect.Contains(Event.current.mousePosition) && Event.current.button == 1)
+                        if (rect.Contains(Event.current.mousePosition))
                         {
+                            Event.current.Use();
                             var newEventNode = BattleAbilitySerializableTree.GetNode(TreeData, ENodeType.Event);
                             newEventNode.depth = 0;
                             newEventNode.parentKey = -1;
@@ -81,7 +83,7 @@ namespace BattleAbility.Editor
                         }
                     }
 
-                    EditorGUILayout.LabelField("（右键点击这里创建事件节点）");
+                    EditorGUILayout.LabelField("（点击这里创建事件节点）");
                     SirenixEditorGUI.EndListItem();
                 }
                 else
