@@ -3,11 +3,11 @@ using System;
 namespace BattleAbility.Editor.BattleAbilityCustomAttribute
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-    public class BattleAbilityDrawerCollectionEditor : System.Attribute
+    public class BAEditorCollectionItemInitTag : System.Attribute
     {
         public string GetInitValueFuncName;
        
-        public BattleAbilityDrawerCollectionEditor(string funcName)
+        public BAEditorCollectionItemInitTag(string funcName)
         {
             GetInitValueFuncName = funcName;
         }

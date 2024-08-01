@@ -53,12 +53,12 @@ namespace BattleAbility.Editor
         public static TreeNode GetNode(BattleAbilitySerializableTree treeData, ENodeType eNodeType)
         {
             var newEventNode = new TreeNode();
-            var hashId = BattleAbilitEditorHelper.GenerateTimeBasedHashId32();
+            var hashId = CommonUtility.GenerateTimeBasedHashId32();
             int maxCount = 100;
             int tryCount = 0;
             while (treeData.allNodes.ContainsKey(hashId) && ++tryCount < maxCount)
             {
-                hashId = BattleAbilitEditorHelper.GenerateTimeBasedHashId32();
+                hashId = CommonUtility.GenerateTimeBasedHashId32();
             }
 
             if (tryCount == maxCount)
@@ -84,12 +84,12 @@ namespace BattleAbility.Editor
         public static EditorBattleVariable GetVariable(BattleAbilitySerializableTree treeData)
         {
             var newVariable = new EditorBattleVariable();
-            var hashId = BattleAbilitEditorHelper.GenerateTimeBasedHashId32();
+            var hashId = CommonUtility.GenerateTimeBasedHashId32();
             int maxCount = 100;
             int tryCount = 0;
             while (treeData.allVariables.ContainsKey(hashId) && ++tryCount < maxCount)
             {
-                hashId = BattleAbilitEditorHelper.GenerateTimeBasedHashId32();
+                hashId = CommonUtility.GenerateTimeBasedHashId32();
             }
 
             if (tryCount == maxCount)

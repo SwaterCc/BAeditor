@@ -9,14 +9,14 @@ namespace BattleAbility.Editor
     /// </summary>
     public abstract class BattleAbilityBaseConfig
     {
-        [BattleAbilityLabelTagEditor("ID(如果ID小于零视为没有初始化)", BattleAbilityLabelTagEditor.ELabeType.Int32)]
+        [BAEditorShowLabelTag("ID(如果ID小于零视为没有初始化)", BAEditorShowLabelTag.ELabeType.Int32)]
         public int ConfigId = -1;
 
-        [BattleAbilityLabelTagEditor("能力名")] public string Name = "NoName";
+        [BAEditorShowLabelTag("能力名")] public string Name = "NoName";
 
-        [BattleAbilityLabelTagEditor("能力描述")] public string Desc = "NoInit";
+        [BAEditorShowLabelTag("能力描述")] public string Desc = "NoInit";
 
-        [BattleAbilityLabelTagEditor("Icon路径")]
+        [BAEditorShowLabelTag("Icon路径")]
         public string IconPath = "";
 
         //预留标签
@@ -35,24 +35,24 @@ namespace BattleAbility.Editor
     {
         public class SkillCostInfo
         {
-            [BattleAbilityLabelTagEditor("资源消耗类型", BattleAbilityLabelTagEditor.ELabeType.Enum)]
+            [BAEditorShowLabelTag("资源消耗类型", BAEditorShowLabelTag.ELabeType.Enum)]
             public EBattleResourceType CostType;
 
-            [BattleAbilityLabelTagEditor("消耗资源的ID", BattleAbilityLabelTagEditor.ELabeType.Int32)]
+            [BAEditorShowLabelTag("消耗资源的ID", BAEditorShowLabelTag.ELabeType.Int32)]
             public int CostResourceId;
 
-            [BattleAbilityLabelTagEditor("消耗资源的数量", BattleAbilityLabelTagEditor.ELabeType.Int32)]
+            [BAEditorShowLabelTag("消耗资源的数量", BAEditorShowLabelTag.ELabeType.Int32)]
             public int CostValue;
         }
 
-        [BattleAbilityLabelTagEditor("技能类型", BattleAbilityLabelTagEditor.ELabeType.Enum)]
+        [BAEditorShowLabelTag("技能类型", BAEditorShowLabelTag.ELabeType.Enum)]
         public ESkillType SkillType;
 
-        [BattleAbilityLabelTagEditor("技能CD", BattleAbilityLabelTagEditor.ELabeType.Long)]
+        [BAEditorShowLabelTag("技能CD", BAEditorShowLabelTag.ELabeType.Long)]
         public long SkillCd;
 
-        [BattleAbilityLabelTagEditor("技能消耗-(消耗资源,消耗数量)", BattleAbilityLabelTagEditor.ELabeType.List)]
-        [BattleAbilityDrawerCollectionEditor("GetNewSkillCostInfo")]
+        [BAEditorShowLabelTag("技能消耗-(消耗资源,消耗数量)", BAEditorShowLabelTag.ELabeType.List)]
+        [BAEditorCollectionItemInitTag("GetNewSkillCostInfo")]
         public List<SkillCostInfo> CostResourceTypeWithValue = new();
 
         public override EAbilityType GetAbilityType()
@@ -68,9 +68,9 @@ namespace BattleAbility.Editor
 
     public class BuffBaseConfig : BattleAbilityBaseConfig
     {
-        [BattleAbilityLabelTagEditor("Buff生命时长(-1为无限)", BattleAbilityLabelTagEditor.ELabeType.Long)]
+        [BAEditorShowLabelTag("Buff生命时长(-1为无限)", BAEditorShowLabelTag.ELabeType.Long)]
         public long BuffLife;
-        [BattleAbilityLabelTagEditor("Buff添加规则", BattleAbilityLabelTagEditor.ELabeType.Enum)]
+        [BAEditorShowLabelTag("Buff添加规则", BAEditorShowLabelTag.ELabeType.Enum)]
         public EBuffAddRule AddRule;
 
         public override EAbilityType GetAbilityType()
@@ -84,7 +84,7 @@ namespace BattleAbility.Editor
     /// </summary>
     public class BulletBaseConfig : BattleAbilityBaseConfig
     {
-        [BattleAbilityLabelTagEditor("子弹类型", BattleAbilityLabelTagEditor.ELabeType.Enum)]
+        [BAEditorShowLabelTag("子弹类型", BAEditorShowLabelTag.ELabeType.Enum)]
         public EBulletType bulletType;
 
         public override EAbilityType GetAbilityType()

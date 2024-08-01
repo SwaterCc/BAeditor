@@ -50,7 +50,7 @@ namespace BattleAbility.Editor
                     treeDrawer.BuildTree();
                     GUILayout.Space(6.18f);
                 }
-                if(SirenixEditorGUI.Button("新建节点树",ButtonSizes.Medium))
+                if(SirenixEditorGUI.Button("新建事件",ButtonSizes.Medium))
                 {
                     var newTreeData = new BattleAbilitySerializableTree();
                     StageData.SerializableTrees.Add(newTreeData);

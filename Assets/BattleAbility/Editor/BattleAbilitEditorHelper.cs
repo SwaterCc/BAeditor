@@ -15,22 +15,22 @@ namespace BattleAbility.Editor
     public static class BattleAbilitEditorHelper
     {
         private static void checkFieldType(FieldInfo fieldInfo, Type checkType,
-            BattleAbilityLabelTagEditor.ELabeType labeType,
+            BAEditorShowLabelTag.ELabeType labeType,
             bool showMsg = true)
         {
             if (fieldInfo.FieldType != checkType && showMsg)
                 Debug.LogWarning($"字段的类型和Label设置的类型不一致，字段类型为{fieldInfo.FieldType},Label类型为{labeType}");
         }
 
-        public static (string, BattleAbilityLabelTagEditor.ELabeType) GetFiledLabelAndType(FieldInfo fieldInfo)
+        public static (string, BAEditorShowLabelTag.ELabeType) GetFiledLabelAndType(FieldInfo fieldInfo)
         {
             string label = "NoInit";
-            BattleAbilityLabelTagEditor.ELabeType labeType = BattleAbilityLabelTagEditor.ELabeType.None;
+            BAEditorShowLabelTag.ELabeType labeType = BAEditorShowLabelTag.ELabeType.None;
             foreach (var attr in fieldInfo.GetCustomAttributes())
             {
-                if (attr.GetType() == typeof(BattleAbilityLabelTagEditor))
+                if (attr.GetType() == typeof(BAEditorShowLabelTag))
                 {
-                    if (attr is not BattleAbilityLabelTagEditor labelTag) continue;
+                    if (attr is not BAEditorShowLabelTag labelTag) continue;
                     label = labelTag.LabelText;
                     labeType = labelTag.LabeType;
                     break;
@@ -83,24 +83,24 @@ namespace BattleAbility.Editor
         /// <param name="label"></param>
         /// <param name="labeType"></param>
         public static Object DrawLabelAndUpdateValueByAttr(Object classObj, FieldInfo fieldInfo, string label,
-            BattleAbilityLabelTagEditor.ELabeType labeType)
+            BAEditorShowLabelTag.ELabeType labeType)
         {
             Object afterUpdateValue = null;
             switch (labeType)
             {
-                case BattleAbilityLabelTagEditor.ELabeType.Int32:
+                case BAEditorShowLabelTag.ELabeType.Int32:
                     checkFieldType(fieldInfo, typeof(int), labeType);
                     afterUpdateValue = SirenixEditorFields.IntField(label, (int)fieldInfo.GetValue(classObj));
                     break;
-                case BattleAbilityLabelTagEditor.ELabeType.Long:
+                case BAEditorShowLabelTag.ELabeType.Long:
                     checkFieldType(fieldInfo, typeof(long), labeType);
                     afterUpdateValue = SirenixEditorFields.LongField(label, (long)fieldInfo.GetValue(classObj));
                     break;
-                case BattleAbilityLabelTagEditor.ELabeType.String:
+                case BAEditorShowLabelTag.ELabeType.String:
                     string text = fieldInfo.GetValue(classObj) == null ? "" : fieldInfo.GetValue(classObj).ToString();
                     afterUpdateValue = SirenixEditorFields.TextField(label, text);
                     break;
-                case BattleAbilityLabelTagEditor.ELabeType.Enum:
+                case BAEditorShowLabelTag.ELabeType.Enum:
                     afterUpdateValue = SirenixEditorFields.EnumDropdown(label, (Enum)fieldInfo.GetValue(classObj));
                     break;
             }
@@ -197,28 +197,6 @@ namespace BattleAbility.Editor
             }
 
             SirenixEditorGUI.EndBox();
-        }
-        
-        /// <summary>
-        /// 根据时间使用MD5进行哈希计算并返回一个32位整型值
-        /// </summary>
-        /// <returns></returns>
-        public static int GenerateTimeBasedHashId32()
-        {
-            // 获取当前时间，并转化为字符串格式
-            string currentTime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-        
-            // 使用MD5进行哈希计算并返回一个32位整型值
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(currentTime);
-                byte[] hashBytes = md5.ComputeHash(bytes);
-
-                // 将前4个字节转换为32位整型值
-                int hashValue = BitConverter.ToInt32(hashBytes, 0);
-                hashValue = Math.Abs(hashValue);
-                return hashValue;
-            }
         }
     }
 }

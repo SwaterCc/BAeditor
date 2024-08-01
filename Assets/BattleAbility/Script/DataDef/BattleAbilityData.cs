@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using BattleAbility.Editor;
 using BattleAbility.Editor.BattleAbilityCustomAttribute;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace BattleAbility.Editor
+namespace BattleAbility
 {
     [CreateAssetMenu(fileName = "BattleAbilityData", menuName = "战斗编辑器/BattleAbilityData")]
     public class BattleAbilityData : SerializedScriptableObject
@@ -14,18 +15,18 @@ namespace BattleAbility.Editor
 
     public class BattleAbilityLogicStage
     {
-        [BattleAbilityLabelTagEditor("阶段ID", BattleAbilityLabelTagEditor.ELabeType.Int32)]
+        [BAEditorShowLabelTag("阶段ID", BAEditorShowLabelTag.ELabeType.Int32)]
         public int stageId;
 
-        [BattleAbilityLabelTagEditor("阶段标志", BattleAbilityLabelTagEditor.ELabeType.Enum)]
+        [BAEditorShowLabelTag("阶段标志", BAEditorShowLabelTag.ELabeType.Enum)]
         public EStageTag stageTag;
 
-        [BattleAbilityLabelTagEditor("阶段动画路径")]
+        [BAEditorShowLabelTag("阶段动画路径")]
         public string animPath;
 
-        [BattleAbilityLabelTagEditor("阶段音效路径")]
+        [BAEditorShowLabelTag("阶段音效路径")]
         public string audioPath;
-
+        
         public List<BattleAbilitySerializableTree> SerializableTrees = new();
     }
 }

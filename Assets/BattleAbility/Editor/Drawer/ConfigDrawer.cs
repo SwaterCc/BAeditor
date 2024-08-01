@@ -53,12 +53,12 @@ namespace BattleAbility.Editor
         {
             bool hasLabelTag = false;
             string label = "";
-            BattleAbilityLabelTagEditor.ELabeType labeType = BattleAbilityLabelTagEditor.ELabeType.None;
+            BAEditorShowLabelTag.ELabeType labeType = BAEditorShowLabelTag.ELabeType.None;
             foreach (var attr in fieldInfo.GetCustomAttributes())
             {
-                if (attr.GetType() == typeof(BattleAbilityLabelTagEditor))
+                if (attr.GetType() == typeof(BAEditorShowLabelTag))
                 {
-                    var labelTag = attr as BattleAbilityLabelTagEditor;
+                    var labelTag = attr as BAEditorShowLabelTag;
                     hasLabelTag = true;
                     if (labelTag == null) continue;
                     label = labelTag.LabelText;
@@ -77,7 +77,7 @@ namespace BattleAbility.Editor
             SirenixEditorGUI.EndListItem();
 
             SirenixEditorGUI.BeginListItem();
-            if (labeType == BattleAbilityLabelTagEditor.ELabeType.List)
+            if (labeType == BAEditorShowLabelTag.ELabeType.List)
             {
                 if (_config.GetAbilityType() == EAbilityType.Skill)
                 {
@@ -85,9 +85,9 @@ namespace BattleAbility.Editor
 
                     foreach (var attr in fieldInfo.GetCustomAttributes())
                     {
-                        if (attr.GetType() == typeof(BattleAbilityDrawerCollectionEditor))
+                        if (attr.GetType() == typeof(BAEditorCollectionItemInitTag))
                         {
-                            var funcName = (attr as BattleAbilityDrawerCollectionEditor).GetInitValueFuncName;
+                            var funcName = (attr as BAEditorCollectionItemInitTag).GetInitValueFuncName;
                             var methodInfo = skillBase.GetType().GetMethod(funcName);
                             if (methodInfo != null)
                             {
@@ -101,7 +101,7 @@ namespace BattleAbility.Editor
                     }
                 }
             }
-            else if (labeType == BattleAbilityLabelTagEditor.ELabeType.Dict)
+            else if (labeType == BAEditorShowLabelTag.ELabeType.Dict)
             {
                 EditorGUILayout.LabelField("还没实现哦");
             }

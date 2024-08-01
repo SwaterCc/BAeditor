@@ -3,7 +3,7 @@ using System;
 namespace BattleAbility.Editor.BattleAbilityCustomAttribute
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public class BattleAbilityLabelTagEditor : System.Attribute
+    public class BAEditorShowLabelTag : System.Attribute
     {
         public enum ELabeType
         {
@@ -22,7 +22,7 @@ namespace BattleAbility.Editor.BattleAbilityCustomAttribute
         public string LabelText;
         public ELabeType LabeType;
 
-        public BattleAbilityLabelTagEditor(string labelText, ELabeType labeType = ELabeType.String)
+        public BAEditorShowLabelTag(string labelText, ELabeType labeType = ELabeType.String)
         {
             LabelText = labelText;
             LabeType = labeType;
