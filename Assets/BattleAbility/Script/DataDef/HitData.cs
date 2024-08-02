@@ -141,6 +141,6 @@ namespace BattleAbility
         /// <summary>
         /// 锁定单个目标
         /// </summary>
-        public int SingleTarget;
+        public int SingleTargetId;
     }
 }

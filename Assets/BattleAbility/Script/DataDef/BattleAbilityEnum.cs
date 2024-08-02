@@ -104,7 +104,7 @@ namespace BattleAbility
     public enum EHitType
     {
         Aoe,
-        Single
+        LockTarget
     }
     
     /// <summary>

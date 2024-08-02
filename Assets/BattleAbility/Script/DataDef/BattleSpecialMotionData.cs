@@ -1,7 +1,7 @@
 namespace BattleAbility
 {
     /// <summary>
-    /// 技能期间的位移
+    /// 通用位移组件，可以移动指定对象
     /// </summary>
     public class BattleSpecialMotionData
     {
@@ -14,8 +14,6 @@ namespace BattleAbility
         public long Duration;
         
         public long EndTime;
-        
-        
     }
     
     
