@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using BattleAbility.Editor;
 
 namespace BattleAbility
 {
@@ -10,16 +12,102 @@ namespace BattleAbility
     {
         public class AbilityStage
         {
-            private List<BattleAbilityLogicTreeNode> _rootList = new();
-            private BattleAbilityBlock _block;
             public int StageId;
-            public BattleRuntimeDataBase StageData;
             
-            public AbilityStage(BattleAbilityBlock block)
+            private BattleAbilityBlock _block;
+            
+            /// <summary>
+            /// 事件树的root节点列表
+            /// </summary>
+            private List<TreeNodeBase> _rootList = new();
+
+            private BattleAbilityLogicStage _stageData;
+            
+            public AbilityStage(BattleAbilityBlock block, BattleAbilityLogicStage stageData)
             {
                 _block = block;
+                _stageData = stageData;
+
+                foreach (var treeData in stageData.SerializableTrees)
+                {
+                    var root = new EventTreeNode(treeData.allNodes[treeData.rootKey]);
+                    _rootList.Add(root);
+                    buildTree(root, treeData);
+                }
+            }
+
+            /// <summary>
+            /// 构建当树，并返回root节点
+            /// </summary>
+            private void buildTree(TreeNodeBase parent, BattleAbilitySerializableTree treeData)
+            {
+                var childKeys = parent.NodeData.childKeys;
+                foreach (var key in childKeys)
+                {
+                    var childNodeData = treeData.allNodes[key];
+                    TreeNodeBase child = null;
+                    switch (childNodeData.eNodeType)
+                    {
+                        case ENodeType.Event:
+                            child = new EventTreeNode(childNodeData);
+                            break;
+                        case ENodeType.Condition:
+                            child = new ConditionTreeNode(childNodeData);
+                            break;
+                        case ENodeType.Action:
+                            child = new ActionTreeNode(childNodeData);
+                            break;
+                        case ENodeType.Variable:
+                            child = new VariableTreeNode(childNodeData);
+                            break;
+                        case ENodeType.Foreach:
+                            child = new ForeachTreeNode(childNodeData);
+                            break;
+                    }
+                    parent.AddChild(child);
+                    buildTree(child, treeData);
+                }
+            }
+            
+            //生命周期
+            
+            /// <summary>
+            /// 阶段开始
+            /// </summary>
+            public void OnStart()
+            {
+                //注册事件
+                foreach (var node in _rootList)
+                {
+                    node.Run();
+                }
                 
+                //计数器更新
+                ++(_block._state.StageRunningCount);
+                _block._state.AddSpecialStageCount(StageId);
                 
+                //初始化完毕后设置状态为Running
+                _block._state.State = EBattleAbilityState.StageRunning;
+                
+                _block._state.OnStartFinish?.Invoke();
+            }
+
+            /// <summary>
+            /// 阶段更新
+            /// </summary>
+            public void OnTick()
+            {
+               _block._state.OnTickFinish?.Invoke();
+            }
+            
+            /// <summary>
+            /// 阶段结束
+            /// </summary>
+            public void OnEnd()
+            {
+                _block._state.State = EBattleAbilityState.StageEnd;
+                
+                _block._state.OnEndFinish?.Invoke();
             }
         }
     }
