@@ -14,7 +14,6 @@ namespace BattleAbility.Editor
         {
             var window = GetWindow<LogicTreeEventNodeWindow>("Event节点配置");
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(400, 600);
-            
         }
         
         protected override void OnEnable()

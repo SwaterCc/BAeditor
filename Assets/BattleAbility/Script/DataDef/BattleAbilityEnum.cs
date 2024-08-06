@@ -12,6 +12,20 @@ namespace BattleAbility
     }
 
     /// <summary>
+    /// 树节点参数类型枚举
+    /// </summary>
+    public enum ETreeNodeParamType
+    {
+        Int,
+        Long,
+        Bool,
+        Float,
+        String,
+        Func,
+        Custom,
+    }
+    
+    /// <summary>
     /// 标签系统是否要做统一
     /// </summary>
     public enum EStageTag
@@ -63,28 +77,33 @@ namespace BattleAbility
         /// 未初始化
         /// </summary>
         UnInit,
+
         /// <summary>
         /// 准备就绪还没调用RUN
         /// </summary>
         Ready,
+
         /// <summary>
         /// 阶段开始
         /// </summary>
         StageStart,
+
         /// <summary>
         /// 阶段运行中
         /// </summary>
         StageRunning,
+
         /// <summary>
         /// 阶段结束
         /// </summary>
         StageEnd,
+
         /// <summary>
         /// 能力完成运行
         /// </summary>
         LogicEnd,
     }
-    
+
     /// <summary>
     /// 技能编辑器中配置的临时变量生效范围
     /// </summary>
@@ -127,7 +146,7 @@ namespace BattleAbility
         /// 创建变量
         /// </summary>
         Variable,
-        
+
         /// <summary>
         /// 遍历
         /// </summary>
@@ -179,7 +198,7 @@ namespace BattleAbility
     /// <summary>
     /// 战斗事件节点的枚举类型
     /// </summary>
-    public enum EBattleEventNodeType
+    public enum EBattleEventType
     {
         /// <summary>
         /// 当前阶段开始
@@ -195,17 +214,17 @@ namespace BattleAbility
         /// 指定打击点命中
         /// </summary>
         Hit,
-        
+
         /// <summary>
         /// 位移开始
         /// </summary>
         SpecialMotionBegin,
-        
+
         /// <summary>
         /// 位移结束
         /// </summary>
         SpecialMotionEnd,
-        
+
         /// <summary>
         /// 定时器
         /// </summary>
@@ -217,6 +236,24 @@ namespace BattleAbility
     /// </summary>
     public enum ECompareType
     {
-        
+    }
+
+    public enum EConditionType
+    {
+        If,
+        IfElse,
+        Else
+    }
+
+    public enum EVariableOperationType
+    {
+        /// <summary>
+        /// 创建变量
+        /// </summary>
+        Create,
+        /// <summary>
+        /// 修改变量
+        /// </summary>
+        Change,
     }
 }

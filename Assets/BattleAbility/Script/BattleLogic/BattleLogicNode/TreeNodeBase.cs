@@ -10,12 +10,13 @@ namespace BattleAbility
     {
         protected int _treeNodeId;
         protected ENodeType _curNodeType;
-        
+        protected BattleAbilityBlock _block;
+
         /// <summary>
         /// 父节点
         /// </summary>
         protected TreeNodeBase _parent;
-        
+
         /// <summary>
         /// 记录子节点，有序的，所以使用List
         /// </summary>
@@ -24,24 +25,43 @@ namespace BattleAbility
         /// <summary>
         /// 树节点数据
         /// </summary>
-        public BattleAbilitySerializableTree.TreeNode NodeData { get; }
+        public BattleAbilitySerializableTree.TreeNode TreeNode { get; }
+
+        protected NodeDataBase _nodeData;
 
         public bool TryGetParent(out TreeNodeBase parent) => (parent = _parent) == null;
         public bool IsRoot() => _parent == null;
 
-        protected TreeNodeBase(BattleAbilitySerializableTree.TreeNode nodeData)
+        protected TreeNodeBase(BattleAbilityBlock block, BattleAbilitySerializableTree.TreeNode treeNode)
         {
-            NodeData = nodeData;
+            TreeNode = treeNode;
+            _block = block;
+            _nodeData = TreeNode.nodeData;
         }
-        
+
         public void AddChild(TreeNodeBase node)
         {
             _children.Add(node);
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public abstract void RunLogic();
+
+        public virtual bool HasNext()
+        {
+            return _children.Count > 0;
+        }
 
         /// <summary>
-        /// 执行节点功能
+        /// 获取下一个运行节点
         /// </summary>
-        public abstract void Run();
+        /// <returns></returns>
+        public virtual TreeNodeBase GetNext()
+        {
+            return _children.Count > 0 ? _children[0] : null;
+        }
+
     }
 }

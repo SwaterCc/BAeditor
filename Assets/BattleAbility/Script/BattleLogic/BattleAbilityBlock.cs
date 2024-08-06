@@ -12,6 +12,8 @@ namespace BattleAbility
         private readonly BattleAbilityState _state;
         private readonly BattleAbilityData _data;
 
+        public int UId { get; }
+
         public BattleAbilityBlock(BattleAbilityData data)
         {
             _data = data;

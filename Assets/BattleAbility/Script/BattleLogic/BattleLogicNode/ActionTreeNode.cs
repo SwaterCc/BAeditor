@@ -4,13 +4,13 @@ namespace BattleAbility
 {
     public class ActionTreeNode : TreeNodeBase
     {
-        public override void Run()
+        public ActionTreeNode(BattleAbilityBlock block, BattleAbilitySerializableTree.TreeNode treeNode) : base(block,treeNode)
+        {
+        }
+        
+        public override void RunLogic()
         {
             
-        }
-
-        public ActionTreeNode(BattleAbilitySerializableTree.TreeNode nodeData) : base(nodeData)
-        {
         }
     }
 }
