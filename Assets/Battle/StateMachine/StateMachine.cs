@@ -1,4 +1,4 @@
-namespace BattleAbility.Tools
+namespace Battle
 {
     /// <summary>
     /// 玩家和怪物的基础状态机基类
@@ -6,6 +6,11 @@ namespace BattleAbility.Tools
     /// </summary>
     public class StateMachine
     {
-        
+        private Actor _actor;
+
+        public StateMachine(Actor actor)
+        {
+            _actor = actor;
+        }
     }
 }

@@ -1,9 +1,9 @@
-
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 
-namespace BattleAbility
+namespace Battle.Tools
 {
     public static class CommonUtility
     {
@@ -28,5 +28,39 @@ namespace BattleAbility
                 return hashValue;
             }
         }
+        
+        public class IdGenerator
+        {
+            private int currentId = 0;
+
+            /// <summary>
+            /// 生成新的ID。ID 会自增并且始终大于0。
+            /// </summary>
+            /// <returns>新的ID</returns>
+            public int GenerateId()
+            {
+                // 使用Interlocked.Increment确保线程安全
+                int newId = Interlocked.Increment(ref currentId);
+
+                // 检查是否溢出（如果超出int.MaxValue，重置为1）
+                if (newId == int.MaxValue)
+                {
+                    Interlocked.Exchange(ref currentId, 0);
+                    newId = Interlocked.Increment(ref currentId);
+                }
+
+                return newId;
+            }
+        }
+
+        /// <summary>
+        /// 获取Id生成器
+        /// </summary>
+        /// <returns></returns>
+        public static IdGenerator GetIdGenerator()
+        {
+            return new IdGenerator();
+        }
+        
     }
 }

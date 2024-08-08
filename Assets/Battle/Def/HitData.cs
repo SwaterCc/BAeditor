@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Battle.Def;
+using Battle;
 using UnityEngine;
 
 namespace BattleAbility
@@ -38,11 +37,6 @@ namespace BattleAbility
         /// 打击点检测间隔
         /// </summary>
         public long Interval;
-
-        /// <summary>
-        /// 来自于什么能力创建的打击点
-        /// </summary>
-        public EAbilityType BelongType;
 
         /// <summary>
         /// 打击点归属物的ID

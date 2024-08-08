@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Battle.Def;
 using Battle.Tools;
 
@@ -7,10 +8,67 @@ namespace Battle.Ability
     /// Ability 结合了GAS的GA，GE两套东西，做一下尝试
     /// 这个Ability代表了运行时流程管理
     /// </summary>
-    public class Ability
+    public partial class Ability
     {
-        //基础数据
+        /// <summary>
+        /// 用于执行能力节点序列
+        /// </summary>
+        private class AbilityExecutor
+        {
+            private Ability _ability;
 
+            /// <summary>
+            /// 节点的配置ID-节点对象
+            /// </summary>
+            private Dictionary<int, AbilityNode> _nodes;
+
+            public AbilityExecutor(Ability ability)
+            {
+                _ability = ability;
+            }
+
+            public void Setup()
+            {
+                var nodeDict = _ability._abilityData.NodeDict;
+                if (nodeDict is { Count: > 0 })
+                {
+                    _nodes = new();
+                    //数据转化为实际逻辑节点
+                    foreach (var pair in nodeDict)
+                    {
+                    }
+                }
+            }
+
+            public void UnInstall()
+            {
+            }
+
+            public AbilityNode GetNode(int id)
+            {
+                return _nodes[id];
+            }
+            
+            public bool TryGetAvailableNode(int id,out AbilityNode node)
+            {
+                node = null;
+                if (_nodes.TryGetValue(id, out var tnode) && !tnode.IsExecuted)
+                {
+                    node = tnode;
+                    return true;
+                }
+                return false;
+            }
+            
+            public void RunNode(List<int> headIdxList)
+            {
+                foreach (var headId in headIdxList)
+                {
+                }
+            }
+        }
+
+        //基础数据
         /// <summary>
         /// 能力运行时唯一识别id
         /// </summary>
@@ -20,12 +78,14 @@ namespace Battle.Ability
         /// 能力是否属于激活状态
         /// </summary>
         public bool IsActive { get; }
-        
+
         /// <summary>
         /// 编辑器数据
         /// </summary>
-        public AbilityData Data { get; }
-        
+        private AbilityData _abilityData;
+
+        private int _abilityConfigId;
+
         /// <summary>
         /// cd计时器，视情况初始化
         /// </summary>
@@ -35,7 +95,32 @@ namespace Battle.Ability
         /// 当前状态
         /// </summary>
         public EAbilityState State = EAbilityState.UnInit;
-        
+
+        private readonly AbilityExecutor _executor;
+
+        public Ability(int abilityConfigId)
+        {
+            _abilityConfigId = abilityConfigId;
+            _abilityData = AbilityDataCacheMgr.Instance.GetAbilityData(_abilityConfigId);
+
+            _executor = new AbilityExecutor(this);
+            _executor.Setup();
+        }
+
+        public void Reload()
+        {
+            //终止能力运行
+            State = EAbilityState.AbilityReady;
+
+            //卸载加载好的节点
+            _executor.UnInstall();
+
+            //重新获取数据
+            _abilityData = AbilityDataCacheMgr.Instance.GetAbilityData(_abilityConfigId);
+            _executor.Setup();
+        }
+
+
         //生命周期
 
         /// <summary>
@@ -44,8 +129,11 @@ namespace Battle.Ability
         public void Init()
         {
             State = EAbilityState.Init;
+            //初始化变量
+            //创建节点对象
+            _executor.RunNode();
         }
-        
+
         /// <summary>
         /// 赋予能力时检测
         /// </summary>
@@ -55,7 +143,7 @@ namespace Battle.Ability
             bool checkRes = true;
             return checkRes;
         }
-        
+
         /// <summary>
         /// 检测能力使用条件
         /// </summary>
@@ -70,7 +158,6 @@ namespace Battle.Ability
         /// </summary>
         public void PreExecute()
         {
-            
         }
 
         /// <summary>
@@ -78,7 +165,6 @@ namespace Battle.Ability
         /// </summary>
         public void Executing()
         {
-            
         }
 
         /// <summary>
@@ -86,19 +172,14 @@ namespace Battle.Ability
         /// </summary>
         public void EndExecute()
         {
-            
         }
-        
-       
-        
+
+
         /// <summary>
         /// 注册的事件触发时
         /// </summary>
         public void OnEventFire()
         {
-            
         }
-        
-        
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Battle.Def;
+using Battle.Tools;
 
 namespace BattleAbility.Editor
 {

@@ -12,9 +12,9 @@ namespace Battle
     }
 
     /// <summary>
-    /// 树节点参数类型枚举
+    /// 自定义变量类型
     /// </summary>
-    public enum ETreeNodeParamType
+    public enum EVariableType
     {
         Int,
         Long,
@@ -22,7 +22,15 @@ namespace Battle
         Float,
         String,
         Func,
-        Custom,
+        Sequence,
+        Struct,
+    }
+
+    /// <summary>
+    /// 参数类型
+    /// </summary>
+    public enum EParamValueType
+    {
     }
 
     /// <summary>
@@ -35,6 +43,45 @@ namespace Battle
         AbilityReady,
         Executing,
         EndExecute,
+    }
+
+    /// <summary>
+    /// Ability生命周期函数枚举，用于编辑器存储节点
+    /// </summary>
+    public enum EAbilityLiftFuncType
+    {
+    }
+
+    /// <summary>
+    /// 能力节点类型
+    /// </summary>
+    public enum EAbilityNodeType
+    {
+        /// <summary>
+        /// 生命周期节点
+        /// 注意，这个节点类型仅存在于编辑器中具象化了一个生命周期，导出的数据并不存在这个节点
+        /// </summary>
+        EAbilityLifeFunc,
+
+        /// <summary>
+        /// 分支控制节点
+        /// </summary>
+        EBranchControl,
+
+        /// <summary>
+        /// 变量控制
+        /// </summary>
+        EVariableControl,
+
+        /// <summary>
+        /// 遍历操作
+        /// </summary>
+        EForEach,
+
+        /// <summary>
+        /// 任务，动作
+        /// </summary>
+        ETask,
     }
 
     /// <summary>
@@ -112,7 +159,7 @@ namespace Battle
     /// <summary>
     /// 技能编辑器中配置的临时变量生效范围
     /// </summary>
-    public enum ELocalValueRange
+    public enum EVariableRange
     {
         //战场全局变量
         Battleground,
@@ -256,6 +303,7 @@ namespace Battle
         /// 创建变量
         /// </summary>
         Create,
+
         /// <summary>
         /// 修改变量
         /// </summary>
