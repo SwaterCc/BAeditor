@@ -1,3 +1,5 @@
+using Battle.Def;
+
 namespace BattleAbility
 {
     /// <summary>

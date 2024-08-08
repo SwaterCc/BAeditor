@@ -1,3 +1,4 @@
+using Battle.Def;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using Unity.VisualScripting;

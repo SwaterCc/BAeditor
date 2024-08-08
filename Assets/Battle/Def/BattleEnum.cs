@@ -1,4 +1,4 @@
-namespace BattleAbility
+namespace Battle
 {
     /// <summary>
     /// 能力配置的归属类型
@@ -24,12 +24,17 @@ namespace BattleAbility
         Func,
         Custom,
     }
-    
+
     /// <summary>
-    /// 标签系统是否要做统一
+    /// 当前Ability执行到哪一步了
     /// </summary>
-    public enum EStageTag
+    public enum EAbilityState
     {
+        UnInit,
+        Init,
+        AbilityReady,
+        Executing,
+        EndExecute,
     }
 
     /// <summary>

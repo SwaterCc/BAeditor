@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Battle;
+using Battle.Def;
 using BattleAbility.Editor.BattleAbilityCustomAttribute;
 
 namespace BattleAbility.Editor

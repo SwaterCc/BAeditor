@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Battle.Def;
 
 namespace BattleAbility
 {

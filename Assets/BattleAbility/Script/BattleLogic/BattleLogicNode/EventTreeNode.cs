@@ -1,4 +1,5 @@
 using System;
+using Battle.Def;
 using BattleAbility.Editor;
 
 namespace BattleAbility
@@ -62,7 +63,11 @@ namespace BattleAbility
             }
         }
 
-        private new void RunLogic() {}
+        public override void RunLogic()
+        {
+            throw new NotImplementedException();
+        }
+
         private new TreeNodeBase GetNext() => null;
         
 

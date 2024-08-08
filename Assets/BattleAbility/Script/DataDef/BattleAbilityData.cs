@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Battle.Def;
 using BattleAbility.Editor;
 using BattleAbility.Editor.BattleAbilityCustomAttribute;
 using Sirenix.OdinInspector;
