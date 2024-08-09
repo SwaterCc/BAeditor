@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Battle.Def;
 
-namespace Battle.Ability
+namespace Battle
 {
     public partial class Ability
     {

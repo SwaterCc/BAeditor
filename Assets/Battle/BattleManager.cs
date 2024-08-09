@@ -1,6 +1,6 @@
 namespace Battle
 {
-    public class ParamCollection
+    public class BattleManager
     {
         
     }

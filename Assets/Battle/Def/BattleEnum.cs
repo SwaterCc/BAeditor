@@ -25,12 +25,21 @@ namespace Battle
         Sequence,
         Struct,
     }
-
+    
     /// <summary>
     /// 参数类型
     /// </summary>
-    public enum EParamValueType
+    public enum EParamType
     {
+        Int,
+        Long,
+        Bool,
+        Float,
+        String,
+        List,
+        Dict,
+        Variable,
+        Property,
     }
 
     /// <summary>
@@ -165,13 +174,10 @@ namespace Battle
         Battleground,
 
         //仅角色
-        Char,
+        Actor,
 
         //单个能力
         Ability,
-
-        //单个阶段
-        Stage,
     }
 
     /// <summary>

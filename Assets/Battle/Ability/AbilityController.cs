@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Battle.Ability
+namespace Battle
 {
     public class AbilityController
     {
@@ -73,6 +73,7 @@ namespace Battle.Ability
                 {
                     if (ability.CheckCondition())
                     {
+                        Ability.Context.UpdateContext((_actor, ability));
                         ability.PreExecute();
                     }
                 }
@@ -85,6 +86,7 @@ namespace Battle.Ability
                 if (ability.State == EAbilityState.EndExecute)
                 {
                     ability.EndExecute();
+                    Ability.Context.ClearContext();
                 }
             }
         }

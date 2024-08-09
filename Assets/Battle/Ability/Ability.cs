@@ -2,14 +2,25 @@ using System.Collections.Generic;
 using Battle.Def;
 using Battle.Tools;
 
-namespace Battle.Ability
+namespace Battle
 {
     /// <summary>
     /// Ability 结合了GAS的GA，GE两套东西，做一下尝试
     /// 这个Ability代表了运行时流程管理
     /// </summary>
-    public partial class Ability
+    public partial class Ability : IVariableCollectionBind
     {
+        /// <summary>
+        /// 能力的上下文，存储当前在运行哪个能力
+        /// </summary>
+        private static AbilityRuntimeContext _context; 
+        public static AbilityRuntimeContext Context => _context;
+
+        public static void InitContext()
+        {
+            _context = new AbilityRuntimeContext();
+        }
+        
         /// <summary>
         /// 用于执行能力节点序列
         /// </summary>
@@ -96,17 +107,26 @@ namespace Battle.Ability
         /// </summary>
         public EAbilityState State = EAbilityState.UnInit;
 
+        /// <summary>
+        /// 执行者
+        /// </summary>
         private readonly AbilityExecutor _executor;
-
+        
+        /// <summary>
+        /// 属于Ability的变量
+        /// </summary>
+        private readonly VariableCollection _variables;
+        public VariableCollection GetCollection() => _variables;
+        
         public Ability(int abilityConfigId)
         {
             _abilityConfigId = abilityConfigId;
             _abilityData = AbilityDataCacheMgr.Instance.GetAbilityData(_abilityConfigId);
-
+            _variables = new VariableCollection(16, this);
             _executor = new AbilityExecutor(this);
             _executor.Setup();
         }
-
+        
         public void Reload()
         {
             //终止能力运行
@@ -119,8 +139,7 @@ namespace Battle.Ability
             _abilityData = AbilityDataCacheMgr.Instance.GetAbilityData(_abilityConfigId);
             _executor.Setup();
         }
-
-
+        
         //生命周期
 
         /// <summary>
@@ -131,7 +150,7 @@ namespace Battle.Ability
             State = EAbilityState.Init;
             //初始化变量
             //创建节点对象
-            _executor.RunNode();
+           
         }
 
         /// <summary>
@@ -158,6 +177,7 @@ namespace Battle.Ability
         /// </summary>
         public void PreExecute()
         {
+           
         }
 
         /// <summary>
@@ -172,6 +192,7 @@ namespace Battle.Ability
         /// </summary>
         public void EndExecute()
         {
+            _variables.Clear();
         }
 
 
@@ -181,5 +202,7 @@ namespace Battle.Ability
         public void OnEventFire()
         {
         }
+
+      
     }
 }
