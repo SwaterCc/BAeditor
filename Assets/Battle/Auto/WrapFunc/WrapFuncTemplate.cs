@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Battle.Auto.WrapFunc
+namespace Battle.Auto
 {
     public static class FuncWrapTemplate
     {
@@ -28,9 +28,17 @@ namespace Battle.Auto.WrapFunc
                     {
                         p1 = VariableHelper.GetVariableValue<int>(param1.GetVariableParam().Range, param1.GetVariableParam().Name);
                     }
-                    else if(param1.IsProperty)
+                    else if(param1.IsAttribute)
                     {
-                        
+                        var attr = Ability.Context.GetActor().GetAttr(param1.GetPropertyParam().PropertyType);
+                        if (!attr.IsComposite && attr is SimpleAttribute<int> sAttr)
+                        {
+                            p1 = sAttr.Get();
+                        }
+                        else
+                        {
+                            return 0;
+                        }
                     }
                     else
                     {
@@ -41,17 +49,8 @@ namespace Battle.Auto.WrapFunc
                 {
                     return 0;
                 }
-                if (!(collection.TryGetParam(0, out var param2) || param2.TryGetFloat(out  p2)))
-                {
-                    return 0;
-                }
-                if (!(collection.TryGetParam(0, out var param2) || param2.TryGetFloat(out  p3)))
-                {
-                    return 0;
-                }
-
-
-                return Ability.Context.GetActor().GetActorXXX(p1, p2, p3);
+                
+                return Ability.Context.GetActor().GetActorXXX(p1);
             }
             else
             {

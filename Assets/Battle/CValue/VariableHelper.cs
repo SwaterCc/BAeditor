@@ -7,12 +7,12 @@ namespace Battle
     {
         public static bool TryGetVariable<T>(this IVariableCollectionBind bind, string name, out Variable<T> variable)
         {
-            return bind.GetCollection().TryGetVariable(name, out variable);
+            return bind.GetVariableCollection().TryGetVariable(name, out variable);
         }
 
         public static Variable<T> GetVariable<T>(this IVariableCollectionBind bind, string name)
         {
-            return bind.GetCollection().GetVariable<T>(name);
+            return bind.GetVariableCollection().GetVariable<T>(name);
         }
 
         public static T GetVariableValue<T>(EVariableRange range, string name)

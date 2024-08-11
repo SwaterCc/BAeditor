@@ -25,7 +25,7 @@ namespace Battle
         Sequence,
         Struct,
     }
-    
+
     /// <summary>
     /// 参数类型
     /// </summary>
@@ -39,7 +39,7 @@ namespace Battle
         List,
         Dict,
         Variable,
-        Property,
+        Attribute,
     }
 
     /// <summary>
@@ -57,9 +57,7 @@ namespace Battle
     /// <summary>
     /// Ability生命周期函数枚举，用于编辑器存储节点
     /// </summary>
-    public enum EAbilityLiftFuncType
-    {
-    }
+    public enum EAbilityLiftFuncType { }
 
     /// <summary>
     /// 能力节点类型
@@ -125,9 +123,7 @@ namespace Battle
     /// <summary>
     /// 投射物
     /// </summary>
-    public enum EBulletType
-    {
-    }
+    public enum EBulletType { }
 
     /// <summary>
     /// 能力逻辑当前处于什么阶段
@@ -249,9 +245,7 @@ namespace Battle
     /// <summary>
     /// 战斗位移的类型
     /// </summary>
-    public enum EBattleSpecialMotionType
-    {
-    }
+    public enum EBattleSpecialMotionType { }
 
     /// <summary>
     /// 战斗事件节点的枚举类型
@@ -292,9 +286,7 @@ namespace Battle
     /// <summary>
     /// 比较方式
     /// </summary>
-    public enum ECompareType
-    {
-    }
+    public enum ECompareType { }
 
     public enum EConditionType
     {
@@ -314,5 +306,34 @@ namespace Battle
         /// 修改变量
         /// </summary>
         Change,
+    }
+
+    /// <summary>
+    /// 属性分量
+    /// </summary>
+    public enum EAttrElementType
+    {
+        /// <summary>
+        /// 基础值，必有此类型
+        /// </summary>
+        Base,
+
+        /// <summary>
+        /// 最终计算值，必有此类型
+        /// </summary>
+        Final,
+
+        Add,
+
+        Multiply,
+    }
+
+    /// <summary>
+    /// 属性修改操作类别
+    /// </summary>
+    public enum EAttrCommandType
+    {
+        Add,
+        Override,
     }
 }

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Battle.Auto.PropertyEnum;
+using Battle.Auto;
 using UnityEngine;
 
 namespace Battle
@@ -15,7 +15,7 @@ namespace Battle
 
         public class PropertyParam
         {
-            public EPropertyType PropertyType;
+            public EAttributeType PropertyType;
         }
 
         public EParamType ParamType;
@@ -30,8 +30,8 @@ namespace Battle
         private PropertyParam _propertyParam;
 
         public bool IsVariable => ParamType == EParamType.Variable && _propertyParam != null;
-        public bool IsProperty => ParamType == EParamType.Property && _variableParam != null;
-        public bool NotCustom => ParamType is not (EParamType.Property or EParamType.Variable);
+        public bool IsAttribute => ParamType == EParamType.Attribute && _variableParam != null;
+        public bool NotCustom => ParamType is not (EParamType.Attribute or EParamType.Variable);
 
         public Param(EParamType paramType)
         {
