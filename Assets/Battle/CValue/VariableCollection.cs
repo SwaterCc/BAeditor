@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Battle.Tools;
 using UnityEngine;
 
 namespace Battle
@@ -11,7 +10,7 @@ namespace Battle
 
     public class VariableCollection
     {
-        private readonly Dictionary<string, Variable> _collection;
+        private readonly Dictionary<string, ICValueBox> _collection;
     
         private IVariableCollectionBind _bind;
 
@@ -21,7 +20,7 @@ namespace Battle
 
         public VariableCollection(int variableSize, int funcSize, IVariableCollectionBind bind)
         {
-            _collection = new Dictionary<string, Variable>(variableSize);
+            _collection = new Dictionary<string, ICValueBox>(variableSize);
             _bind = bind;
         }
 
@@ -30,25 +29,31 @@ namespace Battle
             _bind ??= bind;
         }
 
-        public Variable<T> GetVariable<T>(string name)
+        public CValueBox<T> GetVariable<T>(string name)
         {
             if (_collection.TryGetValue(name, out var variable))
             {
-                return variable as Variable<T>;
+                return variable as CValueBox<T>;
             }
 
             return null;
         }
+        
+        public ICValueBox GetVariable(string name)
+        {
+            return _collection.GetValueOrDefault(name);
+        }
 
-        public bool TryGetVariable<T>(string name, out Variable<T> value)
+
+        public bool TryGetVariable<T>(string name, out CValueBox<T> value)
         {
             value = null;
             if (!_collection.TryGetValue(name, out var cValue)) return false;
-            value = cValue as Variable<T>;
+            value = cValue as CValueBox<T>;
             return true;
         }
 
-        public void Add(string key, Variable variable)
+        public void Add(string key, ICValueBox variable)
         {
             if (!_collection.TryAdd(key, variable))
             {

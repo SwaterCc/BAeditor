@@ -95,7 +95,12 @@ namespace Battle
             }
         }
 
-        public new T Get()
+        public override ICValueBox GetBox()
+        {
+            return new CValueBox<T>(_value);
+        }
+        
+        public T GetValue()
         {
             return _value;
         }

@@ -117,9 +117,9 @@ namespace Battle
             _final = _base;
         }
 
-        public new float Get()
+        public override ICValueBox GetBox()
         {
-            return GetFinal();
+            return new CValueBox<float>(_final);
         }
 
         public float GetBase()

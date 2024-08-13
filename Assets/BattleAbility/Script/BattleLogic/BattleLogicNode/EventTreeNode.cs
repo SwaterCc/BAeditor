@@ -4,21 +4,7 @@ using BattleAbility.Editor;
 
 namespace BattleAbility
 {
-    public class BattleEventHandle
-    {
-        protected readonly Action _onFire;
-
-        public BattleEventHandle(Action onFire)
-        {
-            _onFire = onFire;
-        }
-
-        public void TryFire()
-        {
-            _onFire?.Invoke();
-        }
-    }
-
+    
     public class BattleEventHandle<TKey> : BattleEventHandle
     {
         private TKey _key;

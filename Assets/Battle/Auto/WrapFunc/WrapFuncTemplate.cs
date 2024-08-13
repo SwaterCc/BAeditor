@@ -4,7 +4,10 @@ namespace Battle.Auto
 {
     public static class FuncWrapTemplate
     {
-        public static int _GetActorXXX_Wrap_(ParamCollection collection)
+        //暂时保留，用反射仍然存在很明显的类型转换问题，后续再考虑优化吧
+        
+        /*
+        public static int _GetActorXXX_Wrap_(ParamStack stack)
         {
             if (Ability.Context == null || Ability.Context.IsNotRunning)
             {
@@ -12,12 +15,10 @@ namespace Battle.Auto
                 return 0;
             }
 
-            if (collection.Length == 3)
+            if (stack.Length == 1)
             {
                 int p1;
-                float p2;
-                List<int> p3;
-                if (collection.TryGetParam(0, out var param1))
+                if (stack.TryGetParam(0, out var param1))
                 {
                     if (param1.NotCustom && !param1.TryGetInt(out p1))
                     {
@@ -30,15 +31,8 @@ namespace Battle.Auto
                     }
                     else if(param1.IsAttribute)
                     {
-                        var attr = Ability.Context.GetActor().GetAttr(param1.GetPropertyParam().PropertyType);
-                        if (!attr.IsComposite && attr is SimpleAttribute<int> sAttr)
-                        {
-                            p1 = sAttr.Get();
-                        }
-                        else
-                        {
-                            return 0;
-                        }
+                        var attr = Ability.Context.GetActor().GetAttrBox(param1.GetAttributeParam().AttributeType);
+                        p1 = ((CValueBox<int>)attr.Get()).Get();
                     }
                     else
                     {
@@ -58,5 +52,6 @@ namespace Battle.Auto
                 return 0;
             }
         }
+        */
     }
 }

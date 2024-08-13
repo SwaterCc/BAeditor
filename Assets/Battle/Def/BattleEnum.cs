@@ -1,3 +1,5 @@
+using System;
+
 namespace Battle
 {
     /// <summary>
@@ -17,13 +19,15 @@ namespace Battle
     public enum EVariableType
     {
         Int,
-        Long,
         Bool,
         Float,
         String,
-        Func,
-        Sequence,
-        Struct,
+        Class,
+        /// <summary>
+        /// LIST和Dict仅限获取，不允许修改和创建
+        /// </summary>
+        List,
+        Dict,
     }
 
     /// <summary>
@@ -36,8 +40,6 @@ namespace Battle
         Bool,
         Float,
         String,
-        List,
-        Dict,
         Variable,
         Attribute,
     }
@@ -66,9 +68,13 @@ namespace Battle
     {
         /// <summary>
         /// 生命周期节点
-        /// 注意，这个节点类型仅存在于编辑器中具象化了一个生命周期，导出的数据并不存在这个节点
         /// </summary>
         EAbilityLifeFunc,
+        
+        /// <summary>
+        /// 注册事件触发
+        /// </summary>
+        EEventFired,
 
         /// <summary>
         /// 分支控制节点
@@ -335,5 +341,34 @@ namespace Battle
     {
         Add,
         Override,
+    }
+
+    public enum EAbilityEventType
+    {
+        Tag,
+        /// <summary>
+        /// Hit仅自身创建的打击点命中，如果要检测全局建议使用Tag
+        /// </summary>
+        Hit,
+        /// <summary>
+        /// Motion仅自身的位移发生，如果要检测全局建议使用Tag
+        /// </summary>
+        MotionBegin,
+        MotionEnd,
+    }
+    
+    public enum EForeachObjType
+    {
+        List,
+        Dict
+    }
+    
+    [Flags]
+    public enum EFuncCacheFlag
+    {
+        OnlyCache = 0,
+        ShowVariableWindow = 1 << 0,
+        ShowActionWindow = 1 << 1,
+        ShowForeachWindow = 1 << 2,
     }
 }

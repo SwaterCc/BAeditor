@@ -45,7 +45,7 @@ namespace Battle
         /// <summary>
         /// 执行指定能力，会从资源检测开始，未Init的会主动调用一次Init
         /// </summary>
-        public void ExecutAbility(int id)
+        public void ExecutingAbility(int id)
         {
             if (_abilities.TryGetValue(id, out var ability))
             {

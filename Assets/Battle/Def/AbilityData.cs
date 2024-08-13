@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Battle.Auto;
 
 namespace Battle.Def
 {
@@ -16,11 +17,18 @@ namespace Battle.Def
         
         public string IconPath = "";
 
+        public int[] Tags;
+        
         /// <summary>
         /// 头节点字典，用List结构是因为一个生命周期可能会有多个逻辑，且有优先级
         /// </summary>
         public Dictionary<EAbilityLiftFuncType, List<AbilityNodeData>> HeadNodeDict = new();
 
+        /// <summary>
+        /// 事件监听字典，用List结构是因为一个生命周期可能会有多个逻辑，且有优先级
+        /// </summary>
+        public Dictionary<EAbilityEventType, List<AbilityNodeData>> EventNodeDict = new();
+        
         /// <summary>
         /// 存储所有数据
         /// </summary>
@@ -35,6 +43,8 @@ namespace Battle.Def
         public EAbilityNodeType NodeType;
         
         public int Parent;
+
+        public bool IsHead;
         
         public List<int> ChildrenUids = new();
 
@@ -42,7 +52,44 @@ namespace Battle.Def
         
         public int Priority;
 
-        public Object NodeClass;
+        public Param[] ActionNodeData;
+
+        public Param[] BranchNodeData;
+        
+        public EventNodeData EventNodeData;
+        
+        public ForeachNodeData ForeachNodeData;
+
+        public VariableNodeData VariableNodeData; 
+        
+        public EAbilityLiftFuncType LifeNodeData;
+    }
+
+    public class ForeachNodeData
+    {
+        public EForeachObjType ForeachObjType;
+        public Param[] ForeachData;
     }
     
+    public class EventNodeData
+    {
+        public EAbilityEventType EventType;
+        
+        public int[] Tag;
+
+        public int HitBoxId;
+
+        public int MotionId;
+    }
+    
+    public class VariableNodeData
+    {
+        public EVariableOperationType OperationType;
+        public EVariableRange Range;
+        public string Name;
+
+        public string VariableTypeStr;
+        
+        public Param[] VarParam;
+    }
 }

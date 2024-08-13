@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Battle.Def;
 using Battle.Tools;
@@ -26,8 +27,8 @@ namespace Battle
         /// </summary>
         private class AbilityExecutor
         {
-            private Ability _ability;
-
+            private readonly Ability _ability;
+            private AbilityNode _curNode;
             /// <summary>
             /// 节点的配置ID-节点对象
             /// </summary>
@@ -47,6 +48,7 @@ namespace Battle
                     //数据转化为实际逻辑节点
                     foreach (var pair in nodeDict)
                     {
+                        
                     }
                 }
             }
@@ -55,27 +57,50 @@ namespace Battle
             {
             }
 
+            public void Tick()
+            {
+                if (_curNode == null)
+                {
+                    return;
+                }
+                
+                
+                
+            }
+            
             public AbilityNode GetNode(int id)
             {
                 return _nodes[id];
             }
             
-            public bool TryGetAvailableNode(int id,out AbilityNode node)
+            public void RunNode(AbilityNode node)
             {
-                node = null;
-                if (_nodes.TryGetValue(id, out var tnode) && !tnode.IsExecuted)
-                {
-                    node = tnode;
-                    return true;
-                }
-                return false;
+               
             }
             
-            public void RunNode(List<int> headIdxList)
+            /// <summary>
+            /// 获取下一个节点，返回空说明运行完了
+            /// </summary>
+            /// <returns></returns>
+            /// <exception cref="string"></exception>
+            public AbilityNode GetNextNode(AbilityNode node)
             {
-                foreach (var headId in headIdxList)
+                if (node.TryGetChildren(out var next)) 
                 {
+                    //有子节点返回第一个子节点
+                    return _nodes[next];
                 }
+
+                if (node.TryGetBrother(out next))
+                {
+                    //没有子节点返回自己下一个相邻节点
+                    return _nodes[next];
+                }
+
+                return GetNextNode(_nodes[node.NodeData.Parent]);
+
+                //走到这里要报错
+                throw new Exception("节点执行顺序不对");
             }
         }
 
@@ -116,7 +141,7 @@ namespace Battle
         /// 属于Ability的变量
         /// </summary>
         private readonly VariableCollection _variables;
-        public VariableCollection GetCollection() => _variables;
+        public VariableCollection GetVariableCollection() => _variables;
         
         public Ability(int abilityConfigId)
         {
@@ -185,6 +210,7 @@ namespace Battle
         /// </summary>
         public void Executing()
         {
+            _executor.Tick();
         }
 
         /// <summary>
@@ -201,6 +227,7 @@ namespace Battle
         /// </summary>
         public void OnEventFire()
         {
+            
         }
 
       

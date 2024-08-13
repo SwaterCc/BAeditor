@@ -1,104 +1,44 @@
 using System;
-using System.Collections.Generic;
 using Battle.Auto;
-using UnityEngine;
 
 namespace Battle
 {
+    /// <summary>
+    /// 编辑器反射参数
+    /// </summary>
     public sealed class Param
     {
-        public class VariableParam
-        {
-            public EVariableRange Range;
-            public string Name;
-        }
+        /// <summary>
+        /// 参数类型，反射得到的字符串
+        /// </summary>
+        public string ParamType;
 
-        public class PropertyParam
-        {
-            public EAttributeType PropertyType;
-        }
+        /// <summary>
+        /// 是否是变量
+        /// </summary>
+        public bool IsVariable;
+        public string VarName;
+        public EVariableRange VarRange;
 
-        public EParamType ParamType;
+        /// <summary>
+        /// 是否是属性
+        /// </summary>
+        public bool IsAttribute;
+        public EAttributeType AttributeType;
 
-        private int _intValue;
-        private long _longValue;
-        private float _floatValue;
-        private bool _boolValue;
+        /// <summary>
+        /// 是否是函数
+        /// </summary>
+        public bool IsFunc;
+        public string FuncName;
 
-        private object _obj;
-        private VariableParam _variableParam;
-        private PropertyParam _propertyParam;
-
-        public bool IsVariable => ParamType == EParamType.Variable && _propertyParam != null;
-        public bool IsAttribute => ParamType == EParamType.Attribute && _variableParam != null;
-        public bool NotCustom => ParamType is not (EParamType.Attribute or EParamType.Variable);
-
-        public Param(EParamType paramType)
-        {
-            ParamType = paramType;
-        }
-
-        public bool TryGetInt(out int value)
-        {
-            value = default;
-            if (ParamType == EParamType.Int)
-            {
-                value = _intValue;
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool TryGetLong(out long value)
-        {
-            value = default;
-            if (ParamType == EParamType.Long)
-            {
-                value = _longValue;
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool TryGetFloat(out float value)
-        {
-            value = default;
-            if (ParamType == EParamType.Float)
-            {
-                value = _floatValue;
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool TryGetBool(out bool value)
-        {
-            value = default;
-            if (ParamType == EParamType.Bool)
-            {
-                value = _boolValue;
-                return true;
-            }
-
-            return false;
-        }
-
-        public TClass GetClassObj<TClass>() where TClass : class
-        {
-            return _obj as TClass;
-        }
-
-        public VariableParam GetVariableParam()
-        {
-            return _variableParam;
-        }
-
-        public PropertyParam GetPropertyParam()
-        {
-            return _propertyParam;
-        }
+        /// <summary>
+        /// 是否是值类型
+        /// </summary>
+        public bool IsBaseType;
+        public int IntValue;
+        public long LongValue;
+        public float FloatValue;
+        public bool BoolValue;
     }
 }
