@@ -22,7 +22,7 @@ namespace Battle.Def
         /// <summary>
         /// 头节点字典，用List结构是因为一个生命周期可能会有多个逻辑，且有优先级
         /// </summary>
-        public Dictionary<EAbilityLiftFuncType, List<AbilityNodeData>> HeadNodeDict = new();
+        public Dictionary<EAbilityCycleType, List<AbilityNodeData>> HeadNodeDict = new();
 
         /// <summary>
         /// 事件监听字典，用List结构是因为一个生命周期可能会有多个逻辑，且有优先级
@@ -62,7 +62,9 @@ namespace Battle.Def
 
         public VariableNodeData VariableNodeData; 
         
-        public EAbilityLiftFuncType LifeNodeData;
+        public EAbilityCycleType CycleNodeData;
+
+        public float WaitNodeData;
     }
 
     public class ForeachNodeData
@@ -87,9 +89,7 @@ namespace Battle.Def
         public EVariableOperationType OperationType;
         public EVariableRange Range;
         public string Name;
-
-        public string VariableTypeStr;
         
-        public Param[] VarParam;
+        public Param[] VarParams;
     }
 }

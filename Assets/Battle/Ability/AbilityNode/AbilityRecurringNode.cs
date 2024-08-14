@@ -1,15 +1,17 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Battle.Def;
 
 namespace Battle
 {
     public partial class Ability
     {
-        private class AbilityForeachNode : AbilityNode
+        private class AbilityRepeatNode : AbilityNode
         {
             private ForeachNodeData _foreachNodeData;
             
-            public AbilityForeachNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
+            public AbilityRepeatNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
                 _foreachNodeData = data.ForeachNodeData;
             }
@@ -22,6 +24,7 @@ namespace Battle
                         
                         break;
                     case EForeachObjType.Dict:
+                        
                         break;
                 }
             }

@@ -14,26 +14,17 @@ namespace Battle
         /// </summary>
         private class AbilityActionNode : AbilityNode
         {
-            private readonly Stack<Param> _actionNodeData;
+            private readonly Queue<Param> _actionFunc;
 
             public AbilityActionNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _actionNodeData = new Stack<Param>(NodeData.ActionNodeData);
+                _actionFunc = new Queue<Param>(NodeData.ActionNodeData);
             }
             
             
             public override void DoJob()
             {
-                var func = _actionNodeData.Pop();
-                if (func.IsFunc)
-                {
-                    _actionNodeData.CallFunc(func);
-                }
-                else
-                {
-                    Debug.LogError("Action节点执行错误");
-                   
-                }
+                _actionFunc.TryCallFunc(out _);
             }
         }
     }

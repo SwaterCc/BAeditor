@@ -1,5 +1,6 @@
 using System;
 using Battle.Auto;
+using Sirenix.OdinInspector;
 
 namespace Battle
 {

@@ -8,7 +8,7 @@ namespace Battle
     {
         private class AbilityEventNode : AbilityNode
         {
-            private EventNodeData _eventData;
+            private readonly EventNodeData _eventData;
 
             public AbilityEventNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
@@ -45,7 +45,7 @@ namespace Battle
 
             public override void DoJob()
             {
-                JobFinsh = true;
+                JobFinish = true;
             }
         }
     }

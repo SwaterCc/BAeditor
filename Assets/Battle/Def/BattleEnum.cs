@@ -23,6 +23,7 @@ namespace Battle
         Float,
         String,
         Class,
+
         /// <summary>
         /// LIST和Dict仅限获取，不允许修改和创建
         /// </summary>
@@ -49,9 +50,9 @@ namespace Battle
     /// </summary>
     public enum EAbilityState
     {
-        UnInit,
         Init,
-        AbilityReady,
+        Ready,
+        PreExecute,
         Executing,
         EndExecute,
     }
@@ -59,7 +60,38 @@ namespace Battle
     /// <summary>
     /// Ability生命周期函数枚举，用于编辑器存储节点
     /// </summary>
-    public enum EAbilityLiftFuncType { }
+    public enum EAbilityCycleType
+    {
+        /// <summary>
+        /// 赋予能力时检测
+        /// </summary>
+        OnPreAwardCheck,
+
+        /// <summary>
+        /// 能力初始化
+        /// </summary>
+        OnInit,
+
+        /// <summary>
+        /// 能力执行前检测
+        /// </summary>
+        OnPreExecuteCheck,
+
+        /// <summary>
+        /// 预启动
+        /// </summary>
+        OnPreExecute,
+
+        /// <summary>
+        /// 运行
+        /// </summary>
+        OnExecuting,
+
+        /// <summary>
+        /// 结束
+        /// </summary>
+        OnEndExecute,
+    }
 
     /// <summary>
     /// 能力节点类型
@@ -69,8 +101,8 @@ namespace Battle
         /// <summary>
         /// 生命周期节点
         /// </summary>
-        EAbilityLifeFunc,
-        
+        EAbilityCycle,
+
         /// <summary>
         /// 注册事件触发
         /// </summary>
@@ -89,12 +121,17 @@ namespace Battle
         /// <summary>
         /// 遍历操作
         /// </summary>
-        EForEach,
+        ERepeat,
 
         /// <summary>
         /// 任务，动作
         /// </summary>
-        ETask,
+        EAction,
+
+        /// <summary>
+        /// 等待节点
+        /// </summary>
+        EWait,
     }
 
     /// <summary>
@@ -131,41 +168,6 @@ namespace Battle
     /// </summary>
     public enum EBulletType { }
 
-    /// <summary>
-    /// 能力逻辑当前处于什么阶段
-    /// </summary>
-    public enum EBattleAbilityState
-    {
-        /// <summary>
-        /// 未初始化
-        /// </summary>
-        UnInit,
-
-        /// <summary>
-        /// 准备就绪还没调用RUN
-        /// </summary>
-        Ready,
-
-        /// <summary>
-        /// 阶段开始
-        /// </summary>
-        StageStart,
-
-        /// <summary>
-        /// 阶段运行中
-        /// </summary>
-        StageRunning,
-
-        /// <summary>
-        /// 阶段结束
-        /// </summary>
-        StageEnd,
-
-        /// <summary>
-        /// 能力完成运行
-        /// </summary>
-        LogicEnd,
-    }
 
     /// <summary>
     /// 技能编辑器中配置的临时变量生效范围
@@ -180,37 +182,6 @@ namespace Battle
 
         //单个能力
         Ability,
-    }
-
-    /// <summary>
-    /// 战斗逻辑树节点类型
-    /// </summary>
-    public enum ENodeType
-    {
-        /// <summary>
-        /// 事件节点
-        /// </summary>
-        Event,
-
-        /// <summary>
-        /// 逻辑判定节点
-        /// </summary>
-        Condition,
-
-        /// <summary>
-        /// 具体动作
-        /// </summary>
-        Action,
-
-        /// <summary>
-        /// 创建变量
-        /// </summary>
-        Variable,
-
-        /// <summary>
-        /// 遍历
-        /// </summary>
-        Foreach,
     }
 
     /// <summary>
@@ -346,23 +317,25 @@ namespace Battle
     public enum EAbilityEventType
     {
         Tag,
+
         /// <summary>
         /// Hit仅自身创建的打击点命中，如果要检测全局建议使用Tag
         /// </summary>
         Hit,
+
         /// <summary>
         /// Motion仅自身的位移发生，如果要检测全局建议使用Tag
         /// </summary>
         MotionBegin,
         MotionEnd,
     }
-    
+
     public enum EForeachObjType
     {
         List,
         Dict
     }
-    
+
     [Flags]
     public enum EFuncCacheFlag
     {

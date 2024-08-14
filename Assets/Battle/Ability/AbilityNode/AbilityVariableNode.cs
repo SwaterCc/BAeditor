@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Battle.Auto;
 using Battle.Def;
+using Battle.Tools;
 using UnityEngine;
 
 namespace Battle
@@ -13,148 +15,32 @@ namespace Battle
         /// </summary>
         private class AbilityVariableNode : AbilityNode
         {
-            private AbilityVariableNodeData _vardata;
+            private readonly VariableNodeData _varData;
+            private readonly Queue<Param> _params;
 
             public AbilityVariableNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _vardata = (AbilityVariableNodeData)data.SpecialNodeData;
+                _varData = data.VariableNodeData;
+                _params = new Queue<Param>(_varData.VarParams);
             }
 
             public override void DoJob()
             {
-                switch (_vardata.OperationType)
+                if (_params.TryCallFunc(out var variableBox))
                 {
-                    case EVariableOperationType.Create:
-                        createVariable(GetCollection());
-                        break;
-                    case EVariableOperationType.Change:
-                        updateVariable(GetCollection());
-                        break;
-                }
-            }
-
-            private VariableCollection GetCollection()
-            {
-                VariableCollection collection = null;
-                switch (_vardata.Range)
-                {
-                    case EVariableRange.Battleground:
-                        break;
-                    case EVariableRange.Actor:
-                        collection = Context.GetActor().GetVariableCollection();
-                        break;
-                    case EVariableRange.Ability:
-                        collection = Context.GetAbility().GetVariableCollection();
-                        break;
-                }
-
-                return collection;
-            }
-
-            private ICValueBox getVariable<T>(T value)
-            {
-                ICValueBox variable = null;
-                if (_vardata.IsFunction)
-                {
-                    variable = WrapFuncMain.InvokeFunc(_vardata.FuncId, _vardata.Param);
-                }
-                else if (_vardata.IsAttribute)
-                {
-                    variable = Context.GetActor().GetAttrBox(_vardata.AttrType).Get();
-                }
-                else
-                {
-                    variable = new CValueBox<T>(value);
-                }
-
-                return variable;
-            }
-
-            /// <summary>
-            /// 创建变量,变量不可以直接引用对象，哪怕是列表也必须是新创建的，或者临时变量，如果函数需要对象则提供id去查找
-            /// </summary>
-            /// <param name="collection"></param>
-            /// <exception cref="Exception"></exception>
-            private void createVariable(VariableCollection collection)
-            {
-                ICValueBox v = null;
-                switch (_vardata.VariableType)
-                {
-                    case EVariableType.Int:
-                        v = getVariable(_vardata.IntValue);
-                        break;
-                    case EVariableType.Bool:
-                        v = getVariable(_vardata.BoolValue);
-                        break;
-                    case EVariableType.Float:
-                        v = getVariable(_vardata.FloatValue);
-                        break;
-                    case EVariableType.String:
-                        v = getVariable(_vardata.StringValue);
-                        break;
-                    case EVariableType.List:
-                    case EVariableType.Dict:
-                        v = getVariable<object>(null);
-                        break;
-                }
-
-                if (v == null)
-                {
-                    throw new Exception("逻辑有问题");
-                }
-
-                collection.Add(_vardata.Name, v);
-            }
-
-            private void changeValue<T>(VariableCollection collection, T value)
-            {
-                if (collection.TryGetVariable(_vardata.Name, out CValueBox<T> valueBox))
-                {
-                    if (_vardata.IsFunction)
+                    if (_varData.OperationType == EVariableOperationType.Create)
                     {
-                        collection.Remove(_vardata.Name);
-                        var newValue = WrapFuncMain.InvokeFunc(_vardata.FuncId, _vardata.Param);
-                        collection.Add(_vardata.Name, newValue);
-                    }
-                    else if (_vardata.IsAttribute)
-                    {
-                        collection.Remove(_vardata.Name);
-                        var newValue = Context.GetActor().GetAttrBox(_vardata.AttrType).Get();
-                        collection.Add(_vardata.Name, newValue);
+                        AbilityExtension.CreateVariable(_varData.Range, _varData.Name, variableBox);
                     }
                     else
                     {
-                        valueBox.Set(value);
+                        var variable = AbilityExtension.GetVariableBox(_varData.Range, _varData.Name);
+                        variable.Set(variableBox);
                     }
                 }
                 else
                 {
-                    Debug.LogError("逻辑有问题，改值失败了");
-                }
-            }
-
-            private void updateVariable(VariableCollection collection)
-            {
-                switch (_vardata.VariableType)
-                {
-                    case EVariableType.Int:
-                        changeValue(collection, _vardata.IntValue);
-                        break;
-                    case EVariableType.Bool:
-                        changeValue(collection, _vardata.BoolValue);
-                        break;
-                    case EVariableType.Float:
-                        changeValue(collection, _vardata.FloatValue);
-                        break;
-                    case EVariableType.String:
-                        changeValue(collection, _vardata.StringValue);
-                        break;
-                    case EVariableType.List:
-                        changeValue<IList>(collection, null);
-                        break;
-                    case EVariableType.Dict:
-                        changeValue<IDictionary>(collection, null);
-                        break;
+                    Debug.LogError($"函数执行失败 Name {_varData.Name}");
                 }
             }
         }

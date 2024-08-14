@@ -32,7 +32,7 @@ namespace Battle.Auto
                     else if(param1.IsAttribute)
                     {
                         var attr = Ability.Context.GetActor().GetAttrBox(param1.GetAttributeParam().AttributeType);
-                        p1 = ((CValueBox<int>)attr.Get()).Get();
+                        p1 = ((ValueBox<int>)attr.Get()).Get();
                     }
                     else
                     {
