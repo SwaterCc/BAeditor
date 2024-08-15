@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Battle
 {
@@ -76,7 +77,22 @@ namespace Battle
                 }
             }
 
-            public bool nodeIsPast(int id)
+            public void NodePass(int id)
+            {
+                _pastNodeId.Add(id);
+            }
+
+            public void RemovePass(int id)
+            {
+                _pastNodeId.Remove(id);
+            }
+
+            public void NodeReset(int id)
+            {
+                _nodes[id].Reset();
+            }
+            
+            public bool IsPassedNode(int id)
             {
                return _pastNodeId.Contains(id);
             }
@@ -95,17 +111,50 @@ namespace Battle
             {
                 if (_cycleHeads.TryGetValue(cycleType,out var cycleNode))
                 {
-                    RunNode(cycleNode);
+                    cycleNode.DoJob();
                 }
                 else
                 {
-                    //打日志
+                    Debug.Log($"{cycleType} is empty！");
                 }
             }
-            
-            public void RunNode(AbilityNode node)
+
+            public void CreateVariable(string name,IValueBox valueBox)
             {
-               node.DoJob();
+                _ability.GetVariableCollection().Add(name, valueBox);
+            }
+
+            public IValueBox GetVariable(string name)
+            {
+                return _ability.GetVariableCollection().GetVariable(name);
+            }
+            
+            public ValueBox<T> GetVariable<T>(string name)
+            {
+                return _ability.GetVariableCollection().GetVariable(name) as ValueBox<T>;
+            }
+            
+            public void DeleteVariable(string name)
+            {
+                _ability.GetVariableCollection().Remove(name);
+            }
+
+            public void GoNext(int curNodeId, int nextNodeId)
+            {
+                NodePass(curNodeId);
+                GoNext(nextNodeId);
+            }
+            
+            public void GoNext(int nextNodeId)
+            {
+                if (nextNodeId < 0)
+                {
+                    State.Current.IsEnd = true;
+                }
+                else
+                {
+                    _nodes[nextNodeId].DoJob();
+                }
             }
         }
     }

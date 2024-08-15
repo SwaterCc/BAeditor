@@ -38,7 +38,7 @@ namespace Battle.Def
 
     public class AbilityNodeData
     {
-        public int NodeUid;
+        public int NodeId;
         
         public EAbilityNodeType NodeType;
         
@@ -58,19 +58,38 @@ namespace Battle.Def
         
         public EventNodeData EventNodeData;
         
-        public ForeachNodeData ForeachNodeData;
+        public RepeatNodeData RepeatNodeData;
 
         public VariableNodeData VariableNodeData; 
         
         public EAbilityCycleType CycleNodeData;
 
-        public float WaitNodeData;
+        public TimerNodeData TimerNodeData;
     }
 
-    public class ForeachNodeData
+    public class StageNodeData
     {
-        public EForeachObjType ForeachObjType;
-        public Param[] ForeachData;
+        
+    }
+    
+    public class TimerNodeData
+    {
+        public float FirstInterval;
+        public float Interval;
+        public float MaxCount;
+    }
+    
+    public class RepeatNodeData
+    {
+        public ERepeatOperationType RepeatOperationType;
+
+        public int MaxRepeatCount;
+
+        public float StartValue;
+        public float StepValue;
+        public int StepCount;
+        
+        public Param[] CallFuncData;
     }
     
     public class EventNodeData

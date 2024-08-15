@@ -81,11 +81,16 @@ namespace Battle.Tools
     public static class AbilityExtension
     {
         [AbilityFuncTag(EFuncCacheFlag.OnlyCache)]
-        public static int GetActorXXX(this Actor actor, int i)
+        public static void CreateHitBox(this Actor actor, int i)
         {
-            return 1;
+           
         }
 
+        public static void AddAbility(int id)
+        {
+            
+        }
+        
         public static T GetAttr<T>(this Actor actor, EAttributeType attributeType)
         {
             return default;

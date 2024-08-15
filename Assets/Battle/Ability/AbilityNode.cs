@@ -16,7 +16,7 @@ namespace Battle
                     case EAbilityNodeType.EAbilityCycle:
                         return new AbilityCycleNode(executor, data);
                     case EAbilityNodeType.EWait:
-                        return new AbilityWaitNode(executor, data);
+                        return new AbilityTimerNode(executor, data);
                     case EAbilityNodeType.EBranchControl:
                         return new AbilityBranchNode(executor, data);
                     case EAbilityNodeType.EVariableControl:
@@ -27,42 +27,53 @@ namespace Battle
                         return new AbilityActionNode(executor, data);
                 }
 
-                Debug.LogError($"创建节点失败，节点ID{data.NodeUid} 类型 {data.NodeType}");
-                return new AbilityWaitNode(executor, data);
+                Debug.LogError($"创建节点失败，节点ID{data.NodeId} 类型 {data.NodeType}");
+                return new AbilityTimerNode(executor, data);
             }
             
             public int ConfigId;
 
             public AbilityNodeData NodeData;
 
-            //该节点是否以及运行过
-            public bool JobFinish;
-
-            public bool CanDeep;
-
             protected AbilityExecutor _executor;
 
             protected AbilityNode(AbilityExecutor executor, AbilityNodeData data)
             {
-                JobFinish = false;
                 NodeData = data;
-                ConfigId = NodeData.NodeUid;
-                CanDeep = true;
-            }
-
-            public virtual void Doing()
-            {
-                DoJob();
+                ConfigId = NodeData.NodeId;
             }
             
             /// <summary>
             /// 执行节点功能
             /// </summary>
             public abstract void DoJob();
-            
-            protected int GetNextNode()
+
+            /// <summary>
+            /// 重置该节点，注意，同时该节点会被重置为未执行过
+            /// </summary>
+            public virtual void Reset()
             {
-                if (NodeData.ChildrenUids.Count > 0 && !_executor.nodeIsPast(NodeData.ChildrenUids[0])) 
+                _executor.RemovePass(ConfigId);
+                onReset();
+                resetChildren();
+            }
+
+            protected void resetChildren()
+            {
+                foreach (var childrenUid in NodeData.ChildrenUids)
+                {
+                    _executor.NodeReset(childrenUid);
+                }
+            }
+
+            protected virtual void onReset()
+            {
+                
+            }
+            
+            public virtual int GetNextNode()
+            {
+                if (NodeData.ChildrenUids.Count > 0 && !_executor.IsPassedNode(NodeData.ChildrenUids[0])) 
                 {
                     //有子节点返回第一个子节点
                     return NodeData.ChildrenUids[0];
@@ -80,18 +91,6 @@ namespace Battle
                 }
 
                 return -1;
-            }
-            
-            public virtual bool TryGetChildren(out int childIdx)
-            {
-                childIdx = 0;
-                return NodeData.ChildrenUids.Count > 1 && CanDeep;
-            }
-
-            public virtual bool TryGetBrother(out int brother)
-            {
-                brother = NodeData.NextIdInSameLevel;
-                return NodeData.NextIdInSameLevel > 0;
             }
         }
     }

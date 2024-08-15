@@ -4,29 +4,58 @@ namespace Battle
 {
     public partial class Ability
     {
-        private class AbilityWaitNode : AbilityNode,IWaitCallBack
+        private class AbilityTimerNode : AbilityNode, ITimer
         {
-            public float waitDuration_;
-            public AbilityWaitNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) { }
-            public override void DoJob()
+            private readonly TimerNodeData _timerData;
+            private float _duration;
+            private int _count;
+            private bool _isFirst;
+
+            public AbilityTimerNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                waitDuration_ = 0;
-                _executor.State.Current.Wait(this);
+                _timerData = NodeData.TimerNodeData;
             }
 
-            public bool IsWaiting()
+            public override void DoJob()
             {
-               return waitDuration_ < NodeData.WaitNodeData;
+                _duration = 0;
+                _count = 0;
+                _isFirst = true;
+                _executor.State.Current.TimerStart(this);
+            }
+
+            public bool IsFinish()
+            {
+                return _count > _timerData.MaxCount;
             }
 
             public void Add(float dt)
             {
-                waitDuration_ += dt;
+                _duration += dt;
             }
 
-            public void OnCallBack()
+            public bool NeedCall()
             {
-                //走下个节点
+                bool res;
+                if (_isFirst)
+                {
+                    _isFirst = false;
+                    res = _duration >= _timerData.FirstInterval;
+                    _duration = 0;
+                }
+                else
+                {
+                    res = _duration >= _timerData.Interval;
+                    _duration = 0;
+                }
+
+                return res;
+            }
+
+            public void OnCallTimer()
+            {
+                ++_count;
+                
             }
         }
     }

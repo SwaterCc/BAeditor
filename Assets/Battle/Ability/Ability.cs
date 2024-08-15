@@ -40,12 +40,7 @@ namespace Battle
         private AbilityData _abilityData;
 
         private int _abilityConfigId;
-
-        /// <summary>
-        /// cd计时器，视情况初始化
-        /// </summary>
-        private ScheduleTimer _cdTimer;
-
+        
         /// <summary>
         /// 执行者
         /// </summary>

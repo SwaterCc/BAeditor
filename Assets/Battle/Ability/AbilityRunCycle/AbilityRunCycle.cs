@@ -1,62 +1,106 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Battle
 {
     public partial class Ability
     {
-        private interface IWaitCallBack
+        private interface ITimer
         {
-            public bool IsWaiting();
+            public bool IsFinish();
             public void Add(float dt);
-            public void OnCallBack();
+
+            public bool NeedCall();
+
+            public void OnCallTimer();
         }
-        
+
         private abstract class AbilityRunCycle
         {
             protected Ability _ability;
             protected AbilityExecutor _executor;
             protected AbilityState _state;
-            public bool IsFinish;
-            public 
-            private IWaitCallBack _waitNode;
+
+            /// <summary>
+            /// 通常是AbilityExecutor把节点执行完后会设置这个值
+            /// </summary>
+            public bool IsEnd;
+
+            private readonly HashSet<ITimer> _timerNodes;
+            private readonly List<ITimer> _removes;
+            public EAbilityState CurState => getCurState();
+
             protected AbilityRunCycle(Ability ability)
             {
                 _ability = ability;
                 _executor = ability._executor;
-                IsFinish = false;
+                _timerNodes = new HashSet<ITimer>();
+                _removes = new List<ITimer>();
             }
 
-            public void Wait(IWaitCallBack callBack)
+            public void TimerStart(ITimer callBack)
             {
-                _waitNode = callBack;
+                _timerNodes.Add(callBack);
             }
-            
+
             protected abstract EAbilityCycleType getCycleType();
+            protected abstract EAbilityState getCurState();
 
-            public virtual void OnEnter()
+            public void Enter()
             {
+                onEnter();
                 _executor.ExecuteCycleNode(getCycleType());
             }
 
-            public virtual void OnTick(float dt)
+            protected virtual void onEnter() { }
+
+            public virtual void Tick(float dt)
             {
-                if (_waitNode != null )
+                foreach (var timer in _timerNodes)
                 {
-                    if (_waitNode.IsWaiting())
+                    if (timer.IsFinish())
                     {
-                        _waitNode.Add(dt);
+                        _removes.Add(timer);
                     }
                     else
                     {
-                        _waitNode.OnCallBack();
-                        _waitNode = null;
+                        timer.Add(dt);
+                        if (timer.NeedCall())
+                        {
+                            timer.OnCallTimer();
+                        }
                     }
                 }
+
+                onTick(dt);
+
+                foreach (var timer in _removes)
+                {
+                    _timerNodes.Remove(timer);
+                }
+
+                _removes.Clear();
             }
-            public virtual void OnExit() { }
+
+            protected virtual void onTick(float dt) { }
+
+            public void Exit()
+            {
+                onExit();
+
+                _timerNodes.Clear();
+                _removes.Clear();
+            }
+
+            protected virtual void onExit() { }
 
             public abstract EAbilityState GetNextState();
+
+            public bool CanExit()
+            {
+                return IsEnd;
+            }
         }
 
         private class InitRunCycle : AbilityRunCycle
@@ -68,18 +112,15 @@ namespace Battle
                 return EAbilityCycleType.OnInit;
             }
 
-            public override void OnEnter()
+            protected override EAbilityState getCurState() => EAbilityState.Init;
+
+            protected override void onEnter()
             {
                 //注册事件
                 _executor.RegisterEventNode();
-                
-                base.OnEnter();
-            }
 
-            public override void OnTick(float dt)
-            {
                 //初始化特化模板数据
-                
+                //...
             }
 
             public override EAbilityState GetNextState()
@@ -91,12 +132,70 @@ namespace Battle
         /// <summary>
         /// 不暴露接口，纯逻辑态
         /// </summary>
-        private class Ready { }
+        private class Ready : AbilityRunCycle
+        {
+            private EAbilityState _nextState;
+            protected override EAbilityState getCurState() => EAbilityState.Ready;
+            public Ready(Ability ability) : base(ability) { }
 
-        private class PreExecute { }
+            protected override EAbilityCycleType getCycleType()
+            {
+                return EAbilityCycleType.OnReady;
+            }
 
-        private class Executing { }
+            protected override void onTick(float dt)
+            {
+                if (_state.IsActive)
+                {
+                    //运行前检测
+                    if (_ability.GetCheckerRes(EAbilityCycleType.OnPreExecuteCheck))
+                    {
+                        _nextState = EAbilityState.PreExecute;
+                        IsEnd = true;
+                    }
+                    else
+                    {
+                        //检测失败
+                        _state.ActivationFailed();
+                    }
+                }
+            }
 
-        private class EndExecute { }
+            public override EAbilityState GetNextState()
+            {
+                return _nextState;
+            }
+        }
+
+        private class PreExecute : AbilityRunCycle
+        {
+            public PreExecute(Ability ability) : base(ability) { }
+            
+            protected override EAbilityCycleType getCycleType() => EAbilityCycleType.OnPreExecute;
+
+            protected override EAbilityState getCurState() => EAbilityState.PreExecute;
+
+            public override EAbilityState GetNextState() => EAbilityState.Executing;
+        }
+
+        private class Executing : AbilityRunCycle
+        {
+            public Executing(Ability ability) : base(ability) { }
+            protected override EAbilityCycleType getCycleType() => EAbilityCycleType.OnExecuting;
+
+            protected override EAbilityState getCurState() => EAbilityState.Executing;
+
+            public override EAbilityState GetNextState() => EAbilityState.EndExecute;
+        }
+
+        private class EndExecute  : AbilityRunCycle
+        {
+            public EndExecute(Ability ability) : base(ability) { }
+            protected override EAbilityCycleType getCycleType() => EAbilityCycleType.OnEndExecute;
+
+            protected override EAbilityState getCurState() => EAbilityState.EndExecute;
+
+            public override EAbilityState GetNextState() => EAbilityState.Ready;
+        }
     }
 }

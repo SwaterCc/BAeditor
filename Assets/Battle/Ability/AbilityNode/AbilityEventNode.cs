@@ -22,30 +22,24 @@ namespace Battle
                 switch (_eventData.EventType)
                 {
                     case EAbilityEventType.Tag:
-                        checker = new TagEventChecker(_eventData.Tag, OnEventFired);
+                        checker = new TagEventChecker(_eventData.Tag, null);
                         break;
                     case EAbilityEventType.Hit:
-                        checker = new HitEventChecker(_eventData.HitBoxId, OnEventFired);
+                        checker = new HitEventChecker(_eventData.HitBoxId, null);
                         break;
                     case EAbilityEventType.MotionBegin:
                     case EAbilityEventType.MotionEnd:
-                        checker = new MotionEventChecker(_eventData.EventType, _eventData.MotionId, OnEventFired);
+                        checker = new MotionEventChecker(_eventData.EventType, _eventData.MotionId, null);
                         break;
                 }
 
                 BattleEventMgr.Instance.Register(checker);
             }
 
-            public void OnEventFired()
-            {
-                //执行
-                _executor.RunNode(this);
-            }
-
 
             public override void DoJob()
             {
-                JobFinish = true;
+                _executor.GoNext(ConfigId, GetNextNode());
             }
         }
     }

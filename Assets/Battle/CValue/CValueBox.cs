@@ -7,6 +7,11 @@ namespace Battle
 {
     public interface IValueBox
     {
+        /// <summary>
+        /// 注意！如果该值为值类型则会导致二次装箱
+        /// </summary>
+        /// <returns></returns>
+        public object GetObject();
         public void Set(IValueBox newBox);
         public Type GetValueType();
     }
@@ -37,6 +42,11 @@ namespace Battle
         public void Set(T value)
         {
             _value = value;
+        }
+
+        public object GetObject()
+        {
+            return _value;
         }
 
         public void Set(IValueBox newBox)

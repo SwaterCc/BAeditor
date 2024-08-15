@@ -1,6 +1,6 @@
 namespace Battle.AbilityRunCycle
 {
-    public class AbilityEventState
+    public class AbilityEventTrigger
     {
         
     }

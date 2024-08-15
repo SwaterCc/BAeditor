@@ -73,6 +73,11 @@ namespace Battle
         OnInit,
 
         /// <summary>
+        /// 初始化完成，且未有执行指令时的等待周期，不可编辑（目前）
+        /// </summary>
+        OnReady,
+        
+        /// <summary>
         /// 能力执行前检测
         /// </summary>
         OnPreExecuteCheck,
@@ -132,6 +137,11 @@ namespace Battle
         /// 等待节点
         /// </summary>
         EWait,
+        
+        /// <summary>
+        /// 阶段节点
+        /// </summary>
+        EStage
     }
 
     /// <summary>
@@ -330,10 +340,20 @@ namespace Battle
         MotionEnd,
     }
 
-    public enum EForeachObjType
+    public enum ERepeatOperationType
     {
-        List,
-        Dict
+        //仅重复执行
+        OnlyRepeat,
+        //数值循环
+        NumberLoop,
+        //迭代函数
+        Foreach,
+    }
+
+    public enum ETimerOperationType
+    {
+        Once,
+        Schedule,
     }
 
     [Flags]
