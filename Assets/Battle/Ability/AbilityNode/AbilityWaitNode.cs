@@ -4,6 +4,9 @@ namespace Battle
 {
     public partial class Ability
     {
+        /// <summary>
+        /// 时间节点的子节点不可以有时间节点
+        /// </summary>
         private class AbilityTimerNode : AbilityNode, ITimer
         {
             private readonly TimerNodeData _timerData;
@@ -55,7 +58,24 @@ namespace Battle
             public void OnCallTimer()
             {
                 ++_count;
-                
+                resetChildren();
+                _executor.ExecuteNode(NodeData.ChildrenUids[0]);
+            }
+
+            public override int GetNextNode()
+            {
+                if (NodeData.NextIdInSameLevel > 0)
+                {
+                    //没有子节点返回自己下一个相邻节点,不用判执行，因为理论上不会跳着走
+                    return NodeData.NextIdInSameLevel;
+                }
+
+                if (NodeData.Parent > 0)
+                {
+                    return NodeData.Parent;
+                }
+
+                return -1;
             }
         }
     }

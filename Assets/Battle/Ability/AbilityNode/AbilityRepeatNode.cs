@@ -29,52 +29,67 @@ namespace Battle
                 _curValue = 0;
                 _enumerable = null;
             }
-
-            public override void DoJob()
+            
+            public void Repeat()
             {
                 switch (_repeatNodeData.RepeatOperationType)
                 {
                     case ERepeatOperationType.OnlyRepeat:
-                        _executor.CreateVariable(LOOP_VALUE,new ValueBox<int>(_curLoopCount));
-                        if (_curLoopCount++ < _repeatNodeData.MaxRepeatCount)
-                        {
-                            _executor.GoNext(NodeData.ChildrenUids[0]);
-                        }
+                        _executor.GetVariable<int>(LOOP_VALUE).Set(_curLoopCount);
+                        ++_curLoopCount;
                         break;
                     case ERepeatOperationType.NumberLoop:
-                        _executor.CreateVariable(LOOP_VALUE,new ValueBox<float>(_repeatNodeData.StartValue));
-                        if (_curLoopCount++ < _repeatNodeData.StepCount)
-                        {
-                            _curValue += _repeatNodeData.StartValue;
-                            _executor.GoNext(NodeData.ChildrenUids[0]);
-                        }
+                        ++_curLoopCount;
+                        _curValue += _repeatNodeData.StepValue;
+                        _executor.GetVariable<float>(LOOP_VALUE).Set(_curValue);
                         break;
                 }
+                _executor.RemovePass(ConfigId);
+                resetChildren();
             }
 
-            public override int GetNextNode()
+            public bool CheckLoopEnd()
             {
                 switch (_repeatNodeData.RepeatOperationType)
                 {
                     case ERepeatOperationType.OnlyRepeat:
                         if (_curLoopCount < _repeatNodeData.MaxRepeatCount)
                         {
-                            _executor.GetVariable<int>(LOOP_VALUE).Set(_curLoopCount++);
-                            resetChildren();
-                            return NodeData.ChildrenUids[0];
+                            return true;
                         }
                         break;
                     case ERepeatOperationType.NumberLoop:
                         if (_curLoopCount++ < _repeatNodeData.StepCount)
                         {
-                            _curValue += _repeatNodeData.StepValue;
-                            _executor.GetVariable<float>(LOOP_VALUE).Set(_curValue);
-                            resetChildren();
-                            return NodeData.ChildrenUids[0];
+                            return true;
                         }
                         break;
                 }
 
+                return false;
+            }
+            
+            public override void DoJob()
+            {
+                switch (_repeatNodeData.RepeatOperationType)
+                {
+                    case ERepeatOperationType.OnlyRepeat:
+                        _executor.CreateVariable(LOOP_VALUE,new ValueBox<int>(_curLoopCount));
+                      
+                        break;
+                    case ERepeatOperationType.NumberLoop:
+                        _executor.CreateVariable(LOOP_VALUE,new ValueBox<float>(_repeatNodeData.StartValue));
+                        break;
+                }
+            }
+
+            public override int GetNextNode()
+            {
+                if (!CheckLoopEnd())
+                {
+                    return NodeData.ChildrenUids[0];
+                }
+                
                 if (NodeData.NextIdInSameLevel > 0)
                 {
                     //没有子节点返回自己下一个相邻节点,不用判执行，因为理论上不会跳着走

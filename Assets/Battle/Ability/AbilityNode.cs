@@ -37,6 +37,8 @@ namespace Battle
 
             protected AbilityExecutor _executor;
 
+            public bool JobFinish;
+
             protected AbilityNode(AbilityExecutor executor, AbilityNodeData data)
             {
                 NodeData = data;
@@ -62,7 +64,7 @@ namespace Battle
             {
                 foreach (var childrenUid in NodeData.ChildrenUids)
                 {
-                    _executor.NodeReset(childrenUid);
+                    _executor.ResetNode(childrenUid);
                 }
             }
 
@@ -87,7 +89,7 @@ namespace Battle
 
                 if (NodeData.Parent > 0)
                 {
-                    return _executor.GetNode(NodeData.Parent).GetNextNode();
+                    return NodeData.Parent;
                 }
 
                 return -1;

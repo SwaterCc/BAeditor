@@ -69,7 +69,7 @@ namespace Battle.Def
 
     public class StageNodeData
     {
-        
+        public int StageId;
     }
     
     public class TimerNodeData

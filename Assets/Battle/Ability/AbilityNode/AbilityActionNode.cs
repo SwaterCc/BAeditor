@@ -25,7 +25,6 @@ namespace Battle
             public override void DoJob()
             {
                 _actionFunc.TryCallFunc(out _);
-                _executor.GoNext(ConfigId, GetNextNode());
             }
         }
     }

@@ -39,7 +39,7 @@ namespace Battle
 
             public override void DoJob()
             {
-                _executor.GoNext(ConfigId, GetNextNode());
+                
             }
         }
     }

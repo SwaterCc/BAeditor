@@ -29,7 +29,6 @@ namespace Battle
                 if (_branchNodeStack.TryCallFunc(out var res))
                 {
                     _conditionRes = ((ValueBox<bool>)res).Get();
-                    _executor.GoNext(ConfigId, GetNextNode());
                 }
                 else
                 {
@@ -54,7 +53,7 @@ namespace Battle
 
                 if (NodeData.Parent > 0)
                 {
-                    return _executor.GetNode(NodeData.Parent).GetNextNode();
+                    return NodeData.Parent;
                 }
 
                 return -1;

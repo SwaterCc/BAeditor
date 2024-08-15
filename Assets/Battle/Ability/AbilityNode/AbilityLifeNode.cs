@@ -9,7 +9,7 @@ namespace Battle
             public AbilityCycleNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) { }
             public override void DoJob()
             {
-                _executor.GoNext(ConfigId, GetNextNode());
+                
             }
         }   
     }

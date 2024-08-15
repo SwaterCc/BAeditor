@@ -13,19 +13,22 @@ namespace Battle
         {
             private readonly Ability _ability;
             private AbilityNode _curNode;
+
             /// <summary>
             /// 节点的配置ID-节点对象
             /// </summary>
             private Dictionary<int, AbilityNode> _nodes;
 
-            private Dictionary<EAbilityCycleType, AbilityCycleNode> _cycleHeads;
+            private Dictionary<EAbilityCycleType, int> _cycleHeads;
 
             private HashSet<int> _pastNodeId;
 
             private List<AbilityEventNode> _eventNodes;
 
+            private Stack<int> _repeatNodeIds;
+
             public AbilityState State => _ability._state;
-            
+
             public AbilityExecutor(Ability ability)
             {
                 _ability = ability;
@@ -40,35 +43,36 @@ namespace Battle
                 if (nodeDict is { Count: > 0 })
                 {
                     _nodes ??= new Dictionary<int, AbilityNode>();
-                    _cycleHeads ??= new Dictionary<EAbilityCycleType, AbilityCycleNode>();
+                    _cycleHeads ??= new Dictionary<EAbilityCycleType, int>();
                     _eventNodes ??= new List<AbilityEventNode>();
                     _pastNodeId ??= new HashSet<int>();
+                    _repeatNodeIds ??= new Stack<int>();
                     //数据转化为实际逻辑节点
                     foreach (var pair in nodeDict)
                     {
-                       var node = AbilityNode.CreateNode(this, pair.Value);
-                       _nodes.Add(node.ConfigId, node);
+                        var node = AbilityNode.CreateNode(this, pair.Value);
+                        _nodes.Add(node.ConfigId, node);
 
-                       if (node.NodeData.NodeType == EAbilityNodeType.EAbilityCycle)
-                       {
-                           _cycleHeads.Add(node.NodeData.CycleNodeData, (AbilityCycleNode)node);
-                       }
+                        if (node.NodeData.NodeType == EAbilityNodeType.EAbilityCycle)
+                        {
+                            _cycleHeads.Add(node.NodeData.CycleNodeData, node.ConfigId);
+                        }
 
-                       if (node.NodeData.NodeType == EAbilityNodeType.EEventFired)
-                       {
-                           _eventNodes.Add((AbilityEventNode)node);
-                       }
+                        if (node.NodeData.NodeType == EAbilityNodeType.EEventFired)
+                        {
+                            _eventNodes.Add((AbilityEventNode)node);
+                        }
                     }
                 }
             }
-            
+
             public void UnInstall()
             {
                 _eventNodes.Clear();
                 _cycleHeads.Clear();
                 _nodes.Clear();
             }
-            
+
             public void RegisterEventNode()
             {
                 foreach (var eventNode in _eventNodes)
@@ -77,7 +81,7 @@ namespace Battle
                 }
             }
 
-            public void NodePass(int id)
+            public void PassNode(int id)
             {
                 _pastNodeId.Add(id);
             }
@@ -87,16 +91,16 @@ namespace Battle
                 _pastNodeId.Remove(id);
             }
 
-            public void NodeReset(int id)
+            public void ResetNode(int id)
             {
                 _nodes[id].Reset();
             }
-            
+
             public bool IsPassedNode(int id)
             {
-               return _pastNodeId.Contains(id);
+                return _pastNodeId.Contains(id);
             }
-            
+
             public AbilityNode GetNode(int id)
             {
                 return _nodes[id];
@@ -104,14 +108,61 @@ namespace Battle
 
             public bool HeadNodeHasChildren(EAbilityCycleType cycleType)
             {
-                return _cycleHeads[cycleType].NodeData.ChildrenUids.Count > 0;
+                var id = _cycleHeads[cycleType];
+                return _nodes[id].NodeData.ChildrenUids.Count > 0;
             }
-            
+
+
+            public void ExecuteNode(int nodeId)
+            {
+                var curNode = _nodes[nodeId];
+                while (nodeId > 0)
+                {
+                    curNode.DoJob();
+                    PassNode(nodeId);
+                    
+                    if (curNode.NodeData.NodeType == EAbilityNodeType.ERepeat)
+                    {
+                        _repeatNodeIds.Push(curNode.ConfigId);
+                    }
+                    
+                    nodeId = curNode.GetNextNode();
+
+                    if (nodeId == _repeatNodeIds.Peek())
+                    {
+                        //重复节点又回来了
+                        var repeatNode = ((AbilityRepeatNode)curNode);
+                        if (repeatNode.CheckLoopEnd())
+                        {
+                            _repeatNodeIds.Pop();
+                        }
+                        else
+                        {
+                            repeatNode.Repeat();
+                            nodeId = _nodes[nodeId].NodeData.ChildrenUids[0];
+                            continue;
+                        }
+                    }
+                    
+                    if (nodeId == curNode.NodeData.Parent)
+                    {
+                        while (_nodes[nodeId].NodeData.Parent == _nodes[nodeId].GetNextNode())
+                        {
+                            //如果不是循环节点则查找可走节点
+                            nodeId = _nodes[nodeId].NodeData.Parent;
+                        }
+
+                        curNode = _nodes[nodeId];
+                    }
+                    
+                }
+            }
+
             public void ExecuteCycleNode(EAbilityCycleType cycleType)
             {
-                if (_cycleHeads.TryGetValue(cycleType,out var cycleNode))
+                if (_cycleHeads.TryGetValue(cycleType, out var cycleNodeId))
                 {
-                    cycleNode.DoJob();
+                    ExecuteNode(cycleNodeId);
                 }
                 else
                 {
@@ -119,7 +170,9 @@ namespace Battle
                 }
             }
 
-            public void CreateVariable(string name,IValueBox valueBox)
+            #region AbilityVariable包装
+
+            public void CreateVariable(string name, IValueBox valueBox)
             {
                 _ability.GetVariableCollection().Add(name, valueBox);
             }
@@ -128,34 +181,18 @@ namespace Battle
             {
                 return _ability.GetVariableCollection().GetVariable(name);
             }
-            
+
             public ValueBox<T> GetVariable<T>(string name)
             {
                 return _ability.GetVariableCollection().GetVariable(name) as ValueBox<T>;
             }
-            
+
             public void DeleteVariable(string name)
             {
                 _ability.GetVariableCollection().Remove(name);
             }
 
-            public void GoNext(int curNodeId, int nextNodeId)
-            {
-                NodePass(curNodeId);
-                GoNext(nextNodeId);
-            }
-            
-            public void GoNext(int nextNodeId)
-            {
-                if (nextNodeId < 0)
-                {
-                    State.Current.IsEnd = true;
-                }
-                else
-                {
-                    _nodes[nextNodeId].DoJob();
-                }
-            }
+            #endregion
         }
     }
 }

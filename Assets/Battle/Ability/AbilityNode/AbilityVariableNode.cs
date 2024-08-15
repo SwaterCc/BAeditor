@@ -37,8 +37,6 @@ namespace Battle
                         var variable = AbilityExtension.GetVariableBox(_varData.Range, _varData.Name);
                         variable.Set(variableBox);
                     }
-
-                    _executor.GoNext(ConfigId, GetNextNode());
                 }
                 else
                 {
