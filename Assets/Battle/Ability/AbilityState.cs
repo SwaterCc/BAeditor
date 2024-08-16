@@ -7,17 +7,15 @@ namespace Battle
         private class AbilityState
         {
             private Ability _ability;
-            private AbilityExecutor _executor;
-            private Dictionary<EAbilityState, AbilityRunCycle> _cycles;
-            private bool _isActive;
-            public bool IsActive => _isActive;
+            private readonly Dictionary<EAbilityState, AbilityRunCycle> _cycles;
+            private bool _hasExecuteOrder;
+            public bool HasExecuteOrder => _hasExecuteOrder;
             private AbilityRunCycle _curCycle;
             public AbilityRunCycle Current => _curCycle;
 
             public AbilityState(Ability ability)
             {
                 _ability = ability;
-                _executor = _ability._executor;
                 _cycles = new Dictionary<EAbilityState, AbilityRunCycle>()
                 {
                     { EAbilityState.Init, new InitRunCycle(_ability) },
@@ -27,9 +25,14 @@ namespace Battle
                     { EAbilityState.EndExecute, new EndExecute(_ability) },
                 };
 
-                _isActive = false;
+                _hasExecuteOrder = false;
             }
 
+            public AbilityRunCycle GetState(EAbilityState state)
+            {
+                return _cycles[state];
+            }
+            
             /// <summary>
             /// Ability初始化的下一帧执行
             /// </summary>
@@ -48,26 +51,35 @@ namespace Battle
                     _curCycle.Exit();
                     _curCycle = _cycles[_curCycle.GetNextState()];
                     _curCycle.Enter();
+                    if (_curCycle.CurState == EAbilityState.Executing)
+                    {
+                        _hasExecuteOrder = false;
+                    }
                 }
 
                 _curCycle.Tick(dt);
             }
 
-            public bool TryActive()
+            public void TryExecute()
             {
-                _isActive = _curCycle.CurState == EAbilityState.Ready;
-                return _isActive;
+                _hasExecuteOrder = _curCycle.CurState == EAbilityState.Ready;
             }
 
-            public void ActivationFailed()
+            public void ExecuteFailed()
             {
-                _isActive = false;
+                _hasExecuteOrder = false;
             }
 
             public void Stop()
             {
                 _curCycle.Exit();
                 _curCycle = null;
+            }
+
+            public void OnDestroy()
+            {
+                _hasExecuteOrder = false;
+                Stop();
             }
         }
     }

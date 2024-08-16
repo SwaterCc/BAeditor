@@ -8,48 +8,14 @@ namespace Battle.Tools
 {
     public static class AbilityHelper
     {
-
-        public class ParamParser<T>
+        public static void AwardAbility(int actorId, Ability ability, bool isRunNow = false)
         {
-            private T _parseRes;
-            private Param _param;
-
-            public ParamParser(Param param)
-            {
-                _param = param;
-            }
-
-            public void Parse()
-            {
-                if (_param.IsBaseType)
-                {
-                    
-                }
-
-                if (_param.IsFunc) { }
-
-                if (_param.IsVariable) { }
-
-                if (_param.IsAttribute) { }
-            }
+            //actor._abilityController.AwardActorAbility(ability, isRunNow);
         }
         
-        public static void CallStack(this Stack<Param> stack)
+        public static void AwardAbility(this Actor actor, Ability ability, bool isRunNow = false)
         {
-            void ParseParam()
-            {
-                foreach (var param in stack) { }
-            }
-
-            if (stack.Count <= 0)
-            {
-                Debug.LogError("Stack Is Empty!!");
-                return;
-            }
-
-            var top = stack.Pop();
-
-           
+            actor.GetAbilityController().AwardActorAbility(ability, isRunNow);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Battle
 {
@@ -21,11 +22,6 @@ namespace Battle
             protected Ability _ability;
             protected AbilityExecutor _executor;
             protected AbilityState _state;
-
-            /// <summary>
-            /// 通常是AbilityExecutor把节点执行完后会设置这个值
-            /// </summary>
-            public bool IsEnd;
 
             private readonly HashSet<ITimer> _timerNodes;
             private readonly List<ITimer> _removes;
@@ -97,9 +93,9 @@ namespace Battle
 
             public abstract EAbilityState GetNextState();
 
-            public bool CanExit()
+            public virtual bool CanExit()
             {
-                return IsEnd;
+                return _timerNodes.Count == 0;
             }
         }
 
@@ -134,10 +130,10 @@ namespace Battle
         /// </summary>
         private class Ready : AbilityRunCycle
         {
-            private EAbilityState _nextState;
+            private EAbilityState _nextState = EAbilityState.Ready;
             protected override EAbilityState getCurState() => EAbilityState.Ready;
             public Ready(Ability ability) : base(ability) { }
-
+            
             protected override EAbilityCycleType getCycleType()
             {
                 return EAbilityCycleType.OnReady;
@@ -145,20 +141,30 @@ namespace Battle
 
             protected override void onTick(float dt)
             {
-                if (_state.IsActive)
+                if (_state.HasExecuteOrder)
                 {
                     //运行前检测
                     if (_ability.GetCheckerRes(EAbilityCycleType.OnPreExecuteCheck))
                     {
                         _nextState = EAbilityState.PreExecute;
-                        IsEnd = true;
                     }
                     else
                     {
                         //检测失败
-                        _state.ActivationFailed();
+                        _state.ExecuteFailed();
+                        Debug.Log("资源检测失败！");
                     }
                 }
+            }
+
+            protected override void onExit()
+            {
+                _nextState = EAbilityState.Ready;
+            }
+
+            public override bool CanExit()
+            {
+                return _state.HasExecuteOrder;
             }
 
             public override EAbilityState GetNextState()
@@ -180,12 +186,29 @@ namespace Battle
 
         private class Executing : AbilityRunCycle
         {
+            private Dictionary<int, IStageNodeProxy> _stageNodeProxies = new(8);
+
+            public IStageNodeProxy CurProxy;
+
+            public bool AllStageFinish;
+            
             public Executing(Ability ability) : base(ability) { }
+            
             protected override EAbilityCycleType getCycleType() => EAbilityCycleType.OnExecuting;
 
             protected override EAbilityState getCurState() => EAbilityState.Executing;
 
             public override EAbilityState GetNextState() => EAbilityState.EndExecute;
+
+            public void AddStageProxy(IStageNodeProxy proxy)
+            {
+                _stageNodeProxies.Add(proxy.GetId(),proxy);
+            }
+            
+            public override bool CanExit()
+            {
+                return base.CanExit() && AllStageFinish;
+            }
         }
 
         private class EndExecute  : AbilityRunCycle

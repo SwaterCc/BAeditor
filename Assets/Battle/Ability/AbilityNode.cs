@@ -73,6 +73,7 @@ namespace Battle
                 
             }
             
+            
             public virtual int GetNextNode()
             {
                 if (NodeData.ChildrenUids.Count > 0 && !_executor.IsPassedNode(NodeData.ChildrenUids[0])) 

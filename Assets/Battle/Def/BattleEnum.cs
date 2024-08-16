@@ -233,43 +233,7 @@ namespace Battle
     /// 战斗位移的类型
     /// </summary>
     public enum EBattleSpecialMotionType { }
-
-    /// <summary>
-    /// 战斗事件节点的枚举类型
-    /// </summary>
-    public enum EBattleEventType
-    {
-        /// <summary>
-        /// 当前阶段开始
-        /// </summary>
-        StageBegin,
-
-        /// <summary>
-        /// 当前阶段结束
-        /// </summary>
-        StageEnd,
-
-        /// <summary>
-        /// 指定打击点命中
-        /// </summary>
-        Hit,
-
-        /// <summary>
-        /// 位移开始
-        /// </summary>
-        SpecialMotionBegin,
-
-        /// <summary>
-        /// 位移结束
-        /// </summary>
-        SpecialMotionEnd,
-
-        /// <summary>
-        /// 定时器
-        /// </summary>
-        Timer
-    }
-
+    
     /// <summary>
     /// 比较方式
     /// </summary>
@@ -323,23 +287,7 @@ namespace Battle
         Add,
         Override,
     }
-
-    public enum EAbilityEventType
-    {
-        Tag,
-
-        /// <summary>
-        /// Hit仅自身创建的打击点命中，如果要检测全局建议使用Tag
-        /// </summary>
-        Hit,
-
-        /// <summary>
-        /// Motion仅自身的位移发生，如果要检测全局建议使用Tag
-        /// </summary>
-        MotionBegin,
-        MotionEnd,
-    }
-
+    
     public enum ERepeatOperationType
     {
         //仅重复执行

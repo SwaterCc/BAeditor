@@ -14,6 +14,7 @@ namespace Battle
         public object GetObject();
         public void Set(IValueBox newBox);
         public Type GetValueType();
+        public bool IsValueType();
     }
     
     /// <summary>
@@ -23,10 +24,12 @@ namespace Battle
     public class ValueBox<T> : IValueBox
     {
         protected T _value;
-
+        private bool _isValueType;
+        
         public ValueBox()
         {
             _value = default;
+            _isValueType = typeof(T).IsValueType;
         }
         
         public ValueBox(T value)
@@ -65,6 +68,11 @@ namespace Battle
         public Type GetValueType()
         {
             return GetType();
+        }
+
+        public bool IsValueType()
+        {
+            return _isValueType;
         }
     }
 }

@@ -15,7 +15,6 @@ namespace Battle
             private int _curLoopCount = 0;
             private float _curValue = 0;
             private Queue<Param> _params;
-            private IList _enumerable = null;
             
             public AbilityRepeatNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
@@ -27,7 +26,6 @@ namespace Battle
             {
                 _curLoopCount = 0;
                 _curValue = 0;
-                _enumerable = null;
             }
             
             public void Repeat()

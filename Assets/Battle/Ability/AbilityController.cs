@@ -20,23 +20,12 @@ namespace Battle
         /// <param name="isRunNow"></param>
         public void AwardActorAbility(Ability ability, bool isRunNow)
         {
-            if (ability.GetCheckerRes(EAbilityCycleType.OnPreAwardCheck) 
+            if (ability.GetCheckerRes(EAbilityCycleType.OnPreAwardCheck)
                 && _abilities.ContainsKey(ability.Uid))
             {
                 _abilities.Add(ability.Uid, ability);
-                
+                if (isRunNow) ability.Execute();
             }
-        }
-
-        /// <summary>
-        /// 给予能力静态版本
-        /// </summary>
-        /// <param name="actor"></param>
-        /// <param name="ability"></param>
-        /// <param name="isRunNow"></param>
-        public static void AwardAbility(Actor actor, Ability ability, bool isRunNow = false)
-        {
-            actor.AbilityController.AwardActorAbility(ability, isRunNow);
         }
 
         /// <summary>
@@ -44,7 +33,10 @@ namespace Battle
         /// </summary>
         public void ExecutingAbility(int id)
         {
-            
+            if (_abilities.TryGetValue(id, out var ability))
+            {
+                ability.Execute();
+            }
         }
 
         public void Tick(float dt)
@@ -52,6 +44,7 @@ namespace Battle
             foreach (var abilityPair in _abilities)
             {
                 var ability = abilityPair.Value;
+                Ability.Context.UpdateContext((_actor, ability));
                 ability.OnTick(dt);
                 Ability.Context.ClearContext();
             }

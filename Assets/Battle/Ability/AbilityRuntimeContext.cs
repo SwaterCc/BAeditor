@@ -1,23 +1,19 @@
+using Battle.Event;
+
 namespace Battle
 {
     public class AbilityRuntimeContext
     {
         private BattleLevel _belongBattleLevel;
+        public BattleLevel BelongBattleLevel => _belongBattleLevel;
         
         private Actor _belongActor;
+        public Actor BelongActor => _belongActor;
 
         private Ability _curAbility;
+        public Ability CurrentAbility => _curAbility;
 
-
-        public Actor GetActor()
-        {
-            return _belongActor;
-        }
-
-        public Ability GetAbility()
-        {
-            return _curAbility;
-        }
+        public IEventInfo EventInfo;
 
         public bool IsNotRunning => _belongActor == null || _curAbility == null;
 
@@ -29,6 +25,7 @@ namespace Battle
 
         public void ClearContext()
         {
+            _belongBattleLevel = null;
             _belongActor = null;
             _curAbility = null;
         }

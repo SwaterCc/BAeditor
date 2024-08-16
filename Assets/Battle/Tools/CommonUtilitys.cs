@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using UnityEngine;
 
 namespace Battle.Tools
 {
@@ -15,7 +17,7 @@ namespace Battle.Tools
         {
             // 获取当前时间，并转化为字符串格式
             string currentTime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-        
+
             // 使用MD5进行哈希计算并返回一个32位整型值
             using (MD5 md5 = MD5.Create())
             {
@@ -28,7 +30,7 @@ namespace Battle.Tools
                 return hashValue;
             }
         }
-        
+
         public class IdGenerator
         {
             private int currentId = 0;
@@ -61,6 +63,76 @@ namespace Battle.Tools
         {
             return new IdGenerator();
         }
-        
     }
+    
+    #region ParamExtension
+
+    public static class ParamExtension
+    {
+        public static bool TryCallFunc(this Param[] @params, out IValueBox valueBox)
+        {
+            var queue = new Queue<Param>(@params);
+            return TryCallFunc(queue, out valueBox);
+        }
+
+        public static bool TryCallFunc(this Queue<Param> queue, out IValueBox valueBox)
+        {
+            valueBox = null;
+            var func = queue.Dequeue();
+            if (func.IsFunc)
+            {
+                valueBox = queue.CallFunc(func);
+                return true;
+            }
+
+            Debug.LogError("队首不是函数");
+            return false;
+        }
+
+        /// <summary>
+        /// 执行指定函数
+        /// </summary>
+        /// <param name="queue"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public static IValueBox CallFunc(this Queue<Param> queue, Param func)
+        {
+            var funcInfo = AbilityPreLoad.GetFuncInfo(func.FuncName);
+            IValueBox[] funcParams = new IValueBox[funcInfo.ParamCount];
+
+            for (int idx = 0; idx < funcInfo.ParamCount; idx++)
+            {
+                var param = queue.Dequeue();
+                var paramType = funcInfo.ParamTypes[idx];
+                if (param.IsBaseType)
+                {
+                    var getBaseFunc = AbilityPreLoad.GetFuncInfo("GetBaseValueBox", paramType.Name);
+                    funcParams[idx] = (IValueBox)getBaseFunc.Invoke(null, param);
+                }
+
+                if (param.IsAttribute)
+                {
+                    var getAttrBox = AbilityPreLoad.GetFuncInfo("GetAttrBox");
+                    funcParams[idx] = (IValueBox)getAttrBox.Invoke(Ability.Context.BelongActor, param);
+                }
+
+                if (param.IsVariable)
+                {
+                    var getVariableBox = AbilityPreLoad.GetFuncInfo("GetVariableBox", paramType.Name);
+                    funcParams[idx] = (IValueBox)getVariableBox.Invoke(null, param);
+                }
+
+                if (param.IsFunc)
+                {
+                    funcParams[idx] = CallFunc(queue, param);
+                }
+            }
+
+            //TODO:有消耗
+            var res = (IValueBox)funcInfo.Invoke(null, funcParams);
+            return res;
+        }
+    }
+
+    #endregion
 }

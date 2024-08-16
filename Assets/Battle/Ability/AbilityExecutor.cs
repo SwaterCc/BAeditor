@@ -62,6 +62,17 @@ namespace Battle
                         {
                             _eventNodes.Add((AbilityEventNode)node);
                         }
+
+                        if (node.NodeData.NodeType == EAbilityNodeType.EStage)
+                        {
+                            var executing = (Executing)State.GetState(EAbilityState.Executing);
+                            var stageNode = (AbilityStageNode)node;
+                            executing.AddStageProxy(stageNode);
+                            if (node.NodeData.StageNodeData.IsDefaultStart)
+                            {
+                                executing.CurProxy = stageNode;
+                            }
+                        }
                     }
                 }
             }
@@ -71,6 +82,19 @@ namespace Battle
                 _eventNodes.Clear();
                 _cycleHeads.Clear();
                 _nodes.Clear();
+            }
+
+            public void OnDestroy()
+            {
+                foreach (var eventNode in _eventNodes)
+                {
+                    eventNode.UnRegisterEvent();
+                }
+
+                foreach (var id in _cycleHeads)
+                {
+                    _nodes[id.Value].Reset();
+                }
             }
 
             public void RegisterEventNode()
@@ -120,12 +144,12 @@ namespace Battle
                 {
                     curNode.DoJob();
                     PassNode(nodeId);
-                    
+
                     if (curNode.NodeData.NodeType == EAbilityNodeType.ERepeat)
                     {
                         _repeatNodeIds.Push(curNode.ConfigId);
                     }
-                    
+
                     nodeId = curNode.GetNextNode();
 
                     if (nodeId == _repeatNodeIds.Peek())
@@ -143,18 +167,22 @@ namespace Battle
                             continue;
                         }
                     }
-                    
+
                     if (nodeId == curNode.NodeData.Parent)
                     {
                         while (_nodes[nodeId].NodeData.Parent == _nodes[nodeId].GetNextNode())
                         {
                             //如果不是循环节点则查找可走节点
+                            if (nodeId == -1)
+                            {
+                                break;
+                            }
+
                             nodeId = _nodes[nodeId].NodeData.Parent;
                         }
 
                         curNode = _nodes[nodeId];
                     }
-                    
                 }
             }
 

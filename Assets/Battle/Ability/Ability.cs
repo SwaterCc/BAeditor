@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Battle.Def;
 using Battle.Tools;
+using UnityEngine;
 
 namespace Battle
 {
@@ -16,12 +17,7 @@ namespace Battle
         /// </summary>
         private static AbilityRuntimeContext _context;
 
-        public static AbilityRuntimeContext Context => _context;
-
-        public static void InitContext()
-        {
-            _context = new AbilityRuntimeContext();
-        }
+        public static AbilityRuntimeContext Context => _context ??= new AbilityRuntimeContext();
 
         //基础数据
         /// <summary>
@@ -30,9 +26,9 @@ namespace Battle
         public int Uid { get; }
 
         /// <summary>
-        /// 能力是否属于激活状态
+        /// 能力是否属于激活(释放)状态
         /// </summary>
-        public bool IsActive { get; }
+        public bool IsActive => _state.HasExecuteOrder;
 
         /// <summary>
         /// 编辑器数据
@@ -40,7 +36,7 @@ namespace Battle
         private AbilityData _abilityData;
 
         private int _abilityConfigId;
-        
+
         /// <summary>
         /// 执行者
         /// </summary>
@@ -77,10 +73,15 @@ namespace Battle
             };
 
             _state = new AbilityState(this);
-            
+
             _executor.Setup();
         }
 
+        public void Execute()
+        {
+            _state.TryExecute();
+        }
+        
         public void Reload()
         {
             //终止能力运行
@@ -97,6 +98,12 @@ namespace Battle
         public void OnTick(float dt)
         {
             _state.Tick(dt);
+        }
+
+        public void OnDestroy()
+        {
+            _state.OnDestroy();
+            _executor.OnDestroy();
         }
     }
 }

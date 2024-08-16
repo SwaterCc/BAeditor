@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Battle;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace BattleAbility
@@ -6,13 +8,18 @@ namespace BattleAbility
     /// <summary>
     /// 打击数据
     /// </summary>
-    public class HitData
-    {
+    public class HitData : SerializedScriptableObject
+    { 
         /// <summary>
         /// 打击点唯一ID
         /// </summary>
-        public int HitUid;
-
+        public int ConfigId;
+        
+        /// <summary>
+        /// 伤害盒子类型
+        /// </summary>
+        public EHitType HitType;
+        
         /// <summary>
         /// 打击点检测开始时间
         /// </summary>
@@ -42,6 +49,11 @@ namespace BattleAbility
         /// 打击点归属物的ID
         /// </summary>
         public int SourceId;
+        
+        /// <summary>
+        /// Damage 静态字段 TODO:临时做法，后续要接Excel
+        /// </summary>
+        public Dictionary<string, IValueBox> Damage = new Dictionary<string, IValueBox>();
     }
 
     /// <summary>
@@ -129,13 +141,8 @@ namespace BattleAbility
     public class LockTargetHitData : HitData
     {
         /// <summary>
-        /// 锁定多个目标
+        /// 锁定目标
         /// </summary>
         public int[] TargetIds;
-        
-        /// <summary>
-        /// 锁定单个目标
-        /// </summary>
-        public int SingleTargetId;
     }
 }
