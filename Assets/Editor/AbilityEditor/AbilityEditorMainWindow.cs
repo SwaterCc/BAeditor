@@ -1,25 +1,28 @@
 ﻿using System;
 using System.Linq;
+using Battle;
 using Battle.Def;
+using BattleAbility.Editor;
+using Editor.AbilityEditor.SimpleWindow;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace BattleAbility.Editor
+namespace Editor.AbilityEditor
 {
     /// <summary>
     /// 战斗编辑器主窗口
     /// </summary>
-    public class BattleAbilityEditorMainWindow : OdinMenuEditorWindow
+    public class AbilityEditorMainWindow : OdinMenuEditorWindow
     {
-        [MenuItem("战斗编辑器/打开技能编辑器")]
+        [MenuItem("战斗编辑器/打开Ability编辑器")]
         private static void OpenWindow()
         {
-            var window = GetWindow<BattleAbilityEditorMainWindow>();
+            var window = GetWindow<AbilityEditorMainWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 800);
-            window.titleContent = new GUIContent("战斗编辑器");
+            window.titleContent = new GUIContent("Ability编辑器");
         }
 
         private OdinMenuTree _treeInstance;
@@ -27,18 +30,34 @@ namespace BattleAbility.Editor
         private const string MENU_SKILL = "Skill";
         private const string MENU_BUFF = "Buff";
         private const string MENU_BULLET = "Bullet";
+        private const string MENU_OTHER = "Other";
 
         private const string ASSET_NAME_SKILL = "Skills";
         private const string ASSET_NAME_BUFF = "Buffs";
         private const string ASSET_NAME_BULLET = "Bullets";
 
-        private const string SKILL_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Skill/";
-        private const string BUFF_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Buff/";
-        private const string BULLET_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Bullet/";
+        public static string SKILL_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Skill/";
+        public static string BUFF_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Buff/";
+        public static string BULLET_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Bullet/";
 
-        private BattleAbilityConfigItemList _skills;
-        private BattleAbilityConfigItemList _buffs;
-        private BattleAbilityConfigItemList _bullets;
+        public static string GetSavePath(EAbilityType type)
+        {
+            switch (type)
+            {
+                case EAbilityType.Skill:
+                    return SKILL_DATA_PATH;
+                case EAbilityType.Buff:
+                    return BUFF_DATA_PATH;
+                case EAbilityType.Bullet:
+                    return BULLET_DATA_PATH;
+             }
+
+            return null;
+        }
+        
+        private AbilityDataList _skills;
+        private AbilityDataList _buffs;
+        private AbilityDataList _bullets;
 
         protected override void Initialize()
         {
@@ -47,14 +66,29 @@ namespace BattleAbility.Editor
             _bullets = LoadBattleAbilityConfigList(ASSET_NAME_BULLET);
         }
 
-        private BattleAbilityConfigItemList LoadBattleAbilityConfigList(string abilityTypeStr)
+        public AbilityDataList GetDataList(EAbilityType type)
+        {
+            switch (type)
+            {
+                case EAbilityType.Skill:
+                    return _skills;
+                case EAbilityType.Buff:
+                    return _bullets;
+                case EAbilityType.Bullet:
+                    return _bullets;
+            }
+
+            return null;
+        }
+        
+        private AbilityDataList LoadBattleAbilityConfigList(string abilityTypeStr)
         {
             return AssetDatabase.LoadAssetAtPath($"Assets/EditorData/BattleEditorData/Config/{abilityTypeStr}.asset",
-                typeof(BattleAbilityConfigItemList)) as BattleAbilityConfigItemList;
+                typeof(AbilityDataList)) as AbilityDataList;
             ;
         }
 
-        private void AddMenuItem(string rootMenu, BattleAbilityConfigItemList data)
+        private void AddMenuItem(string rootMenu, AbilityDataList data)
         {
             if (_treeInstance == null)
             {
@@ -63,37 +97,32 @@ namespace BattleAbility.Editor
 
             foreach (var itemPair in data.Items)
             {
-                //测试用
-                var battleAbilityData = LoadBattleAbilitySerializable(data.abilityType, itemPair.Value.configId);
+                var abilityData = LoadAbilitySerializable(data.abilityType, itemPair.Value.configId);
                 if (data != null)
                 {
-                    var battleSHowView =
-                        new BattleAbilityItemView(battleAbilityData.baseConfig, battleAbilityData.stageDatas);
-                    _treeInstance.Add($"{rootMenu}/{battleSHowView.GetOdinMenuTreeItemLabel()}",
-                        battleSHowView);
+                    var abilityView = new AbilityView(abilityData);
+                    _treeInstance.Add($"{rootMenu}/{abilityView.GetOdinMenuTreeItemLabel()}", abilityView);
                 }
             }
         }
 
-        private BattleAbilityData LoadBattleAbilitySerializable(EAbilityType eAbilityType, int id)
+        private AbilityData LoadAbilitySerializable(EAbilityType eAbilityType, int id)
         {
-            BattleAbilityData asset = null;
+            AbilityData asset = null;
             switch (eAbilityType)
             {
                 case EAbilityType.Skill:
                     asset = AssetDatabase.LoadAssetAtPath($"{SKILL_DATA_PATH}{id}.asset",
-                        typeof(BattleAbilityData)) as BattleAbilityData;
+                        typeof(AbilityData)) as AbilityData;
                     break;
                 case EAbilityType.Buff:
                     asset = AssetDatabase.LoadAssetAtPath($"{BUFF_DATA_PATH}{id}.asset",
-                        typeof(BattleAbilityData)) as BattleAbilityData;
+                        typeof(AbilityData)) as AbilityData;
                     break;
                 case EAbilityType.Bullet:
                     asset = AssetDatabase.LoadAssetAtPath($"{BULLET_DATA_PATH}{id}.asset",
-                        typeof(BattleAbilityData)) as BattleAbilityData;
+                        typeof(AbilityData)) as AbilityData;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(eAbilityType), eAbilityType, null);
             }
             return !asset ? null : asset;
         }
@@ -121,8 +150,13 @@ namespace BattleAbility.Editor
         {
             //绘制顶部创建按钮
             var selected = this.MenuTree.Selection.FirstOrDefault();
+            if (selected == null)
+            {
+                return;
+            }
+            
             var toolbarHeight = this.MenuTree.Config.SearchToolbarHeight;
-
+            
             SirenixEditorGUI.BeginHorizontalToolbar(toolbarHeight);
             {
                 if (selected != null)
@@ -130,10 +164,20 @@ namespace BattleAbility.Editor
                     GUILayout.Label(selected.Name);
                 }
 
-                if (SirenixEditorGUI.ToolbarButton(new GUIContent("Create Item")))
+                if (SirenixEditorGUI.ToolbarButton(new GUIContent("创建Ability")))
                 {
-                    
+                    CreateAbilityWindow.OpenWindow(this);
                 }
+                
+                if (selected.Value is AbilityView abilityView)
+                {
+                    if (SirenixEditorGUI.ToolbarButton(new GUIContent("打开变量窗口")))
+                    {
+                        ShowVariableWindow.OpenWindow(this,abilityView.Data);
+                    }
+                }
+                
+                
             }
             SirenixEditorGUI.EndHorizontalToolbar();
         }

@@ -31,6 +31,16 @@ namespace Battle
             }
         }
 
+        public Actor GetActor(int id)
+        {
+            if (_actors.TryGetValue(id, out var actor))
+            {
+                return actor;
+            }
+
+            return null;
+        }
+        
         public void Add(Actor actor)
         {
             var uid = _idGenerator.GenerateId();

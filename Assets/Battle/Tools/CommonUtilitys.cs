@@ -98,28 +98,15 @@ namespace Battle.Tools
         public static IValueBox CallFunc(this Queue<Param> queue, Param func)
         {
             var funcInfo = AbilityPreLoad.GetFuncInfo(func.FuncName);
-            IValueBox[] funcParams = new IValueBox[funcInfo.ParamCount];
+            object[] funcParams = new object[funcInfo.ParamCount];
 
             for (int idx = 0; idx < funcInfo.ParamCount; idx++)
             {
                 var param = queue.Dequeue();
-                var paramType = funcInfo.ParamTypes[idx];
-                if (param.IsBaseType)
+                
+                if (param.IsValueType)
                 {
-                    var getBaseFunc = AbilityPreLoad.GetFuncInfo("GetBaseValueBox", paramType.Name);
-                    funcParams[idx] = (IValueBox)getBaseFunc.Invoke(null, param);
-                }
-
-                if (param.IsAttribute)
-                {
-                    var getAttrBox = AbilityPreLoad.GetFuncInfo("GetAttrBox");
-                    funcParams[idx] = (IValueBox)getAttrBox.Invoke(Ability.Context.BelongActor, param);
-                }
-
-                if (param.IsVariable)
-                {
-                    var getVariableBox = AbilityPreLoad.GetFuncInfo("GetVariableBox", paramType.Name);
-                    funcParams[idx] = (IValueBox)getVariableBox.Invoke(null, param);
+                    funcParams[idx] = param.Value;
                 }
 
                 if (param.IsFunc)

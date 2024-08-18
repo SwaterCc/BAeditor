@@ -9,9 +9,6 @@ using SirenixEditorGUI = Sirenix.Utilities.Editor.SirenixEditorGUI;
 
 namespace BattleAbility.Editor
 {
-    /// <summary>
-    /// 用系列化的数据还原树状图
-    /// </summary>
     public class LogicTreeDrawer
     {
         public readonly BattleAbilitySerializableTree TreeData;

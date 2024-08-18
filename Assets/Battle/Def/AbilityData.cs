@@ -11,6 +11,8 @@ namespace Battle.Def
     /// </summary>
     public class AbilityData : SerializedScriptableObject
     {
+        public EAbilityType Type;
+        
         public int ConfigId;
 
         public string Name = "NoName";
@@ -22,14 +24,14 @@ namespace Battle.Def
         public int[] Tags;
 
         /// <summary>
-        /// 头节点字典，用List结构是因为一个生命周期可能会有多个逻辑，且有优先级
+        /// 头节点字典
         /// </summary>
-        public Dictionary<EAbilityCycleType, List<AbilityNodeData>> HeadNodeDict = new();
+        public Dictionary<EAbilityCycleType, int> HeadNodeDict = new();
 
         /// <summary>
         /// 事件监听字典，用List结构是因为一个生命周期可能会有多个逻辑，且有优先级
         /// </summary>
-        public Dictionary<EBattleEventType, List<AbilityNodeData>> EventNodeDict = new();
+        public Dictionary<EBattleEventType, int> EventNodeDict = new();
 
         /// <summary>
         /// 存储所有数据
@@ -39,7 +41,7 @@ namespace Battle.Def
         /// <summary>
         /// SKILL BUFF 静态字段 TODO:临时做法，后续要接Excel
         /// </summary>
-        public Dictionary<string, IValueBox> SpecializationData = new Dictionary<string, IValueBox>();
+        public Dictionary<string, object> SpecializationData = new Dictionary<string, object>();
     }
 
     public class AbilityNodeData
@@ -50,13 +52,11 @@ namespace Battle.Def
 
         public int Parent;
 
-        public bool IsHead;
+        public int Depth;
 
         public List<int> ChildrenUids = new();
 
         public int NextIdInSameLevel;
-
-        public int Priority;
 
         public Param[] ActionNodeData;
 

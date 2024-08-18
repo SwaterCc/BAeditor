@@ -7,13 +7,15 @@ namespace Battle
     {
         private Actor _actor;
 
+        public Actor Actor => _actor;
+
         private void Awake()
         {
             _actor = new Actor();
             _actor.Init();
             BattleManager.Instance.Add(_actor);
         }
-
+        
         private void OnDestroy() { }
     }
 
@@ -30,7 +32,7 @@ namespace Battle
     /// <summary>
     /// 游戏场景中对象的基类
     /// </summary>
-    public class Actor : ITick
+    public class Actor : ITick, IBeHurt //TODO:这种靠接口的方法后续要处理掉，改成组件，目前是临时做法
     {
         /// <summary>
         /// 运行时唯一ID
@@ -42,7 +44,7 @@ namespace Battle
         /// </summary>
         public int ConfigId;
 
-        private class ActorInterfaceImp : IVariableCollectionBind, IBeHurt
+        private class ActorInterfaceImp : IVariableCollectionBind
         {
             private readonly Actor _actor;
 
@@ -55,8 +57,6 @@ namespace Battle
             {
                 return _actor._variables;
             }
-
-            public void BeHurt(Dictionary<string, IValueBox> damage) { }
         }
 
         private readonly ActorInterfaceImp _actorImp;
@@ -107,7 +107,9 @@ namespace Battle
         {
             return _isDisposable;
         }
-
+        
+        public void BeHurt(Dictionary<string, IValueBox> damage) { }
+        
         public AttrCollection GetAttrCollection()
         {
             return _attrs;

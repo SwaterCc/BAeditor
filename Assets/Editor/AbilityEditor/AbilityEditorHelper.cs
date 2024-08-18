@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using Sirenix.OdinInspector;
+using Battle.Skill;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
-using Object = System.Object;
 
-namespace BattleAbility.Editor
+namespace Editor.AbilityEditor
 {
-    public static class BattleAbilitEditorHelper
+    public static class AbilityEditorHelper
     {
-        private static void checkFieldType(FieldInfo fieldInfo, Type checkType,
+        /*private static void checkFieldType(FieldInfo fieldInfo, Type checkType,
             BAEditorShowLabelTag.ELabeType labeType,
             bool showMsg = true)
         {
@@ -37,7 +33,7 @@ namespace BattleAbility.Editor
             }
 
             return (label, labeType);
-        }
+        }*/
 
 
         /// <summary>
@@ -74,7 +70,36 @@ namespace BattleAbility.Editor
             return afterValue;
         }
         
-        /// <summary>
+        
+        public static object DrawLabelByType(SpecializationDataType elementType, string label, object updateValue)
+        {
+            object afterValue = null;
+            if (elementType == SpecializationDataType.Int)
+            {
+                afterValue = EditorGUILayout.IntField(label, (int)updateValue);
+            }
+            else if (elementType == SpecializationDataType.Long)
+            {
+                afterValue = EditorGUILayout.LongField(label, (long)updateValue);
+            }
+            else if (elementType ==SpecializationDataType.Float)
+            {
+                afterValue = EditorGUILayout.FloatField(label, (float)updateValue);
+            }
+            else if (elementType == SpecializationDataType.String)
+            {
+                afterValue = EditorGUILayout.TextField(label, (string)updateValue);
+            }
+            else if (elementType == SpecializationDataType.Enum)
+            {
+                afterValue = EditorGUILayout.EnumPopup(label, (Enum)updateValue);
+            }
+
+            return afterValue;
+        }
+        
+        
+        /*/// <summary>
         /// 根据自定义特性BattleAbilityLabelTag 来创建不同的Field，不能创建列表，列表有单独的函数绘制
         /// </summary>
         /// <param name="classObj"></param>
@@ -104,7 +129,7 @@ namespace BattleAbility.Editor
                     break;
             }
             return afterUpdateValue;
-        }
+        }*/
         
         /// <summary>
         /// 绘制列表
@@ -114,7 +139,7 @@ namespace BattleAbility.Editor
         /// <param name="getNewValue"></param>
         /// <param name="itemIsClass">TItem的类型不是基础类型，是类或结构体</param>
         /// <typeparam name="TItem"></typeparam>
-        public static void DrawList<TItem>(ref List<TItem> list, string label, Func<TItem> getNewValue, bool itemIsClass = false)
+        /*public static void DrawList<TItem>(ref List<TItem> list, string label, Func<TItem> getNewValue, bool itemIsClass = false)
         {
             int removeIdx = -1;
             SirenixEditorGUI.BeginBox();
@@ -165,7 +190,7 @@ namespace BattleAbility.Editor
                 }
             }
             SirenixEditorGUI.EndBox();
-        }
+        }*/
 
         /// <summary>
         /// 绘制字典,未完成

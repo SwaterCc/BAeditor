@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using BattleAbility.Editor;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace BattleAbility.Editor
+namespace Editor.AbilityEditor
 {
 
     public class BattleAbilityRootView
     {
-        public BattleAbilityConfigItemList Data;
+        public AbilityDataList Data;
 
-        public BattleAbilityRootView(BattleAbilityConfigItemList data)
+        public BattleAbilityRootView(AbilityDataList data)
         {
             Data = data;
         }
@@ -32,7 +32,6 @@ namespace BattleAbility.Editor
             var configItemList = this.ValueEntry.SmartValue.Data;
             
             SirenixEditorGUI.BeginBox();
-            SirenixEditorGUI.BeginHorizontalToolbar();
             _isUsedMulitRemove = EditorGUILayout.Toggle("批量删除开启？", _isUsedMulitRemove,GUILayout.Width(80));
             if (_isUsedMulitRemove)
             {
@@ -46,7 +45,6 @@ namespace BattleAbility.Editor
                 }
             }
             SirenixEditorGUI.ToolbarSearchField("通过Id搜索");
-            SirenixEditorGUI.EndHorizontalToolbar();
 
             SirenixEditorGUI.BeginVerticalList();
 

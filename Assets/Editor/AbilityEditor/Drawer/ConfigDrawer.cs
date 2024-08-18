@@ -1,6 +1,7 @@
 using System.Reflection;
 using Battle.Def;
 using BattleAbility.Editor.BattleAbilityCustomAttribute;
+using Editor.AbilityEditor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 
@@ -92,7 +93,7 @@ namespace BattleAbility.Editor
                             var methodInfo = skillBase.GetType().GetMethod(funcName);
                             if (methodInfo != null)
                             {
-                                BattleAbilitEditorHelper.DrawList<SkillBaseConfig.SkillCostInfo>(
+                                AbilityEditorHelper.DrawList<SkillBaseConfig.SkillCostInfo>(
                                     ref skillBase.CostResourceTypeWithValue, label,
                                     () => (SkillBaseConfig.SkillCostInfo)methodInfo.Invoke(skillBase, null), true);
                             }
@@ -108,7 +109,7 @@ namespace BattleAbility.Editor
             }
             else
             {
-                var afterValue = BattleAbilitEditorHelper.DrawLabelAndUpdateValueByAttr(_config, fieldInfo, label, labeType);
+                var afterValue = AbilityEditorHelper.DrawLabelAndUpdateValueByAttr(_config, fieldInfo, label, labeType);
                 fieldInfo.SetValue(_config, afterValue);
             }
 

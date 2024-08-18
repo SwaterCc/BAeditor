@@ -26,38 +26,6 @@ namespace Battle.Tools
             return default;
         }
 
-        [AbilityFuncTag(EFuncCacheFlag.OnlyCache)]
-        public static IValueBox GetAttrBox(this Actor actor, Param param)
-        {
-            return Ability.Context.BelongActor.GetAttrCollection().GetAttr(param.AttributeType).GetBox();
-        }
-
-        [AbilityFuncTag(EFuncCacheFlag.OnlyCache)]
-        public static IValueBox GetBaseValueBox<T>(Param param)
-        {
-            if (typeof(T) == typeof(int))
-            {
-                return new ValueBox<int>(param.IntValue);
-            }
-
-            if (typeof(T) == typeof(long))
-            {
-                return new ValueBox<long>(param.LongValue);
-            }
-
-            if (typeof(T) == typeof(float))
-            {
-                return new ValueBox<float>(param.FloatValue);
-            }
-
-            if (typeof(T) == typeof(bool))
-            {
-                return new ValueBox<bool>(param.BoolValue);
-            }
-
-            return null;
-        }
-
         public static VariableCollection GetVariableCollection(EVariableRange range)
         {
             switch (range)

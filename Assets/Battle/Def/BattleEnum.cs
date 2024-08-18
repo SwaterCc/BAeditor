@@ -7,44 +7,11 @@ namespace Battle
     /// </summary>
     public enum EAbilityType
     {
-        UnInit,
         Skill,
         Buff,
         Bullet,
     }
-
-    /// <summary>
-    /// 自定义变量类型
-    /// </summary>
-    public enum EVariableType
-    {
-        Int,
-        Bool,
-        Float,
-        String,
-        Class,
-
-        /// <summary>
-        /// LIST和Dict仅限获取，不允许修改和创建
-        /// </summary>
-        List,
-        Dict,
-    }
-
-    /// <summary>
-    /// 参数类型
-    /// </summary>
-    public enum EParamType
-    {
-        Int,
-        Long,
-        Bool,
-        Float,
-        String,
-        Variable,
-        Attribute,
-    }
-
+    
     /// <summary>
     /// 当前Ability执行到哪一步了
     /// </summary>
@@ -159,6 +126,7 @@ namespace Battle
     public enum EBattleResourceType
     {
         Energy,
+        Item,
         Buff,
     }
 
@@ -168,9 +136,13 @@ namespace Battle
     public enum EBuffAddRule
     {
         //同源替换
+        SameSourceReplace,
         //同源叠加
+        SameSourceAdd,
         //全叠加
+        Add,
         //全替换
+        OnlyOne,
     }
 
     /// <summary>

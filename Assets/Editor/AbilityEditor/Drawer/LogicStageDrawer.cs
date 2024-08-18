@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Editor.AbilityEditor;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEngine;
@@ -11,11 +12,11 @@ namespace BattleAbility.Editor
     public class LogicStageDrawer
     {
         private bool _mainFoldout = true;
-        private BattleAbilityItemViewDrawer _parent;
+        private AbilityViewDrawer _parent;
         public readonly BattleAbilityLogicStage StageData;
         private List<LogicTreeDrawer> _treeDrawers = new();
         private LogicTreeDrawer _removeObj = null;
-        public LogicStageDrawer(BattleAbilityItemViewDrawer parent,BattleAbilityLogicStage stageData)
+        public LogicStageDrawer(AbilityViewDrawer parent,BattleAbilityLogicStage stageData)
         {
             _parent = parent;
             StageData = stageData;
@@ -39,8 +40,8 @@ namespace BattleAbility.Editor
             {
                 foreach (var fieldInfo in StageData.GetType().GetFields())
                 {
-                    var attrValue = BattleAbilitEditorHelper.GetFiledLabelAndType(fieldInfo);
-                    BattleAbilitEditorHelper.DrawLabelAndUpdateValueByAttr(StageData, fieldInfo, attrValue.Item1,
+                    var attrValue = AbilityEditorHelper.GetFiledLabelAndType(fieldInfo);
+                    AbilityEditorHelper.DrawLabelAndUpdateValueByAttr(StageData, fieldInfo, attrValue.Item1,
                         attrValue.Item2);
                 }
                 

@@ -26,29 +26,8 @@ namespace Battle.Tools
             {
                 return MethodInfo.Invoke(caller, null);
             }
-
-            public object Invoke<T>(object caller, T param1)
-            {
-                _paramArr[0] = param1;
-                return MethodInfo.Invoke(caller, _paramArr);
-            }
-
-            public object Invoke<T>(object caller, T param1, T param2)
-            {
-                _paramArr[0] = param1;
-                _paramArr[1] = param2;
-                return MethodInfo.Invoke(caller, _paramArr);
-            }
-
-            public object Invoke<T>(object caller, T param1, T param2, T param3)
-            {
-                _paramArr[0] = param1;
-                _paramArr[1] = param2;
-                _paramArr[2] = param3;
-                return MethodInfo.Invoke(caller, _paramArr);
-            }
-
-            public object Invoke<T>(object caller, T[] param)
+            
+            public object Invoke(object caller, object[] param)
             {
                 if (param.Length != ParamCount)
                 {
