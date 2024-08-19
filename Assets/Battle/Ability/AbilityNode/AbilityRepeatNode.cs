@@ -14,12 +14,11 @@ namespace Battle
             private const string LOOP_VALUE = "LOOP_VALUE";
             private int _curLoopCount = 0;
             private float _curValue = 0;
-            private Queue<Param> _params;
+           
             
             public AbilityRepeatNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
                 _repeatNodeData = data.RepeatNodeData;
-                _params = new Queue<Param>(_repeatNodeData.CallFuncData);
             }
 
             protected override void onReset()

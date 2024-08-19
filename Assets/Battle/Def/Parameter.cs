@@ -7,7 +7,7 @@ namespace Battle
     /// <summary>
     /// 编辑器反射参数
     /// </summary>
-    public sealed class Param
+    public struct Parameter
     {
         /// <summary>
         /// 参数类型，反射得到的字符串
@@ -25,5 +25,17 @@ namespace Battle
         /// </summary>
         public bool IsValueType;
         public object Value;
+
+        public void SetFunc(string funcName)
+        {
+            IsFunc = true;
+            FuncName = funcName;
+        }
+
+        public void SetValue(object value)
+        {
+            Value = value;
+            IsValueType = true;
+        }
     }
 }

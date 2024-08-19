@@ -3,9 +3,9 @@ using UnityEditor.IMGUI.Controls;
 
 namespace Editor.AbilityEditor
 {
-    public class AbilityLogicDrawer : TreeView
+    public class AbilityLogicTreeDrawer : TreeView
     {
-        public AbilityLogicDrawer(TreeViewState state, AbilityData data, int headId) : base(state)
+        public AbilityLogicTreeDrawer(TreeViewState state, AbilityData data, int headId) : base(state)
         {
             
             

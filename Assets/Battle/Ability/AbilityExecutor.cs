@@ -58,7 +58,7 @@ namespace Battle
                             _cycleHeads.Add(node.NodeData.CycleNodeData, node.ConfigId);
                         }
 
-                        if (node.NodeData.NodeType == EAbilityNodeType.EEventFired)
+                        if (node.NodeData.NodeType == EAbilityNodeType.EEvent)
                         {
                             _eventNodes.Add((AbilityEventNode)node);
                         }

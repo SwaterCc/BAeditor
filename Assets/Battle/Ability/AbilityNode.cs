@@ -15,7 +15,7 @@ namespace Battle
                 {
                     case EAbilityNodeType.EAbilityCycle:
                         return new AbilityCycleNode(executor, data);
-                    case EAbilityNodeType.EWait:
+                    case EAbilityNodeType.ETimer:
                         return new AbilityTimerNode(executor, data);
                     case EAbilityNodeType.EBranchControl:
                         return new AbilityBranchNode(executor, data);

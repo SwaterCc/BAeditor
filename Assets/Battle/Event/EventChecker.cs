@@ -20,7 +20,7 @@ namespace Battle.Event
 
         private bool _isDisable;
 
-        public EventChecker(Action<IEventInfo> func, Type bindEventInfo = null)
+        public EventChecker(Action<IEventInfo> func = null, Type bindEventInfo = null)
         {
             _func = func;
             _bindEventInfo = bindEventInfo;
@@ -53,6 +53,23 @@ namespace Battle.Event
         public void UnRegister()
         {
             BattleEventManager.Instance.UnRegister(this);
+        }
+    }
+
+   
+    
+    
+    public class EmptyChecker : EventChecker
+    {
+        public EmptyChecker(EBattleEventType eventType, Action<IEventInfo> func = null, Type bindEventInfo = null) :
+            base(func, bindEventInfo)
+        {
+            EventType = eventType;
+        }
+
+        public override bool compare(IEventInfo info)
+        {
+            return true;
         }
     }
 

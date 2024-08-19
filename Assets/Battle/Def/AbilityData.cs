@@ -12,7 +12,7 @@ namespace Battle.Def
     public class AbilityData : SerializedScriptableObject
     {
         public EAbilityType Type;
-        
+
         public int ConfigId;
 
         public string Name = "NoName";
@@ -37,7 +37,7 @@ namespace Battle.Def
         /// 存储所有数据
         /// </summary>
         public Dictionary<int, AbilityNodeData> NodeDict = new();
-        
+
         /// <summary>
         /// SKILL BUFF 静态字段 TODO:临时做法，后续要接Excel
         /// </summary>
@@ -58,11 +58,11 @@ namespace Battle.Def
 
         public int NextIdInSameLevel;
 
-        public Param[] ActionNodeData;
+        public Parameter[] ActionNodeData;
 
-        public Param[] BranchNodeData;
+        public BranchNodeData BranchNodeData;
 
-        public Param[] EventNodeData;
+        public EventNodeData EventNodeData;
 
         public RepeatNodeData RepeatNodeData;
 
@@ -73,6 +73,19 @@ namespace Battle.Def
         public TimerNodeData TimerNodeData;
 
         public StageNodeData StageNodeData;
+    }
+
+    public class BranchNodeData
+    {
+        public Parameter[] Left;
+        public ECompareResType ResType;
+        public Parameter[] Right;
+    }
+    
+    public class EventNodeData
+    {
+        public EBattleEventType EventType;
+        public Parameter[] CreateCheckerFunc;
     }
 
     public class StageNodeData
@@ -104,8 +117,6 @@ namespace Battle.Def
         public float StartValue;
         public float StepValue;
         public int StepCount;
-
-        public Param[] CallFuncData;
     }
 
 
@@ -115,6 +126,6 @@ namespace Battle.Def
         public EVariableRange Range;
         public string Name;
 
-        public Param[] VarParams;
+        public Parameter[] VarParams;
     }
 }

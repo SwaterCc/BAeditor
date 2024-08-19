@@ -69,13 +69,13 @@ namespace Battle.Tools
 
     public static class ParamExtension
     {
-        public static bool TryCallFunc(this Param[] @params, out IValueBox valueBox)
+        public static bool TryCallFunc(this Parameter[] @params, out object valueBox)
         {
-            var queue = new Queue<Param>(@params);
+            var queue = new Queue<Parameter>(@params);
             return TryCallFunc(queue, out valueBox);
         }
 
-        public static bool TryCallFunc(this Queue<Param> queue, out IValueBox valueBox)
+        public static bool TryCallFunc(this Queue<Parameter> queue, out object valueBox)
         {
             valueBox = null;
             var func = queue.Dequeue();
@@ -95,7 +95,7 @@ namespace Battle.Tools
         /// <param name="queue"></param>
         /// <param name="func"></param>
         /// <returns></returns>
-        public static IValueBox CallFunc(this Queue<Param> queue, Param func)
+        public static object CallFunc(this Queue<Parameter> queue, Parameter func)
         {
             var funcInfo = AbilityPreLoad.GetFuncInfo(func.FuncName);
             object[] funcParams = new object[funcInfo.ParamCount];
@@ -116,7 +116,7 @@ namespace Battle.Tools
             }
 
             //TODO:有消耗
-            var res = (IValueBox)funcInfo.Invoke(null, funcParams);
+            var res = funcInfo.Invoke(null, funcParams);
             return res;
         }
     }

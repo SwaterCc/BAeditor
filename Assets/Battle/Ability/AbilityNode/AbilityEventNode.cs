@@ -15,8 +15,8 @@ namespace Battle
                         
             public void RegisterEvent()
             {
-                if (!NodeData.EventNodeData.TryCallFunc(out var valueBox)) return;
-                _checker = ((ValueBox<EventChecker>)valueBox).Get();
+                if (!NodeData.EventNodeData.CreateCheckerFunc.TryCallFunc(out var valueBox)) return;
+                _checker = (EventChecker)valueBox;
                 BattleEventManager.Instance.Register(_checker);
             }
 

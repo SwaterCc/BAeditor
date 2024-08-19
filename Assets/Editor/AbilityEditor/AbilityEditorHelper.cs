@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Battle.Skill;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -34,7 +35,15 @@ namespace Editor.AbilityEditor
 
             return (label, labeType);
         }*/
+        
+        public static Dictionary<string, MethodInfo> AbilityMethodCache = new Dictionary<string, MethodInfo>();
 
+        public static void InitMethodCache()
+        {
+            
+        }
+        
+        
 
         /// <summary>
         /// 根据变量类型来创建对应类型的Filed

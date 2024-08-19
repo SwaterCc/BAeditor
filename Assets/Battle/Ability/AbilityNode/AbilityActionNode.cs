@@ -14,11 +14,11 @@ namespace Battle
         /// </summary>
         private class AbilityActionNode : AbilityNode
         {
-            private readonly Queue<Param> _actionFunc;
+            private readonly Queue<Parameter> _actionFunc;
 
             public AbilityActionNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _actionFunc = new Queue<Param>(NodeData.ActionNodeData);
+                _actionFunc = new Queue<Parameter>(NodeData.ActionNodeData);
             }
             
             

@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using Battle.Def;
 using Battle.Tools;
@@ -9,13 +11,13 @@ namespace Battle
     {
         private class AbilityBranchNode : AbilityNode
         {
-            private readonly Queue<Param> _branchNodeStack;
             private bool _conditionRes;
+            private BranchNodeData _branchNode;
 
             public AbilityBranchNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _branchNodeStack = new Queue<Param>(NodeData.BranchNodeData);
                 _conditionRes = false;
+                _branchNode = NodeData.BranchNodeData;
             }
 
             protected override void onReset()
@@ -25,17 +27,40 @@ namespace Battle
 
             public override void DoJob()
             {
-                var func = _branchNodeStack.Dequeue();
-                if (_branchNodeStack.TryCallFunc(out var res))
-                {
-                    _conditionRes = ((ValueBox<bool>)res).Get();
-                }
-                else
+                if (!_branchNode.Right.TryCallFunc(out var right))
                 {
                     Debug.LogError("Branch节点执行错误");
                 }
+
+                if (!_branchNode.Left.TryCallFunc(out var left))
+                {
+                    Debug.LogError("Branch节点执行错误");
+                }
+
+                var res = ((IComparable)left).CompareTo((IComparable)right);
+
+                _conditionRes = getCompareRes(_branchNode.ResType, res);
             }
 
+            private bool getCompareRes(ECompareResType compareResType, int flag)
+            {
+                switch (compareResType)
+                {
+                    case ECompareResType.Less:
+                        return flag < 0;
+                    case ECompareResType.LessAndEqual:
+                        return flag <= 0;
+                    case ECompareResType.Equal:
+                        return flag == 0;
+                    case ECompareResType.More:
+                        return flag > 0;
+                    case ECompareResType.MoreAndEqual:
+                        return flag >= 0;
+                }
+
+                return true;
+            }
+            
             public override int GetNextNode()
             {
                 if (_conditionRes && NodeData.ChildrenUids.Count > 0 &&

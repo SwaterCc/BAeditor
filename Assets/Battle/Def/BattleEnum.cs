@@ -78,7 +78,7 @@ namespace Battle
         /// <summary>
         /// 注册事件触发
         /// </summary>
-        EEventFired,
+        EEvent,
 
         /// <summary>
         /// 分支控制节点
@@ -103,7 +103,7 @@ namespace Battle
         /// <summary>
         /// 等待节点
         /// </summary>
-        EWait,
+        ETimer,
         
         /// <summary>
         /// 阶段节点
@@ -205,11 +205,18 @@ namespace Battle
     /// 战斗位移的类型
     /// </summary>
     public enum EBattleSpecialMotionType { }
-    
+
     /// <summary>
-    /// 比较方式
+    /// 比较结果方式
     /// </summary>
-    public enum ECompareType { }
+    public enum ECompareResType
+    {
+        Less,
+        LessAndEqual,
+        Equal,
+        More,
+        MoreAndEqual
+    }
 
     public enum EConditionType
     {
@@ -266,8 +273,6 @@ namespace Battle
         OnlyRepeat,
         //数值循环
         NumberLoop,
-        //迭代函数
-        Foreach,
     }
 
     public enum ETimerOperationType

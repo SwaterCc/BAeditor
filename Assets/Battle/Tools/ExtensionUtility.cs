@@ -9,7 +9,7 @@ namespace Battle.Tools
 
     public static class AbilityExtension
     {
-        [AbilityFuncTag(EFuncCacheFlag.OnlyCache)]
+      
         public static void CreateHitBox(this Actor actor, int hitData)
         {
             var hitBox = new HitBox(hitData);
@@ -41,7 +41,7 @@ namespace Battle.Tools
             return null;
         }
 
-        [AbilityFuncTag(EFuncCacheFlag.OnlyCache)]
+       
         public static IValueBox GetVariableBox(EVariableRange range, string name)
         {
             VariableCollection collection = GetVariableCollection(range);
@@ -55,11 +55,18 @@ namespace Battle.Tools
             return default;
         }
 
-        [AbilityFuncTag(EFuncCacheFlag.OnlyCache)]
+        
         public static void CreateVariable(EVariableRange range, string name, IValueBox valueBox)
         {
             VariableCollection collection = GetVariableCollection(range);
             collection?.Add(name, valueBox);
+        }
+        
+      
+        public static void CreateVariable(EVariableRange range, string name, object valueBox)
+        {
+            VariableCollection collection = GetVariableCollection(range);
+            collection?.Add(name, new ValueBox<object>(valueBox));
         }
 
         public static Actor GetActor(int actorUId)

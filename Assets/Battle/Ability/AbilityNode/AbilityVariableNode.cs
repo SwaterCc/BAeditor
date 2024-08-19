@@ -16,12 +16,12 @@ namespace Battle
         private class AbilityVariableNode : AbilityNode
         {
             private readonly VariableNodeData _varData;
-            private readonly Queue<Param> _params;
+            private readonly Queue<Parameter> _params;
 
             public AbilityVariableNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
                 _varData = data.VariableNodeData;
-                _params = new Queue<Param>(_varData.VarParams);
+                _params = new Queue<Parameter>(_varData.VarParams);
             }
 
             public override void DoJob()
@@ -35,7 +35,7 @@ namespace Battle
                     else
                     {
                         var variable = AbilityExtension.GetVariableBox(_varData.Range, _varData.Name);
-                        variable.Set(variableBox);
+                        variable.SetObject(variableBox);
                     }
                 }
                 else

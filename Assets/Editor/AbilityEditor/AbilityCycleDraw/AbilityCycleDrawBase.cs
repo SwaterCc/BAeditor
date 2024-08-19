@@ -22,7 +22,7 @@ namespace Editor.AbilityEditor
       
         public AbilityNodeData CycleNode;
         
-        private AbilityLogicDrawer _logicDrawer;
+        private AbilityLogicTreeDrawer _logicTreeDrawer;
 
         private TreeViewState _logicState;
         
@@ -50,7 +50,7 @@ namespace Editor.AbilityEditor
             }
 
             _logicState = new TreeViewState();
-            _logicDrawer = new AbilityLogicDrawer(_logicState, data, CycleNode.NodeId);
+            _logicTreeDrawer = new AbilityLogicTreeDrawer(_logicState, data, CycleNode.NodeId);
         }
         
         public virtual void DrawCycle()
@@ -73,7 +73,7 @@ namespace Editor.AbilityEditor
                 GUILayout.Box(" ", GUILayout.Height(GetHeight())); //无所谓这个盒子，只是占位用的
                 var boxRect = GUIHelper.GetCurrentLayoutRect();
                 var treeRect = new Rect(boxRect.x, boxRect.y + headHeight - 23f, mainRect.width - 8, GetHeight());
-                _logicDrawer.OnGUI(treeRect);
+                _logicTreeDrawer.OnGUI(treeRect);
                 SirenixEditorGUI.EndBox();
             }
 

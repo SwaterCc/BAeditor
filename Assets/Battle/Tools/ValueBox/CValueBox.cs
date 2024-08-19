@@ -12,6 +12,7 @@ namespace Battle
         /// </summary>
         /// <returns></returns>
         public object GetObject();
+        public void SetObject(object newBox);
         public void Set(IValueBox newBox);
         public Type GetValueType();
         public bool IsValueType();
@@ -50,6 +51,11 @@ namespace Battle
         public object GetObject()
         {
             return _value;
+        }
+
+        public void SetObject(object newBox)
+        {
+            _value = (T)newBox;
         }
 
         public void Set(IValueBox newBox)
