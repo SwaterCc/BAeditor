@@ -32,7 +32,7 @@ namespace Editor.AbilityEditor
 
         protected abstract void OnBtnClicked();
         
-        protected virtual void drawItem(Rect lineRect)
+        public virtual void DrawItem(Rect lineRect)
         {
             var bgColor = GUI.backgroundColor;
             GUI.backgroundColor = getButtonColor();
@@ -47,14 +47,19 @@ namespace Editor.AbilityEditor
             GUI.backgroundColor = bgColor;
         }
         
-        public void UpdateDepth(int parentDepth)
+        public void UpdateDepth(AbilityData data)
         {
-            NodeData.Depth = parentDepth + 1;
+            var parentItem = data.NodeDict[NodeData.Parent];
+            NodeData.Depth = parentItem.Depth + 1;
+            //this.depth = TreeNode.depth;
             if (hasChildren)
             {
                 foreach (var treeViewItem in children)
                 {
-                    ((AbilityLogicTreeItem)treeViewItem).UpdateDepth(NodeData.Depth);
+                    if (treeViewItem is AbilityLogicTreeItem logicTreeViewItem)
+                    {
+                        logicTreeViewItem.UpdateDepth(data);
+                    }
                 }
             }
         }

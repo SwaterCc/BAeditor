@@ -84,7 +84,7 @@ namespace Battle
             {
                 if (!CheckLoopEnd())
                 {
-                    return NodeData.ChildrenUids[0];
+                    return NodeData.ChildrenIds[0];
                 }
                 
                 if (NodeData.NextIdInSameLevel > 0)

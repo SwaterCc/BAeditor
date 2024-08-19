@@ -63,11 +63,11 @@ namespace Battle
             
             public override int GetNextNode()
             {
-                if (_conditionRes && NodeData.ChildrenUids.Count > 0 &&
-                    !_executor.IsPassedNode(NodeData.ChildrenUids[0]))
+                if (_conditionRes && NodeData.ChildrenIds.Count > 0 &&
+                    !_executor.IsPassedNode(NodeData.ChildrenIds[0]))
                 {
                     //有子节点返回第一个子节点
-                    return NodeData.ChildrenUids[0];
+                    return NodeData.ChildrenIds[0];
                 }
 
                 if (NodeData.NextIdInSameLevel > 0)

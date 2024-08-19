@@ -50,7 +50,7 @@ namespace Battle
             public void StageBegin()
             {
                 resetChildren();
-                _executor.ExecuteNode(NodeData.ChildrenUids[0]);
+                _executor.ExecuteNode(NodeData.ChildrenIds[0]);
             }
 
             public void StageEnd()

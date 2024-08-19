@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Battle.Auto;
 using Battle.Event;
+using Battle.Tools;
 using Sirenix.OdinInspector;
 
 namespace Battle.Def
@@ -42,6 +43,17 @@ namespace Battle.Def
         /// SKILL BUFF 静态字段 TODO:临时做法，后续要接Excel
         /// </summary>
         public Dictionary<string, object> SpecializationData = new Dictionary<string, object>();
+
+
+        private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
+        public static AbilityNodeData GetNodeData(AbilityData abilityData, EAbilityNodeType type)
+        {
+            var nodeData = new AbilityNodeData();
+            nodeData.NodeId = abilityData._idGenerator.GenerateId();
+            nodeData.NodeType = type;
+
+            return nodeData;
+        }
     }
 
     public class AbilityNodeData
@@ -54,7 +66,7 @@ namespace Battle.Def
 
         public int Depth;
 
-        public List<int> ChildrenUids = new();
+        public List<int> ChildrenIds = new();
 
         public int NextIdInSameLevel;
 

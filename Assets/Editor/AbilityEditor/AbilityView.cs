@@ -88,16 +88,16 @@ namespace BattleAbility.Editor
 
             foreach (EAbilityCycleType cycle in Enum.GetValues(typeof(EAbilityCycleType)))
             {
+                if(cycle == EAbilityCycleType.OnReady) continue;
+                
                 if (!_cycleDrawer.TryGetValue(cycle, out var drawer))
                 {
                     drawer = getDrawer(cycle, itemShowView.Data);
                     if (drawer != null)
                         _cycleDrawer.Add(cycle, drawer);
-                    else
-                        throw new Exception("ssssssssssssssssssss");
                 }
 
-                drawer.DrawCycle();
+                drawer?.DrawCycle();
             }
 
             GUILayout.EndScrollView();

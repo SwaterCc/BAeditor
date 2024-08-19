@@ -59,7 +59,7 @@ namespace Battle
             {
                 ++_count;
                 resetChildren();
-                _executor.ExecuteNode(NodeData.ChildrenUids[0]);
+                _executor.ExecuteNode(NodeData.ChildrenIds[0]);
             }
 
             public override int GetNextNode()

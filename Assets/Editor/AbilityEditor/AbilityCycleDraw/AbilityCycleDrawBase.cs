@@ -34,9 +34,7 @@ namespace Editor.AbilityEditor
 
             if (!data.HeadNodeDict.TryGetValue(type, out var nodeId))
             {
-                var cycleNodeData = new AbilityNodeData();
-                cycleNodeData.NodeId = AbilityView.IdGenerator.GenerateId();
-                cycleNodeData.NodeType = EAbilityNodeType.EAbilityCycle;
+                var cycleNodeData = AbilityData.GetNodeData(data,EAbilityNodeType.EAbilityCycle);
                 cycleNodeData.CycleNodeData = type;
                 cycleNodeData.Parent = -1;
                 
@@ -50,7 +48,7 @@ namespace Editor.AbilityEditor
             }
 
             _logicState = new TreeViewState();
-            _logicTreeDrawer = new AbilityLogicTreeDrawer(_logicState, data, CycleNode.NodeId);
+            _logicTreeDrawer = new AbilityLogicTreeDrawer(_logicState, data, CycleNode);
         }
         
         public virtual void DrawCycle()
@@ -84,7 +82,7 @@ namespace Editor.AbilityEditor
 
         private float GetHeight()
         {
-            var count = CycleNode.ChildrenUids.Count > 0 ? CycleNode.ChildrenUids.Count : 1;
+            var count = CycleNode.ChildrenIds.Count > 0 ? CycleNode.ChildrenIds.Count : 1;
             return 36 * count + 2;
         }
     }

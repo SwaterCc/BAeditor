@@ -133,7 +133,7 @@ namespace Battle
             public bool HeadNodeHasChildren(EAbilityCycleType cycleType)
             {
                 var id = _cycleHeads[cycleType];
-                return _nodes[id].NodeData.ChildrenUids.Count > 0;
+                return _nodes[id].NodeData.ChildrenIds.Count > 0;
             }
 
 
@@ -163,7 +163,7 @@ namespace Battle
                         else
                         {
                             repeatNode.Repeat();
-                            nodeId = _nodes[nodeId].NodeData.ChildrenUids[0];
+                            nodeId = _nodes[nodeId].NodeData.ChildrenIds[0];
                             continue;
                         }
                     }

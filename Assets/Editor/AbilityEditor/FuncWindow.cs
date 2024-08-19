@@ -30,7 +30,7 @@ namespace Editor.AbilityEditor
 
         public void OnDestroy()
         {
-            _funcHead.ChangeToFunc();
+            
         }
     }
 }

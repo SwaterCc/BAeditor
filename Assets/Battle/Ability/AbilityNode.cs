@@ -62,7 +62,7 @@ namespace Battle
 
             protected void resetChildren()
             {
-                foreach (var childrenUid in NodeData.ChildrenUids)
+                foreach (var childrenUid in NodeData.ChildrenIds)
                 {
                     _executor.ResetNode(childrenUid);
                 }
@@ -76,10 +76,10 @@ namespace Battle
             
             public virtual int GetNextNode()
             {
-                if (NodeData.ChildrenUids.Count > 0 && !_executor.IsPassedNode(NodeData.ChildrenUids[0])) 
+                if (NodeData.ChildrenIds.Count > 0 && !_executor.IsPassedNode(NodeData.ChildrenIds[0])) 
                 {
                     //有子节点返回第一个子节点
-                    return NodeData.ChildrenUids[0];
+                    return NodeData.ChildrenIds[0];
                 }
 
                 if (NodeData.NextIdInSameLevel > 0)
