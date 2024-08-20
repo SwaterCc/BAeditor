@@ -7,6 +7,7 @@ using Editor.AbilityEditor;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace BattleAbility.Editor
@@ -21,12 +22,20 @@ namespace BattleAbility.Editor
         /// </summary>
         public AbilityData Data;
 
-        private static CommonUtility.IdGenerator _idGenerator;
+        private static FuncShowInfoList _funcShowInfoList;
 
-        public static CommonUtility.IdGenerator IdGenerator
+        public static FuncShowInfoList FuncShowInfoList
         {
-            get { return _idGenerator ??= CommonUtility.GetIdGenerator(); }
-            set => _idGenerator = value;
+            get
+            {
+                if (_funcShowInfoList == null)
+                {
+                    _funcShowInfoList = AssetDatabase.LoadAssetAtPath("Assets/Editor/EditorData/funcCache.asset",
+                        typeof(FuncShowInfoList)) as FuncShowInfoList;
+                }
+
+                return _funcShowInfoList;
+            }
         }
 
         public AbilityView(AbilityData baseConfig)
@@ -85,7 +94,11 @@ namespace BattleAbility.Editor
             var itemShowView = this.ValueEntry.SmartValue;
             _scrollViewPos = GUILayout.BeginScrollView(_scrollViewPos, false, true);
 
-
+            SirenixEditorGUI.BeginBox();
+            
+            
+            SirenixEditorGUI.EndBox();
+            
             foreach (EAbilityCycleType cycle in Enum.GetValues(typeof(EAbilityCycleType)))
             {
                 if(cycle == EAbilityCycleType.OnReady) continue;

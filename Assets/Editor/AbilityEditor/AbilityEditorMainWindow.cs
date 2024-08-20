@@ -25,8 +25,6 @@ namespace Editor.AbilityEditor
             window.titleContent = new GUIContent("Ability编辑器");
         }
 
-        private OdinMenuTree _treeInstance;
-
         private const string MENU_SKILL = "Skill";
         private const string MENU_BUFF = "Buff";
         private const string MENU_BULLET = "Bullet";
@@ -36,9 +34,9 @@ namespace Editor.AbilityEditor
         private const string ASSET_NAME_BUFF = "Buffs";
         private const string ASSET_NAME_BULLET = "Bullets";
 
-        public static string SKILL_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Skill/";
-        public static string BUFF_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Buff/";
-        public static string BULLET_DATA_PATH = "Assets/EditorData/BattleEditorData/Config/Bullet/";
+        public static string SKILL_DATA_PATH = "Assets/Editor/EditorData/BattleEditorData/Skill/";
+        public static string BUFF_DATA_PATH = "Assets/Editor/EditorData/BattleEditorData/Buff/";
+        public static string BULLET_DATA_PATH = "Assets/Editor/EditorData/BattleEditorData/Bullet/";
 
         public static string GetSavePath(EAbilityType type)
         {
@@ -50,11 +48,11 @@ namespace Editor.AbilityEditor
                     return BUFF_DATA_PATH;
                 case EAbilityType.Bullet:
                     return BULLET_DATA_PATH;
-             }
+            }
 
             return null;
         }
-        
+
         private AbilityDataList _skills;
         private AbilityDataList _buffs;
         private AbilityDataList _bullets;
@@ -80,17 +78,16 @@ namespace Editor.AbilityEditor
 
             return null;
         }
-        
+
         private AbilityDataList LoadBattleAbilityConfigList(string abilityTypeStr)
         {
-            return AssetDatabase.LoadAssetAtPath($"Assets/EditorData/BattleEditorData/Config/{abilityTypeStr}.asset",
+            return AssetDatabase.LoadAssetAtPath($"Assets/Editor/EditorData/BattleEditorData/{abilityTypeStr}.asset",
                 typeof(AbilityDataList)) as AbilityDataList;
-            ;
         }
 
-        private void AddMenuItem(string rootMenu, AbilityDataList data)
+        private void AddMenuItem(OdinMenuTree treeInstance, string rootMenu, AbilityDataList data)
         {
-            if (_treeInstance == null)
+            if (treeInstance == null)
             {
                 return;
             }
@@ -98,10 +95,10 @@ namespace Editor.AbilityEditor
             foreach (var itemPair in data.Items)
             {
                 var abilityData = LoadAbilitySerializable(data.abilityType, itemPair.Value.configId);
-                if (data != null)
+                if (abilityData != null)
                 {
                     var abilityView = new AbilityView(abilityData);
-                    _treeInstance.Add($"{rootMenu}/{abilityView.GetOdinMenuTreeItemLabel()}", abilityView);
+                    treeInstance.Add($"{rootMenu}/{abilityView.GetOdinMenuTreeItemLabel()}", abilityView);
                 }
             }
         }
@@ -124,26 +121,25 @@ namespace Editor.AbilityEditor
                         typeof(AbilityData)) as AbilityData;
                     break;
             }
+
             return !asset ? null : asset;
         }
 
         protected override OdinMenuTree BuildMenuTree()
         {
-            if (_treeInstance == null)
+            var treeInstance = new OdinMenuTree(true)
             {
-                _treeInstance = new OdinMenuTree(true)
-                {
-                    { MENU_SKILL, new BattleAbilityRootView(_skills), EditorIcons.Clouds },
-                    { MENU_BUFF, new BattleAbilityRootView(_buffs), EditorIcons.Clouds },
-                    { MENU_BULLET, new BattleAbilityRootView(_bullets), EditorIcons.Clouds }
-                };
-            }
+                { MENU_SKILL, new BattleAbilityRootView(this, _skills), EditorIcons.Clouds },
+                { MENU_BUFF, new BattleAbilityRootView(this, _buffs), EditorIcons.Clouds },
+                { MENU_BULLET, new BattleAbilityRootView(this, _bullets), EditorIcons.Clouds }
+            };
 
-            AddMenuItem(MENU_SKILL, _skills);
-            AddMenuItem(MENU_BUFF, _buffs);
-            AddMenuItem(MENU_BULLET, _bullets);
 
-            return _treeInstance;
+            AddMenuItem(treeInstance, MENU_SKILL, _skills);
+            AddMenuItem(treeInstance, MENU_BUFF, _buffs);
+            AddMenuItem(treeInstance, MENU_BULLET, _bullets);
+
+            return treeInstance;
         }
 
         protected override void OnBeginDrawEditors()
@@ -154,9 +150,9 @@ namespace Editor.AbilityEditor
             {
                 return;
             }
-            
+
             var toolbarHeight = this.MenuTree.Config.SearchToolbarHeight;
-            
+
             SirenixEditorGUI.BeginHorizontalToolbar(toolbarHeight);
             {
                 if (selected != null)
@@ -168,16 +164,14 @@ namespace Editor.AbilityEditor
                 {
                     CreateAbilityWindow.OpenWindow(this);
                 }
-                
+
                 if (selected.Value is AbilityView abilityView)
                 {
                     if (SirenixEditorGUI.ToolbarButton(new GUIContent("打开变量窗口")))
                     {
-                        ShowVariableWindow.OpenWindow(this,abilityView.Data);
+                        ShowVariableWindow.OpenWindow(this, abilityView.Data);
                     }
                 }
-                
-                
             }
             SirenixEditorGUI.EndHorizontalToolbar();
         }

@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8bdc74b5b2446d97635e84c3d6bc04, type: 3}
+  m_Name: SkillSpecializatioTmp
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: fieldList
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[Battle.Skill.SpecializationData,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 1|Battle.Skill.SpecializationData, Assembly-CSharp
+    - Name: Name
+      Entry: 1
+      Data: SkillType
+    - Name: Desc
+      Entry: 1
+      Data: "\u6280\u80FD\u7C7B\u578B"
+    - Name: DataType
+      Entry: 3
+      Data: 5
+    - Name: TypeStr
+      Entry: 1
+      Data: Battle.ESkillType,Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    - Name: EnumName
+      Entry: 1
+      Data: Battle.ESkillType
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|Battle.Skill.SpecializationData, Assembly-CSharp
+    - Name: Name
+      Entry: 1
+      Data: TargetType
+    - Name: Desc
+      Entry: 1
+      Data: "\u6280\u80FD\u76EE\u6807\u7B5B\u9009"
+    - Name: DataType
+      Entry: 3
+      Data: 5
+    - Name: TypeStr
+      Entry: 1
+      Data: Battle.ESkillTargetType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    - Name: EnumName
+      Entry: 1
+      Data: Battle.ESkillTargetType
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|Battle.Skill.SpecializationData, Assembly-CSharp
+    - Name: Name
+      Entry: 1
+      Data: CDMode
+    - Name: Desc
+      Entry: 1
+      Data: "CD\u8FDB\u5165\u6A21\u5F0F"
+    - Name: DataType
+      Entry: 3
+      Data: 5
+    - Name: TypeStr
+      Entry: 1
+      Data: Battle.ECDMode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    - Name: EnumName
+      Entry: 1
+      Data: Battle.ECDMode
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 4|Battle.Skill.SpecializationData, Assembly-CSharp
+    - Name: Name
+      Entry: 1
+      Data: ResCostType
+    - Name: Desc
+      Entry: 1
+      Data: "\u8D44\u6E90\u6D88\u8017\u65F6\u673A"
+    - Name: DataType
+      Entry: 3
+      Data: 5
+    - Name: TypeStr
+      Entry: 1
+      Data: Battle.EResCostType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    - Name: EnumName
+      Entry: 1
+      Data: Battle.EResCostType
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 

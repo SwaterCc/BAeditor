@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Battle;
 using Battle.Skill;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -10,41 +12,6 @@ namespace Editor.AbilityEditor
 {
     public static class AbilityEditorHelper
     {
-        /*private static void checkFieldType(FieldInfo fieldInfo, Type checkType,
-            BAEditorShowLabelTag.ELabeType labeType,
-            bool showMsg = true)
-        {
-            if (fieldInfo.FieldType != checkType && showMsg)
-                Debug.LogWarning($"字段的类型和Label设置的类型不一致，字段类型为{fieldInfo.FieldType},Label类型为{labeType}");
-        }
-
-        public static (string, BAEditorShowLabelTag.ELabeType) GetFiledLabelAndType(FieldInfo fieldInfo)
-        {
-            string label = "NoInit";
-            BAEditorShowLabelTag.ELabeType labeType = BAEditorShowLabelTag.ELabeType.None;
-            foreach (var attr in fieldInfo.GetCustomAttributes())
-            {
-                if (attr.GetType() == typeof(BAEditorShowLabelTag))
-                {
-                    if (attr is not BAEditorShowLabelTag labelTag) continue;
-                    label = labelTag.LabelText;
-                    labeType = labelTag.LabeType;
-                    break;
-                }
-            }
-
-            return (label, labeType);
-        }*/
-        
-        public static Dictionary<string, MethodInfo> AbilityMethodCache = new Dictionary<string, MethodInfo>();
-
-        public static void InitMethodCache()
-        {
-            
-        }
-        
-        
-
         /// <summary>
         /// 根据变量类型来创建对应类型的Filed
         /// </summary>
@@ -54,6 +21,8 @@ namespace Editor.AbilityEditor
         /// <returns></returns>
         public static object DrawLabelByType(Type elementType, string label, object updateValue)
         {
+            if (elementType == null)
+                return null;
             object afterValue = null;
             if (elementType == typeof(int))
             {
@@ -78,8 +47,8 @@ namespace Editor.AbilityEditor
 
             return afterValue;
         }
-        
-        
+
+
         public static object DrawLabelByType(SpecializationDataType elementType, string label, object updateValue)
         {
             object afterValue = null;
@@ -91,7 +60,7 @@ namespace Editor.AbilityEditor
             {
                 afterValue = EditorGUILayout.LongField(label, (long)updateValue);
             }
-            else if (elementType ==SpecializationDataType.Float)
+            else if (elementType == SpecializationDataType.Float)
             {
                 afterValue = EditorGUILayout.FloatField(label, (float)updateValue);
             }
@@ -106,8 +75,8 @@ namespace Editor.AbilityEditor
 
             return afterValue;
         }
-        
-        
+
+
         /*/// <summary>
         /// 根据自定义特性BattleAbilityLabelTag 来创建不同的Field，不能创建列表，列表有单独的函数绘制
         /// </summary>
@@ -139,7 +108,7 @@ namespace Editor.AbilityEditor
             }
             return afterUpdateValue;
         }*/
-        
+
         /// <summary>
         /// 绘制列表
         /// </summary>
@@ -225,9 +194,7 @@ namespace Editor.AbilityEditor
             }
 
             SirenixEditorGUI.EndVerticalPropertyLayout();
-            if (GUILayout.Button("添加配置"))
-            {
-            }
+            if (GUILayout.Button("添加配置")) { }
 
             SirenixEditorGUI.EndBox();
         }

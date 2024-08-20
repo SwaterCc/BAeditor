@@ -5,25 +5,52 @@ using UnityEngine;
 
 namespace Battle.Tools
 {
-    #region AbilityExtension
+    #region AbilityCacheFuncDefine
 
-    public static class AbilityExtension
+    public static class AbilityCacheFuncDefine
     {
-      
-        public static void CreateHitBox(this Actor actor, int hitData)
+        [AbilityFuncCache(EFuncCacheFlag.Action)]
+        public static void CreateHitBox(this Actor actor, int hitDataId)
         {
-            var hitBox = new HitBox(hitData);
+            var hitBox = new HitBox(hitDataId);
             BattleManager.Instance.Add(hitBox);
         }
 
-        public static void AddAbility(int id)
+        [AbilityFuncCache(EFuncCacheFlag.Action)]
+        public static void AddAbility(int actorUid, int ability, bool isRunNow)
         {
-            
+            var actor = BattleManager.Instance.GetActor(actorUid);
+            if (actor != null)
+            {
+                var ab = new Ability(ability);
+                actor.GetAbilityController().AwardActorAbility(ab, false);
+            }
         }
-        
-        public static T GetAttr<T>(this Actor actor, EAttributeType attributeType)
+
+        [AbilityFuncCache(EFuncCacheFlag.Variable|EFuncCacheFlag.Branch)]
+        public static object GetAttrBox(EAttributeType attributeType)
         {
-            return default;
+            var attr = Ability.Context.BelongActor.GetAttrCollection().GetAttr(attributeType);
+            return attr.GetBox();
+        }
+
+        [AbilityFuncCache(EFuncCacheFlag.Action)]
+        public static void SetAttrSimple(EAttributeType attributeType, object value)
+        {
+            var attr = Ability.Context.BelongActor.GetAttrCollection().GetAttr(attributeType);
+            if (!attr.IsComposite)
+            {
+                ((SimpleAttribute)attr).OnlySet(value);
+            }
+        }
+        [AbilityFuncCache(EFuncCacheFlag.Action)]
+        public static void SetAttrElement(EAttributeType attributeType, EAttrElementType elementType, object value)
+        {
+            var attr = Ability.Context.BelongActor.GetAttrCollection().GetAttr(attributeType);
+            if (attr.IsComposite)
+            {
+                ((CompositeAttribute)attr).SetElementAttr(elementType, (float)value);
+            }
         }
 
         public static VariableCollection GetVariableCollection(EVariableRange range)
@@ -41,8 +68,8 @@ namespace Battle.Tools
             return null;
         }
 
-       
-        public static IValueBox GetVariableBox(EVariableRange range, string name)
+        [AbilityFuncCache(EFuncCacheFlag.Action|EFuncCacheFlag.Branch|EFuncCacheFlag.Variable)]
+        public static object GetVariable(EVariableRange range, string name)
         {
             VariableCollection collection = GetVariableCollection(range);
 
@@ -55,24 +82,47 @@ namespace Battle.Tools
             return default;
         }
 
-        
-        public static void CreateVariable(EVariableRange range, string name, IValueBox valueBox)
+        [AbilityFuncCache(EFuncCacheFlag.OnlyCache)]
+        public static void ChangeVariable(EVariableRange range, string name, object valueBox)
+        {
+            VariableCollection collection = GetVariableCollection(range);
+            collection.ChangeValue(name, valueBox);
+        }
+
+        [AbilityFuncCache(EFuncCacheFlag.OnlyCache)]
+        public static void CreateVariable(EVariableRange range, string name, object valueBox)
         {
             VariableCollection collection = GetVariableCollection(range);
             collection?.Add(name, valueBox);
         }
-        
-      
-        public static void CreateVariable(EVariableRange range, string name, object valueBox)
+
+        [AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
+        public static int GetActorSelf()
         {
-            VariableCollection collection = GetVariableCollection(range);
-            collection?.Add(name, new ValueBox<object>(valueBox));
+            return Ability.Context.BelongActor.Uid;
         }
 
-        public static Actor GetActor(int actorUId)
-        {
-            return null;
-        }
+        #region 数学函数
+
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static object Add(float a, float b) => a + b;
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static int Add(int a, int b) => a + b;
+       
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static float Subtract(float a, float b) => a - b;
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static int Subtract(int a, int b) => a - b;
+        
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static float Multiply(float a, float b) => a * b;
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static int Multiply (int a, int b) => a * b;
+        
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static float Divide(float a, float b) => a / b;
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static int Divide(int a, int b) => a / b;
+
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static int SelfAdditive(int a) => ++a;
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static float SelfAdditive(float a) => ++a;
+
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static int SelfSubtracting(int a) => --a;
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]public static float SelfSubtracting(float a) => --a;
+        #endregion
+
     }
 
     #endregion

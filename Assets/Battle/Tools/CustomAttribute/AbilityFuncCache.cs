@@ -7,14 +7,19 @@ namespace Battle.Tools.CustomAttribute
     {
         public EFuncCacheFlag Flag;
 
-        public string FuncName;
+        public string FuncDesc;
 
-        public string[] Desc;
+        public string[] ParamDesc;
 
-        public AbilityFuncCache(string funcName, params string[] desc)
+        public int OverLoadedTag;
+
+        public AbilityFuncCache(EFuncCacheFlag flag = EFuncCacheFlag.OnlyCache,int overloadedTag = 0, string funcDesc = "",
+            params string[] paramDesc)
         {
-            FuncName = funcName;
-            Desc = desc;
+            Flag = flag;
+            FuncDesc = funcDesc;
+            ParamDesc = paramDesc;
+            OverLoadedTag = overloadedTag;
         }
     }
 }

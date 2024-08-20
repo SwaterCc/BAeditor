@@ -14,17 +14,15 @@ namespace Battle
         /// </summary>
         private class AbilityActionNode : AbilityNode
         {
-            private readonly Queue<Parameter> _actionFunc;
+            public AbilityActionNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) { }
 
-            public AbilityActionNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
-            {
-                _actionFunc = new Queue<Parameter>(NodeData.ActionNodeData);
-            }
-            
-            
+
             public override void DoJob()
             {
-                _actionFunc.TryCallFunc(out _);
+                if (NodeData.ActionNodeData[0].IsFunc)
+                {
+                    NodeData.ActionNodeData.TryCallFunc(out _);
+                }
             }
         }
     }

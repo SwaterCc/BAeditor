@@ -12,7 +12,7 @@ namespace Battle
     {
         public bool IsComposite => false;
 
-        public abstract IValueBox GetBox();
+        public abstract object GetBox();
     }
 
     /// <summary>

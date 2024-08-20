@@ -25,7 +25,7 @@ namespace Editor.AbilityEditor
             if (!parameter.IsFunc) return;
             if (_method == null)
             {
-                _method = AbilityEditorHelper.AbilityMethodCache[Self.FuncName];
+                _method = FuncWindow.MethodCache[Self.FuncName][0];
             }
 
             FuncParameter.Clear();
@@ -56,7 +56,7 @@ namespace Editor.AbilityEditor
            
             if (Self.IsFunc)
             {
-                _method = AbilityEditorHelper.AbilityMethodCache[Self.FuncName];
+                _method = FuncWindow.MethodCache[Self.FuncName][0];
 
                 foreach (var _ in _method.GetParameters())
                 {

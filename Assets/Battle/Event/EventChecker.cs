@@ -56,8 +56,6 @@ namespace Battle.Event
         }
     }
 
-   
-    
     
     public class EmptyChecker : EventChecker
     {

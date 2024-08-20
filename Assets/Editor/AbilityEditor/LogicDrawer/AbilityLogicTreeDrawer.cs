@@ -9,28 +9,55 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
+    public class EmptyItem : AbilityLogicTreeItem
+    {
+        public EmptyItem(int id, int depth, string name) : base(id, depth, name) { }
+
+        public override void DrawItem(Rect lineRect) { }
+
+        protected override Color getButtonColor()
+        {
+            return Color.black;
+        }
+
+        protected override string getButtonText()
+        {
+            return null;
+        }
+
+        protected override void OnBtnClicked() { }
+    }
+
     public class AbilityLogicTreeDrawer : TreeView
     {
-        private CycleTreeItem _cycleRoot;
         private AbilityNodeData _cycleHeadData;
         private AbilityData _data;
+
         public AbilityLogicTreeDrawer(TreeViewState state, AbilityData data, AbilityNodeData head) : base(state)
         {
             _cycleHeadData = head;
             _cycleHeadData.Depth = -1;
             _data = data;
+            showAlternatingRowBackgrounds = true;
+            showBorder = true;
+            extraSpaceBeforeIconAndLabel = 30;
+            rowHeight = 36;
+            Reload();
         }
 
-        
         protected override TreeViewItem BuildRoot()
         {
-            _cycleRoot = new CycleTreeItem(0, -1, "root");
-            setupChild(_cycleHeadData, _cycleRoot);
-            
-            SetupDepthsFromParentsAndChildren(_cycleRoot);
-            return _cycleRoot;
+            var root = new EmptyItem(0, -1, "root");
+
+            var cycleRoot = new CycleTreeItem(_cycleHeadData);
+            cycleRoot.depth = 0;
+            root.AddChild(cycleRoot);
+            setupChild(_cycleHeadData, cycleRoot);
+
+            SetupDepthsFromParentsAndChildren(root);
+            return root;
         }
-        
+
         private void setupChild(AbilityNodeData nodeData, AbilityLogicTreeItem parent)
         {
             foreach (var childId in nodeData.ChildrenIds)
@@ -64,16 +91,22 @@ namespace Editor.AbilityEditor
                             item = new StageTreeItem(childNodeData);
                             break;
                     }
+
                     parent.AddChild(item);
                     setupChild(childNodeData, item);
                 }
             }
         }
-        
+
         protected override void RowGUI(RowGUIArgs args)
         {
-            var item = (AbilityLogicTreeItem)args.item;
             base.RowGUI(args);
+            var item = (AbilityLogicTreeItem)args.item;
+            if (item is EmptyItem)
+            {
+                return;
+            }
+
             var rowRect = args.rowRect;
             float labelWidth = 24;
             rowRect.x = rowRect.x + 25 + 38 * item.NodeData.Depth;
@@ -92,8 +125,8 @@ namespace Editor.AbilityEditor
 
             item.DrawItem(rowRect);
         }
-        
-        private void AddLogicTreeNode(object obj)
+
+        private void AddNode(object obj)
         {
             if (obj is (AbilityLogicTreeItem, EAbilityNodeType))
             {
@@ -102,29 +135,68 @@ namespace Editor.AbilityEditor
                 node.Parent = pair.select.NodeData.NodeId;
                 node.Depth = pair.select.NodeData.Depth + 1;
                 pair.select.NodeData.ChildrenIds.Add(node.NodeId);
+                _data.NodeDict.Add(node.NodeId, node);
+                switch (pair.eNodeType)
+                {
+                    case EAbilityNodeType.EEvent:
+                        node.EventNodeData = new EventNodeData();
+                        break;
+                    case EAbilityNodeType.EBranchControl:
+                        node.BranchNodeData = new BranchNodeData();
+                        break;
+                    case EAbilityNodeType.EVariableControl:
+                        node.VariableNodeData = new VariableNodeData();
+                        break;
+                    case EAbilityNodeType.ERepeat:
+                        node.RepeatNodeData = new RepeatNodeData();
+                        break;
+                    case EAbilityNodeType.ETimer:
+                        node.TimerNodeData = new TimerNodeData();
+                        break;
+                    case EAbilityNodeType.EStage:
+                        node.StageNodeData = new StageNodeData();
+                        break;
+                }
                 Reload();
             }
         }
-        
+
+        private void RemoveNode(object obj)
+        {
+            if (obj is AbilityLogicTreeItem select)
+            {
+                var parent = _data.NodeDict[select.NodeData.Parent];
+                parent.ChildrenIds.Remove(select.NodeData.NodeId);
+                select.NodeData.RemoveSelf(_data);
+                Reload();
+            }
+        }
+
         protected override void ContextClickedItem(int id)
         {
-            if (FindItem(id, _cycleRoot) is AbilityLogicTreeItem select)
+            if (FindItem(id, rootItem) is AbilityLogicTreeItem select)
             {
                 GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("添加Action节点"), true,
-                    AddLogicTreeNode, (select, EAbilityNodeType.EAction));
-                menu.AddItem(new GUIContent("添加分支节点"), true,
-                    AddLogicTreeNode, (select, EAbilityNodeType.EBranchControl));
-                menu.AddItem(new GUIContent("创建变量控制节点"), true,
-                    AddLogicTreeNode, (select, EAbilityNodeType.EVariableControl));
-                menu.AddItem(new GUIContent("创建Event节点"), true,
-                    AddLogicTreeNode, (select, EAbilityNodeType.EEvent));
-                menu.AddItem(new GUIContent("创建Repeat节点"), true,
-                    AddLogicTreeNode, (select, EAbilityNodeType.ERepeat));
-                menu.AddItem(new GUIContent("创建Stage节点"), true,
-                    AddLogicTreeNode, (select, EAbilityNodeType.EStage));
-                menu.AddItem(new GUIContent("创建Timer节点"), true,
-                    AddLogicTreeNode, (select, EAbilityNodeType.ETimer));
+                menu.AddItem(new GUIContent("创建节点/添加Action节点"), false,
+                    AddNode, (select, EAbilityNodeType.EAction));
+                menu.AddItem(new GUIContent("创建节点/添加分支节点"), false,
+                    AddNode, (select, EAbilityNodeType.EBranchControl));
+                menu.AddItem(new GUIContent("创建节点/创建变量控制节点"), false,
+                    AddNode, (select, EAbilityNodeType.EVariableControl));
+                menu.AddItem(new GUIContent("创建节点/创建Event节点"), false,
+                    AddNode, (select, EAbilityNodeType.EEvent));
+                menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
+                    AddNode, (select, EAbilityNodeType.ERepeat));
+                menu.AddItem(new GUIContent("创建节点/创建Stage节点"), false,
+                    AddNode, (select, EAbilityNodeType.EStage));
+                menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
+                    AddNode, (select, EAbilityNodeType.ETimer));
+                if (select is not CycleTreeItem)
+                {
+                    menu.AddItem(new GUIContent("删除节点"), false,
+                        RemoveNode, select);
+                }
+
                 menu.ShowAsContext();
             }
         }

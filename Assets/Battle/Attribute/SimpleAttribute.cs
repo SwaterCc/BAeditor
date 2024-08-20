@@ -5,16 +5,25 @@ using UnityEngine;
 
 namespace Battle
 {
+    
+    public abstract class SimpleAttribute : Attribute
+    {
+        protected object _value;
+        public void OnlySet(object value)
+        {
+            _value = value;
+        }
+    }
+    
     /// <summary>
     /// 简单属性
     /// 仅作存储的属性
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class SimpleAttribute<T> : Attribute, IAttrCommandHandle<T>
+    public class SimpleAttribute<T> : SimpleAttribute, IAttrCommandHandle<T>
     {
         private readonly LinkedList<AttrCommand<T>> _commands;
         private readonly EAttrCommandType _commandType;
-        private T _value;
         private readonly Func<T, T, T> _add;
 
         public SimpleAttribute(bool openCommandCache = false, EAttrCommandType commandType = EAttrCommandType.Override,
@@ -45,7 +54,7 @@ namespace Battle
                 case EAttrCommandType.Add:
                     foreach (var command in _commands)
                     {
-                        _value = _add.Invoke(_value, command.Value);
+                        _value = _add.Invoke((T)_value, command.Value);
                     }
 
                     break;
@@ -95,14 +104,14 @@ namespace Battle
             }
         }
 
-        public override IValueBox GetBox()
+        public override object GetBox()
         {
-            return new ValueBox<T>(_value);
+            return _value;
         }
         
         public T GetValue()
         {
-            return _value;
+            return (T)_value;
         }
 
         public void Undo(AttrCommand<T> command)

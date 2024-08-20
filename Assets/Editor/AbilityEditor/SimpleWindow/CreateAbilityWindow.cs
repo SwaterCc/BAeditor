@@ -32,7 +32,7 @@ namespace Editor.AbilityEditor.SimpleWindow
 
         public int id;
 
-        public string name;
+        public string abilityName;
 
         public string desc;
 
@@ -43,8 +43,8 @@ namespace Editor.AbilityEditor.SimpleWindow
             return _hasError;
         }
 
-        [InfoBox("$msg", InfoMessageType.Error, "")]
-        public string msg;
+        [InfoBox("$msg", InfoMessageType.Error, "hasError")]
+        private string msg;
 
         [Button("创 建")]
         public void Create()
@@ -61,7 +61,7 @@ namespace Editor.AbilityEditor.SimpleWindow
             var item = new AbilityConfigItem()
             {
                 configId = id,
-                name = name,
+                name = abilityName,
                 desc = desc
             };
 
@@ -78,7 +78,7 @@ namespace Editor.AbilityEditor.SimpleWindow
                 asset.name = item.configId.ToString();
                 asset.ConfigId = item.configId;
                 asset.Type = createType;
-                asset.Name = name;
+                asset.Name = abilityName;
                 asset.Desc = desc;
 
                 // 确定保存路径

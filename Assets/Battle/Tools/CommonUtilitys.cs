@@ -72,10 +72,16 @@ namespace Battle.Tools
         public static bool TryCallFunc(this Parameter[] @params, out object valueBox)
         {
             var queue = new Queue<Parameter>(@params);
-            return TryCallFunc(queue, out valueBox);
+            if (@params[0].IsValueType && @params.Length == 1)
+            {
+                valueBox =@params[0].Value;
+                return true;
+            }
+
+            return tryCallFunc(queue, out valueBox);
         }
 
-        public static bool TryCallFunc(this Queue<Parameter> queue, out object valueBox)
+        private static bool tryCallFunc(this Queue<Parameter> queue, out object valueBox)
         {
             valueBox = null;
             var func = queue.Dequeue();

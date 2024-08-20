@@ -8,5 +8,4 @@ namespace Battle
         public int Flag;
         public float Cost;
     }
-    
 }

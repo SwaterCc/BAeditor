@@ -49,7 +49,19 @@ namespace Battle.Def
         public static AbilityNodeData GetNodeData(AbilityData abilityData, EAbilityNodeType type)
         {
             var nodeData = new AbilityNodeData();
-            nodeData.NodeId = abilityData._idGenerator.GenerateId();
+            var id = CommonUtility.GenerateTimeBasedHashId32();
+            var maxTryCount = 100;
+            var curTryCount = 0;
+            while (abilityData.NodeDict.ContainsKey(id))
+            {
+                id = CommonUtility.GenerateTimeBasedHashId32();
+                if (++curTryCount > maxTryCount)
+                {
+                    throw new Exception("id生成错误");
+                }
+            }
+
+            nodeData.NodeId = id;
             nodeData.NodeType = type;
 
             return nodeData;
@@ -85,6 +97,18 @@ namespace Battle.Def
         public TimerNodeData TimerNodeData;
 
         public StageNodeData StageNodeData;
+
+        public void RemoveSelf(AbilityData data)
+        {
+            data.NodeDict.Remove(NodeId);
+            if (ChildrenIds.Count > 0)
+            {
+                foreach (var id in ChildrenIds)
+                {
+                    data.NodeDict[id].RemoveSelf(data);
+                }
+            }
+        }
     }
 
     public class BranchNodeData

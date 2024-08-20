@@ -8,6 +8,7 @@ namespace BattleAbility
     /// <summary>
     /// 打击数据
     /// </summary>
+    [CreateAssetMenu(menuName = "战斗编辑器/HitData")] 
     public class HitData : SerializedScriptableObject
     { 
         /// <summary>

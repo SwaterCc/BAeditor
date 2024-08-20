@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6ba19aea54643368bd69f39c4705247, type: 3}
-  m_Name: Bullets
+  m_Name: Skills
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -23,8 +23,8 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Items
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[EditorData.BattleEditorData.BattleAbilityConfigItem,
-        Assembly-CSharp]], mscorlib
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[BattleAbility.Editor.AbilityConfigItem,
+        Assembly-CSharp-Editor]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
@@ -34,70 +34,22 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 1
     - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 3
-      Data: 1003
+      Data: 11111
     - Name: $v
       Entry: 7
-      Data: 2|EditorData.BattleEditorData.BattleAbilityConfigItem, Assembly-CSharp
+      Data: 2|BattleAbility.Editor.AbilityConfigItem, Assembly-CSharp-Editor
     - Name: configId
       Entry: 3
-      Data: 1003
+      Data: 11111
     - Name: name
-      Entry: 3
-      Data: 0
-    - Name: desc
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1001
-    - Name: $v
-      Entry: 7
-      Data: 3|EditorData.BattleEditorData.BattleAbilityConfigItem, Assembly-CSharp
-    - Name: configId
-      Entry: 3
-      Data: 1001
-    - Name: name
-      Entry: 3
-      Data: 0
-    - Name: desc
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1002
-    - Name: $v
-      Entry: 7
-      Data: 4|EditorData.BattleEditorData.BattleAbilityConfigItem, Assembly-CSharp
-    - Name: configId
-      Entry: 3
-      Data: 1002
-    - Name: name
-      Entry: 3
-      Data: 0
+      Entry: 1
+      Data: 1111
     - Name: desc
       Entry: 6
       Data: 
@@ -113,4 +65,4 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  abilityType: 3
+  abilityType: 0

@@ -10,12 +10,19 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override Color getButtonColor()
         {
-            return new Color(0.9f, 0.1f, 0.3f);
+            return new Color(1.5f, 0.5f, 0.6f);
         }
 
         protected override string getButtonText()
         {
-            return NodeData.ActionNodeData[0].FuncName;
+            if (NodeData.ActionNodeData == null || NodeData.ActionNodeData.Length == 0)
+                return "未初始化";
+            
+            string text = string.IsNullOrEmpty(NodeData.ActionNodeData[0].FuncName)
+                ? "未初始化"
+                : NodeData.ActionNodeData[0].FuncName;
+            
+            return text;
         }
 
         protected override void OnBtnClicked()

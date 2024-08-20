@@ -14,6 +14,8 @@ namespace Editor.AbilityEditor
     {
         public AbilityNodeData NodeData;
 
+        public bool ShowFlag = true;
+        
         protected AbilityLogicTreeItem(int id, int depth, string name) : base(id, depth, name) { }
 
         protected AbilityLogicTreeItem(AbilityNodeData nodeData) : base(nodeData.NodeId, nodeData.Depth)

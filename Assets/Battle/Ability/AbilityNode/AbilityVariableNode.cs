@@ -16,26 +16,23 @@ namespace Battle
         private class AbilityVariableNode : AbilityNode
         {
             private readonly VariableNodeData _varData;
-            private readonly Queue<Parameter> _params;
 
             public AbilityVariableNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
                 _varData = data.VariableNodeData;
-                _params = new Queue<Parameter>(_varData.VarParams);
             }
 
             public override void DoJob()
             {
-                if (_params.TryCallFunc(out var variableBox))
+                if (_varData.VarParams.TryCallFunc(out var variableBox))
                 {
                     if (_varData.OperationType == EVariableOperationType.Create)
                     {
-                        AbilityExtension.CreateVariable(_varData.Range, _varData.Name, variableBox);
+                        AbilityCacheFuncDefine.CreateVariable(_varData.Range, _varData.Name, variableBox);
                     }
                     else
                     {
-                        var variable = AbilityExtension.GetVariableBox(_varData.Range, _varData.Name);
-                        variable.SetObject(variableBox);
+                        AbilityCacheFuncDefine.ChangeVariable(_varData.Range, _varData.Name,variableBox);
                     }
                 }
                 else

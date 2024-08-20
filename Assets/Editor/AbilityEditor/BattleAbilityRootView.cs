@@ -12,10 +12,11 @@ namespace Editor.AbilityEditor
     public class BattleAbilityRootView
     {
         public AbilityDataList Data;
-
-        public BattleAbilityRootView(AbilityDataList data)
+        public AbilityEditorMainWindow MainWindow;
+        public BattleAbilityRootView(AbilityEditorMainWindow mainWindow, AbilityDataList data)
         {
             Data = data;
+            MainWindow = mainWindow;
         }
     }
     
@@ -32,7 +33,7 @@ namespace Editor.AbilityEditor
             var configItemList = this.ValueEntry.SmartValue.Data;
             
             SirenixEditorGUI.BeginBox();
-            _isUsedMulitRemove = EditorGUILayout.Toggle("批量删除开启？", _isUsedMulitRemove,GUILayout.Width(80));
+            _isUsedMulitRemove = EditorGUILayout.Toggle("批量删除开启？", _isUsedMulitRemove,GUILayout.Width(20));
             if (_isUsedMulitRemove)
             {
                 if (SirenixEditorGUI.Button("删除选中项", ButtonSizes.Medium))
@@ -51,10 +52,10 @@ namespace Editor.AbilityEditor
             foreach (var item in configItemList.Items)
             {
                 SirenixEditorGUI.BeginListItem();
-                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.BeginHorizontal(GUILayout.Width(320));
                 if (_isUsedMulitRemove)
                 {
-                    if (EditorGUILayout.Toggle(_removeList.Contains(item.Key)))
+                    if (EditorGUILayout.Toggle(_removeList.Contains(item.Key),GUILayout.Width(40)))
                     {
                         if (!_removeList.Contains(item.Key))
                         {
@@ -62,13 +63,13 @@ namespace Editor.AbilityEditor
                         }
                     }
                 }
-                EditorGUILayout.LabelField($"ID:{item.Key}");
-                EditorGUILayout.LabelField($"Name:{item.Value.name}");
+                EditorGUILayout.LabelField($"ID:{item.Key}",GUILayout.Width(50));
+                EditorGUILayout.LabelField($"Name:{item.Value.name}",GUILayout.Width(150));
                 EditorGUILayout.LabelField($"Desc:{item.Value.desc}");
 
                 if (!_isUsedMulitRemove)
                 {
-                    if (SirenixEditorGUI.Button("删除", ButtonSizes.Medium))
+                    if (GUILayout.Button("删除"))
                     {
                         _removeIdx = item.Key;
                     }
@@ -81,11 +82,10 @@ namespace Editor.AbilityEditor
             {
                 configItemList.Items.Remove(_removeIdx);
                 _removeIdx = -1;
+                this.ValueEntry.SmartValue.MainWindow.ForceMenuTreeRebuild();
             }
             SirenixEditorGUI.EndVerticalList();
             SirenixEditorGUI.EndBox();
-            
-            
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Editor.AbilityEditor
     {
         public bool Foldout;
         
-        public EAbilityCycleType Type;
+        public EAbilityCycleType CycleType;
         
         public AbilityData Data;
       
@@ -26,20 +26,20 @@ namespace Editor.AbilityEditor
 
         private TreeViewState _logicState;
         
-        public AbilityCycleDrawBase(EAbilityCycleType type, AbilityData data, bool foldout = true)
+        public AbilityCycleDrawBase(EAbilityCycleType cycleType, AbilityData data, bool foldout = true)
         {
-            Type = type;
+            CycleType = cycleType;
             Data = data;
             Foldout = foldout;
 
-            if (!data.HeadNodeDict.TryGetValue(type, out var nodeId))
+            if (!data.HeadNodeDict.TryGetValue(cycleType, out var nodeId))
             {
                 var cycleNodeData = AbilityData.GetNodeData(data,EAbilityNodeType.EAbilityCycle);
-                cycleNodeData.CycleNodeData = type;
+                cycleNodeData.CycleNodeData = cycleType;
                 cycleNodeData.Parent = -1;
                 
                 data.NodeDict.Add(cycleNodeData.NodeId,cycleNodeData);
-                data.HeadNodeDict.Add(Type, cycleNodeData.NodeId);
+                data.HeadNodeDict.Add(CycleType, cycleNodeData.NodeId);
                 CycleNode = cycleNodeData;
             }
             else
@@ -57,20 +57,21 @@ namespace Editor.AbilityEditor
             var mainRect = GUIHelper.GetCurrentLayoutRect();
             SirenixEditorGUI.BeginBoxHeader();
             var headHeight = GUIHelper.GetCurrentLayoutRect().height;
-            Foldout = SirenixEditorGUI.Foldout(Foldout, Type.ToString());
+            Foldout = SirenixEditorGUI.Foldout(Foldout, CycleType.ToString());
             SirenixEditorGUI.EndBoxHeader();
             if (Foldout)
             {
+                
                 SirenixEditorGUI.BeginBox();
                 //画额外内容
                 drawEx();
                 SirenixEditorGUI.EndBox();
 
-                SirenixEditorGUI.BeginBox();
-                //画逻辑树
-                GUILayout.Box(" ", GUILayout.Height(GetHeight())); //无所谓这个盒子，只是占位用的
+                SirenixEditorGUI.BeginBox("编写逻辑");
                 var boxRect = GUIHelper.GetCurrentLayoutRect();
-                var treeRect = new Rect(boxRect.x, boxRect.y + headHeight - 23f, mainRect.width - 8, GetHeight());
+                //画逻辑树
+                GUILayout.Box(" ", GUILayout.Height(GetHeight()),GUILayout.Width(boxRect.width)); //无所谓这个盒子，只是占位用的
+                var treeRect = new Rect(boxRect.x, boxRect.y + headHeight, mainRect.width - 8, GetHeight() + 8);
                 _logicTreeDrawer.OnGUI(treeRect);
                 SirenixEditorGUI.EndBox();
             }
@@ -82,8 +83,8 @@ namespace Editor.AbilityEditor
 
         private float GetHeight()
         {
-            var count = CycleNode.ChildrenIds.Count > 0 ? CycleNode.ChildrenIds.Count : 1;
-            return 36 * count + 2;
+            //var count = _logicTreeDrawer.ro.ChildrenIds.Count > 0 ? CycleNode.ChildrenIds.Count : 1;
+            return _logicTreeDrawer.totalHeight;
         }
     }
 }

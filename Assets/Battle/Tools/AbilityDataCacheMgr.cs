@@ -18,6 +18,7 @@ namespace Battle.Tools
         /// <returns></returns>
         public AbilityData GetAbilityData(int dataId)
         {
+            //临时用直接加载
             return new AbilityData();
         }
     }

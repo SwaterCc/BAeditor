@@ -5,17 +5,22 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class CycleTreeItem : AbilityLogicTreeItem
     {
-        public CycleTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        public CycleTreeItem(AbilityNodeData nodeData) : base(nodeData) { }
+      
+
+        public CycleTreeItem(AbilityNodeData nodeData) : base(nodeData)
+        {
+            base.depth = 0;
+            NodeData.Depth = 0;
+        }
 
         protected override Color getButtonColor()
         {
-            return Color.black;
+            return Color.grey;
         }
 
         protected override string getButtonText()
         {
-            return "隐藏节点";
+            return NodeData.CycleNodeData.ToString();
         }
 
         protected override void OnBtnClicked() { }

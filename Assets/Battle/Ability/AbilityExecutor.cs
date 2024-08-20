@@ -205,7 +205,7 @@ namespace Battle
                 _ability.GetVariableCollection().Add(name, valueBox);
             }
 
-            public IValueBox GetVariable(string name)
+            public object GetVariable(string name)
             {
                 return _ability.GetVariableCollection().GetVariable(name);
             }

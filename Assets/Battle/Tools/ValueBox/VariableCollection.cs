@@ -10,7 +10,7 @@ namespace Battle
 
     public class VariableCollection
     {
-        private readonly Dictionary<string, IValueBox> _collection;
+        private readonly Dictionary<string, object> _collection;
     
         private IVariableCollectionBind _bind;
 
@@ -20,7 +20,7 @@ namespace Battle
 
         public VariableCollection(int variableSize, int funcSize, IVariableCollectionBind bind)
         {
-            _collection = new Dictionary<string, IValueBox>(variableSize);
+            _collection = new Dictionary<string, object>(variableSize);
             _bind = bind;
         }
 
@@ -28,36 +28,26 @@ namespace Battle
         {
             _bind ??= bind;
         }
-
-        public ValueBox<T> GetVariable<T>(string name)
-        {
-            if (_collection.TryGetValue(name, out var variable))
-            {
-                return variable as ValueBox<T>;
-            }
-
-            return null;
-        }
         
-        public IValueBox GetVariable(string name)
+        
+        public object GetVariable(string name)
         {
             return _collection.GetValueOrDefault(name);
         }
 
-
-        public bool TryGetVariable<T>(string name, out ValueBox<T> value)
-        {
-            value = null;
-            if (!_collection.TryGetValue(name, out var cValue)) return false;
-            value = cValue as ValueBox<T>;
-            return true;
-        }
-
-        public void Add(string key, IValueBox variable)
+        public void Add(string key, object variable)
         {
             if (!_collection.TryAdd(key, variable))
             {
                 //报个错
+            }
+        }
+
+        public void ChangeValue(string key, object variable)
+        {
+            if (_collection.ContainsKey(key))
+            {
+                _collection[key] = variable;
             }
         }
 

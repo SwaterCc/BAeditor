@@ -48,7 +48,7 @@ namespace Battle
 
                     _executor.ExecuteCycleNode(getHeadType());
 
-                    _checkRes = _checkRes && collection.GetVariable<bool>(key).Get();
+                    _checkRes = _checkRes && (bool)collection.GetVariable(key);
                     clearContext();
                     collection.Remove(key);
                 }

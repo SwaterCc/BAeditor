@@ -121,6 +121,37 @@ namespace Battle
     }
 
     /// <summary>
+    /// 技能目标类型
+    /// </summary>
+    public enum ESkillTargetType
+    {
+        Enemy,
+        Self,
+        Friendly ,
+        Team,
+        Group,
+        All
+    }
+
+    /// <summary>
+    /// cd模式
+    /// </summary>
+    public enum ECDMode
+    {
+        BeforeExecute,
+        AfterExecute
+    }
+
+    /// <summary>
+    /// 资源消耗时机
+    /// </summary>
+    public enum EResCostType
+    {
+        BeforeExecute,
+        AfterExecute
+    }
+    
+    /// <summary>
     /// 战斗资源的类型
     /// </summary>
     public enum EBattleResourceType
@@ -285,8 +316,8 @@ namespace Battle
     public enum EFuncCacheFlag
     {
         OnlyCache = 0,
-        ShowVariableWindow = 1 << 0,
-        ShowActionWindow = 1 << 1,
-        ShowForeachWindow = 1 << 2,
+        Variable = 1 << 0,
+        Action = 1 << 1,
+        Branch = 1 << 2,
     }
 }

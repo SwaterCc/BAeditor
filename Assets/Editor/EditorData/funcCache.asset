@@ -1,0 +1,1609 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca6c1c821f6d4630bc890cc418ddd3b2, type: 3}
+  m_Name: funcCache
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: FuncDict
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 15
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: CreateHitBox
+    - Name: $v
+      Entry: 7
+      Data: 2|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 3|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: CreateHitBox
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Void
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 5|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: Battle.Actor
+    - Name: Name
+      Entry: 1
+      Data: actor
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 6|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: hitDataId
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: AddAbility
+    - Name: $v
+      Entry: 7
+      Data: 7|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 8|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: AddAbility
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Void
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 9|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 10|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: actorUid
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 11|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: ability
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 12|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Boolean
+    - Name: Name
+      Entry: 1
+      Data: isRunNow
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: GetAttrBox
+    - Name: $v
+      Entry: 7
+      Data: 13|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 14|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: GetAttrBox
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Object
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 15|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 16|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: Battle.Auto.EAttributeType
+    - Name: Name
+      Entry: 1
+      Data: attributeType
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: SetAttrSimple
+    - Name: $v
+      Entry: 7
+      Data: 17|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 18|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: SetAttrSimple
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Void
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 19|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 20|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: Battle.Auto.EAttributeType
+    - Name: Name
+      Entry: 1
+      Data: attributeType
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 21|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Object
+    - Name: Name
+      Entry: 1
+      Data: value
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: SetAttrElement
+    - Name: $v
+      Entry: 7
+      Data: 22|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 23|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: SetAttrElement
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Void
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 24|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 25|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: Battle.Auto.EAttributeType
+    - Name: Name
+      Entry: 1
+      Data: attributeType
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 26|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: Battle.EAttrElementType
+    - Name: Name
+      Entry: 1
+      Data: elementType
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 27|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Object
+    - Name: Name
+      Entry: 1
+      Data: value
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: GetVariable
+    - Name: $v
+      Entry: 7
+      Data: 28|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 29|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: GetVariable
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Object
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 30|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 31|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: Battle.EVariableRange
+    - Name: Name
+      Entry: 1
+      Data: range
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 32|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.String
+    - Name: Name
+      Entry: 1
+      Data: name
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: ChangeVariable
+    - Name: $v
+      Entry: 7
+      Data: 33|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 34|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: ChangeVariable
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Void
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 35|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 36|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: Battle.EVariableRange
+    - Name: Name
+      Entry: 1
+      Data: range
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 37|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.String
+    - Name: Name
+      Entry: 1
+      Data: name
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 38|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Object
+    - Name: Name
+      Entry: 1
+      Data: valueBox
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: CreateVariable
+    - Name: $v
+      Entry: 7
+      Data: 39|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 40|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: CreateVariable
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Void
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 41|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 42|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: Battle.EVariableRange
+    - Name: Name
+      Entry: 1
+      Data: range
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 43|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.String
+    - Name: Name
+      Entry: 1
+      Data: name
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 44|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Object
+    - Name: Name
+      Entry: 1
+      Data: valueBox
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: GetActorSelf
+    - Name: $v
+      Entry: 7
+      Data: 45|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 46|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: GetActorSelf
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Int32
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 47|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Add
+    - Name: $v
+      Entry: 7
+      Data: 48|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 49|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: Add
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Object
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 50|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 51|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Single
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 52|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Single
+    - Name: Name
+      Entry: 1
+      Data: b
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 53|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: Add
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Int32
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 54|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 55|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 56|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: b
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Subtract
+    - Name: $v
+      Entry: 7
+      Data: 57|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 58|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: Subtract
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Single
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 59|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 60|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Single
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 61|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Single
+    - Name: Name
+      Entry: 1
+      Data: b
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 62|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: Subtract
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Int32
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 63|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 64|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 65|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: b
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Multiply
+    - Name: $v
+      Entry: 7
+      Data: 66|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 67|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: Multiply
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Single
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 68|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 69|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Single
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 70|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Single
+    - Name: Name
+      Entry: 1
+      Data: b
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 71|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: Multiply
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Int32
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 72|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 73|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 74|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: b
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: Divide
+    - Name: $v
+      Entry: 7
+      Data: 75|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 76|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: Divide
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Single
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 77|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 78|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Single
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 79|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Single
+    - Name: Name
+      Entry: 1
+      Data: b
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 80|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: Divide
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Int32
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 81|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 82|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 83|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: b
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: SelfAdditive
+    - Name: $v
+      Entry: 7
+      Data: 84|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 85|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: SelfAdditive
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Int32
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 86|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 87|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 88|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: SelfAdditive
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Single
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 89|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 90|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Single
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: SelfSubtracting
+    - Name: $v
+      Entry: 7
+      Data: 91|System.Collections.Generic.List`1[[BattleAbility.Editor.FuncShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 92|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: SelfSubtracting
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Int32
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 93|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 94|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Int32
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 95|BattleAbility.Editor.FuncShowInfo, Assembly-CSharp-Editor
+    - Name: FuncName
+      Entry: 1
+      Data: SelfSubtracting
+    - Name: FuncDesc
+      Entry: 1
+      Data: 
+    - Name: ReturnType
+      Entry: 1
+      Data: System.Single
+    - Name: OverloadTag
+      Entry: 3
+      Data: 0
+    - Name: Params
+      Entry: 7
+      Data: 96|System.Collections.Generic.List`1[[BattleAbility.Editor.ParamShowInfo,
+        Assembly-CSharp-Editor]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 97|BattleAbility.Editor.ParamShowInfo, Assembly-CSharp-Editor
+    - Name: Type
+      Entry: 1
+      Data: System.Single
+    - Name: Name
+      Entry: 1
+      Data: a
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
