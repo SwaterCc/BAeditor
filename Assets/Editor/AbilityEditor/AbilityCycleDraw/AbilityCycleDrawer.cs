@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Battle;
-using Battle.Def;
 using Battle.Skill;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;

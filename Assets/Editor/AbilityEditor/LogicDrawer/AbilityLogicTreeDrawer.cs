@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Battle;
-using Battle.Def;
 using Editor.AbilityEditor.TreeItem;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;

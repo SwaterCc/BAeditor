@@ -3,22 +3,6 @@ using UnityEngine;
 
 namespace Battle
 {
-    public class ActorBehavior : MonoBehaviour
-    {
-        private Actor _actor;
-
-        public Actor Actor => _actor;
-
-        private void Awake()
-        {
-            _actor = new Actor();
-            _actor.Init();
-            BattleManager.Instance.Add(_actor);
-        }
-        
-        private void OnDestroy() { }
-    }
-
     public interface ITick
     {
         public void Tick(float dt);
@@ -44,6 +28,21 @@ namespace Battle
         /// </summary>
         public int ConfigId;
 
+        public class ActorDebugHandle
+        {
+            private readonly Actor _actor;
+
+            public Actor ActorHandle => _actor;
+            
+            public ActorDebugHandle(Actor actor)
+            {
+                _actor = actor;
+            }
+        }
+
+        private readonly ActorDebugHandle _debugHandle;
+        public ActorDebugHandle DebugHandle => _debugHandle;
+        
         private class ActorInterfaceImp : IVariableCollectionBind
         {
             private readonly Actor _actor;
@@ -87,6 +86,7 @@ namespace Battle
         {
             _isDisposable = false;
             _actorImp = new ActorInterfaceImp(this);
+            _debugHandle = new ActorDebugHandle(this);
         }
 
         public virtual void Init()

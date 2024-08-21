@@ -1,4 +1,4 @@
-using Battle.Def;
+using Battle;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem

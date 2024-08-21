@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Battle.Auto;
-using Battle.Def;
 using Battle.Tools;
 using UnityEngine;
 

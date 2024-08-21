@@ -18,7 +18,13 @@ namespace Battle
         {
             Instance ??= this;
         }
-        
+
+
+        private void OnEnable()
+        {
+            AbilityPreLoad.InitCache();
+        }
+
         private Dictionary<int, Actor> _actors = new();
 
         private List<IBeHurt> _beHurts = new();

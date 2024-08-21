@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Battle.Tools.CustomAttribute;
 using UnityEngine;
 
 namespace Battle.Tools
@@ -19,14 +20,12 @@ namespace Battle.Tools
             public int ParamCount = 3;
             public MethodInfo MethodInfo;
             public bool HasParam;
-            public Type[] ParamTypes;
-            public Type ReturnType;
 
             public object Invoke(object caller)
             {
                 return MethodInfo.Invoke(caller, null);
             }
-            
+
             public object Invoke(object caller, object[] param)
             {
                 if (param.Length != ParamCount)
@@ -47,18 +46,52 @@ namespace Battle.Tools
         /// <summary>
         /// 函数信息缓存
         /// </summary>
-        private static Dictionary<string, FuncInfo> _cacheMethodInfos;
+        private static readonly Dictionary<string, List<FuncInfo>>
+            _cacheMethodInfos = new Dictionary<string, List<FuncInfo>>(64);
+        
 
-        //private static Dictionary<string, Type> _cacheTypes;
+        public static void InitCache()
+        {
+            _cacheMethodInfos.Clear();
+            Type type = typeof(AbilityCacheFuncDefine);
 
-        private static bool _isInitFinsh = false;
+            MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
 
-        public static void InitCache() { }
+            foreach (var method in methods)
+            {
+                AbilityFuncCache attr = null;
+                foreach (var obj in method.GetCustomAttributes(typeof(AbilityFuncCache), false))
+                {
+                    if (obj is AbilityFuncCache cache)
+                    {
+                        attr = cache;
+                    }
+                }
 
-        public static FuncInfo GetFuncInfo(string func, string genericType = "")
+                if (attr == null) continue;
+
+                if (!_cacheMethodInfos.TryGetValue(method.Name, out var methodInfos))
+                {
+                    methodInfos = new List<FuncInfo>();
+                    _cacheMethodInfos.Add(method.Name, methodInfos);
+                }
+
+                var info = new FuncInfo
+                {
+                    FuncName = method.Name,
+                    ParamCount = method.GetParameters().Length,
+                    MethodInfo = method,
+                    HasParam = method.GetParameters().Length > 0,
+                };
+
+                methodInfos.Add(info);
+            }
+        }
+
+        public static FuncInfo GetFuncInfo(string func)
         {
             //TODO:字符串有消耗
-            return _cacheMethodInfos[func + genericType];
+            return _cacheMethodInfos[func][0];
         }
     }
 }

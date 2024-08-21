@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Battle;
-using Battle.Def;
 using Battle.Event;
 using Battle.Tools.CustomAttribute;
 using Sirenix.Utilities;

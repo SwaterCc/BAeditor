@@ -1,4 +1,4 @@
-﻿using Battle.Def;
+﻿using Battle;
 
 namespace Editor.AbilityEditor.AbilityNodeDraw
 {

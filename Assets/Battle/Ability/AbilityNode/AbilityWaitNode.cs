@@ -1,5 +1,3 @@
-using Battle.Def;
-
 namespace Battle
 {
     public partial class Ability

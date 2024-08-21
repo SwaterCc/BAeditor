@@ -1,5 +1,5 @@
 ﻿using System;
-using Battle.Def;
+using Battle;
 using BattleAbility.Editor;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;

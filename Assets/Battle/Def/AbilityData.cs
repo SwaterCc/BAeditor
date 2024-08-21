@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Battle.Auto;
 using Battle.Event;
 using Battle.Tools;
 using Sirenix.OdinInspector;
 
-namespace Battle.Def
+namespace Battle
 {
     /// <summary>
     /// Ability的配置

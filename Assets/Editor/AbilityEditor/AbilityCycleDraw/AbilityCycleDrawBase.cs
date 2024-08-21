@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Battle;
-using Battle.Def;
 using BattleAbility.Editor;
 using Editor.AbilityEditor.AbilityNodeDraw;
 using Sirenix.OdinInspector;

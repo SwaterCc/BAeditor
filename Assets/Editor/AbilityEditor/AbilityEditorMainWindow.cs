@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using AbilityRes;
 using Battle;
-using Battle.Def;
 using BattleAbility.Editor;
 using Editor.AbilityEditor.SimpleWindow;
 using Sirenix.OdinInspector.Editor;
@@ -34,9 +34,9 @@ namespace Editor.AbilityEditor
         private const string ASSET_NAME_BUFF = "Buffs";
         private const string ASSET_NAME_BULLET = "Bullets";
 
-        public static string SKILL_DATA_PATH = "Assets/Editor/EditorData/BattleEditorData/Skill/";
-        public static string BUFF_DATA_PATH = "Assets/Editor/EditorData/BattleEditorData/Buff/";
-        public static string BULLET_DATA_PATH = "Assets/Editor/EditorData/BattleEditorData/Bullet/";
+        public static string SKILL_DATA_PATH = "Assets/AbilityRes/BattleEditorData/Skill/";
+        public static string BUFF_DATA_PATH = "Assets/AbilityRes/BattleEditorData/Buff/";
+        public static string BULLET_DATA_PATH = "Assets/AbilityRes/BattleEditorData/Bullet/";
 
         public static string GetSavePath(EAbilityType type)
         {
@@ -81,7 +81,7 @@ namespace Editor.AbilityEditor
 
         private AbilityDataList LoadBattleAbilityConfigList(string abilityTypeStr)
         {
-            return AssetDatabase.LoadAssetAtPath($"Assets/Editor/EditorData/BattleEditorData/{abilityTypeStr}.asset",
+            return AssetDatabase.LoadAssetAtPath($"Assets/AbilityRes/BattleEditorData/{abilityTypeStr}.asset",
                 typeof(AbilityDataList)) as AbilityDataList;
         }
 

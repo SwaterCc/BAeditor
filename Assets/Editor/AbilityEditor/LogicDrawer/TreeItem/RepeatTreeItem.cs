@@ -1,6 +1,5 @@
 using System;
 using Battle;
-using Battle.Def;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

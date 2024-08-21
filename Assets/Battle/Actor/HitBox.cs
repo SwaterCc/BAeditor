@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using Battle.Event;
 using BattleAbility;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace Battle
 {

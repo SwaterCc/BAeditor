@@ -1,6 +1,5 @@
 using System;
 using Battle;
-using Battle.Def;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;

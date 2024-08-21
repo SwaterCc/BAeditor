@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using AbilityRes;
 using Battle;
-using Battle.Def;
-using Battle.Tools;
-using Editor.AbilityEditor;
-using Sirenix.OdinInspector;
+using BattleAbility.Editor;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace BattleAbility.Editor
+namespace Editor.AbilityEditor
 {
     /// <summary>
     /// 能力配置界面 （基础配置 + 逻辑配置）

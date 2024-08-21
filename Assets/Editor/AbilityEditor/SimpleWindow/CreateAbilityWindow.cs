@@ -1,6 +1,6 @@
 ﻿using System;
+using AbilityRes;
 using Battle;
-using Battle.Def;
 using BattleAbility.Editor;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;

@@ -1,4 +1,4 @@
-using Battle.Def;
+using Battle;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

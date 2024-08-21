@@ -1,4 +1,5 @@
-using Battle.Def;
+using System.Collections.Generic;
+using AbilityRes;
 
 namespace Battle.Tools
 {
@@ -11,6 +12,17 @@ namespace Battle.Tools
             get { return _instance ??= new AbilityDataCacheMgr(); }
         }
 
+        private Dictionary<int, AbilityData> _abilityDatas = new Dictionary<int, AbilityData>(64);
+
+        private AbilityDataList _skill;
+        private AbilityDataList _buff;
+        private AbilityDataList _bullet;
+        
+        public void Init()
+        {
+          
+        }
+        
         /// <summary>
         /// 获取指定Id的data
         /// </summary>

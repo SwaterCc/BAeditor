@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 9118bc1ec081c8f45b0b9085f5f4db06
+  m_SerializeEntries:
+  - m_GUID: 58e686b56f0010645bc51bcda9822e6a
+    m_Address: Assets/HitBox/Cube.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5cd1e9b7c49dbd643924ea55eb5e58e8
+    m_Address: Assets/HitBox/Sphere.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a623b6a16be87924b89443ad8df4525c
+    m_Address: Assets/HitBox/Cylinder.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 65338cf53526eec42bc22d15a7a41b7f
+    m_Address: Assets/AbilityData/BattleEditorData/Buffs.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c658d9170d6e53e4884df200ecd670e2
+    m_Address: Assets/AbilityData/BattleEditorData/Bullets.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f9d70b2f03b48c74686811d487af5d6b
+    m_Address: Assets/AbilityData/BattleEditorData/Skills.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c91eba2a39e897f4ca0186927d6bd4ce
+    m_Address: Assets/AbilityData/BattleEditorData/SkillSpecializatioTmp.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f776dae1b4ee405458ec046b6fe2d0df
+    m_Address: Assets/AbilityData/BattleEditorData/Skill/1001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b2a49b8e45de2004597adbc5666213b7
+    m_Address: Assets/AbilityData/BattleEditorData/Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9d79c54d449e36142be39ffa42bc693e
+    m_Address: Assets/AbilityData/BattleEditorData/Buff
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 678bcd56e274c604590bba62ff505e62
+    m_Address: Assets/AbilityData/HitData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 01ec8eaea2e0a124abab8f29eeb7ac32
+    m_Address: Assets/AbilityData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 7656358260d6a194f8b387281fc83166, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 9ae4766ed0773ea409417bbd2123a6bb, type: 2}
+    - {fileID: 11400000, guid: b84299df3fbb81f47a3a79a59f5b388e, type: 2}

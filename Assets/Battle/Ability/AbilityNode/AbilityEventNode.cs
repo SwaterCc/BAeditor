@@ -1,5 +1,4 @@
 using System;
-using Battle.Def;
 using Battle.Event;
 using Battle.Tools;
 using UnityEngine;

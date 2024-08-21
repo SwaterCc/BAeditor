@@ -9,7 +9,7 @@ namespace BattleAbility
     /// 打击数据
     /// </summary>
     [CreateAssetMenu(menuName = "战斗编辑器/HitData")] 
-    public class HitData : SerializedScriptableObject
+    public class HitData : ScriptableObject
     { 
         /// <summary>
         /// 打击点唯一ID
