@@ -114,6 +114,11 @@ namespace Battle
                 }
             }
         }
+
+        public bool IsHead()
+        {
+            return Parent == -1;
+        }
     }
 
     [Serializable]

@@ -63,6 +63,17 @@ namespace Battle.Tools
         {
             return new IdGenerator();
         }
+        
+        public static void SafeWhile(Func<bool> branch,Action doThing,int maxCount)
+        {
+            int curCount = 0;
+
+            while (branch.Invoke() && curCount < maxCount)
+            {
+                doThing.Invoke();
+                ++curCount;
+            }
+        }
     }
     
     #region ParamExtension

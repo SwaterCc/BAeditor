@@ -142,6 +142,12 @@ namespace Battle
                 return EAbilityCycleType.OnReady;
             }
 
+            protected override void onEnter()
+            {
+                //进来前检测下
+                onTick(0);
+            }
+
             protected override void onTick(float dt)
             {
                 if (_state.HasExecuteOrder)

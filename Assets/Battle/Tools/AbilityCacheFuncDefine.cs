@@ -29,8 +29,9 @@ namespace Battle.Tools
             {
                 Debug.Log(string.Format(pattern,args));
             }
-
-            if (p1 != null)
+            
+            Convert($"[{flag}] " + msg, p1, p2, p3);
+            /*if (p1 != null)
             {
                 Convert($"[{flag}] " + msg, p1);
             }
@@ -51,7 +52,7 @@ namespace Battle.Tools
                     flag = "none";
                 
                 Convert($"[{flag}] " + msg);
-            }
+            }*/
         }
 
         [AbilityFuncCache]

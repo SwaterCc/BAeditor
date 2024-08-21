@@ -51,7 +51,7 @@ namespace Battle.Tools.DebugTools
         }
 
         [Button("学能力")]
-        public void Award(int abilityId, bool isRunNow)
+        public void Award(int abilityId = 1231, bool isRunNow = true)
         {
             var ability = new Ability(abilityId);
             AbilityUid.Add(ability.Uid);

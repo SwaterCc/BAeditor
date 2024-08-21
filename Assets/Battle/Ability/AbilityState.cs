@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Battle.Tools;
+using UnityEngine;
 
 namespace Battle
 {
@@ -48,7 +50,7 @@ namespace Battle
                 }
                 
                 _curCycle.Tick(dt);
-                
+                var whileBegin = Time.realtimeSinceStartup;
                 while (_curCycle.CanExit())
                 {
                     var nextState = _curCycle.GetNextState();
@@ -59,12 +61,17 @@ namespace Battle
                     {
                         _hasExecuteOrder = false;
                     }
+
+                    if (Time.realtimeSinceStartup - whileBegin > 0.1f)
+                    {
+                        break;
+                    }
                 }
             }
 
             public void TryExecute()
             {
-                _hasExecuteOrder = _curCycle.CurState == EAbilityState.Ready;
+                _hasExecuteOrder = true;
             }
 
             public void ExecuteFailed()

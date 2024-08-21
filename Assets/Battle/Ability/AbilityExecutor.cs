@@ -142,17 +142,21 @@ namespace Battle
                 var curNode = _nodes[nodeId];
                 while (nodeId > 0)
                 {
-                    curNode.DoJob();
-                    PassNode(nodeId);
+                    if (!IsPassedNode(nodeId))
+                    {
+                        curNode.DoJob();
+                        PassNode(nodeId);
+                    }
 
                     if (curNode.NodeData.NodeType == EAbilityNodeType.ERepeat)
                     {
                         _repeatNodeIds.Push(curNode.ConfigId);
                     }
 
-                    nodeId = curNode.GetNextNode();
-
-                    if (_repeatNodeIds.Count > 0 && nodeId == _repeatNodeIds.Peek())
+                    var nextNodeId = curNode.GetNextNode();
+                    
+                    
+                    if (_repeatNodeIds.Count > 0 && nextNodeId == _repeatNodeIds.Peek())
                     {
                         //重复节点又回来了
                         var repeatNode = ((AbilityRepeatNode)curNode);
@@ -163,29 +167,17 @@ namespace Battle
                         else
                         {
                             repeatNode.Repeat();
-                            nodeId = _nodes[nodeId].NodeData.ChildrenIds[0];
+                            nodeId = _nodes[nextNodeId].NodeData.ChildrenIds[0];
                             continue;
                         }
                     }
 
-                    if (curNode.NodeData.Parent != -1 && nodeId == curNode.NodeData.Parent)
+                    if (nextNodeId != -1)
                     {
-                     
-                        while (_nodes[nodeId].NodeData.Parent == _nodes[nodeId].GetNextNode())
-                        {
-                            nodeId = _nodes[nodeId].NodeData.Parent;
-                            //如果不是循环节点则查找可走节点
-                            if (nodeId == -1)
-                            {
-                                break;
-                            }
-                        }
+                        curNode = _nodes[nextNodeId];
                     }
 
-                    if (nodeId != -1)
-                    {
-                        curNode = _nodes[nodeId];
-                    }
+                    nodeId = nextNodeId;
                 }
             }
 
