@@ -31,12 +31,12 @@ namespace Editor.AbilityEditor.TreeItem
 
     public class VariableNodeDataWindow : BaseNodeWindow<VariableNodeDataWindow>, IWindowInit
     {
-        private ParameterNode _variable;
+        private ParameterMaker _variable;
 
         protected override void onInit()
         {
-            _variable = new ParameterNode();
-            _variable.Parse(NodeData.VariableNodeData.VarParams);
+            _variable = new ParameterMaker();
+            ParameterMaker.Init(_variable,NodeData.VariableNodeData.VarParams);
         }
 
         private void OnGUI()
@@ -51,15 +51,18 @@ namespace Editor.AbilityEditor.TreeItem
             NodeData.VariableNodeData.Range =
                 (EVariableRange)SirenixEditorFields.EnumDropdown("选择范围", NodeData.VariableNodeData.Range);
 
-            EditorGUILayout.BeginHorizontal();
-
+            
             NodeData.VariableNodeData.Name =
-                SirenixEditorFields.TextField("变量名", NodeData.VariableNodeData.Name, GUILayout.Width(28));
+                SirenixEditorFields.TextField("变量名", NodeData.VariableNodeData.Name);
 
+            EditorGUILayout.BeginHorizontal();
+            
+            EditorGUILayout.LabelField("变量值");
+            
             _variable.Draw();
-
+            
             EditorGUILayout.EndHorizontal();
-
+            
             SirenixEditorGUI.EndBox();
         }
     }

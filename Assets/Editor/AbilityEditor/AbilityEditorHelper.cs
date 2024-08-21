@@ -40,6 +40,10 @@ namespace Editor.AbilityEditor
             {
                 afterValue = EditorGUILayout.TextField(label, (string)updateValue);
             }
+            else if (elementType == typeof(bool))
+            {
+                afterValue = EditorGUILayout.Toggle(label, (bool)updateValue);
+            }
             else if (elementType.IsEnum)
             {
                 afterValue = EditorGUILayout.EnumPopup(label, (Enum)updateValue);
@@ -77,6 +81,13 @@ namespace Editor.AbilityEditor
         }
 
 
+        public static string GetTypeAllName(Type type)
+        {
+            string typeName = type.ToString();
+            string assemblyName = type.Assembly.ToString();
+            return typeName + ", " + assemblyName;
+        }
+        
         /*/// <summary>
         /// 根据自定义特性BattleAbilityLabelTag 来创建不同的Field，不能创建列表，列表有单独的函数绘制
         /// </summary>

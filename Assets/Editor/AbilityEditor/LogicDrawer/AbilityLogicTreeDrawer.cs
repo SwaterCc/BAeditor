@@ -107,6 +107,7 @@ namespace Editor.AbilityEditor
                 return;
             }
 
+            SetExpanded(item.id, true);
             var rowRect = args.rowRect;
             float labelWidth = 24;
             rowRect.x = rowRect.x + 25 + 38 * item.NodeData.Depth;

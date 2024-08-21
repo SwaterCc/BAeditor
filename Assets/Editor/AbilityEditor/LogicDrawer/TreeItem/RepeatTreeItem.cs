@@ -31,41 +31,4 @@ namespace Editor.AbilityEditor.TreeItem
             RepeatNodeDataWindow.Open(NodeData);
         }
     }
-
-    public class RepeatNodeDataWindow : BaseNodeOdinWindow<RepeatNodeDataWindow>, IWindowInit
-    {
-        [BoxGroup("循环节点配置", true, true)] [EnumToggleButtons]
-        public ERepeatOperationType RepeatOperationType;
-
-        [BoxGroup("循环节点配置", true, true)] [ShowIf("RepeatOperationType", ERepeatOperationType.OnlyRepeat)]
-        public int MaxRepeatCount;
-
-        [BoxGroup("循环节点配置", true, true)] [ShowIf("RepeatOperationType", ERepeatOperationType.NumberLoop)]
-        public float StartValue;
-
-        [BoxGroup("循环节点配置", true, true)] [ShowIf("RepeatOperationType", ERepeatOperationType.NumberLoop)]
-        public float StepValue;
-
-        [BoxGroup("循环节点配置", true, true)] [ShowIf("RepeatOperationType", ERepeatOperationType.NumberLoop)]
-        public int StepCount;
-
-        protected override void onInit()
-        {
-            RepeatOperationType = NodeData.RepeatNodeData.RepeatOperationType;
-            MaxRepeatCount = NodeData.RepeatNodeData.MaxRepeatCount;
-            StartValue = NodeData.RepeatNodeData.StartValue;
-            StepValue = NodeData.RepeatNodeData.StepValue;
-            StepCount = NodeData.RepeatNodeData.StepCount;
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            NodeData.RepeatNodeData.RepeatOperationType = RepeatOperationType;
-            NodeData.RepeatNodeData.MaxRepeatCount = MaxRepeatCount;
-            NodeData.RepeatNodeData.StartValue = StartValue;
-            NodeData.RepeatNodeData.StepValue = StepValue;
-            NodeData.RepeatNodeData.StepCount = StepCount;
-        }
-    }
 }

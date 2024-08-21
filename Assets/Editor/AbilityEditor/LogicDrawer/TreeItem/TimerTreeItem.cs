@@ -25,29 +25,4 @@ namespace Editor.AbilityEditor.TreeItem
             TimerNodeDataWindow.Open(NodeData);
         }
     }
-
-    public class TimerNodeDataWindow : BaseNodeOdinWindow<TimerNodeDataWindow>, IWindowInit
-    {
-        [BoxGroup("计时器配置")] [Title("第一次调用间隔")] public float FirstInterval;
-
-        [BoxGroup("计时器配置")] [Title("之后每次调用间隔")]
-        public float Interval;
-
-        [BoxGroup("计时器配置")] [Title("回调次数")] public float MaxCount;
-
-        protected override void onInit()
-        {
-            FirstInterval = NodeData.TimerNodeData.FirstInterval;
-            Interval = NodeData.TimerNodeData.Interval;
-            MaxCount = NodeData.TimerNodeData.MaxCount;
-        }
-
-        protected override void OnDestroy()
-        {
-            NodeData.TimerNodeData.FirstInterval = FirstInterval;
-            NodeData.TimerNodeData.Interval = Interval;
-            NodeData.TimerNodeData.MaxCount = MaxCount;
-            base.OnDestroy();
-        }
-    }
 }

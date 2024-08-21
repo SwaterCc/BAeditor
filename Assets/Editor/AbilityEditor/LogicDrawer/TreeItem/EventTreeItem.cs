@@ -39,7 +39,7 @@ namespace Editor.AbilityEditor.TreeItem
             new Dictionary<EBattleEventType, string>();
 
 
-        private ParameterNode _func;
+        private ParameterMaker _func;
         private EBattleEventType _curType;
 
         private static void initDict()
@@ -69,9 +69,9 @@ namespace Editor.AbilityEditor.TreeItem
         {
             initDict();
             
-            _func = new ParameterNode();
-            _func.Parse(NodeData.EventNodeData.CreateCheckerFunc, 0);
+            _func = new ParameterMaker();
             _curType = NodeData.EventNodeData.EventType;
+            ParameterMaker.Init(_func, NodeData.EventNodeData.CreateCheckerFunc);
         }
 
         private void OnGUI()
@@ -79,25 +79,26 @@ namespace Editor.AbilityEditor.TreeItem
             SirenixEditorGUI.BeginBox();
 
             var type = (EBattleEventType)SirenixEditorFields.EnumDropdown("事件类型", _curType);
+            
+            if (!_eventCheckerDict.TryGetValue(type, out var value))
+            {
+                SirenixEditorGUI.BeginBox("参数设置");
+                EditorGUILayout.LabelField("该事件暂时不支持配置");
+                SirenixEditorGUI.EndBox();
+                SirenixEditorGUI.EndBox();
+                return;
+            }
+            
             if (type != _curType)
             {
-               
                 _curType = type;
-                if (!_eventCheckerDict.TryGetValue(type, out var value))
-                {
-                    SirenixEditorGUI.BeginBox("参数设置");
-                    EditorGUILayout.LabelField("该事件暂时不支持配置");
-                    SirenixEditorGUI.EndBox();
-                    return;
-                }
-
-                _func.Create(new Parameter() { FuncName = value, IsFunc = true });
+                _func.CreateFuncParam(value);
             }
 
             SirenixEditorGUI.BeginBox("参数设置");
             bool isFirst = true;
             EditorGUILayout.BeginVertical();
-            foreach (var node in _func.FuncParameter)
+            foreach (var node in _func.FuncParams)
             {
                 if (isFirst)
                 {
@@ -107,6 +108,7 @@ namespace Editor.AbilityEditor.TreeItem
                 node.Draw();
             }
             EditorGUILayout.EndVertical();
+            SirenixEditorGUI.EndBox();
             SirenixEditorGUI.EndBox();
         }
 

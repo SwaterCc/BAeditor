@@ -114,7 +114,8 @@ namespace Editor.AbilityEditor
             window.titleContent = window.GetWindowName();
             window.Init(nodeData);
         }
-
+        
+        [HideInInspector]
         public AbilityNodeData NodeData;
 
         public void Init(AbilityNodeData nodeData)

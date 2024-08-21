@@ -1,6 +1,7 @@
 using System;
 using Battle;
 using Battle.Def;
+using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace Editor.AbilityEditor.TreeItem
         {
             return "分支";
         }
-
+        
         protected override void OnBtnClicked()
         {
             BranchNodeDataWindow.Open(NodeData);
@@ -29,14 +30,20 @@ namespace Editor.AbilityEditor.TreeItem
 
     public class BranchNodeDataWindow : BaseNodeWindow<BranchNodeDataWindow>, IWindowInit
     {
-        private ParameterNode _left;
-        private ParameterNode _right;
+        private ParameterMaker _left;
+        private ParameterMaker _right;
         protected override void onInit()
         {
-            _left = new ParameterNode();
-            _left.Parse(NodeData.BranchNodeData.Left);
-            _right = new ParameterNode();
-            _right.Parse(NodeData.BranchNodeData.Right);
+            _left = new ParameterMaker();
+            ParameterMaker.Init(_left,NodeData.BranchNodeData.Left);
+           
+            _right = new ParameterMaker();
+            ParameterMaker.Init(_right,NodeData.BranchNodeData.Right);
+        }
+
+        public override Rect GetPos()
+        {
+            return   GUIHelper.GetEditorWindowRect().AlignCenter(200, 200);
         }
 
         private void changeCompareType(object type)
@@ -66,9 +73,9 @@ namespace Editor.AbilityEditor.TreeItem
         private void OnGUI()
         {
             SirenixEditorGUI.BeginBox();
-            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical();
             _left.Draw();
-            if (GUILayout.Button(getFlag(NodeData.BranchNodeData.ResType), GUILayout.Width(10)))
+            if (GUILayout.Button(getFlag(NodeData.BranchNodeData.ResType)))
             {
                 GenericMenu menu = new GenericMenu();
                 menu.AddItem(new GUIContent("<"), true, changeCompareType, ECompareResType.Less);
@@ -79,7 +86,7 @@ namespace Editor.AbilityEditor.TreeItem
                 menu.ShowAsContext();
             }
             _right.Draw();
-            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
             SirenixEditorGUI.EndBox();
         }
     }

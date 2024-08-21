@@ -1,3 +1,4 @@
+using Battle;
 using Battle.Def;
 using UnityEngine;
 
@@ -8,9 +9,11 @@ namespace Editor.AbilityEditor.TreeItem
         public ActionTreeItem(int id, int depth, string name) : base(id, depth, name) { }
         public ActionTreeItem(AbilityNodeData nodeData) : base(nodeData) { }
 
+        private ParameterMaker _actionFunc;
+        
         protected override Color getButtonColor()
         {
-            return new Color(1.5f, 0.5f, 0.6f);
+            return new Color(1.5f, 0.3f, 0.3f);
         }
 
         protected override string getButtonText()
@@ -27,9 +30,13 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void OnBtnClicked()
         {
-            var action = new ParameterNode();
-            action.Parse(NodeData.ActionNodeData, 0);
-            FuncWindow.Open(action);
+            _actionFunc = new ParameterMaker();
+            
+            ParameterMaker.Init(_actionFunc,NodeData.ActionNodeData);
+            
+            _actionFunc.OnSave = (parameters) => { NodeData.ActionNodeData = parameters; };
+
+            FuncWindow.Open(_actionFunc, EFuncCacheFlag.Action);
         }
     }
 }

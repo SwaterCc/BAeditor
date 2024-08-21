@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Battle.Auto;
+using Battle.Event;
 using Battle.Tools.CustomAttribute;
 using UnityEngine;
 
@@ -9,8 +10,50 @@ namespace Battle.Tools
 
     public static class AbilityCacheFuncDefine
     {
+        /// <summary>
+        /// 编辑器默认显示函数
+        /// </summary>
+        [AbilityFuncCache(EFuncCacheFlag.Action|EFuncCacheFlag.Branch|EFuncCacheFlag.Variable)]
+        public static void NothingToDo()
+        {
+            
+        }
+
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void CreateHitBox(this Actor actor, int hitDataId)
+        public static void SetNextStageId(int id)
+        {
+            
+        }
+
+        [AbilityFuncCache(EFuncCacheFlag.Action)]
+        public static void StopStage()
+        {
+            
+        }
+        
+        [AbilityFuncCache]
+        public static EventChecker GetEmptyChecker(EBattleEventType eventType)
+        {
+            return new EmptyChecker(eventType);
+        }
+        
+        [AbilityFuncCache]
+        public static EventChecker GetHitChecker(EBattleEventType eventType,int hitId,bool checkActor,bool checkAbility)
+        {
+            int actorId = checkActor ? Ability.Context.BelongActor.Uid : -1;
+            int abilityId = checkAbility ? Ability.Context.CurrentAbility.Uid : -1;
+            return new HitEventChecker(null,hitId,actorId,abilityId);
+        }
+        
+        [AbilityFuncCache]
+        public static EventChecker GetMotionChecker(EBattleEventType eventType,int motionId)
+        {
+            return new MotionEventChecker(eventType, motionId, null);
+        }
+        
+        
+        [AbilityFuncCache(EFuncCacheFlag.Action)]
+        public static void CreateHitBox(int hitDataId)
         {
             var hitBox = new HitBox(hitDataId);
             BattleManager.Instance.Add(hitBox);
@@ -42,14 +85,23 @@ namespace Battle.Tools
             {
                 ((SimpleAttribute)attr).OnlySet(value);
             }
+            else
+            {
+                Debug.LogError($"{attributeType} 该属性是复合属性");
+            }
         }
+        
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void SetAttrElement(EAttributeType attributeType, EAttrElementType elementType, object value)
+        public static void SetAttrElement(EAttributeType attributeType, EAttrElementType elementType, float value)
         {
             var attr = Ability.Context.BelongActor.GetAttrCollection().GetAttr(attributeType);
             if (attr.IsComposite)
             {
-                ((CompositeAttribute)attr).SetElementAttr(elementType, (float)value);
+                ((CompositeAttribute)attr).SetElementAttr(elementType, value);
+            }
+            else
+            {
+                Debug.LogError($"{attributeType} 该属性不是复合属性");
             }
         }
 

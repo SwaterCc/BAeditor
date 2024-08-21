@@ -17,29 +17,31 @@ namespace Editor.AbilityEditor
 {
     public class FuncWindow : EditorWindow
     {
-        public static void Open(object node, EFuncCacheFlag flag)
+        public static void OpenVariable(object node)
         {
             var window = CreateInstance<FuncWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
-            window.init((ParameterNode)node);
+            window.init((ParameterMaker)node, EFuncCacheFlag.Variable);
             window.Show();
         }
 
-        public static void Open(ParameterNode node, EFuncCacheFlag flag)
+        public static void Open(ParameterMaker maker, EFuncCacheFlag flag)
         {
             var window = CreateInstance<FuncWindow>();
-            window.init(node);
+            window.init(maker, flag);
+            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
             window.Show();
         }
 
-        private struct FuncInfo
+        public struct FuncInfo
         {
             public string FuncName;
             public int ParamCount;
             public List<string> ParamNames;
         }
 
-        private ParameterNode _funcHead;
+        private ParameterMaker _funcHead;
+        private EFuncCacheFlag _flag;
 
         private static Dictionary<EFuncCacheFlag, List<FuncInfo>> _flagMethodCache =
             new Dictionary<EFuncCacheFlag, List<FuncInfo>>()
@@ -48,6 +50,21 @@ namespace Editor.AbilityEditor
                 { EFuncCacheFlag.Action, new List<FuncInfo>() },
                 { EFuncCacheFlag.Branch, new List<FuncInfo>() },
             };
+
+        private static bool _flagMethodCacheInit = false;
+        
+        public static Dictionary<EFuncCacheFlag, List<FuncInfo>> FlagMethodCache
+        {
+            get
+            {
+                if (!_flagMethodCacheInit)
+                {
+                    initFuncCache();
+                }
+
+                return _flagMethodCache;
+            }
+        }
 
         private static Dictionary<string, List<MethodInfo>> _methodCache =
             new Dictionary<string, List<MethodInfo>>();
@@ -67,17 +84,18 @@ namespace Editor.AbilityEditor
 
         private FuncList _funcTree;
 
-        private void init(ParameterNode node)
+        private void init(ParameterMaker maker, EFuncCacheFlag flag)
         {
-            if (_flagMethodCache.Count == 0)
+            if (_methodCache.Count == 0)
             {
                 initFuncCache();
             }
 
-            _funcHead = node;
-            switch (_funcHead.Sel) { }
+            _funcHead = maker;
+            switch (_funcHead.Self) { }
 
-            _funcTree = new FuncList(new TreeViewState(), _funcHead, _flagMethodCache[])
+            _flag = flag;
+            _funcTree = new FuncList(new TreeViewState(), _funcHead, _flagMethodCache[_flag]);
         }
 
         private static void initFuncCache()
@@ -115,6 +133,11 @@ namespace Editor.AbilityEditor
                 };
                 foreach (var parameter in method.GetParameters())
                 {
+                    if (info.ParamNames == null)
+                    {
+                        info.ParamNames = new List<string>();
+                    }
+
                     info.ParamNames.Add(parameter.Name);
                 }
 
@@ -133,6 +156,8 @@ namespace Editor.AbilityEditor
                     _flagMethodCache[EFuncCacheFlag.Branch].Add(info);
                 }
             }
+
+            _flagMethodCacheInit = true;
         }
 
         private void OnGUI()
@@ -140,29 +165,49 @@ namespace Editor.AbilityEditor
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal();
             //函数列表界面
-            //_funcTree.OnGUI(new Rect(0,0,300,400));
+            GUILayout.Box("",GUILayout.Width(300),GUILayout.Height(280));
+            _funcTree.OnGUI(new Rect(5, 5, 300, 280));
             //函数预览界面
             SirenixEditorGUI.BeginBox();
             SirenixEditorGUI.BeginVerticalList();
-            foreach (var method in _methodCache[_funcTree.CurSelect])
+            if (_methodCache.TryGetValue(_funcTree.CurSelect, out var list))
             {
-                SirenixEditorGUI.BeginListItem();
-                foreach (var param in method.GetParameters())
+                foreach (var method in list)
                 {
-                    EditorGUILayout.LabelField(param.Name);
-                    EditorGUILayout.LabelField(param.ParameterType.ToString());
+                    foreach (var param in method.GetParameters())
+                    {
+                        SirenixEditorGUI.BeginListItem();
+                        EditorGUILayout.LabelField("参数名："+param.Name);
+                        EditorGUILayout.LabelField("参数类型："+param.ParameterType);
+                        SirenixEditorGUI.EndListItem();
+                    }
                 }
-
-                SirenixEditorGUI.EndListItem();
             }
 
             SirenixEditorGUI.EndVerticalList();
             SirenixEditorGUI.EndBox();
 
             EditorGUILayout.EndHorizontal();
+            GUILayout.Space(30);
             //配置界面
-            SirenixEditorGUI.BeginBox();
-            //_funcHead.Draw();
+            SirenixEditorGUI.BeginBox($"当前函数:{_funcHead.Self.FuncName}",true);
+            if (_funcHead.FuncParams.Count == 0)
+            {
+                EditorGUILayout.LabelField("无参函数");
+            }
+            else
+            {
+                foreach (var param in _funcHead.FuncParams)
+                {
+                    param.Draw();
+                }
+            }
+
+            if(GUILayout.Button("确认修改"))
+            {
+                _funcHead.Save();
+            }
+            
             SirenixEditorGUI.EndBox();
             EditorGUILayout.EndVertical();
         }
@@ -176,13 +221,41 @@ namespace Editor.AbilityEditor
             private List<FuncInfo> _infos;
 
             public string CurSelect;
-            private ParameterNode _funcHead;
+            private ParameterMaker _funcHead;
 
-            public FuncList(TreeViewState state, ParameterNode funcHead, List<FuncInfo> infos) : base(state)
+            public FuncList(TreeViewState state, ParameterMaker funcHead, List<FuncInfo> infos) : base(state)
             {
                 _infos = infos;
                 _funcHead = funcHead;
-                CurSelect = funcHead.Self.FuncName ?? "none";
+                if (funcHead.Self.IsFunc && string.IsNullOrEmpty(funcHead.Self.FuncName))
+                {
+                    funcHead.Self.FuncName = infos[0].FuncName;
+                }
+                CurSelect = funcHead.Self.FuncName;
+                showAlternatingRowBackgrounds = true;
+                showBorder = true;
+                Reload();
+                foreach (var item in rootItem.children)
+                {
+                    if (item.displayName == CurSelect)
+                    {
+                        SelectionClick(item, false);
+                    }
+                }
+            }
+
+            protected override void RowGUI(RowGUIArgs args)
+            {
+                base.RowGUI(args);
+                if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
+                {
+                    Rect rowRect = args.rowRect;
+                    if (rowRect.Contains(Event.current.mousePosition))
+                    {
+                        CurSelect = FindItem(args.item.id, rootItem).displayName;
+                        //Event.current.Use(); // 使用事件以防止其他控件处理它
+                    }
+                }
             }
 
             protected override TreeViewItem BuildRoot()
@@ -200,15 +273,10 @@ namespace Editor.AbilityEditor
                 return root;
             }
 
-            protected override void ContextClickedItem(int id)
-            {
-                CurSelect = FindItem(id, rootItem).displayName;
-            }
-
             protected override void DoubleClickedItem(int id)
             {
                 var item = FindItem(id, rootItem);
-                _funcHead.Create(new Parameter() { IsFunc = true, FuncName = item.displayName });
+                _funcHead.CreateFuncParam(item.displayName);
             }
         }
     }
