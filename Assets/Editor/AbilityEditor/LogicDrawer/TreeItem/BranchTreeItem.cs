@@ -51,6 +51,12 @@ namespace Editor.AbilityEditor.TreeItem
             NodeData.BranchNodeData.ResType = (ECompareResType)type;
         }
 
+        private void OnDestroy()
+        {
+            NodeData.BranchNodeData.Left = _left.ToArray();
+            NodeData.BranchNodeData.Right = _right.ToArray();
+        }
+
         private string getFlag(ECompareResType compareResType)
         {
             switch (compareResType)

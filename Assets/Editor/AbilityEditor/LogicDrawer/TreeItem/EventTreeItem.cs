@@ -74,6 +74,11 @@ namespace Editor.AbilityEditor.TreeItem
             ParameterMaker.Init(_func, NodeData.EventNodeData.CreateCheckerFunc);
         }
 
+        private void OnDestroy()
+        {
+            NodeData.EventNodeData.CreateCheckerFunc = _func.ToArray();
+        }
+
         private void OnGUI()
         {
             SirenixEditorGUI.BeginBox();

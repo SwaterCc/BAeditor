@@ -17,10 +17,12 @@ namespace Editor.AbilityEditor
 {
     public class FuncWindow : EditorWindow
     {
-        public static void OpenVariable(object node)
+        public static void OpenVariableToFunc(object node)
         {
             var window = CreateInstance<FuncWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
+            var maker = (ParameterMaker)node;
+            maker.ChangeToDefaultFunc(EFuncCacheFlag.Variable);
             window.init((ParameterMaker)node, EFuncCacheFlag.Variable);
             window.Show();
         }
@@ -206,15 +208,13 @@ namespace Editor.AbilityEditor
             if(GUILayout.Button("确认修改"))
             {
                 _funcHead.Save();
+                Close();
             }
             
             SirenixEditorGUI.EndBox();
             EditorGUILayout.EndVertical();
         }
-
-
-        public void OnDestroy() { }
-
+        
 
         private class FuncList : TreeView
         {

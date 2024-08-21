@@ -26,7 +26,8 @@ namespace Editor.AbilityEditor
             }
             else
             {
-                maker.Parse(source);
+                int start = 0;
+                maker.Parse(source,ref start);
             }
         }
 
@@ -74,8 +75,7 @@ namespace Editor.AbilityEditor
             Self.Value = valueType.InstantiateDefault(true);
         }
 
-
-        public void Parse(Parameter[] source, int idx = 0)
+        public void Parse(Parameter[] source, ref int start)
         {
             if (source == null || source.Length == 0)
             {
@@ -83,15 +83,15 @@ namespace Editor.AbilityEditor
                 return;
             }
 
-            Self = source[idx];
+            Self = source[start];
 
             if (Self.IsFunc)
             {
-                for (int i = 0; i < source[idx].ParamCount; i++)
+                for (int i = 0; i < Self.ParamCount; ++i)
                 {
-                    ++idx;
                     var paramNode = new ParameterMaker();
-                    paramNode.Parse(source, idx);
+                    ++start;
+                    paramNode.Parse(source, ref start);
                     FuncParams.Add(paramNode);
                     paramNode.Parent = this;
                 }
@@ -112,8 +112,22 @@ namespace Editor.AbilityEditor
 
         public void ChangeToFunc(string funcName)
         {
-            if (Self.IsFunc) return;
+            if (Self.IsFunc && Self.FuncName != funcName) return;
             CreateFuncParam(funcName);
+        }
+
+        public void ChangeToDefaultFunc(EFuncCacheFlag flag)
+        {
+            if (FuncWindow.FlagMethodCache[flag].Count > 0)
+            {
+                var info = FuncWindow.FlagMethodCache[flag][0];
+                if (Self.IsFunc && Self.FuncName != info.FuncName) return;
+                CreateFuncParam(info.FuncName);
+            }
+            else
+            {
+                Debug.LogError("该类型函数没有反射");
+            }
         }
 
         public Parameter[] ToArray()
@@ -143,7 +157,7 @@ namespace Editor.AbilityEditor
             if (GUILayout.Button("▼", GUILayout.Width(22)))
             {
                 GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("调用函数"), false, FuncWindow.OpenVariable, maker);
+                menu.AddItem(new GUIContent("调用函数"), false, FuncWindow.OpenVariableToFunc, maker);
                 menu.AddItem(new GUIContent("使用基础类型/int"), false, maker.ChangeToValueType,
                     AbilityEditorHelper.GetTypeAllName(typeof(int)));
                 menu.AddItem(new GUIContent("使用基础类型/float"), false, maker.ChangeToValueType,
@@ -177,7 +191,7 @@ namespace Editor.AbilityEditor
                     EditorGUIUtility.labelWidth = 100;
 
                     string label = string.IsNullOrEmpty(maker.Self.ParamName) ? "参数" : maker.Self.ParamName;
-                    
+
                     maker.Self.Value = AbilityEditorHelper.DrawLabelByType(type, label, maker.Self.Value);
                 }
             }

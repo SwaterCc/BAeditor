@@ -39,6 +39,11 @@ namespace Editor.AbilityEditor.TreeItem
             ParameterMaker.Init(_variable,NodeData.VariableNodeData.VarParams);
         }
 
+        private void OnDestroy()
+        {
+            NodeData.VariableNodeData.VarParams = _variable.ToArray();
+        }
+
         private void OnGUI()
         {
             string a = NodeData.VariableNodeData.OperationType == EVariableOperationType.Create ? "创建变量：" : "修改变量";
