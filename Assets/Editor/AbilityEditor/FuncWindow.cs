@@ -94,7 +94,6 @@ namespace Editor.AbilityEditor
             }
 
             _funcHead = maker;
-            switch (_funcHead.Self) { }
 
             _flag = flag;
             _funcTree = new FuncList(new TreeViewState(), _funcHead, _flagMethodCache[_flag]);

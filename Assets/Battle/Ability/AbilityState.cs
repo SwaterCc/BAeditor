@@ -7,6 +7,7 @@ namespace Battle
         private class AbilityState
         {
             private Ability _ability;
+            public Ability Ability => _ability;
             private readonly Dictionary<EAbilityState, AbilityRunCycle> _cycles;
             private bool _hasExecuteOrder;
             public bool HasExecuteOrder => _hasExecuteOrder;
@@ -18,11 +19,11 @@ namespace Battle
                 _ability = ability;
                 _cycles = new Dictionary<EAbilityState, AbilityRunCycle>()
                 {
-                    { EAbilityState.Init, new InitRunCycle(_ability) },
-                    { EAbilityState.Ready, new Ready(_ability) },
-                    { EAbilityState.PreExecute, new PreExecute(_ability) },
-                    { EAbilityState.Executing, new Executing(_ability) },
-                    { EAbilityState.EndExecute, new EndExecute(_ability) },
+                    { EAbilityState.Init, new InitRunCycle(this) },
+                    { EAbilityState.Ready, new Ready(this) },
+                    { EAbilityState.PreExecute, new PreExecute(this) },
+                    { EAbilityState.Executing, new Executing(this) },
+                    { EAbilityState.EndExecute, new EndExecute(this) },
                 };
 
                 _hasExecuteOrder = false;
@@ -45,19 +46,20 @@ namespace Battle
                     _curCycle = _cycles[EAbilityState.Init];
                     _curCycle.Enter();
                 }
-
+                
+                _curCycle.Tick(dt);
+                
                 while (_curCycle.CanExit())
                 {
+                    var nextState = _curCycle.GetNextState();
                     _curCycle.Exit();
-                    _curCycle = _cycles[_curCycle.GetNextState()];
+                    _curCycle = _cycles[nextState];
                     _curCycle.Enter();
                     if (_curCycle.CurState == EAbilityState.Executing)
                     {
                         _hasExecuteOrder = false;
                     }
                 }
-
-                _curCycle.Tick(dt);
             }
 
             public void TryExecute()

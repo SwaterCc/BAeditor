@@ -152,7 +152,7 @@ namespace Battle
 
                     nodeId = curNode.GetNextNode();
 
-                    if (nodeId == _repeatNodeIds.Peek())
+                    if (_repeatNodeIds.Count > 0 && nodeId == _repeatNodeIds.Peek())
                     {
                         //重复节点又回来了
                         var repeatNode = ((AbilityRepeatNode)curNode);
@@ -168,7 +168,7 @@ namespace Battle
                         }
                     }
 
-                    if (nodeId == curNode.NodeData.Parent)
+                    if (nodeId != -1 && nodeId == curNode.NodeData.Parent)
                     {
                         while (_nodes[nodeId].NodeData.Parent == _nodes[nodeId].GetNextNode())
                         {

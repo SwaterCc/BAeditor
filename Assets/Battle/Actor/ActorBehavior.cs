@@ -8,7 +8,7 @@ namespace Battle
 
         public Actor Actor => _actor;
 
-        private void Awake()
+        private void OnEnable()
         {
             _actor = new Actor();
             _actor.Init();

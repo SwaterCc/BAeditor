@@ -1,32 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Battle.Tools.DebugTools
 {
-#if UNITY_EDITOR
     /// <summary>
     /// 战斗编辑器Debug组件
     /// </summary>
     public class AbilityDebugInspector : MonoBehaviour
     {
-        public Actor DebugObj;
+        public ActorBehavior DebugObj;
 
         private Actor.ActorDebugHandle _handle;
 
+        private Actor _actor;
+
+        public List<int> AbilityUid = new List<int>();
+        
         public void OnEnable()
         {
-            if (DebugObj != null)
-            {
-                _handle = DebugObj.DebugHandle;
-            }
-            //_handle.ActorHandle.AwardAbility();
         }
 
         private void Update()
         {
-            if (_handle == null) return;
-            
+            if (DebugObj != null)
+            {
+                _handle ??= DebugObj.Actor.DebugHandle;
+                _actor ??= DebugObj.Actor;
+            }
+        }
+
+        [Button("学能力")]
+        public void Award(int abilityId, bool isRunNow)
+        {
+            var ability = new Ability(abilityId);
+            AbilityUid.Add(ability.Uid);
+            _actor.AwardAbility(ability, isRunNow);
+        }
+
+        [Button("运行能力")]
+        public void ExecuteAbility(int abilityId)
+        {
+            _actor.GetAbilityController().ExecutingAbility(abilityId);
         }
     }
-#endif
 }

@@ -8,7 +8,6 @@ namespace BattleAbility
     /// <summary>
     /// 打击数据
     /// </summary>
-    [CreateAssetMenu(menuName = "战斗编辑器/HitData")] 
     public class HitData : ScriptableObject
     { 
         /// <summary>
@@ -126,6 +125,7 @@ namespace BattleAbility
         }
     }
 
+    [CreateAssetMenu(menuName = "战斗编辑器/AoeHitData")] 
     public class AoeHitData<TAreaData> : AoeHitDataAbstract where TAreaData : AoeHitDataAbstract.AreaData
     {
         public new TAreaData HitAreaData => base.HitAreaData == null ? null : base.HitAreaData as TAreaData;
@@ -139,6 +139,7 @@ namespace BattleAbility
     /// <summary>
     /// 锁定打击点
     /// </summary>
+    [CreateAssetMenu(menuName = "战斗编辑器/LockHitData")] 
     public class LockTargetHitData : HitData
     {
         /// <summary>

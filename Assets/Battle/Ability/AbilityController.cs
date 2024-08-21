@@ -2,7 +2,23 @@ using System.Collections.Generic;
 
 namespace Battle
 {
-    public class AbilityController : ITick
+
+    public partial class AbilityController
+    {
+        public class AbilityControllerDebug
+        {
+            private AbilityController _controller;
+
+            public AbilityControllerDebug(AbilityController controller)
+            {
+                _controller = controller;
+            }
+        }
+
+        public AbilityControllerDebug ControllerDebug;
+    }
+    
+    public partial class AbilityController : ITick
     {
         private readonly Dictionary<int, Ability> _abilities = new();
 
@@ -21,9 +37,8 @@ namespace Battle
         public void AwardActorAbility(Ability ability, bool isRunNow)
         {
             if (ability.GetCheckerRes(EAbilityCycleType.OnPreAwardCheck)
-                && _abilities.ContainsKey(ability.Uid))
+                && _abilities.TryAdd(ability.Uid, ability))
             {
-                _abilities.Add(ability.Uid, ability);
                 if (isRunNow) ability.Execute();
             }
         }
@@ -31,9 +46,9 @@ namespace Battle
         /// <summary>
         /// 执行指定能力，会从资源检测开始，未Init的会主动调用一次Init
         /// </summary>
-        public void ExecutingAbility(int id)
+        public void ExecutingAbility(int uid)
         {
-            if (_abilities.TryGetValue(id, out var ability))
+            if (_abilities.TryGetValue(uid, out var ability))
             {
                 ability.Execute();
             }

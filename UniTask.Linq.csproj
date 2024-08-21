@@ -54,8 +54,8 @@
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\ToDictionary.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\Skip.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\SkipUntilCanceled.cs" />
-    <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\Distinct.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\Average.cs" />
+    <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\Distinct.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\GroupBy.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\Buffer.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\ToObservable.cs" />

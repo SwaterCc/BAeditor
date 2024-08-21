@@ -7,7 +7,28 @@ namespace Battle
 {
     public class BattleManager : MonoBehaviour
     {
-        public static BattleManager Instance;
+        private static BattleManager _instance;
+
+        public static BattleManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    // 尝试查找现有实例
+                    _instance = FindObjectOfType<BattleManager>();
+                
+                    // 如果没有找到，则创建新的 GameObject 并添加该组件
+                    if (_instance == null)
+                    {
+                        GameObject singletonObject = new GameObject(nameof(BattleManager));
+                        _instance = singletonObject.AddComponent<BattleManager>();
+                    }
+                }
+
+                return _instance;
+            }
+        }
         
         /// <summary>
         /// 获取Id生成器
@@ -16,13 +37,20 @@ namespace Battle
         
         protected void Awake()
         {
-            Instance ??= this;
-        }
-
-
-        private void OnEnable()
-        {
+            DontDestroyOnLoad(this.gameObject);
+        
+            // 检查是否已经存在另一个实例
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                _instance = this;
+            }
+            
             AbilityPreLoad.InitCache();
+            AbilityDataCacheMgr.Instance.Init();
         }
 
         private Dictionary<int, Actor> _actors = new();

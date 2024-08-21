@@ -1,5 +1,10 @@
+using System;
 using System.Collections.Generic;
 using AbilityRes;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Battle.Tools
 {
@@ -17,10 +22,46 @@ namespace Battle.Tools
         private AbilityDataList _skill;
         private AbilityDataList _buff;
         private AbilityDataList _bullet;
+
+        public static string RootPath = "Assets/AbilityData/BattleEditorData";
+        public static string SkillPath = "Assets/AbilityData/BattleEditorData/Skill";
+        public static string BuffPath = "Assets/AbilityData/BattleEditorData/Buff";
+        public static string BulletPath = "Assets/AbilityData/BattleEditorData/Bullet";
         
-        public void Init()
+        public static bool IsLoaded = false;
+        public async void Init()
         {
-          
+            await LoadAbilityDataList();
+            await LoadAbilityDataItem(_skill,SkillPath);
+        }
+        
+        private async UniTask LoadAbilityDataList()
+        {
+            try
+            {
+                _skill = await Addressables.LoadAssetAsync<AbilityDataList>($"{RootPath}/Skills.asset");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+            //tasks.Add(Addressables.LoadAssetAsync<AbilityDataList>($"{RootPath}/Buffs.asset").ToUniTask());
+            //tasks.Add(Addressables.LoadAssetAsync<AbilityDataList>($"{RootPath}/Bullets.asset").ToUniTask());
+        }
+
+        private async UniTask LoadAbilityDataItem(AbilityDataList list, string path)
+        {
+            List<UniTask<AbilityData>> tasks = new List<UniTask<AbilityData>>();
+            foreach (var skillItem in _skill.Items)
+            {
+                tasks.Add(Addressables.LoadAssetAsync<AbilityData>($"{path}/{skillItem.Value.configId}.asset").ToUniTask());
+            }
+
+            var abilityDatas = await UniTask.WhenAll(tasks);
+            foreach (var ability in abilityDatas)
+            {
+                _abilityDatas.Add(ability.ConfigId,ability);
+            }
         }
         
         /// <summary>
@@ -31,7 +72,7 @@ namespace Battle.Tools
         public AbilityData GetAbilityData(int dataId)
         {
             //临时用直接加载
-            return new AbilityData();
+            return _abilityDatas[dataId];
         }
     }
 }

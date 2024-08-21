@@ -1,12 +1,13 @@
 using System;
-using Battle.Auto;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 
 namespace Battle
 {
     /// <summary>
     /// 编辑器反射参数
     /// </summary>
+    [Serializable]
     public struct Parameter
     {
         /// <summary>
@@ -30,6 +31,8 @@ namespace Battle
         /// 是否是值类型
         /// </summary>
         public bool IsValueType;
+        
+        [OdinSerialize]
         public object Value;
     }
 }

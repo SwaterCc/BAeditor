@@ -18,6 +18,8 @@ namespace Battle
 
         public static AbilityRuntimeContext Context => _context ??= new AbilityRuntimeContext();
 
+        public static CommonUtility.IdGenerator IdGenerator = CommonUtility.GetIdGenerator();
+        
         //基础数据
         /// <summary>
         /// 能力运行时唯一识别id
@@ -60,6 +62,7 @@ namespace Battle
 
         public Ability(int abilityConfigId)
         {
+            Uid = IdGenerator.GenerateId();
             _abilityConfigId = abilityConfigId;
             _abilityData = AbilityDataCacheMgr.Instance.GetAbilityData(_abilityConfigId);
             _variables = new VariableCollection(16, this);

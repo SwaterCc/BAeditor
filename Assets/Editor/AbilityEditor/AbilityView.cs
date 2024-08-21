@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using AbilityRes;
 using Battle;
-using BattleAbility.Editor;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -44,6 +43,12 @@ namespace Editor.AbilityEditor
         public string GetOdinMenuTreeItemLabel()
         {
             return $"{Data.ConfigId}->{Data.Name}";
+        }
+
+        public void Save()
+        {
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
     }
 

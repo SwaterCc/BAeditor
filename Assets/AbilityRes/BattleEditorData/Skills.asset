@@ -23,8 +23,8 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Items
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[BattleAbility.Editor.AbilityConfigItem,
-        Assembly-CSharp-Editor]], mscorlib
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[AbilityRes.AbilityConfigItem,
+        Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
@@ -40,16 +40,16 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 11111
+      Data: 1223
     - Name: $v
       Entry: 7
-      Data: 2|BattleAbility.Editor.AbilityConfigItem, Assembly-CSharp-Editor
+      Data: 2|AbilityRes.AbilityConfigItem, Assembly-CSharp
     - Name: configId
       Entry: 3
-      Data: 11111
+      Data: 1223
     - Name: name
       Entry: 1
-      Data: 1111
+      Data: 111
     - Name: desc
       Entry: 6
       Data: 

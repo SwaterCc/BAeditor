@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Battle.Event;
 using Battle.Tools;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 
 namespace Battle
 {
@@ -26,24 +27,28 @@ namespace Battle
         /// <summary>
         /// 头节点字典
         /// </summary>
+        [OdinSerialize]
         public Dictionary<EAbilityCycleType, int> HeadNodeDict = new();
 
         /// <summary>
         /// 事件监听字典，用List结构是因为一个生命周期可能会有多个逻辑，且有优先级
         /// </summary>
+        [OdinSerialize]
         public Dictionary<EBattleEventType, int> EventNodeDict = new();
 
         /// <summary>
         /// 存储所有数据
         /// </summary>
+        [OdinSerialize]
         public Dictionary<int, AbilityNodeData> NodeDict = new();
 
         /// <summary>
         /// SKILL BUFF 静态字段 TODO:临时做法，后续要接Excel
         /// </summary>
+        [OdinSerialize]
         public Dictionary<string, object> SpecializationData = new Dictionary<string, object>();
 
-
+        [NonSerialized]
         private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
         public static AbilityNodeData GetNodeData(AbilityData abilityData, EAbilityNodeType type)
         {
@@ -67,6 +72,7 @@ namespace Battle
         }
     }
 
+    [Serializable]
     public class AbilityNodeData
     {
         public int NodeId;
@@ -76,25 +82,25 @@ namespace Battle
         public int Parent;
 
         public int Depth;
-
+        
         public List<int> ChildrenIds = new();
 
         public int NextIdInSameLevel;
-
+        
         public Parameter[] ActionNodeData;
-
+        
         public BranchNodeData BranchNodeData;
-
+        
         public EventNodeData EventNodeData;
-
+        
         public RepeatNodeData RepeatNodeData;
-
+        
         public VariableNodeData VariableNodeData;
-
+        
         public EAbilityCycleType CycleNodeData;
-
+        
         public TimerNodeData TimerNodeData;
-
+        
         public StageNodeData StageNodeData;
 
         public void RemoveSelf(AbilityData data)
@@ -110,6 +116,7 @@ namespace Battle
         }
     }
 
+    [Serializable]
     public class BranchNodeData
     {
         public Parameter[] Left;
@@ -117,12 +124,14 @@ namespace Battle
         public Parameter[] Right;
     }
     
+    [Serializable]
     public class EventNodeData
     {
         public EBattleEventType EventType;
         public Parameter[] CreateCheckerFunc;
     }
 
+    [Serializable]
     public class StageNodeData
     {
         public int StageId;
@@ -136,6 +145,7 @@ namespace Battle
         public bool IsDefaultStart;
     }
 
+    [Serializable]
     public class TimerNodeData
     {
         public float FirstInterval;
@@ -143,6 +153,7 @@ namespace Battle
         public float MaxCount;
     }
 
+    [Serializable]
     public class RepeatNodeData
     {
         public ERepeatOperationType RepeatOperationType;
@@ -154,13 +165,12 @@ namespace Battle
         public int StepCount;
     }
 
-
+    [Serializable]
     public class VariableNodeData
     {
         public EVariableOperationType OperationType;
         public EVariableRange Range;
         public string Name;
-
         public Parameter[] VarParams;
     }
 }

@@ -27,10 +27,11 @@ namespace Battle
             private readonly List<ITimer> _removes;
             public EAbilityState CurState => getCurState();
 
-            protected AbilityRunCycle(Ability ability)
+            protected AbilityRunCycle(AbilityState state)
             {
-                _ability = ability;
-                _executor = ability._executor;
+                _state = state;
+                _ability = _state.Ability;
+                _executor = _state.Ability._executor;
                 _timerNodes = new HashSet<ITimer>();
                 _removes = new List<ITimer>();
             }
@@ -101,7 +102,7 @@ namespace Battle
 
         private class InitRunCycle : AbilityRunCycle
         {
-            public InitRunCycle(Ability ability) : base(ability) { }
+            public InitRunCycle(AbilityState state) : base(state) { }
 
             protected override EAbilityCycleType getCycleType()
             {
@@ -132,8 +133,8 @@ namespace Battle
         {
             private EAbilityState _nextState = EAbilityState.Ready;
             protected override EAbilityState getCurState() => EAbilityState.Ready;
-            public Ready(Ability ability) : base(ability) { }
-            
+            public Ready(AbilityState state) : base(state) { }
+
             protected override EAbilityCycleType getCycleType()
             {
                 return EAbilityCycleType.OnReady;
@@ -159,7 +160,7 @@ namespace Battle
 
             protected override void onExit()
             {
-                _nextState = EAbilityState.Ready;
+               
             }
 
             public override bool CanExit()
@@ -175,8 +176,8 @@ namespace Battle
 
         private class PreExecute : AbilityRunCycle
         {
-            public PreExecute(Ability ability) : base(ability) { }
-            
+            public PreExecute(AbilityState state) : base(state) { }
+
             protected override EAbilityCycleType getCycleType() => EAbilityCycleType.OnPreExecute;
 
             protected override EAbilityState getCurState() => EAbilityState.PreExecute;
@@ -191,9 +192,9 @@ namespace Battle
             public IStageNodeProxy CurProxy;
 
             public bool AllStageFinish;
-            
-            public Executing(Ability ability) : base(ability) { }
-            
+
+            public Executing(AbilityState state) : base(state) { }
+
             protected override EAbilityCycleType getCycleType() => EAbilityCycleType.OnExecuting;
 
             protected override EAbilityState getCurState() => EAbilityState.Executing;
@@ -202,18 +203,18 @@ namespace Battle
 
             public void AddStageProxy(IStageNodeProxy proxy)
             {
-                _stageNodeProxies.Add(proxy.GetId(),proxy);
+                _stageNodeProxies.Add(proxy.GetId(), proxy);
             }
-            
+
             public override bool CanExit()
             {
                 return base.CanExit() && AllStageFinish;
             }
         }
 
-        private class EndExecute  : AbilityRunCycle
+        private class EndExecute : AbilityRunCycle
         {
-            public EndExecute(Ability ability) : base(ability) { }
+            public EndExecute(AbilityState state) : base(state) { }
             protected override EAbilityCycleType getCycleType() => EAbilityCycleType.OnEndExecute;
 
             protected override EAbilityState getCurState() => EAbilityState.EndExecute;

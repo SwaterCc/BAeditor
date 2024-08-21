@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
 
 namespace Battle
 {
+    [Serializable]
     public class ResCheckItem
     {
         public EBattleResourceType ResourceType;

@@ -171,7 +171,13 @@ namespace Editor.AbilityEditor
                     {
                         ShowVariableWindow.OpenWindow(this, abilityView.Data);
                     }
+                    
+                    if (SirenixEditorGUI.ToolbarButton(new GUIContent("保存")))
+                    {
+                        abilityView.Save();
+                    }
                 }
+                
             }
             SirenixEditorGUI.EndHorizontalToolbar();
         }
