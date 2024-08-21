@@ -54,7 +54,7 @@ namespace Battle
         {
             var nodeData = new AbilityNodeData();
             var id = CommonUtility.GenerateTimeBasedHashId32();
-            var maxTryCount = 100;
+            var maxTryCount = 500;
             var curTryCount = 0;
             while (abilityData.NodeDict.ContainsKey(id))
             {

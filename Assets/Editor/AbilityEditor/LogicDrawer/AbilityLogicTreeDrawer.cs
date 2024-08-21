@@ -157,6 +157,9 @@ namespace Editor.AbilityEditor
                         node.StageNodeData = new StageNodeData();
                         break;
                 }
+                EditorUtility.SetDirty(_data);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
                 Reload();
             }
         }
@@ -168,6 +171,9 @@ namespace Editor.AbilityEditor
                 var parent = _data.NodeDict[select.NodeData.Parent];
                 parent.ChildrenIds.Remove(select.NodeData.NodeId);
                 select.NodeData.RemoveSelf(_data);
+                EditorUtility.SetDirty(_data);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
                 Reload();
             }
         }

@@ -40,16 +40,16 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 1223
+      Data: 1231
     - Name: $v
       Entry: 7
       Data: 2|AbilityRes.AbilityConfigItem, Assembly-CSharp
     - Name: configId
       Entry: 3
-      Data: 1223
+      Data: 1231
     - Name: name
       Entry: 1
-      Data: 111
+      Data: "\u6309\u65F6\u53D1\u653E"
     - Name: desc
       Entry: 6
       Data: 

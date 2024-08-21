@@ -47,6 +47,7 @@ namespace Editor.AbilityEditor
 
         public void Save()
         {
+            EditorUtility.SetDirty(Data);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }

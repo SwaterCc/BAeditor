@@ -142,6 +142,26 @@ namespace Editor.AbilityEditor
             return treeInstance;
         }
 
+        private void OnSelectionChange()
+        {
+            var selected = this.MenuTree.Selection.FirstOrDefault();
+            if (selected?.Value is AbilityView abilityView)
+            {
+                abilityView.Save();
+            }
+        }
+        
+
+        protected override void OnDestroy()
+        {
+            var selected = this.MenuTree.Selection.FirstOrDefault();
+            if (selected?.Value is AbilityView abilityView)
+            {
+                abilityView.Save();
+            }
+            base.OnDestroy();
+        }
+
         protected override void OnBeginDrawEditors()
         {
             //绘制顶部创建按钮

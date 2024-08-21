@@ -91,6 +91,10 @@ namespace Editor.AbilityEditor.SimpleWindow
                 AssetDatabase.SaveAssets();
             }
 
+            EditorUtility.SetDirty(list);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            
             if (!_hasError)
             {
                 Close();
