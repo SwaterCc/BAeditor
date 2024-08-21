@@ -42,6 +42,7 @@ namespace Battle
             {
                 NodeData = data;
                 ConfigId = NodeData.NodeId;
+                _executor = executor;
             }
             
             /// <summary>

@@ -168,19 +168,22 @@ namespace Battle
                         }
                     }
 
-                    if (nodeId != -1 && nodeId == curNode.NodeData.Parent)
+                    if (curNode.NodeData.Parent != -1 && nodeId == curNode.NodeData.Parent)
                     {
+                     
                         while (_nodes[nodeId].NodeData.Parent == _nodes[nodeId].GetNextNode())
                         {
+                            nodeId = _nodes[nodeId].NodeData.Parent;
                             //如果不是循环节点则查找可走节点
                             if (nodeId == -1)
                             {
                                 break;
                             }
-
-                            nodeId = _nodes[nodeId].NodeData.Parent;
                         }
+                    }
 
+                    if (nodeId != -1)
+                    {
                         curNode = _nodes[nodeId];
                     }
                 }
@@ -191,6 +194,18 @@ namespace Battle
                 if (_cycleHeads.TryGetValue(cycleType, out var cycleNodeId))
                 {
                     ExecuteNode(cycleNodeId);
+                }
+                else
+                {
+                    Debug.Log($"{cycleType} is empty！");
+                }
+            }
+
+            public void ResetCycle(EAbilityCycleType cycleType)
+            {
+                if (_cycleHeads.TryGetValue(cycleType, out var cycleNodeId))
+                {
+                    _nodes[cycleNodeId].Reset();
                 }
                 else
                 {

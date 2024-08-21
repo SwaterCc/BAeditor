@@ -47,7 +47,8 @@ namespace Battle
             public void Enter()
             {
                 onEnter();
-                _executor.ExecuteCycleNode(getCycleType());
+                if (CurState != EAbilityState.Ready)
+                    _executor.ExecuteCycleNode(getCycleType());
             }
 
             protected virtual void onEnter() { }
@@ -85,9 +86,10 @@ namespace Battle
             public void Exit()
             {
                 onExit();
-
                 _timerNodes.Clear();
                 _removes.Clear();
+                if (CurState != EAbilityState.Ready)
+                    _executor.ResetCycle(getCycleType());
             }
 
             protected virtual void onExit() { }
@@ -158,10 +160,7 @@ namespace Battle
                 }
             }
 
-            protected override void onExit()
-            {
-               
-            }
+            protected override void onExit() { }
 
             public override bool CanExit()
             {
@@ -191,7 +190,7 @@ namespace Battle
 
             public IStageNodeProxy CurProxy;
 
-            public bool AllStageFinish;
+            public bool AllStageFinish = true;
 
             public Executing(AbilityState state) : base(state) { }
 
@@ -204,6 +203,7 @@ namespace Battle
             public void AddStageProxy(IStageNodeProxy proxy)
             {
                 _stageNodeProxies.Add(proxy.GetId(), proxy);
+                AllStageFinish = false;
             }
 
             public override bool CanExit()

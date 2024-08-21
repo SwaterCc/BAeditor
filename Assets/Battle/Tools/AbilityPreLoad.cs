@@ -34,12 +34,7 @@ namespace Battle.Tools
                     return null;
                 }
 
-                for (int i = 0; i < ParamCount; i++)
-                {
-                    _paramArr[i] = param[i];
-                }
-
-                return MethodInfo.Invoke(caller, _paramArr);
+                return MethodInfo.Invoke(caller, param);
             }
         }
 
