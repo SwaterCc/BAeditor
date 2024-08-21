@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Battle.Auto;
 using UnityEngine;
 
 namespace Battle
@@ -95,6 +96,19 @@ namespace Battle
             _abilityController = new AbilityController(this);
             _stateMachine = new StateMachine(this);
             _variables = new VariableCollection(8, _actorImp);
+            
+            //测试代码，初始化一些属性
+            var hp = new SimpleAttribute<float>();
+            hp.Set(100f, true);
+            _attrs.AddAttr(EAttributeType.Hp,hp);
+            
+            var mp = new SimpleAttribute<float>();
+            mp.Set(100f, true);
+            _attrs.AddAttr(EAttributeType.Mp,mp);
+            
+            var attack = new SimpleAttribute<float>();
+            attack.Set(999f, true);
+            _attrs.AddAttr(EAttributeType.Attack,attack);
         }
 
         public virtual void Tick(float dt)

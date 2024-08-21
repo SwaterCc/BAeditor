@@ -53,12 +53,15 @@ namespace Editor.AbilityEditor
             root.AddChild(cycleRoot);
             setupChild(_cycleHeadData, cycleRoot);
 
+            EditorUtility.SetDirty(_data);
+            
             SetupDepthsFromParentsAndChildren(root);
             return root;
         }
 
         private void setupChild(AbilityNodeData nodeData, AbilityLogicTreeItem parent)
         {
+            int idx = 0;
             foreach (var childId in nodeData.ChildrenIds)
             {
                 if (_data.NodeDict.TryGetValue(childId, out var childNodeData))
@@ -91,9 +94,17 @@ namespace Editor.AbilityEditor
                             break;
                     }
 
+                    if (idx + 1 < nodeData.ChildrenIds.Count)
+                    {
+                        idx++;
+                        childNodeData.NextIdInSameLevel = _data.NodeDict[nodeData.ChildrenIds[idx]].NodeId;
+                    }
+                    
                     parent.AddChild(item);
                     setupChild(childNodeData, item);
                 }
+
+                
             }
         }
 

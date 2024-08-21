@@ -25,8 +25,33 @@ namespace Battle.Tools
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void DebugMessage(string flag, string msg, object p1, object p2, object p3)
         {
-            //Debug.Log($"[{flag}]", string.Format($"{msg}", p1, p2, p3));
-            Debug.Log("asdasdasdasdasdasdsadasdasdasdasd");
+            void Convert(string pattern,params object[] args)
+            {
+                Debug.Log(string.Format(pattern,args));
+            }
+
+            if (p1 != null)
+            {
+                Convert($"[{flag}] " + msg, p1);
+            }
+            
+            if (p1 != null && p2 != null)
+            {
+                Convert($"[{flag}] " + msg, p1, p2);
+            }
+            
+            if (p1 != null && p2 != null && p3 != null)
+            {
+                Convert($"[{flag}] " + msg, p1, p2, p3);
+            }
+            
+            if (p1 == null && p2 == null && p3 == null)
+            {
+                if (string.IsNullOrEmpty(flag))
+                    flag = "none";
+                
+                Convert($"[{flag}] " + msg);
+            }
         }
 
         [AbilityFuncCache]

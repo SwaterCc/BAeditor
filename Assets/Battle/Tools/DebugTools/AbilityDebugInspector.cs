@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Battle.Auto;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -12,6 +13,12 @@ namespace Battle.Tools.DebugTools
     {
         public ActorBehavior DebugObj;
 
+        public float HP;
+        
+        public float MP;
+        
+        public float Attack;
+        
         private Actor.ActorDebugHandle _handle;
 
         private Actor _actor;
@@ -28,6 +35,18 @@ namespace Battle.Tools.DebugTools
             {
                 _handle ??= DebugObj.Actor.DebugHandle;
                 _actor ??= DebugObj.Actor;
+            }
+
+            if (_actor != null)
+            {
+                var hpAttr = (SimpleAttribute<float>)_actor.GetAttrCollection().GetAttr(EAttributeType.Hp);
+                HP = hpAttr.GetValue();
+                
+                var mpAttr = (SimpleAttribute<float>)_actor.GetAttrCollection().GetAttr(EAttributeType.Mp);
+                MP = mpAttr.GetValue();
+                
+                var atkAttr = (SimpleAttribute<float>)_actor.GetAttrCollection().GetAttr(EAttributeType.Attack);
+                Attack = atkAttr.GetValue();
             }
         }
 
