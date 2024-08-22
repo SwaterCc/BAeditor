@@ -2,22 +2,20 @@ namespace Battle
 {
     public partial class Ability
     {
-        private interface IStageNodeProxy
+        private interface IGroupNodeProxy
         {
             public int GetId();
-            public void StageBegin();
-            public void StageEnd();
+            public void GroupBegin();
+            public void GroupEnd();
         }
         
-        private class AbilityStageNode : AbilityNode,IStageNodeProxy
+        private class AbilityGroupNode : AbilityNode,IGroupNodeProxy
         {
-            private StageNodeData _stageData;
-
+            private GroupNodeData _groupData;
             
-            
-            public AbilityStageNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
+            public AbilityGroupNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _stageData = data.StageNodeData;
+                _groupData = data.groupNodeData;
             }
             public override void DoJob()
             {
@@ -27,7 +25,6 @@ namespace Battle
             public override int GetNextNode()
             {
                 //执行到阶段节点时不执行其子节点，其子节点以及被托管给了Executing状态
-                
                 if (NodeData.NextIdInSameLevel > 0)
                 {
                     //没有子节点返回自己下一个相邻节点,不用判执行，因为理论上不会跳着走
@@ -44,16 +41,16 @@ namespace Battle
 
             public int GetId()
             {
-                return _stageData.StageId;
+                return _groupData.GroupId;
             }
             
-            public void StageBegin()
+            public void GroupBegin()
             {
                 resetChildren();
                 _executor.ExecuteNode(NodeData.ChildrenIds[0]);
             }
 
-            public void StageEnd()
+            public void GroupEnd()
             {
                
             }

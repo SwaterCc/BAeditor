@@ -190,9 +190,9 @@ namespace Battle
 
         private class Executing : AbilityRunCycle
         {
-            private Dictionary<int, IStageNodeProxy> _stageNodeProxies = new(8);
+            private Dictionary<int, IGroupNodeProxy> _stageNodeProxies = new(8);
 
-            public IStageNodeProxy CurProxy;
+            public IGroupNodeProxy CurProxy;
 
             public bool AllStageFinish = true;
 
@@ -204,7 +204,7 @@ namespace Battle
 
             public override EAbilityState GetNextState() => EAbilityState.EndExecute;
 
-            public void AddStageProxy(IStageNodeProxy proxy)
+            public void AddStageProxy(IGroupNodeProxy proxy)
             {
                 _stageNodeProxies.Add(proxy.GetId(), proxy);
                 AllStageFinish = false;

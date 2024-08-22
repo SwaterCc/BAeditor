@@ -11,7 +11,7 @@ namespace Battle
 
     public interface IBeHurt
     {
-        public void BeHurt(Dictionary<string, IValueBox> damage);
+        public void BeHurt(Dictionary<string, object> damage);
     }
 
     /// <summary>
@@ -109,6 +109,10 @@ namespace Battle
             var attack = new SimpleAttribute<float>();
             attack.Set(999f, true);
             _attrs.AddAttr(EAttributeType.Attack,attack);
+            
+            var pos = new SimpleAttribute<Vector3>();
+            pos.Set(Vector3.zero, true);
+            _attrs.AddAttr(EAttributeType.Position,pos);
         }
 
         public virtual void Tick(float dt)
@@ -121,8 +125,16 @@ namespace Battle
         {
             return _isDisposable;
         }
-        
-        public void BeHurt(Dictionary<string, IValueBox> damage) { }
+
+        public virtual void OnDestroy()
+        {
+            
+        }
+
+        public void BeHurt(Dictionary<string, object> damage)
+        {
+            Debug.Log("+++++++++++++++++++++++++打中啦+++++++++++++++++++++++++");
+        }
         
         public AttrCollection GetAttrCollection()
         {

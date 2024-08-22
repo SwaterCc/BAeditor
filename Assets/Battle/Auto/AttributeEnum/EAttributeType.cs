@@ -5,6 +5,7 @@ namespace Battle.Auto
     {
         Hp,
         Mp,
-        Attack
+        Attack,
+        Position,
     }
 }

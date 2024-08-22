@@ -63,12 +63,12 @@ namespace Battle
                             _eventNodes.Add((AbilityEventNode)node);
                         }
 
-                        if (node.NodeData.NodeType == EAbilityNodeType.EStage)
+                        if (node.NodeData.NodeType == EAbilityNodeType.EGroup)
                         {
                             var executing = (Executing)State.GetState(EAbilityState.Executing);
-                            var stageNode = (AbilityStageNode)node;
+                            var stageNode = (AbilityGroupNode)node;
                             executing.AddStageProxy(stageNode);
-                            if (node.NodeData.StageNodeData.IsDefaultStart)
+                            if (node.NodeData.groupNodeData.IsDefaultStart)
                             {
                                 executing.CurProxy = stageNode;
                             }

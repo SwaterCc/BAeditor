@@ -55,14 +55,40 @@ namespace Battle
 
         private Dictionary<int, Actor> _actors = new();
 
+        private List<Actor> _addCache = new List<Actor>();
+        
         private List<IBeHurt> _beHurts = new();
 
+        private List<int> _removeList = new List<int>();
+
         public void Update()
-        {
+        { 
+            if (_addCache.Count > 0)
+            {
+                foreach (var actor in _addCache)
+                {
+                    _actors.Add(actor.Uid, actor);
+                }
+                _addCache.Clear();
+            }
+
             foreach (var actor in _actors)
             {
                 actor.Value.Tick(Time.deltaTime);
+
+                if (actor.Value.IsDisposable())
+                {
+                    _removeList.Add(actor.Key);
+                }
             }
+
+           
+            foreach (var uid in _removeList)
+            {
+                _actors[uid].OnDestroy();
+                _actors.Remove(uid);
+            }
+            _removeList.Clear();
         }
 
         public Actor GetActor(int id)
@@ -79,7 +105,8 @@ namespace Battle
         {
             var uid = _idGenerator.GenerateId();
             actor.Uid = uid;
-            _actors.Add(uid, actor);
+            _addCache.Add(actor);
+            actor.Init();
         }
     }
 }

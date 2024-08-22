@@ -89,8 +89,8 @@ namespace Editor.AbilityEditor
                         case EAbilityNodeType.ETimer:
                             item = new TimerTreeItem(childNodeData);
                             break;
-                        case EAbilityNodeType.EStage:
-                            item = new StageTreeItem(childNodeData);
+                        case EAbilityNodeType.EGroup:
+                            item = new GroupTreeItem(childNodeData);
                             break;
                     }
 
@@ -165,8 +165,8 @@ namespace Editor.AbilityEditor
                     case EAbilityNodeType.ETimer:
                         node.TimerNodeData = new TimerNodeData();
                         break;
-                    case EAbilityNodeType.EStage:
-                        node.StageNodeData = new StageNodeData();
+                    case EAbilityNodeType.EGroup:
+                        node.groupNodeData = new GroupNodeData();
                         break;
                 }
                 EditorUtility.SetDirty(_data);
@@ -206,7 +206,7 @@ namespace Editor.AbilityEditor
                 menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
                     AddNode, (select, EAbilityNodeType.ERepeat));
                 menu.AddItem(new GUIContent("创建节点/创建Stage节点"), false,
-                    AddNode, (select, EAbilityNodeType.EStage));
+                    AddNode, (select, EAbilityNodeType.EGroup));
                 menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
                     AddNode, (select, EAbilityNodeType.ETimer));
                 if (select is not CycleTreeItem)

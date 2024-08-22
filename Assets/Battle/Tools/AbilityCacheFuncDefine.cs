@@ -12,6 +12,9 @@ namespace Battle.Tools
     {
         /// <summary>
         /// 编辑器默认显示函数
+        /// 不允许重载函数
+        /// 尽量不要在get函数里直接获取对象
+        /// 
         /// </summary>
         [AbilityFuncCache(EFuncCacheFlag.Action | EFuncCacheFlag.Branch | EFuncCacheFlag.Variable)]
         public static void NothingToDo() { }
@@ -29,30 +32,10 @@ namespace Battle.Tools
             {
                 Debug.Log(string.Format(pattern,args));
             }
+
+            string flagStr = string.IsNullOrEmpty(flag) ? "" : $"[{flag}] ";
             
-            Convert($"[{flag}] " + msg, p1, p2, p3);
-            /*if (p1 != null)
-            {
-                Convert($"[{flag}] " + msg, p1);
-            }
-            
-            if (p1 != null && p2 != null)
-            {
-                Convert($"[{flag}] " + msg, p1, p2);
-            }
-            
-            if (p1 != null && p2 != null && p3 != null)
-            {
-                Convert($"[{flag}] " + msg, p1, p2, p3);
-            }
-            
-            if (p1 == null && p2 == null && p3 == null)
-            {
-                if (string.IsNullOrEmpty(flag))
-                    flag = "none";
-                
-                Convert($"[{flag}] " + msg);
-            }*/
+            Convert(flagStr + msg, p1, p2, p3);
         }
 
         [AbilityFuncCache]
@@ -78,9 +61,9 @@ namespace Battle.Tools
 
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void CreateHitBox(int hitDataId)
+        public static void CreateHitBox(int hitDataId, ESelectPosType selectPosType)
         {
-            var hitBox = new HitBox(hitDataId);
+            var hitBox = new HitBox(hitDataId, Ability.Context.BelongActor.Uid, selectPosType);
             BattleManager.Instance.Add(hitBox);
         }
 
@@ -145,7 +128,7 @@ namespace Battle.Tools
             return null;
         }
 
-        [AbilityFuncCache(EFuncCacheFlag.Action | EFuncCacheFlag.Branch | EFuncCacheFlag.Variable)]
+        [AbilityFuncCache(EFuncCacheFlag.Branch | EFuncCacheFlag.Variable)]
         public static object GetVariable(EVariableRange range, string name)
         {
             VariableCollection collection = GetVariableCollection(range);
@@ -182,40 +165,40 @@ namespace Battle.Tools
         #region 数学函数
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static object Add(float a, float b) => a + b;
+        public static object FloatAdd(float a, float b) => a + b;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static int Add(int a, int b) => a + b;
+        public static int IntAdd(int a, int b) => a + b;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static float Subtract(float a, float b) => a - b;
+        public static float FloatSubtract(float a, float b) => a - b;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static int Subtract(int a, int b) => a - b;
+        public static int IntSubtract(int a, int b) => a - b;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static float Multiply(float a, float b) => a * b;
+        public static float FloatMultiply(float a, float b) => a * b;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static int Multiply(int a, int b) => a * b;
+        public static int IntMultiply(int a, int b) => a * b;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static float Divide(float a, float b) => a / b;
+        public static float FloatDivide(float a, float b) => a / b;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static int Divide(int a, int b) => a / b;
+        public static int IntDivide(int a, int b) => a / b;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static int SelfAdditive(int a) => ++a;
+        public static int IntSelfAdditive(int a) => ++a;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static float SelfAdditive(float a) => ++a;
+        public static float FloatSelfAdditive(float a) => ++a;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static int SelfSubtracting(int a) => --a;
+        public static int IntSelfSubtracting(int a) => --a;
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
-        public static float SelfSubtracting(float a) => --a;
+        public static float FloatSelfSubtracting(float a) => --a;
 
         #endregion
     }

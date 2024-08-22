@@ -12,6 +12,8 @@ namespace Battle
 
         public List<IBeHurt> GetHitList() => _hitActors;
 
+        
+        
         public void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent<ActorBehavior>(out var actorBehavior))

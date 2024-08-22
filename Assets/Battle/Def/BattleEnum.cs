@@ -23,6 +23,12 @@ namespace Battle
         Executing,
         EndExecute,
     }
+    
+    public enum ESelectPosType
+    {
+        Self,
+        Target,
+    }
 
     /// <summary>
     /// Ability生命周期函数枚举，用于编辑器存储节点
@@ -108,7 +114,7 @@ namespace Battle
         /// <summary>
         /// 阶段节点
         /// </summary>
-        EStage
+        EGroup
     }
 
     /// <summary>

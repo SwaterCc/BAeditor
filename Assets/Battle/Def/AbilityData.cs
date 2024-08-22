@@ -4,6 +4,7 @@ using Battle.Event;
 using Battle.Tools;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine.Serialization;
 
 namespace Battle
 {
@@ -101,7 +102,7 @@ namespace Battle
         
         public TimerNodeData TimerNodeData;
         
-        public StageNodeData StageNodeData;
+        [FormerlySerializedAs("StageNodeData")] public GroupNodeData groupNodeData;
 
         public void RemoveSelf(AbilityData data)
         {
@@ -137,9 +138,9 @@ namespace Battle
     }
 
     [Serializable]
-    public class StageNodeData
+    public class GroupNodeData
     {
-        public int StageId;
+        public int GroupId;
 
         //逻辑不用，阶段描述
         public string Desc;

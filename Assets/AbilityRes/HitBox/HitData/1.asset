@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 311173ea15d743de81be9aeb5d8a3969, type: 3}
+  m_Script: {fileID: 11500000, guid: e6816b665a4e4d71afd24eaa52cb373c, type: 3}
   m_Name: 1
   m_EditorClassIdentifier: 
   serializationData:
@@ -23,8 +23,8 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Damage
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[Battle.IValueBox,
-        Assembly-CSharp]], mscorlib
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Object,
+        mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
@@ -41,11 +41,73 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: HitAreaData
+      Entry: 7
+      Data: 2|BattleAbility.AoeHitData+RectData, Assembly-CSharp
+    - Name: Offset
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Scale
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 2
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Rot
+      Entry: 7
+      Data: UnityEngine.Quaternion, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0.707106769
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0.707106769
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Length
+      Entry: 4
+      Data: 1
+    - Name: Width
+      Entry: 4
+      Data: 1
+    - Name: Height
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
   ConfigId: 1
   HitType: 0
-  BeginTime: 0
-  Duration: 5
-  EndTime: 5
-  ValidCount: 1
+  DelayTime: 0
+  Duration: 2
+  ValidCount: 0
   Interval: 0
-  SourceId: 1001
+  HitAreaType: 0

@@ -1,3 +1,5 @@
+using System;
+using Battle.Auto;
 using UnityEngine;
 
 namespace Battle
@@ -11,10 +13,15 @@ namespace Battle
         private void OnEnable()
         {
             _actor = new Actor();
-            _actor.Init();
             BattleManager.Instance.Add(_actor);
         }
-        
+
+        private void Update()
+        {
+            var pos = _actor.GetAttrCollection().GetAttr(EAttributeType.Position);
+            ((SimpleAttribute<Vector3>)pos).Set(transform.position);
+        }
+
         private void OnDestroy() { }
     }
 }
