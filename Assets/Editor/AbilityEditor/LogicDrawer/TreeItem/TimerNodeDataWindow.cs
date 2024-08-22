@@ -1,29 +1,25 @@
+using System;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class TimerNodeDataWindow : BaseNodeOdinWindow<TimerNodeDataWindow>, IWindowInit
+    public class TimerNodeDataWindow : BaseNodeWindow<TimerNodeDataWindow>, IWindowInit
     {
-        [BoxGroup("计时器配置")] [LabelText("第一次调用间隔")] public float FirstInterval;
-
-        [BoxGroup("计时器配置")] [LabelText("之后每次调用间隔")]
-        public float Interval;
-
-        [BoxGroup("计时器配置")] [LabelText("回调次数")] public float MaxCount;
-
         protected override void onInit()
         {
-            FirstInterval = NodeData.TimerNodeData.FirstInterval;
-            Interval = NodeData.TimerNodeData.Interval;
-            MaxCount = NodeData.TimerNodeData.MaxCount;
+            
         }
 
-        protected override void OnDestroy()
+        private void OnGUI()
         {
-            NodeData.TimerNodeData.FirstInterval = FirstInterval;
-            NodeData.TimerNodeData.Interval = Interval;
-            NodeData.TimerNodeData.MaxCount = MaxCount;
-            base.OnDestroy();
+            SirenixEditorGUI.BeginBox("配置计时器");
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("第一次调用间隔");
+           
+            EditorGUILayout.EndHorizontal();
+            SirenixEditorGUI.EndBox();
         }
     }
 }

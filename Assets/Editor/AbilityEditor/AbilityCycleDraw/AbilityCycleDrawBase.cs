@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Battle;
+using Battle.Skill;
 using BattleAbility.Editor;
 using Editor.AbilityEditor.AbilityNodeDraw;
 using Sirenix.OdinInspector;
@@ -13,31 +14,32 @@ namespace Editor.AbilityEditor
 {
     public abstract class AbilityCycleDrawBase
     {
-        public bool Foldout;
-        
+        public bool Foldout = false;
+
         public EAbilityCycleType CycleType;
-        
+
         public AbilityData Data;
-      
+
         public AbilityNodeData CycleNode;
-        
+
         private AbilityLogicTreeDrawer _logicTreeDrawer;
 
         private TreeViewState _logicState;
+
+        private bool _isFirst = true;
         
-        public AbilityCycleDrawBase(EAbilityCycleType cycleType, AbilityData data, bool foldout = true)
+        public AbilityCycleDrawBase(EAbilityCycleType cycleType, AbilityData data)
         {
             CycleType = cycleType;
             Data = data;
-            Foldout = foldout;
 
             if (!data.HeadNodeDict.TryGetValue(cycleType, out var nodeId))
             {
-                var cycleNodeData = AbilityData.GetNodeData(data,EAbilityNodeType.EAbilityCycle);
+                var cycleNodeData = AbilityData.GetNodeData(data, EAbilityNodeType.EAbilityCycle);
                 cycleNodeData.CycleNodeData = cycleType;
                 cycleNodeData.Parent = -1;
-                
-                data.NodeDict.Add(cycleNodeData.NodeId,cycleNodeData);
+
+                data.NodeDict.Add(cycleNodeData.NodeId, cycleNodeData);
                 data.HeadNodeDict.Add(CycleType, cycleNodeData.NodeId);
                 CycleNode = cycleNodeData;
             }
@@ -49,9 +51,20 @@ namespace Editor.AbilityEditor
             _logicState = new TreeViewState();
             _logicTreeDrawer = new AbilityLogicTreeDrawer(_logicState, data, CycleNode);
         }
-        
+
+        protected virtual bool getDefaultFoldout()
+        {
+            return true;
+        }
+
         public virtual void DrawCycle()
         {
+            if (_isFirst)
+            {
+                Foldout = getDefaultFoldout();
+                _isFirst = false;
+            }
+            
             SirenixEditorGUI.BeginBox();
             var mainRect = GUIHelper.GetCurrentLayoutRect();
             SirenixEditorGUI.BeginBoxHeader();
@@ -60,7 +73,6 @@ namespace Editor.AbilityEditor
             SirenixEditorGUI.EndBoxHeader();
             if (Foldout)
             {
-                
                 SirenixEditorGUI.BeginBox();
                 //画额外内容
                 drawEx();
@@ -69,7 +81,7 @@ namespace Editor.AbilityEditor
                 SirenixEditorGUI.BeginBox("编写逻辑");
                 var boxRect = GUIHelper.GetCurrentLayoutRect();
                 //画逻辑树
-                GUILayout.Box(" ", GUILayout.Height(GetHeight()),GUILayout.Width(boxRect.width)); //无所谓这个盒子，只是占位用的
+                GUILayout.Box(" ", GUILayout.Height(GetHeight()), GUILayout.Width(boxRect.width)); //无所谓这个盒子，只是占位用的
                 var treeRect = new Rect(boxRect.x, boxRect.y + headHeight, mainRect.width - 8, GetHeight() + 8);
                 _logicTreeDrawer.OnGUI(treeRect);
                 SirenixEditorGUI.EndBox();
@@ -77,13 +89,86 @@ namespace Editor.AbilityEditor
 
             SirenixEditorGUI.EndBox();
         }
-        
+
         protected virtual void drawEx() { }
 
         private float GetHeight()
         {
-            //var count = _logicTreeDrawer.ro.ChildrenIds.Count > 0 ? CycleNode.ChildrenIds.Count : 1;
             return _logicTreeDrawer.totalHeight;
+        }
+
+        public static void DrawResList(AbilityData data, string key, string desc)
+        {
+            if (!data.SpecializationData.TryGetValue(key, out var resCheck))
+            {
+                resCheck = new List<List<ResCheckItem>>();
+                data.SpecializationData.Add(key, new List<List<ResCheckItem>>());
+            }
+
+            ResCheckItem removeItem = null;
+            List<ResCheckItem> removeList = null;
+
+
+            var checkList = (List<List<ResCheckItem>>)resCheck;
+            EditorGUILayout.LabelField(desc);
+            SirenixEditorGUI.BeginVerticalList();
+
+            foreach (var items in checkList)
+            {
+                SirenixEditorGUI.BeginListItem();
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("删除", GUILayout.Width(42)))
+                {
+                    removeList = items;
+                }
+
+                EditorGUILayout.LabelField("条件组：", GUILayout.Width(48));
+                EditorGUILayout.BeginVertical();
+                foreach (var item in items)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    if (GUILayout.Button("-", GUILayout.Width(22)))
+                    {
+                        removeItem = item;
+                    }
+
+                    EditorGUIUtility.labelWidth = 70;
+                    item.ResourceType =
+                        (EBattleResourceType)SirenixEditorFields.EnumDropdown("消耗类型", item.ResourceType,
+                            GUILayout.Width(180));
+                    EditorGUIUtility.labelWidth = 50;
+                    item.Flag = SirenixEditorFields.IntField("特征值", item.Flag);
+                    item.Cost = SirenixEditorFields.FloatField("消耗值", item.Cost);
+                    EditorGUILayout.EndHorizontal();
+                }
+
+                EditorGUILayout.EndVertical();
+
+                if (GUILayout.Button("+", GUILayout.Width(22)))
+                {
+                    items.Add(new ResCheckItem());
+                }
+
+                EditorGUILayout.EndHorizontal();
+                SirenixEditorGUI.EndListItem();
+                if (removeItem != null)
+                {
+                    items.Remove(removeItem);
+                    removeItem = null;
+                }
+            }
+
+            if (SirenixEditorGUI.Button("+", ButtonSizes.Medium))
+            {
+                checkList.Add(new List<ResCheckItem>());
+            }
+
+            SirenixEditorGUI.EndVerticalList();
+
+            if (removeList != null)
+            {
+                checkList.Remove(removeList);
+            }
         }
     }
 }

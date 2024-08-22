@@ -52,13 +52,12 @@ namespace Editor.AbilityEditor
             cycleRoot.depth = 0;
             root.AddChild(cycleRoot);
             setupChild(_cycleHeadData, cycleRoot);
-
-            EditorUtility.SetDirty(_data);
             
+            EditorUtility.SetDirty(_data);
             SetupDepthsFromParentsAndChildren(root);
             return root;
         }
-
+        
         private void setupChild(AbilityNodeData nodeData, AbilityLogicTreeItem parent)
         {
             int idx = 0;
@@ -166,7 +165,7 @@ namespace Editor.AbilityEditor
                         node.TimerNodeData = new TimerNodeData();
                         break;
                     case EAbilityNodeType.EGroup:
-                        node.groupNodeData = new GroupNodeData();
+                        node.GroupNodeData = new GroupNodeData();
                         break;
                 }
                 EditorUtility.SetDirty(_data);
@@ -190,6 +189,23 @@ namespace Editor.AbilityEditor
             }
         }
 
+        private bool checkerOnly(EAbilityNodeType nodeType,AbilityLogicTreeItem select)
+        {
+            if (select.NodeData.NodeType == nodeType) return false;
+            int parentId = select.NodeData.Parent;
+            while (parentId > 0)
+            {
+                if (_data.NodeDict[parentId].NodeType == nodeType)
+                {
+                    return false;
+                }
+
+                parentId = _data.NodeDict[parentId].Parent;
+            }
+
+            return true;
+        }
+        
         protected override void ContextClickedItem(int id)
         {
             if (FindItem(id, rootItem) is AbilityLogicTreeItem select)
@@ -203,12 +219,25 @@ namespace Editor.AbilityEditor
                     AddNode, (select, EAbilityNodeType.EVariableControl));
                 menu.AddItem(new GUIContent("创建节点/创建Event节点"), false,
                     AddNode, (select, EAbilityNodeType.EEvent));
-                menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
-                    AddNode, (select, EAbilityNodeType.ERepeat));
-                menu.AddItem(new GUIContent("创建节点/创建Stage节点"), false,
-                    AddNode, (select, EAbilityNodeType.EGroup));
-                menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
-                    AddNode, (select, EAbilityNodeType.ETimer));
+                
+                if (checkerOnly(EAbilityNodeType.ERepeat, select))
+                {
+                    menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
+                        AddNode, (select, EAbilityNodeType.ERepeat));
+                }
+                
+                if (checkerOnly(EAbilityNodeType.EGroup, select))
+                {
+                    menu.AddItem(new GUIContent("创建节点/创建Stage节点"), false,
+                        AddNode, (select, EAbilityNodeType.EGroup));
+                }
+                
+                if (checkerOnly(EAbilityNodeType.ETimer, select))
+                {
+                    menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
+                        AddNode, (select, EAbilityNodeType.ETimer));
+                }
+                
                 if (select is not CycleTreeItem)
                 {
                     menu.AddItem(new GUIContent("删除节点"), false,

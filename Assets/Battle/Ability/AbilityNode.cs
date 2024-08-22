@@ -24,10 +24,13 @@ namespace Battle
                         return new AbilityRepeatNode(executor, data);
                     case EAbilityNodeType.EAction:
                         return new AbilityActionNode(executor, data);
+                    case EAbilityNodeType.EGroup:
+                        return new AbilityGroupNode(executor, data);
+                    
                 }
 
                 Debug.LogError($"创建节点失败，节点ID{data.NodeId} 类型 {data.NodeType}");
-                return new AbilityTimerNode(executor, data);
+                return new AbilityCycleNode(executor, data);
             }
             
             public int ConfigId;

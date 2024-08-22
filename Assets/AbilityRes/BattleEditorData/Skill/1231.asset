@@ -49,7 +49,7 @@ MonoBehaviour:
       Data: 0
     - Name: $v
       Entry: 3
-      Data: 1484949265
+      Data: 1870433883
     - Name: 
       Entry: 8
       Data: 
@@ -61,7 +61,7 @@ MonoBehaviour:
       Data: 1
     - Name: $v
       Entry: 3
-      Data: 322710213
+      Data: 950138884
     - Name: 
       Entry: 8
       Data: 
@@ -73,7 +73,7 @@ MonoBehaviour:
       Data: 3
     - Name: $v
       Entry: 3
-      Data: 1259460176
+      Data: 371144272
     - Name: 
       Entry: 8
       Data: 
@@ -85,7 +85,7 @@ MonoBehaviour:
       Data: 4
     - Name: $v
       Entry: 3
-      Data: 361545276
+      Data: 1976715322
     - Name: 
       Entry: 8
       Data: 
@@ -97,7 +97,7 @@ MonoBehaviour:
       Data: 5
     - Name: $v
       Entry: 3
-      Data: 2010224807
+      Data: 394542900
     - Name: 
       Entry: 8
       Data: 
@@ -109,7 +109,7 @@ MonoBehaviour:
       Data: 6
     - Name: $v
       Entry: 3
-      Data: 123279527
+      Data: 1608405216
     - Name: 
       Entry: 8
       Data: 
@@ -158,19 +158,19 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 10
+      Data: 17
     - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 3
-      Data: 1484949265
+      Data: 1870433883
     - Name: $v
       Entry: 7
       Data: 6|Battle.AbilityNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 1484949265
+      Data: 1870433883
     - Name: NodeType
       Entry: 3
       Data: 0
@@ -178,6 +178,9 @@ MonoBehaviour:
       Entry: 3
       Data: -1
     - Name: Depth
+      Entry: 3
+      Data: 0
+    - Name: BelongGroupId
       Entry: 3
       Data: 0
     - Name: ChildrenIds
@@ -216,7 +219,7 @@ MonoBehaviour:
     - Name: TimerNodeData
       Entry: 6
       Data: 
-    - Name: StageNodeData
+    - Name: GroupNodeData
       Entry: 6
       Data: 
     - Name: 
@@ -230,13 +233,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 322710213
+      Data: 950138884
     - Name: $v
       Entry: 7
       Data: 8|Battle.AbilityNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 322710213
+      Data: 950138884
     - Name: NodeType
       Entry: 3
       Data: 0
@@ -244,6 +247,9 @@ MonoBehaviour:
       Entry: 3
       Data: -1
     - Name: Depth
+      Entry: 3
+      Data: 0
+    - Name: BelongGroupId
       Entry: 3
       Data: 0
     - Name: ChildrenIds
@@ -282,7 +288,7 @@ MonoBehaviour:
     - Name: TimerNodeData
       Entry: 6
       Data: 
-    - Name: StageNodeData
+    - Name: GroupNodeData
       Entry: 6
       Data: 
     - Name: 
@@ -296,13 +302,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 1259460176
+      Data: 371144272
     - Name: $v
       Entry: 7
       Data: 10|Battle.AbilityNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 1259460176
+      Data: 371144272
     - Name: NodeType
       Entry: 3
       Data: 0
@@ -310,6 +316,9 @@ MonoBehaviour:
       Entry: 3
       Data: -1
     - Name: Depth
+      Entry: 3
+      Data: 0
+    - Name: BelongGroupId
       Entry: 3
       Data: 0
     - Name: ChildrenIds
@@ -348,7 +357,7 @@ MonoBehaviour:
     - Name: TimerNodeData
       Entry: 6
       Data: 
-    - Name: StageNodeData
+    - Name: GroupNodeData
       Entry: 6
       Data: 
     - Name: 
@@ -362,13 +371,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 361545276
+      Data: 1976715322
     - Name: $v
       Entry: 7
       Data: 12|Battle.AbilityNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 361545276
+      Data: 1976715322
     - Name: NodeType
       Entry: 3
       Data: 0
@@ -376,6 +385,9 @@ MonoBehaviour:
       Entry: 3
       Data: -1
     - Name: Depth
+      Entry: 3
+      Data: 0
+    - Name: BelongGroupId
       Entry: 3
       Data: 0
     - Name: ChildrenIds
@@ -414,7 +426,7 @@ MonoBehaviour:
     - Name: TimerNodeData
       Entry: 6
       Data: 
-    - Name: StageNodeData
+    - Name: GroupNodeData
       Entry: 6
       Data: 
     - Name: 
@@ -428,13 +440,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 2010224807
+      Data: 394542900
     - Name: $v
       Entry: 7
       Data: 14|Battle.AbilityNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 2010224807
+      Data: 394542900
     - Name: NodeType
       Entry: 3
       Data: 0
@@ -442,6 +454,9 @@ MonoBehaviour:
       Entry: 3
       Data: -1
     - Name: Depth
+      Entry: 3
+      Data: 0
+    - Name: BelongGroupId
       Entry: 3
       Data: 0
     - Name: ChildrenIds
@@ -452,10 +467,10 @@ MonoBehaviour:
       Data: 2
     - Name: 
       Entry: 3
-      Data: 638662993
+      Data: 856024479
     - Name: 
       Entry: 3
-      Data: 924301288
+      Data: 57905076
     - Name: 
       Entry: 13
       Data: 
@@ -486,7 +501,7 @@ MonoBehaviour:
     - Name: TimerNodeData
       Entry: 6
       Data: 
-    - Name: StageNodeData
+    - Name: GroupNodeData
       Entry: 6
       Data: 
     - Name: 
@@ -500,13 +515,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 123279527
+      Data: 1608405216
     - Name: $v
       Entry: 7
       Data: 16|Battle.AbilityNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 123279527
+      Data: 1608405216
     - Name: NodeType
       Entry: 3
       Data: 0
@@ -514,6 +529,9 @@ MonoBehaviour:
       Entry: 3
       Data: -1
     - Name: Depth
+      Entry: 3
+      Data: 0
+    - Name: BelongGroupId
       Entry: 3
       Data: 0
     - Name: ChildrenIds
@@ -552,7 +570,7 @@ MonoBehaviour:
     - Name: TimerNodeData
       Entry: 6
       Data: 
-    - Name: StageNodeData
+    - Name: GroupNodeData
       Entry: 6
       Data: 
     - Name: 
@@ -566,97 +584,40 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 281200384
+      Data: 57905076
     - Name: $v
       Entry: 7
       Data: 18|Battle.AbilityNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 281200384
-    - Name: NodeType
-      Entry: 3
-      Data: 5
-    - Name: Parent
-      Entry: 3
-      Data: 924301288
-    - Name: Depth
-      Entry: 3
-      Data: 2
-    - Name: ChildrenIds
-      Entry: 7
-      Data: 19|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: NextIdInSameLevel
-      Entry: 3
-      Data: 0
-    - Name: ActionNodeData
-      Entry: 6
-      Data: 
-    - Name: BranchNodeData
-      Entry: 6
-      Data: 
-    - Name: EventNodeData
-      Entry: 6
-      Data: 
-    - Name: RepeatNodeData
-      Entry: 6
-      Data: 
-    - Name: VariableNodeData
-      Entry: 6
-      Data: 
-    - Name: CycleNodeData
-      Entry: 3
-      Data: 0
-    - Name: TimerNodeData
-      Entry: 6
-      Data: 
-    - Name: StageNodeData
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 924301288
-    - Name: $v
-      Entry: 7
-      Data: 20|Battle.AbilityNodeData, Assembly-CSharp
-    - Name: NodeId
-      Entry: 3
-      Data: 924301288
+      Data: 57905076
     - Name: NodeType
       Entry: 3
       Data: 7
     - Name: Parent
       Entry: 3
-      Data: 2010224807
+      Data: 394542900
     - Name: Depth
       Entry: 3
       Data: 1
+    - Name: BelongGroupId
+      Entry: 3
+      Data: 0
     - Name: ChildrenIds
       Entry: 7
-      Data: 21|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+      Data: 19|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 3
     - Name: 
       Entry: 3
-      Data: 281200384
+      Data: 379316908
+    - Name: 
+      Entry: 3
+      Data: 769185129
+    - Name: 
+      Entry: 3
+      Data: 1418990556
     - Name: 
       Entry: 13
       Data: 
@@ -671,7 +632,7 @@ MonoBehaviour:
       Data: 
     - Name: BranchNodeData
       Entry: 7
-      Data: 22|Battle.BranchNodeData, Assembly-CSharp
+      Data: 20|Battle.BranchNodeData, Assembly-CSharp
     - Name: Left
       Entry: 6
       Data: 
@@ -681,12 +642,15 @@ MonoBehaviour:
     - Name: Right
       Entry: 6
       Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: EventNodeData
       Entry: 7
-      Data: 23|Battle.EventNodeData, Assembly-CSharp
+      Data: 21|Battle.EventNodeData, Assembly-CSharp
     - Name: EventType
       Entry: 3
       Data: 0
@@ -698,7 +662,7 @@ MonoBehaviour:
       Data: 
     - Name: RepeatNodeData
       Entry: 7
-      Data: 24|Battle.RepeatNodeData, Assembly-CSharp
+      Data: 22|Battle.RepeatNodeData, Assembly-CSharp
     - Name: RepeatOperationType
       Entry: 3
       Data: 0
@@ -719,7 +683,7 @@ MonoBehaviour:
       Data: 
     - Name: VariableNodeData
       Entry: 7
-      Data: 25|Battle.VariableNodeData, Assembly-CSharp
+      Data: 23|Battle.VariableNodeData, Assembly-CSharp
     - Name: OperationType
       Entry: 3
       Data: 0
@@ -740,7 +704,7 @@ MonoBehaviour:
       Data: 0
     - Name: TimerNodeData
       Entry: 7
-      Data: 26|Battle.TimerNodeData, Assembly-CSharp
+      Data: 24|Battle.TimerNodeData, Assembly-CSharp
     - Name: FirstInterval
       Entry: 4
       Data: 0
@@ -753,10 +717,10 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: StageNodeData
+    - Name: GroupNodeData
       Entry: 7
-      Data: 27|Battle.StageNodeData, Assembly-CSharp
-    - Name: StageId
+      Data: 25|Battle.GroupNodeData, Assembly-CSharp
+    - Name: GroupId
       Entry: 3
       Data: 1
     - Name: Desc
@@ -779,31 +743,31 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 638662993
+      Data: 164373027
     - Name: $v
       Entry: 7
-      Data: 28|Battle.AbilityNodeData, Assembly-CSharp
+      Data: 26|Battle.AbilityNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 638662993
+      Data: 164373027
     - Name: NodeType
       Entry: 3
-      Data: 7
+      Data: 5
     - Name: Parent
       Entry: 3
-      Data: 2010224807
+      Data: 1418990556
     - Name: Depth
+      Entry: 3
+      Data: 3
+    - Name: BelongGroupId
       Entry: 3
       Data: 1
     - Name: ChildrenIds
       Entry: 7
-      Data: 29|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+      Data: 27|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 3
-      Data: 2028882694
+      Data: 0
     - Name: 
       Entry: 13
       Data: 
@@ -812,13 +776,347 @@ MonoBehaviour:
       Data: 
     - Name: NextIdInSameLevel
       Entry: 3
-      Data: 924301288
+      Data: 917026112
+    - Name: ActionNodeData
+      Entry: 7
+      Data: 28|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 8
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: DebugMessage
+    - Name: ParamCount
+      Entry: 3
+      Data: 5
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: flag
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 29|System.String, mscorlib
+    - Name: 
+      Entry: 1
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: msg
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 30|System.String, mscorlib
+    - Name: 
+      Entry: 1
+      Data: "\u8BA1\u65F6\u5668\u5F00\u59CB \u5F53\u524DCount {0}"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: GetVariable
+    - Name: ParamCount
+      Entry: 3
+      Data: 2
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: Battle.EVariableRange, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    - Name: ParamName
+      Entry: 1
+      Data: range
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 31|Battle.EVariableRange, Assembly-CSharp
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: name
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 32|System.String, mscorlib
+    - Name: 
+      Entry: 1
+      Data: count
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: p2
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 33|System.Object, mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: p3
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 34|System.Object, mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BranchNodeData
+      Entry: 6
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 6
+      Data: 
+    - Name: CycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1418990556
+    - Name: $v
+      Entry: 7
+      Data: 35|Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 1418990556
+    - Name: NodeType
+      Entry: 3
+      Data: 6
+    - Name: Parent
+      Entry: 3
+      Data: 57905076
+    - Name: Depth
+      Entry: 3
+      Data: 2
+    - Name: BelongGroupId
+      Entry: 3
+      Data: 1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 36|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 164373027
+    - Name: 
+      Entry: 3
+      Data: 917026112
+    - Name: 
+      Entry: 3
+      Data: 1450702202
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 0
     - Name: ActionNodeData
       Entry: 6
       Data: 
     - Name: BranchNodeData
       Entry: 7
-      Data: 30|Battle.BranchNodeData, Assembly-CSharp
+      Data: 37|Battle.BranchNodeData, Assembly-CSharp
     - Name: Left
       Entry: 6
       Data: 
@@ -828,12 +1126,15 @@ MonoBehaviour:
     - Name: Right
       Entry: 6
       Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: EventNodeData
       Entry: 7
-      Data: 31|Battle.EventNodeData, Assembly-CSharp
+      Data: 38|Battle.EventNodeData, Assembly-CSharp
     - Name: EventType
       Entry: 3
       Data: 0
@@ -845,7 +1146,7 @@ MonoBehaviour:
       Data: 
     - Name: RepeatNodeData
       Entry: 7
-      Data: 32|Battle.RepeatNodeData, Assembly-CSharp
+      Data: 39|Battle.RepeatNodeData, Assembly-CSharp
     - Name: RepeatOperationType
       Entry: 3
       Data: 0
@@ -866,7 +1167,7 @@ MonoBehaviour:
       Data: 
     - Name: VariableNodeData
       Entry: 7
-      Data: 33|Battle.VariableNodeData, Assembly-CSharp
+      Data: 40|Battle.VariableNodeData, Assembly-CSharp
     - Name: OperationType
       Entry: 3
       Data: 0
@@ -887,23 +1188,23 @@ MonoBehaviour:
       Data: 0
     - Name: TimerNodeData
       Entry: 7
-      Data: 34|Battle.TimerNodeData, Assembly-CSharp
+      Data: 41|Battle.TimerNodeData, Assembly-CSharp
     - Name: FirstInterval
       Entry: 4
-      Data: 0
+      Data: 4
     - Name: Interval
       Entry: 4
       Data: 0
     - Name: MaxCount
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
-    - Name: StageNodeData
+    - Name: GroupNodeData
       Entry: 7
-      Data: 35|Battle.StageNodeData, Assembly-CSharp
-    - Name: StageId
+      Data: 42|Battle.GroupNodeData, Assembly-CSharp
+    - Name: GroupId
       Entry: 3
       Data: 0
     - Name: Desc
@@ -911,7 +1212,7 @@ MonoBehaviour:
       Data: 
     - Name: IsDefaultStart
       Entry: 5
-      Data: true
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -926,25 +1227,28 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 2028882694
+      Data: 825318683
     - Name: $v
       Entry: 7
-      Data: 36|Battle.AbilityNodeData, Assembly-CSharp
+      Data: 43|Battle.AbilityNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 2028882694
+      Data: 825318683
     - Name: NodeType
       Entry: 3
       Data: 5
     - Name: Parent
       Entry: 3
-      Data: 638662993
+      Data: 1450702202
     - Name: Depth
       Entry: 3
-      Data: 2
+      Data: 4
+    - Name: BelongGroupId
+      Entry: 3
+      Data: 1
     - Name: ChildrenIds
       Entry: 7
-      Data: 37|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+      Data: 44|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 0
@@ -956,9 +1260,78 @@ MonoBehaviour:
       Data: 
     - Name: NextIdInSameLevel
       Entry: 3
-      Data: 0
+      Data: 898682493
     - Name: ActionNodeData
+      Entry: 7
+      Data: 45|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
       Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: SetNextStageId
+    - Name: ParamCount
+      Entry: 3
+      Data: 1
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: id
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 46|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
       Data: 
     - Name: BranchNodeData
       Entry: 6
@@ -978,7 +1351,1267 @@ MonoBehaviour:
     - Name: TimerNodeData
       Entry: 6
       Data: 
-    - Name: StageNodeData
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 917026112
+    - Name: $v
+      Entry: 7
+      Data: 47|Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 917026112
+    - Name: NodeType
+      Entry: 3
+      Data: 2
+    - Name: Parent
+      Entry: 3
+      Data: 1418990556
+    - Name: Depth
+      Entry: 3
+      Data: 3
+    - Name: BelongGroupId
+      Entry: 3
+      Data: 1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 48|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 1452415415
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 1450702202
+    - Name: ActionNodeData
+      Entry: 6
+      Data: 
+    - Name: BranchNodeData
+      Entry: 7
+      Data: 49|Battle.BranchNodeData, Assembly-CSharp
+    - Name: Left
+      Entry: 7
+      Data: 50|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: GetVariable
+    - Name: ParamCount
+      Entry: 3
+      Data: 2
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: Battle.EVariableRange, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    - Name: ParamName
+      Entry: 1
+      Data: range
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 51|Battle.EVariableRange, Assembly-CSharp
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: name
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 52|System.String, mscorlib
+    - Name: 
+      Entry: 1
+      Data: count
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ResType
+      Entry: 3
+      Data: 3
+    - Name: Right
+      Entry: 7
+      Data: 53|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 54|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Desc
+      Entry: 1
+      Data: count > 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 6
+      Data: 
+    - Name: CycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1450702202
+    - Name: $v
+      Entry: 7
+      Data: 55|Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 1450702202
+    - Name: NodeType
+      Entry: 3
+      Data: 2
+    - Name: Parent
+      Entry: 3
+      Data: 1418990556
+    - Name: Depth
+      Entry: 3
+      Data: 3
+    - Name: BelongGroupId
+      Entry: 3
+      Data: 1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 56|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 825318683
+    - Name: 
+      Entry: 3
+      Data: 898682493
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 0
+    - Name: ActionNodeData
+      Entry: 6
+      Data: 
+    - Name: BranchNodeData
+      Entry: 7
+      Data: 57|Battle.BranchNodeData, Assembly-CSharp
+    - Name: Left
+      Entry: 7
+      Data: 58|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: GetVariable
+    - Name: ParamCount
+      Entry: 3
+      Data: 2
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: Battle.EVariableRange, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    - Name: ParamName
+      Entry: 1
+      Data: range
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 9
+      Data: 51
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: name
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 59|System.String, mscorlib
+    - Name: 
+      Entry: 1
+      Data: count
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ResType
+      Entry: 3
+      Data: 1
+    - Name: Right
+      Entry: 7
+      Data: 60|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 61|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Desc
+      Entry: 1
+      Data: count<=5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 6
+      Data: 
+    - Name: CycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1452415415
+    - Name: $v
+      Entry: 7
+      Data: 62|Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 1452415415
+    - Name: NodeType
+      Entry: 3
+      Data: 5
+    - Name: Parent
+      Entry: 3
+      Data: 917026112
+    - Name: Depth
+      Entry: 3
+      Data: 4
+    - Name: BelongGroupId
+      Entry: 3
+      Data: 1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 63|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 0
+    - Name: ActionNodeData
+      Entry: 7
+      Data: 64|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: StopStage
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BranchNodeData
+      Entry: 6
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 6
+      Data: 
+    - Name: CycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 856024479
+    - Name: $v
+      Entry: 7
+      Data: 65|Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 856024479
+    - Name: NodeType
+      Entry: 3
+      Data: 3
+    - Name: Parent
+      Entry: 3
+      Data: 394542900
+    - Name: Depth
+      Entry: 3
+      Data: 1
+    - Name: BelongGroupId
+      Entry: 3
+      Data: 0
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 66|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 57905076
+    - Name: ActionNodeData
+      Entry: 6
+      Data: 
+    - Name: BranchNodeData
+      Entry: 6
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 7
+      Data: 67|Battle.VariableNodeData, Assembly-CSharp
+    - Name: OperationType
+      Entry: 3
+      Data: 0
+    - Name: Range
+      Entry: 3
+      Data: 2
+    - Name: Name
+      Entry: 1
+      Data: count
+    - Name: VarParams
+      Entry: 7
+      Data: 68|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 69|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 769185129
+    - Name: $v
+      Entry: 7
+      Data: 70|Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 769185129
+    - Name: NodeType
+      Entry: 3
+      Data: 3
+    - Name: Parent
+      Entry: 3
+      Data: 57905076
+    - Name: Depth
+      Entry: 3
+      Data: 2
+    - Name: BelongGroupId
+      Entry: 3
+      Data: 1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 71|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 1418990556
+    - Name: ActionNodeData
+      Entry: 6
+      Data: 
+    - Name: BranchNodeData
+      Entry: 6
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 7
+      Data: 72|Battle.VariableNodeData, Assembly-CSharp
+    - Name: OperationType
+      Entry: 3
+      Data: 1
+    - Name: Range
+      Entry: 3
+      Data: 2
+    - Name: Name
+      Entry: 1
+      Data: count
+    - Name: VarParams
+      Entry: 7
+      Data: 73|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: IntSelfAdditive
+    - Name: ParamCount
+      Entry: 3
+      Data: 1
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: GetVariable
+    - Name: ParamCount
+      Entry: 3
+      Data: 2
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: Battle.EVariableRange, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    - Name: ParamName
+      Entry: 1
+      Data: range
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 9
+      Data: 51
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: name
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 74|System.String, mscorlib
+    - Name: 
+      Entry: 1
+      Data: count
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 379316908
+    - Name: $v
+      Entry: 7
+      Data: 75|Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 379316908
+    - Name: NodeType
+      Entry: 3
+      Data: 5
+    - Name: Parent
+      Entry: 3
+      Data: 57905076
+    - Name: Depth
+      Entry: 3
+      Data: 2
+    - Name: BelongGroupId
+      Entry: 3
+      Data: 1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 76|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 769185129
+    - Name: ActionNodeData
+      Entry: 7
+      Data: 77|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 6
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: DebugMessage
+    - Name: ParamCount
+      Entry: 3
+      Data: 5
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: flag
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 9
+      Data: 29
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: msg
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 78|System.String, mscorlib
+    - Name: 
+      Entry: 1
+      Data: "\u9636\u6BB5\u5F00\u59CB"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: p1
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 79|System.Object, mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: p2
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 80|System.Object, mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: p3
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 81|System.Object, mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BranchNodeData
+      Entry: 6
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 6
+      Data: 
+    - Name: CycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 898682493
+    - Name: $v
+      Entry: 7
+      Data: 82|Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 898682493
+    - Name: NodeType
+      Entry: 3
+      Data: 5
+    - Name: Parent
+      Entry: 3
+      Data: 1450702202
+    - Name: Depth
+      Entry: 3
+      Data: 4
+    - Name: BelongGroupId
+      Entry: 3
+      Data: 1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 83|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 0
+    - Name: ActionNodeData
+      Entry: 7
+      Data: 84|Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: StopStage
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: BranchNodeData
+      Entry: 6
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 6
+      Data: 
+    - Name: CycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
       Entry: 6
       Data: 
     - Name: 
@@ -995,18 +2628,90 @@ MonoBehaviour:
       Data: 
     - Name: SpecializationData
       Entry: 7
-      Data: 38|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Object,
+      Data: 85|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Object,
         mscorlib]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 39|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+      Data: 86|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
         mscorlib]], mscorlib
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: SkillType
+    - Name: $v
+      Entry: 7
+      Data: 87|Battle.ESkillType, Assembly-CSharp
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: TargetType
+    - Name: $v
+      Entry: 7
+      Data: 88|Battle.ESkillTargetType, Assembly-CSharp
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: CDMode
+    - Name: $v
+      Entry: 7
+      Data: 89|Battle.ECDMode, Assembly-CSharp
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: ResCostType
+    - Name: $v
+      Entry: 7
+      Data: 90|Battle.EResCostType, Assembly-CSharp
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 7
       Data: 
@@ -1015,7 +2720,7 @@ MonoBehaviour:
       Data: SkillResCheck
     - Name: $v
       Entry: 7
-      Data: 40|System.Collections.Generic.List`1[[System.Collections.Generic.List`1[[Battle.ResCheckItem,
+      Data: 91|System.Collections.Generic.List`1[[System.Collections.Generic.List`1[[Battle.ResCheckItem,
         Assembly-CSharp]], mscorlib]], mscorlib
     - Name: 
       Entry: 12
@@ -1037,7 +2742,8 @@ MonoBehaviour:
       Data: 
   Type: 0
   ConfigId: 1231
-  Name: "\u6309\u65F6\u53D1\u653E"
-  Desc: 
+  Name: 1111
+  Desc: ffffffffffff
   IconPath: 
   Tags: 
+  DefaultStartGroupId: 1

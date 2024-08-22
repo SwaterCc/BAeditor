@@ -81,6 +81,8 @@ namespace Editor.AbilityEditor
 
             if (_removeIdx >= 0)
             {
+                string path = AbilityEditorMainWindow.SKILL_DATA_PATH + $"{configItemList.Items[_removeIdx]}.asset";
+                AssetDatabase.DeleteAsset(path);
                 configItemList.Items.Remove(_removeIdx);
                 _removeIdx = -1;
                 this.ValueEntry.SmartValue.MainWindow.ForceMenuTreeRebuild();

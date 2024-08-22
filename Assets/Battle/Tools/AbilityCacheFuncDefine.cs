@@ -20,10 +20,16 @@ namespace Battle.Tools
         public static void NothingToDo() { }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void SetNextStageId(int id) { }
+        public static void SetNextStageId(int id)
+        {
+            Ability.Context.CurrentAbility.SetNextGroupId(id);
+        }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void StopStage() { }
+        public static void StopStage()
+        {
+            Ability.Context.CurrentAbility.StopGroup();
+        }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void DebugMessage(string flag, string msg, object p1, object p2, object p3)

@@ -4,7 +4,7 @@ namespace Battle
     {
         private interface IGroupNodeProxy
         {
-            public int GetId();
+            public int GetGroupId();
             public void GroupBegin();
             public void GroupEnd();
         }
@@ -15,11 +15,11 @@ namespace Battle
             
             public AbilityGroupNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _groupData = data.groupNodeData;
+                _groupData = data.GroupNodeData;
             }
             public override void DoJob()
             {
-               
+                
             }
 
             public override int GetNextNode()
@@ -39,13 +39,14 @@ namespace Battle
                 return -1;
             }
 
-            public int GetId()
+            public int GetGroupId()
             {
                 return _groupData.GroupId;
             }
             
             public void GroupBegin()
             {
+                ((Executing)_executor.State.Current).NextGroupId = -1;
                 resetChildren();
                 _executor.ExecuteNode(NodeData.ChildrenIds[0]);
             }

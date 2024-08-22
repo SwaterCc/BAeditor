@@ -15,7 +15,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return $"Group ID <{NodeData.groupNodeData.GroupId}> " + NodeData.groupNodeData.Desc;
+            return $"Group ID <{NodeData.GroupNodeData.GroupId}> " + NodeData.GroupNodeData.Desc;
         }
 
         protected override void OnBtnClicked()

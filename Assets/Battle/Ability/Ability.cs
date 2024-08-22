@@ -102,6 +102,22 @@ namespace Battle
             _state.Tick(dt);
         }
 
+        public void SetNextGroupId(int id)
+        {
+            if (_state.Current.CurState == EAbilityState.Executing)
+            {
+                ((Executing)_state.Current).NextGroupId = id;
+            }
+        }
+
+        public void StopGroup()
+        {
+            if (_state.Current.CurState == EAbilityState.Executing)
+            {
+                ((Executing)_state.Current).CurrentGroupStop();
+            }
+        }
+        
         public void OnDestroy()
         {
             _state.OnDestroy();

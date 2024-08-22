@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 namespace Battle.Skill
@@ -17,6 +18,7 @@ namespace Battle.Skill
         Custom
     }
 
+    [Serializable]
     public class SpecializationData
     {
         [LabelText("命名")] public string Name = "";
@@ -73,6 +75,8 @@ namespace Battle.Skill
             {
                 VARIABLE.UpdateTypeStr();
             }
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
         }
     }
 }

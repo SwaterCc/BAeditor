@@ -13,22 +13,17 @@ namespace Editor.AbilityEditor.TreeItem
         [LabelText("阶段描述")]
         public string Desc;
         
-        [BoxGroup("Group配置")]
-        [LabelText("是否为默认开启阶段")]
-        public bool IsDefaultStart;
         
         protected override void onInit()
         {
-            StageId = NodeData.groupNodeData.GroupId;
-            Desc = NodeData.groupNodeData.Desc;
-            IsDefaultStart = NodeData.groupNodeData.IsDefaultStart;
+            GroupId = NodeData.GroupNodeData.GroupId;
+            Desc = NodeData.GroupNodeData.Desc;
         }
 
         protected override void OnDestroy()
         {
-            NodeData.groupNodeData.GroupId = StageId;
-            NodeData.groupNodeData.Desc = Desc;
-            NodeData.groupNodeData.IsDefaultStart = IsDefaultStart;
+            NodeData.GroupNodeData.GroupId = GroupId;
+            NodeData.GroupNodeData.Desc = Desc;
             base.OnDestroy();
         }
     }

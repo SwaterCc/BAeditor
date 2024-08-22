@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using AbilityRes;
 using Battle;
+using Battle.Skill;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -38,6 +40,37 @@ namespace Editor.AbilityEditor
         public AbilityView(AbilityData baseConfig)
         {
             Data = baseConfig;
+
+            SpecializationDataTemplate template = null;
+            switch (Data.Type)
+            {
+                case EAbilityType.Skill:
+                    template = AssetDatabase.LoadAssetAtPath(
+                        "Assets/AbilityRes/BattleEditorData/SkillSpecializatioTmp.asset",
+                        typeof(SpecializationDataTemplate)) as SpecializationDataTemplate;
+                    break;
+                case EAbilityType.Buff:
+                    template = AssetDatabase.LoadAssetAtPath(
+                        "Assets/AbilityRes/BattleEditorData/BuffSpecializationTmp.asset",
+                        typeof(SpecializationDataTemplate)) as SpecializationDataTemplate;
+                    break;
+                case EAbilityType.Bullet:
+                    template = AssetDatabase.LoadAssetAtPath(
+                        "Assets/AbilityRes/BattleEditorData/BulletSpecializationTmp.asset",
+                        typeof(SpecializationDataTemplate)) as SpecializationDataTemplate;
+                    break;
+            }
+            
+            if(template == null) return;
+            
+            foreach (var field in template.fieldList)
+            {
+                var fieldType = Type.GetType(field.TypeStr);
+                if (!Data.SpecializationData.ContainsKey(field.Name))
+                {
+                    Data.SpecializationData.Add(field.Name, fieldType?.InstantiateDefault(true));
+                }
+            }
         }
 
         public string GetOdinMenuTreeItemLabel()
@@ -45,8 +78,30 @@ namespace Editor.AbilityEditor
             return $"{Data.ConfigId}->{Data.Name}";
         }
 
+        public static void UpdateGroupId(AbilityData data)
+        {
+            foreach (var pair in data.NodeDict)
+            {
+                var node = pair.Value;
+
+                int parentId = node.Parent;
+                while (parentId > 0)
+                {
+                    var parentNode = data.NodeDict[parentId];
+                    if (parentNode.NodeType == EAbilityNodeType.EGroup)
+                    {
+                        node.BelongGroupId = parentNode.GroupNodeData.GroupId;
+                        break;
+                    }
+
+                    parentId = parentNode.Parent;
+                }
+            }
+        }
+        
         public void Save()
         {
+            AbilityView.UpdateGroupId(Data);
             EditorUtility.SetDirty(Data);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -92,15 +147,20 @@ namespace Editor.AbilityEditor
 
             return null;
         }
-
+        
         protected override void DrawPropertyLayout(GUIContent label)
         {
             var itemShowView = this.ValueEntry.SmartValue;
             _scrollViewPos = GUILayout.BeginScrollView(_scrollViewPos, false, true);
 
-            SirenixEditorGUI.BeginBox();
-            
-            
+            SirenixEditorGUI.BeginBox("基础数据");
+            EditorGUIUtility.labelWidth = 100;
+            SirenixEditorFields.IntField("配置ID", itemShowView.Data.ConfigId);
+            itemShowView.Data.Name = SirenixEditorFields.TextField("Name", itemShowView.Data.Name);
+            itemShowView.Data.Desc = SirenixEditorFields.TextField("Desc", itemShowView.Data.Desc);
+            itemShowView.Data.IconPath = SirenixEditorFields.TextField("IconPath", itemShowView.Data.IconPath);
+            //tag需要工具
+            itemShowView.Data.DefaultStartGroupId = SirenixEditorFields.IntField("默认开始阶段", itemShowView.Data.DefaultStartGroupId);
             SirenixEditorGUI.EndBox();
             
             foreach (EAbilityCycleType cycle in Enum.GetValues(typeof(EAbilityCycleType)))

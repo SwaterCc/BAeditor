@@ -11,9 +11,7 @@ namespace Battle
         {
             public bool IsFinish();
             public void Add(float dt);
-
             public bool NeedCall();
-
             public void OnCallTimer();
         }
 
@@ -23,8 +21,8 @@ namespace Battle
             protected AbilityExecutor _executor;
             protected AbilityState _state;
 
-            private readonly HashSet<ITimer> _timerNodes;
-            private readonly List<ITimer> _removes;
+            protected readonly HashSet<ITimer> _timerNodes;
+            protected readonly List<ITimer> _removes;
             public EAbilityState CurState => getCurState();
 
             protected AbilityRunCycle(AbilityState state)
@@ -36,7 +34,7 @@ namespace Battle
                 _removes = new List<ITimer>();
             }
 
-            public void TimerStart(ITimer callBack)
+            public virtual void TimerStart(ITimer callBack)
             {
                 _timerNodes.Add(callBack);
             }
@@ -46,6 +44,7 @@ namespace Battle
 
             public void Enter()
             {
+                Debug.Log($"Enter {CurState},CycleType {getCycleType()}");
                 onEnter();
                 if (CurState != EAbilityState.Ready)
                     _executor.ExecuteCycleNode(getCycleType());
@@ -62,7 +61,7 @@ namespace Battle
                     {
                         timer.OnCallTimer();
                     }
-                    
+
                     if (timer.IsFinish())
                     {
                         _removes.Add(timer);
@@ -83,6 +82,7 @@ namespace Battle
 
             public void Exit()
             {
+                Debug.Log($"Exit {CurState},CycleType {getCycleType()}");
                 onExit();
                 _timerNodes.Clear();
                 _removes.Clear();
@@ -115,9 +115,6 @@ namespace Battle
             {
                 //注册事件
                 _executor.RegisterEventNode();
-
-                //初始化特化模板数据
-                //...
             }
 
             public override EAbilityState GetNextState()
@@ -194,7 +191,25 @@ namespace Battle
 
             public IGroupNodeProxy CurProxy;
 
+            public int NextGroupId = -1;
+
+            /// <summary>
+            /// 存储当前组对象的timer
+            /// </summary>
+            private HashSet<ITimer> _groupTimer = new();
+
+            private List<ITimer> _groupRemoveList = new List<ITimer>();
+
             public bool AllStageFinish = true;
+
+            private bool _clearTimer = false;
+
+            /// <summary>
+            /// 执行期最大时长
+            /// </summary>
+            private float _maxTime = 10f;
+
+            private float _startTime = 0;
 
             public Executing(AbilityState state) : base(state) { }
 
@@ -204,15 +219,107 @@ namespace Battle
 
             public override EAbilityState GetNextState() => EAbilityState.EndExecute;
 
+            protected override void onEnter()
+            {
+                _startTime = Time.realtimeSinceStartup;
+            }
+
+            protected override void onExit()
+            {
+                _startTime = 0;
+                NextGroupId = _ability._abilityData.DefaultStartGroupId;
+                CurProxy = null;
+                _groupTimer.Clear();
+            }
+
             public void AddStageProxy(IGroupNodeProxy proxy)
             {
-                _stageNodeProxies.Add(proxy.GetId(), proxy);
+                _stageNodeProxies.Add(proxy.GetGroupId(), proxy);
                 AllStageFinish = false;
+            }
+
+            public override void TimerStart(ITimer callBack)
+            {
+                var node = (AbilityNode)callBack;
+                if (node.NodeData.BelongGroupId == CurProxy.GetGroupId())
+                {
+                    _groupTimer.Add(callBack);
+                }
+                else
+                {
+                    base.TimerStart(callBack);
+                }
+            }
+
+            public void CurrentGroupStop()
+            {
+                //清理当前阶段计时器
+                _clearTimer = true;
+                
+                CurProxy.GroupEnd();
+
+                if (NextGroupId != -1 && _stageNodeProxies.ContainsKey(NextGroupId))
+                {
+                    CurProxy = null;
+                    _startTime = Time.realtimeSinceStartup;
+                }
+                else
+                {
+                    if (NextGroupId != -1)
+                    {
+                        Debug.LogError($"尝试切换到不存在的GroupID :{NextGroupId}");
+                    }
+                    CurProxy = null;
+                    AllStageFinish = true;
+                }
+            }
+
+            protected override void onTick(float dt)
+            {
+                if (_clearTimer)
+                {
+                    _groupTimer.Clear();
+                    _clearTimer = false;
+                }
+                
+                if (NextGroupId != -1 && CurProxy == null)
+                {
+                    CurProxy = _stageNodeProxies[NextGroupId];
+                    CurProxy.GroupBegin();
+                }
+                
+                //阶段定时器自己管理
+                foreach (var timer in _groupTimer)
+                {
+                    timer.Add(dt);
+                    if (timer.NeedCall())
+                    {
+                        timer.OnCallTimer();
+                    }
+
+                    if (timer.IsFinish())
+                    {
+                        _groupRemoveList.Add(timer);
+                    }
+                }
+
+                foreach (var timer in _groupRemoveList)
+                {
+                    _groupTimer.Remove(timer);
+                }
+
+                _groupRemoveList.Clear();
             }
 
             public override bool CanExit()
             {
-                return base.CanExit() && AllStageFinish;
+                bool timeOut = _maxTime < Time.realtimeSinceStartup - _startTime;
+                if (timeOut)
+                {
+                    Debug.LogWarning($"Ability {_ability.Uid} Cid {_ability._abilityData.ConfigId} TimeOut");
+                }
+
+                return (base.CanExit() && AllStageFinish) || timeOut;
             }
         }
 
@@ -224,6 +331,11 @@ namespace Battle
             protected override EAbilityState getCurState() => EAbilityState.EndExecute;
 
             public override EAbilityState GetNextState() => EAbilityState.Ready;
+
+            protected override void onExit()
+            {
+                _ability.GetVariableCollection().Clear();
+            }
         }
     }
 }

@@ -1,3 +1,6 @@
+using Battle.Tools;
+using UnityEngine;
+
 namespace Battle
 {
     public partial class Ability
@@ -12,6 +15,10 @@ namespace Battle
             private int _count;
             private bool _isFirst;
 
+            private float _maxCount;
+            private float _firstInterval;
+            private float _interval;
+
             public AbilityTimerNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
                 _timerData = NodeData.TimerNodeData;
@@ -22,12 +29,35 @@ namespace Battle
                 _duration = 0;
                 _count = 0;
                 _isFirst = true;
+                
+                if (!_timerData.FirstInterval.TryCallFunc(out var firstInterval))
+                {
+                    Debug.LogError("Branch节点执行错误");
+                }
+
+                _firstInterval = (float)firstInterval;
+                
+                if (!_timerData.MaxCount.TryCallFunc(out var maxCount))
+                {
+                    Debug.LogError("Branch节点执行错误");
+                }
+
+                _maxCount = (int)maxCount;
+                
+                if (!_timerData.Interval.TryCallFunc(out var interval))
+                {
+                    Debug.LogError("Branch节点执行错误");
+                }
+
+                _interval = (float)interval;
+                
+                
                 _executor.State.Current.TimerStart(this);
             }
 
             public bool IsFinish()
             {
-                return _count >= _timerData.MaxCount;
+                return _count >= _maxCount;
             }
 
             public void Add(float dt)
@@ -40,11 +70,11 @@ namespace Battle
                 bool res;
                 if (_isFirst)
                 {
-                    res = _duration >= _timerData.FirstInterval;
+                    res = _duration >= _firstInterval;
                 }
                 else
                 {
-                    res = _duration >= _timerData.Interval;
+                    res = _duration >= _interval;
                 }
 
                 return res;

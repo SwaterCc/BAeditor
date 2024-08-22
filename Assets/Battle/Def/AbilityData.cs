@@ -25,6 +25,8 @@ namespace Battle
 
         public int[] Tags;
 
+        public int DefaultStartGroupId;
+
         /// <summary>
         /// 头节点字典
         /// </summary>
@@ -83,6 +85,8 @@ namespace Battle
         public int Parent;
 
         public int Depth;
+
+        public int BelongGroupId = -1;
         
         public List<int> ChildrenIds = new();
 
@@ -102,7 +106,7 @@ namespace Battle
         
         public TimerNodeData TimerNodeData;
         
-        [FormerlySerializedAs("StageNodeData")] public GroupNodeData groupNodeData;
+        public GroupNodeData GroupNodeData;
 
         public void RemoveSelf(AbilityData data)
         {
@@ -128,6 +132,7 @@ namespace Battle
         public Parameter[] Left;
         public ECompareResType ResType;
         public Parameter[] Right;
+        public string Desc;//编辑器描述
     }
     
     [Serializable]
@@ -154,9 +159,9 @@ namespace Battle
     [Serializable]
     public class TimerNodeData
     {
-        public float FirstInterval;
-        public float Interval;
-        public float MaxCount;
+        public Parameter[] FirstInterval;
+        public Parameter[] Interval;
+        public Parameter[] MaxCount;
     }
 
     [Serializable]
