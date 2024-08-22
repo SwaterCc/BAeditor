@@ -50,7 +50,7 @@ namespace Battle
                 }
                 
                 _curCycle.Tick(dt);
-                var whileBegin = Time.realtimeSinceStartup;
+                
                 while (_curCycle.CanExit())
                 {
                     var nextState = _curCycle.GetNextState();
@@ -60,11 +60,6 @@ namespace Battle
                     if (_curCycle.CurState == EAbilityState.Executing)
                     {
                         _hasExecuteOrder = false;
-                    }
-
-                    if (Time.realtimeSinceStartup - whileBegin > 0.1f)
-                    {
-                        break;
                     }
                 }
             }

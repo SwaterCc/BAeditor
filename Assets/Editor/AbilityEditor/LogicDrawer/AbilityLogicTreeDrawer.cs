@@ -94,6 +94,7 @@ namespace Editor.AbilityEditor
                             break;
                     }
 
+                    childNodeData.NextIdInSameLevel = 0;
                     if (idx + 1 < nodeData.ChildrenIds.Count)
                     {
                         idx++;

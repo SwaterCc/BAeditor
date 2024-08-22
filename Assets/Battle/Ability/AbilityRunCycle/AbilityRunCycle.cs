@@ -57,17 +57,15 @@ namespace Battle
             {
                 foreach (var timer in _timerNodes)
                 {
+                    timer.Add(dt);
+                    if (timer.NeedCall())
+                    {
+                        timer.OnCallTimer();
+                    }
+                    
                     if (timer.IsFinish())
                     {
                         _removes.Add(timer);
-                    }
-                    else
-                    {
-                        timer.Add(dt);
-                        if (timer.NeedCall())
-                        {
-                            timer.OnCallTimer();
-                        }
                     }
                 }
 

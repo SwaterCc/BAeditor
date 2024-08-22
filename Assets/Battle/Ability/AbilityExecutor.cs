@@ -140,12 +140,14 @@ namespace Battle
             public void ExecuteNode(int nodeId)
             {
                 var curNode = _nodes[nodeId];
+                Debug.Log($"ExecuteNode start  NodeId {nodeId} NodeType {curNode.NodeData.NodeType}");
                 while (nodeId > 0)
                 {
                     if (!IsPassedNode(nodeId))
                     {
                         curNode.DoJob();
                         PassNode(nodeId);
+                        Debug.Log($"DoJob NodeId {nodeId} NodeType {curNode.NodeData.NodeType}");
                     }
 
                     if (curNode.NodeData.NodeType == EAbilityNodeType.ERepeat)
@@ -154,7 +156,11 @@ namespace Battle
                     }
 
                     var nextNodeId = curNode.GetNextNode();
-                    
+                    Debug.Log($"DoJob nextNodeId {nextNodeId}");
+                    if (nextNodeId != -1)
+                    {
+                        Debug.Log($"NextNodeType {_nodes[nextNodeId].NodeData.NodeType}");
+                    }
                     
                     if (_repeatNodeIds.Count > 0 && nextNodeId == _repeatNodeIds.Peek())
                     {
@@ -171,12 +177,17 @@ namespace Battle
                             continue;
                         }
                     }
-
+                    
                     if (nextNodeId != -1)
                     {
                         curNode = _nodes[nextNodeId];
                     }
-
+                    
+                    if (curNode.NodeData.NodeType == EAbilityNodeType.ETimer && IsPassedNode(nextNodeId))
+                    {
+                        nextNodeId = -1;
+                    }
+                    
                     nodeId = nextNodeId;
                 }
             }

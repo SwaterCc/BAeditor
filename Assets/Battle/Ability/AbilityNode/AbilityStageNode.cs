@@ -13,6 +13,8 @@ namespace Battle
         {
             private StageNodeData _stageData;
 
+            
+            
             public AbilityStageNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
                 _stageData = data.StageNodeData;

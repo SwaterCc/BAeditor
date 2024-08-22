@@ -27,7 +27,7 @@ namespace Battle
 
             public bool IsFinish()
             {
-                return _count > _timerData.MaxCount;
+                return _count >= _timerData.MaxCount;
             }
 
             public void Add(float dt)
@@ -40,14 +40,11 @@ namespace Battle
                 bool res;
                 if (_isFirst)
                 {
-                    _isFirst = false;
                     res = _duration >= _timerData.FirstInterval;
-                    _duration = 0;
                 }
                 else
                 {
                     res = _duration >= _timerData.Interval;
-                    _duration = 0;
                 }
 
                 return res;
@@ -56,6 +53,8 @@ namespace Battle
             public void OnCallTimer()
             {
                 ++_count;
+                _duration = 0;
+                _isFirst = false;
                 resetChildren();
                 _executor.ExecuteNode(NodeData.ChildrenIds[0]);
             }
