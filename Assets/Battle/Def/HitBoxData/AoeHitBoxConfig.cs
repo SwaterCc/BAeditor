@@ -6,8 +6,8 @@ namespace BattleAbility
     /// <summary>
     /// 范围打击点定义
     /// </summary>
-    [CreateAssetMenu(menuName = "战斗编辑器/AoeHitData")] 
-    public class AoeHitData : HitData
+    [CreateAssetMenu(menuName = "战斗编辑器/AoeHitBoxConfig")] 
+    public class AoeHitBoxConfig : HitBoxConfig
     {
         public EHitAreaType HitAreaType;
 

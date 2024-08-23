@@ -8,7 +8,7 @@ namespace BattleAbility
     /// <summary>
     /// 打击数据
     /// </summary>
-    public class HitData : SerializedScriptableObject
+    public class HitBoxConfig : SerializedScriptableObject
     { 
         /// <summary>
         /// 打击点唯一ID
@@ -34,15 +34,15 @@ namespace BattleAbility
         /// 打击点有效次数
         /// </summary>
         public int ValidCount;
-
+        
+        /// <summary>
+        /// 单次检测帧数
+        /// </summary>
+        public int EffectTime;
+        
         /// <summary>
         /// 打击点检测间隔
         /// </summary>
         public long Interval;
-        
-        /// <summary>
-        /// Damage 静态字段 TODO:临时做法，后续要接Excel
-        /// </summary>
-        public Dictionary<string, object> Damage = new Dictionary<string, object>();
     }
 }

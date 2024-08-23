@@ -12,11 +12,11 @@ using Object = UnityEngine.Object;
 namespace Battle
 {
     /// <summary>
-    /// 打击盒
+    /// 打击盒 本质上是伤害信息收集器
     /// </summary>
     public class HitBox : Actor
     {
-        private HitData _hitData;
+        private HitBoxConfig _hitBoxConfig;
 
         private float _duration;
 
@@ -29,15 +29,22 @@ namespace Battle
         private List<IBeHurt> _beHurtList;
 
         private bool _isLoaded;
-        
+
         /// <summary>
-        /// 召唤者
+        /// 来源id，所有的来源来自于Ability
         /// </summary>
         private int _source;
+        
+        /// <summary>
+        /// 召唤者id
+        /// </summary>
+        private int _summerId;
 
         private int _targetId;
 
         private ESelectPosType _selectPosType;
+
+       // private EDamageType _damageType;
 
         public HitBox(int configId, int source, ESelectPosType selectPosType)
         {
@@ -63,16 +70,16 @@ namespace Battle
         
         private async UniTask loadHitData()
         {
-            _hitData = await Addressables
-                .LoadAssetAsync<HitData>($"Assets/AbilityData/HitData/{ConfigId}.asset")
+            _hitBoxConfig = await Addressables
+                .LoadAssetAsync<HitBoxConfig>($"Assets/AbilityData/HitBoxConfig/{ConfigId}.asset")
                 .ToUniTask();
-            _intervalDuration = _hitData.Interval;
+            _intervalDuration = _hitBoxConfig.Interval;
         }
 
         private async UniTask createHitPrefab()
         {
             string path = "";
-            switch (((AoeHitData)_hitData).HitAreaType)
+            switch (((AoeHitBoxConfig)_hitBoxConfig).HitAreaType)
             {
                 case EHitAreaType.Rect:
                     path = "Assets/HitBox/Cube.prefab";
@@ -110,12 +117,12 @@ namespace Battle
             if (actor == null) return;
 
             var actorPos = (Vector3)(actor.GetAttrCollection().GetAttr(EAttributeType.Position).GetBox());
-            _hitBoxObject.transform.position = ((AoeHitData)_hitData).HitAreaData.Offset + actorPos;
+            _hitBoxObject.transform.position = ((AoeHitBoxConfig)_hitBoxConfig).HitAreaData.Offset + actorPos;
         }
 
         private void getTarget()
         {
-            var lockHit = (LockTargetHitData)_hitData;
+            var lockHit = (LockTargetHitBoxConfig)_hitBoxConfig;
             foreach (var actorId in lockHit.TargetIds)
             {
                 var actor = BattleManager.Instance.GetActor(actorId);
@@ -123,13 +130,13 @@ namespace Battle
             }
         }
 
-        private void onHit(Dictionary<string, object> damage)
+        private void check()
         {
             foreach (var beHurt in _beHurtList)
             {
                 BattleEventManager.Instance.TriggerEvent(EBattleEventType.Hit, new HitEventInfo());
                 //调用自身Ability
-                beHurt.BeHurt(damage);
+                //beHurt.BeHurt(damage);
             }
         }
 
@@ -140,9 +147,9 @@ namespace Battle
             if(!_isLoaded) return;
             
             //有效时间
-            if (_duration >= _hitData.DelayTime && _duration <= _hitData.DelayTime + _hitData.Duration)
+            if (_duration >= _hitBoxConfig.DelayTime && _duration <= _hitBoxConfig.DelayTime + _hitBoxConfig.Duration)
             {
-                switch (_hitData.HitType)
+                switch (_hitBoxConfig.HitType)
                 {
                     case EHitType.Aoe:
                         _beHurtList = _hitBoxObject.GetHitList();
@@ -152,9 +159,9 @@ namespace Battle
                         break;
                 }
 
-                if (_intervalDuration >= _hitData.Interval)
+                if (_intervalDuration >= _hitBoxConfig.Interval)
                 {
-                    onHit(_hitData.Damage);
+                    check();
                     _intervalDuration = 0;
                     
                 }
@@ -163,7 +170,7 @@ namespace Battle
             _intervalDuration += dt;
             _duration += dt;
 
-            if (_duration >= _hitData.Duration + _hitData.DelayTime)
+            if (_duration >= _hitBoxConfig.Duration + _hitBoxConfig.DelayTime)
             {
                 _isDisposable = true;
             }

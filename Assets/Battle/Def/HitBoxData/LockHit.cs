@@ -6,7 +6,7 @@ namespace BattleAbility
     /// 锁定打击点
     /// </summary>
     [CreateAssetMenu(menuName = "战斗编辑器/LockHitData")] 
-    public class LockTargetHitData : HitData
+    public class LockTargetHitBoxConfig : HitBoxConfig
     {
         /// <summary>
         /// 锁定目标

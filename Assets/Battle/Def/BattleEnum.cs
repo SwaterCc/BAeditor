@@ -11,6 +11,17 @@ namespace Battle
         Buff,
         Bullet,
     }
+
+    /// <summary>
+    /// 对象类型
+    /// </summary>
+    public enum EActorType
+    {
+        Pawn,
+        Monster,
+        Building,
+        HitBox,
+    }
     
     /// <summary>
     /// 当前Ability执行到哪一步了
