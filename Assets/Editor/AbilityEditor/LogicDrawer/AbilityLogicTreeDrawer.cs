@@ -255,7 +255,7 @@ namespace Editor.AbilityEditor
         /// <returns></returns>
         protected override bool CanStartDrag(CanStartDragArgs args)
         {
-            return true;
+            return args.draggedItem is not CycleTreeItem;
         }
 
         /// <summary>
@@ -294,6 +294,41 @@ namespace Editor.AbilityEditor
             if (args.performDrop)
             {
                 var draggedItems = (List<AbilityLogicTreeItem>)genericData;
+                
+                bool CheckLoop(TreeViewItem item)
+                {
+                    if (item.children == null)
+                    {
+                        return false;
+                    }
+                    
+                    foreach (var child in item.children)
+                    {
+                        if (child == args.parentItem)
+                        {
+                            return true;
+                        }
+
+                        return CheckLoop(child);
+                    }
+
+                    return false;
+                }
+                
+                foreach (var draggedItem in draggedItems)
+                {
+                    //子节点拖到自己身上不移动
+                    if (draggedItem == args.parentItem)
+                    {
+                        return DragAndDropVisualMode.None;
+                    }
+                    
+                    if (CheckLoop(draggedItem))
+                    {
+                        return  DragAndDropVisualMode.None;
+                    }
+                }
+                
                 foreach (var treeViewItem in draggedItems)
                 {
                     var parentItem = (AbilityLogicTreeItem)args.parentItem;

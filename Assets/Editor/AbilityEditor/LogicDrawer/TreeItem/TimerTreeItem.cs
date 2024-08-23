@@ -1,5 +1,8 @@
 using Battle;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
@@ -25,4 +28,49 @@ namespace Editor.AbilityEditor.TreeItem
             TimerNodeDataWindow.Open(NodeData);
         }
     }
+    
+    public class TimerNodeDataWindow : BaseNodeWindow<TimerNodeDataWindow>, IWindowInit
+    {
+        private ParameterMaker _firstInterval;
+        private ParameterMaker _interval;
+        private ParameterMaker _maxCount;
+        
+        protected override void onInit()
+        {
+            _firstInterval = new ParameterMaker();
+            ParameterMaker.Init(_firstInterval,NodeData.TimerNodeData.FirstInterval);
+            _interval = new ParameterMaker();
+            ParameterMaker.Init(_interval,NodeData.TimerNodeData.Interval);
+            _maxCount = new ParameterMaker();
+            ParameterMaker.Init(_maxCount,NodeData.TimerNodeData.MaxCount);
+        }
+
+        public override Rect GetPos()
+        {
+            return GUIHelper.GetEditorWindowRect().AlignCenter(400, 120);
+        }
+
+        private void OnGUI()
+        {
+            SirenixEditorGUI.BeginBox("配置计时器");
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("第一次调用间隔 float");
+            _firstInterval.Draw();
+            EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("调用间隔 float");
+            _interval.Draw();
+            EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("最大调用次数 int");
+            _maxCount.Draw();
+            EditorGUILayout.EndHorizontal();
+
+            SirenixEditorGUI.EndBox();
+            
+        }
+    }
+    
 }

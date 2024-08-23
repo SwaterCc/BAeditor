@@ -36,12 +36,7 @@ namespace Editor.AbilityEditor
             Self = new Parameter();
             Self.IsFunc = true;
             Self.FuncName = funcName;
-            MethodInfo methodInfo = null;
-            if (FuncWindow.MethodCache.TryGetValue(Self.FuncName, out var methodInfos))
-            {
-                methodInfo = methodInfos[0];
-            }
-            else
+            if (!FuncWindow.MethodCache.TryGetValue(Self.FuncName, out var methodInfo))
             {
                 Debug.LogError($"{Self.FuncName} 该函数未定义！");
                 return;

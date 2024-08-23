@@ -1,5 +1,6 @@
 using System;
 using Battle;
+using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -38,6 +39,11 @@ namespace Editor.AbilityEditor.TreeItem
             ParameterMaker.Init(_variable,NodeData.VariableNodeData.VarParams);
         }
 
+        public override Rect GetPos()
+        {
+            return GUIHelper.GetEditorWindowRect().AlignCenter(400, 140);
+        }
+        
         private void OnDestroy()
         {
             NodeData.VariableNodeData.VarParams = _variable.ToArray();

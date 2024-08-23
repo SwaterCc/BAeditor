@@ -81,7 +81,7 @@ namespace Editor.AbilityEditor
 
             if (_removeIdx >= 0)
             {
-                string path = AbilityEditorMainWindow.SKILL_DATA_PATH + $"{configItemList.Items[_removeIdx]}.asset";
+                string path = AbilityEditorMainWindow.SKILL_DATA_PATH + $"{configItemList.Items[_removeIdx].configId}.asset";
                 AssetDatabase.DeleteAsset(path);
                 configItemList.Items.Remove(_removeIdx);
                 _removeIdx = -1;

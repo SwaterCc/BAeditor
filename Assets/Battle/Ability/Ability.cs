@@ -19,7 +19,7 @@ namespace Battle
         public static AbilityRuntimeContext Context => _context ??= new AbilityRuntimeContext();
 
         public static CommonUtility.IdGenerator IdGenerator = CommonUtility.GetIdGenerator();
-        
+
         //基础数据
         /// <summary>
         /// 能力运行时唯一识别id
@@ -83,7 +83,7 @@ namespace Battle
         {
             _state.TryExecute();
         }
-        
+
         public void Reload()
         {
             //终止能力运行
@@ -117,7 +117,7 @@ namespace Battle
                 ((Executing)_state.Current).CurrentGroupStop();
             }
         }
-        
+
         public void OnDestroy()
         {
             _state.OnDestroy();

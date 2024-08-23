@@ -54,7 +54,7 @@ namespace Editor.AbilityEditor
             };
 
         private static bool _flagMethodCacheInit = false;
-        
+
         public static Dictionary<EFuncCacheFlag, List<FuncInfo>> FlagMethodCache
         {
             get
@@ -68,10 +68,10 @@ namespace Editor.AbilityEditor
             }
         }
 
-        private static Dictionary<string, List<MethodInfo>> _methodCache =
-            new Dictionary<string, List<MethodInfo>>();
+        private static Dictionary<string, MethodInfo> _methodCache =
+            new Dictionary<string, MethodInfo>();
 
-        public static Dictionary<string, List<MethodInfo>> MethodCache
+        public static Dictionary<string, MethodInfo> MethodCache
         {
             get
             {
@@ -119,13 +119,11 @@ namespace Editor.AbilityEditor
 
                 if (attr == null) continue;
 
-                if (!_methodCache.TryGetValue(method.Name, out var methodInfos))
+                if (!_methodCache.TryGetValue(method.Name, out var methodInfo))
                 {
-                    methodInfos = new List<MethodInfo>();
-                    _methodCache.Add(method.Name, methodInfos);
+                    methodInfo = method;
+                    _methodCache.Add(method.Name, method);
                 }
-
-                methodInfos.Add(method);
 
                 var info = new FuncInfo
                 {
@@ -166,22 +164,32 @@ namespace Editor.AbilityEditor
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal();
             //函数列表界面
-            GUILayout.Box("",GUILayout.Width(300),GUILayout.Height(280));
+            GUILayout.Box("", GUILayout.Width(300), GUILayout.Height(280));
             _funcTree.OnGUI(new Rect(5, 5, 300, 280));
             //函数预览界面
             SirenixEditorGUI.BeginBox();
             SirenixEditorGUI.BeginVerticalList();
-            if (_methodCache.TryGetValue(_funcTree.CurSelect, out var list))
+            if (_methodCache.TryGetValue(_funcTree.CurSelect, out var method))
             {
-                foreach (var method in list)
+                foreach (var param in method.GetParameters())
                 {
-                    foreach (var param in method.GetParameters())
-                    {
-                        SirenixEditorGUI.BeginListItem();
-                        EditorGUILayout.LabelField("参数名："+param.Name);
-                        EditorGUILayout.LabelField("参数类型："+param.ParameterType);
-                        SirenixEditorGUI.EndListItem();
-                    }
+                    SirenixEditorGUI.BeginListItem();
+                    EditorGUILayout.LabelField("参数名：" + param.Name);
+                    EditorGUILayout.LabelField("参数类型：" + param.ParameterType);
+                    SirenixEditorGUI.EndListItem();
+                }
+
+                if (method.ReturnType != typeof(void))
+                {
+                    SirenixEditorGUI.BeginListItem();
+                    EditorGUILayout.LabelField("返回类型：" + method.ReturnType);
+                    SirenixEditorGUI.EndListItem();
+                }
+                else
+                {
+                    SirenixEditorGUI.BeginListItem();
+                    EditorGUILayout.LabelField("无返回值");
+                    SirenixEditorGUI.EndListItem();
                 }
             }
 
@@ -191,7 +199,7 @@ namespace Editor.AbilityEditor
             EditorGUILayout.EndHorizontal();
             GUILayout.Space(30);
             //配置界面
-            SirenixEditorGUI.BeginBox($"当前函数:{_funcHead.Self.FuncName}",true);
+            SirenixEditorGUI.BeginBox($"当前函数:{_funcHead.Self.FuncName}", true);
             if (_funcHead.FuncParams.Count == 0)
             {
                 EditorGUILayout.LabelField("无参函数");
@@ -204,16 +212,16 @@ namespace Editor.AbilityEditor
                 }
             }
 
-            if(GUILayout.Button("确认修改"))
+            if (GUILayout.Button("确认修改"))
             {
                 _funcHead.Save();
                 Close();
             }
-            
+
             SirenixEditorGUI.EndBox();
             EditorGUILayout.EndVertical();
         }
-        
+
 
         private class FuncList : TreeView
         {
@@ -230,6 +238,7 @@ namespace Editor.AbilityEditor
                 {
                     funcHead.Self.FuncName = infos[0].FuncName;
                 }
+
                 CurSelect = funcHead.Self.FuncName;
                 showAlternatingRowBackgrounds = true;
                 showBorder = true;
