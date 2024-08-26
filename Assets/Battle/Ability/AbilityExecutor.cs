@@ -27,6 +27,7 @@ namespace Battle
 
             private Stack<int> _repeatNodeIds;
 
+            public Ability Ability => _ability;
             public AbilityState State => _ability._state;
 
             public AbilityExecutor(Ability ability)

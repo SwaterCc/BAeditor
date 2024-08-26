@@ -12,14 +12,13 @@ namespace Battle.GamePlay
         private List<Actor> _removeList = new List<Actor>();
         private List<Actor> _addCaches = new List<Actor>();
 
-
-        public void Init()
-        {
-            
-        }
+        private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
         
-        private Actor createActor(EActorType actorType, int configId)
+        public void Init() { }
+
+        public Actor CreateActor(EActorType actorType, int configId)
         {
+            var actor = new Actor(_idGenerator.GenerateId(), actorType);
             ActorLogic logic = null;
             ActorShow show = null;
             switch (actorType)
@@ -34,8 +33,7 @@ namespace Battle.GamePlay
                     break;
             }
 
-            Actor actor = new Actor(show, logic);
-            actor.Init();
+            actor.Init(show, logic);
             return actor;
         }
 
@@ -61,7 +59,7 @@ namespace Battle.GamePlay
 
             foreach (var actor in _actors)
             {
-                actor.Tick(dt);
+                actor.RTState.Tick(dt);
             }
 
             if (_removeList.Count != 0)
@@ -75,10 +73,28 @@ namespace Battle.GamePlay
             }
         }
 
+        public void Update(float dt)
+        {
+            foreach (var actor in _actors)
+            {
+                actor.RTState.Update(dt);
+            }
+        }
+
+        public void AddActor(Actor actor)
+        {
+            _addCaches.Add(actor);
+        }
+
         public void AddActor(EActorType type, int configId)
         {
-            var actor = createActor(type, configId);
+            var actor = CreateActor(type, configId);
             _addCaches.Add(actor);
+        }
+
+        public Actor GetActor(int uid)
+        {
+            return _actors[uid];
         }
 
         public void RemoveActor(Actor actor) { }

@@ -62,10 +62,12 @@ namespace Battle
         /// 该能力属于哪个Actor
         /// </summary>
         private int _belongActorId;
+        public int BelongActorId => _belongActorId;
 
-        public Ability(int uid, int abilityConfigId)
+        public Ability(int uid, int belongActorId, int abilityConfigId)
         {
             Uid = uid;
+            _belongActorId = belongActorId;
             _abilityConfigId = abilityConfigId;
             _abilityData = AbilityDataCacheMgr.Instance.GetAbilityData(_abilityConfigId);
             _variables = new Variables(16, this);

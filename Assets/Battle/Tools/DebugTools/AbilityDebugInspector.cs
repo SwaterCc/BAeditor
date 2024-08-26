@@ -19,8 +19,7 @@ namespace Battle.Tools.DebugTools
         
         public float Attack;
         
-        private Actor.ActorDebugHandle _handle;
-
+       
         private Actor _actor;
 
         public List<int> AbilityUid = new List<int>();
@@ -31,7 +30,7 @@ namespace Battle.Tools.DebugTools
 
         private void Update()
         {
-            if (DebugObj != null)
+            /*if (DebugObj != null)
             {
                 _handle ??= DebugObj.Actor.DebugHandle;
                 _actor ??= DebugObj.Actor;
@@ -47,21 +46,21 @@ namespace Battle.Tools.DebugTools
                 
                 var atkAttr = (SimpleAttribute<float>)_actor.GetAttrCollection().GetAttr(EAttributeType.Attack);
                 Attack = atkAttr.GetValue();
-            }
+            }*/
         }
 
         [Button("学能力")]
         public void Award(int abilityId = 1231, bool isRunNow = true)
         {
-            var ability = new Ability(abilityId);
+            /*var ability = new Ability(abilityId);
             AbilityUid.Add(ability.Uid);
-            _actor.AwardAbility(ability, isRunNow);
+            _actor.AwardAbility(ability, isRunNow);*/
         }
 
         [Button("运行能力")]
         public void ExecuteAbility(int abilityId)
         {
-            _actor.GetAbilityController().ExecutingAbility(abilityId);
+           // _actor.GetAbilityController().ExecutingAbility(abilityId);
         }
     }
 }

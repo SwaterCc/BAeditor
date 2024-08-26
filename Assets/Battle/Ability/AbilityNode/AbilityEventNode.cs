@@ -1,5 +1,6 @@
 using System;
 using Battle.Event;
+using Battle.GamePlay;
 using Battle.Tools;
 using UnityEngine;
 
@@ -11,11 +12,12 @@ namespace Battle
         {
             private EventChecker _checker;
             public AbilityEventNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) { }
-                        
+
             public void RegisterEvent()
             {
                 if (!NodeData.EventNodeData.CreateCheckerFunc.TryCallFunc(out var valueBox)) return;
                 _checker = (EventChecker)valueBox;
+                _checker.BindFunc(onEventFired);
                 BattleEventManager.Instance.Register(_checker);
             }
 
@@ -24,17 +26,18 @@ namespace Battle
                 _checker.UnRegister();
             }
 
-            
-            
-            public void OnEventFired()
+            private void onEventFired(IEventInfo eventInfo)
             {
-                
+                var actor = ActorManager.Instance.GetActor(_executor.Ability.BelongActorId);
+                if (actor != null)
+                {
+                    _context.UpdateContext((actor.ActorLogic, _executor.Ability));
+                    _executor.ExecuteNode(NodeData.ChildrenIds[0]);
+                    _context.ClearContext();
+                }
             }
-            
-            public override void DoJob()
-            {
-                
-            }
+
+            public override void DoJob() { }
         }
     }
 }

@@ -30,10 +30,6 @@ namespace Battle
         /// 渲染帧
         /// </summary>
         public virtual void Update(float dt) { }
-
-        public virtual void OnEnterScene() { }
-
-        public virtual void OnExitScene() { }
     }
 
     public abstract class ALogicComponent
@@ -48,9 +44,5 @@ namespace Battle
         /// 逻辑帧
         /// </summary>
         public virtual void Tick(float dt) { }
-
-        public virtual void OnEnterScene() { }
-
-        public virtual void OnExitScene() { }
     }
 }

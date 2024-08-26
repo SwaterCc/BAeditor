@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Battle.Auto;
 using Battle.Event;
+using Battle.GamePlay;
 using Battle.Tools.CustomAttribute;
 using UnityEngine;
 
@@ -52,7 +53,7 @@ namespace Battle.Tools
         public static EventChecker GetHitChecker(EBattleEventType eventType, int hitId, bool checkActor,
             bool checkAbility)
         {
-            int actorId = checkActor ? Ability.Context.BelongActor.Uid : -1;
+            int actorId = checkActor ? Ability.Context.CurrentAbility.BelongActorId : -1;
             int abilityId = checkAbility ? Ability.Context.CurrentAbility.Uid : -1;
             return new HitEventChecker(null, hitId, actorId, abilityId);
         }
@@ -68,34 +69,28 @@ namespace Battle.Tools
         public static void CreateHitBox(int hitDataId, ESelectPosType selectPosType)
         {
             var hitBox = new HitBox(hitDataId, Ability.Context.CurrentAbility.Uid, selectPosType);
-            BattleManager.Instance.Add(hitBox);
+            ActorManager.Instance.AddActor(hitBox);
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void AddAbility(int actorUid, int ability, bool isRunNow)
         {
-            var actor = BattleManager.Instance.GetActor(actorUid);
+            var actor = ActorManager.Instance.GetActor(actorUid);
             actor?.AwardAbility(ability, isRunNow);
         }
-
-        [AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
-        public static object GetShowAttr(EAttributeType attributeType)
-        {
-            var attr = Ability.Context.BelongActor.GetAttr(attributeType);
-            return attr.GetBox();
-        }
+        
         
         [AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
         public static object GetLogicAttr(EAttributeType attributeType)
         {
-            var attr = Ability.Context.BelongActor.GetAttr(attributeType);
+            var attr = Ability.Context.BelongLogic.GetAttr(attributeType);
             return attr.GetBox();
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void SetAttrSimple(EAttributeType attributeType, object value)
         {
-            var attr = Ability.Context.BelongActor.GetAttrCollection().GetAttr(attributeType);
+            var attr = Ability.Context.BelongLogic.GetAttr(attributeType);
             if (!attr.IsComposite)
             {
                 ((SimpleAttribute)attr).OnlySet(value);
@@ -109,7 +104,7 @@ namespace Battle.Tools
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void SetAttrElement(EAttributeType attributeType, EAttrElementType elementType, float value)
         {
-            var attr = Ability.Context.BelongActor.GetAttrCollection().GetAttr(attributeType);
+            var attr = Ability.Context.BelongLogic.GetAttr(attributeType);
             if (attr.IsComposite)
             {
                 ((CompositeAttribute)attr).SetElementAttr(elementType, value);
@@ -127,7 +122,7 @@ namespace Battle.Tools
                 case EVariableRange.Battleground:
                     return default;
                 case EVariableRange.Actor:
-                    return Ability.Context.BelongActor.GetVariables();
+                    return Ability.Context.BelongLogic.GetVariables();
                 case EVariableRange.Ability:
                     return Ability.Context.CurrentAbility.GetVariables();
             }
@@ -166,7 +161,7 @@ namespace Battle.Tools
         [AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
         public static int GetActorSelf()
         {
-            return Ability.Context.BelongActor.Uid;
+            return Ability.Context.CurrentAbility.BelongActorId;
         }
 
         #region 数学函数

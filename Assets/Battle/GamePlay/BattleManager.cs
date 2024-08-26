@@ -59,7 +59,10 @@ namespace Battle
         { 
           
             //临时做法
+            //保证逻辑帧在表现帧之前执行一次
             Tick(Time.deltaTime);
+            
+            ActorManager.Instance.Update(Time.deltaTime);
         }
 
         public void Tick(float dt)

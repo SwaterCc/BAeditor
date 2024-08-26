@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Battle.Auto;
 using UnityEngine;
 
 namespace Battle
@@ -6,11 +7,6 @@ namespace Battle
     //逻辑层
     public abstract class ActorLogic : ITick, IVariablesBind
     {
-        /// <summary>
-        /// ActorState
-        /// </summary>
-        protected ActorRTState _rtState;
-
         //逻辑层包含数据,逻辑流程
         /// <summary>
         /// 属性
@@ -39,9 +35,8 @@ namespace Battle
         /// </summary>
         protected readonly Dictionary<ELogicComponentType, ALogicComponent> _components;
 
-        public ActorLogic(ActorRTState rtState)
+        public ActorLogic()
         {
-            _rtState = rtState;
             _abilityController = new AbilityController();
             _variables = new Variables(16, this);
             _stateMachine = new StateMachine(this);
@@ -50,12 +45,15 @@ namespace Battle
 
         public void Init()
         {
+            onInit();
             registerComponents();
             foreach (var component in _components)
             {
                 component.Value.Init();
             }
         }
+
+        protected virtual void onInit() { }
 
         private void registerComponents()
         {
@@ -97,6 +95,11 @@ namespace Battle
         public Variables GetVariables()
         {
             return _variables;
+        }
+        
+        public Attribute GetAttr(EAttributeType attributeType)
+        {
+            return _attrs.GetAttr(attributeType);
         }
     }
 }

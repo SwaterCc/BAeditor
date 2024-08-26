@@ -12,14 +12,14 @@ namespace Battle
     }
 
     /// <summary>
-    /// 游戏场景中对象的基类
+    /// Actor 实际的行为由Logic+Show构成，用State去管理Logic和Show Actor提供对外的接口
     /// </summary>
-    public class Actor
+    public sealed class Actor
     {
         /// <summary>
         /// 运行时唯一ID
         /// </summary>
-        public int Uid;
+        public int Uid { get; }
 
         /// <summary>
         /// 配置ID
@@ -34,7 +34,7 @@ namespace Battle
         /// <summary>
         /// 是否无效
         /// </summary>
-        protected bool _isDisposable;
+        protected bool _isDisposable = false;
 
         public bool IsDisposable => _isDisposable;
 
@@ -48,6 +48,8 @@ namespace Battle
         /// </summary>
         private ActorLogic _logic;
 
+        public ActorLogic ActorLogic => _logic;
+
         /// <summary>
         /// 当前运行状态
         /// </summary>
@@ -58,52 +60,25 @@ namespace Battle
         /// </summary>
         public ActorRTState RTState => _rtState;
 
-        public Actor(ActorShow show, ActorLogic logic)
+        public Actor(int uid, EActorType actorType)
         {
-            _isDisposable = false;
-            _show = show;
-            _logic = logic;
-            _rtState = new ActorRTState(show, logic);
+            Uid = uid;
+            ActorType = actorType;
         }
 
         //生命周期
-        public void Init()
+        public void Init(ActorShow show, ActorLogic logic)
         {
-            _show.Init();
-            _logic.Init();
+            _show?.Init();
+            _logic?.Init();
+            _rtState = new ActorRTState(show, logic);
         }
-
-        public void SetLogicAttr() { }
-
-        public void GetLogicAttr() { }
-        
-        public void GetShowAttr() { }
 
         public void AwardAbility(int configId, bool isRunNow)
         {
-            _logic?.AbilityController.AwardAbility(configId, isRunNow);
+            _logic?.AbilityController.AwardAbility(Uid, configId, isRunNow);
         }
 
-        public void EnterScene()
-        {
-            _rtState.OnEnterScene();
-        }
-
-        public void Update(float dt)
-        {
-            _rtState.Update(dt);
-        }
-
-        public void Tick(float dt)
-        {
-            _rtState.Tick(dt);
-        }
-
-        public void ExitScene()
-        {
-            _rtState.OnExitScene();
-        }
-
-        public virtual void Destroy() { }
+        public void Destroy() { }
     }
 }

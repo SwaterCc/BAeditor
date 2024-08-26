@@ -12,11 +12,12 @@ namespace Battle
         /// <summary>
         /// 赋予能力
         /// </summary>
+        /// <param name="actorId"></param>
         /// <param name="configId"></param>
         /// <param name="isRunNow"></param>
-        public void AwardAbility(int configId, bool isRunNow)
+        public void AwardAbility(int actorId, int configId, bool isRunNow)
         {
-            var ability = new Ability(_idGenerator.GenerateId(), configId);
+            var ability = new Ability(_idGenerator.GenerateId(), actorId, configId);
             if (ability.GetCheckerRes(EAbilityCycleType.OnPreAwardCheck)
                 && _abilities.TryAdd(ability.Uid, ability))
             {

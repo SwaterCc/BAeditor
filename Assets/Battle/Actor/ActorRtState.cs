@@ -3,6 +3,8 @@ namespace Battle
     //Actor操作中间层
     public class ActorRTState : ITick
     {
+        private Actor _actor;
+        
         private ActorShow _show;
 
         private ActorLogic _logic;
@@ -26,27 +28,26 @@ namespace Battle
 
         public ActorRTState(ActorShow show, ActorLogic logic, bool showTickPause = false, bool logicTickPause = false)
         {
-            _hasShow = show == null;
-            _show = show;
-            _showTickPause = showTickPause && _hasShow;
-
-            _hasLogic = logic != null;
-            _logic = logic;
-            _logicTickPause = logicTickPause && _hasLogic;
+            SetShow(show, showTickPause);
+            
+            SetLogic(logic, logicTickPause);
         }
 
         public void SetShow(ActorShow show, bool tickPause = false)
         {
-            if (show == null) return;
-            _show ??= show;
             _showTickPause = tickPause;
+            _hasShow = show != null;
+            if (!_hasShow) return;
+            _show = show;
         }
 
         public void SetLogic(ActorLogic logic, bool tickPause = false)
         {
-            if (logic == null) return;
-            _logic ??= logic;
             _logicTickPause = tickPause;
+            _hasLogic = logic != null;
+            if (!_hasLogic) 
+                return;
+            _logic = logic;
         }
 
         public void SetShowPause(bool flag)
@@ -59,28 +60,16 @@ namespace Battle
             _logicTickPause = flag;
         }
 
-        public void OnEnterScene()
-        {
-            
-        }
-
-        public void OnExitScene()
-        {
-            
-        }
-
         public void SetShowAttr()
-        {
-            
-        }
-
-        public void SetLogicAttr()
         {
             
         }
         
         public void Update(float dt)
         {
+            //更新固定值
+            //...
+            //
             if (_hasShow && _showTickPause)
             {
                 _show.Update(dt);

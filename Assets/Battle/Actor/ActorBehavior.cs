@@ -12,14 +12,12 @@ namespace Battle
 
         private void OnEnable()
         {
-            _actor = new Actor();
-            BattleManager.Instance.Add(_actor);
+         
         }
 
         private void Update()
         {
-            var pos = _actor.GetAttrCollection().GetAttr(EAttributeType.Position);
-            ((SimpleAttribute<Vector3>)pos).Set(transform.position);
+          
         }
 
         private void OnDestroy()
