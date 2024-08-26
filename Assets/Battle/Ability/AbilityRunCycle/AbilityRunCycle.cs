@@ -334,7 +334,7 @@ namespace Battle
 
             protected override void onExit()
             {
-                _ability.GetVariableCollection().Clear();
+                _ability.GetVariables().Clear();
             }
         }
     }

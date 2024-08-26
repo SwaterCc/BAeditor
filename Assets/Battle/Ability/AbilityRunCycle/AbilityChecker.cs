@@ -42,7 +42,7 @@ namespace Battle
                 {
                     buildContext();
                     string key = "CHECKER_RES";
-                    var collection = _ability.GetVariableCollection();
+                    var collection = _ability.GetVariables();
 
                     collection.Add(key, new ValueBox<bool>());
 

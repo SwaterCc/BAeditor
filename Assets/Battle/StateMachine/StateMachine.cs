@@ -6,11 +6,11 @@ namespace Battle
     /// </summary>
     public class StateMachine : ITick
     {
-        private Actor _actor;
+        private ActorLogic _actorLogic;
 
-        public StateMachine(Actor actor)
+        public StateMachine(ActorLogic actor)
         {
-            _actor = actor;
+            _actorLogic = actor;
         }
 
         public void Tick(float dt)

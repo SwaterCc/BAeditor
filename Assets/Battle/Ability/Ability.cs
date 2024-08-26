@@ -9,7 +9,7 @@ namespace Battle
     /// Ability 结合了GAS的GA，GE两套东西，做一下尝试
     /// 这个Ability代表了运行时流程管理
     /// </summary>
-    public partial class Ability : IVariableCollectionBind
+    public partial class Ability : IVariablesBind
     {
         /// <summary>
         /// 能力的上下文，存储当前在运行哪个能力
@@ -17,8 +17,6 @@ namespace Battle
         private static AbilityRuntimeContext _context;
 
         public static AbilityRuntimeContext Context => _context ??= new AbilityRuntimeContext();
-
-        public static CommonUtility.IdGenerator IdGenerator = CommonUtility.GetIdGenerator();
 
         //基础数据
         /// <summary>
@@ -46,9 +44,9 @@ namespace Battle
         /// <summary>
         /// 属于Ability的变量
         /// </summary>
-        private readonly VariableCollection _variables;
+        private readonly Variables _variables;
 
-        public VariableCollection GetVariableCollection() => _variables;
+        public Variables GetVariables() => _variables;
 
         /// <summary>
         /// 检测类
@@ -60,12 +58,17 @@ namespace Battle
         /// </summary>
         private readonly AbilityState _state;
 
-        public Ability(int abilityConfigId)
+        /// <summary>
+        /// 该能力属于哪个Actor
+        /// </summary>
+        private int _belongActorId;
+
+        public Ability(int uid, int abilityConfigId)
         {
-            Uid = IdGenerator.GenerateId();
+            Uid = uid;
             _abilityConfigId = abilityConfigId;
             _abilityData = AbilityDataCacheMgr.Instance.GetAbilityData(_abilityConfigId);
-            _variables = new VariableCollection(16, this);
+            _variables = new Variables(16, this);
             _executor = new AbilityExecutor(this);
 
             _checkers = new Dictionary<EAbilityCycleType, AbilityChecker>()

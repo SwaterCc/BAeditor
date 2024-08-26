@@ -3,32 +3,27 @@ using UnityEngine;
 
 namespace Battle
 {
-    public interface IVariableCollectionBind
+    public interface IVariablesBind
     {
-        public VariableCollection GetVariableCollection();
+        public Variables GetVariables();
     }
 
-    public class VariableCollection
+    public class Variables
     {
         private readonly Dictionary<string, object> _collection;
     
-        private IVariableCollectionBind _bind;
+        private IVariablesBind _bind;
 
-        public VariableCollection(int capacity, IVariableCollectionBind bind = null) : this(capacity, capacity, bind)
+        public Variables(int capacity, IVariablesBind bind = null)
         {
-        }
-
-        public VariableCollection(int variableSize, int funcSize, IVariableCollectionBind bind)
-        {
-            _collection = new Dictionary<string, object>(variableSize);
+            _collection = new Dictionary<string, object>(capacity);
             _bind = bind;
         }
-
-        public void SetBind(IVariableCollectionBind bind)
+        
+        public void SetBind(IVariablesBind bind)
         {
             _bind ??= bind;
         }
-        
         
         public object GetVariable(string name)
         {

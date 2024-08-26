@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Battle.Auto;
+using Battle.Event;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Battle
@@ -9,15 +11,10 @@ namespace Battle
         public void Tick(float dt);
     }
 
-    public interface IBeHurt
-    {
-        public void BeHurt(Dictionary<string, object> damage);
-    }
-
     /// <summary>
     /// 游戏场景中对象的基类
     /// </summary>
-    public class Actor : ITick, IBeHurt //TODO:这种靠接口的方法后续要处理掉，改成组件，目前是临时做法
+    public class Actor
     {
         /// <summary>
         /// 运行时唯一ID
@@ -27,128 +24,86 @@ namespace Battle
         /// <summary>
         /// 配置ID
         /// </summary>
-        public int ConfigId;
+        protected int _configId;
 
-        public class ActorDebugHandle
-        {
-            private readonly Actor _actor;
+        /// <summary>
+        /// actor类型
+        /// </summary>
+        public EActorType ActorType;
 
-            public Actor ActorHandle => _actor;
-            
-            public ActorDebugHandle(Actor actor)
-            {
-                _actor = actor;
-            }
-        }
-
-        private readonly ActorDebugHandle _debugHandle;
-        public ActorDebugHandle DebugHandle => _debugHandle;
-        
-        private class ActorInterfaceImp : IVariableCollectionBind
-        {
-            private readonly Actor _actor;
-
-            public ActorInterfaceImp(Actor actor)
-            {
-                _actor = actor;
-            }
-
-            public VariableCollection GetVariableCollection()
-            {
-                return _actor._variables;
-            }
-        }
-
-        private readonly ActorInterfaceImp _actorImp;
-
+        /// <summary>
+        /// 是否无效
+        /// </summary>
         protected bool _isDisposable;
 
-        /// <summary>
-        /// 属性
-        /// </summary>
-        protected AttrCollection _attrs;
+        public bool IsDisposable => _isDisposable;
 
         /// <summary>
-        /// 变量
+        /// 表现层
         /// </summary>
-        protected VariableCollection _variables;
+        private ActorShow _show;
 
         /// <summary>
-        /// 状态机
+        /// 逻辑层
         /// </summary>
-        protected StateMachine _stateMachine;
+        private ActorLogic _logic;
 
         /// <summary>
-        /// Ability控制器
+        /// 当前运行状态
         /// </summary>
-        protected AbilityController _abilityController;
+        private ActorRTState _rtState;
 
-        public Actor()
+        /// <summary>
+        /// 运行状态
+        /// </summary>
+        public ActorRTState RTState => _rtState;
+
+        public Actor(ActorShow show, ActorLogic logic)
         {
             _isDisposable = false;
-            _actorImp = new ActorInterfaceImp(this);
-            _debugHandle = new ActorDebugHandle(this);
+            _show = show;
+            _logic = logic;
+            _rtState = new ActorRTState(show, logic);
         }
 
-        public virtual void Init()
+        //生命周期
+        public void Init()
         {
-            _attrs = new AttrCollection();
-            _abilityController = new AbilityController(this);
-            _stateMachine = new StateMachine(this);
-            _variables = new VariableCollection(8, _actorImp);
-            
-            //测试代码，初始化一些属性
-            var hp = new SimpleAttribute<float>();
-            hp.Set(100f, true);
-            _attrs.AddAttr(EAttributeType.Hp,hp);
-            
-            var mp = new SimpleAttribute<float>();
-            mp.Set(100f, true);
-            _attrs.AddAttr(EAttributeType.Mp,mp);
-            
-            var attack = new SimpleAttribute<float>();
-            attack.Set(999f, true);
-            _attrs.AddAttr(EAttributeType.Attack,attack);
-            
-            var pos = new SimpleAttribute<Vector3>();
-            pos.Set(Vector3.zero, true);
-            _attrs.AddAttr(EAttributeType.Position,pos);
+            _show.Init();
+            _logic.Init();
         }
 
-        public virtual void Tick(float dt)
-        {
-            _stateMachine?.Tick(dt);
-            _abilityController?.Tick(dt);
-        }
+        public void SetLogicAttr() { }
 
-        public bool IsDisposable()
-        {
-            return _isDisposable;
-        }
-
-        public virtual void OnDestroy()
-        {
-            
-        }
-
-        public void BeHurt(Dictionary<string, object> damage)
-        {
-            Debug.Log("+++++++++++++++++++++++++打中啦+++++++++++++++++++++++++");
-        }
+        public void GetLogicAttr() { }
         
-        public AttrCollection GetAttrCollection()
+        public void GetShowAttr() { }
+
+        public void AwardAbility(int configId, bool isRunNow)
         {
-            return _attrs;
+            _logic?.AbilityController.AwardAbility(configId, isRunNow);
         }
 
-        public VariableCollection GetVariableCollection()
+        public void EnterScene()
         {
-            return _actorImp.GetVariableCollection();
+            _rtState.OnEnterScene();
         }
 
-        public AbilityController GetAbilityController()
+        public void Update(float dt)
         {
-            return _abilityController;
+            _rtState.Update(dt);
         }
+
+        public void Tick(float dt)
+        {
+            _rtState.Tick(dt);
+        }
+
+        public void ExitScene()
+        {
+            _rtState.OnExitScene();
+        }
+
+        public virtual void Destroy() { }
     }
 }

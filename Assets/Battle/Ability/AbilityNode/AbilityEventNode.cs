@@ -23,6 +23,13 @@ namespace Battle
             {
                 _checker.UnRegister();
             }
+
+            
+            
+            public void OnEventFired()
+            {
+                
+            }
             
             public override void DoJob()
             {

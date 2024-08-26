@@ -1,41 +1,22 @@
 using System.Collections.Generic;
+using Battle.Tools;
 
 namespace Battle
 {
-
-    public partial class AbilityController
-    {
-        public class AbilityControllerDebug
-        {
-            private AbilityController _controller;
-
-            public AbilityControllerDebug(AbilityController controller)
-            {
-                _controller = controller;
-            }
-        }
-
-        public AbilityControllerDebug ControllerDebug;
-    }
-    
-    public partial class AbilityController : ITick
+    public class AbilityController
     {
         private readonly Dictionary<int, Ability> _abilities = new();
 
-        private Actor _actor;
-
-        public AbilityController(Actor actor)
-        {
-            _actor = actor;
-        }
+        private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 
         /// <summary>
         /// 赋予能力
         /// </summary>
-        /// <param name="ability"></param>
+        /// <param name="configId"></param>
         /// <param name="isRunNow"></param>
-        public void AwardActorAbility(Ability ability, bool isRunNow)
+        public void AwardAbility(int configId, bool isRunNow)
         {
+            var ability = new Ability(_idGenerator.GenerateId(), configId);
             if (ability.GetCheckerRes(EAbilityCycleType.OnPreAwardCheck)
                 && _abilities.TryAdd(ability.Uid, ability))
             {
@@ -54,12 +35,12 @@ namespace Battle
             }
         }
 
-        public void Tick(float dt)
+        public void Tick(ActorLogic actorLogic, float dt)
         {
             foreach (var abilityPair in _abilities)
             {
                 var ability = abilityPair.Value;
-                Ability.Context.UpdateContext((_actor, ability));
+                Ability.Context.UpdateContext((actorLogic, ability));
                 ability.OnTick(dt);
                 Ability.Context.ClearContext();
             }

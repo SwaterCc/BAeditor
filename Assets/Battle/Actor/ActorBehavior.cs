@@ -22,6 +22,9 @@ namespace Battle
             ((SimpleAttribute<Vector3>)pos).Set(transform.position);
         }
 
-        private void OnDestroy() { }
+        private void OnDestroy()
+        {
+            
+        }
     }
 }

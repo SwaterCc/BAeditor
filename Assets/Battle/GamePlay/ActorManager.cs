@@ -1,16 +1,27 @@
 using System;
 using System.Collections.Generic;
+using Battle.Tools;
 
 namespace Battle.GamePlay
 {
-    public class ActorManager
+    public class ActorManager : Singleton<ActorManager>
     {
-        private Dictionary<EActorType, List<NewActor>> _actors = new();
+        private List<Actor> _actors = new List<Actor>();
+        private Dictionary<int, Actor> _uidActorDict = new();
+        private Dictionary<EActorType, Dictionary<int, Actor>> _actorTypeDict = new();
+        private List<Actor> _removeList = new List<Actor>();
+        private List<Actor> _addCaches = new List<Actor>();
 
 
-        public NewActor CreateActor(EActorType actorType, int configId)
+        public void Init()
         {
-            NewActor actor = null;
+            
+        }
+        
+        private Actor createActor(EActorType actorType, int configId)
+        {
+            ActorLogic logic = null;
+            ActorShow show = null;
             switch (actorType)
             {
                 case EActorType.Pawn:
@@ -22,12 +33,54 @@ namespace Battle.GamePlay
                 case EActorType.HitBox:
                     break;
             }
-            actor.Initialize();
+
+            Actor actor = new Actor(show, logic);
+            actor.Init();
+            return actor;
         }
-        
-        public void AddActor(int configId)
+
+        public void Tick(float dt)
         {
-            var actor = new NewActor();
+            if (_addCaches.Count != 0)
+            {
+                foreach (var actor in _addCaches)
+                {
+                    _actors.Add(actor);
+                    _uidActorDict.Add(actor.Uid, actor);
+                    if (!_actorTypeDict.TryGetValue(actor.ActorType, out var dict))
+                    {
+                        dict = new Dictionary<int, Actor>();
+                        _actorTypeDict.Add(actor.ActorType, dict);
+                    }
+
+                    dict.Add(actor.Uid, actor);
+                }
+
+                _addCaches.Clear();
+            }
+
+            foreach (var actor in _actors)
+            {
+                actor.Tick(dt);
+            }
+
+            if (_removeList.Count != 0)
+            {
+                foreach (var actor in _removeList)
+                {
+                    _actors.Remove(actor);
+                }
+
+                _removeList.Clear();
+            }
         }
+
+        public void AddActor(EActorType type, int configId)
+        {
+            var actor = createActor(type, configId);
+            _addCaches.Add(actor);
+        }
+
+        public void RemoveActor(Actor actor) { }
     }
 }

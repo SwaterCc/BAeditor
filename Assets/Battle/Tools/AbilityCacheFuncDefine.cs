@@ -5,9 +5,7 @@ using Battle.Tools.CustomAttribute;
 using UnityEngine;
 
 namespace Battle.Tools
-{
-    #region AbilityCacheFuncDefine
-
+{ 
     public static class AbilityCacheFuncDefine
     {
         /// <summary>
@@ -69,7 +67,7 @@ namespace Battle.Tools
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void CreateHitBox(int hitDataId, ESelectPosType selectPosType)
         {
-            var hitBox = new HitBox(hitDataId, Ability.Context.BelongActor.Uid, selectPosType);
+            var hitBox = new HitBox(hitDataId, Ability.Context.CurrentAbility.Uid, selectPosType);
             BattleManager.Instance.Add(hitBox);
         }
 
@@ -77,17 +75,20 @@ namespace Battle.Tools
         public static void AddAbility(int actorUid, int ability, bool isRunNow)
         {
             var actor = BattleManager.Instance.GetActor(actorUid);
-            if (actor != null)
-            {
-                var ab = new Ability(ability);
-                actor.GetAbilityController().AwardActorAbility(ab, false);
-            }
+            actor?.AwardAbility(ability, isRunNow);
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
-        public static object GetAttrBox(EAttributeType attributeType)
+        public static object GetShowAttr(EAttributeType attributeType)
         {
-            var attr = Ability.Context.BelongActor.GetAttrCollection().GetAttr(attributeType);
+            var attr = Ability.Context.BelongActor.GetAttr(attributeType);
+            return attr.GetBox();
+        }
+        
+        [AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
+        public static object GetLogicAttr(EAttributeType attributeType)
+        {
+            var attr = Ability.Context.BelongActor.GetAttr(attributeType);
             return attr.GetBox();
         }
 
@@ -119,16 +120,16 @@ namespace Battle.Tools
             }
         }
 
-        public static VariableCollection GetVariableCollection(EVariableRange range)
+        public static Variables GetVariableCollection(EVariableRange range)
         {
             switch (range)
             {
                 case EVariableRange.Battleground:
                     return default;
                 case EVariableRange.Actor:
-                    return Ability.Context.BelongActor.GetVariableCollection();
+                    return Ability.Context.BelongActor.GetVariables();
                 case EVariableRange.Ability:
-                    return Ability.Context.CurrentAbility.GetVariableCollection();
+                    return Ability.Context.CurrentAbility.GetVariables();
             }
 
             return null;
@@ -137,7 +138,7 @@ namespace Battle.Tools
         [AbilityFuncCache(EFuncCacheFlag.Branch | EFuncCacheFlag.Variable)]
         public static object GetVariable(EVariableRange range, string name)
         {
-            VariableCollection collection = GetVariableCollection(range);
+            Variables collection = GetVariableCollection(range);
 
             if (collection != null)
             {
@@ -151,14 +152,14 @@ namespace Battle.Tools
         [AbilityFuncCache(EFuncCacheFlag.OnlyCache)]
         public static void ChangeVariable(EVariableRange range, string name, object valueBox)
         {
-            VariableCollection collection = GetVariableCollection(range);
+            Variables collection = GetVariableCollection(range);
             collection.ChangeValue(name, valueBox);
         }
 
         [AbilityFuncCache(EFuncCacheFlag.OnlyCache)]
         public static void CreateVariable(EVariableRange range, string name, object valueBox)
         {
-            VariableCollection collection = GetVariableCollection(range);
+            Variables collection = GetVariableCollection(range);
             collection?.Add(name, valueBox);
         }
 
@@ -208,6 +209,4 @@ namespace Battle.Tools
 
         #endregion
     }
-
-    #endregion
 }

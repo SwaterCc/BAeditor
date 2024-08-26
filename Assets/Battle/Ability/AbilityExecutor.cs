@@ -210,22 +210,22 @@ namespace Battle
 
             public void CreateVariable(string name, IValueBox valueBox)
             {
-                _ability.GetVariableCollection().Add(name, valueBox);
+                _ability.GetVariables().Add(name, valueBox);
             }
 
             public object GetVariable(string name)
             {
-                return _ability.GetVariableCollection().GetVariable(name);
+                return _ability.GetVariables().GetVariable(name);
             }
 
             public ValueBox<T> GetVariable<T>(string name)
             {
-                return _ability.GetVariableCollection().GetVariable(name) as ValueBox<T>;
+                return _ability.GetVariables().GetVariable(name) as ValueBox<T>;
             }
 
             public void DeleteVariable(string name)
             {
-                _ability.GetVariableCollection().Remove(name);
+                _ability.GetVariables().Remove(name);
             }
 
             #endregion
