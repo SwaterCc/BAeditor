@@ -1,21 +1,27 @@
-﻿using Battle.Damage;
-using Battle.Tools;
+﻿using System.IO;
+using UnityEngine;
+using XLua;
 
-namespace Battle.GamePlay
-{
-    public static class DamageLuaInterface
-    {
-        public static DamageResults GetDamageResults(ActorLogic attacker,ActorLogic target,DamageInfo damageInfo)
-        {
-            //调用lua
-            
-            //处理小公式，计算出最终加伤桶，乘伤桶，减伤桶，随机暴击爆伤
-            //...
+namespace Hono.Scripts.Battle {
+	public static class DamageLuaInterface {
+		public static DamageResults GetDamageResults(ActorLogic attacker, ActorLogic target, DamageInfo damageInfo) {
+			//调用lua
+			string luaScriptsPath = Application.dataPath + "/Hono/Scripts/Battle/LuaScripts/Damage";
 
-            //调用大公式
-            //...
+			// 获取 LuaScripts 目录下的所有 Lua 脚本文件
+			string[] luaFiles = Directory.GetFiles(luaScriptsPath, "*.lua");
 
-            return new DamageResults();
-        }
-    }
+			var luaEnv = LuaClient.Instance.GetEnv();
+			foreach (string luaFile in luaFiles)
+			{
+				string luaScript = File.ReadAllText(luaFile);
+				luaEnv.DoString(luaScript);
+			}
+			
+			LuaFunction func1 = luaEnv.Global.Get<LuaFunction>("CalculateDamage");
+			var objs = func1.Call();
+			
+			return new DamageResults();
+		}
+	}
 }

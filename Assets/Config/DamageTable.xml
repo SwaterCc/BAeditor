@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<class>
-    <className>DamageTable</className>
-    <rows>
-        <DamageConfig id = "" actorType = "" showId = "" logicId = ""/>
-
-    </rows>
-</class>
