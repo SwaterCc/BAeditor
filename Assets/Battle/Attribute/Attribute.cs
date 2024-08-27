@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Battle.Auto;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Battle

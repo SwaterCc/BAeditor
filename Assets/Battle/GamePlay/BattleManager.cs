@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Battle.GamePlay;
 using Battle.Tools;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Battle
@@ -50,6 +51,12 @@ namespace Battle
                 _instance = this;
             }
 
+            
+        }
+
+        public void Init()
+        {
+            ConfigManager.Instance.Init();
             ActorManager.Instance.Init();
             AbilityPreLoad.InitCache();
             AbilityDataCacheMgr.Instance.Init();

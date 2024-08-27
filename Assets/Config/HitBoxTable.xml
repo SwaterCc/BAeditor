@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<class>
+    <className>HitBoxTable</className>
+    <rows>
+        <HitBoxConfig Id ="" HitType = "AoeHitBox" DelayTime = "" Duration = "" ValidCount ="" EffectTime ="" Interval="" AoeData ="class@AabbRect">
+            <AabbRect AreaType = "Rect">
+                <Rect Length = "" Width = "" Height = ""/>
+            </AabbRect>
+        </HitBoxConfig>
+        
+    </rows>
+</class>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using BattleAbility;
 using UnityEngine;
 
 namespace Battle.Tools
@@ -63,19 +64,27 @@ namespace Battle.Tools
         {
             return new IdGenerator();
         }
-        
-        public static void SafeWhile(Func<bool> branch,Action doThing,int maxCount)
-        {
-            int curCount = 0;
 
-            while (branch.Invoke() && curCount < maxCount)
+        public static List<int> CheckAABB(AabbData data, Vector3 pos)
+        {
+            List<int> uids = new List<int>();
+
+            switch (data.AabbType)
             {
-                doThing.Invoke();
-                ++curCount;
+                case EAabbType.Rect:
+                    break;
+                case EAabbType.Sphere:
+                    break;
+                case EAabbType.Cylinder:
+                    break;
+                case EAabbType.Sector:
+                    break;
             }
+
+            return uids;
         }
     }
-    
+
     #region ParamExtension
 
     public static class ParamExtension
@@ -85,7 +94,7 @@ namespace Battle.Tools
             var queue = new Queue<Parameter>(@params);
             if (@params[0].IsValueType && @params.Length == 1)
             {
-                valueBox =@params[0].Value;
+                valueBox = @params[0].Value;
                 return true;
             }
 
@@ -120,7 +129,7 @@ namespace Battle.Tools
             for (int idx = 0; idx < funcInfo.ParamCount; idx++)
             {
                 var param = queue.Dequeue();
-                
+
                 if (param.IsValueType)
                 {
                     funcParams[idx] = param.Value;

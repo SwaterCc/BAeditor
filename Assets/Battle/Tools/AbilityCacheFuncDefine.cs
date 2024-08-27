@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Battle.Auto;
 using Battle.Event;
 using Battle.GamePlay;
 using Battle.Tools.CustomAttribute;
@@ -66,9 +64,9 @@ namespace Battle.Tools
 
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void CreateHitBox(int hitDataId, ESelectPosType selectPosType)
+        public static void CreateHitBox(int hitDataId)
         {
-            var hitBox = new HitBox(hitDataId, Ability.Context.CurrentAbility.Uid, selectPosType);
+            var hitBox = ActorManager.Instance.CreateActor(EActorType.HitBox, hitDataId);
             ActorManager.Instance.AddActor(hitBox);
         }
 

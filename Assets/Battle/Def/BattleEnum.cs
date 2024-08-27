@@ -226,7 +226,7 @@ namespace Battle
     /// <summary>
     /// Aoe打击点范围形状类型
     /// </summary>
-    public enum EHitAreaType
+    public enum EAabbType
     {
         /// <summary>
         /// 矩形

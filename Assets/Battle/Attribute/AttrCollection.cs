@@ -1,18 +1,11 @@
 ﻿using System.Collections.Generic;
-using Battle.Auto;
 
 namespace Battle
 {
     public class AttrCollection
     {
-        private Dictionary<EAttributeType, Attribute> _simpleAttrs;
-        private Dictionary<EAttributeType, Attribute> _compositeAttrs;
-
-        public AttrCollection()
-        {
-            _simpleAttrs = new Dictionary<EAttributeType, Attribute>(64);
-            _compositeAttrs = new Dictionary<EAttributeType, Attribute>(64);
-        }
+        private Dictionary<EAttributeType, Attribute> _simpleAttrs = new(64);
+        private Dictionary<EAttributeType, Attribute> _compositeAttrs = new(64);
 
         public Attribute GetAttr(EAttributeType attrType)
         {

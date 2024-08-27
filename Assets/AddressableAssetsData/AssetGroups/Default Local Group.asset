@@ -62,18 +62,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 678bcd56e274c604590bba62ff505e62
-    m_Address: Assets/AbilityData/HitData
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 01ec8eaea2e0a124abab8f29eeb7ac32
     m_Address: Assets/AbilityData
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 040fbffe5d5fe9f44aed94beda9c7945
-    m_Address: Assets/AbilityData/HitData/1.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

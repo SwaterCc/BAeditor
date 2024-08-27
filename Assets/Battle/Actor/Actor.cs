@@ -1,9 +1,3 @@
-using System.Collections.Generic;
-using Battle.Auto;
-using Battle.Event;
-using Unity.VisualScripting;
-using UnityEngine;
-
 namespace Battle
 {
     public interface ITick
@@ -24,7 +18,7 @@ namespace Battle
         /// <summary>
         /// 配置ID
         /// </summary>
-        protected int _configId;
+        private int _configId;
 
         /// <summary>
         /// actor类型
@@ -34,8 +28,8 @@ namespace Battle
         /// <summary>
         /// 是否无效
         /// </summary>
-        protected bool _isDisposable = false;
-
+        private bool _isDisposable = false;
+        
         public bool IsDisposable => _isDisposable;
 
         /// <summary>

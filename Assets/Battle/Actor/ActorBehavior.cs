@@ -1,5 +1,3 @@
-using System;
-using Battle.Auto;
 using UnityEngine;
 
 namespace Battle

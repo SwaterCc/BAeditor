@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Battle.Auto;
 using Battle.Tools;
-using UnityEngine;
 
 namespace Battle
 {

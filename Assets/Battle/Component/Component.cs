@@ -2,12 +2,13 @@ namespace Battle
 {
     public enum EShowComponentType
     {
-        Model,
+        Transform,
         Count,
     }
-    
+
     public enum ELogicComponentType
     {
+        HitBoxComp,
         BeHurtComp,
         Count,
     }
@@ -17,32 +18,52 @@ namespace Battle
         public void AsyncLoad();
         public void OnLoadedFinish();
     }
-    
+
     public abstract class AShowComponent
     {
-        public abstract void Init();
+        protected ActorShow _actorShow;
 
-        public virtual void Reset() { }
+        protected AShowComponent(ActorShow show)
+        {
+            _actorShow = show;
+        }
 
         public abstract EShowComponentType GetCompType();
+        public abstract void Init();
+        public virtual void Reset() { }
 
         /// <summary>
         /// 渲染帧
         /// </summary>
-        public virtual void Update(float dt) { }
+        public void Update(float dt)
+        {
+            onUpdate(dt);
+        }
+
+        protected abstract void onUpdate(float dt);
     }
 
     public abstract class ALogicComponent
     {
-        public abstract void Init();
+        protected ActorLogic _actorLogic;
 
-        public virtual void Reset() { }
+        protected ALogicComponent(ActorLogic logic)
+        {
+            _actorLogic = logic;
+        }
 
         public abstract ELogicComponentType GetCompType();
+        public abstract void Init();
+        public virtual void Reset() { }
 
         /// <summary>
         /// 逻辑帧
         /// </summary>
-        public virtual void Tick(float dt) { }
+        public void Tick(float dt)
+        {
+            onTick(dt);
+        }
+
+        protected abstract void onTick(float dt);
     }
 }

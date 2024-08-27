@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Battle.Auto;
+﻿using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -14,19 +12,17 @@ namespace Battle.Tools.DebugTools
         public ActorBehavior DebugObj;
 
         public float HP;
-        
+
         public float MP;
-        
+
         public float Attack;
-        
-       
+
+
         private Actor _actor;
 
         public List<int> AbilityUid = new List<int>();
-        
-        public void OnEnable()
-        {
-        }
+
+        public void OnEnable() { }
 
         private void Update()
         {
@@ -40,10 +36,10 @@ namespace Battle.Tools.DebugTools
             {
                 var hpAttr = (SimpleAttribute<float>)_actor.GetAttrCollection().GetAttr(EAttributeType.Hp);
                 HP = hpAttr.GetValue();
-                
+
                 var mpAttr = (SimpleAttribute<float>)_actor.GetAttrCollection().GetAttr(EAttributeType.Mp);
                 MP = mpAttr.GetValue();
-                
+
                 var atkAttr = (SimpleAttribute<float>)_actor.GetAttrCollection().GetAttr(EAttributeType.Attack);
                 Attack = atkAttr.GetValue();
             }*/
@@ -60,7 +56,7 @@ namespace Battle.Tools.DebugTools
         [Button("运行能力")]
         public void ExecuteAbility(int abilityId)
         {
-           // _actor.GetAbilityController().ExecutingAbility(abilityId);
+            // _actor.GetAbilityController().ExecutingAbility(abilityId);
         }
     }
 }

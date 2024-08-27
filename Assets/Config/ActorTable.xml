@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<class>
+    <className>ActorTable</className>
+    <rows>
+        <ActorConfig id = "" actorType = "" showId = "" logicId = ""/>
+       
+    </rows>
+</class>
