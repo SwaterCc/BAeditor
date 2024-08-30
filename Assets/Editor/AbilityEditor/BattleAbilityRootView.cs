@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using AbilityRes;
-using BattleAbility.Editor;
+using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;

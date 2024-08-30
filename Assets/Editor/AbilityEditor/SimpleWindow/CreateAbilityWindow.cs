@@ -1,7 +1,4 @@
-﻿using System;
-using AbilityRes;
-using Battle;
-using BattleAbility.Editor;
+﻿using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;

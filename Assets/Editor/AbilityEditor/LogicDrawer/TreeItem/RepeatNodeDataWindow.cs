@@ -1,4 +1,5 @@
-using Battle;
+
+using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 
 namespace Editor.AbilityEditor.TreeItem

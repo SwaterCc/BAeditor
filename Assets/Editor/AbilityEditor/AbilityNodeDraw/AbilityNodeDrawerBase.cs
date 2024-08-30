@@ -1,4 +1,5 @@
-﻿using Battle;
+﻿
+using Hono.Scripts.Battle;
 
 namespace Editor.AbilityEditor.AbilityNodeDraw
 {

@@ -1,12 +1,10 @@
-using Battle;
+using Hono.Scripts.Battle;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
     public class CycleTreeItem : AbilityLogicTreeItem
     {
-      
-
         public CycleTreeItem(AbilityNodeData nodeData) : base(nodeData)
         {
             base.depth = 0;

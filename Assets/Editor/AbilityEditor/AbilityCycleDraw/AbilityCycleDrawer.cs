@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Battle;
-using Battle.Skill;
-using Sirenix.OdinInspector;
+using Hono.Scripts.Battle;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
-using UnityEngine;
+
 
 namespace Editor.AbilityEditor
 {

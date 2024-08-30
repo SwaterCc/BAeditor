@@ -1,4 +1,4 @@
-using Battle;
+using Hono.Scripts.Battle;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem

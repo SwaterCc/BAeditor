@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using AbilityRes;
-using Battle;
-using BattleAbility.Editor;
+﻿using System.Linq;
 using Editor.AbilityEditor.SimpleWindow;
+using Hono.Scripts.Battle;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;

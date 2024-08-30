@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using Battle;
+using Hono.Scripts.Battle;
 using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;

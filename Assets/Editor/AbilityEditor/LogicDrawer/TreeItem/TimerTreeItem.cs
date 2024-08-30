@@ -1,5 +1,6 @@
-using Battle;
-using Sirenix.OdinInspector;
+
+using Hono.Scripts.Battle;
+
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;

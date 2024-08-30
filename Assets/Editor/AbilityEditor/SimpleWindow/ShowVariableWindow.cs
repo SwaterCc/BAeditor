@@ -1,4 +1,4 @@
-﻿using Battle;
+﻿using Hono.Scripts.Battle;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
