@@ -34,7 +34,7 @@ namespace Hono.Scripts.Battle.Tools.DebugTools {
 
 		/*[Button("运行能力")]
 		public void ExecuteAbility(int abilityId) {
-			// _actor.GetAbilityController().ExecutingAbility(abilityId);
+			// _actorLogic.GetAbilityController().ExecutingAbility(abilityId);
 		}*/
 
 		private DamageLuaInterface _luaInterface = new DamageLuaInterface();

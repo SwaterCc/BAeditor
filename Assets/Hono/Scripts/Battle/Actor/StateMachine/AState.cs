@@ -1,102 +1,112 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Hono.Scripts.Battle {
-	public partial class ActorLogic {
-		public abstract class AState {
-			protected class AStateTransform {
-				public bool IsEnable;
-				public EActorState Next { get; }
-				private readonly Func<bool> _transCondition;
+namespace Hono.Scripts.Battle
+{
+    public partial class ActorLogic
+    {
+        public abstract class AState
+        {
+            protected class AStateTransform
+            {
+                public bool IsEnable;
+                public EActorState Next { get; }
+                private readonly Func<bool> _transCondition;
 
-				public AStateTransform(EActorState next, Func<bool> condition = null, bool isEnable = true) {
-					Next = next;
-					IsEnable = isEnable;
-					_transCondition = condition;
-				}
+                public AStateTransform(EActorState next, Func<bool> condition = null, bool isEnable = true)
+                {
+                    Next = next;
+                    IsEnable = isEnable;
+                    _transCondition = condition;
+                }
 
-				public bool Invoke() {
-					if (!IsEnable) return false;
-					if (IsEnable && _transCondition == null) return true;
-					return IsEnable && _transCondition.Invoke();
-				}
-			}
+                public bool Invoke()
+                {
+                    if (!IsEnable) return false;
+                    if (IsEnable && _transCondition == null) return true;
+                    return IsEnable && _transCondition.Invoke();
+                }
+            }
 
-			private ActorStateMachine _stateMachine;
-			protected readonly Dictionary<EActorState, List<AStateTransform>> _transDict;
+            protected ActorLogic _actorLogic;
+            private ActorStateMachine _stateMachine;
+            protected readonly Dictionary<EActorState, List<AStateTransform>> _transDict;
 
-			protected bool _canExit;
-			private AStateTransform _next;
+            protected bool _canExit;
+            protected EActorState _defaultState;
 
-			protected AState(ActorStateMachine machine) {
-				_stateMachine = machine;
-				_next = null;
-				_canExit = false;
-				_transDict = new Dictionary<EActorState, List<AStateTransform>>() {
-					{ EActorState.Idle, new List<AStateTransform>() },
-					{ EActorState.Battle, new List<AStateTransform>() },
-					{ EActorState.Move, new List<AStateTransform>() },
-					{ EActorState.Stiff, new List<AStateTransform>() },
-					{ EActorState.Death, new List<AStateTransform>() },
-				};
-			}
+            private AStateTransform _next;
 
-			public bool HasTrans(EActorState go) {
-				return _transDict[go].Count == 0;
-			}
+            protected AState(ActorStateMachine machine, ActorLogic actorLogicLogic)
+            {
+                _stateMachine = machine;
+                _actorLogic = actorLogicLogic;
+                _defaultState = EActorState.Idle;
+                _next = null;
+                _canExit = false;
+                _transDict = new Dictionary<EActorState, List<AStateTransform>>()
+                {
+                    { EActorState.Idle, new List<AStateTransform>() },
+                    { EActorState.Battle, new List<AStateTransform>() },
+                    { EActorState.Move, new List<AStateTransform>() },
+                    { EActorState.Stiff, new List<AStateTransform>() },
+                    { EActorState.Death, new List<AStateTransform>() },
+                };
+            }
 
-			public EActorState StateType => getStateType();
-			protected abstract EActorState getStateType();
+            public bool HasTrans(EActorState go)
+            {
+                return _transDict[go].Count == 0;
+            }
 
-			public virtual bool CanExit() {
-				return _canExit;
-			}
+            public EActorState StateType => getStateType();
+            protected abstract EActorState getStateType();
 
-			public EActorState GetNext() {
-				return _next.Next;
-			}
+            public virtual bool CanExit()
+            {
+                return _canExit;
+            }
 
-			public abstract void Init();
-			protected virtual void onEnter() { }
+            public EActorState GetNext()
+            {
+                return _next?.Next ?? _defaultState;
+            }
 
-			public virtual void Enter() {
-				onEnter();
-			}
+            public abstract void Init();
+            protected virtual void onEnter() { }
 
-			public virtual void OnChangeState(EActorState next) {
-				foreach (var transform in _transDict[next]) {
-					if (transform.Invoke()) {
-						_next = transform;
-						_canExit = true;
-					}
-				}
-			}
+            public virtual void Enter()
+            {
+                onEnter();
+            }
 
-			protected virtual void onTick(float dt) { }
+            public virtual void OnChangeState(EActorState next)
+            {
+                foreach (var transform in _transDict[next])
+                {
+                    if (transform.Invoke())
+                    {
+                        _next = transform;
+                        _canExit = true;
+                    }
+                }
+            }
 
-			public void Tick(float dt) {
-				onTick(dt);
+            protected virtual void onTick(float dt) { }
 
-				if (!_canExit) {
-					return;
-				}
+            public void Tick(float dt)
+            {
+                onTick(dt);
+            }
 
-				foreach (var stateTrans in _transDict) {
-					foreach (var transform in stateTrans.Value) {
-						if (transform.Invoke()) {
-							_next = transform;
-						}
-					}
-				}
-			}
+            protected virtual void onExit() { }
 
-			protected virtual void onExit() { }
-
-			public void Exit() {
-				onExit();
-				_canExit = false;
-				_next = null;
-			}
-		}
-	}
+            public void Exit()
+            {
+                onExit();
+                _canExit = false;
+                _next = null;
+            }
+        }
+    }
 }

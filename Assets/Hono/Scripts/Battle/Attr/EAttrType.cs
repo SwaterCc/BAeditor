@@ -7,6 +7,7 @@ namespace Hono.Scripts.Battle
         Source,
         SourceType,
         Attack,
+        Rot,
         Position,
     }
 

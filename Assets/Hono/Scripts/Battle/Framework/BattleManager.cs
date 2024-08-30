@@ -27,6 +27,7 @@ namespace Hono.Scripts.Battle {
 		/// </summary>
 		private static CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 
+		
 		protected void Awake() {
 			DontDestroyOnLoad(this.gameObject);
 
@@ -37,7 +38,7 @@ namespace Hono.Scripts.Battle {
 			else {
 				_instance = this;
 			}
-
+			
 			Init();
 		}
 

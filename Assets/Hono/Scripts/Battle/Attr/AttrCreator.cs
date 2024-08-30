@@ -19,6 +19,8 @@ namespace Hono.Scripts.Battle {
 					return new Attr<int>((a, b) => a + b);
 				case EAttrType.Position:
 					return new Attr<Vector3>((a, b) => a + b);
+				case EAttrType.Rot:
+					return new Attr<Quaternion>((a, b) => b * a);
 			}
 
 			return null;

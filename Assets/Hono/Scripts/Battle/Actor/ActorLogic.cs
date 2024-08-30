@@ -12,9 +12,9 @@ namespace Hono.Scripts.Battle {
 		public int Uid; 
 		
 		/// <summary>
-		/// ActorLogic配置Id
+		/// actor
 		/// </summary>
-		protected int _configId;
+		protected Actor _actor;
 
 		//逻辑层包含数据,逻辑流程
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Hono.Scripts.Battle {
 		/// <summary>
 		/// tag
 		/// </summary>
-		protected Tags Tagses;
+		protected Tags Tags;
 
 		/// <summary>
 		/// 逻辑组件
@@ -49,13 +49,13 @@ namespace Hono.Scripts.Battle {
 
 		public ActorLogic(Actor actor) {
 			Uid = actor.Uid;
-			_configId = actor.ConfigId;
+			_actor = actor;
 			_attrs = new AttrCollection(LogicAttrCreator.Create);
 			_abilityController = new AbilityController();
 			_variables = new Variables(16, this);
 			_stateMachine = new ActorStateMachine(this);
 			_components = new Dictionary<Type, ALogicComponent>();
-			Tagses = new Tags();
+			Tags = new Tags();
 		}
 		
 		public void Init() {
@@ -134,11 +134,11 @@ namespace Hono.Scripts.Battle {
 		}
 		
 		public void AddTag(int tag) {
-			Tagses.Add(tag);
+			Tags.Add(tag);
 		}
 		
 		public bool HasTag(int tag) {
-			return Tagses.HasTag(tag);
+			return Tags.HasTag(tag);
 		}
 
 		public bool HasAbility(int abilityConfigId) {
@@ -151,7 +151,7 @@ namespace Hono.Scripts.Battle {
 		}
 		
 		public void ShowCurTags() {
-			Tagses.Show();
+			Tags.Show();
 		}
 		
 		public int GetAttrLua(int attrType) {

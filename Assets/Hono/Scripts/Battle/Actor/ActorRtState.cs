@@ -29,7 +29,6 @@ namespace Hono.Scripts.Battle
         public ActorRTState(ActorShow show, ActorLogic logic, bool showTickPause = false, bool logicTickPause = false)
         {
             SetShow(show, showTickPause);
-            
             SetLogic(logic, logicTickPause);
         }
 
@@ -68,11 +67,16 @@ namespace Hono.Scripts.Battle
         public void SetLogicAttr() {
 	        
         }
+
+        private void SyncTransform()
+        {
+            
+        }
         
         public void Update(float dt)
         {
             //更新固定值
-            //...
+            SyncTransform();
             //
             if (_hasShow && _showTickPause)
             {

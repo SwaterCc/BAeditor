@@ -32,6 +32,11 @@ namespace Hono.Scripts.Battle {
 		public bool IsDisposable => _isDisposable;
 
 		/// <summary>
+		/// Actor基础数据
+		/// </summary>
+		public ActorBassData BassData;
+
+		/// <summary>
 		/// 表现层
 		/// </summary>
 		private ActorShow _show;
