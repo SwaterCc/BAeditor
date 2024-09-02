@@ -1,17 +1,16 @@
-
 using Hono.Scripts.Battle.Event;
+using Hono.Scripts.Battle.RefValue;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle.Tools
-{ 
+namespace Hono.Scripts.Battle
+{
     public static class AbilityCacheFuncDefine
     {
         /// <summary>
         /// 编辑器默认显示函数
         /// 不允许重载函数
         /// 尽量不要在get函数里直接获取对象
-        /// 
         /// </summary>
         [AbilityFuncCache(EFuncCacheFlag.Action | EFuncCacheFlag.Branch | EFuncCacheFlag.Variable)]
         public static void NothingToDo() { }
@@ -31,14 +30,16 @@ namespace Hono.Scripts.Battle.Tools
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void DebugMessage(string flag, string msg, object p1, object p2, object p3)
         {
-            void Convert(string pattern,params object[] args)
+#if UNITY_EDITOR
+            void Convert(string pattern, params object[] args)
             {
-                Debug.Log(string.Format(pattern,args));
+                Debug.Log(string.Format(pattern, args));
             }
 
             string flagStr = string.IsNullOrEmpty(flag) ? "" : $"[{flag}] ";
-            
+
             Convert(flagStr + msg, p1, p2, p3);
+#endif
         }
 
         [AbilityFuncCache]
@@ -76,21 +77,21 @@ namespace Hono.Scripts.Battle.Tools
             var actor = ActorManager.Instance.GetActor(actorUid);
             actor?.ActorLogic.AwardAbility(ability, isRunNow);
         }
-        
-        
+
+
         [AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
         public static object GetLogicAttr(EAttrType attrType)
         {
-            return Ability.Context.BelongLogic.GetAttrBox(attrType);;
+            return Ability.Context.BelongLogic.GetAttrBox(attrType);
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void SetLogicAttr(EAttrType attrType, object value, bool isTempData)
         {
-           var command = Ability.Context.BelongLogic.SetAttrBox(attrType,value,isTempData);
-           Ability.Context.CurrentAbility.AddCommand(command);
+            var command = Ability.Context.BelongLogic.SetAttrBox(attrType, value, isTempData);
+            Ability.Context.CurrentAbility.AddCommand(command);
         }
-        
+
         public static Variables GetVariableCollection(EVariableRange range)
         {
             switch (range)

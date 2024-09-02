@@ -124,7 +124,7 @@ namespace Editor.AbilityEditor
 
         protected override OdinMenuTree BuildMenuTree()
         {
-            var treeInstance = new OdinMenuTree(true)
+            var treeInstance = new OdinMenuTree(false)
             {
                 { MENU_SKILL, new BattleAbilityRootView(this, _skills), EditorIcons.Clouds },
                 { MENU_BUFF, new BattleAbilityRootView(this, _buffs), EditorIcons.Clouds },

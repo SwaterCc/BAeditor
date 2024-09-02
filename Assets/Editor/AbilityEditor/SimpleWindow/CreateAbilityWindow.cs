@@ -39,7 +39,7 @@ namespace Editor.AbilityEditor.SimpleWindow
         {
             return _hasError;
         }
-
+        
         [InfoBox("$msg", InfoMessageType.Error, "hasError")]
         private string msg;
 

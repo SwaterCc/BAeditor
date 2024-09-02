@@ -632,11 +632,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee48fc14790b4c87b42dfece8d15a09a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugObj: {fileID: 872264329}
-  HP: 0
-  MP: 0
-  Attack: 0
-  AbilityUid: 
+  DamageConfig: {fileID: 0}
+  DamageInfo: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

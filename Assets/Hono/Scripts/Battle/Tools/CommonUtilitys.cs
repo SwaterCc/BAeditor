@@ -179,6 +179,7 @@ namespace Hono.Scripts.Battle.Tools
         public static object CallFunc(this Queue<Parameter> queue, Parameter func)
         {
             var funcInfo = AbilityPreLoad.GetFuncInfo(func.FuncName);
+            //TODO:有GC问题后续优化
             object[] funcParams = new object[funcInfo.ParamCount];
 
             for (int idx = 0; idx < funcInfo.ParamCount; idx++)
