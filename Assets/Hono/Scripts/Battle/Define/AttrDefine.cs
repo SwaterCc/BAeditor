@@ -12,6 +12,7 @@ namespace Hono.Scripts.Battle
         public string desc;
         [NonSerialized]
         [OdinSerialize]
+        
         public List<AttrDefineItem> AttrDefineItems = new List<AttrDefineItem>();
     }
 }

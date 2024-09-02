@@ -9,8 +9,6 @@ namespace Editor.AttrMaker
     public class AttrTemplate : SerializedScriptableObject
     {
         public string Desc;
-        [NonSerialized]
-        [OdinSerialize]
         public List<AttrTemplateItem> AttrTemplateItems = new List<AttrTemplateItem>();
     }
 }

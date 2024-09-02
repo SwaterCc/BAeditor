@@ -27,7 +27,7 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 4
     - Name: 
       Entry: 7
       Data: 1|Hono.Scripts.Battle.AttrDefineItem, Assembly-CSharp
@@ -36,13 +36,13 @@ MonoBehaviour:
       Data: aa
     - Name: AttrType
       Entry: 1
-      Data: System.Int64
+      Data: System.Int32
     - Name: AttrValue
       Entry: 7
-      Data: 2|System.Int64, mscorlib
+      Data: 2|System.Int32, mscorlib
     - Name: 
       Entry: 3
-      Data: 22
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -57,13 +57,61 @@ MonoBehaviour:
       Data: aaa
     - Name: AttrType
       Entry: 1
-      Data: System.Single
+      Data: System.Int64
     - Name: AttrValue
       Entry: 7
-      Data: 4|System.Single, mscorlib
+      Data: 4|System.Int64, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|Hono.Scripts.Battle.AttrDefineItem, Assembly-CSharp
+    - Name: AttrName
+      Entry: 1
+      Data: fffas
+    - Name: AttrType
+      Entry: 1
+      Data: System.Boolean
+    - Name: AttrValue
+      Entry: 7
+      Data: 6|System.Boolean, mscorlib
+    - Name: 
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|Hono.Scripts.Battle.AttrDefineItem, Assembly-CSharp
+    - Name: AttrName
+      Entry: 1
+      Data: ffasdas
+    - Name: AttrType
+      Entry: 1
+      Data: Vector3
+    - Name: AttrValue
+      Entry: 7
+      Data: 8|UnityEngine.Vector3, UnityEngine.CoreModule
     - Name: 
       Entry: 4
-      Data: 13123
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 

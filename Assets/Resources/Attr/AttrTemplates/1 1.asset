@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f9d45ad59aa4409824d5b8fc89caac3, type: 3}
+  m_Name: 1 1
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: AttrDefineItems
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AttrDefineItem,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 1|Hono.Scripts.Battle.AttrDefineItem, Assembly-CSharp
+    - Name: AttrName
+      Entry: 1
+      Data: aa
+    - Name: AttrType
+      Entry: 1
+      Data: System.Int32
+    - Name: AttrValue
+      Entry: 7
+      Data: 2|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|Hono.Scripts.Battle.AttrDefineItem, Assembly-CSharp
+    - Name: AttrName
+      Entry: 1
+      Data: aaa
+    - Name: AttrType
+      Entry: 1
+      Data: System.Int64
+    - Name: AttrValue
+      Entry: 7
+      Data: 4|System.Int64, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|Hono.Scripts.Battle.AttrDefineItem, Assembly-CSharp
+    - Name: AttrName
+      Entry: 1
+      Data: fffas
+    - Name: AttrType
+      Entry: 1
+      Data: System.Boolean
+    - Name: AttrValue
+      Entry: 7
+      Data: 6|System.Boolean, mscorlib
+    - Name: 
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|Hono.Scripts.Battle.AttrDefineItem, Assembly-CSharp
+    - Name: AttrName
+      Entry: 1
+      Data: ffasdas
+    - Name: AttrType
+      Entry: 1
+      Data: Vector3
+    - Name: AttrValue
+      Entry: 7
+      Data: 8|UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  id: 1
+  desc: 

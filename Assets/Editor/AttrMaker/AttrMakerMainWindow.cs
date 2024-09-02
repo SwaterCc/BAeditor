@@ -20,20 +20,18 @@ namespace Editor.AttrMaker
     [Serializable]
     public class AttrTemplateItem
     {
-        [LabelText("属性变量名")] [HorizontalGroup("a")]
+        [LabelText("属性变量名")] [HorizontalGroup]
         public string AttrName;
 
-        [LabelText("属性描述")] [HorizontalGroup("a")]
+        [LabelText("属性描述")] [HorizontalGroup]
         public string AttrDesc;
 
-        [LabelText("属性值类型")]
-        [HorizontalGroup("a")]
-        [ValueDropdown("attrTypeList")]
+        [LabelText("属性值类型")] [HorizontalGroup] [ValueDropdown("attrTypeList")]
         [OnValueChanged("OnDropdownValueChanged")]
         public string AttrType;
 
-        [LabelText("属性默认值")] [HorizontalGroup("a")] [OdinSerialize]
-        public object AttrDefaultValue;
+        [LabelText("属性默认值")] [HorizontalGroup][DisableIf("@this.AttrType == \"Vector3\" || this.AttrType == \"Quaternion\"")]
+        public string AttrDefaultValue;
 
         [NonSerialized] private IEnumerable attrTypeList = new ValueDropdownList<string>()
         {
@@ -41,14 +39,22 @@ namespace Editor.AttrMaker
             { "long", typeof(Int64).ToString() },
             { "float", typeof(Single).ToString() },
             { "bool", typeof(Boolean).ToString() },
+            { "Vector3", "Vector3" },
+            { "Quaternion", "Quaternion" },
         };
 
         private void OnDropdownValueChanged()
         {
+            if (AttrType == "Vector3" || AttrType == "Quaternion")
+            {
+                AttrDefaultValue = String.Empty;
+                return;
+            }
+            
             var valueType = Type.GetType(AttrType);
             if (valueType != null)
             {
-                AttrDefaultValue = valueType.InstantiateDefault(true);
+                AttrDefaultValue = valueType.InstantiateDefault(true).ToString();
             }
         }
     }
@@ -64,7 +70,7 @@ namespace Editor.AttrMaker
         }
 
         public static string AttrTemplatesResourcePath = "Assets/Resources/Attr/AttrTemplates";
-
+        public static string AttrResourcePath = "Assets/Resources/Attr/ActorAttrConfig/";
         public static string PawnAttrResourcePath = "Assets/Resources/Attr/ActorAttrConfig/Pawn";
         public static string MonsterAttrResourcePath = "Assets/Resources/Attr/ActorAttrConfig/Monster";
         public static string BulletAttrResourcePath = "Assets/Resources/Attr/ActorAttrConfig/Bullet";
@@ -100,10 +106,10 @@ namespace Editor.AttrMaker
         }
 
         private static string _actorAttrTreeName = "Actor属性定义/";
-        private static string _pawnAttrTreeName = $"{_actorAttrTreeName}/Pawn/";
-        private static string _monsterAttrTreeName = $"{_actorAttrTreeName}/Monster/";
-        private static string _bulletAttrTreeName = $"{_actorAttrTreeName}/Bullet/";
-        private static string _hitBoxAttrTreeName = $"{_actorAttrTreeName}/HitBox/";
+        private static string _pawnAttrTreeName = $"{_actorAttrTreeName}Pawn/";
+        private static string _monsterAttrTreeName = $"{_actorAttrTreeName}Monster/";
+        private static string _bulletAttrTreeName = $"{_actorAttrTreeName}Bullet/";
+        private static string _hitBoxAttrTreeName = $"{_actorAttrTreeName}HitBox/";
 
         public List<AttrTemplate> attrTemplates = new List<AttrTemplate>();
 
@@ -197,7 +203,7 @@ namespace Editor.AttrMaker
                 {
                     if (SirenixEditorGUI.ToolbarButton("新建属性"))
                     {
-                        CreateActorAttrWindow.Open(attrTemplates);
+                        CreateActorAttrWindow.Open(attrTemplates,selected.Name);
                     }
                 }
 
@@ -205,7 +211,7 @@ namespace Editor.AttrMaker
                 {
                     if (SirenixEditorGUI.ToolbarButton("新建属性"))
                     {
-                        CreateActorAttrWindow.Open(attrTemplates);
+                        CreateActorAttrWindow.Open(attrTemplates,selected.Name);
                     }
                 }
             }

@@ -20,66 +20,22 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: AttrTemplateItems
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[Editor.AttrMaker.AttrTemplateItem,
-        Assembly-CSharp-Editor]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 1|Editor.AttrMaker.AttrTemplateItem, Assembly-CSharp-Editor
-    - Name: AttrName
-      Entry: 1
-      Data: aa
-    - Name: AttrDesc
-      Entry: 6
-      Data: 
-    - Name: AttrType
-      Entry: 1
-      Data: System.Int64
-    - Name: AttrDefaultValue
-      Entry: 7
-      Data: 2|System.Int64, mscorlib
-    - Name: 
-      Entry: 3
-      Data: 22
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 3|Editor.AttrMaker.AttrTemplateItem, Assembly-CSharp-Editor
-    - Name: AttrName
-      Entry: 1
-      Data: aaa
-    - Name: AttrDesc
-      Entry: 6
-      Data: 
-    - Name: AttrType
-      Entry: 1
-      Data: System.Single
-    - Name: AttrDefaultValue
-      Entry: 7
-      Data: 4|System.Single, mscorlib
-    - Name: 
-      Entry: 4
-      Data: 13123
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   Desc: 
+  AttrTemplateItems:
+  - AttrName: aa
+    AttrDesc: 
+    AttrType: System.Int32
+    AttrDefaultValue: 0
+  - AttrName: aaa
+    AttrDesc: 
+    AttrType: System.Int64
+    AttrDefaultValue: 0
+  - AttrName: fffas
+    AttrDesc: 
+    AttrType: System.Boolean
+    AttrDefaultValue: True
+  - AttrName: ffasdas
+    AttrDesc: 
+    AttrType: Vector3
+    AttrDefaultValue: 
