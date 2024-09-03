@@ -10,6 +10,12 @@ namespace Hono.Scripts.Battle
 
         private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 
+        private ActorLogic _logic;
+        public AbilityController(ActorLogic logic)
+        {
+            _logic = logic;
+        }
+        
         public bool HasAbility(int configId) {
 	        foreach (var ability in _abilities) {
 		        if (ability.Value.ConfigId == configId)
@@ -24,6 +30,21 @@ namespace Hono.Scripts.Battle
 		       Debug.Log($"ability UID{ability.Key} ,ConfigId {ability.Value.ConfigId}");
 	        }
         }
+
+        public Ability CreateAbility(int configId)
+        {
+            var ability = new Ability(_idGenerator.GenerateId(), _logic.Uid, configId);
+            return ability;
+        }
+
+        public void AwardAbility(Ability ability, bool isRunNow)
+        {
+            if (ability.GetCheckerRes(EAbilityCycleType.OnPreAwardCheck)
+                && _abilities.TryAdd(ability.Uid, ability))
+            {
+                if (isRunNow) ability.Execute();
+            }
+        }
         
         /// <summary>
         /// 赋予能力
@@ -31,9 +52,9 @@ namespace Hono.Scripts.Battle
         /// <param name="actorId"></param>
         /// <param name="configId"></param>
         /// <param name="isRunNow"></param>
-        public void AwardAbility(int actorId, int configId, bool isRunNow)
+        public void AwardAbility(int configId, bool isRunNow)
         {
-            var ability = new Ability(_idGenerator.GenerateId(), actorId, configId);
+            var ability = new Ability(_idGenerator.GenerateId(),_logic.Uid , configId);
             if (ability.GetCheckerRes(EAbilityCycleType.OnPreAwardCheck)
                 && _abilities.TryAdd(ability.Uid, ability))
             {

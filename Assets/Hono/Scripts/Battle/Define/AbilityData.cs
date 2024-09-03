@@ -4,6 +4,7 @@ using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -48,10 +49,11 @@ namespace Hono.Scripts.Battle
         /// SKILL BUFF 静态字段 TODO:临时做法，后续要接Excel
         /// </summary>
         [OdinSerialize]
-        public Dictionary<string, object> SpecializationData = new Dictionary<string, object>();
+        public ScriptableObject ExData = null;
 
         [NonSerialized]
         private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
+        
         public static AbilityNodeData GetNodeData(AbilityData abilityData, EAbilityNodeType type)
         {
             var nodeData = new AbilityNodeData();

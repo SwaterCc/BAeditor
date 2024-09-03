@@ -11,16 +11,18 @@ namespace Hono.Scripts.Battle {
 		/// </summary>
 		public int Uid; 
 		
-		/// <summary>
-		/// actor
-		/// </summary>
-		protected Actor _actor;
-
 		//逻辑层包含数据,逻辑流程
 		/// <summary>
 		/// 属性
 		/// </summary>
 		protected AttrCollection _attrs;
+
+		/// <summary>
+		/// 逻辑数据
+		/// </summary>
+		protected ActorLogicData _logicData;
+
+		public ActorLogicData LogicData => _logicData;
 
 		/// <summary>
 		/// 变量
@@ -47,11 +49,11 @@ namespace Hono.Scripts.Battle {
 		/// </summary>
 		protected readonly Dictionary<Type, ALogicComponent> _components;
 
-		public ActorLogic(Actor actor) {
-			Uid = actor.Uid;
-			_actor = actor;
+		public ActorLogic(int uid,ActorLogicData logicData) {
+			Uid = uid;
+			_logicData = logicData;
 			_attrs = new AttrCollection(LogicAttrCreator.Create);
-			_abilityController = new AbilityController();
+			_abilityController = new AbilityController(this);
 			_variables = new Variables(16, this);
 			_stateMachine = new ActorStateMachine(this);
 			_components = new Dictionary<Type, ALogicComponent>();
@@ -59,11 +61,17 @@ namespace Hono.Scripts.Battle {
 		}
 		
 		public void Init() {
+			InitAttr();
 			onInit();
 			registerComponents();
 			foreach (var component in _components) {
 				component.Value.Init();
 			}
+		}
+
+		private void InitAttr()
+		{
+			
 		}
 
 		protected abstract void onInit();
@@ -89,6 +97,18 @@ namespace Hono.Scripts.Battle {
 			return (T)component;
 		}
 
+		public bool TryGetComponent<T>(out T comp) where T : ALogicComponent
+		{
+			comp = null;
+			if (_components.TryGetValue(typeof(T), out var component))
+			{
+				comp = (T)component;
+				return true;
+			}
+			
+			return false;
+		}
+
 		protected virtual void onTick(float dt) { }
 
 		public void Tick(float dt) {
@@ -112,25 +132,25 @@ namespace Hono.Scripts.Battle {
 			return _variables;
 		}
 
-		public T GetAttr<T>(EAttrType attrType) {
-			return _attrs.GetAttr<T>(attrType.ToInt());
+		public T GetAttr<T>(ELogicAttr logicAttr) {
+			return _attrs.GetAttr<T>(logicAttr.ToInt());
 		}
 
-		public object GetAttrBox(EAttrType attrType) {
-			return _attrs.GetAttrBox(attrType.ToInt());
+		public object GetAttrBox(ELogicAttr logicAttr) {
+			return _attrs.GetAttrBox(logicAttr.ToInt());
 		}
 
-		public ICommand SetAttr<T>(EAttrType attrType, T value, bool isTempData) {
-			return _attrs.SetAttr(attrType.ToInt(), value, isTempData);
+		public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData) {
+			return _attrs.SetAttr(logicAttr.ToInt(), value, isTempData);
 		}
 
-		public ICommand SetAttrBox(EAttrType attrType, object value, bool isTempData) {
-			return _attrs.SetAttrBox(attrType.ToInt(), value, isTempData);
+		public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData) {
+			return _attrs.SetAttrBox(logicAttr.ToInt(), value, isTempData);
 		}
 
 		public void AwardAbility(int configId, bool isRunNow)
 		{
-			_abilityController.AwardAbility(Uid, configId, isRunNow);
+			_abilityController.AwardAbility(configId, isRunNow);
 		}
 		
 		public void AddTag(int tag) {

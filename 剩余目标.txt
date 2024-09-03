@@ -1,4 +1,5 @@
-1.资源加载流程，Res版
+1.Attr生成，AssetManager
+1.Ability特化流程
 2.Lua正式版
 3.筛选，阵营组件
 4.Ability的通用性再思考下，感觉可以优化

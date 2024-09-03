@@ -27,7 +27,7 @@ namespace Editor.AbilityEditor
             {
                 if (_funcShowInfoList == null)
                 {
-                    _funcShowInfoList = AssetDatabase.LoadAssetAtPath("Assets/Editor/EditorData/funcCache.asset",
+                    _funcShowInfoList = AssetDatabase.LoadAssetAtPath("Assets/Resources/AbilityRes/funcCache.asset",
                         typeof(FuncShowInfoList)) as FuncShowInfoList;
                 }
 
@@ -38,37 +38,6 @@ namespace Editor.AbilityEditor
         public AbilityView(AbilityData baseConfig)
         {
             Data = baseConfig;
-
-            SpecializationDataTemplate template = null;
-            switch (Data.Type)
-            {
-                case EAbilityType.Skill:
-                    template = AssetDatabase.LoadAssetAtPath(
-                        "Assets/AbilityRes/BattleEditorData/SkillSpecializatioTmp.asset",
-                        typeof(SpecializationDataTemplate)) as SpecializationDataTemplate;
-                    break;
-                case EAbilityType.Buff:
-                    template = AssetDatabase.LoadAssetAtPath(
-                        "Assets/AbilityRes/BattleEditorData/BuffSpecializationTmp.asset",
-                        typeof(SpecializationDataTemplate)) as SpecializationDataTemplate;
-                    break;
-                case EAbilityType.Bullet:
-                    template = AssetDatabase.LoadAssetAtPath(
-                        "Assets/AbilityRes/BattleEditorData/BulletSpecializationTmp.asset",
-                        typeof(SpecializationDataTemplate)) as SpecializationDataTemplate;
-                    break;
-            }
-            
-            if(template == null) return;
-            
-            foreach (var field in template.fieldList)
-            {
-                var fieldType = Type.GetType(field.TypeStr);
-                if (!Data.SpecializationData.ContainsKey(field.Name))
-                {
-                    Data.SpecializationData.Add(field.Name, fieldType?.InstantiateDefault(true));
-                }
-            }
         }
 
         public string GetOdinMenuTreeItemLabel()

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Hono.Scripts.Battle
 {
     //表演层
-    public abstract class ActorShow
+    public abstract partial class ActorShow
     {
         /// <summary>
         /// 配置id

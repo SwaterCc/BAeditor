@@ -6,54 +6,60 @@ namespace Hono.Scripts.Battle
         public void OnLoadedFinish();
     }
 
-    public abstract class AShowComponent
+    public partial class ActorShow
     {
-        protected ActorShow _actorShow;
-
-        protected AShowComponent(ActorShow show)
+        public abstract class AShowComponent
         {
-            _actorShow = show;
+            protected ActorShow _actorShow;
+
+            protected AShowComponent(ActorShow show)
+            {
+                _actorShow = show;
+            }
+
+            public abstract void Init();
+
+            public abstract void Load();
+
+            public abstract void LoadFinish();
+
+            public virtual void Reset() { }
+
+            /// <summary>
+            /// 渲染帧
+            /// </summary>
+            public void Update(float dt)
+            {
+                onUpdate(dt);
+            }
+
+            protected abstract void onUpdate(float dt);
         }
-        
-        public abstract void Init();
-
-        public abstract void Load();
-
-        public abstract void LoadFinish();
-        
-        public virtual void Reset() { }
-
-        /// <summary>
-        /// 渲染帧
-        /// </summary>
-        public void Update(float dt)
-        {
-            onUpdate(dt);
-        }
-
-        protected abstract void onUpdate(float dt);
     }
 
-    public abstract class ALogicComponent
+    public partial class ActorLogic
     {
-        protected ActorLogic _actorLogic;
-
-        protected ALogicComponent(ActorLogic logic)
+        public abstract class ALogicComponent
         {
-            _actorLogic = logic;
-        }
-        
-        public abstract void Init();
-        public virtual void Reset() { }
+            protected ActorLogic _actorLogic;
 
-        /// <summary>
-        /// 逻辑帧
-        /// </summary>
-        public void Tick(float dt)
-        {
-            onTick(dt);
-        }
+            protected ALogicComponent(ActorLogic logic)
+            {
+                _actorLogic = logic;
+            }
 
-        protected abstract void onTick(float dt);
+            public abstract void Init();
+            public virtual void Reset() { }
+
+            /// <summary>
+            /// 逻辑帧
+            /// </summary>
+            public void Tick(float dt)
+            {
+                onTick(dt);
+            }
+
+            protected abstract void onTick(float dt);
+        }
     }
 }

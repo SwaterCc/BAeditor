@@ -1,24 +1,18 @@
 ﻿
 namespace Hono.Scripts.Battle
 {
-    public class BeHurtComp : ALogicComponent
+    public partial class ActorLogic
     {
-        public BeHurtComp(ActorLogic logic) : base(logic) { }
-        
-        public override void Init()
+        public class BeHurtComp : ALogicComponent
         {
-            
-        }
-        
+            public BeHurtComp(ActorLogic logic) : base(logic) { }
 
-        protected override void onTick(float dt)
-        {
-            
-        }
+            public override void Init() { }
 
-        public void OnBeHurt(DamageResults damageResults)
-        {
-            
+
+            protected override void onTick(float dt) { }
+
+            public void OnBeHurt(DamageResults damageResults) { }
         }
     }
 }

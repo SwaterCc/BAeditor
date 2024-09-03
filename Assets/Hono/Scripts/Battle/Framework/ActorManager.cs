@@ -4,34 +4,62 @@ using Hono.Scripts.Battle.Tools;
 
 namespace Hono.Scripts.Battle {
 	public class ActorManager : Singleton<ActorManager> {
-		private List<Actor> _actors = new List<Actor>();
-		private Dictionary<int, Actor> _uidActorDict = new();
-		private Dictionary<EActorType, Dictionary<int, Actor>> _actorTypeDict = new();
-		private List<Actor> _removeList = new List<Actor>();
-		private List<Actor> _addCaches = new List<Actor>();
+		
+		/// <summary>
+		/// 正在运行的actor列表
+		/// </summary>
+		private readonly List<Actor> _runningActorList = new();
+		
+		/// <summary>
+		/// actor字典
+		/// </summary>
+		private readonly Dictionary<int, Actor> _uidActorDict = new();
+		
+		private readonly List<Actor> _removeList = new();
+		private readonly List<Actor> _addCaches = new();
 
-		private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
+		private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 
 		public void Init() { }
 
-		public Actor CreateActor(EActorType actorType, int configId) {
-			var actor = new Actor(_idGenerator.GenerateId(), configId, actorType);
+		public Actor CreateActor(int configId)
+		{
+			var actorData = AssetManager.Instance.GetData<ActorPrototypeData>(configId);
+			var actor = new Actor(_idGenerator.GenerateId(), actorData);
 			ActorLogic logic = null;
-			ActorShow show = null;
-			switch (actorType) {
-				case EActorType.Pawn:
-					show = new PawnShow();
-					logic = new PawnLogic(actor);
+			var logicData = AssetManager.Instance.GetData<ActorLogicData>(actorData.LogicConfigId);
+			switch (logicData.logicType) {
+				case EActorLogicType.Pawn:
+					logic = new PawnLogic(actor.Uid, logicData);
 					break;
-				case EActorType.Monster:
+				case EActorLogicType.Monster:
 					break;
-				case EActorType.Building:
+				case EActorLogicType.Building:
 					break;
-				case EActorType.HitBox:
-					logic = new HitBoxLogic(actor);
+				case EActorLogicType.HitBox:
+					logic = new HitBoxLogic(actor.Uid, logicData);
 					break;
 			}
-
+			
+			ActorShow show = null;
+			if (actorData.ShowConfigId > 0)
+			{
+				var showData = AssetManager.Instance.GetData<ActorShowData>(actorData.ShowConfigId);
+				switch (showData.ShowType)
+				{
+					case EActorShowType.LogicTest:
+						show = new PawnShow();
+						break;
+					case EActorShowType.Pawn:
+						show = new PawnShow();
+						break;
+					case EActorShowType.Monster:
+						break;
+					case EActorShowType.Building:
+						break;
+				}
+			}
+			
 			actor.Init(show, logic);
 			return actor;
 		}
@@ -39,26 +67,21 @@ namespace Hono.Scripts.Battle {
 		public void Tick(float dt) {
 			if (_addCaches.Count != 0) {
 				foreach (var actor in _addCaches) {
-					_actors.Add(actor);
+					_runningActorList.Add(actor);
 					_uidActorDict.Add(actor.Uid, actor);
-					if (!_actorTypeDict.TryGetValue(actor.ActorType, out var dict)) {
-						dict = new Dictionary<int, Actor>();
-						_actorTypeDict.Add(actor.ActorType, dict);
-					}
-
-					dict.Add(actor.Uid, actor);
 				}
 
 				_addCaches.Clear();
 			}
 
-			foreach (var actor in _actors) {
+			foreach (var actor in _runningActorList) {
 				actor.RTState.Tick(dt);
 			}
 
 			if (_removeList.Count != 0) {
 				foreach (var actor in _removeList) {
-					_actors.Remove(actor);
+					_runningActorList.Remove(actor);
+					_uidActorDict.Remove(actor.Uid);
 				}
 
 				_removeList.Clear();
@@ -66,24 +89,41 @@ namespace Hono.Scripts.Battle {
 		}
 
 		public void Update(float dt) {
-			foreach (var actor in _actors) {
+			foreach (var actor in _runningActorList) {
 				actor.RTState.Update(dt);
 			}
 		}
 
-		public void AddActor(Actor actor) {
+		public void AddActor(Actor actor)
+		{
+			if (actor == null) return; 
 			_addCaches.Add(actor);
 		}
 
-		public void AddActor(EActorType type, int configId) {
-			var actor = CreateActor(type, configId);
-			_addCaches.Add(actor);
+		public void AddActor( int configId) {
+			var actor = CreateActor(configId);
+			AddActor(actor);
 		}
 
 		public Actor GetActor(int uid) {
-			return _actors[uid];
+			if (_uidActorDict.TryGetValue(uid, out var actor))
+			{
+				return actor;
+			}
+			return null;
 		}
 
-		public void RemoveActor(Actor actor) { }
+		public bool TryGetActor(int uid, out Actor actor)
+		{
+			return _uidActorDict.TryGetValue(uid, out actor);
+		}
+
+		public void RemoveActor(Actor actor)
+		{
+			if (actor != null)
+			{
+				_removeList.Add(actor);
+			}
+		}
 	}
 }

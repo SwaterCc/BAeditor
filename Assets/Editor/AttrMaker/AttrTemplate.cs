@@ -6,9 +6,16 @@ using UnityEngine;
 
 namespace Editor.AttrMaker
 {
+    public enum EAttrType
+    {
+        LogicAttr,
+        ShowAttr
+    }
+    
     public class AttrTemplate : SerializedScriptableObject
     {
         public string Desc;
+        public EAttrType AttrTemplateType;
         public List<AttrTemplateItem> AttrTemplateItems = new List<AttrTemplateItem>();
     }
 }

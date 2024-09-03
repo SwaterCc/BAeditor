@@ -12,10 +12,10 @@ namespace Hono.Scripts.Battle {
 
 		private readonly Dictionary<int, IAttr> _attrs = new(128);
 
-		private IAttr getAttrAndSetDefault(EAttrType attrType) {
-			var attr = _creator.Invoke(attrType.ToInt());
+		private IAttr getAttrAndSetDefault(int logicAttr) {
+			var attr = _creator.Invoke(logicAttr);
 			if (attr == null) {
-				throw new NullReferenceException($"create attr {attrType} Failed!");
+				throw new NullReferenceException($"create attr {logicAttr} Failed!");
 			}
 
 			attr.InitDefaultValue();
@@ -26,7 +26,7 @@ namespace Hono.Scripts.Battle {
 			var attrTypeInt = attrType;
 
 			if (!_attrs.TryGetValue(attrTypeInt, out var attr)) {
-				attr = getAttrAndSetDefault((EAttrType)attrType);
+				attr = getAttrAndSetDefault(attrType);
 				_attrs.Add(attrTypeInt, attr);
 			}
 
@@ -45,7 +45,7 @@ namespace Hono.Scripts.Battle {
 			var attrTypeInt = attrType;
 
 			if (!_attrs.TryGetValue(attrTypeInt, out var attr)) {
-				attr = getAttrAndSetDefault((EAttrType)attrType);
+				attr = getAttrAndSetDefault(attrType);
 				_attrs.Add(attrTypeInt, attr);
 			}
 
@@ -72,6 +72,17 @@ namespace Hono.Scripts.Battle {
 			}
 
 			throw new KeyNotFoundException($"Attribute type {attrType} not found");
+		}
+	}
+	
+	
+	public static class AttrEnumExtensions {
+		public static int ToInt(this ELogicAttr logicAttr) {
+			return (int)logicAttr;
+		}
+
+		public static int ToInt(this EShowAttr attr) {
+			return (int)attr;
 		}
 	}
 }

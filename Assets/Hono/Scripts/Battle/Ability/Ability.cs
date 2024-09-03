@@ -62,13 +62,13 @@ namespace Hono.Scripts.Battle {
 		public int BelongActorId => _belongActorId;
 
 		//指令缓存
-		private HashSet<ICommand> _commands = new HashSet<ICommand>();
+		private HashSet<ICommand> _commands;
 		
 		public Ability(int uid, int belongActorId, int abilityConfigId) {
 			Uid = uid;
 			_belongActorId = belongActorId;
 			_abilityConfigId = abilityConfigId;
-			_abilityData = AbilityDataCacheMgr.Instance.GetAbilityData(_abilityConfigId);
+			_abilityData = AbilityDataMgr.Instance.GetAbilityData(_abilityConfigId);
 			_variables = new Variables(16, this);
 			_executor = new AbilityExecutor(this);
 			_checkers = new Dictionary<EAbilityCycleType, AbilityChecker>() {
@@ -92,7 +92,7 @@ namespace Hono.Scripts.Battle {
 			_executor.UnInstall();
 
 			//重新获取数据
-			_abilityData = AbilityDataCacheMgr.Instance.GetAbilityData(_abilityConfigId);
+			_abilityData = AbilityDataMgr.Instance.GetAbilityData(_abilityConfigId);
 			_executor.Setup();
 		}
 

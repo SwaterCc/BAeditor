@@ -39,14 +39,13 @@ namespace Hono.Scripts.Battle {
 				_instance = this;
 			}
 			
-			Init();
+			init();
 		}
 
-		public void Init() {
-			ConfigManager.Instance.Init();
+		private void init() {
+			AssetManager.Instance.Init();
+			AbilityDataMgr.Instance.Init();
 			ActorManager.Instance.Init();
-			AbilityPreLoad.InitCache();
-			AbilityDataCacheMgr.Instance.Init();
 		}
 
 		public void Update() {

@@ -1,6 +1,8 @@
+using UnityEngine;
+
 namespace Hono.Scripts.Battle
 {
-    public enum EAttrType
+    public enum ELogicAttr
     {
         Hp = 0,
         Mp,
@@ -9,9 +11,6 @@ namespace Hono.Scripts.Battle
         Attack,
         Rot,
         Position,
-    }
-
-    public enum EShowAttrType {
-	    
+        Speed,
     }
 }

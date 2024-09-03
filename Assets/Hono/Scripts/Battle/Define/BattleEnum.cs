@@ -2,6 +2,22 @@ using System;
 
 namespace Hono.Scripts.Battle
 {
+    public enum EActorLogicType
+    {
+        Pawn,
+        Monster,
+        Building,
+        HitBox,
+    }
+
+    public enum EActorShowType
+    {
+        LogicTest,
+        Pawn,
+        Monster,
+        Building,
+    }
+    
     /// <summary>
     /// 能力配置的归属类型
     /// </summary>
@@ -10,17 +26,8 @@ namespace Hono.Scripts.Battle
         Skill,
         Buff,
         Bullet,
-    }
-
-    /// <summary>
-    /// 对象类型
-    /// </summary>
-    public enum EActorType
-    {
-        Pawn,
-        Monster,
-        Building,
-        HitBox,
+        GameMode,
+        Other,
     }
 
     public enum EDamageElementType {
@@ -300,26 +307,6 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 属性分量
-    /// </summary>
-    public enum EAttrElementType
-    {
-        /// <summary>
-        /// 基础值，必有此类型
-        /// </summary>
-        Base,
-
-        /// <summary>
-        /// 最终计算值，必有此类型
-        /// </summary>
-        Final,
-
-        Add,
-
-        Multiply,
-    }
-
-    /// <summary>
     /// 属性修改操作类别
     /// </summary>
     public enum EAttrCommandType
@@ -334,12 +321,6 @@ namespace Hono.Scripts.Battle
         OnlyRepeat,
         //数值循环
         NumberLoop,
-    }
-
-    public enum ETimerOperationType
-    {
-        Once,
-        Schedule,
     }
 
     [Flags]

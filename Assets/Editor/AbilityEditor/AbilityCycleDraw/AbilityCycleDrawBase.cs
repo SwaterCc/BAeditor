@@ -95,17 +95,18 @@ namespace Editor.AbilityEditor
 
         public static void DrawResList(AbilityData data, string key, string desc)
         {
-            if (!data.SpecializationData.TryGetValue(key, out var resCheck))
+            /*if (!data.SpecializationData.TryGetValue(key, out var resCheck))
             {
-                resCheck = new List<List<ResCheckItem>>();
-                data.SpecializationData.Add(key, new List<List<ResCheckItem>>());
-            }
+                resCheck = new List<List<ResItem>>();
+                data.SpecializationData.Add(key, new List<List<ResItem>>());
+            }*/
 
-            ResCheckItem removeItem = null;
-            List<ResCheckItem> removeList = null;
+            /*
+            ResItem removeItem = null;
+            List<ResItem> removeList = null;
 
 
-            var checkList = (List<List<ResCheckItem>>)resCheck;
+            var checkList = (List<List<ResItem>>)resCheck;
             EditorGUILayout.LabelField(desc);
             SirenixEditorGUI.BeginVerticalList();
 
@@ -142,7 +143,7 @@ namespace Editor.AbilityEditor
 
                 if (GUILayout.Button("+", GUILayout.Width(22)))
                 {
-                    items.Add(new ResCheckItem());
+                    items.Add(new ResItem());
                 }
 
                 EditorGUILayout.EndHorizontal();
@@ -156,7 +157,7 @@ namespace Editor.AbilityEditor
 
             if (SirenixEditorGUI.Button("+", ButtonSizes.Medium))
             {
-                checkList.Add(new List<ResCheckItem>());
+                checkList.Add(new List<ResItem>());
             }
 
             SirenixEditorGUI.EndVerticalList();
@@ -164,7 +165,7 @@ namespace Editor.AbilityEditor
             if (removeList != null)
             {
                 checkList.Remove(removeList);
-            }
+            }*/
         }
     }
 }

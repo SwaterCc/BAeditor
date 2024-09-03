@@ -16,14 +16,8 @@ namespace Hono.Scripts.Battle {
 		/// 配置ID
 		/// </summary>
 		private int _configId;
-
 		public int ConfigId => _configId;
-
-		/// <summary>
-		/// actor类型
-		/// </summary>
-		public EActorType ActorType;
-
+		
 		/// <summary>
 		/// 是否无效
 		/// </summary>
@@ -34,7 +28,7 @@ namespace Hono.Scripts.Battle {
 		/// <summary>
 		/// Actor基础数据
 		/// </summary>
-		public ActorBassData BassData;
+		public ActorPrototypeData PrototypeData { get; }
 
 		/// <summary>
 		/// 表现层
@@ -58,10 +52,10 @@ namespace Hono.Scripts.Battle {
 		/// </summary>
 		public ActorRTState RTState => _rtState;
 
-		public Actor(int uid, int configId, EActorType actorType) {
+		public Actor(int uid, ActorPrototypeData data) {
 			Uid = uid;
-			_configId = configId;
-			ActorType = actorType;
+			PrototypeData = data;
+			_configId = data.id;
 		}
 
 		public void Init(ActorShow show, ActorLogic logic) {

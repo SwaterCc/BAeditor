@@ -63,12 +63,10 @@ namespace Hono.Scripts.Battle
             return new MotionEventChecker(eventType, motionId, null);
         }
 
-
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void CreateHitBox(int hitDataId)
         {
-            var hitBox = ActorManager.Instance.CreateActor(EActorType.HitBox, hitDataId);
-            ActorManager.Instance.AddActor(hitBox);
+            ActorManager.Instance.AddActor(hitDataId);
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
@@ -80,15 +78,15 @@ namespace Hono.Scripts.Battle
 
 
         [AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
-        public static object GetLogicAttr(EAttrType attrType)
+        public static object GetLogicAttr(ELogicAttr logicAttr)
         {
-            return Ability.Context.BelongLogic.GetAttrBox(attrType);
+            return Ability.Context.BelongLogic.GetAttrBox(logicAttr);
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void SetLogicAttr(EAttrType attrType, object value, bool isTempData)
+        public static void SetLogicAttr(ELogicAttr logicAttr, object value, bool isTempData)
         {
-            var command = Ability.Context.BelongLogic.SetAttrBox(attrType, value, isTempData);
+            var command = Ability.Context.BelongLogic.SetAttrBox(logicAttr, value, isTempData);
             Ability.Context.CurrentAbility.AddCommand(command);
         }
 
