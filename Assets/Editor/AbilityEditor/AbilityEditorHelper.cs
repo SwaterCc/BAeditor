@@ -50,7 +50,7 @@ namespace Editor.AbilityEditor
         }
 
 
-        public static object DrawLabelByType(SpecializationDataType elementType, string label, object updateValue)
+        /*public static object DrawLabelByType(SpecializationDataType elementType, string label, object updateValue)
         {
             object afterValue = null;
             if (elementType == SpecializationDataType.Int)
@@ -75,7 +75,7 @@ namespace Editor.AbilityEditor
             }
 
             return afterValue;
-        }
+        }*/
 
 
         public static string GetTypeAllName(Type type)

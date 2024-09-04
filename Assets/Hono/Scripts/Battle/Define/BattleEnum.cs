@@ -209,7 +209,7 @@ namespace Hono.Scripts.Battle
         //全叠加
         Add,
 
-        //全替换
+        //非同源替换
         OnlyOne,
     }
 

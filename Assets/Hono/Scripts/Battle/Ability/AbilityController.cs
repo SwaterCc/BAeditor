@@ -51,13 +51,15 @@ namespace Hono.Scripts.Battle
         /// <param name="actorId"></param>
         /// <param name="configId"></param>
         /// <param name="isRunNow"></param>
-        public void AwardAbility(int configId, bool isRunNow)
+        public int AwardAbility(int configId, bool isRunNow)
         {
             var ability = new Ability(_idGenerator.GenerateId(),_logic.Uid , configId);
             if (_abilities.TryAdd(ability.Uid, ability))
             {
                 if (isRunNow) ability.Execute();
             }
+
+            return ability.Uid;
         }
 
         /// <summary>
@@ -68,6 +70,15 @@ namespace Hono.Scripts.Battle
             if (_abilities.TryGetValue(uid, out var ability))
             {
                 ability.Execute();
+            }
+        }
+
+        public void RemoveAbility(int uid)
+        {
+            if (_abilities.TryGetValue(uid, out var ability))
+            {
+                ability.OnDestroy();
+                _abilities.Remove(uid);
             }
         }
 

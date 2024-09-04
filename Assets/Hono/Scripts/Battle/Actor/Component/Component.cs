@@ -59,7 +59,7 @@ namespace Hono.Scripts.Battle
                 onTick(dt);
             }
 
-            protected abstract void onTick(float dt);
+            protected virtual void onTick(float dt) { }
         }
     }
 }
