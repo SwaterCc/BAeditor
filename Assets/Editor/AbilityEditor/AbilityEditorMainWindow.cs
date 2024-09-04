@@ -25,6 +25,7 @@ namespace Editor.AbilityEditor
         private const string MENU_SKILL = "Skill";
         private const string MENU_BUFF = "Buff";
         private const string MENU_BULLET = "Bullet";
+        private const string MENU_GameMode = "GameMode";
         private const string MENU_OTHER = "Other";
 
         private const string ASSET_NAME_SKILL = "Skills";
