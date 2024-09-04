@@ -17,7 +17,7 @@ namespace Hono.Scripts.Battle
         Monster,
         Building,
     }
-    
+
     /// <summary>
     /// 能力配置的归属类型
     /// </summary>
@@ -30,19 +30,21 @@ namespace Hono.Scripts.Battle
         Other,
     }
 
-    public enum EDamageElementType {
-	    Fire,
-	    Water,
-	    Wind,
+    public enum EDamageElementType
+    {
+        Fire,
+        Water,
+        Wind,
     }
-    
-    public enum EDamageType {
-	    Normal,
-	    Percent,
-	    Dot,
-	    Health,
+
+    public enum EDamageType
+    {
+        Normal,
+        Percent,
+        Dot,
+        Health,
     }
-    
+
     /// <summary>
     /// 当前Ability执行到哪一步了
     /// </summary>
@@ -54,7 +56,7 @@ namespace Hono.Scripts.Battle
         Executing,
         EndExecute,
     }
-    
+
     public enum ESelectPosType
     {
         Self,
@@ -62,15 +64,10 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// Ability生命周期函数枚举，用于编辑器存储节点
+    /// Ability可编辑周期
     /// </summary>
-    public enum EAbilityCycleType
+    public enum EAbilityAllowEditCycle
     {
-        /// <summary>
-        /// 赋予能力时检测
-        /// </summary>
-        OnPreAwardCheck,
-
         /// <summary>
         /// 能力初始化
         /// </summary>
@@ -80,7 +77,7 @@ namespace Hono.Scripts.Battle
         /// 初始化完成，且未有执行指令时的等待周期，不可编辑（目前）
         /// </summary>
         OnReady,
-        
+
         /// <summary>
         /// 能力执行前检测
         /// </summary>
@@ -141,7 +138,7 @@ namespace Hono.Scripts.Battle
         /// 等待节点
         /// </summary>
         ETimer,
-        
+
         /// <summary>
         /// 阶段节点
         /// </summary>
@@ -164,7 +161,7 @@ namespace Hono.Scripts.Battle
     {
         Enemy,
         Self,
-        Friendly ,
+        Friendly,
         Team,
         Group,
         All
@@ -187,7 +184,7 @@ namespace Hono.Scripts.Battle
         BeforeExecute,
         AfterExecute
     }
-    
+
     /// <summary>
     /// 战斗资源的类型
     /// </summary>
@@ -205,10 +202,13 @@ namespace Hono.Scripts.Battle
     {
         //同源替换
         SameSourceReplace,
+
         //同源叠加
         SameSourceAdd,
+
         //全叠加
         Add,
+
         //全替换
         OnlyOne,
     }
@@ -243,13 +243,10 @@ namespace Hono.Scripts.Battle
         LockTarget
     }
 
-    /// <summary>
-    /// Aoe打击点范围形状类型
-    /// </summary>
-    public enum EAabbType
+    public enum ECheckBoxShapeType
     {
         /// <summary>
-        /// 矩形
+        /// 立方体
         /// </summary>
         Cube,
 
@@ -270,6 +267,21 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
+    /// 范围检测方式
+    /// </summary>
+    public enum ECheckBoxBehaveType
+    {
+        /// <summary>
+        /// 预设触发器
+        /// </summary>
+        Trigger,
+        /// <summary>
+        /// 射线检测，适合一帧的瞬时检测
+        /// </summary>
+        RayCast,
+    }
+
+    /// <summary>
     /// 战斗位移的类型
     /// </summary>
     public enum EBattleSpecialMotionType { }
@@ -286,11 +298,11 @@ namespace Hono.Scripts.Battle
         MoreAndEqual
     }
 
-    public enum EConditionType
+    public enum EFilterRangeType
     {
-        If,
-        IfElse,
-        Else
+        Tag,
+        ActorState,
+        AbilityID,
     }
 
     public enum EVariableOperationType
@@ -314,11 +326,12 @@ namespace Hono.Scripts.Battle
         Add,
         Override,
     }
-    
+
     public enum ERepeatOperationType
     {
         //仅重复执行
         OnlyRepeat,
+
         //数值循环
         NumberLoop,
     }
@@ -335,11 +348,12 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// 状态机枚举
     /// </summary>
-    public enum EActorState {
-	    Idle,
-	    Move,
-	    Battle,
-	    Stiff,
-	    Death
+    public enum EActorState
+    {
+        Idle,
+        Move,
+        Battle,
+        Stiff,
+        Death
     }
 }

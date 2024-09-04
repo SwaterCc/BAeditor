@@ -77,39 +77,37 @@ namespace Editor.AbilityEditor
 
     public class AbilityViewDrawer : OdinValueDrawer<AbilityView>
     {
-        private Dictionary<EAbilityCycleType, AbilityCycleDrawBase> _cycleDrawer = new();
+        private Dictionary<EAbilityAllowEditCycle, AbilityCycleDrawBase> _cycleDrawer = new();
 
         private bool _logicMainFoldout = true;
 
         private Vector2 _scrollViewPos = Vector2.zero;
 
-        private Dictionary<EAbilityCycleType, string> _cycleDesc;
+        private Dictionary<EAbilityAllowEditCycle, string> _cycleDesc;
 
         protected override void Initialize()
         {
-            _cycleDrawer = new Dictionary<EAbilityCycleType, AbilityCycleDrawBase>();
+            _cycleDrawer = new Dictionary<EAbilityAllowEditCycle, AbilityCycleDrawBase>();
         }
 
-        private AbilityCycleDrawBase getDrawer(EAbilityCycleType type, AbilityData data)
+        private AbilityCycleDrawBase getDrawer(EAbilityAllowEditCycle type, AbilityData data)
         {
             switch (type)
             {
-                case EAbilityCycleType.OnPreAwardCheck:
-                    return new OnPreAwardCheckDrawer(EAbilityCycleType.OnPreAwardCheck, data);
-                case EAbilityCycleType.OnInit:
-                    return new OnInitDrawer(EAbilityCycleType.OnInit, data);
+                case EAbilityAllowEditCycle.OnInit:
+                    return new OnInitDrawer(EAbilityAllowEditCycle.OnInit, data);
 
-                case EAbilityCycleType.OnPreExecuteCheck:
-                    return new OnPreExecuteCheckDrawer(EAbilityCycleType.OnPreExecuteCheck, data);
+                case EAbilityAllowEditCycle.OnPreExecuteCheck:
+                    return new OnPreExecuteCheckDrawer(EAbilityAllowEditCycle.OnPreExecuteCheck, data);
 
-                case EAbilityCycleType.OnPreExecute:
-                    return new OnPreExecuteDrawer(EAbilityCycleType.OnPreExecute, data);
+                case EAbilityAllowEditCycle.OnPreExecute:
+                    return new OnPreExecuteDrawer(EAbilityAllowEditCycle.OnPreExecute, data);
 
-                case EAbilityCycleType.OnExecuting:
-                    return new OnExecutingDrawer(EAbilityCycleType.OnExecuting, data);
+                case EAbilityAllowEditCycle.OnExecuting:
+                    return new OnExecutingDrawer(EAbilityAllowEditCycle.OnExecuting, data);
 
-                case EAbilityCycleType.OnEndExecute:
-                    return new OnEndExecuteDrawer(EAbilityCycleType.OnEndExecute, data);
+                case EAbilityAllowEditCycle.OnEndExecute:
+                    return new OnEndExecuteDrawer(EAbilityAllowEditCycle.OnEndExecute, data);
             }
 
             return null;
@@ -127,12 +125,16 @@ namespace Editor.AbilityEditor
             itemShowView.Data.Desc = SirenixEditorFields.TextField("Desc", itemShowView.Data.Desc);
             itemShowView.Data.IconPath = SirenixEditorFields.TextField("IconPath", itemShowView.Data.IconPath);
             //tag需要工具
+            EditorGUILayout.LabelField("Tag需要工具");
             itemShowView.Data.DefaultStartGroupId = SirenixEditorFields.IntField("默认开始阶段", itemShowView.Data.DefaultStartGroupId);
+            itemShowView.Data.PreCheckerVarName = SirenixEditorFields.TextField("检测阶段变量名", itemShowView.Data.PreCheckerVarName);
             SirenixEditorGUI.EndBox();
             
-            foreach (EAbilityCycleType cycle in Enum.GetValues(typeof(EAbilityCycleType)))
+            
+            
+            foreach (EAbilityAllowEditCycle cycle in Enum.GetValues(typeof(EAbilityAllowEditCycle)))
             {
-                if(cycle == EAbilityCycleType.OnReady) continue;
+                if(cycle == EAbilityAllowEditCycle.OnReady) continue;
                 
                 if (!_cycleDrawer.TryGetValue(cycle, out var drawer))
                 {

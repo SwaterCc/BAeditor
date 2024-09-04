@@ -44,11 +44,14 @@ namespace Hono.Scripts.Battle {
 
 		private void init() {
 			AssetManager.Instance.Init();
-			AbilityDataMgr.Instance.Init();
 			ActorManager.Instance.Init();
 		}
 
 		public void Update() {
+			if (!AssetManager.Instance.IsLoadFinish)
+			{
+				return;
+			}
 			//临时做法
 			//保证逻辑帧在表现帧之前执行一次
 			Tick(Time.deltaTime);

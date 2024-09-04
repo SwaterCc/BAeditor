@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Hono.Scripts.Battle
 {
     [Serializable]
-    public class AbilityConfigItem
+    public struct AbilityConfigItem
     {
         /// <summary>
         /// 配置ID 策划手输入

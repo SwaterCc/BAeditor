@@ -45,11 +45,6 @@ namespace Hono.Scripts.Battle {
 		public Variables GetVariables() => _variables;
 
 		/// <summary>
-		/// 检测类
-		/// </summary>
-		private readonly Dictionary<EAbilityCycleType, AbilityChecker> _checkers;
-
-		/// <summary>
 		/// 周期类
 		/// </summary>
 		private readonly AbilityState _state;
@@ -68,13 +63,9 @@ namespace Hono.Scripts.Battle {
 			Uid = uid;
 			_belongActorId = belongActorId;
 			_abilityConfigId = abilityConfigId;
-			_abilityData = AbilityDataMgr.Instance.GetAbilityData(_abilityConfigId);
+			_abilityData = AssetManager.Instance.GetData<AbilityData>(_abilityConfigId);
 			_variables = new Variables(16, this);
 			_executor = new AbilityExecutor(this);
-			_checkers = new Dictionary<EAbilityCycleType, AbilityChecker>() {
-				{ EAbilityCycleType.OnPreAwardCheck, new PreAwardChecker(this) },
-				{ EAbilityCycleType.OnPreExecuteCheck, new PreExecuteCheck(this) },
-			};
 			_state = new AbilityState(this);
 			_commands = new HashSet<ICommand>();
 			_executor.Setup();
@@ -91,6 +82,14 @@ namespace Hono.Scripts.Battle {
 			//卸载加载好的节点
 			_executor.UnInstall();
 
+			//清理变量
+			_variables.Clear();
+			
+			//指令撤销
+			foreach (var command in _commands) {
+				command.Undo();
+			}
+			
 			//重新获取数据
 			_abilityData = AbilityDataMgr.Instance.GetAbilityData(_abilityConfigId);
 			_executor.Setup();
@@ -102,18 +101,23 @@ namespace Hono.Scripts.Battle {
 
 		public void SetNextGroupId(int id) {
 			if (_state.Current.CurState == EAbilityState.Executing) {
-				((Executing)_state.Current).NextGroupId = id;
+				((ExecutingCycle)_state.Current).NextGroupId = id;
 			}
 		}
 
 		public void StopGroup() {
 			if (_state.Current.CurState == EAbilityState.Executing) {
-				((Executing)_state.Current).CurrentGroupStop();
+				((ExecutingCycle)_state.Current).CurrentGroupStop();
 			}
 		}
 
 		public void AddCommand(ICommand command) {
 			_commands.Add(command);
+		}
+
+		public CycleCallback GetCycleCallback(EAbilityAllowEditCycle allowEditCycle)
+		{
+			return _state.GetCycleCallback(allowEditCycle);
 		}
 		
 		public void OnDestroy() {

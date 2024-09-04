@@ -13,9 +13,7 @@ namespace Hono.Scripts.Battle
             //管理技能升级养成数据
             //技能的内核逻辑依靠Ability
             //Ability可通过该组件获取技能数据
-
             private Dictionary<int, SkillData> _skillDatas = new Dictionary<int, SkillData>();
-            private Dictionary<int, Ability> _skill = new Dictionary<int, Ability>();
 
             public SkillComp(ActorLogic logic) : base(logic) { }
 

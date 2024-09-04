@@ -22,6 +22,9 @@ namespace Editor.AbilityEditor.TreeItem
         [BoxGroup("循环节点配置", true, true)] [ShowIf("RepeatOperationType", ERepeatOperationType.NumberLoop)]
         [LabelText("循环次数")]public int StepCount;
 
+        //public bool IsCaptureVar;
+        //public string CaptureVarName;
+        
         protected override void onInit()
         {
             RepeatOperationType = NodeData.RepeatNodeData.RepeatOperationType;

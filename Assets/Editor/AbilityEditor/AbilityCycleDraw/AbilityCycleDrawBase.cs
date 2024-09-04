@@ -12,7 +12,7 @@ namespace Editor.AbilityEditor
     {
         public bool Foldout = false;
 
-        public EAbilityCycleType CycleType;
+        public EAbilityAllowEditCycle AllowEditCycle;
 
         public AbilityData Data;
 
@@ -24,19 +24,19 @@ namespace Editor.AbilityEditor
 
         private bool _isFirst = true;
         
-        public AbilityCycleDrawBase(EAbilityCycleType cycleType, AbilityData data)
+        public AbilityCycleDrawBase(EAbilityAllowEditCycle allowEditCycle, AbilityData data)
         {
-            CycleType = cycleType;
+            AllowEditCycle = allowEditCycle;
             Data = data;
 
-            if (!data.HeadNodeDict.TryGetValue(cycleType, out var nodeId))
+            if (!data.HeadNodeDict.TryGetValue(allowEditCycle, out var nodeId))
             {
                 var cycleNodeData = AbilityData.GetNodeData(data, EAbilityNodeType.EAbilityCycle);
-                cycleNodeData.CycleNodeData = cycleType;
+                cycleNodeData.allowEditCycleNodeData = allowEditCycle;
                 cycleNodeData.Parent = -1;
 
                 data.NodeDict.Add(cycleNodeData.NodeId, cycleNodeData);
-                data.HeadNodeDict.Add(CycleType, cycleNodeData.NodeId);
+                data.HeadNodeDict.Add(AllowEditCycle, cycleNodeData.NodeId);
                 CycleNode = cycleNodeData;
             }
             else
@@ -65,7 +65,7 @@ namespace Editor.AbilityEditor
             var mainRect = GUIHelper.GetCurrentLayoutRect();
             SirenixEditorGUI.BeginBoxHeader();
             var headHeight = GUIHelper.GetCurrentLayoutRect().height;
-            Foldout = SirenixEditorGUI.Foldout(Foldout, CycleType.ToString());
+            Foldout = SirenixEditorGUI.Foldout(Foldout, AllowEditCycle.ToString());
             SirenixEditorGUI.EndBoxHeader();
             if (Foldout)
             {

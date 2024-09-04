@@ -10,7 +10,7 @@ namespace Editor.AbilityEditor
 {
     public class OnPreAwardCheckDrawer : AbilityCycleDrawBase
     {
-        public OnPreAwardCheckDrawer(EAbilityCycleType cycleType, AbilityData data) : base(cycleType, data) { }
+        public OnPreAwardCheckDrawer(EAbilityAllowEditCycle allowEditCycle, AbilityData data) : base(allowEditCycle, data) { }
 
         protected override bool getDefaultFoldout()
         {
@@ -29,7 +29,7 @@ namespace Editor.AbilityEditor
         private List<ResItem> _removeList;
 
 
-        public OnPreExecuteCheckDrawer(EAbilityCycleType cycleType, AbilityData data) : base(cycleType, data) { }
+        public OnPreExecuteCheckDrawer(EAbilityAllowEditCycle allowEditCycle, AbilityData data) : base(allowEditCycle, data) { }
 
         protected override bool getDefaultFoldout()
         {
@@ -47,7 +47,7 @@ namespace Editor.AbilityEditor
 
     public class OnInitDrawer : AbilityCycleDrawBase
     {
-        public OnInitDrawer(EAbilityCycleType cycleType, AbilityData data) : base(cycleType, data) { }
+        public OnInitDrawer(EAbilityAllowEditCycle allowEditCycle, AbilityData data) : base(allowEditCycle, data) { }
 
         protected override void drawEx() { }
     }
@@ -57,7 +57,7 @@ namespace Editor.AbilityEditor
         private EResCostType _resCostType;
         private bool _hasType;
 
-        public OnPreExecuteDrawer(EAbilityCycleType cycleType, AbilityData data) : base(cycleType, data) { }
+        public OnPreExecuteDrawer(EAbilityAllowEditCycle allowEditCycle, AbilityData data) : base(allowEditCycle, data) { }
 
         protected override bool getDefaultFoldout() => false;
 
@@ -74,7 +74,7 @@ namespace Editor.AbilityEditor
 
     public class OnExecutingDrawer : AbilityCycleDrawBase
     {
-        public OnExecutingDrawer(EAbilityCycleType cycleType, AbilityData data) : base(cycleType, data) { }
+        public OnExecutingDrawer(EAbilityAllowEditCycle allowEditCycle, AbilityData data) : base(allowEditCycle, data) { }
         protected override bool getDefaultFoldout() => true;
     }
 
@@ -83,7 +83,7 @@ namespace Editor.AbilityEditor
         private EResCostType _resCostType;
         private bool _hasType;
 
-        public OnEndExecuteDrawer(EAbilityCycleType cycleType, AbilityData data) : base(cycleType, data) { }
+        public OnEndExecuteDrawer(EAbilityAllowEditCycle allowEditCycle, AbilityData data) : base(allowEditCycle, data) { }
 
         protected override bool getDefaultFoldout() => false;
 

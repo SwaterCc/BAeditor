@@ -39,8 +39,7 @@ namespace Hono.Scripts.Battle
 
         public void AwardAbility(Ability ability, bool isRunNow)
         {
-            if (ability.GetCheckerRes(EAbilityCycleType.OnPreAwardCheck)
-                && _abilities.TryAdd(ability.Uid, ability))
+            if (_abilities.TryAdd(ability.Uid, ability))
             {
                 if (isRunNow) ability.Execute();
             }
@@ -55,8 +54,7 @@ namespace Hono.Scripts.Battle
         public void AwardAbility(int configId, bool isRunNow)
         {
             var ability = new Ability(_idGenerator.GenerateId(),_logic.Uid , configId);
-            if (ability.GetCheckerRes(EAbilityCycleType.OnPreAwardCheck)
-                && _abilities.TryAdd(ability.Uid, ability))
+            if (_abilities.TryAdd(ability.Uid, ability))
             {
                 if (isRunNow) ability.Execute();
             }

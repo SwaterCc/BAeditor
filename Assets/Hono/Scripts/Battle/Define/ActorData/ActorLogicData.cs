@@ -3,8 +3,9 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public class ActorLogicData : ScriptableObject
+    public class ActorLogicData : ScriptableObject ,IAllowedIndexing
     {
+        public int ID => id;
         public int id;
         public EActorLogicType logicType;
         public int initAttrId;

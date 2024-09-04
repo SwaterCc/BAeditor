@@ -18,7 +18,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return NodeData.CycleNodeData.ToString();
+            return NodeData.allowEditCycleNodeData.ToString();
         }
 
         protected override void OnBtnClicked() { }

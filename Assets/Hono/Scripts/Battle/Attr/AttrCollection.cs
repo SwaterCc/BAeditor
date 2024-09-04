@@ -22,6 +22,11 @@ namespace Hono.Scripts.Battle {
 			return attr;
 		}
 
+		public bool HasAttr(int attrType)
+		{
+			return _attrs.ContainsKey(attrType);
+		}
+
 		public ICommand SetAttr<T>(int attrType, T value, bool isTempData) {
 			var attrTypeInt = attrType;
 

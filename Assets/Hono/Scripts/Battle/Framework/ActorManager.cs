@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
 
 namespace Hono.Scripts.Battle {
-	public class ActorManager : Singleton<ActorManager> {
+	public partial class ActorManager : Singleton<ActorManager> {
 		
 		/// <summary>
 		/// 正在运行的actor列表
@@ -20,7 +20,10 @@ namespace Hono.Scripts.Battle {
 
 		private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 
-		public void Init() { }
+		public void Init()
+		{
+			_filter = new Filter(this);
+		}
 
 		public Actor CreateActor(int configId)
 		{
@@ -111,6 +114,11 @@ namespace Hono.Scripts.Battle {
 				return actor;
 			}
 			return null;
+		}
+
+		public List<Actor> GetRunningActors()
+		{
+			return _runningActorList;
 		}
 
 		public bool TryGetActor(int uid, out Actor actor)

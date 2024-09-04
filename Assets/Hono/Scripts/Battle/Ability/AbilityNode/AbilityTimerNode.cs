@@ -61,7 +61,7 @@ namespace Hono.Scripts.Battle
                 return _count >= _maxCount;
             }
 
-            public void Add(float dt)
+            public void Step(float dt)
             {
                 _duration += dt;
             }

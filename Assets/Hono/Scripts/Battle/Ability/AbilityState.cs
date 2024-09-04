@@ -1,29 +1,49 @@
+using System;
 using System.Collections.Generic;
 
 namespace Hono.Scripts.Battle
 {
     public partial class Ability
     {
+        public class CycleCallback
+        {
+            public Action OnEnter;
+            public Action OnTick;
+            public Action OnExit;
+        }
+
         private class AbilityState
         {
-            private Ability _ability;
             public Ability Ability => _ability;
-            private readonly Dictionary<EAbilityState, AbilityRunCycle> _cycles;
-            private bool _hasExecuteOrder;
-            public bool HasExecuteOrder => _hasExecuteOrder;
-            private AbilityRunCycle _curCycle;
             public AbilityRunCycle Current => _curCycle;
+            public bool HasExecuteOrder => _hasExecuteOrder;
+
+            private readonly Ability _ability;
+            private AbilityRunCycle _curCycle;
+            private bool _hasExecuteOrder;
+            private readonly Dictionary<EAbilityState, AbilityRunCycle> _cycles;
+            private readonly Dictionary<EAbilityAllowEditCycle, CycleCallback> _callbackDict;
 
             public AbilityState(Ability ability)
             {
                 _ability = ability;
                 _cycles = new Dictionary<EAbilityState, AbilityRunCycle>()
                 {
-                    { EAbilityState.Init, new InitRunCycle(this) },
-                    { EAbilityState.Ready, new Ready(this) },
-                    { EAbilityState.PreExecute, new PreExecute(this) },
-                    { EAbilityState.Executing, new Executing(this) },
-                    { EAbilityState.EndExecute, new EndExecute(this) },
+                    { EAbilityState.Init, new OnInitCycle(this) },
+                    { EAbilityState.Ready, new ReadyCycle(this) },
+                    { EAbilityState.PreExecute, new PreExecuteCycle(this) },
+                    { EAbilityState.Executing, new ExecutingCycle(this) },
+                    { EAbilityState.EndExecute, new EndExecuteCycle(this) },
+                };
+
+                _callbackDict = new Dictionary<EAbilityAllowEditCycle, CycleCallback>()
+                {
+                    { EAbilityAllowEditCycle.OnInit, new CycleCallback() },
+                    { EAbilityAllowEditCycle.OnReady, new CycleCallback() },
+                    { EAbilityAllowEditCycle.OnPreExecuteCheck, new CycleCallback() },
+                    { EAbilityAllowEditCycle.OnPreExecute, new CycleCallback() },
+                    { EAbilityAllowEditCycle.OnExecuting, new CycleCallback() },
+                    { EAbilityAllowEditCycle.OnEndExecute, new CycleCallback() },
                 };
 
                 _hasExecuteOrder = false;
@@ -33,7 +53,12 @@ namespace Hono.Scripts.Battle
             {
                 return _cycles[state];
             }
-            
+
+            public CycleCallback GetCycleCallback(EAbilityAllowEditCycle allowEditCycle)
+            {
+                return _callbackDict[allowEditCycle];
+            }
+
             /// <summary>
             /// Ability初始化的下一帧执行
             /// </summary>
@@ -46,9 +71,9 @@ namespace Hono.Scripts.Battle
                     _curCycle = _cycles[EAbilityState.Init];
                     _curCycle.Enter();
                 }
-                
+
                 _curCycle.Tick(dt);
-                
+
                 while (_curCycle.CanExit())
                 {
                     var nextState = _curCycle.GetNextState();

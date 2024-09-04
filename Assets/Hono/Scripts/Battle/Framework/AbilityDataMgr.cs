@@ -41,7 +41,7 @@ namespace Hono.Scripts.Battle
         /// 函数信息缓存
         /// </summary>
         private readonly Dictionary<string, FuncInfo>
-            _cacheMethodInfos = new Dictionary<string, FuncInfo>(64);
+            _cacheMethodInfos = new(64);
         
         /// <summary>
         /// ability数据
@@ -53,6 +53,7 @@ namespace Hono.Scripts.Battle
         private AbilityDataList _bullet;
 
         private static string RootPath = "Assets/AbilityData/BattleEditorData";
+        
         private static string SkillPath = "Assets/AbilityData/BattleEditorData/Skill";
         private static string BuffPath = "Assets/AbilityData/BattleEditorData/Buff";
         private static string BulletPath = "Assets/AbilityData/BattleEditorData/Bullet";

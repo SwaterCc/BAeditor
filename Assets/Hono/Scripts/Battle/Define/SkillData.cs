@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public class SkillData : ScriptableObject
+    public class SkillData : ScriptableObject, IAllowedIndexing
     {
+        public int ID => SkillId;
+        public int SkillId;
         public ESkillType SkillType;
         public ESkillTargetType SkillTargetType;
         public float SkillRange;
@@ -19,6 +21,8 @@ namespace Hono.Scripts.Battle
         public int PriorityDEF;
         public int AttackRange;
         public bool ForceFaceTarget;
-        public int SkillDamageBasePer;//基础倍率，万分比
+        public int SkillDamageBasePer; //基础倍率，万分比
+        public bool UseCustomFilter;
+        public int CustomFilterId;
     }
 }

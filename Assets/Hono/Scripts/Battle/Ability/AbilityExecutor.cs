@@ -19,7 +19,7 @@ namespace Hono.Scripts.Battle
             /// </summary>
             private Dictionary<int, AbilityNode> _nodes;
 
-            private Dictionary<EAbilityCycleType, int> _cycleHeads;
+            private Dictionary<EAbilityAllowEditCycle, int> _cycleHeads;
 
             private HashSet<int> _pastNodeId;
 
@@ -44,7 +44,7 @@ namespace Hono.Scripts.Battle
                 if (nodeDict is { Count: > 0 })
                 {
                     _nodes ??= new Dictionary<int, AbilityNode>();
-                    _cycleHeads ??= new Dictionary<EAbilityCycleType, int>();
+                    _cycleHeads ??= new Dictionary<EAbilityAllowEditCycle, int>();
                     _eventNodes ??= new List<AbilityEventNode>();
                     _pastNodeId ??= new HashSet<int>();
                     _repeatNodeIds ??= new Stack<int>();
@@ -56,7 +56,7 @@ namespace Hono.Scripts.Battle
 
                         if (node.NodeData.NodeType == EAbilityNodeType.EAbilityCycle)
                         {
-                            _cycleHeads.Add(node.NodeData.CycleNodeData, node.ConfigId);
+                            _cycleHeads.Add(node.NodeData.allowEditCycleNodeData, node.ConfigId);
                         }
 
                         if (node.NodeData.NodeType == EAbilityNodeType.EEvent)
@@ -66,7 +66,7 @@ namespace Hono.Scripts.Battle
 
                         if (node.NodeData.NodeType == EAbilityNodeType.EGroup)
                         {
-                            var executing = (Executing)State.GetState(EAbilityState.Executing);
+                            var executing = (ExecutingCycle)State.GetState(EAbilityState.Executing);
                             var stageNode = (AbilityGroupNode)node;
                             executing.AddStageProxy(stageNode);
                             executing.NextGroupId = _ability._abilityData.DefaultStartGroupId;
@@ -128,9 +128,9 @@ namespace Hono.Scripts.Battle
                 return _nodes[id];
             }
 
-            public bool HeadNodeHasChildren(EAbilityCycleType cycleType)
+            public bool HeadNodeHasChildren(EAbilityAllowEditCycle allowEditCycle)
             {
-                var id = _cycleHeads[cycleType];
+                var id = _cycleHeads[allowEditCycle];
                 return _nodes[id].NodeData.ChildrenIds.Count > 0;
             }
 
@@ -183,27 +183,27 @@ namespace Hono.Scripts.Battle
                 }
             }
 
-            public void ExecuteCycleNode(EAbilityCycleType cycleType)
+            public void ExecuteCycleNode(EAbilityAllowEditCycle allowEditCycle)
             {
-                if (_cycleHeads.TryGetValue(cycleType, out var cycleNodeId))
+                if (_cycleHeads.TryGetValue(allowEditCycle, out var cycleNodeId))
                 {
                     ExecuteNode(cycleNodeId);
                 }
                 else
                 {
-                    Debug.Log($"{cycleType} is empty！");
+                    Debug.Log($"{allowEditCycle} is empty！");
                 }
             }
 
-            public void ResetCycle(EAbilityCycleType cycleType)
+            public void ResetCycle(EAbilityAllowEditCycle allowEditCycle)
             {
-                if (_cycleHeads.TryGetValue(cycleType, out var cycleNodeId))
+                if (_cycleHeads.TryGetValue(allowEditCycle, out var cycleNodeId))
                 {
                     _nodes[cycleNodeId].Reset();
                 }
                 else
                 {
-                    Debug.Log($"{cycleType} is empty！");
+                    Debug.Log($"{allowEditCycle} is empty！");
                 }
             }
 

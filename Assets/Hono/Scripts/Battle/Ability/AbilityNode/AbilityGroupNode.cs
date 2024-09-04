@@ -48,7 +48,7 @@ namespace Hono.Scripts.Battle
             
             public void GroupBegin()
             {
-                ((Executing)_executor.State.Current).NextGroupId = -1;
+                ((ExecutingCycle)_executor.State.Current).NextGroupId = -1;
                 resetChildren();
                 _executor.ExecuteNode(NodeData.ChildrenIds[0]);
             }

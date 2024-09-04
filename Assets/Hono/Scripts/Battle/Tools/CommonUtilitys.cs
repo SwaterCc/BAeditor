@@ -64,7 +64,7 @@ namespace Hono.Scripts.Battle.Tools
             return new IdGenerator();
         }
 
-        public static bool CheckAABB(AabbData data, Vector3 targetPos, Vector3 selectCenterPos,
+        public static bool CheckAABB(CheckBoxData data, Vector3 targetPos, Vector3 selectCenterPos,
             Quaternion followAttackerRot)
         {
             List<int> uids = new List<int>();
@@ -88,7 +88,7 @@ namespace Hono.Scripts.Battle.Tools
                 //变换目标点的坐标系到盒子的坐标系
                 var dir = targetPos - centerPos;
                 var finalTargetPos = Quaternion.Inverse(followAttackerRot * data.Rot) * dir;
-                var cubeData = (AabbCube)data;
+                var cubeData = (CheckBoxCube)data;
                 if (finalTargetPos.x >= -(cubeData.Length / 2) && finalTargetPos.x <= (cubeData.Length / 2) &&
                     finalTargetPos.y >= -(cubeData.Height / 2) && finalTargetPos.y <= (cubeData.Height / 2) &&
                     finalTargetPos.z >= -(cubeData.Width / 2) && finalTargetPos.z <= (cubeData.Width / 2))
@@ -101,7 +101,7 @@ namespace Hono.Scripts.Battle.Tools
 
             bool checkInCylinder()
             {
-                var cylinderData = (AabbCylinder)data;
+                var cylinderData = (CheckBoxCylinder)data;
                 if (targetPos.x * targetPos.x + targetPos.z * targetPos.z <=
                     cylinderData.Radius * cylinderData.Radius &&
                     targetPos.y >= -cylinderData.Height / 2 && targetPos.y <= cylinderData.Height / 2)
@@ -114,7 +114,7 @@ namespace Hono.Scripts.Battle.Tools
 
             bool checkInSphere()
             {
-                var sphereData = (AabbSphere)data;
+                var sphereData = (CheckBoxSphere)data;
                 if (targetPos.x * targetPos.x + targetPos.z * targetPos.z + targetPos.y * targetPos.y <=
                     sphereData.Radius * sphereData.Radius)
                 {
@@ -124,7 +124,7 @@ namespace Hono.Scripts.Battle.Tools
                 return false;
             }
 
-            switch (data.AabbType)
+            /*switch (data.AabbType)
             {
                 case EAabbType.Cube:
                     return checkInCube();
@@ -134,7 +134,7 @@ namespace Hono.Scripts.Battle.Tools
                     return checkInCylinder();
                 case EAabbType.Sector:
                     return false;
-            }
+            }*/
 
             return false;
         }

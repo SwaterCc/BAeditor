@@ -5,14 +5,22 @@ using Hono.Scripts.Battle.Tools;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
 {
     /// <summary>
     /// Ability的配置
+    /// ID分段 1-9999 其他逻辑
+    /// ID分段 10001-19999 技能
+    /// ID分段 20001-29999 buff
+    /// ID分段 30001-39999 子弹
+    /// ID分段 40001-49999 GameMode
     /// </summary>
-    public class AbilityData : SerializedScriptableObject
+    public class AbilityData : SerializedScriptableObject, IAllowedIndexing
     {
+        public int ID => ConfigId;
+        
         public EAbilityType Type;
 
         public int ConfigId;
@@ -23,33 +31,23 @@ namespace Hono.Scripts.Battle
 
         public string IconPath = "";
 
-        public int[] Tags;
+        public List<int> Tags = new();
 
         public int DefaultStartGroupId;
+
+        public string PreCheckerVarName = "CHECKER";
 
         /// <summary>
         /// 头节点字典
         /// </summary>
         [OdinSerialize]
-        public Dictionary<EAbilityCycleType, int> HeadNodeDict = new();
-
-        /// <summary>
-        /// 事件监听字典，用List结构是因为一个生命周期可能会有多个逻辑，且有优先级
-        /// </summary>
-        [OdinSerialize]
-        public Dictionary<EBattleEventType, int> EventNodeDict = new();
-
+        public Dictionary<EAbilityAllowEditCycle, int> HeadNodeDict = new();
+        
         /// <summary>
         /// 存储所有数据
         /// </summary>
         [OdinSerialize]
         public Dictionary<int, AbilityNodeData> NodeDict = new();
-
-        /// <summary>
-        /// SKILL BUFF 静态字段 TODO:临时做法，后续要接Excel
-        /// </summary>
-        [OdinSerialize]
-        public ScriptableObject ExData = null;
 
         [NonSerialized]
         private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
@@ -103,7 +101,7 @@ namespace Hono.Scripts.Battle
         
         public VariableNodeData VariableNodeData;
         
-        public EAbilityCycleType CycleNodeData;
+        [FormerlySerializedAs("CycleNodeData")] public EAbilityAllowEditCycle allowEditCycleNodeData;
         
         public TimerNodeData TimerNodeData;
         
@@ -175,6 +173,9 @@ namespace Hono.Scripts.Battle
         public float StartValue;
         public float StepValue;
         public int StepCount;
+
+        public bool IsCaptureVar;
+        public string CaptureVarName;
     }
 
     [Serializable]

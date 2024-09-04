@@ -161,6 +161,16 @@ namespace Hono.Scripts.Battle {
 			return Tags.HasTag(tag);
 		}
 
+		public EActorState CurState()
+		{
+			return _stateMachine.Current.StateType;
+		}
+
+		public bool HasAttr(ELogicAttr attr)
+		{
+			return _attrs.HasAttr(attr.ToInt());
+		}
+		
 		public bool HasAbility(int abilityConfigId) {
 			return _abilityController.HasAbility(abilityConfigId);
 		}
