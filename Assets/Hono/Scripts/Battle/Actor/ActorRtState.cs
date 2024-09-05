@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Hono.Scripts.Battle
 {
     //Actor操作中间层
@@ -68,20 +70,25 @@ namespace Hono.Scripts.Battle
 	        
         }
 
-        private void SyncTransform()
+        public void SyncTransform()
         {
-            
+            var pos = _logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+            var rot = _logic.GetAttr<Quaternion>(ELogicAttr.AttrRot);
+
+            if (_show.Model != null)
+            {
+                _show.Model.transform.localPosition = pos;
+                _show.Model.transform.localRotation = rot;
+            }
         }
         
         public void Update(float dt)
         {
+            if (!_hasShow || !_showTickPause) return;
+            
             //更新固定值
             SyncTransform();
-            //
-            if (_hasShow && _showTickPause)
-            {
-                _show.Update(dt);
-            }
+            _show.Update(dt);
         }
         
         public void Tick(float dt)

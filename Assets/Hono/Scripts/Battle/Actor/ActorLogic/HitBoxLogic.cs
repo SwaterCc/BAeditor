@@ -26,6 +26,17 @@ namespace Hono.Scripts.Battle
             _filterSetting = new FilterSetting();
         }
 
+        protected override void initAttrs()
+        {
+            //设置坐标
+            var target = ActorManager.Instance.GetActor(_sourceActorId);
+            var pos = target.Logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+            var rot = target.Logic.GetAttr<Vector3>(ELogicAttr.AttrRot);
+            SetAttr(ELogicAttr.AttrPosition, pos, false);
+            SetAttr(ELogicAttr.AttrRot, rot, false);
+
+        }
+
         protected override void onInit()
         {
             _intervalDuration = _hitBoxData.Interval;
@@ -34,6 +45,7 @@ namespace Hono.Scripts.Battle
             _sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
             _sourceAbilityId = GetAttr<int>(ELogicAttr.AttrSourceAbilityUid);
             _sourceAbilityType = GetAttr<EAbilityType>(ELogicAttr.SourceAbilityType);
+
 
             switch (_hitBoxData.HitType)
             {
@@ -82,7 +94,7 @@ namespace Hono.Scripts.Battle
         {
             //aoe会根据目标坐标二次筛选
             var targetIds = ActorManager.Instance.UseFilter(this, _filterSetting);
-            
+
             foreach (var targetUid in targetIds)
             {
                 var target = ActorManager.Instance.GetActor(targetUid);

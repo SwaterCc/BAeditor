@@ -1,9 +1,16 @@
+using Cysharp.Threading.Tasks;
+
 namespace Hono.Scripts.Battle
 {
     public interface IAsyncLoad
     {
-        public void AsyncLoad();
+        public UniTask AsyncLoad();
         public void OnLoadedFinish();
+    }
+    
+    public interface ILoad
+    {
+        public void Load();
     }
 
     public partial class ActorShow
@@ -18,10 +25,6 @@ namespace Hono.Scripts.Battle
             }
 
             public abstract void Init();
-
-            public abstract void Load();
-
-            public abstract void LoadFinish();
 
             public virtual void Reset() { }
 

@@ -12,11 +12,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
   m_Name: BattleResource
   m_EditorClassIdentifier: 
-  m_GroupName: Packed Assets
+  m_GroupName: BattleResource
   m_Data:
     m_SerializedData: []
   m_GUID: 1c60dece5e34e1444968e8c507b4613e
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: cf502dfc992561f4e92972213f74a226
+    m_Address: Assets/BattleData/Ability
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ability
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7e5e73a9f7a4b2548bc006c6391e4676
+    m_Address: Assets/BattleData/Buff
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a87ca4486091188409994cd4a5afc525
+    m_Address: Assets/BattleData/Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 872d59318fb5ab54fac8475b964eb6c4
+    m_Address: Assets/BattleData/Skill
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 029dde68970032c4dabc9975b6d81759
+    m_Address: Assets/BattleData/Actor/ActorLogic
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b549a11a5abfa164f90a87ea5b7ffba1
+    m_Address: Assets/BattleData/Actor/ActorShow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9420fce795d6daf45869f47fe59433f1
+    m_Address: Assets/BattleData/Tools/RefreshPoint.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d498fdc43754add418017fcf63a98408
+    m_Address: Assets/BattleData/Tools/refreshPoint_m.mat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7656358260d6a194f8b387281fc83166, type: 2}
   m_SchemaSet:

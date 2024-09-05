@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle
         public int ID => id;
         public int id;
         public EActorShowType ShowType;
-        public int ModelId;
+        public string ModelPath;
         public int InitAttrId;
     }
 }

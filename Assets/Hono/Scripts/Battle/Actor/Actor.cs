@@ -59,11 +59,13 @@ namespace Hono.Scripts.Battle {
 		}
 
 		public void Init(ActorShow show, ActorLogic logic) {
+			_rtState = new ActorRTState(show, logic);
 			_logic = logic;
 			_show = show;
 			_show?.Init();
-			_logic?.Init();
-			_rtState = new ActorRTState(show, logic);
+			_logic?.Init(_rtState);
+			
+			_rtState.SyncTransform();
 		}
 
 		public void Destroy() { }

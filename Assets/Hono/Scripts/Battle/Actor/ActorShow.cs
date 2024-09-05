@@ -8,11 +8,8 @@ namespace Hono.Scripts.Battle
     //表演层
     public abstract partial class ActorShow
     {
-        /// <summary>
-        /// 配置id
-        /// </summary>
-        protected int _showConfigId;
-
+        public int Uid { get; }
+        
         /// <summary>
         /// 属性
         /// </summary>
@@ -21,31 +18,40 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// unity中对应的对象
         /// </summary>
-        public GameObject Model;
+        public GameObject Model => _gameObject;
+
+        protected GameObject _gameObject;
 
         /// <summary>
-        /// 逻辑组件
+        /// 表现组件
         /// </summary>
-        protected readonly Dictionary<Type, AShowComponent> _components = new Dictionary<Type, AShowComponent>();
+        private readonly Dictionary<Type, AShowComponent> _components;
 
-        public void Init()
+        protected ActorShowData _showData;
+        
+        protected ActorShow(int uid,ActorShowData data)
         {
+            Uid = uid;
+            _components = new Dictionary<Type, AShowComponent>();
+            _showData = data;
+            _attrs = new AttrCollection(ShowAttrCreator.Create);
+        }
+        
+        public async void Init()
+        {
+            //先load对象
+            await loadModel();
+
             registerComponents();
-            List<IAsyncLoad> loadTask = new List<IAsyncLoad>();
+            //对象加载完后再load组件
             foreach (var component in _components)
             {
                 component.Value.Init();
-                if (component.Value is IAsyncLoad loadHandle)
-                {
-                    loadTask.Add(loadHandle);
-                }
             }
-
-            //先load对象
-            
-            //对象加载完后再load组件
         }
 
+        protected abstract UniTask loadModel();
+        
         public async void AsyncLoadStart() { }
 
         public void Update(float dt)
