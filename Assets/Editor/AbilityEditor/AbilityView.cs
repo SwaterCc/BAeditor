@@ -122,7 +122,7 @@ namespace Editor.AbilityEditor
             SirenixEditorFields.IntField("配置ID", itemShowView.AbilityData.ConfigId);
             itemShowView.AbilityData.Name = SirenixEditorFields.TextField("Name", itemShowView.AbilityData.Name);
             itemShowView.AbilityData.Desc = SirenixEditorFields.TextField("Desc", itemShowView.AbilityData.Desc);
-            itemShowView.AbilityData.IconPath = SirenixEditorFields.TextField("IconPath", itemShowView.AbilityData.IconPath);
+            
             //tag需要工具
             AbilityEditorHelper.DrawIntList(itemShowView.AbilityData.Tags,"Tags(后续需要新的工具)",38);
             itemShowView.AbilityData.DefaultStartGroupId = SirenixEditorFields.IntField("默认开始阶段", itemShowView.AbilityData.DefaultStartGroupId);

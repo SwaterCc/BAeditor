@@ -55,7 +55,7 @@ namespace Hono.Scripts.Battle
                         return LuaInterface.GetFaction(f1, f2) == (EFactionType)range.Value;
                 }
 
-                Debug.LogError($"使用了未实现的范围筛选 settingId {_filterSetting.id} type {range.RangeType}");
+                Debug.LogError($"使用了未实现的范围筛选 settingId {_filterUser.Uid} type {range.RangeType}");
                 return false;
             }
 

@@ -29,7 +29,7 @@ namespace Hono.Scripts.Battle
 
         public string Desc = "NoInit";
 
-        public string IconPath = "";
+        public Texture IconPath;
 
         public List<int> Tags = new();
 
