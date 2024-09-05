@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -18,6 +19,7 @@ namespace Hono.Scripts.Battle
             private bool _resEnough;
             private float _maxCd;
             private ActorLogic _logic;
+            private FilterSetting _skillTargetSetting;
 
             public Skill(ActorLogic logic, SkillData data)
             {
@@ -26,16 +28,40 @@ namespace Hono.Scripts.Battle
                 _logic = logic;
                 Data = data;
                 _isDisable = false;
-                
+
+                if (data.SkillTargetType != ESkillTargetType.Self)
+                {
+                    if (data.UseCustomFilter)
+                    {
+                        _skillTargetSetting = data.CustomFilter;
+                    }
+                    else
+                    {
+                        _skillTargetSetting = new FilterSetting();
+                        var boxData = new CheckBoxSphere();
+                        boxData.Radius = data.AttackRange;
+                        boxData.ShapeType = ECheckBoxShapeType.Sphere;
+                        _skillTargetSetting.BoxData = boxData;
+
+                        var range = new FilterRange()
+                        {
+                            RangeType = EFilterRangeType.Faction,
+                        };
+                        switch (data.SkillTargetType)
+                        {
+                            case ESkillTargetType.Enemy:
+                                range.Value = (int)EFactionType.Enemy;
+                                break;
+                            case ESkillTargetType.Friendly:
+                                range.Value = (int)EFactionType.Friendly;
+                                break;
+                        }
+                        _skillTargetSetting.Ranges.Add(range);
+                    }
+                }
+
                 var ability = _logic._abilityController.CreateAbility(data.SkillId);
                 _abilityUid = ability.Uid;
-                
-                ability.GetCycleCallback(EAbilityAllowEditCycle.OnPreExecuteCheck).OnEnter += () =>
-                {
-                    var abilityData = AssetManager.Instance.GetData<AbilityData>(Data.SkillId);
-                    var check = (bool)Ability.Context.CurrentAbility.GetVariables().GetVariable(abilityData.PreCheckerVarName);
-                    Ability.Context.CurrentAbility.GetVariables().ChangeValue(abilityData.PreCheckerVarName,check && _resEnough);
-                };
 
                 if (data.CostType == EResCostType.AfterExecute)
                 {
@@ -54,9 +80,9 @@ namespace Hono.Scripts.Battle
                 {
                     ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnEnter += CdBegin;
                 }
-                
+
                 _logic._abilityController.AwardAbility(ability, false);
-                
+
                 resourceCheck();
             }
 
@@ -93,12 +119,13 @@ namespace Hono.Scripts.Battle
                         {
                             case EBattleResourceType.Energy:
                                 var mp = _logic.GetAttr<int>((ELogicAttr)resItem.ResId);
-                                _resEnough = mp > resItem.Value; 
+                                _resEnough = mp > resItem.Value;
                                 break;
                             case EBattleResourceType.Item:
                                 break;
                             case EBattleResourceType.Buff:
-                                _resEnough = _logic.GetComponent<BuffComp>().GetBuffLayer(resItem.ResId) > resItem.Value;
+                                _resEnough = _logic.GetComponent<BuffComp>().GetBuffLayer(resItem.ResId) >
+                                             resItem.Value;
                                 break;
                         }
                     }
@@ -115,7 +142,7 @@ namespace Hono.Scripts.Battle
                         {
                             case EBattleResourceType.Energy:
                                 var mp = _logic.GetAttr<int>((ELogicAttr)resItem.ResId);
-                                _logic.SetAttr((ELogicAttr)resItem.ResId,mp-resItem.Value,false);
+                                _logic.SetAttr((ELogicAttr)resItem.ResId, mp - resItem.Value, false);
                                 break;
                         }
                     }
@@ -138,8 +165,41 @@ namespace Hono.Scripts.Battle
 
             public void OnSkillUsed()
             {
-                _logic._abilityController.ExecutingAbility(_abilityUid);
-                resourceCheck();
+                int targetUid = -1;
+                //选敌
+                if (Data.SkillTargetType != ESkillTargetType.Self)
+                {
+                    var targetList = ActorManager.Instance.UseFilter(_logic, _skillTargetSetting);
+                    float minDistance = Data.AttackRange;
+                    var selfPos = _logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+                  
+                    foreach (var uid in targetList)
+                    {
+                        var target = ActorManager.Instance.GetActor(uid);
+                        var targetPos = target.Logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+                        var newMinDis = Vector3.Distance(selfPos, targetPos);
+                        if (newMinDis < minDistance)
+                        {
+                            minDistance = newMinDis;
+                            targetUid = uid;
+                        }
+                    }
+                }
+                else
+                {
+                    targetUid = _logic.Uid;
+                }
+                
+                if (targetUid > 0)
+                {
+                    _logic.SetAttr(ELogicAttr.AttrAttackTargetUid, targetUid, false);
+                    _logic._abilityController.ExecutingAbility(_abilityUid);
+                    resourceCheck();
+                }
+                else
+                {
+                    Debug.Log("技能没有找到目标！");
+                }
             }
 
             public static bool operator <(Skill control1, Skill control2)
@@ -175,7 +235,7 @@ namespace Hono.Scripts.Battle
             {
                 foreach (var skillId in _actorLogic.LogicData.ownerSkills)
                 {
-                    var skillCtrl = new Skill(_actorLogic,AssetManager.Instance.GetData<SkillData>(skillId));
+                    var skillCtrl = new Skill(_actorLogic, AssetManager.Instance.GetData<SkillData>(skillId));
                     _skills.Add(skillId, skillCtrl);
                 }
             }

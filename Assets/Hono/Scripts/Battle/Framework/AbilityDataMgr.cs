@@ -63,7 +63,6 @@ namespace Hono.Scripts.Battle
         public async void Init()
         {
             initAbilityFuncCache();
-            await loadAbilityDataList();
         }
 
         private async UniTask loadAbilityDataList()

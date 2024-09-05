@@ -1,115 +1,133 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
+    /// <summary>
+    /// 打击点目前是每隔一段时间对打击目标结算一次伤害
+    /// </summary>
     public class HitBoxLogic : ActorLogic
     {
-        private HitBoxData _hitBoxConfig;
-        private float _duration;
-        private float _effectDuration;
+        private HitBoxData _hitBoxData;
         private float _intervalDuration;
-        private bool _isInEffect;
-        private int _count;
-        private Dictionary<BeHurtComp, int> _hitCountDict = new();
-        private DamageLuaInterface _luaInterface;
-        public HitBoxLogic(int uid, ActorLogicData logicData) : base(uid, logicData) { }
+        private int _curCount;
+
+        private int _sourceActorId;
+        private int _sourceAbilityId;
+        private EAbilityType _sourceAbilityType;
+        private Action<ActorLogic, DamageInfo> _hitProcess;
+        private FilterSetting _filterSetting;
+
+        private readonly Dictionary<BeHurtComp, int> _hitCountDict = new();
+
+        public HitBoxLogic(int uid, ActorLogicData logicData) : base(uid, logicData)
+        {
+            _filterSetting = new FilterSetting();
+        }
 
         protected override void onInit()
         {
-            _duration = 0;
-            _intervalDuration = _hitBoxConfig.Interval;
-            _count = 0;
-            _isInEffect = false;
-            _luaInterface = new DamageLuaInterface();
-            _luaInterface.Init();
+            _intervalDuration = _hitBoxData.Interval;
+            _curCount = 0;
+
+            _sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
+            _sourceAbilityId = GetAttr<int>(ELogicAttr.AttrSourceAbilityUid);
+            _sourceAbilityType = GetAttr<EAbilityType>(ELogicAttr.SourceAbilityType);
+
+            switch (_hitBoxData.HitType)
+            {
+                case EHitType.Aoe:
+                    _hitProcess = aoeHit;
+                    break;
+                case EHitType.Single:
+                    _hitProcess = singleHit;
+                    break;
+            }
+
+
+            _filterSetting.BoxData = _hitBoxData.AoeData;
         }
 
         protected override void registerChildComp() { }
 
-        private List<int> getHitTargets()
+        private void hitCounter(BeHurtComp beHurtComp)
         {
-            //TODO:要接地图块，筛选器
-            switch (_hitBoxConfig.HitType)
+            if (_hitCountDict.TryGetValue(beHurtComp, out var count))
             {
-                case EHitType.Aoe:
-
-                    break;
-                case EHitType.LockTarget:
-                    break;
+                if (count < _hitBoxData.ValidCount)
+                {
+                    ++count;
+                }
             }
-
-            return null;
+            else
+            {
+                _hitCountDict.Add(beHurtComp, 1);
+            }
         }
 
-        private void hit()
+        private void singleHit(ActorLogic attacker, DamageInfo damageInfo)
         {
-            List<int> targets = getHitTargets();
-            if (targets == null) return;
+            var targetId = attacker.GetAttr<int>(ELogicAttr.AttrAttackTargetUid);
+            var target = ActorManager.Instance.GetActor(targetId);
+            if (target == null) return;
+            if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
+            hitCounter(beHurtComp);
+            var damageItem = AssetManager.Instance.GetData<DamageItem>(damageInfo.DamageConfigId);
+            var res = LuaInterface.GetDamageResults(attacker, target.Logic, damageInfo, damageItem);
+            beHurtComp.OnBeHurt(res);
+        }
+
+        private void aoeHit(ActorLogic attacker, DamageInfo damageInfo)
+        {
+            //aoe会根据目标坐标二次筛选
+            var targetIds = ActorManager.Instance.UseFilter(this, _filterSetting);
+            
+            foreach (var targetUid in targetIds)
+            {
+                var target = ActorManager.Instance.GetActor(targetUid);
+                if (target == null) return;
+                if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
+                hitCounter(beHurtComp);
+                var damageItem = AssetManager.Instance.GetData<DamageItem>(damageInfo.DamageConfigId);
+                var res = LuaInterface.GetDamageResults(attacker, target.Logic, damageInfo, damageItem);
+                beHurtComp.OnBeHurt(res);
+            }
+        }
+
+        private void onHit()
+        {
+            var attacker = ActorManager.Instance.GetActor(_sourceActorId).Logic;
 
             var damageInfo = new DamageInfo();
-            var source = GetAttr<int>(ELogicAttr.Source);
-            var attacker = ActorManager.Instance.GetActor(source).ActorLogic;
-            damageInfo.DamageConfigId = _hitBoxConfig.DamageConfigId;
-            damageInfo.SourceId = source;
-            damageInfo.SourceType = GetAttr<int>(ELogicAttr.SourceType);
+            damageInfo.DamageConfigId = _hitBoxData.DamageConfigId;
+            damageInfo.SourceActorId = _sourceActorId;
+            damageInfo.SourceAbilityId = _sourceAbilityId;
+            damageInfo.SourceAbilityType = _sourceAbilityType;
 
-            foreach (var target in targets)
+            for (int i = 0; i < _hitBoxData.OnceHitDamageCount; i++)
             {
-                var targetLogic = ActorManager.Instance.GetActor(target).ActorLogic;
-                var behitComp = targetLogic.GetComponent<BeHurtComp>();
-                if (_hitCountDict.TryGetValue(behitComp, out var count))
-                {
-                    if (count >= _hitBoxConfig.ValidCount)
-                    {
-                        continue;
-                    }
-                }
-                else
-                {
-                    _hitCountDict.Add(behitComp, 1);
-                }
-
-                //TODO:要接配置
-                var res = _luaInterface.GetDamageResults(attacker, targetLogic, damageInfo, new DamageItem());
-                behitComp.OnBeHurt(res);
+                _hitProcess.Invoke(attacker, damageInfo);
             }
         }
 
         protected override void onTick(float dt)
         {
-            //有效时间
-            if (_duration >= _hitBoxConfig.DelayTime && _duration <= _hitBoxConfig.DelayTime + _hitBoxConfig.Duration)
+            var interval = _curCount == 0 ? _hitBoxData.FirstInterval : _hitBoxData.Interval;
+
+            if (_intervalDuration > interval)
             {
-                if (_intervalDuration >= _hitBoxConfig.Interval)
-                {
-                    _intervalDuration = 0;
-                    _effectDuration = 0;
-                    ++_count;
-                    _isInEffect = true;
-                }
-
-                if (_isInEffect)
-                {
-                    if (_effectDuration <= _hitBoxConfig.EffectTime && _count <= _hitBoxConfig.ValidCount)
-                    {
-                        _effectDuration += dt;
-                        hit();
-                    }
-                    else
-                    {
-                        _isInEffect = false;
-                    }
-                }
-
-                if (!_isInEffect)
-                {
-                    _intervalDuration += dt;
-                }
+                ++_curCount;
+                _intervalDuration = 0;
+                onHit();
             }
 
-            _duration += dt;
+            _intervalDuration += dt;
 
-            if (_duration >= _hitBoxConfig.Duration + _hitBoxConfig.DelayTime) { }
+            if (_curCount >= _hitBoxData.MaxCount)
+            {
+                ActorManager.Instance.RemoveActor(this.Uid);
+            }
         }
 
         protected override void onDestroy() { }

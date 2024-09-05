@@ -59,24 +59,24 @@ namespace Hono.Scripts.Battle {
 
 		//TODO：性能问题
 		public object GetAttrBox(int attrType) {
-			if (_attrs.TryGetValue(attrType, out var attr)) {
-				return attr.GetBox();
+			if (!_attrs.TryGetValue(attrType, out var attr)) {
+				attr = getAttrAndSetDefault(attrType);
+				_attrs.Add(attrType, attr);
 			}
-
-			throw new KeyNotFoundException($"Attribute type {attrType} not found");
+			return attr.GetBox();
 		}
 
 		public T GetAttr<T>(int attrType) {
-			if (_attrs.TryGetValue(attrType, out var attr)) {
-				if (attr is Attr<T> typedAttr) {
-					return typedAttr.Get();
-				}
-				else {
-					throw new InvalidCastException($"Cannot cast attribute of type {attrType} to {typeof(T)}");
-				}
+			if (!_attrs.TryGetValue(attrType, out var attr)) {
+				attr = getAttrAndSetDefault(attrType);
+				_attrs.Add(attrType, attr);
+			}
+			
+			if (attr is Attr<T> typedAttr) {
+				return typedAttr.Get();
 			}
 
-			throw new KeyNotFoundException($"Attribute type {attrType} not found");
+			throw new InvalidCastException($"Cannot cast attribute of type {attrType} to {typeof(T)}");
 		}
 	}
 	

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.ComTypes;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.RefValue;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
@@ -66,14 +67,28 @@ namespace Hono.Scripts.Battle
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void CreateHitBox(int hitDataId)
         {
-            ActorManager.Instance.AddActor(hitDataId);
+            var hitBox = ActorManager.Instance.CreateActor(hitDataId);
+            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.BelongActor.Uid, false);
+            hitBox.Logic.SetAttr(ELogicAttr.SourceAbilityType, Ability.Context.CurrentAbility.AbilityData.Type, false);
+            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceAbilityUid, Ability.Context.CurrentAbility.AbilityData.Type, false);
+            ActorManager.Instance.AddActor(hitBox);
         }
+        
+        /*[AbilityFuncCache(EFuncCacheFlag.Action)]
+        public static void CreateBullet(int hitDataId)
+        {
+            var hitBox = ActorManager.Instance.CreateActor(hitDataId);
+            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.BelongActor.Uid, false);
+            hitBox.Logic.SetAttr(ELogicAttr.SourceAbilityType, Ability.Context.CurrentAbility.AbilityData.Type, false);
+            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceAbilityUid, Ability.Context.CurrentAbility.AbilityData.Type, false);
+            ActorManager.Instance.AddActor(hitBox);
+        }*/
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void AddAbility(int actorUid, int ability, bool isRunNow)
         {
             var actor = ActorManager.Instance.GetActor(actorUid);
-            actor?.ActorLogic.AwardAbility(ability, isRunNow);
+            actor?.Logic.AwardAbility(ability, isRunNow);
         }
 
 

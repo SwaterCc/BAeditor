@@ -7,6 +7,12 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Tools
 {
+    public static class LayerMask
+    {
+        public static int ActorMask = 1;
+    }
+
+
     public static class CommonUtility
     {
         /// <summary>
@@ -64,79 +70,54 @@ namespace Hono.Scripts.Battle.Tools
             return new IdGenerator();
         }
 
-        public static bool CheckAABB(CheckBoxData data, Vector3 targetPos, Vector3 selectCenterPos,
-            Quaternion followAttackerRot)
+        public static bool HitRayCast(CheckBoxData data, Vector3 selectCenterPos, Quaternion followAttackerRot,out List<int> actorIds)
         {
-            List<int> uids = new List<int>();
-
-            Vector3 vector3Sub(Vector3 a, Vector3 b)
-            {
-                Vector3 res = Vector3.zero;
-                res.x = a.x * b.x;
-                res.y = a.y * b.y;
-                res.z = a.z * b.z;
-                return res;
-            }
-
+            actorIds = null;
             //获取中心坐标
-            var offset = data.OffsetUsePercent ? vector3Sub(data.Scale, data.Offset) : data.Offset;
-            var centerPos = selectCenterPos + (followAttackerRot * data.Rot) * offset;
+            //var offset = data.OffsetUsePercent ? vector3Sub(data.Scale, data.Offset) : data.Offset;
+            var finalRot = followAttackerRot * data.Rot;
+            var centerPos = selectCenterPos + finalRot * data.Offset;
 
-
-            bool checkInCube()
+            //最大命中数量
+            List<RaycastHit> raycastHits = new List<RaycastHit>();
+            switch (data.ShapeType)
             {
-                //变换目标点的坐标系到盒子的坐标系
-                var dir = targetPos - centerPos;
-                var finalTargetPos = Quaternion.Inverse(followAttackerRot * data.Rot) * dir;
-                var cubeData = (CheckBoxCube)data;
-                if (finalTargetPos.x >= -(cubeData.Length / 2) && finalTargetPos.x <= (cubeData.Length / 2) &&
-                    finalTargetPos.y >= -(cubeData.Height / 2) && finalTargetPos.y <= (cubeData.Height / 2) &&
-                    finalTargetPos.z >= -(cubeData.Width / 2) && finalTargetPos.z <= (cubeData.Width / 2))
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            bool checkInCylinder()
-            {
-                var cylinderData = (CheckBoxCylinder)data;
-                if (targetPos.x * targetPos.x + targetPos.z * targetPos.z <=
-                    cylinderData.Radius * cylinderData.Radius &&
-                    targetPos.y >= -cylinderData.Height / 2 && targetPos.y <= cylinderData.Height / 2)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            bool checkInSphere()
-            {
-                var sphereData = (CheckBoxSphere)data;
-                if (targetPos.x * targetPos.x + targetPos.z * targetPos.z + targetPos.y * targetPos.y <=
-                    sphereData.Radius * sphereData.Radius)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            /*switch (data.AabbType)
-            {
-                case EAabbType.Cube:
-                    return checkInCube();
-                case EAabbType.Sphere:
-                    return checkInSphere();
-                case EAabbType.Cylinder:
-                    return checkInCylinder();
-                case EAabbType.Sector:
+                case ECheckBoxShapeType.Cube:
+                    var cubeData = (CheckBoxCube)data;
+                    var half = new Vector3(cubeData.Length, cubeData.Height, cubeData.Width);
+                    raycastHits.AddRange(Physics.BoxCastAll(centerPos, half, followAttackerRot * Vector3.forward,
+                        data.Rot, 0.001f));
+                    break;
+                case ECheckBoxShapeType.Sphere:
+                    var sphereData = (CheckBoxSphere)data;
+                    raycastHits.AddRange(Physics.SphereCastAll(centerPos, sphereData.Radius,
+                        followAttackerRot * Vector3.forward,
+                        0.001f));
+                    break;
+                case ECheckBoxShapeType.Cylinder:
+                    var cylinderData = (CheckBoxCylinder)data;
+                    raycastHits.AddRange(Physics.CapsuleCastAll(centerPos + Vector3.up * (cylinderData.Height / 2),
+                        centerPos + Vector3.down * (cylinderData.Height / 2),
+                        0.1f,
+                        followAttackerRot * Vector3.forward, 0.001f));
+                    break;
+                default:
+                    Debug.LogError("使用了未实现的检测");
                     return false;
-            }*/
+            }
 
-            return false;
+            foreach (var raycastHit in raycastHits)
+            {
+                if (!raycastHit.collider.TryGetComponent<ActorModelHandle>(out var handle))
+                {
+                    continue;
+                }
+
+                actorIds ??= new List<int>();
+                actorIds.Add(handle.ActorUid); 
+            }
+
+            return actorIds == null;
         }
     }
 

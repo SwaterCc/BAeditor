@@ -40,7 +40,7 @@ namespace Hono.Scripts.Battle {
 		/// </summary>
 		private ActorLogic _logic;
 
-		public ActorLogic ActorLogic => _logic;
+		public ActorLogic Logic => _logic;
 
 		/// <summary>
 		/// 当前运行状态

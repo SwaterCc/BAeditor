@@ -7,8 +7,6 @@ namespace Hono.Scripts.Battle
     public abstract class CheckBoxData
     {
         public ECheckBoxShapeType ShapeType;
-        public ECheckBoxBehaveType Behavetype;
-        public Vector3 Scale = Vector3.one;
         public Quaternion Rot = Quaternion.identity;
         //是否应用百分比存储偏移
         public bool OffsetUsePercent = true;

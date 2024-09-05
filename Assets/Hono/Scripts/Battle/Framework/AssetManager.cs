@@ -42,9 +42,6 @@ namespace Hono.Scripts.Battle
     {
         private readonly Dictionary<Type, IDataHelper> _assetDict = new Dictionary<Type, IDataHelper>();
 
-        private readonly Dictionary<ECheckBoxShapeType, CheckBoxHandle> _checkBoxDict =
-            new Dictionary<ECheckBoxShapeType, CheckBoxHandle>();
-
         private bool _isLoadFinish;
         public bool IsLoadFinish => _isLoadFinish;
 
@@ -61,10 +58,7 @@ namespace Hono.Scripts.Battle
             tasks.Add(register<ActorLogicData>("actorLogic"));
             tasks.Add(register<ActorShowData>("actorShow"));
             tasks.Add(register<HitBoxData>("hitBoxData"));
-            tasks.Add(register<FilterSetting>("filterSetting"));
-
-            //加载检测盒子
-            tasks.Add(loadCheckBoxes("checkBox"));
+            
             await UniTask.WhenAll(tasks);
             _isLoadFinish = true;
         }
@@ -102,41 +96,11 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        private async UniTask loadCheckBoxes(string label)
-        {
-            try
-            {
-                var datas = await Addressables.LoadAssetsAsync<GameObject>(label, (data) =>
-                {
-                    if (data == null) Debug.LogError($"{label}某资源加载失败！");
-                }).ToUniTask();
-
-                foreach (var gameObject in datas)
-                {
-                    if (!gameObject || !gameObject.TryGetComponent<CheckBoxHandle>(out var handle))
-                        return;
-                    _checkBoxDict.Add(handle.eCheckBoxShapeType, handle);
-                }
-
-                Debug.Log($"asset key {label} 加载完成！加载数量 {datas.Count}");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-                throw;
-            }
-        }
-
         public async void ReloadAsset<T>(int id, string path) where T : ScriptableObject, IAllowedIndexing
         {
             
         }
-
-        public CheckBoxHandle GetCheckBox(ECheckBoxShapeType boxShapeType)
-        {
-            return _checkBoxDict[boxShapeType];
-        }
-
+        
         public T GetData<T>(int id) where T : ScriptableObject, IAllowedIndexing
         {
             if (_assetDict.TryGetValue(typeof(T), out var idataHelper) && idataHelper is DataHelper<T> dataHelper)

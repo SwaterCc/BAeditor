@@ -7,9 +7,8 @@ namespace Hono.Scripts.Battle
     {
         public int ID => id;
         public int id;
-        public float Speed;
         public int ShowConfigId;
         public int LogicConfigId;
-        
+        public EActorType ActorType;
     }
 }

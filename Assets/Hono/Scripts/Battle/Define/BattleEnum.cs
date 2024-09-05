@@ -2,6 +2,14 @@ using System;
 
 namespace Hono.Scripts.Battle
 {
+    public enum EActorType
+    {
+        Pawn,
+        Monster,
+        Building,
+        HitBox,
+    }
+    
     public enum EActorLogicType
     {
         Pawn,
@@ -30,13 +38,11 @@ namespace Hono.Scripts.Battle
         Other,
     }
 
-    public enum EDamageElementType
-    {
-        Fire,
-        Water,
-        Wind,
+    public enum EDamageElementType {
+        Physical,
+        Magic,
     }
-
+    
     public enum EDamageType
     {
         Normal,
@@ -240,7 +246,7 @@ namespace Hono.Scripts.Battle
     public enum EHitType
     {
         Aoe,
-        LockTarget
+        Single,
     }
 
     public enum ECheckBoxShapeType
@@ -300,9 +306,11 @@ namespace Hono.Scripts.Battle
 
     public enum EFilterRangeType
     {
+        Range,
         Tag,
         ActorState,
         AbilityID,
+        Faction
     }
 
     public enum EVariableOperationType
@@ -327,6 +335,25 @@ namespace Hono.Scripts.Battle
         Override,
     }
 
+    /// <summary>
+    /// 阵营关系
+    /// </summary>
+    public enum EFactionType
+    {
+        /// <summary>
+        /// 中立
+        /// </summary>
+        Neutrality,
+        /// <summary>
+        /// 友善
+        /// </summary>
+        Friendly,
+        /// <summary>
+        /// 敌对
+        /// </summary>
+        Enemy, 
+    }
+    
     public enum ERepeatOperationType
     {
         //仅重复执行

@@ -29,7 +29,7 @@ namespace Hono.Scripts.Battle
                 var actor = ActorManager.Instance.GetActor(_executor.Ability.BelongActorId);
                 if (actor != null)
                 {
-                    _context.UpdateContext((actor.ActorLogic, _executor.Ability));
+                    _context.UpdateContext((actor.Logic, _executor.Ability));
                     _executor.ExecuteNode(NodeData.ChildrenIds[0]);
                     _context.ClearContext();
                 }

@@ -6,22 +6,16 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-	[ShowOdinSerializedPropertiesInInspector]
-	[CreateAssetMenu(menuName = "战斗编辑器/DamageInfo")] 
-    public class DamageInfo : SerializedScriptableObject
+    public class DamageInfo
     {
-        public int SourceId;
-	    [ValueDropdown("GetIntEnumValues")]
-	    public int SourceType;
+        public int SourceActorId;
+	    public EAbilityType SourceAbilityType;
+        public int SourceAbilityId;
+        /// <summary>
+        /// 这个值如果是技能，就是技能基础倍率，如果是buff那就是子弹倍率
+        /// </summary>
+        public int BaseDamagePer;
         public int DamageConfigId;
         public int HitCount;
-
-
-        private static IEnumerable<ValueDropdownItem<int>> GetIntEnumValues()
-        {
-	        yield return new ValueDropdownItem<int>("Skill 0", 0);
-	        yield return new ValueDropdownItem<int>("Buff 1", 1);
-	        yield return new ValueDropdownItem<int>("Bullet 2", 2);
-        }
     }
 }

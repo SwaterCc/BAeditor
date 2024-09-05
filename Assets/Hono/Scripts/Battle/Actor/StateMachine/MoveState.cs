@@ -21,7 +21,7 @@ namespace Hono.Scripts.Battle
                 _transDict[EActorState.Idle].Add(new AStateTransform(EActorState.Idle));
                 _transDict[EActorState.Stiff].Add(new AStateTransform(EActorState.Stiff));
 
-                _baseSpeed = _actorLogic.GetAttr<float>(ELogicAttr.Hp);
+                _baseSpeed = _actorLogic.GetAttr<float>(ELogicAttr.AttrBaseSpeed);
             }
 
 
@@ -29,11 +29,11 @@ namespace Hono.Scripts.Battle
             {
                 if (InputManager.Instance.HasMoveInput)
                 {
-                    var curPos = _actorLogic.GetAttr<Vector3>(ELogicAttr.Position);
+                    var curPos = _actorLogic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
                     var curRot = Quaternion.FromToRotation(Vector3.forward, InputManager.Instance.InputDirection);
-                    var offset = InputManager.Instance.InputDirection * _baseSpeed * dt;
-                    _actorLogic.SetAttr(ELogicAttr.Position, curPos + offset, false);
-                    _actorLogic.SetAttr(ELogicAttr.Rot, curRot, false);
+                    var offset = InputManager.Instance.InputDirection * (_baseSpeed * dt);
+                    _actorLogic.SetAttr(ELogicAttr.AttrPosition, curPos + offset, false);
+                    _actorLogic.SetAttr(ELogicAttr.AttrRot, curRot, false);
                 }
                 else
                 {

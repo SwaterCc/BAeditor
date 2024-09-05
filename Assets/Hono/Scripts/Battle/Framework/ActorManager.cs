@@ -133,5 +133,13 @@ namespace Hono.Scripts.Battle {
 				_removeList.Add(actor);
 			}
 		}
+		
+		public void RemoveActor(int actorUid )
+		{
+			if (_uidActorDict.TryGetValue(actorUid,out var actor))
+			{
+				_removeList.Add(actor);
+			}
+		}
 	}
 }

@@ -1,3 +1,4 @@
+using System;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
@@ -39,6 +40,7 @@ namespace Hono.Scripts.Battle {
 				_instance = this;
 			}
 			
+			LuaInterface.Init();
 			init();
 		}
 
@@ -61,6 +63,11 @@ namespace Hono.Scripts.Battle {
 
 		public void Tick(float dt) {
 			ActorManager.Instance.Tick(dt);
+		}
+
+		public void OnDestroy()
+		{
+			LuaInterface.Dispose();
 		}
 	}
 }

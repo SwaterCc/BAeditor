@@ -23,6 +23,6 @@ namespace Hono.Scripts.Battle
         public bool ForceFaceTarget;
         public int SkillDamageBasePer; //基础倍率，万分比
         public bool UseCustomFilter;
-        public int CustomFilterId;
+        public FilterSetting CustomFilter;
     }
 }

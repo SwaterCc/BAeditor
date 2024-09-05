@@ -28,6 +28,7 @@ namespace Hono.Scripts.Battle {
 		/// 编辑器数据
 		/// </summary>
 		private AbilityData _abilityData;
+		public AbilityData AbilityData => _abilityData;
 
 		private int _abilityConfigId;
 		public int ConfigId => _abilityConfigId;

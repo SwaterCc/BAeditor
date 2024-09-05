@@ -1,3 +1,4 @@
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -7,51 +8,47 @@ namespace Hono.Scripts.Battle
     /// </summary>
     public class HitBoxData : ScriptableObject, IAllowedIndexing
     {
-        public int ID => ConfigId;
+        public int ID => Id;
 
         /// <summary>
         /// 打击点唯一ID
         /// </summary>
-        public int ConfigId;
+        public int Id;
 
         /// <summary>
         /// 伤害盒子类型
         /// </summary>
         public EHitType HitType;
-
+        
         /// <summary>
-        /// 延迟生效时间
+        /// 打击点最大检测次数
         /// </summary>
-        public long DelayTime;
+        public int MaxCount = 1;
 
         /// <summary>
-        /// 打击点持续时长
-        /// </summary>
-        public long Duration;
-
-        /// <summary>
-        /// 打击点有效次数
+        /// 打击点对单个目标最大有效次数
         /// </summary>
         public int ValidCount;
-
+        
         /// <summary>
-        /// 单次检测时长
+        /// 第一次触发时间
         /// </summary>
-        public int EffectTime;
-
+        public long FirstInterval;
+        
         /// <summary>
         /// 打击点检测间隔
         /// </summary>
         public long Interval;
-
+        
         /// <summary>
-        /// 打击点形状类型
+        /// 单次打击造成几次伤害
         /// </summary>
-        public ECheckBoxShapeType ShapeType;
+        public int OnceHitDamageCount = 1;
 
         /// <summary>
         /// Aoe打击点AABB盒子数据
         /// </summary>
+        [OdinSerialize]
         public CheckBoxData AoeData;
 
         /// <summary>
