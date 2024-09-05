@@ -19,7 +19,6 @@ namespace Hono.Scripts.Battle
         public List<int> Tags = new List<int>();
         public int PriorityATK;
         public int PriorityDEF;
-        public int AttackRange;
         public bool ForceFaceTarget;
         public int SkillDamageBasePer; //基础倍率，万分比
         public bool UseCustomFilter;

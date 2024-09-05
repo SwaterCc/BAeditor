@@ -116,7 +116,19 @@ namespace Hono.Scripts.Battle
             damageInfo.SourceActorId = _sourceActorId;
             damageInfo.SourceAbilityId = _sourceAbilityId;
             damageInfo.SourceAbilityType = _sourceAbilityType;
-
+            var abilityData = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityId);
+            switch (abilityData.Type)
+            {
+                case EAbilityType.Skill:
+                    var skillData = AssetManager.Instance.GetData<SkillData>(_sourceAbilityId);
+                    damageInfo.BaseDamagePer = skillData.SkillDamageBasePer;
+                    break;
+                case EAbilityType.Buff:
+                    var buffData = AssetManager.Instance.GetData<BuffData>(_sourceAbilityId);
+                    damageInfo.BaseDamagePer = buffData.BuffDamageBasePer;
+                    break;
+            }
+            
             for (int i = 0; i < _hitBoxData.OnceHitDamageCount; i++)
             {
                 _hitProcess.Invoke(attacker, damageInfo);

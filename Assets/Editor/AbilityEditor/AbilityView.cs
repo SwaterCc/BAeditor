@@ -6,9 +6,17 @@ using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Editor.AbilityEditor
 {
+    public interface IExDrawer
+    {
+        public void LoadAsset(int id);
+        public void Draw();
+        public void Save();
+    }
+    
     /// <summary>
     /// 能力配置界面 （基础配置 + 逻辑配置）
     /// </summary>
@@ -17,32 +25,22 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 能力基础数据
         /// </summary>
-        public AbilityData Data;
+        public AbilityData AbilityData;
 
-        private static FuncShowInfoList _funcShowInfoList;
-
-        public static FuncShowInfoList FuncShowInfoList
+        public IExDrawer ExDrawer;
+        public AbilityView(AbilityData abilityAbilityData)
         {
-            get
+            AbilityData = abilityAbilityData;
+            switch (AbilityData.Type)
             {
-                if (_funcShowInfoList == null)
-                {
-                    _funcShowInfoList = AssetDatabase.LoadAssetAtPath("Assets/Resources/AbilityRes/funcCache.asset",
-                        typeof(FuncShowInfoList)) as FuncShowInfoList;
-                }
-
-                return _funcShowInfoList;
+                case EAbilityType.Skill:
+                    ExDrawer = new SkillDrawer();
+                    break;
+                case EAbilityType.Buff:
+                    ExDrawer = new BuffDrawer();
+                    break;
             }
-        }
-
-        public AbilityView(AbilityData baseConfig)
-        {
-            Data = baseConfig;
-        }
-
-        public string GetOdinMenuTreeItemLabel()
-        {
-            return $"{Data.ConfigId}->{Data.Name}";
+            ExDrawer?.LoadAsset(AbilityData.ConfigId);
         }
 
         public static void UpdateGroupId(AbilityData data)
@@ -68,8 +66,9 @@ namespace Editor.AbilityEditor
         
         public void Save()
         {
-            AbilityView.UpdateGroupId(Data);
-            EditorUtility.SetDirty(Data);
+            ExDrawer?.Save();
+            AbilityView.UpdateGroupId(AbilityData);
+            EditorUtility.SetDirty(AbilityData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
@@ -120,17 +119,20 @@ namespace Editor.AbilityEditor
 
             SirenixEditorGUI.BeginBox("基础数据");
             EditorGUIUtility.labelWidth = 100;
-            SirenixEditorFields.IntField("配置ID", itemShowView.Data.ConfigId);
-            itemShowView.Data.Name = SirenixEditorFields.TextField("Name", itemShowView.Data.Name);
-            itemShowView.Data.Desc = SirenixEditorFields.TextField("Desc", itemShowView.Data.Desc);
-            itemShowView.Data.IconPath = SirenixEditorFields.TextField("IconPath", itemShowView.Data.IconPath);
+            SirenixEditorFields.IntField("配置ID", itemShowView.AbilityData.ConfigId);
+            itemShowView.AbilityData.Name = SirenixEditorFields.TextField("Name", itemShowView.AbilityData.Name);
+            itemShowView.AbilityData.Desc = SirenixEditorFields.TextField("Desc", itemShowView.AbilityData.Desc);
+            itemShowView.AbilityData.IconPath = SirenixEditorFields.TextField("IconPath", itemShowView.AbilityData.IconPath);
             //tag需要工具
             EditorGUILayout.LabelField("Tag需要工具");
-            itemShowView.Data.DefaultStartGroupId = SirenixEditorFields.IntField("默认开始阶段", itemShowView.Data.DefaultStartGroupId);
-            itemShowView.Data.PreCheckerVarName = SirenixEditorFields.TextField("检测阶段变量名", itemShowView.Data.PreCheckerVarName);
+            itemShowView.AbilityData.DefaultStartGroupId = SirenixEditorFields.IntField("默认开始阶段", itemShowView.AbilityData.DefaultStartGroupId);
+            itemShowView.AbilityData.PreCheckerVarName = SirenixEditorFields.TextField("检测阶段变量名", itemShowView.AbilityData.PreCheckerVarName);
             SirenixEditorGUI.EndBox();
             
-            
+            if (itemShowView.ExDrawer != null)
+            {
+               
+            }
             
             foreach (EAbilityAllowEditCycle cycle in Enum.GetValues(typeof(EAbilityAllowEditCycle)))
             {
@@ -138,7 +140,7 @@ namespace Editor.AbilityEditor
                 
                 if (!_cycleDrawer.TryGetValue(cycle, out var drawer))
                 {
-                    drawer = getDrawer(cycle, itemShowView.Data);
+                    drawer = getDrawer(cycle, itemShowView.AbilityData);
                     if (drawer != null)
                         _cycleDrawer.Add(cycle, drawer);
                 }

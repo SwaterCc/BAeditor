@@ -70,10 +70,11 @@ namespace Hono.Scripts.Battle
             var hitBox = ActorManager.Instance.CreateActor(hitDataId);
             hitBox.Logic.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.BelongActor.Uid, false);
             hitBox.Logic.SetAttr(ELogicAttr.SourceAbilityType, Ability.Context.CurrentAbility.AbilityData.Type, false);
-            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceAbilityUid, Ability.Context.CurrentAbility.AbilityData.Type, false);
+            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceAbilityUid, Ability.Context.CurrentAbility.AbilityData.Type,
+                false);
             ActorManager.Instance.AddActor(hitBox);
         }
-        
+
         /*[AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void CreateBullet(int hitDataId)
         {
@@ -87,10 +88,24 @@ namespace Hono.Scripts.Battle
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void AddAbility(int actorUid, int ability, bool isRunNow)
         {
+            if (ability > 10000)
+            {
+                Debug.LogWarning($"未经过组件试图添加一个特化的Ability {ability}，这是有风险的行为");
+            }
+
             var actor = ActorManager.Instance.GetActor(actorUid);
             actor?.Logic.AwardAbility(ability, isRunNow);
         }
 
+        [AbilityFuncCache(EFuncCacheFlag.Action)]
+        public static void AddBuff(int actorUid, int buffId, int buffLayer = 1)
+        {
+            var actor = ActorManager.Instance.GetActor(actorUid);
+            if (actor.Logic.TryGetComponent<ActorLogic.BuffComp>(out var comp))
+            {
+                comp.AddBuff(Ability.Context.BelongActor.Uid, buffId, buffLayer);
+            }
+        }
 
         [AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
         public static object GetLogicAttr(ELogicAttr logicAttr)
@@ -191,6 +206,12 @@ namespace Hono.Scripts.Battle
 
         [AbilityFuncCache(EFuncCacheFlag.Variable)]
         public static float FloatSelfSubtracting(float a) => --a;
+
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]
+        public static bool And(bool a, bool b) => a && b;
+
+        [AbilityFuncCache(EFuncCacheFlag.Variable)]
+        public static bool Or(bool a, bool b) => a || b;
 
         #endregion
     }

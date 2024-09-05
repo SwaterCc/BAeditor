@@ -39,7 +39,7 @@ namespace Hono.Scripts.Battle
                     {
                         _skillTargetSetting = new FilterSetting();
                         var boxData = new CheckBoxSphere();
-                        boxData.Radius = data.AttackRange;
+                        boxData.Radius = data.SkillRange;
                         boxData.ShapeType = ECheckBoxShapeType.Sphere;
                         _skillTargetSetting.BoxData = boxData;
 
@@ -170,7 +170,7 @@ namespace Hono.Scripts.Battle
                 if (Data.SkillTargetType != ESkillTargetType.Self)
                 {
                     var targetList = ActorManager.Instance.UseFilter(_logic, _skillTargetSetting);
-                    float minDistance = Data.AttackRange;
+                    float minDistance = Data.SkillRange;
                     var selfPos = _logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
                   
                     foreach (var uid in targetList)

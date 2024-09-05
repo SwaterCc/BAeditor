@@ -55,7 +55,7 @@ namespace Hono.Scripts.Battle
 
             public override void Init() { }
 
-            public void AddBuff(int sourceId, int buffConfigId, int buffLayer = 1)
+            public void AddBuff(int sourceActorId, int buffConfigId, int buffLayer = 1)
             {
                 var buffData = AssetManager.Instance.GetData<BuffData>(buffConfigId);
 
@@ -71,13 +71,13 @@ namespace Hono.Scripts.Battle
                 {
                     if (buffList.Count != 0)
                     {
-                        createNewBuff = AddRule(buffData, sourceId, buffList, buffLayer);
+                        createNewBuff = AddRule(buffData, sourceActorId, buffList, buffLayer);
                     }
                 }
 
                 if (createNewBuff)
                 {
-                    var buff = new Buff(_idGenerator.GenerateId(), _actorLogic, sourceId, buffData);
+                    var buff = new Buff(_idGenerator.GenerateId(), _actorLogic, sourceActorId, buffData);
                     buffList.Add(buff);
                     buff.OnAdd();
                     _buffs.Add(buff.Uid, buff);

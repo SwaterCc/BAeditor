@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Editor.AbilityEditor.SimpleWindow;
 using Hono.Scripts.Battle;
+using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -20,122 +23,96 @@ namespace Editor.AbilityEditor
             var window = GetWindow<AbilityEditorMainWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 800);
             window.titleContent = new GUIContent("Ability编辑器");
-        }
 
-        private const string MENU_SKILL = "Skill";
-        private const string MENU_BUFF = "Buff";
-        private const string MENU_BULLET = "Bullet";
-        private const string MENU_GameMode = "GameMode";
-        private const string MENU_OTHER = "Other";
-
-        private const string ASSET_NAME_SKILL = "Skills";
-        private const string ASSET_NAME_BUFF = "Buffs";
-        private const string ASSET_NAME_BULLET = "Bullets";
-
-        public static string SKILL_DATA_PATH = "Assets/Resources/BattleEditorData/Skill/";
-        public static string BUFF_DATA_PATH = "Assets/Resources/BattleEditorData/Buff/";
-        public static string BULLET_DATA_PATH = "Assets/Resources/BattleEditorData/Bullet/";
-
-        public static string GetSavePath(EAbilityType type)
-        {
-            switch (type)
+            foreach (var eType in Enum.GetValues(typeof(EAbilityType)))
             {
-                case EAbilityType.Skill:
-                    return SKILL_DATA_PATH;
-                case EAbilityType.Buff:
-                    return BUFF_DATA_PATH;
-                case EAbilityType.Bullet:
-                    return BULLET_DATA_PATH;
+                window.Reload((EAbilityType)eType);
             }
-
-            return null;
         }
 
-        private AbilityDataList _skills;
-        private AbilityDataList _buffs;
-        private AbilityDataList _bullets;
-
-        protected override void Initialize()
+        private readonly Dictionary<EAbilityType, string> _menuNames = new()
         {
-            _skills = LoadBattleAbilityConfigList(ASSET_NAME_SKILL);
-            _buffs = LoadBattleAbilityConfigList(ASSET_NAME_BUFF);
-            _bullets = LoadBattleAbilityConfigList(ASSET_NAME_BULLET);
-        }
+            { EAbilityType.Other, "Other" },
+            { EAbilityType.Skill, "Skill" },
+            { EAbilityType.Buff, "Buff" },
+            { EAbilityType.Bullet, "Bullet" },
+            { EAbilityType.GameMode, "GameMode" }
+        };
 
-        public AbilityDataList GetDataList(EAbilityType type)
+        private readonly Dictionary<EAbilityType, string> _abilityFolders = new()
         {
-            switch (type)
+            { EAbilityType.Other, AbilityEditorPath.AbilityOtherPath },
+            { EAbilityType.Skill, AbilityEditorPath.AbilitySkillPath },
+            { EAbilityType.Buff, AbilityEditorPath.AbilityBuffPath },
+            { EAbilityType.Bullet, AbilityEditorPath.AbilityBulletPath },
+            { EAbilityType.GameMode, AbilityEditorPath.AbilityGameModePath }
+        };
+
+        public Dictionary<EAbilityType, string> AbilityFolders => _abilityFolders;
+
+        private readonly Dictionary<EAbilityType, Dictionary<string, AbilityData>> _abilityPathWithDatas = new()
+        {
+            { EAbilityType.Other, new Dictionary<string, AbilityData>() },
+            { EAbilityType.Skill, new Dictionary<string, AbilityData>() },
+            { EAbilityType.Buff, new Dictionary<string, AbilityData>() },
+            { EAbilityType.Bullet, new Dictionary<string, AbilityData>() },
+            { EAbilityType.GameMode, new Dictionary<string, AbilityData>() }
+        };
+
+        public Dictionary<EAbilityType, Dictionary<string, AbilityData>> AbilityPathWithDatas => _abilityPathWithDatas;
+
+        public static string[] LoadFolder(string folderPath)
+        {
+            // 获取指定文件夹路径下所有 .asset 文件的 GUID 数组
+            string[] assetGUIDs = AssetDatabase.FindAssets("t:object", new[] { folderPath });
+
+            // 创建一个字符串数组来存储文件名
+            string[] assetFileNames = new string[assetGUIDs.Length];
+
+            for (int i = 0; i < assetGUIDs.Length; i++)
             {
-                case EAbilityType.Skill:
-                    return _skills;
-                case EAbilityType.Buff:
-                    return _bullets;
-                case EAbilityType.Bullet:
-                    return _bullets;
-            }
+                // 使用 GUID 获取每个资产的路径
+                string assetPath = AssetDatabase.GUIDToAssetPath(assetGUIDs[i]);
 
-            return null;
-        }
-
-        private AbilityDataList LoadBattleAbilityConfigList(string abilityTypeStr)
-        {
-            return AssetDatabase.LoadAssetAtPath($"Assets/Resources/BattleEditorData/{abilityTypeStr}.asset",
-                typeof(AbilityDataList)) as AbilityDataList;
-        }
-
-        private void AddMenuItem(OdinMenuTree treeInstance, string rootMenu, AbilityDataList data)
-        {
-            if (treeInstance == null)
-            {
-                return;
-            }
-
-            foreach (var itemPair in data.Items)
-            {
-                var abilityData = LoadAbilitySerializable(data.abilityType, itemPair.Value.configId);
-                if (abilityData != null)
+                // 检查文件是否为 .asset 文件
+                if (assetPath.EndsWith(".asset"))
                 {
-                    var abilityView = new AbilityView(abilityData);
-                    treeInstance.Add($"{rootMenu}/{abilityView.GetOdinMenuTreeItemLabel()}", abilityView);
+                    // 获取文件名（带扩展名）
+                    assetFileNames[i] = assetPath;
                 }
             }
+
+            return assetFileNames;
         }
 
-        private AbilityData LoadAbilitySerializable(EAbilityType eAbilityType, int id)
+        public void Reload(EAbilityType abilityType)
         {
-            AbilityData asset = null;
-            switch (eAbilityType)
+            _abilityPathWithDatas[abilityType].Clear();
+            var paths = LoadFolder(_abilityFolders[abilityType]);
+            foreach (var fullPath in paths)
             {
-                case EAbilityType.Skill:
-                    asset = AssetDatabase.LoadAssetAtPath($"{SKILL_DATA_PATH}{id}.asset",
-                        typeof(AbilityData)) as AbilityData;
-                    break;
-                case EAbilityType.Buff:
-                    asset = AssetDatabase.LoadAssetAtPath($"{BUFF_DATA_PATH}{id}.asset",
-                        typeof(AbilityData)) as AbilityData;
-                    break;
-                case EAbilityType.Bullet:
-                    asset = AssetDatabase.LoadAssetAtPath($"{BULLET_DATA_PATH}{id}.asset",
-                        typeof(AbilityData)) as AbilityData;
-                    break;
+                var data = AssetDatabase.LoadAssetAtPath<AbilityData>(fullPath);
+                _abilityPathWithDatas[abilityType].Add(fullPath, data);
             }
-
-            return !asset ? null : asset;
         }
 
         protected override OdinMenuTree BuildMenuTree()
         {
-            var treeInstance = new OdinMenuTree(false)
+            var treeInstance = new OdinMenuTree(false);
+
+            foreach (var pMenuName in _menuNames)
             {
-                { MENU_SKILL, new BattleAbilityRootView(this, _skills), EditorIcons.Clouds },
-                { MENU_BUFF, new BattleAbilityRootView(this, _buffs), EditorIcons.Clouds },
-                { MENU_BULLET, new BattleAbilityRootView(this, _bullets), EditorIcons.Clouds }
-            };
+                treeInstance.Add(pMenuName.Value,
+                    new BattleAbilityRootView(this, pMenuName.Key, _abilityPathWithDatas[pMenuName.Key]),
+                    SdfIconType.BoxSeam);
 
-
-            AddMenuItem(treeInstance, MENU_SKILL, _skills);
-            AddMenuItem(treeInstance, MENU_BUFF, _buffs);
-            AddMenuItem(treeInstance, MENU_BULLET, _bullets);
+                foreach (var abilityDataPair in _abilityPathWithDatas[pMenuName.Key])
+                {
+                    string itemName = pMenuName.Value + "/" + abilityDataPair.Value.ConfigId +
+                                      $"({abilityDataPair.Value.Desc})";
+                    treeInstance.Add(itemName, new AbilityView(abilityDataPair.Value), SdfIconType.CaretRight);
+                }
+            }
 
             return treeInstance;
         }
@@ -148,7 +125,7 @@ namespace Editor.AbilityEditor
                 abilityView.Save();
             }
         }
-        
+
 
         protected override void OnDestroy()
         {
@@ -157,6 +134,7 @@ namespace Editor.AbilityEditor
             {
                 abilityView.Save();
             }
+
             base.OnDestroy();
         }
 
@@ -187,15 +165,14 @@ namespace Editor.AbilityEditor
                 {
                     if (SirenixEditorGUI.ToolbarButton(new GUIContent("打开变量窗口")))
                     {
-                        ShowVariableWindow.OpenWindow(this, abilityView.Data);
+                        ShowVariableWindow.OpenWindow(this, abilityView.AbilityData);
                     }
-                    
+
                     if (SirenixEditorGUI.ToolbarButton(new GUIContent("保存")))
                     {
                         abilityView.Save();
                     }
                 }
-                
             }
             SirenixEditorGUI.EndHorizontalToolbar();
         }
