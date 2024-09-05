@@ -77,7 +77,7 @@ namespace Editor.AbilityEditor.SimpleWindow
                 return;
             }
 
-            if (abilityIdCheck())
+            if (!abilityIdCheck())
             {
                 msg = "id不服合规范！";
                 _hasError = true;
@@ -93,7 +93,7 @@ namespace Editor.AbilityEditor.SimpleWindow
 
             string savePath = _main.AbilityFolders[createType] + "/" + id + ".asset";
             
-            if (!list.ContainsKey(savePath))
+            if (list.ContainsKey(savePath))
             {
                 msg = "添加失败，id重复";
                 _hasError = true;

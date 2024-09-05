@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -50,34 +51,6 @@ namespace Editor.AbilityEditor
         }
 
 
-        /*public static object DrawLabelByType(SpecializationDataType elementType, string label, object updateValue)
-        {
-            object afterValue = null;
-            if (elementType == SpecializationDataType.Int)
-            {
-                afterValue = EditorGUILayout.IntField(label, (int)updateValue);
-            }
-            else if (elementType == SpecializationDataType.Long)
-            {
-                afterValue = EditorGUILayout.LongField(label, (long)updateValue);
-            }
-            else if (elementType == SpecializationDataType.Float)
-            {
-                afterValue = EditorGUILayout.FloatField(label, (float)updateValue);
-            }
-            else if (elementType == SpecializationDataType.String)
-            {
-                afterValue = EditorGUILayout.TextField(label, (string)updateValue);
-            }
-            else if (elementType == SpecializationDataType.Enum)
-            {
-                afterValue = EditorGUILayout.EnumPopup(label, (Enum)updateValue);
-            }
-
-            return afterValue;
-        }*/
-
-
         public static string GetTypeAllName(Type type)
         {
             string typeName = type.ToString();
@@ -85,125 +58,38 @@ namespace Editor.AbilityEditor
             return typeName + ", " + assemblyName;
         }
         
-        /*/// <summary>
-        /// 根据自定义特性BattleAbilityLabelTag 来创建不同的Field，不能创建列表，列表有单独的函数绘制
-        /// </summary>
-        /// <param name="classObj"></param>
-        /// <param name="fieldInfo"></param>
-        /// <param name="label"></param>
-        /// <param name="labeType"></param>
-        public static Object DrawLabelAndUpdateValueByAttr(Object classObj, FieldInfo fieldInfo, string label,
-            BAEditorShowLabelTag.ELabeType labeType)
-        {
-            Object afterUpdateValue = null;
-            switch (labeType)
-            {
-                case BAEditorShowLabelTag.ELabeType.Int32:
-                    checkFieldType(fieldInfo, typeof(int), labeType);
-                    afterUpdateValue = SirenixEditorFields.IntField(label, (int)fieldInfo.GetValue(classObj));
-                    break;
-                case BAEditorShowLabelTag.ELabeType.Long:
-                    checkFieldType(fieldInfo, typeof(long), labeType);
-                    afterUpdateValue = SirenixEditorFields.LongField(label, (long)fieldInfo.GetValue(classObj));
-                    break;
-                case BAEditorShowLabelTag.ELabeType.String:
-                    string text = fieldInfo.GetValue(classObj) == null ? "" : fieldInfo.GetValue(classObj).ToString();
-                    afterUpdateValue = SirenixEditorFields.TextField(label, text);
-                    break;
-                case BAEditorShowLabelTag.ELabeType.Enum:
-                    afterUpdateValue = SirenixEditorFields.EnumDropdown(label, (Enum)fieldInfo.GetValue(classObj));
-                    break;
-            }
-            return afterUpdateValue;
-        }*/
-
-        /// <summary>
-        /// 绘制列表
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="label"></param>
-        /// <param name="getNewValue"></param>
-        /// <param name="itemIsClass">TItem的类型不是基础类型，是类或结构体</param>
-        /// <typeparam name="TItem"></typeparam>
-        /*public static void DrawList<TItem>(ref List<TItem> list, string label, Func<TItem> getNewValue, bool itemIsClass = false)
+        
+        public static void DrawIntList(List<int> list, string label,float labelWidth)
         {
             int removeIdx = -1;
             SirenixEditorGUI.BeginBox();
-            SirenixEditorGUI.BeginBoxHeader();
-            SirenixEditorGUI.Title(label, "", TextAlignment.Left, true);
-            SirenixEditorGUI.EndBoxHeader();
             if (list == null)
             {
-                list = new List<TItem>();
+                list = new List<int>();
+                list.Add(0);
             }
+
+            EditorGUILayout.LabelField(label, GUILayout.Width(labelWidth));
             for (int idx = 0; idx < list.Count; ++idx)
             {
                 EditorGUILayout.BeginHorizontal();
-                if (SirenixEditorGUI.Button("删除", ButtonSizes.Gigantic))
+                if (GUILayout.Button("-",GUILayout.Width(22)))
                 {
                     removeIdx = idx;
                 }
-                SirenixEditorGUI.BeginListItem();
-                if (itemIsClass)
-                {
-                    foreach (var fieldInfo in (list[idx]).GetType().GetFields())
-                    {
-                        var attr = GetFiledLabelAndType(fieldInfo);
-                        var obj = DrawLabelAndUpdateValueByAttr(list[idx], fieldInfo, attr.Item1, attr.Item2);
-                        fieldInfo.SetValue(list[idx],obj);
-                    }
-                }
-                else
-                {
-                    var afterValue = DrawLabelByType(typeof(TItem), label, list[idx]);
-                    list[idx] = (TItem)afterValue;
-                }
-                SirenixEditorGUI.EndListItem();
+                list[idx] = SirenixEditorFields.IntField(list[idx],GUILayout.Width(30));
                 EditorGUILayout.EndHorizontal();
             }
 
             if (removeIdx >= 0)
             {
                 list.RemoveAt(removeIdx);
-                removeIdx = -1;
             }
 
-            if (SirenixEditorGUI.Button("添加", ButtonSizes.Medium))
+            if (GUILayout.Button("+", GUILayout.Width(22)))
             {
-                if (getNewValue != null)
-                {
-                    list.Add(getNewValue());
-                }
+                list.Add(0);
             }
-            SirenixEditorGUI.EndBox();
-        }*/
-
-        /// <summary>
-        /// 绘制字典,未完成
-        /// </summary>
-        /// <param name="dict"></param>
-        /// <param name="label"></param>
-        /// <typeparam name="TKey"></typeparam>
-        /// <typeparam name="TValue"></typeparam>
-        public static void DrawDict<TKey, TValue>(ref Dictionary<TKey, TValue> dict, string label)
-        {
-            SirenixEditorGUI.BeginBox();
-            SirenixEditorGUI.BeginBoxHeader();
-            SirenixEditorGUI.Title(label, "", TextAlignment.Left, true);
-            SirenixEditorGUI.EndBoxHeader();
-            SirenixEditorGUI.BeginVerticalPropertyLayout(new GUIContent("label"));
-            foreach (var pair in dict)
-            {
-                SirenixEditorGUI.BeginIndentedHorizontal();
-                var afterKey = DrawLabelByType(typeof(TKey), label, pair.Key);
-                var afterValue = DrawLabelByType(typeof(TKey), label, pair.Value);
-                dict[pair.Key] = (TValue)afterValue;
-                SirenixEditorGUI.EndIndentedHorizontal();
-            }
-
-            SirenixEditorGUI.EndVerticalPropertyLayout();
-            if (GUILayout.Button("添加配置")) { }
-
             SirenixEditorGUI.EndBox();
         }
     }

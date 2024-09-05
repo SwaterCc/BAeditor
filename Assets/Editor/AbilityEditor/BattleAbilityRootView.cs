@@ -89,7 +89,7 @@ namespace Editor.AbilityEditor
                 SirenixEditorGUI.EndListItem();
             }
 
-            if (string.IsNullOrEmpty(removePath))
+            if (!string.IsNullOrEmpty(removePath))
             {
                 AssetDatabase.DeleteAsset(removePath);
                 ValueEntry.SmartValue.MainWindow.Reload(ValueEntry.SmartValue.AbilityType);

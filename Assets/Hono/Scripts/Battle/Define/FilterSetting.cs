@@ -24,9 +24,6 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class FilterSetting
     {
-        public int ID => id;
-        public int id;
-
         public bool OpenBoxCheck;
         [OdinSerialize] public CheckBoxData BoxData;
 

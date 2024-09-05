@@ -124,15 +124,12 @@ namespace Editor.AbilityEditor
             itemShowView.AbilityData.Desc = SirenixEditorFields.TextField("Desc", itemShowView.AbilityData.Desc);
             itemShowView.AbilityData.IconPath = SirenixEditorFields.TextField("IconPath", itemShowView.AbilityData.IconPath);
             //tag需要工具
-            EditorGUILayout.LabelField("Tag需要工具");
+            AbilityEditorHelper.DrawIntList(itemShowView.AbilityData.Tags,"Tags(后续需要新的工具)",38);
             itemShowView.AbilityData.DefaultStartGroupId = SirenixEditorFields.IntField("默认开始阶段", itemShowView.AbilityData.DefaultStartGroupId);
             itemShowView.AbilityData.PreCheckerVarName = SirenixEditorFields.TextField("检测阶段变量名", itemShowView.AbilityData.PreCheckerVarName);
             SirenixEditorGUI.EndBox();
             
-            if (itemShowView.ExDrawer != null)
-            {
-               
-            }
+            itemShowView.ExDrawer?.Draw();
             
             foreach (EAbilityAllowEditCycle cycle in Enum.GetValues(typeof(EAbilityAllowEditCycle)))
             {

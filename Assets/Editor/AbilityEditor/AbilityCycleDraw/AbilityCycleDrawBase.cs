@@ -69,11 +69,8 @@ namespace Editor.AbilityEditor
             SirenixEditorGUI.EndBoxHeader();
             if (Foldout)
             {
-                SirenixEditorGUI.BeginBox();
                 //画额外内容
                 drawEx();
-                SirenixEditorGUI.EndBox();
-
                 SirenixEditorGUI.BeginBox("编写逻辑");
                 var boxRect = GUIHelper.GetCurrentLayoutRect();
                 //画逻辑树

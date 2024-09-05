@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Editor.AbilityEditor.SimpleWindow;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
@@ -27,26 +28,43 @@ namespace Editor.AbilityEditor
         public void Draw()
         {
             if (!_data) return;
+            float oldWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 140;
             SirenixEditorGUI.BeginBox("技能数据");
             _data.SkillType = (ESkillType)SirenixEditorFields.EnumDropdown("技能类型", _data.SkillType);
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.SkillTargetType = (ESkillTargetType)SirenixEditorFields.EnumDropdown("技能目标类型", _data.SkillTargetType);
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.SkillRange = SirenixEditorFields.FloatField("技能范围", _data.SkillRange);
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.PriorityATK = SirenixEditorFields.IntField("技能打断优先级", _data.PriorityATK);
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.PriorityDEF = SirenixEditorFields.IntField("技能抗打断优先级", _data.PriorityDEF);
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.EcdMode = (ECDMode)SirenixEditorFields.EnumDropdown("CD启动时机", _data.EcdMode);
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.SkillCD = SirenixEditorFields.FloatField("技能CD", _data.SkillCD);
+            SirenixEditorGUI.HorizontalLineSeparator();
             drawResList(_data.SkillResCheck,"技能释放前检测");
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.CostType = (EResCostType)SirenixEditorFields.EnumDropdown("战斗资源扣除时机", _data.CostType);
-            drawResList(_data.SkillResCheck,"扣除资源配置");
+            SirenixEditorGUI.HorizontalLineSeparator();
+            drawResList(_data.SkillResCost,"扣除资源配置");
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.ForceFaceTarget = EditorGUILayout.Toggle("是否转向技能目标", _data.ForceFaceTarget);
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.SkillDamageBasePer = SirenixEditorFields.IntField("技能基础倍率万分比", _data.SkillDamageBasePer);
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.UseCustomFilter = EditorGUILayout.Toggle("是否使用自定义筛选器", _data.UseCustomFilter);
             if (_data.UseCustomFilter)
             {
-                EditorGUILayout.LabelField("自定义筛选器编辑器绘制还未实现");
+                if (SirenixEditorGUI.Button("打开筛选器编辑器",ButtonSizes.Medium))
+                {
+                    FilterSettingWindow.Open(ref _data.CustomFilter);
+                }
             }
-            EditorGUILayout.LabelField("Tag绘制未实现");
             SirenixEditorGUI.EndBox();
+            EditorGUIUtility.labelWidth = oldWidth;
         }
 
         public void Save()
@@ -62,6 +80,7 @@ namespace Editor.AbilityEditor
 
         private void drawResList(List<ResItems> resItemsList, string desc)
         {
+            float oldw = EditorGUIUtility.labelWidth;
             int removeIdx = -1;
             ResItems removeList = null;
 
@@ -125,6 +144,7 @@ namespace Editor.AbilityEditor
             {
                 resItemsList.Remove(removeList);
             }
+            EditorGUIUtility.labelWidth = oldw;
         }
     }
 }
