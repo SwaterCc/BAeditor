@@ -13,13 +13,19 @@ namespace Hono.Scripts.Battle.Event
     {
         public EBattleEventType EventType { get; protected set; }
 
+        /// <summary>
+        /// 检测通过后调用函数
+        /// </summary>
         private Action<IEventInfo> _func;
 
+        /// <summary>
+        /// 绑定的数据类型
+        /// </summary>
         private Type _bindEventInfo;
 
         private bool _isDisable;
 
-        public EventChecker(Action<IEventInfo> func = null, Type bindEventInfo = null)
+        protected EventChecker(Action<IEventInfo> func = null, Type bindEventInfo = null)
         {
             _func = func;
             _bindEventInfo = bindEventInfo;
@@ -55,7 +61,7 @@ namespace Hono.Scripts.Battle.Event
         }
     }
 
-    
+
     public class EmptyChecker : EventChecker
     {
         public EmptyChecker(EBattleEventType eventType, Action<IEventInfo> func = null, Type bindEventInfo = null) :
@@ -69,6 +75,40 @@ namespace Hono.Scripts.Battle.Event
             return true;
         }
     }
+
+    public class UseSkillChecker : EventChecker
+    {
+        private readonly int _uid;
+
+        public UseSkillChecker(int uid) : base(null,
+            typeof(SkillUsedEventInfo))
+        {
+            EventType = EBattleEventType.UseSkill;
+            _uid = uid;
+            BindFunc(useSkill);
+        }
+
+        private void useSkill(IEventInfo eventInfo)
+        {
+            var actor = ActorManager.Instance.GetActor(_uid);
+            if (actor != null && actor.Logic.TryGetComponent<ActorLogic.SkillComp>(out var skillComp))
+            {
+                skillComp.UseSkill(((SkillUsedEventInfo)eventInfo).SkillId);
+            }
+        }
+
+        public override bool compare(IEventInfo info)
+        {
+            var skillUsedEventInfo = (SkillUsedEventInfo)info;
+            if (_uid == skillUsedEventInfo.ActorUid)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
 
     /// <summary>
     /// 打击点默认检测来源于该能力的打击点，全局打击点请用tag

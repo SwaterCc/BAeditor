@@ -1,68 +1,68 @@
 function init(attacker, target, damageInfo, damageConfig)
     --attacker属性
-    attacker:SetAttrLuaByType(EAttrType.EntityLevel, 10);
-    attacker:SetAttrLuaByType(EAttrType.AttrAttack, 500);
-    attacker:SetAttrLuaByType(EAttrType.AttrHp, 100);
-    attacker:SetAttrLuaByType(EAttrType.AttrMp, 100);
-    attacker:SetAttrLuaByType(EAttrType.AttrDefense, 100);
-    attacker:SetAttrLuaByType(EAttrType.AttrIgnoreDefense, 50);
-    attacker:SetAttrLuaByType(EAttrType.AttrIgnoreDefensePCT, 10000);
-    attacker:SetAttrLuaByType(EAttrType.AttrCrit, 3000);
-    attacker:SetAttrLuaByType(EAttrType.AttrCritDamage, 15000);
-    attacker:SetAttrLuaByType(EAttrType.AttrAttackSpeedPCT, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrDmgRed, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrDmgRedNear, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrDmgRedFar, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrDmgRedBullet, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrDmgRedMelee, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrDmgRedBuff, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrDmgRedVsNormalEnemy, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrDmgRedVsEliteEnemy, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrDmgRedHealthy, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrDmgRedNonHealthy, 0);
-    attacker:SetAttrLuaByType(EAttrType.AttrElementPenPCT, 3000)
-    attacker:SetAttrLuaByType(EAttrType.AttrElementRedPCT, 3000)
-    attacker:SetAttrLuaByType(EAttrType.AttrElementPhysicalPenPCT, 3000)
-    attacker:SetAttrLuaByType(EAttrType.AttrElementPhysicalRedPCT, 3000)
-    attacker:SetAttrLuaByType(EAttrType.AttrElementMagicPenPCT, 3000)
-    attacker:SetAttrLuaByType(EAttrType.AttrElementMagicRedPCT, 3000)
-    attacker:SetAttrLuaByType(EAttrType.AttrHealIntensity, 0)
-    attacker:SetAttrLuaByType(EAttrType.AttrHeal, 10000)
-    attacker:SetAttrLuaByType(EAttrType.AttrHealed, 0)
+    attacker:SetAttrLuaByType(ELogicAttr.AttrEntityLevel, 10);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrAttack, 500);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrHp, 100);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrMp, 100);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDefense, 100);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrIgnoreDefense, 50);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrIgnoreDefensePCT, 10000);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrCrit, 3000);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrCritDamage, 15000);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrAttackSpeedPCT, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRed, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedNear, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedFar, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedBullet, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedMelee, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedBuff, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedVsNormalEnemy, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedVsEliteEnemy, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedHealthy, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedNonHealthy, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrElementPenPCT, 3000)
+    attacker:SetAttrLuaByType(ELogicAttr.AttrElementRedPCT, 3000)
+    attacker:SetAttrLuaByType(ELogicAttr.AttrElementPhysicalPenPCT, 3000)
+    attacker:SetAttrLuaByType(ELogicAttr.AttrElementPhysicalRedPCT, 3000)
+    attacker:SetAttrLuaByType(ELogicAttr.AttrElementMagicPenPCT, 3000)
+    attacker:SetAttrLuaByType(ELogicAttr.AttrElementMagicRedPCT, 3000)
+    attacker:SetAttrLuaByType(ELogicAttr.AttrHealIntensity, 0)
+    attacker:SetAttrLuaByType(ELogicAttr.AttrHeal, 10000)
+    attacker:SetAttrLuaByType(ELogicAttr.AttrHealed, 0)
     attacker:AddTag(100)
     attacker:AddTag(101)
     attacker:AddTag(102)
     --target属性
-    target:SetAttrLuaByType(EAttrType.EntityLevel, 10);
-    target:SetAttrLuaByType(EAttrType.AttrAttack, 500);
-    target:SetAttrLuaByType(EAttrType.AttrHp, 100);
-    target:SetAttrLuaByType(EAttrType.AttrMaxHp, 100);
-    target:SetAttrLuaByType(EAttrType.AttrMp, 100);
-    target:SetAttrLuaByType(EAttrType.AttrDefense, 100);
-    target:SetAttrLuaByType(EAttrType.AttrIgnoreDefense, 50);
-    target:SetAttrLuaByType(EAttrType.AttrIgnoreDefensePCT, 10000);
-    target:SetAttrLuaByType(EAttrType.AttrCrit, 5000);
-    target:SetAttrLuaByType(EAttrType.AttrCritDamage, 15000);
-    target:SetAttrLuaByType(EAttrType.AttrAttackSpeedPCT, 0);
-    target:SetAttrLuaByType(EAttrType.AttrDmgRed, 0);
-    target:SetAttrLuaByType(EAttrType.AttrDmgRedNear, 0);
-    target:SetAttrLuaByType(EAttrType.AttrDmgRedFar, 0);
-    target:SetAttrLuaByType(EAttrType.AttrDmgRedBullet, 0);
-    target:SetAttrLuaByType(EAttrType.AttrDmgRedMelee, 0);
-    target:SetAttrLuaByType(EAttrType.AttrDmgRedBuff, 0);
-    target:SetAttrLuaByType(EAttrType.AttrDmgRedVsNormalEnemy, 0);
-    target:SetAttrLuaByType(EAttrType.AttrDmgRedVsEliteEnemy, 0);
-    target:SetAttrLuaByType(EAttrType.AttrDmgRedHealthy, 0);
-    target:SetAttrLuaByType(EAttrType.AttrDmgRedNonHealthy, 0);
-    target:SetAttrLuaByType(EAttrType.AttrElementPenPCT, 3000)
-    target:SetAttrLuaByType(EAttrType.AttrElementRedPCT, 3000)
-    target:SetAttrLuaByType(EAttrType.AttrElementPhysicalPenPCT, 3000)
-    target:SetAttrLuaByType(EAttrType.AttrElementPhysicalRedPCT, 15000)
-    target:SetAttrLuaByType(EAttrType.AttrElementMagicPenPCT, 3000)
-    target:SetAttrLuaByType(EAttrType.AttrElementMagicRedPCT, 3000)
-    target:SetAttrLuaByType(EAttrType.AttrHealIntensity, 0)
-    target:SetAttrLuaByType(EAttrType.AttrHeal, 0)
-    target:SetAttrLuaByType(EAttrType.AttrHealed, 10000)
+    target:SetAttrLuaByType(ELogicAttr.AttrEntityLevel, 10);
+    target:SetAttrLuaByType(ELogicAttr.AttrAttack, 500);
+    target:SetAttrLuaByType(ELogicAttr.AttrHp, 100);
+    target:SetAttrLuaByType(ELogicAttr.AttrMaxHp, 100);
+    target:SetAttrLuaByType(ELogicAttr.AttrMp, 100);
+    target:SetAttrLuaByType(ELogicAttr.AttrDefense, 100);
+    target:SetAttrLuaByType(ELogicAttr.AttrIgnoreDefense, 50);
+    target:SetAttrLuaByType(ELogicAttr.AttrIgnoreDefensePCT, 10000);
+    target:SetAttrLuaByType(ELogicAttr.AttrCrit, 5000);
+    target:SetAttrLuaByType(ELogicAttr.AttrCritDamage, 15000);
+    target:SetAttrLuaByType(ELogicAttr.AttrAttackSpeedPCT, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrDmgRed, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrDmgRedNear, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrDmgRedFar, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrDmgRedBullet, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrDmgRedMelee, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrDmgRedBuff, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrDmgRedVsNormalEnemy, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrDmgRedVsEliteEnemy, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrDmgRedHealthy, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrDmgRedNonHealthy, 0);
+    target:SetAttrLuaByType(ELogicAttr.AttrElementPenPCT, 3000)
+    target:SetAttrLuaByType(ELogicAttr.AttrElementRedPCT, 3000)
+    target:SetAttrLuaByType(ELogicAttr.AttrElementPhysicalPenPCT, 3000)
+    target:SetAttrLuaByType(ELogicAttr.AttrElementPhysicalRedPCT, 0)
+    target:SetAttrLuaByType(ELogicAttr.AttrElementMagicPenPCT, 3000)
+    target:SetAttrLuaByType(ELogicAttr.AttrElementMagicRedPCT, 3000)
+    target:SetAttrLuaByType(ELogicAttr.AttrHealIntensity, 0)
+    target:SetAttrLuaByType(ELogicAttr.AttrHeal, 0)
+    target:SetAttrLuaByType(ELogicAttr.AttrHealed, 10000)
     target:AddTag(100)
     target:AddTag(101)
     target:AddTag(102)
@@ -249,8 +249,4 @@ local enumDefine = {
     AttrDmgRedNonHealthyExPer = 17125,
 
     EntityLevel = 60010,
-    Source,
-    SourceType,
-    Position,
-
 }

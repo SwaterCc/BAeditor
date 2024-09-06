@@ -1,73 +1,87 @@
-namespace Hono.Scripts.Battle {
-	public interface ITick {
-		public void Tick(float dt);
-	}
+namespace Hono.Scripts.Battle
+{
+    public interface ITick
+    {
+        public void Tick(float dt);
+    }
 
-	/// <summary>
-	/// Actor 实际的行为由Logic+Show构成，用State去管理Logic和Show Actor提供对外的接口
-	/// </summary>
-	public sealed class Actor {
-		/// <summary>
-		/// 运行时唯一ID
-		/// </summary>
-		public int Uid { get; }
+    /// <summary>
+    /// Actor 实际的行为由Logic+Show构成，用State去管理Logic和Show Actor提供对外的接口
+    /// </summary>
+    public sealed class Actor
+    {
+        /// <summary>
+        /// 运行时唯一ID
+        /// </summary>
+        public int Uid { get; }
 
-		/// <summary>
-		/// 配置ID
-		/// </summary>
-		private int _configId;
-		public int ConfigId => _configId;
-		
-		/// <summary>
-		/// 是否无效
-		/// </summary>
-		private bool _isDisposable = false;
+        /// <summary>
+        /// 配置ID
+        /// </summary>
+        private int _configId;
 
-		public bool IsDisposable => _isDisposable;
+        public int ConfigId => _configId;
 
-		/// <summary>
-		/// Actor基础数据
-		/// </summary>
-		public ActorPrototypeData PrototypeData { get; }
+        /// <summary>
+        /// 是否无效
+        /// </summary>
+        private bool _isDisposable = false;
 
-		/// <summary>
-		/// 表现层
-		/// </summary>
-		private ActorShow _show;
+        public bool IsDisposable => _isDisposable;
 
-		/// <summary>
-		/// 逻辑层
-		/// </summary>
-		private ActorLogic _logic;
+        /// <summary>
+        /// Actor基础数据
+        /// </summary>
+        public ActorPrototypeData PrototypeData { get; }
 
-		public ActorLogic Logic => _logic;
+        /// <summary>
+        /// 表现层
+        /// </summary>
+        private ActorShow _show;
 
-		/// <summary>
-		/// 当前运行状态
-		/// </summary>
-		private ActorRTState _rtState;
+        /// <summary>
+        /// 逻辑层
+        /// </summary>
+        private ActorLogic _logic;
 
-		/// <summary>
-		/// 运行状态
-		/// </summary>
-		public ActorRTState RTState => _rtState;
+        public ActorLogic Logic => _logic;
 
-		public Actor(int uid, ActorPrototypeData data) {
-			Uid = uid;
-			PrototypeData = data;
-			_configId = data.id;
-		}
+        /// <summary>
+        /// 当前运行状态
+        /// </summary>
+        private ActorRTState _rtState;
 
-		public void Init(ActorShow show, ActorLogic logic) {
-			_rtState = new ActorRTState(show, logic);
-			_logic = logic;
-			_show = show;
-			_show?.Init();
-			_logic?.Init(_rtState);
-			
-			_rtState.SyncTransform();
-		}
+        /// <summary>
+        /// 运行状态
+        /// </summary>
+        public ActorRTState RTState => _rtState;
 
-		public void Destroy() { }
-	}
+        public Actor(int uid, ActorPrototypeData data)
+        {
+            Uid = uid;
+            PrototypeData = data;
+            _configId = data.id;
+        }
+
+        public void Setup(ActorShow show, ActorLogic logic)
+        {
+            _rtState = new ActorRTState(show, logic);
+            _logic = logic;
+            _show = show;
+        }
+
+        public void Init()
+        {
+            _show?.Init();
+            _logic?.Init(_rtState);
+
+            _rtState.SyncTransform();
+        }
+
+        public void Destroy()
+        {
+            _show.Destroy();
+            _logic.Destroy();
+        }
+    }
 }

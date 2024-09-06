@@ -17,16 +17,27 @@ Faction.FactionIDs = { 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 
 Faction.InfoTable = {
     --找不到默认中立
-    [1] = { [EFactionType.Friendly] = {1,2},[EFactionType.Enemy] = {3,4,5,6,7,8,9} }
+    [1] = { [EFactionType.Friendly] = { 1, 2 }, [EFactionType.Enemy] = { 3, 4, 5, 6, 7, 8, 9 } }
 }
 
 Faction.GetFaction = function(id1, id2)
-    if Faction.InfoTable[id1] ~= nil then
-        for res, id in pairs(Faction.InfoTable[id1]) do
-            if id == id2 then
+    PrintDamageLog("1 " .. id1)
+    PrintDamageLog("2 " .. id2)
+    if Faction.InfoTable[id1] == nil then
+        return
+    end
+    
+    PrintDamageLog("3")
+    for res, factionIds in pairs(Faction.InfoTable[id1]) do
+        PrintDamageLog("res " .. res)
+        for _, faction in ipairs(factionIds) do
+            if faction == id2 then
+                PrintDamageLog("4 " .. res)
                 return res
             end
         end
     end
+    
+    PrintDamageLog(EFactionType.Neutrality)
     return EFactionType.Neutrality
 end

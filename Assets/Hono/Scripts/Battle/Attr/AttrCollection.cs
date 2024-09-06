@@ -76,7 +76,8 @@ namespace Hono.Scripts.Battle {
 				return typedAttr.Get();
 			}
 
-			throw new InvalidCastException($"Cannot cast attribute of type {attrType} to {typeof(T)}");
+			Debug.LogError($"Cannot cast attribute of type {attrType} to {typeof(T)}");
+			return default;
 		}
 	}
 	

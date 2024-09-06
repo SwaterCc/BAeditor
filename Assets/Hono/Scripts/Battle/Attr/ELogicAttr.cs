@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle
         //Base
         AttrUid,
         AttrSourceActorUid,
-        AttrSourceAbilityUid,
+        AttrSourceAbilityConfigId,
         SourceAbilityType,
         AttrRot,
         AttrPosition,
@@ -15,8 +15,8 @@ namespace Hono.Scripts.Battle
         AttrAttackTargetUid,
         AttrMoveTargetUid,
         AttrFaction, 
-
         //HP
+        
         AttrHp = 10000,
         AttrHpPer = 10001,
         AttrMaxHp = 10010,
@@ -216,6 +216,6 @@ namespace Hono.Scripts.Battle
         AttrDmgRedNonHealthyExAdd = 17123,
         AttrDmgRedNonHealthyPer = 17124,
         AttrDmgRedNonHealthyExPer = 17125,
-      
+        AttrEntityLevel =60010,
     }
 }

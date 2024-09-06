@@ -18,7 +18,7 @@ namespace Hono.Scripts.Battle
             {
                 _transDict[EActorState.Battle].Add(new AStateTransform(EActorState.Battle));
                 _transDict[EActorState.Death].Add(new AStateTransform(EActorState.Death));
-                _transDict[EActorState.Idle].Add(new AStateTransform(EActorState.Idle));
+                _transDict[EActorState.Idle].Add(new AStateTransform(EActorState.Idle,() => _actorLogic._inputHandle.MoveInputValue.magnitude == 0));
                 _transDict[EActorState.Stiff].Add(new AStateTransform(EActorState.Stiff));
 
                 _baseSpeed = _actorLogic.GetAttr<float>(ELogicAttr.AttrBaseSpeed);
@@ -27,18 +27,12 @@ namespace Hono.Scripts.Battle
 
             protected override void onTick(float dt)
             {
-                if (InputManager.Instance.HasMoveInput)
-                {
-                    var curPos = _actorLogic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-                    var curRot = Quaternion.FromToRotation(Vector3.forward, InputManager.Instance.InputDirection);
-                    var offset = InputManager.Instance.InputDirection * (_baseSpeed * dt);
-                    _actorLogic.SetAttr(ELogicAttr.AttrPosition, curPos + offset, false);
-                    _actorLogic.SetAttr(ELogicAttr.AttrRot, curRot, false);
-                }
-                else
-                {
-                    _canExit = true;
-                }
+                var curPos = _actorLogic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+                var curRot = Quaternion.FromToRotation(Vector3.forward, _actorLogic._inputHandle.MoveInputValue);
+                var offset = InputManager.Instance.InputDirection * (_baseSpeed * dt);
+                Debug.Log($"move Offset {offset}");
+                _actorLogic.SetAttr(ELogicAttr.AttrPosition, curPos + offset, false);
+                _actorLogic.SetAttr(ELogicAttr.AttrRot, curRot, false);
             }
         }
     }

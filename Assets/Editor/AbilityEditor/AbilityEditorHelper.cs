@@ -49,8 +49,7 @@ namespace Editor.AbilityEditor
 
             return afterValue;
         }
-
-
+        
         public static string GetTypeAllName(Type type)
         {
             string typeName = type.ToString();

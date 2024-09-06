@@ -108,16 +108,17 @@ namespace Hono.Scripts.Battle.Tools
 
             foreach (var raycastHit in raycastHits)
             {
+                Debug.Log($"handle Name {raycastHit.collider.gameObject.name}");
                 if (!raycastHit.collider.TryGetComponent<ActorModelHandle>(out var handle))
                 {
                     continue;
                 }
-
+                
                 actorIds ??= new List<int>();
                 actorIds.Add(handle.ActorUid); 
             }
 
-            return actorIds == null;
+            return actorIds != null;
         }
     }
 

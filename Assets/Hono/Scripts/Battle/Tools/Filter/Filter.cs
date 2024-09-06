@@ -51,8 +51,8 @@ namespace Hono.Scripts.Battle
                         return logic.HasAbility(range.Value);
                     case EFilterRangeType.Faction :
                         var f1 = _filterUser.GetAttr<int>(ELogicAttr.AttrFaction);
-                        var f2 = _filterUser.GetAttr<int>(ELogicAttr.AttrFaction);
-                        return LuaInterface.GetFaction(f1, f2) == (EFactionType)range.Value;
+                        var f2 = logic.GetAttr<int>(ELogicAttr.AttrFaction);
+                        return LuaInterface.GetFaction(f1, f2) == range.Value;
                 }
 
                 Debug.LogError($"使用了未实现的范围筛选 settingId {_filterUser.Uid} type {range.RangeType}");

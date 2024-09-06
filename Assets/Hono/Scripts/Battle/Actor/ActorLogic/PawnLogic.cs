@@ -2,10 +2,13 @@
 {
     public class PawnLogic : ActorLogic
     {
-        public PawnLogic(int uid, ActorLogicData logicData) : base(uid,logicData) { }
+        public PawnLogic(int uid, ActorLogicData logicData) : base(uid, logicData) { }
+
         protected override void initAttrs()
         {
-            
+            SetAttr<float>(ELogicAttr.AttrBaseSpeed, 10, false);
+            SetAttr<int>(ELogicAttr.AttrAttack, 500, false);
+            SetAttr<int>(ELogicAttr.AttrFaction, 1,false);
         }
 
         protected override void onInit() { }
@@ -18,9 +21,6 @@
             addComponent(new BeHurtComp(this));
         }
 
-        protected override void onTick(float dt)
-        {
-           
-        }
+        protected override void onTick(float dt) { }
     }
 }

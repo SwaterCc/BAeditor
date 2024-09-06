@@ -77,6 +77,10 @@ namespace Hono.Scripts.Battle
 
             public void UnInstall()
             {
+                foreach (var eventNode in _eventNodes)
+                {
+                    eventNode.UnRegisterEvent();
+                }
                 _eventNodes.Clear();
                 _cycleHeads.Clear();
                 _nodes.Clear();

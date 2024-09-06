@@ -10,8 +10,9 @@ namespace Hono.Scripts.Battle
             {
                 case ELogicAttr.AttrUid:
                 case ELogicAttr.AttrSourceActorUid:
-                case ELogicAttr.AttrSourceAbilityUid:
+                case ELogicAttr.AttrSourceAbilityConfigId:
                 case ELogicAttr.AttrAttackTargetUid:
+                case ELogicAttr.AttrFaction:
                     return new Attr<int>((a, b) => a + b);
                 case ELogicAttr.AttrBaseSpeed:
                     return new Attr<float>((a, b) => a + b);
@@ -19,9 +20,10 @@ namespace Hono.Scripts.Battle
                     return new Attr<Vector3>((a, b) => a + b);
                 case ELogicAttr.AttrRot:
                     return new Attr<Quaternion>((a, b) => b * a);
-
+                case ELogicAttr.SourceAbilityType:
+                    return new Attr<EAbilityType>(null);
                 #region 数值数据
-
+                case ELogicAttr.AttrEntityLevel:
                 case ELogicAttr.AttrHp:
                 case ELogicAttr.AttrHpPer:
                 case ELogicAttr.AttrMaxHp:

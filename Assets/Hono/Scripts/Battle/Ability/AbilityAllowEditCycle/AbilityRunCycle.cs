@@ -43,7 +43,7 @@ namespace Hono.Scripts.Battle
 
             public void Enter()
             {
-                Debug.Log($"Enter {CurState},AllowEditCycle {getCycleType()}");
+                Debug.Log($"Enter {getCycleType()}");
                 onEnter();
                 if (CurState != EAbilityState.Ready)
                     _executor.ExecuteCycleNode(getCycleType());
@@ -83,7 +83,7 @@ namespace Hono.Scripts.Battle
 
             public void Exit()
             {
-                Debug.Log($"Exit {CurState},AllowEditCycle {getCycleType()}");
+                Debug.Log($"Exit {getCycleType()} ----> {CurState}");
                 _state.GetCycleCallback(getCycleType()).OnExit?.Invoke();
                 onExit();
                 _timerNodes.Clear();

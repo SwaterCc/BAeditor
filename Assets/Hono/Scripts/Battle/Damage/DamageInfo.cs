@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle
     {
         public int SourceActorId;
 	    public EAbilityType SourceAbilityType;
-        public int SourceAbilityId;
+        public int SourceAbilityConfigId;
         /// <summary>
         /// 这个值如果是技能，就是技能基础倍率，如果是buff那就是子弹倍率
         /// </summary>

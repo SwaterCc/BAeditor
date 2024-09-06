@@ -62,10 +62,31 @@ namespace Hono.Scripts.Battle
             _pawnInput.Pawn.Disable();
         }
 
+        public void AddMoveCallBack(Action<InputAction.CallbackContext> onMove)
+        {
+            _pawnInput.Pawn.Move.performed += onMove;
+           
+        }
+        
+        public void AddMoveEndCallBack(Action<InputAction.CallbackContext> onMoveEnd)
+        {
+            _pawnInput.Pawn.Move.canceled += onMoveEnd;
+        }
+
+        public void AddPressNum1(Action<InputAction.CallbackContext> onPress)
+        {
+            _pawnInput.Pawn.Skill1.performed += onPress;
+        }
+        
+        public void AddPressNum2(Action<InputAction.CallbackContext> onPress)
+        {
+            _pawnInput.Pawn.Skill2.performed += onPress;
+        }
+        
         private void onMove(InputAction.CallbackContext context)
         {
             InputValue = context.ReadValue<Vector2>();
-            InputDirection = new Vector3(InputValue.x, 0, -InputValue.y);
+            InputDirection = new Vector3(-InputValue.y, 0, InputValue.x);
             HasMoveInput = true;
         }
 

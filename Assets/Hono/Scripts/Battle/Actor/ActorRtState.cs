@@ -84,7 +84,7 @@ namespace Hono.Scripts.Battle
         
         public void Update(float dt)
         {
-            if (!_hasShow || !_showTickPause) return;
+            if (!_hasShow || _showTickPause) return;
             
             //更新固定值
             SyncTransform();
@@ -94,10 +94,9 @@ namespace Hono.Scripts.Battle
         public void Tick(float dt)
         {
             //确保逻辑层先执行运算
-            if (_hasLogic && _logicTickPause)
-            {
-                _logic.Tick(dt);
-            }
+            if (!_hasLogic || _logicTickPause) return;
+           
+            _logic.Tick(dt);
         }
     }
 }

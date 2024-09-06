@@ -13,11 +13,23 @@ namespace Hono.Scripts.Battle {
 			private EActorState _defaultState;
 			private Dictionary<EActorState, AState> _states;
 			public AState Current => _current;
-
+			
 			public ActorStateMachine(ActorLogic actor) {
 				_actorLogic = actor;
 				_defaultState = EActorState.Idle;
-				_states = new Dictionary<EActorState, AState>() { };
+				_states = new Dictionary<EActorState, AState>()
+				{
+					{ EActorState.Idle ,new IdleState(this,_actorLogic)},
+					{ EActorState.Battle ,new BattleState(this,_actorLogic)},
+					{ EActorState.Move ,new MoveState(this,_actorLogic)},
+					{ EActorState.Death ,new DeathState(this,_actorLogic)},
+					{ EActorState.Stiff ,new StiffState(this,_actorLogic)},
+				};
+				
+			}
+
+			public void Init()
+			{
 				foreach (var state in _states) {
 					state.Value.Init();
 				}
@@ -25,7 +37,8 @@ namespace Hono.Scripts.Battle {
 
 			public void ChangeState(EActorState state) {
 				if (_current != null && _current.HasTrans(state)) {
-					_current.OnChangeState(state);
+					_current.Exit();
+					_states[state].Enter();
 				}
 			}
 
@@ -37,10 +50,9 @@ namespace Hono.Scripts.Battle {
 					_current.Enter();
 				}
 
-				if (_current.CanExit()) {
-					var next = _current.GetNext();
+				if (_current.CanExit(out var next)) {
 					_current.Exit();
-					_current = _states[next];
+					_current= _states[next];
 					_current.Enter();
 				}
 

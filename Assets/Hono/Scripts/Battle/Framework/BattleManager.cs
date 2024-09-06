@@ -61,6 +61,7 @@ namespace Hono.Scripts.Battle
         private void init()
         {
             AssetManager.Instance.Init();
+            AbilityDataMgr.Instance.Init();
             ActorManager.Instance.Init();
         }
 
@@ -68,7 +69,7 @@ namespace Hono.Scripts.Battle
         {
             foreach (var point in RefreshPoints)
             {
-                if (point.PointType == EPointType.Player)
+                //if (point.PointType == EPointType.Player)
                 {
                     point.CreateActor();
                 }

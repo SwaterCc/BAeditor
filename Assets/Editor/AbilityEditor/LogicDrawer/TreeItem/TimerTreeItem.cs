@@ -72,6 +72,13 @@ namespace Editor.AbilityEditor.TreeItem
             SirenixEditorGUI.EndBox();
             
         }
+        
+        private void OnDestroy()
+        {
+            NodeData.TimerNodeData.FirstInterval = _firstInterval.ToArray();
+            NodeData.TimerNodeData.Interval = _interval.ToArray();
+            NodeData.TimerNodeData.MaxCount = _maxCount.ToArray();
+        }
     }
     
 }

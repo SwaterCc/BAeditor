@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -13,17 +14,16 @@ namespace Hono.Scripts.Battle
                 public EActorState Next { get; }
                 private readonly Func<bool> _transCondition;
 
-                public AStateTransform(EActorState next, Func<bool> condition = null, bool isEnable = true)
+                public AStateTransform(EActorState next, Func<bool> exitCondition = null, bool isEnable = true)
                 {
                     Next = next;
                     IsEnable = isEnable;
-                    _transCondition = condition;
+                    _transCondition = exitCondition;
                 }
 
                 public bool Invoke()
                 {
-                    if (!IsEnable) return false;
-                    if (IsEnable && _transCondition == null) return true;
+                    if (!IsEnable || _transCondition == null) return false;
                     return IsEnable && _transCondition.Invoke();
                 }
             }
@@ -31,8 +31,7 @@ namespace Hono.Scripts.Battle
             protected ActorLogic _actorLogic;
             private ActorStateMachine _stateMachine;
             protected readonly Dictionary<EActorState, List<AStateTransform>> _transDict;
-
-            protected bool _canExit;
+            
             protected EActorState _defaultState;
 
             private AStateTransform _next;
@@ -43,7 +42,6 @@ namespace Hono.Scripts.Battle
                 _actorLogic = actorLogicLogic;
                 _defaultState = EActorState.Idle;
                 _next = null;
-                _canExit = false;
                 _transDict = new Dictionary<EActorState, List<AStateTransform>>()
                 {
                     { EActorState.Idle, new List<AStateTransform>() },
@@ -62,14 +60,22 @@ namespace Hono.Scripts.Battle
             public EActorState StateType => getStateType();
             protected abstract EActorState getStateType();
 
-            public virtual bool CanExit()
+            public virtual bool CanExit(out EActorState next)
             {
-                return _canExit;
-            }
+                foreach (var pState in _transDict)
+                {
+                    foreach (var transform in pState.Value)
+                    {
+                        if (transform.Invoke())
+                        {
+                            next = transform.Next;
+                            return true;
+                        }
+                    }
+                }
 
-            public EActorState GetNext()
-            {
-                return _next?.Next ?? _defaultState;
+                next = EActorState.Idle;
+                return false;
             }
 
             public abstract void Init();
@@ -77,19 +83,8 @@ namespace Hono.Scripts.Battle
 
             public virtual void Enter()
             {
+                Debug.Log($"Enter State {getStateType()}");
                 onEnter();
-            }
-
-            public virtual void OnChangeState(EActorState next)
-            {
-                foreach (var transform in _transDict[next])
-                {
-                    if (transform.Invoke())
-                    {
-                        _next = transform;
-                        _canExit = true;
-                    }
-                }
             }
 
             protected virtual void onTick(float dt) { }
@@ -103,8 +98,8 @@ namespace Hono.Scripts.Battle
 
             public void Exit()
             {
+                Debug.Log($"Exit State {getStateType()}");
                 onExit();
-                _canExit = false;
                 _next = null;
             }
         }

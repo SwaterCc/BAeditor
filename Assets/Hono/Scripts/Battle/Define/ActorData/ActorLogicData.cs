@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
+    [CreateAssetMenu(menuName = "战斗编辑器/Actor/ActorLogicData")] 
     public class ActorLogicData : ScriptableObject ,IAllowedIndexing
     {
         public int ID => id;

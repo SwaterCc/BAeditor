@@ -1,8 +1,7 @@
 namespace Hono.Scripts.Battle.Event
 {
     public interface IEventInfo { }
-
-
+    
     public class HitEventInfo : IEventInfo
     {
         /// <summary>
@@ -23,7 +22,7 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         /// 伤害id
         /// </summary>
-        public int DamageId;
+        public DamageResults DamageResults;
     }
     
     public class MotionEventInfo : IEventInfo
@@ -38,5 +37,10 @@ namespace Hono.Scripts.Battle.Event
         /// </summary>
         public int MotionId;
     }
-    
+
+    public class SkillUsedEventInfo : IEventInfo
+    {
+        public int SkillId;
+        public int ActorUid;
+    }
 }

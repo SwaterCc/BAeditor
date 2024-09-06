@@ -33,7 +33,7 @@ namespace Hono.Scripts.Battle
 
         public List<int> Tags = new();
 
-        public int DefaultStartGroupId;
+        public int DefaultStartGroupId = -1;
 
         public string PreCheckerVarName = "CHECKER";
 

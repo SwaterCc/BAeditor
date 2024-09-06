@@ -8,9 +8,6 @@ namespace Hono.Scripts.Battle
     {
         private BattleLevel _belongBattleLevel;
         public BattleLevel BelongBattleLevel => _belongBattleLevel;
-
-        private Actor _belongActor;
-        public Actor BelongActor => _belongActor;
         
         private ActorLogic _belongLogic;
         public ActorLogic BelongLogic => _belongLogic;

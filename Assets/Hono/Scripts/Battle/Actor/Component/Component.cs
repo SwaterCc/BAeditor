@@ -26,7 +26,7 @@ namespace Hono.Scripts.Battle
 
             public abstract void Init();
 
-            public virtual void Reset() { }
+            public virtual void OnDestroy() { }
 
             /// <summary>
             /// 渲染帧
@@ -52,7 +52,7 @@ namespace Hono.Scripts.Battle
             }
 
             public abstract void Init();
-            public virtual void Reset() { }
+            public virtual void UnInit() { }
 
             /// <summary>
             /// 逻辑帧

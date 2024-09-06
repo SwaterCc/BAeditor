@@ -13,9 +13,9 @@ namespace Hono.Scripts.Battle
         public float SkillRange;
         public ECDMode EcdMode;
         public float SkillCD;
-        public List<ResItems> SkillResCheck;
+        public List<ResItems> SkillResCheck = new List<ResItems>();
         public EResCostType CostType;
-        public List<ResItems> SkillResCost;
+        public List<ResItems> SkillResCost = new List<ResItems>();
         public int PriorityATK;
         public int PriorityDEF;
         public bool ForceFaceTarget;

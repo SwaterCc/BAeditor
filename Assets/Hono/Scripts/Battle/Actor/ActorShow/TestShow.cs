@@ -1,7 +1,9 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using Object = UnityEngine.Object;
 
 namespace Hono.Scripts.Battle
 {
@@ -11,16 +13,20 @@ namespace Hono.Scripts.Battle
 
         protected override async UniTask loadModel()
         {
-            if (_showData != null && string.IsNullOrEmpty(_showData.ModelPath))
+            if (_showData == null || string.IsNullOrEmpty(_showData.ModelPath)) return;
+
+            try
             {
-                try
+                _gameObject = await Addressables.LoadAssetAsync<GameObject>(_showData.ModelPath).ToUniTask();
+                _gameObject = Object.Instantiate(_gameObject);
+                if (_gameObject.TryGetComponent<ActorModelHandle>(out var handle))
                 {
-                    _gameObject = await Addressables.LoadAssetAsync<GameObject>(_showData.ModelPath).ToUniTask();
+                    handle.ActorUid = Uid;
                 }
-                catch (Exception e)
-                {
-                    Debug.LogError($"加载模型失败，路径{_showData.ModelPath}");
-                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"加载模型失败，路径{_showData.ModelPath}");
             }
         }
     }

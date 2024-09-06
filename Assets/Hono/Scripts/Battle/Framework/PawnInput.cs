@@ -37,6 +37,24 @@ namespace Hono.Scripts.Battle
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Skill1"",
+                    ""type"": ""Button"",
+                    ""id"": ""a4ef7b53-f2d5-4901-916d-c9084ffdb908"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill2"",
+                    ""type"": ""Button"",
+                    ""id"": ""073d4c48-f973-4dae-9049-b7f70d490601"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -94,6 +112,28 @@ namespace Hono.Scripts.Battle
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ac129e6-357f-45b8-8c1e-722c02754e38"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fcc8aad9-03e6-4a91-8137-85a0a20fba69"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -103,6 +143,8 @@ namespace Hono.Scripts.Battle
             // Pawn
             m_Pawn = asset.FindActionMap("Pawn", throwIfNotFound: true);
             m_Pawn_Move = m_Pawn.FindAction("Move", throwIfNotFound: true);
+            m_Pawn_Skill1 = m_Pawn.FindAction("Skill1", throwIfNotFound: true);
+            m_Pawn_Skill2 = m_Pawn.FindAction("Skill2", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -165,11 +207,15 @@ namespace Hono.Scripts.Battle
         private readonly InputActionMap m_Pawn;
         private List<IPawnActions> m_PawnActionsCallbackInterfaces = new List<IPawnActions>();
         private readonly InputAction m_Pawn_Move;
+        private readonly InputAction m_Pawn_Skill1;
+        private readonly InputAction m_Pawn_Skill2;
         public struct PawnActions
         {
             private @PawnInput m_Wrapper;
             public PawnActions(@PawnInput wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_Pawn_Move;
+            public InputAction @Skill1 => m_Wrapper.m_Pawn_Skill1;
+            public InputAction @Skill2 => m_Wrapper.m_Pawn_Skill2;
             public InputActionMap Get() { return m_Wrapper.m_Pawn; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -182,6 +228,12 @@ namespace Hono.Scripts.Battle
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Skill1.started += instance.OnSkill1;
+                @Skill1.performed += instance.OnSkill1;
+                @Skill1.canceled += instance.OnSkill1;
+                @Skill2.started += instance.OnSkill2;
+                @Skill2.performed += instance.OnSkill2;
+                @Skill2.canceled += instance.OnSkill2;
             }
 
             private void UnregisterCallbacks(IPawnActions instance)
@@ -189,6 +241,12 @@ namespace Hono.Scripts.Battle
                 @Move.started -= instance.OnMove;
                 @Move.performed -= instance.OnMove;
                 @Move.canceled -= instance.OnMove;
+                @Skill1.started -= instance.OnSkill1;
+                @Skill1.performed -= instance.OnSkill1;
+                @Skill1.canceled -= instance.OnSkill1;
+                @Skill2.started -= instance.OnSkill2;
+                @Skill2.performed -= instance.OnSkill2;
+                @Skill2.canceled -= instance.OnSkill2;
             }
 
             public void RemoveCallbacks(IPawnActions instance)
@@ -209,6 +267,8 @@ namespace Hono.Scripts.Battle
         public interface IPawnActions
         {
             void OnMove(InputAction.CallbackContext context);
+            void OnSkill1(InputAction.CallbackContext context);
+            void OnSkill2(InputAction.CallbackContext context);
         }
     }
 }

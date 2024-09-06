@@ -14,7 +14,7 @@ namespace Hono.Scripts.Battle
         private int _curCount;
 
         private int _sourceActorId;
-        private int _sourceAbilityId;
+        private int _sourceAbilityConfigId;
         private EAbilityType _sourceAbilityType;
         private Action<ActorLogic, DamageInfo> _hitProcess;
         private FilterSetting _filterSetting;
@@ -31,22 +31,22 @@ namespace Hono.Scripts.Battle
             //设置坐标
             var target = ActorManager.Instance.GetActor(_sourceActorId);
             var pos = target.Logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-            var rot = target.Logic.GetAttr<Vector3>(ELogicAttr.AttrRot);
+            var rot = target.Logic.GetAttr<Quaternion>(ELogicAttr.AttrRot);
             SetAttr(ELogicAttr.AttrPosition, pos, false);
             SetAttr(ELogicAttr.AttrRot, rot, false);
-
         }
 
         protected override void onInit()
         {
+            _sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
+            _sourceAbilityConfigId = GetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId);
+            _sourceAbilityType = GetAttr<EAbilityType>(ELogicAttr.SourceAbilityType);
+            var hitBoxDataId = (int)(GetVariables().GetVariable("hitBoxDataId"));
+            _hitBoxData = AssetManager.Instance.GetData<HitBoxData>(hitBoxDataId);
+
             _intervalDuration = _hitBoxData.Interval;
             _curCount = 0;
-
-            _sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
-            _sourceAbilityId = GetAttr<int>(ELogicAttr.AttrSourceAbilityUid);
-            _sourceAbilityType = GetAttr<EAbilityType>(ELogicAttr.SourceAbilityType);
-
-
+            
             switch (_hitBoxData.HitType)
             {
                 case EHitType.Aoe:
@@ -114,21 +114,21 @@ namespace Hono.Scripts.Battle
             var damageInfo = new DamageInfo();
             damageInfo.DamageConfigId = _hitBoxData.DamageConfigId;
             damageInfo.SourceActorId = _sourceActorId;
-            damageInfo.SourceAbilityId = _sourceAbilityId;
+            damageInfo.SourceAbilityConfigId = _sourceAbilityConfigId;
             damageInfo.SourceAbilityType = _sourceAbilityType;
-            var abilityData = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityId);
+            var abilityData = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId);
             switch (abilityData.Type)
             {
                 case EAbilityType.Skill:
-                    var skillData = AssetManager.Instance.GetData<SkillData>(_sourceAbilityId);
+                    var skillData = AssetManager.Instance.GetData<SkillData>(_sourceAbilityConfigId);
                     damageInfo.BaseDamagePer = skillData.SkillDamageBasePer;
                     break;
                 case EAbilityType.Buff:
-                    var buffData = AssetManager.Instance.GetData<BuffData>(_sourceAbilityId);
+                    var buffData = AssetManager.Instance.GetData<BuffData>(_sourceAbilityConfigId);
                     damageInfo.BaseDamagePer = buffData.BuffDamageBasePer;
                     break;
             }
-            
+
             for (int i = 0; i < _hitBoxData.OnceHitDamageCount; i++)
             {
                 _hitProcess.Invoke(attacker, damageInfo);

@@ -6,6 +6,7 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// 打击数据
     /// </summary>
+    [CreateAssetMenu(menuName = "战斗编辑器/HitBoxData")] 
     public class HitBoxData : ScriptableObject, IAllowedIndexing
     {
         public int ID => Id;
@@ -28,21 +29,23 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 打击点对单个目标最大有效次数
         /// </summary>
+        [Tooltip("打击点对单个目标最大有效次数")]
         public int ValidCount;
         
         /// <summary>
         /// 第一次触发时间
         /// </summary>
-        public long FirstInterval;
+        public float FirstInterval;
         
         /// <summary>
         /// 打击点检测间隔
         /// </summary>
-        public long Interval;
+        public float Interval;
         
         /// <summary>
         /// 单次打击造成几次伤害
         /// </summary>
+        [Tooltip("单次打击造成几次伤害")]
         public int OnceHitDamageCount = 1;
 
         /// <summary>

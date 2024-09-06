@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Hono.Scripts.Battle
 {
@@ -41,7 +42,7 @@ namespace Hono.Scripts.Battle
         {
             //先load对象
             await loadModel();
-
+            
             registerComponents();
             //对象加载完后再load组件
             foreach (var component in _components)
@@ -86,6 +87,19 @@ namespace Hono.Scripts.Battle
             }
 
             return (T)component;
+        }
+
+        public void Destroy()
+        {
+            if (_gameObject != null)
+            {
+                Object.Destroy(_gameObject);
+            }
+
+            foreach (var component in _components)
+            {
+                component.Value.OnDestroy();
+            }
         }
     }
 }

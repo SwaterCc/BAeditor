@@ -26,27 +26,32 @@ MonoBehaviour:
   - m_GUID: 7e5e73a9f7a4b2548bc006c6391e4676
     m_Address: Assets/BattleData/Buff
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - buff
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a87ca4486091188409994cd4a5afc525
     m_Address: Assets/BattleData/Bullet
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - bullet
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 872d59318fb5ab54fac8475b964eb6c4
     m_Address: Assets/BattleData/Skill
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - skill
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 029dde68970032c4dabc9975b6d81759
     m_Address: Assets/BattleData/Actor/ActorLogic
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - actorLogic
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b549a11a5abfa164f90a87ea5b7ffba1
     m_Address: Assets/BattleData/Actor/ActorShow
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - actorShow
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9420fce795d6daf45869f47fe59433f1
     m_Address: Assets/BattleData/Tools/RefreshPoint.prefab
@@ -57,6 +62,34 @@ MonoBehaviour:
     m_Address: Assets/BattleData/Tools/refreshPoint_m.mat
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb6860f7b12c13347807a79d9b1920a6
+    m_Address: Assets/BattleData/Tools/modelTest.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a852ac01c30b3974e922dc2f77e7c379
+    m_Address: Assets/BattleData/hitboxtest.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - hitBoxData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76f31488cf096eb4a84a415c9871efa3
+    m_Address: Assets/BattleData/Actor/ActorPrototype
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - actorPrototype
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 56d60527c71e626429707fbedb93b45a
+    m_Address: Assets/BattleData/Tools
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21059bd2a465001448a2c3010f20912f
+    m_Address: Assets/BattleData/Damage
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - damageItem
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7656358260d6a194f8b387281fc83166, type: 2}

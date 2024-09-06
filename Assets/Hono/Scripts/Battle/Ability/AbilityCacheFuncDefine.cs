@@ -67,11 +67,12 @@ namespace Hono.Scripts.Battle
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void CreateHitBox(int hitDataId)
         {
-            var hitBox = ActorManager.Instance.CreateActor(hitDataId);
-            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.BelongActor.Uid, false);
+            var hitBox = ActorManager.Instance.CreateActor(3);
+            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.BelongLogic.Uid, false);
             hitBox.Logic.SetAttr(ELogicAttr.SourceAbilityType, Ability.Context.CurrentAbility.AbilityData.Type, false);
-            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceAbilityUid, Ability.Context.CurrentAbility.AbilityData.Type,
+            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.CurrentAbility.ConfigId,
                 false);
+            hitBox.Logic.GetVariables().Add("hitBoxDataId",hitDataId);
             ActorManager.Instance.AddActor(hitBox);
         }
 
@@ -81,7 +82,7 @@ namespace Hono.Scripts.Battle
             var hitBox = ActorManager.Instance.CreateActor(hitDataId);
             hitBox.Logic.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.BelongActor.Uid, false);
             hitBox.Logic.SetAttr(ELogicAttr.SourceAbilityType, Ability.Context.CurrentAbility.AbilityData.Type, false);
-            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceAbilityUid, Ability.Context.CurrentAbility.AbilityData.Type, false);
+            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.CurrentAbility.AbilityData.Type, false);
             ActorManager.Instance.AddActor(hitBox);
         }*/
 
@@ -103,7 +104,7 @@ namespace Hono.Scripts.Battle
             var actor = ActorManager.Instance.GetActor(actorUid);
             if (actor.Logic.TryGetComponent<ActorLogic.BuffComp>(out var comp))
             {
-                comp.AddBuff(Ability.Context.BelongActor.Uid, buffId, buffLayer);
+                comp.AddBuff(Ability.Context.BelongLogic.Uid, buffId, buffLayer);
             }
         }
 

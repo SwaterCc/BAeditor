@@ -26,9 +26,9 @@ namespace Hono.Scripts.Battle
             _filter = new Filter(this);
         }
 
-        public Actor CreateActor(int configId)
+        public Actor CreateActor(int actorPrototypeId,Action preInit = null)
         {
-            var actorData = AssetManager.Instance.GetData<ActorPrototypeData>(configId);
+            var actorData = AssetManager.Instance.GetData<ActorPrototypeData>(actorPrototypeId);
             var actor = new Actor(_idGenerator.GenerateId(), actorData);
             ActorLogic logic = null;
             var logicData = AssetManager.Instance.GetData<ActorLogicData>(actorData.LogicConfigId);
@@ -38,6 +38,7 @@ namespace Hono.Scripts.Battle
                     logic = new PawnLogic(actor.Uid, logicData);
                     break;
                 case EActorLogicType.Monster:
+                    logic = new MonsterLogic(actor.Uid, logicData);
                     break;
                 case EActorLogicType.Building:
                     break;
@@ -59,13 +60,15 @@ namespace Hono.Scripts.Battle
                         show = new TestShow(actor.Uid, showData);
                         break;
                     case EActorShowType.Monster:
+                        show = new TestShow(actor.Uid, showData);
                         break;
                     case EActorShowType.Building:
+                        show = new TestShow(actor.Uid, showData);
                         break;
                 }
             }
-
-            actor.Init(show, logic);
+            
+            actor.Setup(show, logic);
             return actor;
         }
 
@@ -75,6 +78,7 @@ namespace Hono.Scripts.Battle
             {
                 foreach (var actor in _addCaches)
                 {
+                    actor.Init();
                     _runningActorList.Add(actor);
                     _uidActorDict.Add(actor.Uid, actor);
                 }
@@ -91,6 +95,7 @@ namespace Hono.Scripts.Battle
             {
                 foreach (var actor in _removeList)
                 {
+                    actor.Destroy();
                     _runningActorList.Remove(actor);
                     _uidActorDict.Remove(actor.Uid);
                 }

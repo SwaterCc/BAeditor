@@ -1,6 +1,7 @@
 using Hono.Scripts.Battle.Tools;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -56,6 +57,8 @@ namespace Hono.Scripts.Battle
         /// </summary>
         protected ActorRTState _rtState;
 
+        protected IInputHandle _inputHandle;
+
         public ActorLogic(int uid, ActorLogicData logicData)
         {
             Uid = uid;
@@ -74,16 +77,35 @@ namespace Hono.Scripts.Battle
             
             onInit();
             initAttrs();
+            onInputInit();
             registerComponents();
             foreach (var component in _components)
             {
                 component.Value.Init();
             }
+
+            _stateMachine.Init();
         }
 
         protected abstract void initAttrs();
 
         protected abstract void onInit();
+        
+        protected virtual void onInputInit()
+        {
+            switch (_logicData.logicType)
+            {
+                case EActorLogicType.Pawn:
+                    _inputHandle = new PawnLeaderInput();
+                    break;
+                case EActorLogicType.Monster:
+                case EActorLogicType.Building:
+                case EActorLogicType.HitBox:
+                default:
+                    _inputHandle = new NoInput();
+                    break;
+            }
+        }
 
         private void registerComponents()
         {
@@ -141,6 +163,11 @@ namespace Hono.Scripts.Battle
         public void Destroy()
         {
             onDestroy();
+            
+            foreach (var component in _components)
+            {
+                component.Value.UnInit();
+            }
         }
 
         protected virtual void onDestroy() { }
@@ -202,19 +229,30 @@ namespace Hono.Scripts.Battle
 
         #region LUA_Attr
 
-        public void ShowAbility()
-        {
+        public void ShowAbility() {
             _abilityController.Show();
         }
-
-        public void ShowCurTags()
-        {
+		
+        public void ShowCurTags() {
             Tags.Show();
         }
-
-        public int GetAttrLua(int attrType)
-        {
+		
+        public int GetAttrLua(int attrType) {
             return _attrs.GetAttr<int>(attrType);
+        }
+
+        public void SetAttrLua(int attrType,int value) {
+
+            _attrs.SetAttr<int>(attrType, value,false);
+        }
+
+        public void SetAttrLuaByType(ELogicAttr attrType,int value) {
+
+            _attrs.SetAttr<int>(attrType.ToInt(), value,false);
+        }
+
+        public int GetAttrLuaByType(ELogicAttr attrType) {
+            return _attrs.GetAttr<int>(attrType.ToInt());
         }
 
         #endregion

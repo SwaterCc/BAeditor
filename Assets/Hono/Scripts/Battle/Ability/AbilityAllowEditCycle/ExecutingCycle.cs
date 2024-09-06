@@ -61,7 +61,7 @@ namespace Hono.Scripts.Battle
             public override void TimerStart(ITimer callBack)
             {
                 var node = (AbilityNode)callBack;
-                if (node.NodeData.BelongGroupId == CurProxy.GetGroupId())
+                if (CurProxy != null && node.NodeData.BelongGroupId == CurProxy.GetGroupId())
                 {
                     _groupTimer.Add(callBack);
                 }

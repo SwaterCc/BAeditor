@@ -20,5 +20,7 @@ namespace Hono.Scripts.Battle.Event
         MotionBegin,
         [EventCheckerBinder("GetMotionChecker")]
         MotionEnd,
+       
+        UseSkill,
     }
 }

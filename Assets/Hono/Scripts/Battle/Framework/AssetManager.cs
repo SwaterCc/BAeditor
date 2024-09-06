@@ -45,9 +45,26 @@ namespace Hono.Scripts.Battle
         private bool _isLoadFinish;
         public bool IsLoadFinish => _isLoadFinish;
 
+        private readonly HashSet<string> _loadLabels = new()
+        {
+            "ability",
+            "skill",
+            "buff",
+            "bullet",
+            "actorPrototype",
+            "actorLogic",
+            "actorShow",
+            "hitBoxData"
+        };
+
+        private AssetLabelCounter _assetLabelCounter;
+
         public async void Init()
         {
             _isLoadFinish = false;
+
+            await loadLabelCount();
+            
             List<UniTask> tasks = new List<UniTask>();
             //加载数据
             tasks.Add(register<AbilityData>("ability"));
@@ -58,13 +75,24 @@ namespace Hono.Scripts.Battle
             tasks.Add(register<ActorLogicData>("actorLogic"));
             tasks.Add(register<ActorShowData>("actorShow"));
             tasks.Add(register<HitBoxData>("hitBoxData"));
-            
+            tasks.Add(register<DamageItem>("damageItem"));
             await UniTask.WhenAll(tasks);
             _isLoadFinish = true;
         }
 
+
+        private async UniTask loadLabelCount()
+        {
+            _assetLabelCounter = await Addressables.LoadAssetAsync<AssetLabelCounter>("Assets/BattleData/LabelCount.asset").ToUniTask();
+        }
+        
         private async UniTask register<T>(string label) where T : ScriptableObject, IAllowedIndexing
         {
+            if (!_assetLabelCounter.LabelCounts.TryGetValue(label, out var count) || count == 0)
+            {
+                return;
+            }
+            
             var key = typeof(T);
             if (_assetDict.ContainsKey(key))
             {
@@ -77,22 +105,28 @@ namespace Hono.Scripts.Battle
 
             try
             {
-                var datas = await Addressables.LoadAssetsAsync<T>(label, (data) =>
-                {
-                    if (data == null) Debug.LogError($"{label}某资源加载失败！");
-                }).ToUniTask();
+                var datas = await Addressables.LoadAssetsAsync<T>(label, null).ToUniTask();
 
+                if (datas == null)
+                {
+                    Debug.Log($"Asset key empty");
+                    return;
+                }
+                
                 foreach (var data in datas)
                 {
                     helper.AddData(data.ID, data);
                 }
-
-                Debug.Log($"asset key {label} 加载完成！加载数量 {datas.Count}");
+                Debug.Log($"Asset key {label} 加载完成！加载数量 {datas.Count}");
+                
+            }
+            catch (InvalidKeyException)
+            {
+                Debug.LogWarning($"Asset key not found: {label}");
             }
             catch (Exception e)
             {
-                Debug.LogError(e);
-                throw;
+                Debug.LogError($"Unexpected error: {e}");
             }
         }
 

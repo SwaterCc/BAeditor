@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 9118bc1ec081c8f45b0b9085f5f4db06
   m_currentHash:
     serializedVersion: 2
-    Hash: 8fd36cd496aae7f8692dd957c17d4bee
+    Hash: a428ea193d6278442e4693adba37a0ef
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -98,6 +98,7 @@ MonoBehaviour:
     - actorShow
     - filterSetting
     - hitBoxData
+    - damageItem
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 14437eb2b0133e044897893d6e855855, type: 2}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -42,7 +43,7 @@ namespace Hono.Scripts.Battle
                         boxData.Radius = data.SkillRange;
                         boxData.ShapeType = ECheckBoxShapeType.Sphere;
                         _skillTargetSetting.BoxData = boxData;
-
+                        _skillTargetSetting.OpenBoxCheck = true;
                         var range = new FilterRange()
                         {
                             RangeType = EFilterRangeType.Faction,
@@ -80,6 +81,8 @@ namespace Hono.Scripts.Battle
                 {
                     ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnEnter += CdBegin;
                 }
+                
+                ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnExit += ()=> _logic._stateMachine.ChangeState(EActorState.Idle);
 
                 _logic._abilityController.AwardAbility(ability, false);
 
@@ -229,8 +232,10 @@ namespace Hono.Scripts.Battle
             /// </summary>
             private Skill _curSkill;
 
+            private UseSkillChecker _eventChecker;
+            
             public SkillComp(ActorLogic logic) : base(logic) { }
-
+            
             public override void Init()
             {
                 foreach (var skillId in _actorLogic.LogicData.ownerSkills)
@@ -238,6 +243,14 @@ namespace Hono.Scripts.Battle
                     var skillCtrl = new Skill(_actorLogic, AssetManager.Instance.GetData<SkillData>(skillId));
                     _skills.Add(skillId, skillCtrl);
                 }
+
+                _eventChecker ??= new UseSkillChecker(_actorLogic.Uid);
+                BattleEventManager.Instance.Register(_eventChecker);
+            }
+
+            public override void UnInit()
+            {
+                BattleEventManager.Instance.UnRegister(_eventChecker);
             }
 
             protected override void onTick(float dt)
