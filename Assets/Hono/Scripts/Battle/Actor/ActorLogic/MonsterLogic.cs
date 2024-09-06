@@ -16,6 +16,8 @@ namespace Hono.Scripts.Battle
         protected override void registerChildComp()
         {
             addComponent(new BeHurtComp(this));
+            addComponent(new BuffComp(this));
+            addComponent(new SkillComp(this));
         }
     }
 }

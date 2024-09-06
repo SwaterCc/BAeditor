@@ -42,8 +42,8 @@ namespace Editor.AbilityEditor.SimpleWindow
             return _hasError;
         }
         
-        [InfoBox("$msg", InfoMessageType.Error, "hasError")]
-        private string msg;
+        [InfoBox("$_msg", InfoMessageType.Error, "hasError")]
+        private string _msg;
 
 
         private bool abilityIdCheck()
@@ -72,14 +72,14 @@ namespace Editor.AbilityEditor.SimpleWindow
             var list = _main.AbilityPathWithDatas[createType];
             if (list == null)
             {
-                msg = "获取列表失败";
+                _msg = "获取列表失败";
                 _hasError = true;
                 return;
             }
 
             if (!abilityIdCheck())
             {
-                msg = "id不服合规范！";
+                _msg = "id不服合规范！";
                 _hasError = true;
                 return;
             }
@@ -95,7 +95,7 @@ namespace Editor.AbilityEditor.SimpleWindow
             
             if (list.ContainsKey(savePath))
             {
-                msg = "添加失败，id重复";
+                _msg = "添加失败，id重复";
                 _hasError = true;
                 return;
             }

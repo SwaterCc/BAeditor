@@ -52,8 +52,6 @@ namespace Hono.Scripts.Battle
         }
 
         protected abstract UniTask loadModel();
-        
-        public async void AsyncLoadStart() { }
 
         public void Update(float dt)
         {

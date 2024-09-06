@@ -6,17 +6,22 @@ namespace Hono.Scripts.Battle
 {
     public partial class Ability
     {
+        [Flags]
+        public enum AbilityErrorCode
+        {
+            NoError = 0,
+            DataInitFailed = 1,
+        }
+        
         /// <summary>
         /// 用于执行能力节点序列
         /// </summary>
         private class AbilityExecutor
         {
             private readonly Ability _ability;
+            
             private AbilityNode _curNode;
 
-            /// <summary>
-            /// 节点的配置ID-节点对象
-            /// </summary>
             private Dictionary<int, AbilityNode> _nodes;
 
             private Dictionary<EAbilityAllowEditCycle, int> _cycleHeads;
@@ -27,9 +32,16 @@ namespace Hono.Scripts.Battle
 
             private Stack<int> _repeatNodeIds;
 
+            private bool _hasError;
+
+            private AbilityErrorCode _errorCode;
+
             public Ability Ability => _ability;
             public AbilityState State => _ability._state;
-
+            
+            private AbilityData _abilityData;
+            public AbilityData AbilityData => _abilityData;
+            
             public AbilityExecutor(Ability ability)
             {
                 _ability = ability;
@@ -40,7 +52,15 @@ namespace Hono.Scripts.Battle
             /// </summary>
             public void Setup()
             {
-                var nodeDict = _ability._abilityData.NodeDict;
+                if (!AssetManager.Instance.TryGetData(_ability.ConfigId, out _abilityData))
+                {
+                    _hasError = true;
+                    _errorCode = AbilityErrorCode.DataInitFailed;
+                    Debug.LogError($"Ability {_ability.ConfigId} SetupFaild");
+                    return;
+                }
+                
+                var nodeDict = _abilityData.NodeDict;
                 if (nodeDict is { Count: > 0 })
                 {
                     _nodes ??= new Dictionary<int, AbilityNode>();
@@ -69,7 +89,7 @@ namespace Hono.Scripts.Battle
                             var executing = (ExecutingCycle)State.GetState(EAbilityState.Executing);
                             var stageNode = (AbilityGroupNode)node;
                             executing.AddStageProxy(stageNode);
-                            executing.NextGroupId = _ability._abilityData.DefaultStartGroupId;
+                            executing.NextGroupId = _abilityData.DefaultStartGroupId;
                         }
                     }
                 }
@@ -77,6 +97,8 @@ namespace Hono.Scripts.Battle
 
             public void UnInstall()
             {
+                if(_hasError) return;
+                
                 foreach (var eventNode in _eventNodes)
                 {
                     eventNode.UnRegisterEvent();
@@ -88,6 +110,8 @@ namespace Hono.Scripts.Battle
 
             public void OnDestroy()
             {
+                if(_hasError) return;
+                
                 foreach (var eventNode in _eventNodes)
                 {
                     eventNode.UnRegisterEvent();
@@ -101,6 +125,7 @@ namespace Hono.Scripts.Battle
 
             public void RegisterEventNode()
             {
+                if(_hasError) return;
                 foreach (var eventNode in _eventNodes)
                 {
                     eventNode.RegisterEvent();
@@ -141,6 +166,8 @@ namespace Hono.Scripts.Battle
 
             public void ExecuteNode(int nodeId)
             {
+                if(_hasError) return;
+                
                 var curNode = _nodes[nodeId];
                 while (nodeId > 0)
                 {
@@ -189,6 +216,8 @@ namespace Hono.Scripts.Battle
 
             public void ExecuteCycleNode(EAbilityAllowEditCycle allowEditCycle)
             {
+                if(_hasError) return;
+                
                 if (_cycleHeads.TryGetValue(allowEditCycle, out var cycleNodeId))
                 {
                     ExecuteNode(cycleNodeId);
@@ -201,6 +230,8 @@ namespace Hono.Scripts.Battle
 
             public void ResetCycle(EAbilityAllowEditCycle allowEditCycle)
             {
+                if(_hasError) return;
+                
                 if (_cycleHeads.TryGetValue(allowEditCycle, out var cycleNodeId))
                 {
                     _nodes[cycleNodeId].Reset();

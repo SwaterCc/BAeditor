@@ -40,7 +40,7 @@ namespace Hono.Scripts.Battle
         {
             _sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
             _sourceAbilityConfigId = GetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId);
-            _sourceAbilityType = GetAttr<EAbilityType>(ELogicAttr.SourceAbilityType);
+            _sourceAbilityType = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId).Type;
             var hitBoxDataId = (int)(GetVariables().GetVariable("hitBoxDataId"));
             _hitBoxData = AssetManager.Instance.GetData<HitBoxData>(hitBoxDataId);
 

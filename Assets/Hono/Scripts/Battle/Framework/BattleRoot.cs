@@ -5,40 +5,34 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public class BattleManager : MonoBehaviour
+    public class BattleRoot : MonoBehaviour
     {
         public List<ActorRefreshPoint> RefreshPoints = new List<ActorRefreshPoint>();
 
-        private static BattleManager _instance;
+        private static BattleRoot _instance;
         private bool _isFirstUpdate;
 
-        public static BattleManager Instance
+        public static BattleRoot Instance
         {
             get
             {
                 if (_instance == null)
                 {
                     // 尝试查找现有实例
-                    _instance = FindObjectOfType<BattleManager>();
+                    _instance = FindObjectOfType<BattleRoot>();
 
                     // 如果没有找到，则创建新的 GameObject 并添加该组件
                     if (_instance == null)
                     {
-                        GameObject singletonObject = new GameObject(nameof(BattleManager));
-                        _instance = singletonObject.AddComponent<BattleManager>();
+                        GameObject singletonObject = new GameObject(nameof(BattleRoot));
+                        _instance = singletonObject.AddComponent<BattleRoot>();
                     }
                 }
 
                 return _instance;
             }
         }
-
-        /// <summary>
-        /// 获取Id生成器
-        /// </summary>
-        private static CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
-
-
+        
         protected void Awake()
         {
             DontDestroyOnLoad(this.gameObject);
@@ -54,14 +48,16 @@ namespace Hono.Scripts.Battle
             }
 
             _isFirstUpdate = true;
+            //初始化Lua环境
             LuaInterface.Init();
+            //反射缓存
+            AbilityFuncPreLoader.InitAbilityFuncCache();
             init();
         }
 
         private void init()
         {
             AssetManager.Instance.Init();
-            AbilityDataMgr.Instance.Init();
             ActorManager.Instance.Init();
         }
 

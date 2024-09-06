@@ -64,7 +64,7 @@ namespace Hono.Scripts.Battle
             _isLoadFinish = false;
 
             await loadLabelCount();
-            
+
             List<UniTask> tasks = new List<UniTask>();
             //加载数据
             tasks.Add(register<AbilityData>("ability"));
@@ -83,16 +83,17 @@ namespace Hono.Scripts.Battle
 
         private async UniTask loadLabelCount()
         {
-            _assetLabelCounter = await Addressables.LoadAssetAsync<AssetLabelCounter>("Assets/BattleData/LabelCount.asset").ToUniTask();
+            _assetLabelCounter = await Addressables
+                .LoadAssetAsync<AssetLabelCounter>("Assets/BattleData/LabelCount.asset").ToUniTask();
         }
-        
+
         private async UniTask register<T>(string label) where T : ScriptableObject, IAllowedIndexing
         {
             if (!_assetLabelCounter.LabelCounts.TryGetValue(label, out var count) || count == 0)
             {
                 return;
             }
-            
+
             var key = typeof(T);
             if (_assetDict.ContainsKey(key))
             {
@@ -112,13 +113,13 @@ namespace Hono.Scripts.Battle
                     Debug.Log($"Asset key empty");
                     return;
                 }
-                
+
                 foreach (var data in datas)
                 {
                     helper.AddData(data.ID, data);
                 }
+
                 Debug.Log($"Asset key {label} 加载完成！加载数量 {datas.Count}");
-                
             }
             catch (InvalidKeyException)
             {
@@ -130,11 +131,8 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        public async void ReloadAsset<T>(int id, string path) where T : ScriptableObject, IAllowedIndexing
-        {
-            
-        }
-        
+        public async void ReloadAsset<T>(int id, string path) where T : ScriptableObject, IAllowedIndexing { }
+
         public T GetData<T>(int id) where T : ScriptableObject, IAllowedIndexing
         {
             if (_assetDict.TryGetValue(typeof(T), out var idataHelper) && idataHelper is DataHelper<T> dataHelper)
@@ -146,6 +144,20 @@ namespace Hono.Scripts.Battle
             }
 
             return null;
+        }
+
+        public bool TryGetData<T>(int id, out T data) where T : ScriptableObject, IAllowedIndexing
+        {
+            data = null;
+            if (_assetDict.TryGetValue(typeof(T), out var idataHelper) && idataHelper is DataHelper<T> dataHelper)
+            {
+                if (dataHelper.TryGetData(id, out data))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

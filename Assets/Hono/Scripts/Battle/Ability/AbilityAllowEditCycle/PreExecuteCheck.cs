@@ -25,7 +25,7 @@ namespace Hono.Scripts.Battle
 
                 if (_executor.HeadNodeHasChildren(_headNode))
                 {
-                    _ability._variables.Add(_ability._abilityData.PreCheckerVarName, false);
+                    _ability._variables.Add(_executor.AbilityData.PreCheckerVarName, false);
 
                     _executor.ExecuteCycleNode(_headNode);
                     
@@ -33,8 +33,8 @@ namespace Hono.Scripts.Battle
                     _state.GetCycleCallback(_headNode).OnTick?.Invoke();
                     _state.GetCycleCallback(_headNode).OnExit?.Invoke();
                     //TODO:性能问题
-                    checkRes = (bool)_ability._variables.GetVariable(_ability._abilityData.PreCheckerVarName);
-                    _ability._variables.Remove(_ability._abilityData.PreCheckerVarName);
+                    checkRes = (bool)_ability._variables.GetVariable(_executor.AbilityData.PreCheckerVarName);
+                    _ability._variables.Remove(_executor.AbilityData.PreCheckerVarName);
                 }
 
                 return checkRes;

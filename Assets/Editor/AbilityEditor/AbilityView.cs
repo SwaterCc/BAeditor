@@ -78,8 +78,6 @@ namespace Editor.AbilityEditor
     {
         private Dictionary<EAbilityAllowEditCycle, AbilityCycleDrawBase> _cycleDrawer = new();
 
-        private bool _logicMainFoldout = true;
-
         private Vector2 _scrollViewPos = Vector2.zero;
 
         private Dictionary<EAbilityAllowEditCycle, string> _cycleDesc;

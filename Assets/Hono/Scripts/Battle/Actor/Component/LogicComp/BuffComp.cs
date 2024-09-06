@@ -59,6 +59,12 @@ namespace Hono.Scripts.Battle
             {
                 var buffData = AssetManager.Instance.GetData<BuffData>(buffConfigId);
 
+                if (buffData == null)
+                {
+                    Debug.LogError($"Id {buffConfigId} BuffData is null");
+                    return;
+                }
+                
                 bool createNewBuff = true;
 
                 if (!_buffControls.TryGetValue(buffConfigId, out var buffList))

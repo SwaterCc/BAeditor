@@ -51,16 +51,9 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private ActorRTState _rtState;
 
-        /// <summary>
-        /// 运行状态
-        /// </summary>
-        public ActorRTState RTState => _rtState;
-
-        public Actor(int uid, ActorPrototypeData data)
+        public Actor(int uid)
         {
             Uid = uid;
-            PrototypeData = data;
-            _configId = data.id;
         }
 
         public void Setup(ActorShow show, ActorLogic logic)
@@ -78,6 +71,16 @@ namespace Hono.Scripts.Battle
             _rtState.SyncTransform();
         }
 
+        public void Tick(float dt)
+        {
+            _rtState.Tick(dt);
+        }
+        
+        public void Update(float dt)
+        {
+            _rtState.Update(dt);
+        }
+        
         public void Destroy()
         {
             _show.Destroy();

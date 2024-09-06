@@ -70,7 +70,8 @@ namespace Hono.Scripts.Battle.Tools
             return new IdGenerator();
         }
 
-        public static bool HitRayCast(CheckBoxData data, Vector3 selectCenterPos, Quaternion followAttackerRot,out List<int> actorIds)
+        public static bool HitRayCast(CheckBoxData data, Vector3 selectCenterPos, Quaternion followAttackerRot,
+            out List<int> actorIds)
         {
             actorIds = null;
             //获取中心坐标
@@ -113,9 +114,9 @@ namespace Hono.Scripts.Battle.Tools
                 {
                     continue;
                 }
-                
+
                 actorIds ??= new List<int>();
-                actorIds.Add(handle.ActorUid); 
+                actorIds.Add(handle.ActorUid);
             }
 
             return actorIds != null;
@@ -145,7 +146,7 @@ namespace Hono.Scripts.Battle.Tools
             if (func.IsFunc)
             {
                 valueBox = queue.CallFunc(func);
-                return true;
+                return valueBox != null;
             }
 
             Debug.LogError("队首不是函数");
@@ -160,7 +161,13 @@ namespace Hono.Scripts.Battle.Tools
         /// <returns></returns>
         public static object CallFunc(this Queue<Parameter> queue, Parameter func)
         {
-            var funcInfo = AbilityDataMgr.Instance.GetFuncInfo(func.FuncName);
+            var funcInfo = AbilityFuncPreLoader.GetFuncInfo(func.FuncName);
+
+            if (funcInfo == null)
+            {
+                return null;
+            }
+
             //TODO:有GC问题后续优化
             object[] funcParams = new object[funcInfo.ParamCount];
 

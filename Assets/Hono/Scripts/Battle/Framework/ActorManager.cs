@@ -26,10 +26,11 @@ namespace Hono.Scripts.Battle
             _filter = new Filter(this);
         }
 
-        public Actor CreateActor(int actorPrototypeId,Action preInit = null)
+        public Actor CreateActor(int actorPrototypeId)
         {
             var actorData = AssetManager.Instance.GetData<ActorPrototypeData>(actorPrototypeId);
-            var actor = new Actor(_idGenerator.GenerateId(), actorData);
+            
+            var actor = new Actor(_idGenerator.GenerateId());
             ActorLogic logic = null;
             var logicData = AssetManager.Instance.GetData<ActorLogicData>(actorData.LogicConfigId);
             switch (logicData.logicType)
@@ -88,7 +89,7 @@ namespace Hono.Scripts.Battle
 
             foreach (var actor in _runningActorList)
             {
-                actor.RTState.Tick(dt);
+                actor.Tick(dt);
             }
 
             if (_removeList.Count != 0)
@@ -108,7 +109,7 @@ namespace Hono.Scripts.Battle
         {
             foreach (var actor in _runningActorList)
             {
-                actor.RTState.Update(dt);
+                actor.Update(dt);
             }
         }
 

@@ -47,7 +47,7 @@ namespace Hono.Scripts.Battle
             protected override void onExit()
             {
                 _startTime = 0;
-                NextGroupId = _ability._abilityData.DefaultStartGroupId;
+                NextGroupId = _executor.AbilityData.DefaultStartGroupId;
                 CurProxy = null;
                 _groupTimer.Clear();
             }
@@ -137,7 +137,7 @@ namespace Hono.Scripts.Battle
                 bool timeOut = _maxTime < Time.realtimeSinceStartup - _startTime;
                 if (timeOut)
                 {
-                    Debug.LogWarning($"Ability {_ability.Uid} Cid {_ability._abilityData.ConfigId} TimeOut");
+                    Debug.LogWarning($"Ability {_ability.Uid} Cid {_executor.AbilityData.ConfigId} TimeOut");
                 }
 
                 return (base.CanExit() && AllStageFinish) || timeOut;

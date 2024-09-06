@@ -29,7 +29,6 @@ namespace Editor.AbilityEditor
     {
         private List<int> _removeList = new List<int>();
         private bool _isUsedMulitRemove;
-        private int _removeIdx = -1;
 
         protected override void DrawPropertyLayout(GUIContent label)
         {

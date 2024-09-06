@@ -69,9 +69,7 @@ namespace Hono.Scripts.Battle
         {
             var hitBox = ActorManager.Instance.CreateActor(3);
             hitBox.Logic.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.BelongLogic.Uid, false);
-            hitBox.Logic.SetAttr(ELogicAttr.SourceAbilityType, Ability.Context.CurrentAbility.AbilityData.Type, false);
-            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.CurrentAbility.ConfigId,
-                false);
+            hitBox.Logic.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.CurrentAbility.ConfigId, false);
             hitBox.Logic.GetVariables().Add("hitBoxDataId",hitDataId);
             ActorManager.Instance.AddActor(hitBox);
         }

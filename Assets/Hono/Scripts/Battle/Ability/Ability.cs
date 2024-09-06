@@ -20,24 +20,16 @@ namespace Hono.Scripts.Battle {
 		public int Uid { get; }
 
 		/// <summary>
-		/// 能力是否属于激活(释放)状态
+		/// 基础数据配置Id
 		/// </summary>
-		public bool IsActive => _state.HasExecuteOrder;
-
+		public int ConfigId { get; }
+		
 		/// <summary>
-		/// 编辑器数据
+		/// 该能力属于哪个Actor
 		/// </summary>
-		private AbilityData _abilityData;
-		public AbilityData AbilityData => _abilityData;
+		public int BelongActorId { get; }
 
-		private int _abilityConfigId;
-		public int ConfigId => _abilityConfigId;
-
-		/// <summary>
-		/// 执行者
-		/// </summary>
-		private readonly AbilityExecutor _executor;
-
+		
 		/// <summary>
 		/// 属于Ability的变量
 		/// </summary>
@@ -51,20 +43,17 @@ namespace Hono.Scripts.Battle {
 		private readonly AbilityState _state;
 
 		/// <summary>
-		/// 该能力属于哪个Actor
+		/// 执行者
 		/// </summary>
-		private int _belongActorId;
-
-		public int BelongActorId => _belongActorId;
-
+		private readonly AbilityExecutor _executor;
+		
 		//指令缓存
-		private HashSet<ICommand> _commands;
+		private readonly HashSet<ICommand> _commands;
 		
 		public Ability(int uid, int belongActorId, int abilityConfigId) {
 			Uid = uid;
-			_belongActorId = belongActorId;
-			_abilityConfigId = abilityConfigId;
-			_abilityData = AssetManager.Instance.GetData<AbilityData>(_abilityConfigId);
+			BelongActorId = belongActorId;
+			ConfigId = abilityConfigId;
 			_variables = new Variables(16, this);
 			_executor = new AbilityExecutor(this);
 			_state = new AbilityState(this);
@@ -92,7 +81,6 @@ namespace Hono.Scripts.Battle {
 			}
 			
 			//重新获取数据
-			_abilityData = AbilityDataMgr.Instance.GetAbilityData(_abilityConfigId);
 			_executor.Setup();
 		}
 
