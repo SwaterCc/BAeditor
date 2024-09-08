@@ -106,11 +106,11 @@ namespace Hono.Scripts.Battle
                 protected override void onParse(string[] line)
                 {
                     
-            _row.LogicConfigId = parseInt(line[1]);
+                    _row.LogicConfigId = parseInt(line[1]);
             
-            _row.ShowConfigId = parseInt(line[2]);
+                    _row.ShowConfigId = parseInt(line[2]);
             
-            _row.ActorType = parseInt(line[3]);
+                    _row.ActorType = parseInt(line[3]);
             
                 }
             }

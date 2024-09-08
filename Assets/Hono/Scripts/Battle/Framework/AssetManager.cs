@@ -71,11 +71,7 @@ namespace Hono.Scripts.Battle
             tasks.Add(register<SkillData>("skill"));
             tasks.Add(register<BuffData>("buff"));
             //tasks.Add(register<BulletData>("bullet"));
-            tasks.Add(register<ActorPrototypeData>("actorPrototype"));
-            tasks.Add(register<ActorLogicData>("actorLogic"));
-            tasks.Add(register<ActorShowData>("actorShow"));
-            tasks.Add(register<HitBoxData>("hitBoxData"));
-            tasks.Add(register<DamageItem>("damageItem"));
+            
             await UniTask.WhenAll(tasks);
             _isLoadFinish = true;
         }

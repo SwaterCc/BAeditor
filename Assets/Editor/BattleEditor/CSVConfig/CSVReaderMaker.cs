@@ -44,7 +44,7 @@ namespace Editor.BattleEditor.CSVConfig
             ";
 
         private readonly string _parseFuncTmp = @"
-            _row.@PropertyName = @ParseFunc(line[@index]);
+                    _row.@PropertyName = @ParseFunc(line[@index]);
             ";
 
         private readonly Dictionary<string, string> _parseTypeDict = new Dictionary<string, string>()
@@ -239,7 +239,6 @@ namespace Editor.BattleEditor.CSVConfig
             {
                 writer.Write(code);
             }
-            //File.WriteAllText(filePath, code);
         }
     }
 }

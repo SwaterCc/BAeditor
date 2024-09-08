@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Editor.AbilityEditor.SimpleWindow;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
@@ -46,19 +47,28 @@ namespace Editor.AbilityEditor
             {
                 afterValue = EditorGUILayout.EnumPopup(label, (Enum)updateValue);
             }
+            else if (elementType.IsSerializable)
+            {
+                if (SirenixEditorGUI.Button("编辑序列化数据", ButtonSizes.Medium))
+                {
+                    SerializableOdinWindow.Open(ref updateValue, elementType);
+                }
+
+                return updateValue;
+            }
 
             return afterValue;
         }
-        
+
         public static string GetTypeAllName(Type type)
         {
             string typeName = type.ToString();
             string assemblyName = type.Assembly.ToString();
             return typeName + ", " + assemblyName;
         }
-        
-        
-        public static void DrawIntList(List<int> list, string label,float labelWidth)
+
+
+        public static void DrawIntList(List<int> list, string label, float labelWidth)
         {
             int removeIdx = -1;
             SirenixEditorGUI.BeginBox();
@@ -72,11 +82,12 @@ namespace Editor.AbilityEditor
             for (int idx = 0; idx < list.Count; ++idx)
             {
                 EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("-",GUILayout.Width(22)))
+                if (GUILayout.Button("-", GUILayout.Width(22)))
                 {
                     removeIdx = idx;
                 }
-                list[idx] = SirenixEditorFields.IntField(list[idx],GUILayout.Width(30));
+
+                list[idx] = SirenixEditorFields.IntField(list[idx], GUILayout.Width(30));
                 EditorGUILayout.EndHorizontal();
             }
 
@@ -89,6 +100,7 @@ namespace Editor.AbilityEditor
             {
                 list.Add(0);
             }
+
             SirenixEditorGUI.EndBox();
         }
     }

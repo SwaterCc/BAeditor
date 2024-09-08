@@ -41,8 +41,7 @@ namespace Hono.Scripts.Battle
             _sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
             _sourceAbilityConfigId = GetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId);
             _sourceAbilityType = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId).Type;
-            var hitBoxDataId = (int)(GetVariables().GetVariable("hitBoxDataId"));
-            _hitBoxData = AssetManager.Instance.GetData<HitBoxData>(hitBoxDataId);
+            _hitBoxData = (HitBoxData)(GetVariables().GetVariable("hitBoxData"));
 
             _intervalDuration = _hitBoxData.Interval;
             _curCount = 0;

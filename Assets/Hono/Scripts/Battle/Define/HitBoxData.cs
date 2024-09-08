@@ -1,3 +1,4 @@
+using System;
 using Sirenix.Serialization;
 using UnityEngine;
 
@@ -6,8 +7,8 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// 打击数据
     /// </summary>
-    [CreateAssetMenu(menuName = "战斗编辑器/HitBoxData")] 
-    public class HitBoxData : ScriptableObject, IAllowedIndexing
+    [Serializable] 
+    public class HitBoxData
     {
         public int ID => Id;
 

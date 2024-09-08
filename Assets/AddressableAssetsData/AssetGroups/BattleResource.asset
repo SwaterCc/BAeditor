@@ -91,6 +91,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - damageItem
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb2254f225de4f13a2810d9ed8eec84f
+    m_Address: Assets/BattleData/CSV
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7656358260d6a194f8b387281fc83166, type: 2}
   m_SchemaSet:

@@ -4,27 +4,85 @@ namespace Hono.Scripts.Battle
 {
     public class IntArray
     {
-        public IntArray(string csv) { }
+        private readonly List<int> _array;
+
+        public IntArray(string csv)
+        {
+            _array = new List<int>();
+            var intStr = csv.Split("=");
+            foreach (var intValue in intStr)
+            {
+                _array.Add(int.Parse(intValue));
+            }
+        }
+
+        public int this[int idx] => _array[idx];
     }
 
     public class NumberArray
     {
-        public NumberArray(string csv) { }
+        private readonly List<float> _array;
+
+        public NumberArray(string csv)
+        {
+            _array = new List<float>();
+            var intStr = csv.Split("=");
+            foreach (var floatValue in intStr)
+            {
+                _array.Add(float.Parse(floatValue));
+            }
+        }
+
+        public float this[int idx] => _array[idx];
     }
 
     public class StringArray
     {
-        public StringArray(string csv) { }
+        private readonly List<string> _array;
+
+        public StringArray(string csv)
+        {
+            _array = new List<string>();
+            var intStr = csv.Split("=");
+            foreach (var value in intStr)
+            {
+                _array.Add(value);
+            }
+        }
+
+        public string this[int idx] => _array[idx];
     }
 
     public class IntTable
     {
-        public IntTable(string csv) { }
+        private List<IntArray> _tables;
+
+        public IntTable(string csv)
+        {
+            _tables = new List<IntArray>();
+            foreach (var arrayStr in csv.Split("|"))
+            {
+                _tables.Add(new IntArray(arrayStr));
+            }
+        }
+
+        public IntArray this[int idx] => _tables[idx];
     }
 
     public class NumberTable
     {
-        public NumberTable(string csv) { }
+        private List<NumberArray> _tables;
+
+        public NumberTable(string csv)
+        {
+            _tables = new List<NumberArray>();
+            foreach (var arrayStr in csv.Split("|"))
+            {
+                _tables.Add(new NumberArray(arrayStr));
+            }
+        }
+
+        public NumberArray this[int idx] => _tables[idx];
     }
 
     public abstract class TableRow
