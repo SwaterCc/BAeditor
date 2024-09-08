@@ -1,0 +1,98 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+
+namespace @nameSpace
+{
+    public partial class @tableName : ITableHelper
+    {
+        private readonly Dictionary<int, @tableRowName> _tableData = new();
+
+        public bool LoadCSV(string csvFile)
+        {
+            try
+            {
+                using (StringReader  reader = new StringReader (csvFile))
+                {
+                    int lineCount = 0;
+                    while (reader.ReadLine() is { } line)
+                    {
+                        if (++lineCount <= 3)
+                        {
+                            continue;
+                        }
+                        var row = Activator.CreateInstance<@tableRowName>();
+                        row.Parser.Parse(line);
+                        addRow(row.Id, row);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                return false;
+            }
+
+            return true;
+        }
+
+        public TableRow GetTableRow(int id)
+        {
+            if (TryGet(id, out var row))
+            {
+                return row;
+            }
+
+            return null;
+        }
+
+        private void addRow(int id, @tableRowName row)
+        {
+            if (!_tableData.TryAdd(id, row))
+            {
+                Debug.LogError($"{typeof(@tableRowName)} TryAdd {id} id重复");
+            }
+        }
+
+        public @tableRowName Get(int id)
+        {
+            return _tableData[id];
+        }
+
+        public bool TryGet(int id, out @tableRowName data)
+        {
+            return _tableData.TryGetValue(id, out data);
+        }
+
+       
+    }
+
+    public partial class @tableName
+    {
+        public class @tableRowName : TableRow
+        {
+           @tableRowProperty
+
+            public @tableRowName()
+            {
+                Parser = new @tableRowNameCSVParser(this);
+            }
+
+            private class @tableRowNameCSVParser : CSVParser
+            {
+                private @tableRowName _row;
+
+                public @tableRowNameCSVParser(@tableRowName row) : base(row)
+                {
+                    _row = (@tableRowName)base._row;
+                }
+
+                protected override void onParse(string[] line)
+                {
+                    @tableRowParse
+                }
+            }
+        }
+    }
+}

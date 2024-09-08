@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -24,9 +25,12 @@ namespace Hono.Scripts.Battle
             private readonly Dictionary<EAbilityState, AbilityRunCycle> _cycles;
             private readonly Dictionary<EAbilityAllowEditCycle, CycleCallback> _callbackDict;
 
+            private bool _hasError;
+            
             public AbilityState(Ability ability)
             {
                 _ability = ability;
+                _hasError = false;
                 _cycles = new Dictionary<EAbilityState, AbilityRunCycle>()
                 {
                     { EAbilityState.Init, new OnInitCycle(this) },
@@ -65,25 +69,37 @@ namespace Hono.Scripts.Battle
             /// <param name="dt"></param>
             public void Tick(float dt)
             {
-                if (_curCycle == null)
+                
+                if(_hasError) return;
+                
+                try
                 {
-                    //第一次
-                    _curCycle = _cycles[EAbilityState.Init];
-                    _curCycle.Enter();
-                }
-
-                _curCycle.Tick(dt);
-
-                while (_curCycle.CanExit())
-                {
-                    var nextState = _curCycle.GetNextState();
-                    _curCycle.Exit();
-                    _curCycle = _cycles[nextState];
-                    _curCycle.Enter();
-                    if (_curCycle.CurState == EAbilityState.Executing)
+                    if (_curCycle == null)
                     {
-                        _hasExecuteOrder = false;
+                        //第一次
+                        _curCycle = _cycles[EAbilityState.Init];
+                        _curCycle.Enter();
                     }
+
+                    _curCycle.Tick(dt);
+
+                    while (_curCycle.CanExit())
+                    {
+                        var nextState = _curCycle.GetNextState();
+                        _curCycle.Exit();
+                        _curCycle = _cycles[nextState];
+                        _curCycle.Enter();
+                        if (_curCycle.CurState == EAbilityState.Executing)
+                        {
+                            _hasExecuteOrder = false;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                    Stop();
+                    _hasError = true;
                 }
             }
 
@@ -99,8 +115,13 @@ namespace Hono.Scripts.Battle
 
             public void Stop()
             {
-                _curCycle.Exit();
+                _curCycle?.Exit();
                 _curCycle = null;
+            }
+
+            public void Reset()
+            {
+                _hasError = false;
             }
 
             public void OnDestroy()

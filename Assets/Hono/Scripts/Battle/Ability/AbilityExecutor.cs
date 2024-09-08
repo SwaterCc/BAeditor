@@ -33,9 +33,7 @@ namespace Hono.Scripts.Battle
             private Stack<int> _repeatNodeIds;
 
             private bool _hasError;
-
-            private AbilityErrorCode _errorCode;
-
+            
             public Ability Ability => _ability;
             public AbilityState State => _ability._state;
             
@@ -45,6 +43,11 @@ namespace Hono.Scripts.Battle
             public AbilityExecutor(Ability ability)
             {
                 _ability = ability;
+                _nodes = new Dictionary<int, AbilityNode>();
+                _cycleHeads = new Dictionary<EAbilityAllowEditCycle, int>();
+                _eventNodes = new List<AbilityEventNode>();
+                _pastNodeId = new HashSet<int>();
+                _repeatNodeIds = new Stack<int>();
             }
 
             /// <summary>
@@ -55,19 +58,13 @@ namespace Hono.Scripts.Battle
                 if (!AssetManager.Instance.TryGetData(_ability.ConfigId, out _abilityData))
                 {
                     _hasError = true;
-                    _errorCode = AbilityErrorCode.DataInitFailed;
-                    Debug.LogError($"Ability {_ability.ConfigId} SetupFaild");
+                    Debug.LogError($"Ability {_ability.ConfigId} SetupFailed,this Ability Can not Running");
                     return;
                 }
                 
                 var nodeDict = _abilityData.NodeDict;
                 if (nodeDict is { Count: > 0 })
                 {
-                    _nodes ??= new Dictionary<int, AbilityNode>();
-                    _cycleHeads ??= new Dictionary<EAbilityAllowEditCycle, int>();
-                    _eventNodes ??= new List<AbilityEventNode>();
-                    _pastNodeId ??= new HashSet<int>();
-                    _repeatNodeIds ??= new Stack<int>();
                     //数据转化为实际逻辑节点
                     foreach (var pair in nodeDict)
                     {
@@ -95,10 +92,13 @@ namespace Hono.Scripts.Battle
                 }
             }
 
+            public void Reset()
+            {
+                _hasError = false;
+            }
+            
             public void UnInstall()
             {
-                if(_hasError) return;
-                
                 foreach (var eventNode in _eventNodes)
                 {
                     eventNode.UnRegisterEvent();
@@ -110,8 +110,6 @@ namespace Hono.Scripts.Battle
 
             public void OnDestroy()
             {
-                if(_hasError) return;
-                
                 foreach (var eventNode in _eventNodes)
                 {
                     eventNode.UnRegisterEvent();
@@ -125,7 +123,6 @@ namespace Hono.Scripts.Battle
 
             public void RegisterEventNode()
             {
-                if(_hasError) return;
                 foreach (var eventNode in _eventNodes)
                 {
                     eventNode.RegisterEvent();

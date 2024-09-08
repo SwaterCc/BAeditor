@@ -80,6 +80,10 @@ namespace Hono.Scripts.Battle {
 				command.Undo();
 			}
 			
+			//重置error状态
+			_executor.Reset();
+			_state.Reset();
+			
 			//重新获取数据
 			_executor.Setup();
 		}

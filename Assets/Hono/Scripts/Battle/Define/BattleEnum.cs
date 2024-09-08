@@ -61,6 +61,7 @@ namespace Hono.Scripts.Battle
         PreExecute,
         Executing,
         EndExecute,
+        Error,
     }
 
     public enum ESelectPosType
