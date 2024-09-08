@@ -1,4 +1,4 @@
-Id,逻辑配置ID,表现配置ID,Actor类型
+Id,閫昏緫閰嶇疆ID,琛ㄧ幇閰嶇疆ID,Actor绫诲瀷
 Id,LogicConfigId,ShowConfigId,ActorType
 int,int,int,int
 2,1,2,2

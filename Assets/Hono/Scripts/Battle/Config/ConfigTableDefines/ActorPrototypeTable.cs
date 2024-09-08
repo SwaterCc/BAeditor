@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle
         {
             if (!_tableData.TryAdd(id, row))
             {
-                Debug.LogError($"{typeof(ActorPrototypeRow)} TryAdd {id} id�ظ�");
+                Debug.LogError($"{typeof(ActorPrototypeRow)} TryAdd {id} id重复");
             }
         }
 
@@ -74,17 +74,17 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
-            /// ???????ID
+            /// 逻辑配置ID
             /// </summary>
             public int LogicConfigId { get; private set; }
             
             /// <summary>
-            /// ????????ID
+            /// 表现配置ID
             /// </summary>
             public int ShowConfigId { get; private set; }
             
             /// <summary>
-            /// Actor????
+            /// Actor类型
             /// </summary>
             public int ActorType { get; private set; }
             

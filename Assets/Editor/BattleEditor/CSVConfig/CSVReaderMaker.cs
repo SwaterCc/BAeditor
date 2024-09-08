@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Hono.Scripts.Battle;
 using UnityEditor;
 using UnityEngine;
@@ -81,8 +82,14 @@ namespace Editor.BattleEditor.CSVConfig
 
         public CSVReaderMaker()
         {
-            _classCodeTmp = File.ReadAllText("Assets/Editor/BattleEditor/CSVConfig/CSVReaderCodeTmp");
+            //_classCodeTmp = File.ReadAllText("Assets/Editor/BattleEditor/CSVConfig/CSVReaderCodeTmp");
 
+            using (StreamReader reader = new StreamReader("Assets/Editor/BattleEditor/CSVConfig/CSVReaderCodeTmp", Encoding.UTF8))
+            {
+                _classCodeTmp = reader.ReadToEnd();
+            }
+            
+            
             if (Directory.Exists(_configPathRoot))
             {
                 // 获取文件夹中所有 .csv 文件的路径
@@ -227,8 +234,12 @@ namespace Editor.BattleEditor.CSVConfig
             {
                 Directory.CreateDirectory(_genCShapePath);
             }
-
-            File.WriteAllText(filePath, code);
+            
+            using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+            {
+                writer.Write(code);
+            }
+            //File.WriteAllText(filePath, code);
         }
     }
 }
