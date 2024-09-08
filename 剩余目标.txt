@@ -18,4 +18,6 @@ Event很jb难用
 脚本重加载
 Ability子节点全部执行完后给父节点回调增加一个周期
 
-接入Excel
+
+
+重加载，ACtor，Ability ，Ability容器，属性容器，运行数据容器，三者的关系重新梳理
