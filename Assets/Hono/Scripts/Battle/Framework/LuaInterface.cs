@@ -49,7 +49,7 @@ namespace Hono.Scripts.Battle
         }
         
         public static DamageResults GetDamageResults(ActorLogic attacker, ActorLogic target, DamageInfo damageInfo,
-            DamageItem config) {
+            DamageConfig config) {
             //TODO：临时做法，会有性能开销，后续导出
             var rets = _damageProcessMain.Call(attacker, target, damageInfo, config, typeof(DamageResults));
             if (rets is { Length: > 0 } && rets[0] is DamageResults results) {

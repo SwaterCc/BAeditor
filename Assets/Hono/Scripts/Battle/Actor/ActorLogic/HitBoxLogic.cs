@@ -84,9 +84,14 @@ namespace Hono.Scripts.Battle
             if (target == null) return;
             if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
             hitCounter(beHurtComp);
-            var damageItem = AssetManager.Instance.GetData<DamageItem>(damageInfo.DamageConfigId);
+            var damageItem = makeDamageConfig();
             var res = LuaInterface.GetDamageResults(attacker, target.Logic, damageInfo, damageItem);
             beHurtComp.OnBeHurt(res);
+        }
+
+        private DamageConfig makeDamageConfig()
+        {
+            return new DamageConfig();
         }
 
         private void aoeHit(ActorLogic attacker, DamageInfo damageInfo)
@@ -100,7 +105,7 @@ namespace Hono.Scripts.Battle
                 if (target == null) return;
                 if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
                 hitCounter(beHurtComp);
-                var damageItem = AssetManager.Instance.GetData<DamageItem>(damageInfo.DamageConfigId);
+                var damageItem = makeDamageConfig();
                 var res = LuaInterface.GetDamageResults(attacker, target.Logic, damageInfo, damageItem);
                 beHurtComp.OnBeHurt(res);
             }

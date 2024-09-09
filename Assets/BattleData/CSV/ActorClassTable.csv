@@ -1,3 +1,3 @@
-Id,ְҵ����,ְҵ����,ְҵBuff
+﻿Id,职业类型,职业技能,职业Buff
 Id,ActorClassType,Skills,Buffs
 int,int,intArray,intArray

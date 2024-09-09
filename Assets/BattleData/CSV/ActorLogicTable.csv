@@ -1,4 +1,4 @@
-Id,Âß¼­ÀàĞÍ(Íæ¼ÒÑø³É½ÇÉ«0£¬¹ÖÎï1£¬½¨ÖşÎï2£¬´ò»÷µã3),Ö°ÒµID,³õÊ¼»¯ÊôĞÔÄ£°åId,ÓµÓĞ¼¼ÄÜ,ÓµÓĞBuff,ÓµÓĞµÄÆäËûAbility
+ï»¿Id,é€»è¾‘ç±»å‹(ç©å®¶å…»æˆè§’è‰²0ï¼Œæ€ªç‰©1ï¼Œå»ºç­‘ç‰©2ï¼Œæ‰“å‡»ç‚¹3),èŒä¸šID,åˆå§‹åŒ–å±æ€§æ¨¡æ¿Id,æ‹¥æœ‰æŠ€èƒ½,æ‹¥æœ‰Buff,æ‹¥æœ‰çš„å…¶ä»–Ability
 Id,LogicType,ActorClassId,AttrTemplateId,OwnerSkills,OwnerBuffs,ownerOtherAbility
 int,int,int,int,intTable,intArray,intArray
 1,0,1,1,10001=1,,

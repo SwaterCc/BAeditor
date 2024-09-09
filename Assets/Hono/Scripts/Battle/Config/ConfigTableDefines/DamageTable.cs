@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public partial class ActorPrototypeTable : ITableHelper
+    public partial class DamageTable : ITableHelper
     {
-        private readonly Dictionary<int, ActorPrototypeRow> _tableData = new();
+        private readonly Dictionary<int, DamageRow> _tableData = new();
 
         public bool LoadCSV(string csvFile)
         {
@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
-                        var row = Activator.CreateInstance<ActorPrototypeRow>();
+                        var row = Activator.CreateInstance<DamageRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
                     }
@@ -47,20 +47,20 @@ namespace Hono.Scripts.Battle
             return null;
         }
 
-        private void addRow(int id, ActorPrototypeRow row)
+        private void addRow(int id, DamageRow row)
         {
             if (!_tableData.TryAdd(id, row))
             {
-                Debug.LogError($"{typeof(ActorPrototypeRow)} TryAdd {id} id重复");
+                Debug.LogError($"{typeof(DamageRow)} TryAdd {id} id重复");
             }
         }
 
-        public ActorPrototypeRow Get(int id)
+        public DamageRow Get(int id)
         {
             return _tableData[id];
         }
 
-        public bool TryGet(int id, out ActorPrototypeRow data)
+        public bool TryGet(int id, out DamageRow data)
         {
             return _tableData.TryGetValue(id, out data);
         }
@@ -68,63 +68,63 @@ namespace Hono.Scripts.Battle
        
     }
 
-    public partial class ActorPrototypeTable
+    public partial class DamageTable
     {
-        public class ActorPrototypeRow : TableRow
+        public class DamageRow : TableRow
         {
            
             /// <summary>
-            /// 原型描述
+            /// 伤害计算公式
             /// </summary>
-            public string Desc { get; private set; }
+            public string FormulaName { get; private set; }
             
             /// <summary>
-            /// 逻辑ID(ActorLogicTableId)
+            /// 伤害类型(普通伤害，百分比伤害，Dot，治疗)
             /// </summary>
-            public int LogicConfigId { get; private set; }
+            public int DamageType { get; private set; }
             
             /// <summary>
-            /// 表现ID(ActorShowTableId)
+            /// 元素类型（物理，法术）
             /// </summary>
-            public int ShowConfigId { get; private set; }
+            public int ElementType { get; private set; }
             
             /// <summary>
-            /// Actor类型（人物0，怪物1，建筑2，打击盒3，Npc4）
+            /// 加值表配置
             /// </summary>
-            public int ActorType { get; private set; }
+            public int AdditiveId { get; private set; }
             
             /// <summary>
-            /// 角色头像
+            /// 乘值表配置
             /// </summary>
-            public string RPGIcon { get; private set; }
+            public int MultiplyId { get; private set; }
             
 
-            public ActorPrototypeRow()
+            public DamageRow()
             {
-                Parser = new ActorPrototypeRowCSVParser(this);
+                Parser = new DamageRowCSVParser(this);
             }
 
-            private class ActorPrototypeRowCSVParser : CSVParser
+            private class DamageRowCSVParser : CSVParser
             {
-                private ActorPrototypeRow _row;
+                private DamageRow _row;
 
-                public ActorPrototypeRowCSVParser(ActorPrototypeRow row) : base(row)
+                public DamageRowCSVParser(DamageRow row) : base(row)
                 {
-                    _row = (ActorPrototypeRow)base._row;
+                    _row = (DamageRow)base._row;
                 }
 
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.Desc = parseString(line[1]);
+                    _row.FormulaName = parseString(line[1]);
             
-                    _row.LogicConfigId = parseInt(line[2]);
+                    _row.DamageType = parseInt(line[2]);
             
-                    _row.ShowConfigId = parseInt(line[3]);
+                    _row.ElementType = parseInt(line[3]);
             
-                    _row.ActorType = parseInt(line[4]);
+                    _row.AdditiveId = parseInt(line[4]);
             
-                    _row.RPGIcon = parseString(line[5]);
+                    _row.MultiplyId = parseInt(line[5]);
             
                 }
             }

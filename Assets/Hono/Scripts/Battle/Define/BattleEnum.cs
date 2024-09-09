@@ -39,13 +39,13 @@ namespace Hono.Scripts.Battle
     }
 
     public enum EDamageElementType {
-        Physical,
+        Physical = 1,
         Magic,
     }
     
     public enum EDamageType
     {
-        Normal,
+        Normal = 1,
         Percent,
         Dot,
         Health,

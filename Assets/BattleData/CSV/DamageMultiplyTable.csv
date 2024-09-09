@@ -1,3 +1,3 @@
-Id,ApplyÔöÉËÊýÖµÍò·Ö±È,ApplyÊýÖµµÄ·½·¨£¬¿ÉÒÔÔÚluaÖÐ×Ô¶¨Òå¼ÆËã·½·¨£¬Í¨³£±£³ÖÄ¬ÈÏ¼´¿É,ÔöÉËÌõ¼þIDÁÐ±í,ÔöÉËÌõ¼þ²ÎÊý±í
+ï»¿Id,Applyå¢žä¼¤æ•°å€¼ä¸‡åˆ†æ¯”,Applyæ•°å€¼çš„æ–¹æ³•ï¼Œå¯ä»¥åœ¨luaä¸­è‡ªå®šä¹‰è®¡ç®—æ–¹æ³•ï¼Œé€šå¸¸ä¿æŒé»˜è®¤å³å¯,å¢žä¼¤æ¡ä»¶IDåˆ—è¡¨,å¢žä¼¤æ¡ä»¶å‚æ•°è¡¨
 Id,DamageValue,ApplyFuncName,ConditionIds,ConditionParams
 int,int,string,intArray,intTable

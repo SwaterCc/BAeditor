@@ -84,13 +84,6 @@ namespace Editor.AbilityEditor.SimpleWindow
                 return;
             }
 
-            var item = new AbilityConfigItem()
-            {
-                configId = id,
-                name = abilityName,
-                desc = desc
-            };
-
             string savePath = _main.AbilityFolders[createType] + "/" + id + ".asset";
             
             if (list.ContainsKey(savePath))
@@ -103,8 +96,8 @@ namespace Editor.AbilityEditor.SimpleWindow
             AbilityData asset = CreateInstance<AbilityData>();
 
             // 设置默认数据
-            asset.name = item.configId.ToString();
-            asset.ConfigId = item.configId;
+            asset.name = id.ToString();
+            asset.ConfigId = id;
             asset.Type = createType;
             asset.Name = abilityName;
             asset.Desc = desc;

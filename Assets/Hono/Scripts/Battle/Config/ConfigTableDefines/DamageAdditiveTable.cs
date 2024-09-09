@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public partial class ActorPrototypeTable : ITableHelper
+    public partial class DamageAdditiveTable : ITableHelper
     {
-        private readonly Dictionary<int, ActorPrototypeRow> _tableData = new();
+        private readonly Dictionary<int, DamageAdditiveRow> _tableData = new();
 
         public bool LoadCSV(string csvFile)
         {
@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
-                        var row = Activator.CreateInstance<ActorPrototypeRow>();
+                        var row = Activator.CreateInstance<DamageAdditiveRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
                     }
@@ -47,20 +47,20 @@ namespace Hono.Scripts.Battle
             return null;
         }
 
-        private void addRow(int id, ActorPrototypeRow row)
+        private void addRow(int id, DamageAdditiveRow row)
         {
             if (!_tableData.TryAdd(id, row))
             {
-                Debug.LogError($"{typeof(ActorPrototypeRow)} TryAdd {id} id重复");
+                Debug.LogError($"{typeof(DamageAdditiveRow)} TryAdd {id} id重复");
             }
         }
 
-        public ActorPrototypeRow Get(int id)
+        public DamageAdditiveRow Get(int id)
         {
             return _tableData[id];
         }
 
-        public bool TryGet(int id, out ActorPrototypeRow data)
+        public bool TryGet(int id, out DamageAdditiveRow data)
         {
             return _tableData.TryGetValue(id, out data);
         }
@@ -68,63 +68,56 @@ namespace Hono.Scripts.Battle
        
     }
 
-    public partial class ActorPrototypeTable
+    public partial class DamageAdditiveTable
     {
-        public class ActorPrototypeRow : TableRow
+        public class DamageAdditiveRow : TableRow
         {
            
             /// <summary>
-            /// 原型描述
+            /// Apply增伤数值万分比
             /// </summary>
-            public string Desc { get; private set; }
+            public int DamageValue { get; private set; }
             
             /// <summary>
-            /// 逻辑ID(ActorLogicTableId)
+            /// Apply数值的方法，可以在lua中自定义计算方法，通常保持默认即可
             /// </summary>
-            public int LogicConfigId { get; private set; }
+            public string ApplyFuncName { get; private set; }
             
             /// <summary>
-            /// 表现ID(ActorShowTableId)
+            /// 增伤条件ID列表
             /// </summary>
-            public int ShowConfigId { get; private set; }
+            public IntArray ConditionIds { get; private set; }
             
             /// <summary>
-            /// Actor类型（人物0，怪物1，建筑2，打击盒3，Npc4）
+            /// 增伤条件参数表
             /// </summary>
-            public int ActorType { get; private set; }
-            
-            /// <summary>
-            /// 角色头像
-            /// </summary>
-            public string RPGIcon { get; private set; }
+            public IntTable ConditionParams { get; private set; }
             
 
-            public ActorPrototypeRow()
+            public DamageAdditiveRow()
             {
-                Parser = new ActorPrototypeRowCSVParser(this);
+                Parser = new DamageAdditiveRowCSVParser(this);
             }
 
-            private class ActorPrototypeRowCSVParser : CSVParser
+            private class DamageAdditiveRowCSVParser : CSVParser
             {
-                private ActorPrototypeRow _row;
+                private DamageAdditiveRow _row;
 
-                public ActorPrototypeRowCSVParser(ActorPrototypeRow row) : base(row)
+                public DamageAdditiveRowCSVParser(DamageAdditiveRow row) : base(row)
                 {
-                    _row = (ActorPrototypeRow)base._row;
+                    _row = (DamageAdditiveRow)base._row;
                 }
 
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.Desc = parseString(line[1]);
+                    _row.DamageValue = parseInt(line[1]);
             
-                    _row.LogicConfigId = parseInt(line[2]);
+                    _row.ApplyFuncName = parseString(line[2]);
             
-                    _row.ShowConfigId = parseInt(line[3]);
+                    _row.ConditionIds = parseIntArray(line[3]);
             
-                    _row.ActorType = parseInt(line[4]);
-            
-                    _row.RPGIcon = parseString(line[5]);
+                    _row.ConditionParams = parseIntTable(line[4]);
             
                 }
             }

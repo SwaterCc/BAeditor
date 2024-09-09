@@ -84,7 +84,7 @@ namespace Editor.BattleEditor.CSVConfig
         {
             //_classCodeTmp = File.ReadAllText("Assets/Editor/BattleEditor/CSVConfig/CSVReaderCodeTmp");
 
-            using (StreamReader reader = new StreamReader("Assets/Editor/BattleEditor/CSVConfig/CSVReaderCodeTmp", Encoding.UTF8))
+            using (StreamReader reader = new StreamReader("Assets/Editor/BattleEditor/CSVConfig/CSVReaderCodeTmp", Encoding.Default))
             {
                 _classCodeTmp = reader.ReadToEnd();
             }

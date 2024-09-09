@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public partial class ActorPrototypeTable : ITableHelper
+    public partial class ActorShowTable : ITableHelper
     {
-        private readonly Dictionary<int, ActorPrototypeRow> _tableData = new();
+        private readonly Dictionary<int, ActorShowRow> _tableData = new();
 
         public bool LoadCSV(string csvFile)
         {
@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
-                        var row = Activator.CreateInstance<ActorPrototypeRow>();
+                        var row = Activator.CreateInstance<ActorShowRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
                     }
@@ -47,20 +47,20 @@ namespace Hono.Scripts.Battle
             return null;
         }
 
-        private void addRow(int id, ActorPrototypeRow row)
+        private void addRow(int id, ActorShowRow row)
         {
             if (!_tableData.TryAdd(id, row))
             {
-                Debug.LogError($"{typeof(ActorPrototypeRow)} TryAdd {id} id重复");
+                Debug.LogError($"{typeof(ActorShowRow)} TryAdd {id} id重复");
             }
         }
 
-        public ActorPrototypeRow Get(int id)
+        public ActorShowRow Get(int id)
         {
             return _tableData[id];
         }
 
-        public bool TryGet(int id, out ActorPrototypeRow data)
+        public bool TryGet(int id, out ActorShowRow data)
         {
             return _tableData.TryGetValue(id, out data);
         }
@@ -68,49 +68,44 @@ namespace Hono.Scripts.Battle
        
     }
 
-    public partial class ActorPrototypeTable
+    public partial class ActorShowTable
     {
-        public class ActorPrototypeRow : TableRow
+        public class ActorShowRow : TableRow
         {
            
             /// <summary>
-            /// 原型描述
+            /// 描述
             /// </summary>
             public string Desc { get; private set; }
             
             /// <summary>
-            /// 逻辑ID(ActorLogicTableId)
+            /// 表现层类型(测试胶囊体0，帧动画1)
             /// </summary>
-            public int LogicConfigId { get; private set; }
+            public int ShowType { get; private set; }
             
             /// <summary>
-            /// 表现ID(ActorShowTableId)
+            /// 模型路径
             /// </summary>
-            public int ShowConfigId { get; private set; }
+            public string ModelPath { get; private set; }
             
             /// <summary>
-            /// Actor类型（人物0，怪物1，建筑2，打击盒3，Npc4）
+            /// 动画模板
             /// </summary>
-            public int ActorType { get; private set; }
-            
-            /// <summary>
-            /// 角色头像
-            /// </summary>
-            public string RPGIcon { get; private set; }
+            public string AnimTemplateId { get; private set; }
             
 
-            public ActorPrototypeRow()
+            public ActorShowRow()
             {
-                Parser = new ActorPrototypeRowCSVParser(this);
+                Parser = new ActorShowRowCSVParser(this);
             }
 
-            private class ActorPrototypeRowCSVParser : CSVParser
+            private class ActorShowRowCSVParser : CSVParser
             {
-                private ActorPrototypeRow _row;
+                private ActorShowRow _row;
 
-                public ActorPrototypeRowCSVParser(ActorPrototypeRow row) : base(row)
+                public ActorShowRowCSVParser(ActorShowRow row) : base(row)
                 {
-                    _row = (ActorPrototypeRow)base._row;
+                    _row = (ActorShowRow)base._row;
                 }
 
                 protected override void onParse(string[] line)
@@ -118,13 +113,11 @@ namespace Hono.Scripts.Battle
                     
                     _row.Desc = parseString(line[1]);
             
-                    _row.LogicConfigId = parseInt(line[2]);
+                    _row.ShowType = parseInt(line[2]);
             
-                    _row.ShowConfigId = parseInt(line[3]);
+                    _row.ModelPath = parseString(line[3]);
             
-                    _row.ActorType = parseInt(line[4]);
-            
-                    _row.RPGIcon = parseString(line[5]);
+                    _row.AnimTemplateId = parseString(line[4]);
             
                 }
             }

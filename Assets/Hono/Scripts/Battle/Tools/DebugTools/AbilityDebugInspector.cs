@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
     /// </summary>
     public class AbilityDebugInspector : MonoBehaviour
     {
-        [ShowInInspector] public DamageItem DamageConfig;
+        [ShowInInspector] public DamageConfig DamageConfig;
 
         [ShowInInspector] public DamageInfo DamageInfo;
 

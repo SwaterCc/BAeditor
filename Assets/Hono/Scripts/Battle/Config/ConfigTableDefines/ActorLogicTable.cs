@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public partial class ActorPrototypeTable : ITableHelper
+    public partial class ActorLogicTable : ITableHelper
     {
-        private readonly Dictionary<int, ActorPrototypeRow> _tableData = new();
+        private readonly Dictionary<int, ActorLogicRow> _tableData = new();
 
         public bool LoadCSV(string csvFile)
         {
@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
-                        var row = Activator.CreateInstance<ActorPrototypeRow>();
+                        var row = Activator.CreateInstance<ActorLogicRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
                     }
@@ -47,20 +47,20 @@ namespace Hono.Scripts.Battle
             return null;
         }
 
-        private void addRow(int id, ActorPrototypeRow row)
+        private void addRow(int id, ActorLogicRow row)
         {
             if (!_tableData.TryAdd(id, row))
             {
-                Debug.LogError($"{typeof(ActorPrototypeRow)} TryAdd {id} id重复");
+                Debug.LogError($"{typeof(ActorLogicRow)} TryAdd {id} id重复");
             }
         }
 
-        public ActorPrototypeRow Get(int id)
+        public ActorLogicRow Get(int id)
         {
             return _tableData[id];
         }
 
-        public bool TryGet(int id, out ActorPrototypeRow data)
+        public bool TryGet(int id, out ActorLogicRow data)
         {
             return _tableData.TryGetValue(id, out data);
         }
@@ -68,63 +68,70 @@ namespace Hono.Scripts.Battle
        
     }
 
-    public partial class ActorPrototypeTable
+    public partial class ActorLogicTable
     {
-        public class ActorPrototypeRow : TableRow
+        public class ActorLogicRow : TableRow
         {
            
             /// <summary>
-            /// 原型描述
+            /// 逻辑类型(玩家养成角色0，怪物1，建筑物2，打击点3)
             /// </summary>
-            public string Desc { get; private set; }
+            public int LogicType { get; private set; }
             
             /// <summary>
-            /// 逻辑ID(ActorLogicTableId)
+            /// 职业ID
             /// </summary>
-            public int LogicConfigId { get; private set; }
+            public int ActorClassId { get; private set; }
             
             /// <summary>
-            /// 表现ID(ActorShowTableId)
+            /// 初始化属性模板Id
             /// </summary>
-            public int ShowConfigId { get; private set; }
+            public int AttrTemplateId { get; private set; }
             
             /// <summary>
-            /// Actor类型（人物0，怪物1，建筑2，打击盒3，Npc4）
+            /// 拥有技能
             /// </summary>
-            public int ActorType { get; private set; }
+            public IntTable OwnerSkills { get; private set; }
             
             /// <summary>
-            /// 角色头像
+            /// 拥有Buff
             /// </summary>
-            public string RPGIcon { get; private set; }
+            public IntArray OwnerBuffs { get; private set; }
+            
+            /// <summary>
+            /// 拥有的其他Ability
+            /// </summary>
+            public IntArray ownerOtherAbility { get; private set; }
             
 
-            public ActorPrototypeRow()
+            public ActorLogicRow()
             {
-                Parser = new ActorPrototypeRowCSVParser(this);
+                Parser = new ActorLogicRowCSVParser(this);
             }
 
-            private class ActorPrototypeRowCSVParser : CSVParser
+            private class ActorLogicRowCSVParser : CSVParser
             {
-                private ActorPrototypeRow _row;
+                private ActorLogicRow _row;
 
-                public ActorPrototypeRowCSVParser(ActorPrototypeRow row) : base(row)
+                public ActorLogicRowCSVParser(ActorLogicRow row) : base(row)
                 {
-                    _row = (ActorPrototypeRow)base._row;
+                    _row = (ActorLogicRow)base._row;
                 }
 
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.Desc = parseString(line[1]);
+                    _row.LogicType = parseInt(line[1]);
             
-                    _row.LogicConfigId = parseInt(line[2]);
+                    _row.ActorClassId = parseInt(line[2]);
             
-                    _row.ShowConfigId = parseInt(line[3]);
+                    _row.AttrTemplateId = parseInt(line[3]);
             
-                    _row.ActorType = parseInt(line[4]);
+                    _row.OwnerSkills = parseIntTable(line[4]);
             
-                    _row.RPGIcon = parseString(line[5]);
+                    _row.OwnerBuffs = parseIntArray(line[5]);
+            
+                    _row.ownerOtherAbility = parseIntArray(line[6]);
             
                 }
             }

@@ -1,4 +1,4 @@
-Id,ÃèÊö,±íÏÖ²ãÀàĞÍ(²âÊÔ½ºÄÒÌå0£¬Ö¡¶¯»­1),Ä£ĞÍÂ·¾¶,¶¯»­Ä£°å
+ï»¿Id,æè¿°,è¡¨ç°å±‚ç±»å‹(æµ‹è¯•èƒ¶å›Šä½“0ï¼Œå¸§åŠ¨ç”»1),æ¨¡å‹è·¯å¾„,åŠ¨ç”»æ¨¡æ¿
 Id,Desc,ShowType,ModelPath,AnimTemplateId
 int,string,int,string,string
-1,²âÊÔÓÃ½ºÄÒÌå,0,Assets/BattleData/Tools/modelTest.prefab,
+1,æµ‹è¯•ç”¨èƒ¶å›Šä½“,0,Assets/BattleData/Tools/modelTest.prefab,
