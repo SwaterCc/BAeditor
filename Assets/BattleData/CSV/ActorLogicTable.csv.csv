@@ -1,0 +1,6 @@
+Id,逻辑类型,职业ID,初始化属性模板Id,拥有技能,拥有Buff,拥有的其他Ability
+Id,LogicType,ActorClassId,AttrTemplateId,OwnerSkills,OwnerBuffs,ownerOtherAbility
+int,int,int,int,intTable,intArray,intArray
+2,1,2,2,,,
+3,1,1,3,,,
+11,2,44,123123,,,
