@@ -5,9 +5,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    [ShowOdinSerializedPropertiesInInspector]
-    [CreateAssetMenu(menuName = "战斗编辑器/DamageItem")]
-    public class DamageItem : SerializedScriptableObject, IAllowedIndexing
+    public class DamageConfig
     {
         public int Id;
 
@@ -42,7 +40,5 @@ namespace Hono.Scripts.Battle
         /// 伤害类型
         /// </summary>
         public EDamageType DamageType;
-
-        public int ID => Id;
     }
 }
