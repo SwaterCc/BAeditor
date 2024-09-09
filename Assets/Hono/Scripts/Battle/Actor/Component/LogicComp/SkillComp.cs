@@ -22,25 +22,25 @@ namespace Hono.Scripts.Battle
             private ActorLogic _logic;
             private FilterSetting _skillTargetSetting;
 
-            public Skill(ActorLogic logic, SkillData data)
+            public Skill(ActorLogic logic, int skillId)
             {
                 _level = 1;
                 _curCdPercent = 0;
                 _logic = logic;
-                Data = data;
+                Data = AssetManager.Instance.GetData<SkillData>(skillId);
                 _isDisable = false;
 
-                if (data.SkillTargetType != ESkillTargetType.Self)
+                if (Data.SkillTargetType != ESkillTargetType.Self)
                 {
-                    if (data.UseCustomFilter)
+                    if (Data.UseCustomFilter)
                     {
-                        _skillTargetSetting = data.CustomFilter;
+                        _skillTargetSetting = Data.CustomFilter;
                     }
                     else
                     {
                         _skillTargetSetting = new FilterSetting();
                         var boxData = new CheckBoxSphere();
-                        boxData.Radius = data.SkillRange;
+                        boxData.Radius = Data.SkillRange;
                         boxData.ShapeType = ECheckBoxShapeType.Sphere;
                         _skillTargetSetting.BoxData = boxData;
                         _skillTargetSetting.OpenBoxCheck = true;
@@ -48,7 +48,7 @@ namespace Hono.Scripts.Battle
                         {
                             RangeType = EFilterRangeType.Faction,
                         };
-                        switch (data.SkillTargetType)
+                        switch (Data.SkillTargetType)
                         {
                             case ESkillTargetType.Enemy:
                                 range.Value = (int)EFactionType.Enemy;
@@ -57,14 +57,15 @@ namespace Hono.Scripts.Battle
                                 range.Value = (int)EFactionType.Friendly;
                                 break;
                         }
+
                         _skillTargetSetting.Ranges.Add(range);
                     }
                 }
 
-                var ability = _logic._abilityController.CreateAbility(data.SkillId);
+                var ability = _logic._abilityController.CreateAbility(Data.SkillId);
                 _abilityUid = ability.Uid;
 
-                if (data.CostType == EResCostType.AfterExecute)
+                if (Data.CostType == EResCostType.AfterExecute)
                 {
                     ability.GetCycleCallback(EAbilityAllowEditCycle.OnPreExecute).OnEnter += resourceCost;
                 }
@@ -73,7 +74,7 @@ namespace Hono.Scripts.Battle
                     ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnEnter += resourceCost;
                 }
 
-                if (data.EcdMode == ECDMode.AfterExecute)
+                if (Data.EcdMode == ECDMode.AfterExecute)
                 {
                     ability.GetCycleCallback(EAbilityAllowEditCycle.OnPreExecute).OnEnter += CdBegin;
                 }
@@ -81,8 +82,9 @@ namespace Hono.Scripts.Battle
                 {
                     ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnEnter += CdBegin;
                 }
-                
-                ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnExit += ()=> _logic._stateMachine.ChangeState(EActorState.Idle);
+
+                ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnExit +=
+                    () => _logic._stateMachine.ChangeState(EActorState.Idle);
 
                 _logic._abilityController.AwardAbility(ability, false);
 
@@ -175,7 +177,7 @@ namespace Hono.Scripts.Battle
                     var targetList = ActorManager.Instance.UseFilter(_logic, _skillTargetSetting);
                     float minDistance = Data.SkillRange;
                     var selfPos = _logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-                  
+
                     foreach (var uid in targetList)
                     {
                         var target = ActorManager.Instance.GetActor(uid);
@@ -192,7 +194,7 @@ namespace Hono.Scripts.Battle
                 {
                     targetUid = _logic.Uid;
                 }
-                
+
                 if (targetUid > 0)
                 {
                     _logic.SetAttr(ELogicAttr.AttrAttackTargetUid, targetUid, false);
@@ -214,9 +216,14 @@ namespace Hono.Scripts.Battle
             {
                 return control1.Data.PriorityDEF > control2.Data.PriorityATK;
             }
+
+            public void Destroy()
+            {
+                _logic._abilityController.RemoveAbility(_abilityUid);
+            }
         }
 
-        public class SkillComp : ALogicComponent
+        public class SkillComp : ALogicComponent, IReloadHandle
         {
             //管理技能cd
             //管理技能释放前消耗检测
@@ -233,24 +240,48 @@ namespace Hono.Scripts.Battle
             private Skill _curSkill;
 
             private UseSkillChecker _eventChecker;
-            
+
             public SkillComp(ActorLogic logic) : base(logic) { }
-            
+
             public override void Init()
             {
                 foreach (var skillId in _actorLogic.LogicData.ownerSkills)
                 {
-                    var skillCtrl = new Skill(_actorLogic, AssetManager.Instance.GetData<SkillData>(skillId));
+                    var skillCtrl = new Skill(_actorLogic, skillId);
                     _skills.Add(skillId, skillCtrl);
                 }
 
                 _eventChecker ??= new UseSkillChecker(_actorLogic.Uid);
                 BattleEventManager.Instance.Register(_eventChecker);
+                AssetManager.Instance.AddReloadHandle(this);
+            }
+
+            public void Reload()
+            {
+                clear();
+
+                foreach (var skillId in _actorLogic.LogicData.ownerSkills)
+                {
+                    var skillCtrl = new Skill(_actorLogic, skillId);
+                    _skills.Add(skillId, skillCtrl);
+                }
+            }
+
+            private void clear()
+            {
+                foreach (var skill in _skills)
+                {
+                    skill.Value.Destroy();
+                }
+
+                _skills.Clear();
             }
 
             public override void UnInit()
             {
+                clear();
                 BattleEventManager.Instance.UnRegister(_eventChecker);
+                AssetManager.Instance.RemoveReloadHandle(this);
             }
 
             protected override void onTick(float dt)

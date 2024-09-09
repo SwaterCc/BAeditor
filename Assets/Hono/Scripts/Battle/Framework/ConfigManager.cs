@@ -23,9 +23,25 @@ namespace Hono.Scripts.Battle
             loadConfigs();
         }
 
+
+        public void Reload(string className)
+        {
+#if UNITY_EDITOR
+#endif
+        }
+
+        public void ReloadAll()
+        {
+#if UNITY_EDITOR
+            IsLoadFinish = false;
+            _tables.Clear();
+            loadConfigs();
+#endif
+        }
+
         private async void loadConfigs()
         {
-            string folderPath = "Assets/BattleData/CSV";
+            string folderPath = DataPath.CSVRoot;
 
             if (Directory.Exists(folderPath))
             {

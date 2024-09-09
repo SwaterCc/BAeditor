@@ -5,7 +5,7 @@ namespace Hono.Scripts.Battle {
 	/// <summary>
 	/// 这个Ability代表了运行时流程管理
 	/// </summary>
-	public partial class Ability : IVariablesBind {
+	public partial class Ability : IVariablesBind,IReloadHandle {
 		/// <summary>
 		/// Ability的上下文，存储当前在运行哪个Ability
 		/// </summary>
@@ -59,6 +59,7 @@ namespace Hono.Scripts.Battle {
 			_state = new AbilityState(this);
 			_commands = new HashSet<ICommand>();
 			_executor.Setup();
+			AssetManager.Instance.AddReloadHandle(this);
 		}
 
 		public void Execute() {
@@ -119,6 +120,7 @@ namespace Hono.Scripts.Battle {
 			}
 			_state.OnDestroy();
 			_executor.OnDestroy();
+			AssetManager.Instance.RemoveReloadHandle(this);
 		}
 	}
 }

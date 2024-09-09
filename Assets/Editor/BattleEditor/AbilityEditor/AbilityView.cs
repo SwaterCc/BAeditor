@@ -71,6 +71,39 @@ namespace Editor.AbilityEditor
             EditorUtility.SetDirty(AbilityData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            rtReload();
+        }
+
+        private async void rtReload()
+        {
+            if (EditorApplication.isPlaying)
+            {
+#if UNITY_EDITOR
+                if(!DebugMode.Instance.AutoReloadAsset) return;
+                
+                await AssetManager.Instance.ReloadAsset<AbilityData>(AbilityData.ConfigId);
+
+                switch (AbilityData.Type)
+                {
+                    case EAbilityType.Skill:
+                        await AssetManager.Instance.ReloadAsset<SkillData>(AbilityData.ConfigId);
+                        break;
+                    case EAbilityType.Buff:
+                        await AssetManager.Instance.ReloadAsset<BuffData>(AbilityData.ConfigId);
+                        break;
+                    case EAbilityType.Bullet:
+                        break;
+                    case EAbilityType.GameMode:
+                        break;
+                    case EAbilityType.Other:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                AssetManager.Instance.CallReloadHandles();
+#endif
+            }
         }
     }
 

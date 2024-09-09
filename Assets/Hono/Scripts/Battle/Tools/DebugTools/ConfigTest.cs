@@ -1,4 +1,4 @@
-﻿using Sirenix.OdinInspector;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Tools.DebugTools

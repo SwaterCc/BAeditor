@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks.Triggers;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace Hono.Scripts.Battle
 
         private static BattleRoot _instance;
         private bool _isFirstUpdate;
+        private bool _allLoadFinish;
 
         public static BattleRoot Instance
         {
@@ -32,7 +34,7 @@ namespace Hono.Scripts.Battle
                 return _instance;
             }
         }
-        
+
         protected void Awake()
         {
             DontDestroyOnLoad(this.gameObject);
@@ -57,6 +59,10 @@ namespace Hono.Scripts.Battle
 
         private void init()
         {
+#if UNITY_EDITOR
+            DebugMode.Instance.Init();
+#endif
+            ConfigManager.Instance.Init();
             AssetManager.Instance.Init();
             ActorManager.Instance.Init();
         }
@@ -76,14 +82,14 @@ namespace Hono.Scripts.Battle
 
         public void Update()
         {
-            if (!AssetManager.Instance.IsLoadFinish)
+            if (!AssetManager.Instance.IsLoadFinish && ConfigManager.Instance.IsLoadFinish)
             {
                 return;
             }
 
             if (_isFirstUpdate)
                 firstUpdate();
-            
+
             //临时做法
             //保证逻辑帧在表现帧之前执行一次
             Tick(Time.deltaTime);
