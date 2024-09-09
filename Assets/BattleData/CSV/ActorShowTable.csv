@@ -1,0 +1,4 @@
+Id,描述,表现层类型(测试胶囊体0，帧动画1),模型路径,动画模板
+Id,Desc,ShowType,ModelPath,AnimTemplateId
+int,string,int,string,string
+1,测试用胶囊体,0,Assets/BattleData/Tools/modelTest.prefab,
