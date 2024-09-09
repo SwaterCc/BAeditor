@@ -28,12 +28,12 @@ namespace Hono.Scripts.Battle
 
         public Actor CreateActor(int actorPrototypeId)
         {
-            var actorData = AssetManager.Instance.GetData<ActorPrototypeData>(actorPrototypeId);
+            var actorData = ConfigManager.Instance.GetTable<ActorPrototypeTable>().Get(actorPrototypeId);
             
             var actor = new Actor(_idGenerator.GenerateId());
             ActorLogic logic = null;
-            var logicData = AssetManager.Instance.GetData<ActorLogicData>(actorData.LogicConfigId);
-            switch (logicData.logicType)
+            var logicData =  ConfigManager.Instance.GetTable<ActorLogicTable>().Get(actorData.LogicConfigId);
+            switch ((EActorLogicType)logicData.LogicType)
             {
                 case EActorLogicType.Pawn:
                     logic = new PawnLogic(actor.Uid, logicData);
@@ -51,8 +51,8 @@ namespace Hono.Scripts.Battle
             ActorShow show = null;
             if (actorData.ShowConfigId > 0)
             {
-                var showData = AssetManager.Instance.GetData<ActorShowData>(actorData.ShowConfigId);
-                switch (showData.ShowType)
+                var showData =  ConfigManager.Instance.GetTable<ActorShowTable>().Get(actorData.ShowConfigId);
+                switch ((EActorShowType)showData.ShowType)
                 {
                     case EActorShowType.LogicTest:
                         show = new TestShow(actor.Uid, showData);

@@ -89,14 +89,19 @@ namespace Hono.Scripts.Battle
             public int ElementType { get; private set; }
             
             /// <summary>
+            /// 冲击力
+            /// </summary>
+            public int ImpactValue { get; private set; }
+            
+            /// <summary>
             /// 加值表配置
             /// </summary>
-            public int AdditiveId { get; private set; }
+            public IntArray AdditiveId { get; private set; }
             
             /// <summary>
             /// 乘值表配置
             /// </summary>
-            public int MultiplyId { get; private set; }
+            public IntArray MultiplyId { get; private set; }
             
 
             public DamageRow()
@@ -122,9 +127,11 @@ namespace Hono.Scripts.Battle
             
                     _row.ElementType = parseInt(line[3]);
             
-                    _row.AdditiveId = parseInt(line[4]);
+                    _row.ImpactValue = parseInt(line[4]);
             
-                    _row.MultiplyId = parseInt(line[5]);
+                    _row.AdditiveId = parseIntArray(line[5]);
+            
+                    _row.MultiplyId = parseIntArray(line[6]);
             
                 }
             }

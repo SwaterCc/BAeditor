@@ -2,7 +2,7 @@ namespace Hono.Scripts.Battle
 {
     public class MonsterLogic : ActorLogic
     {
-        public MonsterLogic(int uid, ActorLogicData logicData) : base(uid, logicData) { }
+        public MonsterLogic(int uid, ActorLogicTable.ActorLogicRow logicData) : base(uid, logicData) { }
         protected override void initAttrs()
         {
             SetAttr<int>(ELogicAttr.AttrFaction, 4, false);

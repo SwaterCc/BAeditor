@@ -1,7 +1,6 @@
 using Hono.Scripts.Battle.Tools;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -23,9 +22,9 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 逻辑数据
         /// </summary>
-        protected ActorLogicData _logicData;
+        protected  ActorLogicTable.ActorLogicRow _logicData;
 
-        public ActorLogicData LogicData => _logicData;
+        public  ActorLogicTable.ActorLogicRow LogicData => _logicData;
 
         /// <summary>
         /// 变量
@@ -59,7 +58,7 @@ namespace Hono.Scripts.Battle
 
         protected IInputHandle _inputHandle;
 
-        public ActorLogic(int uid, ActorLogicData logicData)
+        public ActorLogic(int uid,  ActorLogicTable.ActorLogicRow logicData)
         {
             Uid = uid;
             _logicData = logicData;
@@ -93,7 +92,7 @@ namespace Hono.Scripts.Battle
         
         protected virtual void onInputInit()
         {
-            switch (_logicData.logicType)
+            switch ((EActorLogicType)_logicData.LogicType)
             {
                 case EActorLogicType.Pawn:
                     _inputHandle = new PawnLeaderInput();

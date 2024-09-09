@@ -1,4 +1,4 @@
-﻿Id,伤害计算公式,伤害类型(普通伤害，百分比伤害，Dot，治疗),元素类型（物理，法术）,加值表配置,乘值表配置
-Id,FormulaName,DamageType,ElementType,AdditiveId,MultiplyId
-int,string,int,int,int,int
-1,Heal,1,1,1,-1
+﻿Id,伤害计算公式,伤害类型(普通伤害，百分比伤害，Dot，治疗),元素类型（物理，法术）,冲击力,加值表配置,乘值表配置
+Id,FormulaName,DamageType,ElementType,ImpactValue,AdditiveId,MultiplyId
+int,string,int,int,int,intArray,intArray
+1,Heal,1,1,99998,1,

@@ -2,3 +2,4 @@
 Id,Desc,ShowType,ModelPath,AnimTemplateId
 int,string,int,string,string
 1,测试用胶囊体,0,Assets/BattleData/Tools/modelTest.prefab,
+2,测试用打击盒,0,Assets/BattleData/Tools/HitBoxCube.prefab,

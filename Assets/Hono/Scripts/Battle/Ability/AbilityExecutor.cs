@@ -114,11 +114,6 @@ namespace Hono.Scripts.Battle
                 {
                     eventNode.UnRegisterEvent();
                 }
-
-                foreach (var id in _cycleHeads)
-                {
-                    _nodes[id.Value].Reset();
-                }
             }
 
             public void RegisterEventNode()

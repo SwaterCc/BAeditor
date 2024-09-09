@@ -82,7 +82,7 @@ namespace Hono.Scripts.Battle
 
         public void Update()
         {
-            if (!AssetManager.Instance.IsLoadFinish && ConfigManager.Instance.IsLoadFinish)
+            if (!AssetManager.Instance.IsLoadFinish || !ConfigManager.Instance.IsLoadFinish)
             {
                 return;
             }

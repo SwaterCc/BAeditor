@@ -301,7 +301,7 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
         local isPass = true
         for idx, cid in pairs(damageFuncInfo.ConditionIds) do
             local params = damageFuncInfo.ConditionParams[idx]
-            local result = DamageModifierCheckFunc[cid.typeId](attacker, target, damageInfo, params)
+            local result = DamageModifierCheckFunc[cid](attacker, target, damageInfo, params)
 
             if not result then
                 isPass = false

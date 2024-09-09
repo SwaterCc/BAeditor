@@ -32,7 +32,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// Actor基础数据
         /// </summary>
-        public ActorPrototypeData PrototypeData { get; }
+        public ActorPrototypeTable.ActorPrototypeRow PrototypeData { get; }
 
         /// <summary>
         /// 表现层

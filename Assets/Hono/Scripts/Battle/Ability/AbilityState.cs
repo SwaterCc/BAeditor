@@ -99,7 +99,7 @@ namespace Hono.Scripts.Battle
                 {
                     Debug.LogError(e);
                     Stop();
-                    _hasError = true;
+                    //_hasError = true;
                 }
             }
 

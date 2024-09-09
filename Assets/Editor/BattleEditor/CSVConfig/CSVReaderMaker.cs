@@ -15,6 +15,7 @@ namespace Editor.BattleEditor.CSVConfig
         {
             CSVReaderMaker maker = new CSVReaderMaker();
             maker.GenConfigReaders();
+            Debug.Log("生成类完成");
         }
     }
     

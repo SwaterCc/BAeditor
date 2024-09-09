@@ -28,9 +28,9 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private readonly Dictionary<Type, AShowComponent> _components;
 
-        protected ActorShowData _showData;
+        protected ActorShowTable.ActorShowRow _showData;
         
-        protected ActorShow(int uid,ActorShowData data)
+        protected ActorShow(int uid,ActorShowTable.ActorShowRow data)
         {
             Uid = uid;
             _components = new Dictionary<Type, AShowComponent>();

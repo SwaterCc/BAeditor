@@ -25,7 +25,7 @@ namespace Hono.Scripts.Battle
 
     public class DamageFuncInfo
     {
-        public List<ConditionFuncType> ConditionIds = new List<ConditionFuncType>();
+        public List<int> ConditionIds = new List<int>();
         public List<List<int>> ConditionParams = new List<List<int>>();
 
         //[SerializeField,Tooltip("Apply数值的方法，可以在lua中自定义计算方法，通常保持默认即可")]

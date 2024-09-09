@@ -103,7 +103,7 @@ namespace Hono.Scripts.Battle
                     _clearTimer = false;
                 }
 
-                if (NextGroupId != -1 && CurProxy == null)
+                if (NextGroupId >= 0 && CurProxy == null)
                 {
                     CurProxy = _stageNodeProxies[NextGroupId];
                     CurProxy.GroupBegin();

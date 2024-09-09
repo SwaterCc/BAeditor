@@ -13,6 +13,11 @@ namespace Hono.Scripts.Battle
     /// </summary>
     public class ConfigManager : Singleton<ConfigManager>
     {
+	    public static T Table<T>() where T : class, ITableHelper {
+		    return Instance.GetTable<T>();
+	    }
+	    
+	    
         private Dictionary<Type, ITableHelper> _tables = new Dictionary<Type, ITableHelper>();
 
         public bool IsLoadFinish { get; private set; }
@@ -36,6 +41,7 @@ namespace Hono.Scripts.Battle
             IsLoadFinish = false;
             _tables.Clear();
             loadConfigs();
+            Debug.Log("ReloadTable Finish");
 #endif
         }
 
@@ -105,7 +111,7 @@ namespace Hono.Scripts.Battle
             Addressables.Release(sRow);
         }
 
-        public T GetTable<T>(int id) where T : class, ITableHelper
+        public T GetTable<T>() where T : class, ITableHelper
         {
             if (_tables.TryGetValue(typeof(T), out var table))
             {

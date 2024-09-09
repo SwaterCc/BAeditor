@@ -10,13 +10,6 @@ namespace Hono.Scripts.Battle
     [Serializable] 
     public class HitBoxData
     {
-        public int ID => Id;
-
-        /// <summary>
-        /// 打击点唯一ID
-        /// </summary>
-        public int Id;
-
         /// <summary>
         /// 伤害盒子类型
         /// </summary>

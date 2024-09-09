@@ -5,7 +5,7 @@ namespace Hono.Scripts.Battle {
 	/// <summary>
 	/// 这个Ability代表了运行时流程管理
 	/// </summary>
-	public partial class Ability : IVariablesBind,IReloadHandle {
+	public partial class Ability : IVariablesBind, IReloadHandle {
 		/// <summary>
 		/// Ability的上下文，存储当前在运行哪个Ability
 		/// </summary>
@@ -23,13 +23,13 @@ namespace Hono.Scripts.Battle {
 		/// 基础数据配置Id
 		/// </summary>
 		public int ConfigId { get; }
-		
+
 		/// <summary>
 		/// 该能力属于哪个Actor
 		/// </summary>
 		public int BelongActorId { get; }
 
-		
+
 		/// <summary>
 		/// 属于Ability的变量
 		/// </summary>
@@ -46,10 +46,10 @@ namespace Hono.Scripts.Battle {
 		/// 执行者
 		/// </summary>
 		private readonly AbilityExecutor _executor;
-		
+
 		//指令缓存
 		private readonly HashSet<ICommand> _commands;
-		
+
 		public Ability(int uid, int belongActorId, int abilityConfigId) {
 			Uid = uid;
 			BelongActorId = belongActorId;
@@ -75,16 +75,16 @@ namespace Hono.Scripts.Battle {
 
 			//清理变量
 			_variables.Clear();
-			
+
 			//指令撤销
 			foreach (var command in _commands) {
 				command.Undo();
 			}
-			
+
 			//重置error状态
 			_executor.Reset();
 			_state.Reset();
-			
+
 			//重新获取数据
 			_executor.Setup();
 		}
@@ -109,15 +109,15 @@ namespace Hono.Scripts.Battle {
 			_commands.Add(command);
 		}
 
-		public CycleCallback GetCycleCallback(EAbilityAllowEditCycle allowEditCycle)
-		{
+		public CycleCallback GetCycleCallback(EAbilityAllowEditCycle allowEditCycle) {
 			return _state.GetCycleCallback(allowEditCycle);
 		}
-		
+
 		public void OnDestroy() {
 			foreach (var command in _commands) {
 				command.Undo();
 			}
+
 			_state.OnDestroy();
 			_executor.OnDestroy();
 			AssetManager.Instance.RemoveReloadHandle(this);

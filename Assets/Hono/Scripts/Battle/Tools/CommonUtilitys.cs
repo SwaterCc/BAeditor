@@ -5,192 +5,175 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle.Tools
-{
-    public static class LayerMask
-    {
-        public static int ActorMask = 1;
-    }
+namespace Hono.Scripts.Battle.Tools {
+	public static class LayerMask {
+		public static int ActorMask = 1;
+	}
 
 
-    public static class CommonUtility
-    {
-        /// <summary>
-        /// 根据时间使用MD5进行哈希计算并返回一个32位整型值
-        /// </summary>
-        /// <returns></returns>
-        public static int GenerateTimeBasedHashId32()
-        {
-            // 获取当前时间，并转化为字符串格式
-            string currentTime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+	public static class CommonUtility {
+		/// <summary>
+		/// 根据时间使用MD5进行哈希计算并返回一个32位整型值
+		/// </summary>
+		/// <returns></returns>
+		public static int GenerateTimeBasedHashId32() {
+			// 获取当前时间，并转化为字符串格式
+			string currentTime = DateTime.Now.ToString("yyyyMMddHHmmssfff");
 
-            // 使用MD5进行哈希计算并返回一个32位整型值
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(currentTime);
-                byte[] hashBytes = md5.ComputeHash(bytes);
+			// 使用MD5进行哈希计算并返回一个32位整型值
+			using (MD5 md5 = MD5.Create()) {
+				byte[] bytes = Encoding.UTF8.GetBytes(currentTime);
+				byte[] hashBytes = md5.ComputeHash(bytes);
 
-                // 将前4个字节转换为32位整型值
-                int hashValue = BitConverter.ToInt32(hashBytes, 0);
-                hashValue = Math.Abs(hashValue);
-                return hashValue;
-            }
-        }
+				// 将前4个字节转换为32位整型值
+				int hashValue = BitConverter.ToInt32(hashBytes, 0);
+				hashValue = Math.Abs(hashValue);
+				return hashValue;
+			}
+		}
 
-        public class IdGenerator
-        {
-            private int currentId = 0;
+		public class IdGenerator {
+			private int currentId = 0;
 
-            /// <summary>
-            /// 生成新的ID。ID 会自增并且始终大于0。
-            /// </summary>
-            /// <returns>新的ID</returns>
-            public int GenerateId()
-            {
-                // 使用Interlocked.Increment确保线程安全
-                int newId = Interlocked.Increment(ref currentId);
+			/// <summary>
+			/// 生成新的ID。ID 会自增并且始终大于0。
+			/// </summary>
+			/// <returns>新的ID</returns>
+			public int GenerateId() {
+				// 使用Interlocked.Increment确保线程安全
+				int newId = Interlocked.Increment(ref currentId);
 
-                // 检查是否溢出（如果超出int.MaxValue，重置为1）
-                if (newId == int.MaxValue)
-                {
-                    Interlocked.Exchange(ref currentId, 0);
-                    newId = Interlocked.Increment(ref currentId);
-                }
+				// 检查是否溢出（如果超出int.MaxValue，重置为1）
+				if (newId == int.MaxValue) {
+					Interlocked.Exchange(ref currentId, 0);
+					newId = Interlocked.Increment(ref currentId);
+				}
 
-                return newId;
-            }
-        }
+				return newId;
+			}
+		}
 
-        /// <summary>
-        /// 获取Id生成器
-        /// </summary>
-        /// <returns></returns>
-        public static IdGenerator GetIdGenerator()
-        {
-            return new IdGenerator();
-        }
+		/// <summary>
+		/// 获取Id生成器
+		/// </summary>
+		/// <returns></returns>
+		public static IdGenerator GetIdGenerator() {
+			return new IdGenerator();
+		}
 
-        public static bool HitRayCast(CheckBoxData data, Vector3 selectCenterPos, Quaternion followAttackerRot,
-            out List<int> actorIds)
-        {
-            actorIds = null;
-            //获取中心坐标
-            //var offset = data.OffsetUsePercent ? vector3Sub(data.Scale, data.Offset) : data.Offset;
-            var finalRot = followAttackerRot * data.Rot;
-            var centerPos = selectCenterPos + finalRot * data.Offset;
+		public static bool HitRayCast(CheckBoxData data, Vector3 selectCenterPos, Quaternion followAttackerRot,
+			out List<int> actorIds) {
+			actorIds = null;
+			//获取中心坐标
+			//var offset = data.OffsetUsePercent ? vector3Sub(data.Scale, data.Offset) : data.Offset;
+			var finalRot = followAttackerRot * data.Rot;
+			var centerPos = selectCenterPos + finalRot * data.Offset;
 
-            //最大命中数量
-            List<RaycastHit> raycastHits = new List<RaycastHit>();
-            switch (data.ShapeType)
-            {
-                case ECheckBoxShapeType.Cube:
-                    var cubeData = (CheckBoxCube)data;
-                    var half = new Vector3(cubeData.Length, cubeData.Height, cubeData.Width);
-                    raycastHits.AddRange(Physics.BoxCastAll(centerPos, half, followAttackerRot * Vector3.forward,
-                        data.Rot, 0.001f));
-                    break;
-                case ECheckBoxShapeType.Sphere:
-                    var sphereData = (CheckBoxSphere)data;
-                    raycastHits.AddRange(Physics.SphereCastAll(centerPos, sphereData.Radius,
-                        followAttackerRot * Vector3.forward,
-                        0.001f));
-                    break;
-                case ECheckBoxShapeType.Cylinder:
-                    var cylinderData = (CheckBoxCylinder)data;
-                    raycastHits.AddRange(Physics.CapsuleCastAll(centerPos + Vector3.up * (cylinderData.Height / 2),
-                        centerPos + Vector3.down * (cylinderData.Height / 2),
-                        0.1f,
-                        followAttackerRot * Vector3.forward, 0.001f));
-                    break;
-                default:
-                    Debug.LogError("使用了未实现的检测");
-                    return false;
-            }
+			//最大命中数量
+			List<RaycastHit> raycastHits = new List<RaycastHit>();
+			switch (data.ShapeType) {
+				case ECheckBoxShapeType.Cube:
 
-            foreach (var raycastHit in raycastHits)
-            {
-                Debug.Log($"handle Name {raycastHit.collider.gameObject.name}");
-                if (!raycastHit.collider.TryGetComponent<ActorModelHandle>(out var handle))
-                {
-                    continue;
-                }
+					var cubeData = (CheckBoxCube)data;
+					var half = new Vector3(cubeData.Length, cubeData.Height, cubeData.Width);
+					raycastHits.AddRange(Physics.BoxCastAll(centerPos, half, followAttackerRot * Vector3.forward,
+						data.Rot, 0.001f));
+					GizmosHelper.Instance.DrawCube(centerPos, half, finalRot, Color.green);
+					break;
+				case ECheckBoxShapeType.Sphere:
+					var sphereData = (CheckBoxSphere)data;
+					raycastHits.AddRange(Physics.SphereCastAll(centerPos, sphereData.Radius,
+						followAttackerRot * Vector3.forward,
+						0.001f));
+					GizmosHelper.Instance.DrawSphere(centerPos, sphereData.Radius, finalRot, Color.green);
+					break;
+				case ECheckBoxShapeType.Cylinder:
+					var cylinderData = (CheckBoxCylinder)data;
+					raycastHits.AddRange(Physics.CapsuleCastAll(centerPos + Vector3.up * (cylinderData.Height / 2),
+						centerPos + Vector3.down * (cylinderData.Height / 2),
+						0.1f,
+						followAttackerRot * Vector3.forward, 0.001f));
+					GizmosHelper.Instance.DrawCube(centerPos,
+						new Vector3(cylinderData.Radius, cylinderData.Height, cylinderData.Radius), finalRot,
+						Color.green);
+					break;
+				default:
+					Debug.LogError("使用了未实现的检测");
+					return false;
+			}
 
-                actorIds ??= new List<int>();
-                actorIds.Add(handle.ActorUid);
-            }
+			foreach (var raycastHit in raycastHits) {
+				Debug.Log($"handle Name {raycastHit.collider.gameObject.name}");
+				if (!raycastHit.collider.TryGetComponent<ActorModelHandle>(out var handle)) {
+					continue;
+				}
 
-            return actorIds != null;
-        }
-    }
+				actorIds ??= new List<int>();
+				actorIds.Add(handle.ActorUid);
+			}
 
-    #region ParamExtension
+			return actorIds != null;
+		}
+	}
 
-    public static class ParamExtension
-    {
-        public static bool TryCallFunc(this Parameter[] @params, out object valueBox)
-        {
-            var queue = new Queue<Parameter>(@params);
-            if (@params[0].IsValueType && @params.Length == 1)
-            {
-                valueBox = @params[0].Value;
-                return true;
-            }
+	#region ParamExtension
 
-            return tryCallFunc(queue, out valueBox);
-        }
+	public static class ParamExtension {
+		public static bool TryCallFunc(this Parameter[] @params, out object valueBox) {
+			var queue = new Queue<Parameter>(@params);
+			if (@params[0].IsValueType && @params.Length == 1) {
+				valueBox = @params[0].Value;
+				return true;
+			}
 
-        private static bool tryCallFunc(this Queue<Parameter> queue, out object valueBox)
-        {
-            valueBox = null;
-            var func = queue.Dequeue();
-            if (func.IsFunc)
-            {
-                valueBox = queue.CallFunc(func);
-                return valueBox != null;
-            }
+			return tryCallFunc(queue, out valueBox);
+		}
 
-            Debug.LogError("队首不是函数");
-            return false;
-        }
+		private static bool tryCallFunc(this Queue<Parameter> queue, out object valueBox) {
+			valueBox = null;
+			var func = queue.Dequeue();
+			if (func.IsFunc) {
+				valueBox = queue.CallFunc(func);
+				return valueBox != null;
+			}
 
-        /// <summary>
-        /// 执行指定函数
-        /// </summary>
-        /// <param name="queue"></param>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public static object CallFunc(this Queue<Parameter> queue, Parameter func)
-        {
-            var funcInfo = AbilityFuncPreLoader.GetFuncInfo(func.FuncName);
+			Debug.LogError("队首不是函数");
+			return false;
+		}
 
-            if (funcInfo == null)
-            {
-                return null;
-            }
+		/// <summary>
+		/// 执行指定函数
+		/// </summary>
+		/// <param name="queue"></param>
+		/// <param name="func"></param>
+		/// <returns></returns>
+		public static object CallFunc(this Queue<Parameter> queue, Parameter func) {
+			var funcInfo = AbilityFuncPreLoader.GetFuncInfo(func.FuncName);
 
-            //TODO:有GC问题后续优化
-            object[] funcParams = new object[funcInfo.ParamCount];
+			if (funcInfo == null) {
+				return null;
+			}
 
-            for (int idx = 0; idx < funcInfo.ParamCount; idx++)
-            {
-                var param = queue.Dequeue();
+			//TODO:有GC问题后续优化
+			object[] funcParams = new object[funcInfo.ParamCount];
 
-                if (param.IsValueType)
-                {
-                    funcParams[idx] = param.Value;
-                }
+			for (int idx = 0; idx < funcInfo.ParamCount; idx++) {
+				var param = queue.Dequeue();
 
-                if (param.IsFunc)
-                {
-                    funcParams[idx] = CallFunc(queue, param);
-                }
-            }
+				if (param.IsValueType) {
+					funcParams[idx] = param.Value;
+				}
 
-            //TODO:有消耗
-            var res = funcInfo.Invoke(null, funcParams);
-            return res;
-        }
-    }
+				if (param.IsFunc) {
+					funcParams[idx] = CallFunc(queue, param);
+				}
+			}
 
-    #endregion
+			//TODO:有消耗
+			var res = funcInfo.Invoke(null, funcParams);
+			return res;
+		}
+	}
+
+	#endregion
 }

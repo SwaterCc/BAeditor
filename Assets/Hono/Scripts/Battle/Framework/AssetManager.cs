@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
-using Hono.Scripts.Battle.Tools;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using Object = UnityEngine.Object;
 
 namespace Hono.Scripts.Battle
 {
@@ -25,7 +22,7 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            _paths.Add(id, path);
+            _paths.TryAdd(id, path);
         }
 
         public bool TryGetPath(int id, out string path)
@@ -166,7 +163,7 @@ namespace Hono.Scripts.Battle
 
                 await UniTask.WhenAll(tasks);
 
-                int succeedCount = 0;
+                /*int succeedCount = 0;
                 foreach (var task in tasks)
                 {
                     if (task.Status == UniTaskStatus.Succeeded)
@@ -175,7 +172,7 @@ namespace Hono.Scripts.Battle
                     }
                 }
 
-                Debug.Log($"加载完成！加载数量 {succeedCount}");
+                Debug.Log($"加载完成！加载数量 {succeedCount}");*/
             }
             catch (Exception e)
             {
@@ -214,9 +211,9 @@ namespace Hono.Scripts.Battle
             _reloadHandles.Add(reloadHandle);
         }
 
-        public void CallReloadHandles()
-        {
-            foreach (var handle in _reloadHandles)
+        public void CallReloadHandles() {
+	        var reloadList = new List<IReloadHandle>(_reloadHandles);
+            foreach (var handle in reloadList)
             {
                 handle.Reload();
             }

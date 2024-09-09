@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle
         {
             public int Id => Data.ID;
             public SkillData Data;
-            public bool IsEnable => (!_isDisable) || (_curCdPercent <= 0 && _resEnough);
+            public bool IsEnable => (!_isDisable) && (_curCdPercent <= 0 && _resEnough);
 
             private int _level;
             private float _curCdPercent;
@@ -22,9 +22,9 @@ namespace Hono.Scripts.Battle
             private ActorLogic _logic;
             private FilterSetting _skillTargetSetting;
 
-            public Skill(ActorLogic logic, int skillId)
+            public Skill(ActorLogic logic, int skillId,int level)
             {
-                _level = 1;
+                _level = level;
                 _curCdPercent = 0;
                 _logic = logic;
                 Data = AssetManager.Instance.GetData<SkillData>(skillId);
@@ -96,10 +96,25 @@ namespace Hono.Scripts.Battle
             /// </summary>
             public void CdBegin()
             {
+	            Debug.Log("CDBegin");
                 calculateCd();
                 _curCdPercent = 1;
             }
 
+            public void SendFailedMsg() {
+	            if (_isDisable) {
+		            Debug.Log("被禁止使用");
+	            }
+	            
+	            if (!_resEnough) {
+		            Debug.Log("能量不足");
+	            }
+
+	            if (_curCdPercent <= 1) {
+		            Debug.Log("Cd中！");
+	            }
+            }
+            
             /// <summary>
             /// 减少cd
             /// </summary>
@@ -116,6 +131,11 @@ namespace Hono.Scripts.Battle
 
             private void resourceCheck()
             {
+	            if (Data.SkillResCheck.Count == 0) {
+		            _resEnough = true;
+		            return;
+	            }
+	            
                 foreach (var resItems in Data.SkillResCheck)
                 {
                     foreach (var resItem in resItems.Items)
@@ -245,11 +265,11 @@ namespace Hono.Scripts.Battle
 
             public override void Init()
             {
-                foreach (var skillId in _actorLogic.LogicData.ownerSkills)
-                {
-                    var skillCtrl = new Skill(_actorLogic, skillId);
-                    _skills.Add(skillId, skillCtrl);
-                }
+	            foreach (var skill in _actorLogic.LogicData.OwnerSkills)
+	            {
+		            var skillCtrl = new Skill(_actorLogic, skill[0],skill[1]);
+		            _skills.Add(skillCtrl.Id, skillCtrl);
+	            }
 
                 _eventChecker ??= new UseSkillChecker(_actorLogic.Uid);
                 BattleEventManager.Instance.Register(_eventChecker);
@@ -260,10 +280,10 @@ namespace Hono.Scripts.Battle
             {
                 clear();
 
-                foreach (var skillId in _actorLogic.LogicData.ownerSkills)
+                foreach (var skill in _actorLogic.LogicData.OwnerSkills)
                 {
-                    var skillCtrl = new Skill(_actorLogic, skillId);
-                    _skills.Add(skillId, skillCtrl);
+                    var skillCtrl = new Skill(_actorLogic, skill[0],skill[1]);
+                    _skills.Add(skillCtrl.Id, skillCtrl);
                 }
             }
 
@@ -308,6 +328,9 @@ namespace Hono.Scripts.Battle
                 {
                     _actorLogic._stateMachine.ChangeState(EActorState.Battle);
                     skillState.OnSkillUsed();
+                }
+                else {
+	                skillState.SendFailedMsg();
                 }
             }
         }

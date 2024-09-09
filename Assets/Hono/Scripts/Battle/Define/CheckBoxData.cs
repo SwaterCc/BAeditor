@@ -9,8 +9,9 @@ namespace Hono.Scripts.Battle
         public ECheckBoxShapeType ShapeType;
         public Quaternion Rot = Quaternion.identity;
         //是否应用百分比存储偏移
-        public bool OffsetUsePercent = true;
-        public Vector3 Offset = Vector3.one;
+        public bool OffsetUsePercent = false;
+        public Vector3 Offset = Vector3.zero;
+        public bool WhenAbilityEndRemove;
     }
 
 	[Serializable]
@@ -30,6 +31,10 @@ namespace Hono.Scripts.Battle
         /// 矩形高（Y）
         /// </summary>
         public float Height;
+
+        public CheckBoxCube() {
+	        ShapeType = ECheckBoxShapeType.Cube;
+        }
     }
 
     /// <summary>
@@ -39,6 +44,9 @@ namespace Hono.Scripts.Battle
     public class CheckBoxSphere : CheckBoxData
     {
         public float Radius;
+        public CheckBoxSphere() {
+	        ShapeType = ECheckBoxShapeType.Sphere;
+        }
     }
 
     /// <summary>
@@ -49,6 +57,9 @@ namespace Hono.Scripts.Battle
     {
         public float Radius;
         public float Height;
+        public CheckBoxCylinder() {
+	        ShapeType = ECheckBoxShapeType.Cylinder;
+        }
     }
 
     /// <summary>
@@ -60,5 +71,8 @@ namespace Hono.Scripts.Battle
         public float Radius;
         public float Height;
         public float Angle;
+        public CheckBoxSector() {
+	        ShapeType = ECheckBoxShapeType.Sector;
+        }
     }
 }

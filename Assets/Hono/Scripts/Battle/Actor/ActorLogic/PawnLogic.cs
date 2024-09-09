@@ -2,7 +2,7 @@
 {
     public class PawnLogic : ActorLogic
     {
-        public PawnLogic(int uid, ActorLogicData logicData) : base(uid, logicData) { }
+        public PawnLogic(int uid, ActorLogicTable.ActorLogicRow logicData) : base(uid, logicData) { }
 
         protected override void initAttrs()
         {

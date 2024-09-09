@@ -28,7 +28,7 @@ namespace Hono.Scripts.Battle
             }
         }
         
-        private bool _isAutoReload = false;
+        private bool _isAutoReload = true;
         public bool AutoReloadAsset => _isAutoReload;
         
         protected void Awake()
@@ -54,7 +54,7 @@ namespace Hono.Scripts.Battle
         private void OnGUI()
         {
             // 设置 GUI 元素的宽度和高度
-            float elementWidth = 100f;
+            float elementWidth = 140f;
             float elementHeight = 20f;
 
             // 开始水平布局
@@ -64,7 +64,7 @@ namespace Hono.Scripts.Battle
             _isAutoReload = GUILayout.Toggle(_isAutoReload, "启用Asset自动加载", GUILayout.Width(elementWidth), GUILayout.Height(elementHeight));
 
             // 绘制 Button 控件
-            if (GUILayout.Button("Reload All Table", GUILayout.Width(elementWidth), GUILayout.Height(elementHeight)))
+            if (GUILayout.Button("重新加载表", GUILayout.Width(elementWidth), GUILayout.Height(elementHeight)))
             {
                 ConfigManager.Instance.ReloadAll();
             }

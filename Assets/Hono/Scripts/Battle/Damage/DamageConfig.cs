@@ -7,8 +7,6 @@ namespace Hono.Scripts.Battle
 {
     public class DamageConfig
     {
-        public int Id;
-
         /// <summary>
         /// 加值类型
         /// </summary>

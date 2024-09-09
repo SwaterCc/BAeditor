@@ -12,7 +12,7 @@ namespace Editor.AbilityEditor.SimpleWindow
 {
     public class SerializableOdinWindow : OdinEditorWindow
     {
-        public static void Open(ref object serializableObject,Type type)
+        public static void Open(ref object serializableObject,Type type,string label = "创建序列化参数")
         {
             var window = GetWindow<SerializableOdinWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(450, 500);

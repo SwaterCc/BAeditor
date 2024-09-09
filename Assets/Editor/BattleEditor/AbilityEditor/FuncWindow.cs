@@ -212,6 +212,7 @@ namespace Editor.AbilityEditor
             if (GUILayout.Button("确认修改"))
             {
                 _funcHead.Save();
+                AbilityEditorHelper.SearchText = "";
                 Close();
             }
 

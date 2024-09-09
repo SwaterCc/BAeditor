@@ -30,7 +30,6 @@ namespace Hono.Scripts.Battle
                 var curPos = _actorLogic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
                 var curRot = Quaternion.FromToRotation(Vector3.forward, _actorLogic._inputHandle.MoveInputValue);
                 var offset = InputManager.Instance.InputDirection * (_baseSpeed * dt);
-                Debug.Log($"move Offset {offset}");
                 _actorLogic.SetAttr(ELogicAttr.AttrPosition, curPos + offset, false);
                 _actorLogic.SetAttr(ELogicAttr.AttrRot, curRot, false);
             }

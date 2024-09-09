@@ -9,7 +9,7 @@ namespace Hono.Scripts.Battle
 {
     public class TestShow : ActorShow
     {
-        public TestShow(int uid, ActorShowData data) : base(uid, data) { }
+        public TestShow(int uid, ActorShowTable.ActorShowRow data) : base(uid, data) { }
 
         protected override async UniTask loadModel()
         {

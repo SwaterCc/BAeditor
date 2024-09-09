@@ -21,18 +21,13 @@ Faction.InfoTable = {
 }
 
 Faction.GetFaction = function(id1, id2)
-    PrintDamageLog("1 " .. id1)
-    PrintDamageLog("2 " .. id2)
     if Faction.InfoTable[id1] == nil then
         return
     end
     
-    PrintDamageLog("3")
     for res, factionIds in pairs(Faction.InfoTable[id1]) do
-        PrintDamageLog("res " .. res)
         for _, faction in ipairs(factionIds) do
             if faction == id2 then
-                PrintDamageLog("4 " .. res)
                 return res
             end
         end
