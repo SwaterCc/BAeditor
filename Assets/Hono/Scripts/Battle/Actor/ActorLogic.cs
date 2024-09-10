@@ -3,257 +3,180 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle
-{
-    //逻辑层
-    public abstract partial class ActorLogic : ITick, IVariablesBind
-    {
-        /// <summary>
-        /// Actor的UID
-        /// </summary>
-        public int Uid;
+namespace Hono.Scripts.Battle {
+	/// <summary>
+	/// Actor的逻辑，包含逻辑层自身的逻辑和关联组件，状态机，最终决定出当前Actor逻辑层的属性
+	/// ActorLogic可被Actor外界影响
+	/// </summary>
+	public abstract partial class ActorLogic : ITick {
+		/// <summary>
+		/// Actor的UID
+		/// </summary>
+		public int Uid;
 
-        //逻辑层包含数据,逻辑流程
-        /// <summary>
-        /// 属性
-        /// </summary>
-        protected AttrCollection _attrs;
+		/// <summary>
+		/// Actor
+		/// </summary>
+		public Actor Actor { get; }
 
-        /// <summary>
-        /// 逻辑数据
-        /// </summary>
-        protected  ActorLogicTable.ActorLogicRow _logicData;
+		/// <summary>
+		/// 逻辑数据
+		/// </summary>
+		public ActorLogicTable.ActorLogicRow LogicData { get; private set; }
 
-        public  ActorLogicTable.ActorLogicRow LogicData => _logicData;
+		/// <summary>
+		/// 状态机
+		/// </summary>
+		protected ActorStateMachine _stateMachine;
 
-        /// <summary>
-        /// 变量
-        /// </summary>
-        protected Variables _variables;
+		/// <summary>
+		/// 逻辑组件
+		/// </summary>
+		private readonly Dictionary<Type, ALogicComponent> _components;
 
-        /// <summary>
-        /// 状态机
-        /// </summary>
-        protected ActorStateMachine _stateMachine;
+		/// <summary>
+		/// Actor的Ability控制器
+		/// </summary>
+		protected Actor.AbilityController _abilityController;
 
-        /// <summary>
-        /// Ability控制器
-        /// </summary>
-        protected AbilityController _abilityController;
+		/// <summary>
+		/// Actor的属性
+		/// </summary>
+		protected AttrCollection _attrs;
 
-        /// <summary>
-        /// tag
-        /// </summary>
-        protected Tags Tags;
+		/// <summary>
+		/// Actor的Tags
+		/// </summary>
+		protected Tags _tags;
 
-        /// <summary>
-        /// 逻辑组件
-        /// </summary>
-        private readonly Dictionary<Type, ALogicComponent> _components;
+		/// <summary>
+		/// Actor的黑板数据
+		/// </summary>
+		protected VarCollection _variables;
 
-        /// <summary>
-        /// logic可以单方向设置Show，但是需要通过中间层
-        /// </summary>
-        protected ActorRTState _rtState;
+		/// <summary>
+		/// 输入来源
+		/// </summary>
+		protected IInputHandle _inputHandle;
 
-        protected IInputHandle _inputHandle;
+		public ActorLogic(Actor actor, ActorLogicTable.ActorLogicRow logicData) {
+			Actor = actor;
+			Uid = actor.Uid;
+			LogicData = logicData;
+			_stateMachine = new ActorStateMachine(this);
+			_components = new Dictionary<Type, ALogicComponent>();
+		}
 
-        public ActorLogic(int uid,  ActorLogicTable.ActorLogicRow logicData)
-        {
-            Uid = uid;
-            _logicData = logicData;
-            _attrs = new AttrCollection(LogicAttrCreator.Create);
-            _abilityController = new AbilityController(this);
-            _variables = new Variables(16, this);
-            _stateMachine = new ActorStateMachine(this);
-            _components = new Dictionary<Type, ALogicComponent>();
-            Tags = new Tags();
-        }
+		public void Setup(Actor.AbilityController controller, AttrCollection attrs, Tags tags,
+			VarCollection varCollection) {
 
-        public void Init(ActorRTState rtState)
-        {
-            _rtState = rtState;
-            
-            onInit();
-            initAttrs();
-            onInputInit();
-            registerComponents();
-            foreach (var component in _components)
-            {
-                component.Value.Init();
-            }
+			_attrs = attrs;
+			_abilityController = controller;
+			_tags = tags;
+			_variables = varCollection;
+			
+			setupAttrs();
+		}
 
-            _stateMachine.Init();
-        }
+		public void Init() {
+			onInit();
+			onInputInit();
+			registerComponents();
+			registerChildComponents();
+			foreach (var component in _components) {
+				component.Value.Init();
+			}
 
-        protected abstract void initAttrs();
+			_stateMachine.Init();
+		}
 
-        protected abstract void onInit();
-        
-        protected virtual void onInputInit()
-        {
-            switch ((EActorLogicType)_logicData.LogicType)
-            {
-                case EActorLogicType.Pawn:
-                    _inputHandle = new PawnLeaderInput();
-                    break;
-                case EActorLogicType.Monster:
-                case EActorLogicType.Building:
-                case EActorLogicType.HitBox:
-                default:
-                    _inputHandle = new NoInput();
-                    break;
-            }
-        }
+		protected abstract void setupAttrs();
 
-        private void registerComponents()
-        {
-            registerChildComp();
-        }
+		protected abstract void onInit();
 
-        protected abstract void registerChildComp();
+		protected virtual void onInputInit() {
+			switch ((EActorLogicType)LogicData.LogicType) {
+				case EActorLogicType.Pawn:
+					_inputHandle = new PawnLeaderInput();
+					break;
+				case EActorLogicType.Monster:
+				case EActorLogicType.Building:
+				case EActorLogicType.HitBox:
+				default:
+					_inputHandle = new NoInput();
+					break;
+			}
+		}
+
+		private void registerComponents() { }
+
+		protected abstract void registerChildComponents();
+
+		protected void addComponent(ALogicComponent component) {
+			if (!_components.TryAdd(component.GetType(), component)) {
+				Debug.Log($"{this.GetType()}  添加组件 {component.GetType()} Failed!");
+			}
+		}
+
+		public T GetComponent<T>() where T : ALogicComponent {
+			if (!_components.TryGetValue(typeof(T), out var component)) {
+				Debug.Log($"{this.GetType()} 获取组件 {typeof(T)} 失败!");
+			}
+
+			return (T)component;
+		}
+
+		public bool TryGetComponent<T>(out T comp) where T : ALogicComponent {
+			comp = null;
+			if (_components.TryGetValue(typeof(T), out var component)) {
+				comp = (T)component;
+				return true;
+			}
+
+			return false;
+		}
+
+		protected virtual void onTick(float dt) { }
+
+		public void Tick(float dt) {
+			foreach (var component in _components) {
+				component.Value.Tick(dt);
+			}
+
+			_stateMachine.Tick(dt);
+
+			onTick(dt);
+		}
+
+		public void Destroy() {
+			onDestroy();
+
+			foreach (var component in _components) {
+				component.Value.UnInit();
+			}
+		}
+
+		protected virtual void onDestroy() { }
+
+		public EActorState CurState() {
+			return _stateMachine.Current.StateType;
+		}
 
 
-        protected void addComponent(ALogicComponent component)
-        {
-            if (!_components.TryAdd(component.GetType(), component))
-            {
-                Debug.Log($"{this.GetType()}  添加组件 {component.GetType()} Failed!");
-            }
-        }
+		public T GetAttr<T>(ELogicAttr logicAttr) {
+			return Actor.GetAttr<T>(logicAttr);
+		}
 
-        public T GetComponent<T>() where T : ALogicComponent
-        {
-            if (!_components.TryGetValue(typeof(T), out var component))
-            {
-                Debug.Log($"{this.GetType()} 获取组件 {typeof(T)} 失败!");
-            }
+		public object GetAttrBox(ELogicAttr logicAttr) {
+			return Actor.GetAttrBox(logicAttr);
+		}
 
-            return (T)component;
-        }
+		public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData) {
+			return Actor.SetAttr(logicAttr, value, isTempData);
+		}
 
-        public bool TryGetComponent<T>(out T comp) where T : ALogicComponent
-        {
-            comp = null;
-            if (_components.TryGetValue(typeof(T), out var component))
-            {
-                comp = (T)component;
-                return true;
-            }
-
-            return false;
-        }
-
-        protected virtual void onTick(float dt) { }
-
-        public void Tick(float dt)
-        {
-            foreach (var component in _components)
-            {
-                component.Value.Tick(dt);
-            }
-
-            _stateMachine.Tick(dt);
-            _abilityController.Tick(this, dt);
-
-            onTick(dt);
-        }
-
-        public void Destroy()
-        {
-            onDestroy();
-            
-            foreach (var component in _components)
-            {
-                component.Value.UnInit();
-            }
-        }
-
-        protected virtual void onDestroy() { }
-
-        public Variables GetVariables()
-        {
-            return _variables;
-        }
-
-        public T GetAttr<T>(ELogicAttr logicAttr)
-        {
-            return _attrs.GetAttr<T>(logicAttr.ToInt());
-        }
-
-        public object GetAttrBox(ELogicAttr logicAttr)
-        {
-            return _attrs.GetAttrBox(logicAttr.ToInt());
-        }
-
-        public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData)
-        {
-            return _attrs.SetAttr(logicAttr.ToInt(), value, isTempData);
-        }
-
-        public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData)
-        {
-            return _attrs.SetAttrBox(logicAttr.ToInt(), value, isTempData);
-        }
-
-        public void AwardAbility(int configId, bool isRunNow)
-        {
-            _abilityController.AwardAbility(configId, isRunNow);
-        }
-
-        public void AddTag(int tag)
-        {
-            Tags.Add(tag);
-        }
-
-        public bool HasTag(int tag)
-        {
-            return Tags.HasTag(tag);
-        }
-
-        public EActorState CurState()
-        {
-            return _stateMachine.Current.StateType;
-        }
-
-        public bool HasAttr(ELogicAttr attr)
-        {
-            return _attrs.HasAttr(attr.ToInt());
-        }
-
-        public bool HasAbility(int abilityConfigId)
-        {
-            return _abilityController.HasAbility(abilityConfigId);
-        }
-
-        #region LUA_Attr
-
-        public void ShowAbility() {
-            _abilityController.Show();
-        }
-		
-        public void ShowCurTags() {
-            Tags.Show();
-        }
-		
-        public int GetAttrLua(int attrType) {
-            return _attrs.GetAttr<int>(attrType);
-        }
-
-        public void SetAttrLua(int attrType,int value) {
-
-            _attrs.SetAttr<int>(attrType, value,false);
-        }
-
-        public void SetAttrLuaByType(ELogicAttr attrType,int value) {
-
-            _attrs.SetAttr<int>(attrType.ToInt(), value,false);
-        }
-
-        public int GetAttrLuaByType(ELogicAttr attrType) {
-            return _attrs.GetAttr<int>(attrType.ToInt());
-        }
-
-        #endregion
-    }
+		public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData) {
+			return Actor.SetAttrBox(logicAttr, value, isTempData);
+		}
+	}
 }

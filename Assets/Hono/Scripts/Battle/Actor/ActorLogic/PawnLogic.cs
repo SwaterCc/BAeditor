@@ -2,9 +2,9 @@
 {
     public class PawnLogic : ActorLogic
     {
-        public PawnLogic(int uid, ActorLogicTable.ActorLogicRow logicData) : base(uid, logicData) { }
+        public PawnLogic(Actor actor, ActorLogicTable.ActorLogicRow logicData) : base(actor, logicData) { }
 
-        protected override void initAttrs()
+        protected override void setupAttrs()
         {
             SetAttr<float>(ELogicAttr.AttrBaseSpeed, 10, false);
             SetAttr<int>(ELogicAttr.AttrAttack, 500, false);
@@ -13,7 +13,7 @@
 
         protected override void onInit() { }
 
-        protected override void registerChildComp()
+        protected override void registerChildComponents()
         {
             addComponent(new SkillComp(this));
             addComponent(new BuffComp(this));

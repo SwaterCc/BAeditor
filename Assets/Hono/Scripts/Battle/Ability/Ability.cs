@@ -5,7 +5,7 @@ namespace Hono.Scripts.Battle {
 	/// <summary>
 	/// 这个Ability代表了运行时流程管理
 	/// </summary>
-	public partial class Ability : IVariablesBind, IReloadHandle {
+	public sealed partial class Ability : IVarCollectionBind,IReloadHandle {
 		/// <summary>
 		/// Ability的上下文，存储当前在运行哪个Ability
 		/// </summary>
@@ -27,16 +27,8 @@ namespace Hono.Scripts.Battle {
 		/// <summary>
 		/// 该能力属于哪个Actor
 		/// </summary>
-		public int BelongActorId { get; }
-
-
-		/// <summary>
-		/// 属于Ability的变量
-		/// </summary>
-		private readonly Variables _variables;
-
-		public Variables GetVariables() => _variables;
-
+		public Actor Actor { get; }
+		
 		/// <summary>
 		/// 周期类
 		/// </summary>
@@ -47,19 +39,26 @@ namespace Hono.Scripts.Battle {
 		/// </summary>
 		private readonly AbilityExecutor _executor;
 
-		//指令缓存
+		/// <summary>
+		/// 指令缓存
+		/// </summary>
 		private readonly HashSet<ICommand> _commands;
-
-		public Ability(int uid, int belongActorId, int abilityConfigId) {
+		
+		/// <summary>
+		/// 属于Ability的变量
+		/// </summary>
+		public VarCollection Variables { get; }
+		
+		public Ability(int uid, Actor actor, int abilityConfigId) {
 			Uid = uid;
-			BelongActorId = belongActorId;
+			Actor = actor;
 			ConfigId = abilityConfigId;
-			_variables = new Variables(16, this);
+			Variables = new VarCollection(this,64);
 			_executor = new AbilityExecutor(this);
 			_state = new AbilityState(this);
 			_commands = new HashSet<ICommand>();
-			_executor.Setup();
 			AssetManager.Instance.AddReloadHandle(this);
+			_executor.Setup();
 		}
 
 		public void Execute() {
@@ -74,7 +73,7 @@ namespace Hono.Scripts.Battle {
 			_executor.UnInstall();
 
 			//清理变量
-			_variables.Clear();
+			Variables.Clear();
 
 			//指令撤销
 			foreach (var command in _commands) {

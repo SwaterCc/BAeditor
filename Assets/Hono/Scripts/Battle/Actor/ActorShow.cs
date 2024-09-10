@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Tools;
+using System.Collections.Generic;
 using System;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Hono.Scripts.Battle
 {
@@ -10,32 +10,47 @@ namespace Hono.Scripts.Battle
     public abstract partial class ActorShow
     {
         public int Uid { get; }
-        
-        /// <summary>
-        /// 属性
-        /// </summary>
-        protected AttrCollection _attrs;
+
+        public Actor Actor { get; }
 
         /// <summary>
         /// unity中对应的对象
         /// </summary>
-        public GameObject Model => _gameObject;
+        public GameObject Model { get; protected set; }
 
-        protected GameObject _gameObject;
-
+        /// <summary>
+        /// 表现数据
+        /// </summary>
+        public ActorShowTable.ActorShowRow ShowData { get; }
+        
         /// <summary>
         /// 表现组件
         /// </summary>
         private readonly Dictionary<Type, AShowComponent> _components;
 
-        protected ActorShowTable.ActorShowRow _showData;
-        
-        protected ActorShow(int uid,ActorShowTable.ActorShowRow data)
-        {
-            Uid = uid;
+        /// <summary>
+        /// 模型是否加值完成
+        /// </summary>
+        public bool IsModelLoadFinish { get; protected set; }
+
+        protected Tags _tags;
+
+        protected VarCollection _variables;
+
+        protected ActorRTState _rtState;
+
+        protected ActorShow(Actor actor,ActorShowTable.ActorShowRow data) {
+	        Actor = actor;
+            Uid = actor.Uid;
             _components = new Dictionary<Type, AShowComponent>();
-            _showData = data;
-            _attrs = new AttrCollection(ShowAttrCreator.Create);
+            ShowData = data;
+            IsModelLoadFinish = false;
+        }
+
+        public void Setup(Tags tags,VarCollection varCollection,ActorRTState rtState) {
+	        _tags = tags;
+	        _variables = varCollection;
+	        _rtState = rtState;
         }
         
         public async void Init()
@@ -44,11 +59,15 @@ namespace Hono.Scripts.Battle
             await loadModel();
             
             registerComponents();
+            registerChildComponents();
+            
             //对象加载完后再load组件
             foreach (var component in _components)
             {
                 component.Value.Init();
             }
+
+            IsModelLoadFinish = true;
         }
 
         protected abstract UniTask loadModel();
@@ -63,10 +82,10 @@ namespace Hono.Scripts.Battle
 
         private void registerComponents()
         {
-            registerChildComp();
+         
         }
 
-        protected virtual void registerChildComp() { }
+        protected virtual void registerChildComponents() { }
 
 
         protected void addComponent(AShowComponent component)
@@ -89,9 +108,9 @@ namespace Hono.Scripts.Battle
 
         public void Destroy()
         {
-            if (_gameObject != null)
+            if (Model != null)
             {
-                Object.Destroy(_gameObject);
+                GameObject.Destroy(Model);
             }
 
             foreach (var component in _components)

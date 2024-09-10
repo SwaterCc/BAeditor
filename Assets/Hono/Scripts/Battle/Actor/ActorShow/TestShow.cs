@@ -9,24 +9,24 @@ namespace Hono.Scripts.Battle
 {
     public class TestShow : ActorShow
     {
-        public TestShow(int uid, ActorShowTable.ActorShowRow data) : base(uid, data) { }
+        public TestShow(Actor actor, ActorShowTable.ActorShowRow data) : base(actor, data) { }
 
         protected override async UniTask loadModel()
         {
-            if (_showData == null || string.IsNullOrEmpty(_showData.ModelPath)) return;
+            if (ShowData == null || string.IsNullOrEmpty(ShowData.ModelPath)) return;
 
             try
             {
-                _gameObject = await Addressables.LoadAssetAsync<GameObject>(_showData.ModelPath).ToUniTask();
-                _gameObject = Object.Instantiate(_gameObject);
-                if (_gameObject.TryGetComponent<ActorModelHandle>(out var handle))
+                Model = await Addressables.LoadAssetAsync<GameObject>(ShowData.ModelPath).ToUniTask();
+                Model = Object.Instantiate(Model);
+                if (Model.TryGetComponent<ActorModelHandle>(out var handle))
                 {
                     handle.ActorUid = Uid;
                 }
             }
             catch (Exception e)
             {
-                Debug.LogError($"加载模型失败，路径{_showData.ModelPath}");
+                Debug.LogError($"加载模型失败，路径{ShowData.ModelPath}");
             }
         }
     }

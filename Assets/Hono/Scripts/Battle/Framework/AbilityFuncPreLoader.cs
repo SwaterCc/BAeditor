@@ -43,7 +43,7 @@ namespace Hono.Scripts.Battle
         public static void InitAbilityFuncCache()
         {
             CacheMethodInfos.Clear();
-            Type type = typeof(AbilityCacheFuncDefine);
+            Type type = typeof(AbilityFunction);
 
             MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
 

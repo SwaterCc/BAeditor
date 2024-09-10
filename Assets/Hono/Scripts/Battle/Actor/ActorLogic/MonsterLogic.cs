@@ -2,8 +2,8 @@ namespace Hono.Scripts.Battle
 {
     public class MonsterLogic : ActorLogic
     {
-        public MonsterLogic(int uid, ActorLogicTable.ActorLogicRow logicData) : base(uid, logicData) { }
-        protected override void initAttrs()
+        public MonsterLogic(Actor actor, ActorLogicTable.ActorLogicRow logicData) : base(actor, logicData) { }
+        protected override void setupAttrs()
         {
             SetAttr<int>(ELogicAttr.AttrFaction, 4, false);
         }
@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
             
         }
 
-        protected override void registerChildComp()
+        protected override void registerChildComponents()
         {
             addComponent(new BeHurtComp(this));
             addComponent(new BuffComp(this));

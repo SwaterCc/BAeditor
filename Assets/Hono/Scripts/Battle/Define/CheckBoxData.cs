@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using System;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -6,12 +7,18 @@ namespace Hono.Scripts.Battle
 	[Serializable]
     public abstract class CheckBoxData
     {
-        public ECheckBoxShapeType ShapeType;
-        public Quaternion Rot = Quaternion.identity;
+	    [ReadOnly]
+	    public ECheckBoxShapeType ShapeType { get; }
+        
+	    public Quaternion Rot = Quaternion.identity;
         //是否应用百分比存储偏移
         public bool OffsetUsePercent = false;
         public Vector3 Offset = Vector3.zero;
         public bool WhenAbilityEndRemove;
+
+        public CheckBoxData(ECheckBoxShapeType shapeType) {
+	        ShapeType = shapeType;
+        }
     }
 
 	[Serializable]
@@ -32,9 +39,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public float Height;
 
-        public CheckBoxCube() {
-	        ShapeType = ECheckBoxShapeType.Cube;
-        }
+        public CheckBoxCube(ECheckBoxShapeType shapeType) : base(shapeType) { }
     }
 
     /// <summary>
@@ -44,9 +49,7 @@ namespace Hono.Scripts.Battle
     public class CheckBoxSphere : CheckBoxData
     {
         public float Radius;
-        public CheckBoxSphere() {
-	        ShapeType = ECheckBoxShapeType.Sphere;
-        }
+        public CheckBoxSphere(ECheckBoxShapeType shapeType) : base(shapeType) { }
     }
 
     /// <summary>
@@ -57,9 +60,7 @@ namespace Hono.Scripts.Battle
     {
         public float Radius;
         public float Height;
-        public CheckBoxCylinder() {
-	        ShapeType = ECheckBoxShapeType.Cylinder;
-        }
+        public CheckBoxCylinder(ECheckBoxShapeType shapeType) : base(shapeType) { }
     }
 
     /// <summary>
@@ -71,8 +72,6 @@ namespace Hono.Scripts.Battle
         public float Radius;
         public float Height;
         public float Angle;
-        public CheckBoxSector() {
-	        ShapeType = ECheckBoxShapeType.Sector;
-        }
+        public CheckBoxSector(ECheckBoxShapeType shapeType) : base(shapeType) { }
     }
 }

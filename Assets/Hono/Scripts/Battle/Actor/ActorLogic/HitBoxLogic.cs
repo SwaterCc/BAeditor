@@ -20,11 +20,11 @@ namespace Hono.Scripts.Battle {
 
 		private readonly Dictionary<BeHurtComp, int> _hitCountDict = new();
 
-		public HitBoxLogic(int uid, ActorLogicTable.ActorLogicRow logicData) : base(uid, logicData) {
+		public HitBoxLogic(Actor actor, ActorLogicTable.ActorLogicRow logicData) : base(actor, logicData) {
 			_filterSetting = new FilterSetting();
 		}
 
-		protected override void initAttrs() {
+		protected override void setupAttrs() {
 			//设置坐标
 		}
 
@@ -32,7 +32,7 @@ namespace Hono.Scripts.Battle {
 			_sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
 			_sourceAbilityConfigId = GetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId);
 			_sourceAbilityType = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId).Type;
-			_hitBoxData = (HitBoxData)(_variables.GetVariable("hitBoxData"));
+			_hitBoxData = (HitBoxData)(_variables.Get("hitBoxData"));
 
 			var attacker =  ActorManager.Instance.GetActor(_sourceActorId);
 			var targetUid = attacker.Logic.GetAttr<int>(ELogicAttr.AttrAttackTargetUid);
@@ -77,7 +77,7 @@ namespace Hono.Scripts.Battle {
 			
 		}
 
-		protected override void registerChildComp() { }
+		protected override void registerChildComponents() { }
 
 		private void hitCounter(BeHurtComp beHurtComp) {
 			if (_hitCountDict.TryGetValue(beHurtComp, out var count)) {
@@ -132,7 +132,7 @@ namespace Hono.Scripts.Battle {
 
 		private void aoeHit(ActorLogic attacker, DamageInfo damageInfo) {
 			//aoe会根据目标坐标二次筛选
-			var targetIds = ActorManager.Instance.UseFilter(this, _filterSetting);
+			var targetIds = ActorManager.Instance.UseFilter(Actor, _filterSetting);
 
 			foreach (var targetUid in targetIds) {
 				var target = ActorManager.Instance.GetActor(targetUid);

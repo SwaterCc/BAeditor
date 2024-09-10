@@ -1,3 +1,4 @@
+using Hono.Scripts.Battle.Tools;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,13 +37,13 @@ namespace Hono.Scripts.Battle
             
             public Ability Ability => _ability;
             public AbilityState State => _ability._state;
-            
-            private AbilityData _abilityData;
-            public AbilityData AbilityData => _abilityData;
+            public AbilityData AbilityData { get; private set; }
+            public VarCollection Variables { get; private set; }
             
             public AbilityExecutor(Ability ability)
             {
                 _ability = ability;
+                Variables = ability.Variables;
                 _nodes = new Dictionary<int, AbilityNode>();
                 _cycleHeads = new Dictionary<EAbilityAllowEditCycle, int>();
                 _eventNodes = new List<AbilityEventNode>();
@@ -55,14 +56,15 @@ namespace Hono.Scripts.Battle
             /// </summary>
             public void Setup()
             {
-                if (!AssetManager.Instance.TryGetData(_ability.ConfigId, out _abilityData))
+                if (!AssetManager.Instance.TryGetData<AbilityData>(_ability.ConfigId, out var abilityData))
                 {
                     _hasError = true;
                     Debug.LogError($"Ability {_ability.ConfigId} SetupFailed,this Ability Can not Running");
                     return;
                 }
+                AbilityData = abilityData;
                 
-                var nodeDict = _abilityData.NodeDict;
+                var nodeDict = AbilityData.NodeDict;
                 if (nodeDict is { Count: > 0 })
                 {
                     //数据转化为实际逻辑节点
@@ -86,7 +88,7 @@ namespace Hono.Scripts.Battle
                             var executing = (ExecutingCycle)State.GetState(EAbilityState.Executing);
                             var stageNode = (AbilityGroupNode)node;
                             executing.AddStageProxy(stageNode);
-                            executing.NextGroupId = _abilityData.DefaultStartGroupId;
+                            executing.NextGroupId = AbilityData.DefaultStartGroupId;
                         }
                     }
                 }
@@ -233,30 +235,6 @@ namespace Hono.Scripts.Battle
                     Debug.Log($"{allowEditCycle} is empty！");
                 }
             }
-
-            #region AbilityVariable包装
-
-            public void CreateVariable(string name, IValueBox valueBox)
-            {
-                _ability.GetVariables().Add(name, valueBox);
-            }
-
-            public object GetVariable(string name)
-            {
-                return _ability.GetVariables().GetVariable(name);
-            }
-
-            public ValueBox<T> GetVariable<T>(string name)
-            {
-                return _ability.GetVariables().GetVariable(name) as ValueBox<T>;
-            }
-
-            public void DeleteVariable(string name)
-            {
-                _ability.GetVariables().Remove(name);
-            }
-
-            #endregion
         }
     }
 }

@@ -39,9 +39,8 @@ namespace Hono.Scripts.Battle
                     else
                     {
                         _skillTargetSetting = new FilterSetting();
-                        var boxData = new CheckBoxSphere();
+                        var boxData = new CheckBoxSphere(ECheckBoxShapeType.Sphere);
                         boxData.Radius = Data.SkillRange;
-                        boxData.ShapeType = ECheckBoxShapeType.Sphere;
                         _skillTargetSetting.BoxData = boxData;
                         _skillTargetSetting.OpenBoxCheck = true;
                         var range = new FilterRange()
@@ -194,14 +193,14 @@ namespace Hono.Scripts.Battle
                 //选敌
                 if (Data.SkillTargetType != ESkillTargetType.Self)
                 {
-                    var targetList = ActorManager.Instance.UseFilter(_logic, _skillTargetSetting);
+                    var targetList = ActorManager.Instance.UseFilter(_logic.Actor, _skillTargetSetting);
                     float minDistance = Data.SkillRange;
                     var selfPos = _logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
 
                     foreach (var uid in targetList)
                     {
                         var target = ActorManager.Instance.GetActor(uid);
-                        var targetPos = target.Logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+                        var targetPos = target.GetAttr<Vector3>(ELogicAttr.AttrPosition);
                         var newMinDis = Vector3.Distance(selfPos, targetPos);
                         if (newMinDis < minDistance)
                         {
@@ -265,13 +264,13 @@ namespace Hono.Scripts.Battle
 
             public override void Init()
             {
-	            foreach (var skill in _actorLogic.LogicData.OwnerSkills)
+	            foreach (var skill in ActorLogic.LogicData.OwnerSkills)
 	            {
-		            var skillCtrl = new Skill(_actorLogic, skill[0],skill[1]);
+		            var skillCtrl = new Skill(ActorLogic, skill[0],skill[1]);
 		            _skills.Add(skillCtrl.Id, skillCtrl);
 	            }
 
-                _eventChecker ??= new UseSkillChecker(_actorLogic.Uid);
+                _eventChecker ??= new UseSkillChecker(ActorLogic.Uid);
                 BattleEventManager.Instance.Register(_eventChecker);
                 AssetManager.Instance.AddReloadHandle(this);
             }
@@ -280,9 +279,9 @@ namespace Hono.Scripts.Battle
             {
                 clear();
 
-                foreach (var skill in _actorLogic.LogicData.OwnerSkills)
+                foreach (var skill in ActorLogic.LogicData.OwnerSkills)
                 {
-                    var skillCtrl = new Skill(_actorLogic, skill[0],skill[1]);
+                    var skillCtrl = new Skill(ActorLogic, skill[0],skill[1]);
                     _skills.Add(skillCtrl.Id, skillCtrl);
                 }
             }
@@ -326,7 +325,7 @@ namespace Hono.Scripts.Battle
 
                 if (skillState.IsEnable)
                 {
-                    _actorLogic._stateMachine.ChangeState(EActorState.Battle);
+	                ActorLogic._stateMachine.ChangeState(EActorState.Battle);
                     skillState.OnSkillUsed();
                 }
                 else {

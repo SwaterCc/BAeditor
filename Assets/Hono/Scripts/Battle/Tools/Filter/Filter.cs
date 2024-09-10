@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle
     {
         private Filter _filter;
 
-        public List<int> UseFilter(ActorLogic target, FilterSetting setting)
+        public List<int> UseFilter(Actor target, FilterSetting setting)
         {
             if (setting == null)
             {
@@ -25,7 +25,7 @@ namespace Hono.Scripts.Battle
         private class Filter
         {
             private FilterSetting _filterSetting;
-            private ActorLogic _filterUser;
+            private Actor _filterUser;
             private readonly ActorManager _actorManager;
 
             internal Filter(ActorManager actorManager)
@@ -33,25 +33,25 @@ namespace Hono.Scripts.Battle
                 _actorManager = actorManager;
             }
 
-            public void SettingChange(ActorLogic filterUser, FilterSetting setting)
+            public void SettingChange(Actor filterUser, FilterSetting setting)
             {
                 _filterSetting = setting;
                 _filterUser = filterUser;
             }
 
-            private bool rangeCheck(ActorLogic logic, FilterRange range)
+            private bool rangeCheck(Actor actor, FilterRange range)
             {
                 switch (range.RangeType)
                 {
                     case EFilterRangeType.Tag:
-                        return logic.HasTag(range.Value);
+                        return actor.HasTag(range.Value);
                     case EFilterRangeType.ActorState:
-                        return logic.CurState() == (EActorState)range.Value;
+                        return actor.Logic.CurState() == (EActorState)range.Value;
                     case EFilterRangeType.AbilityID:
-                        return logic.HasAbility(range.Value);
+                        return actor.HasAbility(range.Value);
                     case EFilterRangeType.Faction :
                         var f1 = _filterUser.GetAttr<int>(ELogicAttr.AttrFaction);
-                        var f2 = logic.GetAttr<int>(ELogicAttr.AttrFaction);
+                        var f2 = actor.GetAttr<int>(ELogicAttr.AttrFaction);
                         return LuaInterface.GetFaction(f1, f2) == range.Value;
                 }
 
@@ -113,7 +113,7 @@ namespace Hono.Scripts.Battle
                     bool pass = true;
                     foreach (var range in _filterSetting.Ranges)
                     {
-                        if (!rangeCheck(actor.Logic, range))
+                        if (!rangeCheck(actor, range))
                         {
                             pass = false;
                             break;

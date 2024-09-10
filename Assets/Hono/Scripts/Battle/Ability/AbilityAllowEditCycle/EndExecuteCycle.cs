@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
 
             protected override void onExit()
             {
-                _ability._variables.Clear();
+                _ability.Variables.Clear();
 			
                 //指令撤销
                 foreach (var command in _ability._commands) {

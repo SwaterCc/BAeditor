@@ -25,16 +25,15 @@ namespace Hono.Scripts.Battle
 
                 if (_executor.HeadNodeHasChildren(_headNode))
                 {
-                    _ability._variables.Add(_executor.AbilityData.PreCheckerVarName, false);
-
+                    _ability.Variables.Set(_executor.AbilityData.PreCheckerVarName, false);
                     _executor.ExecuteCycleNode(_headNode);
                     
                     _state.GetCycleCallback(_headNode).OnEnter?.Invoke();
                     _state.GetCycleCallback(_headNode).OnTick?.Invoke();
                     _state.GetCycleCallback(_headNode).OnExit?.Invoke();
                     //TODO:性能问题
-                    checkRes = (bool)_ability._variables.GetVariable(_executor.AbilityData.PreCheckerVarName);
-                    _ability._variables.Remove(_executor.AbilityData.PreCheckerVarName);
+                    checkRes = (bool)_ability.Variables.Get(_executor.AbilityData.PreCheckerVarName);
+                    _ability.Variables.Delete(_executor.AbilityData.PreCheckerVarName);
                 }
 
                 return checkRes;

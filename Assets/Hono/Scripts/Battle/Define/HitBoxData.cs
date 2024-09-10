@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 打击点最大检测次数
         /// </summary>
+        [Tooltip("打击点最大检测次数")]
         public int MaxCount = 1;
 
         /// <summary>
@@ -29,11 +31,13 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 第一次触发时间
         /// </summary>
+        [Tooltip("第一次触发时间")]
         public float FirstInterval;
         
         /// <summary>
         /// 打击点检测间隔
         /// </summary>
+        [Tooltip("打击点检测间隔")]
         public float Interval;
         
         /// <summary>
@@ -41,16 +45,35 @@ namespace Hono.Scripts.Battle
         /// </summary>
         [Tooltip("单次打击造成几次伤害")]
         public int OnceHitDamageCount = 1;
-
+        
+        [OnValueChanged("OnEnumChanged")]
+	    public ECheckBoxShapeType ShapeType;
+        
+	    /// <summary>
+	    /// 伤害数据
+	    /// </summary>
+	    public int DamageConfigId;
+	    
         /// <summary>
         /// Aoe打击点AABB盒子数据
         /// </summary>
         [OdinSerialize]
         public CheckBoxData AoeData;
-
-        /// <summary>
-        /// 伤害数据
-        /// </summary>
-        public int DamageConfigId;
+        
+        private void OnEnumChanged()
+        {
+	        switch (ShapeType) {
+		        case ECheckBoxShapeType.Cube:
+			        AoeData = new CheckBoxCube(ShapeType);
+			        break;
+		        case ECheckBoxShapeType.Sphere:
+			        AoeData = new CheckBoxSphere(ShapeType);
+			        break;
+		        case ECheckBoxShapeType.Cylinder:
+		        case ECheckBoxShapeType.Sector:
+			        AoeData = new CheckBoxCylinder(ShapeType);
+			        break;
+	        }
+        }
     }
 }

@@ -56,7 +56,7 @@ namespace Hono.Scripts.Battle
         public void Refresh()
         {
             FuncDict.Clear();
-            Type type = typeof(AbilityCacheFuncDefine);
+            Type type = typeof(AbilityFunction);
             
             MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
 

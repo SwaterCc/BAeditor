@@ -22,14 +22,7 @@ namespace Hono.Scripts.Battle
             {
                 if (_varData.VarParams.TryCallFunc(out var variableBox))
                 {
-                    if (_varData.OperationType == EVariableOperationType.Create)
-                    {
-                        AbilityCacheFuncDefine.CreateVariable(_varData.Range, _varData.Name, variableBox);
-                    }
-                    else
-                    {
-                        AbilityCacheFuncDefine.ChangeVariable(_varData.Range, _varData.Name,variableBox);
-                    }
+	                AbilityFunction.SetVariable(_varData.Range, _varData.Name, variableBox);
                 }
                 else
                 {

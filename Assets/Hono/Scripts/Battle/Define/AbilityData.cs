@@ -101,7 +101,7 @@ namespace Hono.Scripts.Battle
         
         public VariableNodeData VariableNodeData;
         
-        [FormerlySerializedAs("CycleNodeData")] public EAbilityAllowEditCycle allowEditCycleNodeData;
+	    public EAbilityAllowEditCycle allowEditCycleNodeData;
         
         public TimerNodeData TimerNodeData;
         
@@ -124,7 +124,7 @@ namespace Hono.Scripts.Battle
             return Parent == -1;
         }
     }
-
+    
     [Serializable]
     public class BranchNodeData
     {
@@ -139,6 +139,7 @@ namespace Hono.Scripts.Battle
     {
         public EBattleEventType EventType;
         public Parameter[] CreateCheckerFunc;
+        public string CaptureVarName;
     }
 
     [Serializable]

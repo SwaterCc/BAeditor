@@ -6,6 +6,16 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
+	public interface ITick
+	{
+		public void Tick(float dt);
+	}
+
+	public static class BattleSetting {
+		public const int BattleModePrototypeId = 4;
+		public const int DefaultHitBoxPrototypeId = 3;
+	}
+	
     public class BattleRoot : MonoBehaviour
     {
         public List<ActorRefreshPoint> RefreshPoints = new List<ActorRefreshPoint>();
@@ -13,6 +23,8 @@ namespace Hono.Scripts.Battle
         private static BattleRoot _instance;
         private bool _isFirstUpdate;
         private bool _allLoadFinish;
+        private Actor _battleMode;
+        public static Actor BattleMode => Instance._battleMode;
 
         public static BattleRoot Instance
         {
@@ -54,6 +66,7 @@ namespace Hono.Scripts.Battle
             LuaInterface.Init();
             //反射缓存
             AbilityFuncPreLoader.InitAbilityFuncCache();
+            
             init();
         }
 
@@ -67,8 +80,8 @@ namespace Hono.Scripts.Battle
             ActorManager.Instance.Init();
         }
 
-        private void firstUpdate()
-        {
+        private void firstUpdate() {
+	        _battleMode = ActorManager.Instance.CreateActor(BattleSetting.BattleModePrototypeId);
             foreach (var point in RefreshPoints)
             {
                 //if (point.PointType == EPointType.Player)
@@ -90,6 +103,7 @@ namespace Hono.Scripts.Battle
             if (_isFirstUpdate)
                 firstUpdate();
 
+            _battleMode.Tick(Time.deltaTime);
             //临时做法
             //保证逻辑帧在表现帧之前执行一次
             Tick(Time.deltaTime);

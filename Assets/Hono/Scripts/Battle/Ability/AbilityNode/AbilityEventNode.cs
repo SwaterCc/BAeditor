@@ -26,13 +26,14 @@ namespace Hono.Scripts.Battle
 
             private void onEventFired(IEventInfo eventInfo)
             {
-                var actor = ActorManager.Instance.GetActor(_executor.Ability.BelongActorId);
-                if (actor != null)
-                {
-                    _context.UpdateContext((actor.Logic, _executor.Ability));
-                    _executor.ExecuteNode(NodeData.ChildrenIds[0]);
-                    _context.ClearContext();
-                }
+	            _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
+	            if (!string.IsNullOrEmpty(NodeData.EventNodeData.CaptureVarName)) {
+		            _executor.Ability.Variables.Set(NodeData.EventNodeData.CaptureVarName, eventInfo);
+	            }
+                   
+	            _executor.ExecuteNode(NodeData.ChildrenIds[0]);
+	            _executor.Ability.Variables.Delete(NodeData.EventNodeData.CaptureVarName);
+	            _context.ClearContext();
             }
 
             public override void DoJob() { }

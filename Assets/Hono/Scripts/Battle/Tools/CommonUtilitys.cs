@@ -73,7 +73,6 @@ namespace Hono.Scripts.Battle.Tools {
 			List<RaycastHit> raycastHits = new List<RaycastHit>();
 			switch (data.ShapeType) {
 				case ECheckBoxShapeType.Cube:
-
 					var cubeData = (CheckBoxCube)data;
 					var half = new Vector3(cubeData.Length, cubeData.Height, cubeData.Width);
 					raycastHits.AddRange(Physics.BoxCastAll(centerPos, half, followAttackerRot * Vector3.forward,

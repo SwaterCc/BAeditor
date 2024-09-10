@@ -16,8 +16,8 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private readonly Dictionary<int, Actor> _uidActorDict = new();
 
-        private readonly List<Actor> _removeList = new();
-        private readonly List<Actor> _addCaches = new();
+        private readonly List<Actor> _removeList = new(16);
+        private readonly List<Actor> _addCaches = new(16);
 
         private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 
@@ -28,23 +28,23 @@ namespace Hono.Scripts.Battle
 
         public Actor CreateActor(int actorPrototypeId)
         {
-            var actorData = ConfigManager.Instance.GetTable<ActorPrototypeTable>().Get(actorPrototypeId);
-            
+            var actorData = ConfigManager.Table<ActorPrototypeTable>().Get(actorPrototypeId);
             var actor = new Actor(_idGenerator.GenerateId());
+            
             ActorLogic logic = null;
-            var logicData =  ConfigManager.Instance.GetTable<ActorLogicTable>().Get(actorData.LogicConfigId);
+            var logicData =  ConfigManager.Table<ActorLogicTable>().Get(actorData.LogicConfigId);
             switch ((EActorLogicType)logicData.LogicType)
             {
                 case EActorLogicType.Pawn:
-                    logic = new PawnLogic(actor.Uid, logicData);
+                    logic = new PawnLogic(actor, logicData);
                     break;
                 case EActorLogicType.Monster:
-                    logic = new MonsterLogic(actor.Uid, logicData);
+                    logic = new MonsterLogic(actor, logicData);
                     break;
                 case EActorLogicType.Building:
                     break;
                 case EActorLogicType.HitBox:
-                    logic = new HitBoxLogic(actor.Uid, logicData);
+                    logic = new HitBoxLogic(actor, logicData);
                     break;
             }
 
@@ -55,16 +55,16 @@ namespace Hono.Scripts.Battle
                 switch ((EActorShowType)showData.ShowType)
                 {
                     case EActorShowType.LogicTest:
-                        show = new TestShow(actor.Uid, showData);
+                        show = new TestShow(actor, showData);
                         break;
                     case EActorShowType.Pawn:
-                        show = new TestShow(actor.Uid, showData);
+                        show = new TestShow(actor, showData);
                         break;
                     case EActorShowType.Monster:
-                        show = new TestShow(actor.Uid, showData);
+                        show = new TestShow(actor, showData);
                         break;
                     case EActorShowType.Building:
-                        show = new TestShow(actor.Uid, showData);
+                        show = new TestShow(actor, showData);
                         break;
                 }
             }
@@ -72,7 +72,7 @@ namespace Hono.Scripts.Battle
             actor.Setup(show, logic);
             return actor;
         }
-
+        
         public void Tick(float dt)
         {
             if (_addCaches.Count != 0)

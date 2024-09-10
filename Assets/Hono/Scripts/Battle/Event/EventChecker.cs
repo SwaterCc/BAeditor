@@ -116,11 +116,6 @@ namespace Hono.Scripts.Battle.Event
     public class HitEventChecker : EventChecker
     {
         /// <summary>
-        /// 打击点ID
-        /// </summary>
-        private int _hitConfigId;
-
-        /// <summary>
         /// 属于的Actor
         /// </summary>
         private int _belongActorId;
@@ -130,12 +125,11 @@ namespace Hono.Scripts.Battle.Event
         /// </summary>
         private int _sourceAbility;
 
-        public HitEventChecker(Action<IEventInfo> func = null, int hitConfigId = -1, int belongActorId = -1,
+        public HitEventChecker(Action<IEventInfo> func = null, int belongActorId = -1,
             int sourceAbility = -1) :
             base(func)
         {
             EventType = EBattleEventType.Hit;
-            _hitConfigId = hitConfigId;
             _belongActorId = belongActorId;
             _sourceAbility = sourceAbility;
         }
@@ -144,14 +138,10 @@ namespace Hono.Scripts.Battle.Event
         {
             var res = true;
             var hitInfo = (HitEventInfo)info;
-            if (_hitConfigId != -1)
-            {
-                res = (res && hitInfo.HitConfigId == _hitConfigId);
-            }
 
             if (_sourceAbility != -1)
             {
-                res = (res && hitInfo.AbilityUId == _sourceAbility);
+                res = hitInfo.AbilityUId == _sourceAbility;
             }
 
             if (_belongActorId != -1)

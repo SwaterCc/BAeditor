@@ -4,9 +4,11 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle {
 	public class AttrCollection {
+		private Actor _actor;
 		private readonly Func<int, IAttr> _creator;
 
-		public AttrCollection(Func<int, IAttr> creator) {
+		public AttrCollection(Actor actor, Func<int, IAttr> creator) {
+			_actor = actor;
 			_creator = creator;
 		}
 
@@ -22,8 +24,7 @@ namespace Hono.Scripts.Battle {
 			return attr;
 		}
 
-		public bool HasAttr(int attrType)
-		{
+		public bool HasAttr(int attrType) {
 			return _attrs.ContainsKey(attrType);
 		}
 
@@ -41,7 +42,7 @@ namespace Hono.Scripts.Battle {
 			else {
 				Debug.LogError($"attrType {attrType} 没有{typeof(T)}类型的实现！");
 			}
-			
+
 			return null;
 		}
 
@@ -63,6 +64,7 @@ namespace Hono.Scripts.Battle {
 				attr = getAttrAndSetDefault(attrType);
 				_attrs.Add(attrType, attr);
 			}
+
 			return attr.GetBox();
 		}
 
@@ -71,7 +73,7 @@ namespace Hono.Scripts.Battle {
 				attr = getAttrAndSetDefault(attrType);
 				_attrs.Add(attrType, attr);
 			}
-			
+
 			if (attr is Attr<T> typedAttr) {
 				return typedAttr.Get();
 			}
@@ -80,8 +82,8 @@ namespace Hono.Scripts.Battle {
 			return default;
 		}
 	}
-	
-	
+
+
 	public static class AttrEnumExtensions {
 		public static int ToInt(this ELogicAttr logicAttr) {
 			return (int)logicAttr;

@@ -2,95 +2,79 @@ using Hono.Scripts.Battle.Tools;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle
-{
-    public class AbilityController
-    {
-        private readonly Dictionary<int, Ability> _abilities = new();
+namespace Hono.Scripts.Battle {
+	public partial class Actor {
+		public class AbilityController {
+			private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
+			private readonly Dictionary<int, Ability> _abilities = new();
 
-        private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
+			private Actor _actor;
+			private ActorLogic _logic;
 
-        private ActorLogic _logic;
-        public AbilityController(ActorLogic logic)
-        {
-            _logic = logic;
-        }
-        
-        public bool HasAbility(int configId) {
-	        foreach (var ability in _abilities) {
-		        if (ability.Value.ConfigId == configId)
-			        return true;
-	        }
+			public AbilityController(Actor actor) {
+				_actor = actor;
+				_logic = actor.Logic;
+			}
 
-	        return false;
-        }
+			public bool HasAbility(int configId) {
+				foreach (var ability in _abilities) {
+					if (ability.Value.ConfigId == configId)
+						return true;
+				}
 
-        public void Show() {
-	        foreach (var ability in _abilities) {
-		       Debug.Log($"ability UID{ability.Key} ,ConfigId {ability.Value.ConfigId}");
-	        }
-        }
+				return false;
+			}
 
-        public Ability CreateAbility(int configId)
-        {
-            var ability = new Ability(_idGenerator.GenerateId(), _logic.Uid, configId);
-            return ability;
-        }
+			public Ability CreateAbility(int configId) {
+				var ability = new Ability(_idGenerator.GenerateId(), _actor, configId);
+				return ability;
+			}
 
-        public void AwardAbility(Ability ability, bool isRunNow)
-        {
-            if (_abilities.TryAdd(ability.Uid, ability))
-            {
-                if (isRunNow) ability.Execute();
-            }
-        }
-        
-        /// <summary>
-        /// 赋予能力
-        /// </summary>
-        /// <param name="actorId"></param>
-        /// <param name="configId"></param>
-        /// <param name="isRunNow"></param>
-        public int AwardAbility(int configId, bool isRunNow)
-        {
-            var ability = new Ability(_idGenerator.GenerateId(),_logic.Uid , configId);
-            if (_abilities.TryAdd(ability.Uid, ability))
-            {
-                if (isRunNow) ability.Execute();
-            }
+			public void AwardAbility(Ability ability, bool isRunNow) {
+				if (_abilities.TryAdd(ability.Uid, ability)) {
+					if (isRunNow) ability.Execute();
+				}
+			}
 
-            return ability.Uid;
-        }
+			/// <summary>
+			/// 赋予能力
+			/// </summary>
+			/// <param name="actorId"></param>
+			/// <param name="configId"></param>
+			/// <param name="isRunNow"></param>
+			public int AwardAbility(int configId, bool isRunNow) {
+				var ability = new Ability(_idGenerator.GenerateId(), _actor, configId);
+				if (_abilities.TryAdd(ability.Uid, ability)) {
+					if (isRunNow) ability.Execute();
+				}
 
-        /// <summary>
-        /// 执行指定能力，会从资源检测开始，未Init的会主动调用一次Init
-        /// </summary>
-        public void ExecutingAbility(int uid)
-        {
-            if (_abilities.TryGetValue(uid, out var ability))
-            {
-                ability.Execute();
-            }
-        }
+				return ability.Uid;
+			}
 
-        public void RemoveAbility(int uid)
-        {
-            if (_abilities.TryGetValue(uid, out var ability))
-            {
-                ability.OnDestroy();
-                _abilities.Remove(uid);
-            }
-        }
+			/// <summary>
+			/// 执行指定能力，会从资源检测开始，未Init的会主动调用一次Init
+			/// </summary>
+			public void ExecutingAbility(int uid) {
+				if (_abilities.TryGetValue(uid, out var ability)) {
+					ability.Execute();
+				}
+			}
 
-        public void Tick(ActorLogic actorLogic, float dt)
-        {
-            foreach (var abilityPair in _abilities)
-            {
-                var ability = abilityPair.Value;
-                Ability.Context.UpdateContext((actorLogic, ability));
-                ability.OnTick(dt);
-                Ability.Context.ClearContext();
-            }
-        }
-    }
+			public void RemoveAbility(int uid) {
+				if (_abilities.TryGetValue(uid, out var ability)) {
+					ability.OnDestroy();
+					_abilities.Remove(uid);
+				}
+			}
+
+			public void Tick(float dt) {
+				foreach (var abilityPair in _abilities) {
+					var ability = abilityPair.Value;
+					Ability.Context.UpdateContext((_actor, ability));
+					ability.OnTick(dt);
+					Ability.Context.ClearContext();
+				}
+			}
+		}
+	}
 }
