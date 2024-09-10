@@ -15,7 +15,7 @@ namespace Hono.Scripts.Battle {
 	public class Attr<T> : IAttr, ICommandCollection {
 		private T _value;
 		private LinkedList<ICommand> _commands;
-		private Func<T, T, T> _onCommandChanged;
+		private readonly Func<T, T, T> _onCommandChanged;
 
 		public Attr(Func<T, T, T> onCommandChanged) {
 			_onCommandChanged = onCommandChanged;
@@ -46,7 +46,7 @@ namespace Hono.Scripts.Battle {
 		}
 
 		public ICommand Set(T value, bool isTempData = false) {
-			if (isTempData) {
+			if (isTempData || _onCommandChanged == null) {
 				return new AttrCommand<T>(this, value);
 			}
 			_value = value;

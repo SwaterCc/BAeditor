@@ -17,14 +17,15 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            if (NodeData.ActionNodeData == null || NodeData.ActionNodeData.Length == 0)
+            if (_actionFunc == null || NodeData.ActionNodeData == null || NodeData.ActionNodeData.Length == 0 || string.IsNullOrEmpty(NodeData.ActionNodeData[0].FuncName))
                 return "未初始化";
             
-            string text = string.IsNullOrEmpty(NodeData.ActionNodeData[0].FuncName)
-                ? "未初始化"
-                : NodeData.ActionNodeData[0].FuncName;
-            
-            return text;
+            return _actionFunc.ToString();
+        }
+
+        protected override string getItemEffectInfo()
+        {
+            return "执行无返回值的函数调用";
         }
 
         protected override void OnBtnClicked()

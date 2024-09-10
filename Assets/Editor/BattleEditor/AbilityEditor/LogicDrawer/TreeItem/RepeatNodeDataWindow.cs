@@ -27,21 +27,13 @@ namespace Editor.AbilityEditor.TreeItem
         
         protected override void onInit()
         {
-            RepeatOperationType = NodeData.RepeatNodeData.RepeatOperationType;
             MaxRepeatCount = NodeData.RepeatNodeData.MaxRepeatCount;
-            StartValue = NodeData.RepeatNodeData.StartValue;
-            StepValue = NodeData.RepeatNodeData.StepValue;
-            StepCount = NodeData.RepeatNodeData.StepCount;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            NodeData.RepeatNodeData.RepeatOperationType = RepeatOperationType;
             NodeData.RepeatNodeData.MaxRepeatCount = MaxRepeatCount;
-            NodeData.RepeatNodeData.StartValue = StartValue;
-            NodeData.RepeatNodeData.StepValue = StepValue;
-            NodeData.RepeatNodeData.StepCount = StepCount;
         }
     }
 }

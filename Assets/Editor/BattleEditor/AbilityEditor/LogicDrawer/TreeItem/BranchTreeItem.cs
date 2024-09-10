@@ -16,6 +16,7 @@ namespace Editor.AbilityEditor.TreeItem
         {
             return Color.cyan;
         }
+        
 
         protected override string getButtonText()
         {
@@ -24,6 +25,11 @@ namespace Editor.AbilityEditor.TreeItem
                 : NodeData.BranchNodeData.Desc;
             
             return label;
+        }
+
+        protected override string getItemEffectInfo()
+        {
+            return "执行if判定，如果判定成功则执行子节点内容，判定失败则走同级的下一节点";
         }
 
         protected override void OnBtnClicked()

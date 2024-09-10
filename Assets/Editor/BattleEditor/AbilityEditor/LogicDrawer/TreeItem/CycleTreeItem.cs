@@ -21,6 +21,11 @@ namespace Editor.AbilityEditor.TreeItem
             return NodeData.allowEditCycleNodeData.ToString();
         }
 
+        protected override string getItemEffectInfo()
+        {
+            return "周期根节点，仅做展示";
+        }
+
         protected override void OnBtnClicked() { }
     }
 }

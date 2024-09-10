@@ -22,5 +22,6 @@ namespace Hono.Scripts.Battle
         public int SkillDamageBasePer; //基础倍率，万分比
         public bool UseCustomFilter;
         public FilterSetting CustomFilter;
+        public int MaxTargetCount = 1;//目标选择最大数量
     }
 }

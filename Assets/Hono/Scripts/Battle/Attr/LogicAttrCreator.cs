@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -11,7 +12,6 @@ namespace Hono.Scripts.Battle
                 case ELogicAttr.AttrUid:
                 case ELogicAttr.AttrSourceActorUid:
                 case ELogicAttr.AttrSourceAbilityConfigId:
-                case ELogicAttr.AttrAttackTargetUid:
                 case ELogicAttr.AttrFaction:
                     return new Attr<int>((a, b) => a + b);
                 case ELogicAttr.AttrBaseSpeed:
@@ -22,7 +22,11 @@ namespace Hono.Scripts.Battle
                     return new Attr<Quaternion>((a, b) => b * a);
                 case ELogicAttr.SourceAbilityType:
                     return new Attr<EAbilityType>(null);
+                case ELogicAttr.AttrAttackTargetUid:
+                    return new Attr<List<int>>(null);
+
                 #region 数值数据
+
                 case ELogicAttr.AttrEntityLevel:
                 case ELogicAttr.AttrHp:
                 case ELogicAttr.AttrHpPer:

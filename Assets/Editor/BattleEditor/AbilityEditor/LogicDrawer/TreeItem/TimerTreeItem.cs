@@ -20,8 +20,12 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return
-                $"Timer First:{NodeData.TimerNodeData.FirstInterval}s,Interval:{NodeData.TimerNodeData.Interval}s,Count:{NodeData.TimerNodeData.MaxCount}";
+            return NodeData.VariableNodeData.Desc;
+        }
+
+        protected override string getItemEffectInfo()
+        {
+            throw new System.NotImplementedException();
         }
 
         protected override void OnBtnClicked()

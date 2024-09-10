@@ -25,6 +25,11 @@ namespace Editor.AbilityEditor.TreeItem
             return NodeData.EventNodeData.EventType.ToString();
         }
 
+        protected override string getItemEffectInfo()
+        {
+            return "监听指定事件回调，与执行顺序无关";
+        }
+
         protected override void OnBtnClicked()
         {
             EventNodeDataWindow.Open(NodeData);

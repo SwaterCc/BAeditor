@@ -35,7 +35,7 @@ namespace Hono.Scripts.Battle {
 			_hitBoxData = (HitBoxData)(_variables.Get("hitBoxData"));
 
 			var attacker =  ActorManager.Instance.GetActor(_sourceActorId);
-			var targetUid = attacker.Logic.GetAttr<int>(ELogicAttr.AttrAttackTargetUid);
+			var targetUid = (int)(_variables.Get("targetUid"));
 			var target = ActorManager.Instance.GetActor(targetUid);
 			var pos = target.Logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
 			SetAttr(ELogicAttr.AttrPosition, pos, false);

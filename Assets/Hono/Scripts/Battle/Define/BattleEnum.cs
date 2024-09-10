@@ -384,4 +384,12 @@ namespace Hono.Scripts.Battle
         Stiff,
         Death
     }
+    
+    public enum ECalculateType
+    {
+        Add,
+        Subtract,
+        Multiply,
+        Divide,
+    }
 }

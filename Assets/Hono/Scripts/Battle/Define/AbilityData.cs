@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using Sirenix.OdinInspector;
@@ -123,6 +125,17 @@ namespace Hono.Scripts.Battle
         {
             return Parent == -1;
         }
+        
+        public AbilityNodeData DeepCopy()
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, this);
+                ms.Position = 0;
+                return (AbilityNodeData)formatter.Deserialize(ms);
+            }
+        }
     }
     
     [Serializable]
@@ -140,6 +153,7 @@ namespace Hono.Scripts.Battle
         public EBattleEventType EventType;
         public Parameter[] CreateCheckerFunc;
         public string CaptureVarName;
+        public string Desc;
     }
 
     [Serializable]
@@ -162,21 +176,14 @@ namespace Hono.Scripts.Battle
         public Parameter[] FirstInterval;
         public Parameter[] Interval;
         public Parameter[] MaxCount;
+        public string Desc = "定时器";
     }
 
     [Serializable]
     public class RepeatNodeData
     {
-        public ERepeatOperationType RepeatOperationType;
-
         public int MaxRepeatCount;
-
-        public float StartValue;
-        public float StepValue;
-        public int StepCount;
-
-        public bool IsCaptureVar;
-        public string CaptureVarName;
+        public string Desc;
     }
 
     [Serializable]
@@ -184,7 +191,10 @@ namespace Hono.Scripts.Battle
     {
         public EVariableOperationType OperationType;
         public EVariableRange Range;
+        public int ActorUid;
+        public int AbilityUid;
         public string Name;
         public Parameter[] VarParams;
+        public string Desc;
     }
 }

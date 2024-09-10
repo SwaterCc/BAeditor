@@ -1,4 +1,5 @@
 
+using System.Linq;
 using Hono.Scripts.Battle;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -19,8 +20,17 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            string a = NodeData.VariableNodeData.OperationType == EVariableOperationType.Create ? "创建变量：" : "修改变量";
-            return a + NodeData.VariableNodeData.Name;
+            if (string.IsNullOrEmpty(NodeData.VariableNodeData.Desc))
+            {
+                return $"调用并Set变量 {NodeData.VariableNodeData.Name} = {NodeData.VariableNodeData.VarParams.ToArray()}";
+            }
+
+            return NodeData.VariableNodeData.Desc;
+        }
+
+        protected override string getItemEffectInfo()
+        {
+            return "调用有返回值的Action";
         }
 
         protected override void OnBtnClicked()

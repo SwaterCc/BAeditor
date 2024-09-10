@@ -18,11 +18,13 @@ namespace Editor.AbilityEditor.TreeItem
         protected override string getButtonText()
         {
             var rData = NodeData.RepeatNodeData;
-            string a = rData.RepeatOperationType == ERepeatOperationType.OnlyRepeat
-                ? $"循环次数{rData.MaxRepeatCount}"
-                : $"for step = {rData.StartValue} ; count = {rData.StepCount} ; step + {rData.StepValue}";
+            
+            return "";
+        }
 
-            return a;
+        protected override string getItemEffectInfo()
+        {
+            return "循环节点，循环指定次数";
         }
 
         protected override void OnBtnClicked()

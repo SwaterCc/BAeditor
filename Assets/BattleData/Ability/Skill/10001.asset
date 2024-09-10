@@ -1106,12 +1106,15 @@ MonoBehaviour:
     - Name: OnceHitDamageCount
       Entry: 3
       Data: 1
-    - Name: AoeData
-      Entry: 7
-      Data: 33|Hono.Scripts.Battle.CheckBoxCube, Assembly-CSharp
     - Name: ShapeType
       Entry: 3
-      Data: 0
+      Data: 1
+    - Name: DamageConfigId
+      Entry: 3
+      Data: 1
+    - Name: AoeData
+      Entry: 7
+      Data: 33|Hono.Scripts.Battle.CheckBoxSphere, Assembly-CSharp
     - Name: Rot
       Entry: 7
       Data: UnityEngine.Quaternion, UnityEngine.CoreModule
@@ -1151,21 +1154,12 @@ MonoBehaviour:
     - Name: WhenAbilityEndRemove
       Entry: 5
       Data: false
-    - Name: Length
+    - Name: Radius
       Entry: 4
-      Data: 4
-    - Name: Width
-      Entry: 4
-      Data: 4
-    - Name: Height
-      Entry: 4
-      Data: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
-    - Name: DamageConfigId
-      Entry: 3
-      Data: 1
     - Name: 
       Entry: 8
       Data: 

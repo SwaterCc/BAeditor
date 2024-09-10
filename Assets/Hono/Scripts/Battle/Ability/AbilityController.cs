@@ -8,12 +8,10 @@ namespace Hono.Scripts.Battle {
 			private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 			private readonly Dictionary<int, Ability> _abilities = new();
 
-			private Actor _actor;
-			private ActorLogic _logic;
+			private readonly Actor _actor;
 
 			public AbilityController(Actor actor) {
 				_actor = actor;
-				_logic = actor.Logic;
 			}
 
 			public bool HasAbility(int configId) {
@@ -23,6 +21,11 @@ namespace Hono.Scripts.Battle {
 				}
 
 				return false;
+			}
+
+			public bool TryGetAbility(int uid,out Ability ability)
+			{
+				return _abilities.TryGetValue(uid, out ability);
 			}
 
 			public Ability CreateAbility(int configId) {

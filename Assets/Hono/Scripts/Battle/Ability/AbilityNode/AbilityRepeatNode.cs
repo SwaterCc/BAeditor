@@ -2,7 +2,6 @@ namespace Hono.Scripts.Battle {
 	public partial class Ability {
 		private class AbilityRepeatNode : AbilityNode {
 			private RepeatNodeData _repeatNodeData;
-			private const string LOOP_VALUE = "LOOP_VALUE";
 			private int _curLoopCount = 0;
 			private float _curValue = 0;
 
@@ -17,51 +16,21 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public void Repeat() {
-				switch (_repeatNodeData.RepeatOperationType) {
-					case ERepeatOperationType.OnlyRepeat:
-						_executor.Variables.Set(LOOP_VALUE, _curLoopCount);
-						++_curLoopCount;
-						break;
-					case ERepeatOperationType.NumberLoop:
-						++_curLoopCount;
-						_curValue += _repeatNodeData.StepValue;
-						_executor.Variables.Set(LOOP_VALUE, _curValue);
-						break;
-				}
-
+				++_curLoopCount;
 				_executor.RemovePass(ConfigId);
 				resetChildren();
 			}
 
 			public bool CheckLoopEnd() {
-				switch (_repeatNodeData.RepeatOperationType) {
-					case ERepeatOperationType.OnlyRepeat:
-						if (_curLoopCount < _repeatNodeData.MaxRepeatCount) {
-							return true;
-						}
-
-						break;
-					case ERepeatOperationType.NumberLoop:
-						if (_curLoopCount++ < _repeatNodeData.StepCount) {
-							return true;
-						}
-
-						break;
+				if (_curLoopCount < _repeatNodeData.MaxRepeatCount) {
+					return true;
 				}
 
 				return false;
 			}
 
 			public override void DoJob() {
-				switch (_repeatNodeData.RepeatOperationType) {
-					case ERepeatOperationType.OnlyRepeat:
-						_executor.Variables.Set(LOOP_VALUE, _curLoopCount);
-
-						break;
-					case ERepeatOperationType.NumberLoop:
-						_executor.Variables.Set(LOOP_VALUE, _repeatNodeData.StartValue);
-						break;
-				}
+				
 			}
 
 			public override int GetNextNode() {

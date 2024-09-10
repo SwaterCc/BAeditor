@@ -30,6 +30,28 @@ namespace Editor.AbilityEditor
             }
         }
 
+        public override string ToString()
+        {
+            if (Self.IsValueType)
+            {
+                return $"{Self.ParamName}:{Self.Value}";
+            }
+
+            if (Self.IsFunc)
+            {
+                string func = $"func:{Self.FuncName}(";
+                foreach (var parameter in FuncParams)
+                {
+                    func = func + parameter + ",";
+                }
+
+                func += ")";
+                return func;
+            }
+
+            return "????";
+        }
+        
         public void CreateFuncParam(string funcName)
         {
             Self = new Parameter();

@@ -24,6 +24,11 @@ namespace Editor.AbilityEditor
             return null;
         }
 
+        protected override string getItemEffectInfo()
+        {
+            return "";
+        }
+
         protected override void OnBtnClicked() { }
     }
 
@@ -182,6 +187,10 @@ namespace Editor.AbilityEditor
                 var parent = _data.NodeDict[select.NodeData.Parent];
                 parent.ChildrenIds.Remove(select.NodeData.NodeId);
                 select.NodeData.RemoveSelf(_data);
+                if(select.SettingWindow != null)
+                {
+                    select.SettingWindow.Close();
+                }
                 EditorUtility.SetDirty(_data);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();

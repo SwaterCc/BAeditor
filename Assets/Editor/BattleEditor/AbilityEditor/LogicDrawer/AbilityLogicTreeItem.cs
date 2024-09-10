@@ -1,4 +1,6 @@
-﻿using Hono.Scripts.Battle;
+﻿using System;
+using System.Collections.Generic;
+using Hono.Scripts.Battle;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -13,6 +15,8 @@ namespace Editor.AbilityEditor
         public AbilityNodeData NodeData;
 
         public bool ShowFlag = true;
+
+        public EditorWindow SettingWindow;
         
         protected AbilityLogicTreeItem(int id, int depth, string name) : base(id, depth, name) { }
 
@@ -24,6 +28,8 @@ namespace Editor.AbilityEditor
         protected abstract Color getButtonColor();
 
         protected abstract string getButtonText();
+
+        protected abstract string getItemEffectInfo();
 
         protected virtual float getButtonWidth()
         {
@@ -37,7 +43,7 @@ namespace Editor.AbilityEditor
             var bgColor = GUI.backgroundColor;
             GUI.backgroundColor = getButtonColor();
             lineRect.width = getButtonWidth();
-            if (GUI.Button(lineRect, getButtonText()))
+            if (GUI.Button(lineRect, new GUIContent(getButtonText(),getItemEffectInfo())))
             {
                 if (Event.current.button == 0)
                 {
@@ -83,7 +89,7 @@ namespace Editor.AbilityEditor
         }
 
         public AbilityNodeData NodeData;
-
+        public Stack<EditorWindow> WindowStack = new Stack<EditorWindow>();
         public void Init(AbilityNodeData nodeData)
         {
             NodeData = nodeData;
@@ -100,6 +106,15 @@ namespace Editor.AbilityEditor
         public virtual GUIContent GetWindowName()
         {
             return this.titleContent;
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var window in WindowStack)
+            {
+                window.Close();
+            }
+            WindowStack.Clear();
         }
     }
     

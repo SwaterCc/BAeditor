@@ -35,3 +35,4 @@ MonoBehaviour:
     - AttrType: 0
       CompareResType: 0
       CompareValue: 0
+  MaxTargetCount: 1

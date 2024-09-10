@@ -18,7 +18,7 @@ namespace Editor.AbilityEditor
         {
             var window = CreateInstance<FuncWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
-            var maker = (ParameterMaker)node;
+            var maker = new ParameterMaker();
             maker.ChangeToDefaultFunc(EFuncCacheFlag.Variable);
             window.init((ParameterMaker)node, EFuncCacheFlag.Variable);
             window.Show();
@@ -32,15 +32,14 @@ namespace Editor.AbilityEditor
             window.Show();
         }
 
+        #region 函数缓存
+
         public struct FuncInfo
         {
             public string FuncName;
             public int ParamCount;
             public List<string> ParamNames;
         }
-
-        private ParameterMaker _funcHead;
-        private EFuncCacheFlag _flag;
 
         private static Dictionary<EFuncCacheFlag, List<FuncInfo>> _flagMethodCache =
             new Dictionary<EFuncCacheFlag, List<FuncInfo>>()
@@ -81,25 +80,10 @@ namespace Editor.AbilityEditor
             }
         }
 
-        private FuncList _funcTree;
-
-        private void init(ParameterMaker maker, EFuncCacheFlag flag)
-        {
-            if (_methodCache.Count == 0)
-            {
-                initFuncCache();
-            }
-
-            _funcHead = maker;
-
-            _flag = flag;
-            _funcTree = new FuncList(new TreeViewState(), _funcHead, _flagMethodCache[_flag]);
-        }
-
         private static void initFuncCache()
         {
             // 获取 MyStaticClass 类型信息
-            Type type = typeof(AbilityCacheFuncDefine);
+            Type type = typeof(AbilityFunction);
 
             MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
 
@@ -155,7 +139,29 @@ namespace Editor.AbilityEditor
 
             _flagMethodCacheInit = true;
         }
+        #endregion
 
+        private ParameterMaker _origin;
+        private ParameterMaker _funcHead;
+        private EFuncCacheFlag _flag;
+        
+        private FuncList _funcTree;
+
+        private void init(ParameterMaker maker, EFuncCacheFlag flag)
+        {
+            if (_methodCache.Count == 0)
+            {
+                initFuncCache();
+            }
+
+            _origin = maker;
+            _funcHead = new ParameterMaker();
+            ParameterMaker.Init(_funcHead,_funcHead.ToArray());
+
+            _flag = flag;
+            _funcTree = new FuncList(new TreeViewState(), _funcHead, _flagMethodCache[_flag]);
+        }
+        
         private void OnGUI()
         {
             EditorGUILayout.BeginVertical();
@@ -211,7 +217,7 @@ namespace Editor.AbilityEditor
 
             if (GUILayout.Button("确认修改"))
             {
-                _funcHead.Save();
+                _origin = _funcHead;
                 AbilityEditorHelper.SearchText = "";
                 Close();
             }

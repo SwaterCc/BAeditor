@@ -22,7 +22,8 @@ namespace Hono.Scripts.Battle
             {
                 if (_varData.VarParams.TryCallFunc(out var variableBox))
                 {
-	                AbilityFunction.SetVariable(_varData.Range, _varData.Name, variableBox);
+                    AbilityFunction.SetVariableByUid(_varData.Range, _varData.ActorUid, _varData.AbilityUid,
+                        _varData.Name, variableBox);
                 }
                 else
                 {
