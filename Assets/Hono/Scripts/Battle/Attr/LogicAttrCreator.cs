@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
                     return new Attr<Quaternion>((a, b) => b * a);
                 case ELogicAttr.SourceAbilityType:
                     return new Attr<EAbilityType>(null);
-                case ELogicAttr.AttrAttackTargetUid:
+                case ELogicAttr.AttrAttackTargetUids:
                     return new Attr<List<int>>(null);
 
                 #region 数值数据

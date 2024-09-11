@@ -159,6 +159,11 @@ namespace Hono.Scripts.Battle
             _abilityController.ExecutingAbility(uid);
         }
 
+        public void ExecuteAbilityByConfigId(int config)
+        {
+            _abilityController.ExecutingAbilityByConfig(config);
+        }
+
         public bool TryGetAbility(int uid,out Ability ability)
         {
             return _abilityController.TryGetAbility(uid, out ability);

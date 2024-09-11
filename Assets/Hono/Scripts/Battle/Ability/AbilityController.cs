@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle {
 		public class AbilityController {
 			private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 			private readonly Dictionary<int, Ability> _abilities = new();
-
+			private readonly Dictionary<int, Dictionary<int,Ability>>_configDict = new();
 			private readonly Actor _actor;
 
 			public AbilityController(Actor actor) {
@@ -60,6 +60,16 @@ namespace Hono.Scripts.Battle {
 			public void ExecutingAbility(int uid) {
 				if (_abilities.TryGetValue(uid, out var ability)) {
 					ability.Execute();
+				}
+			}
+			
+			public void ExecutingAbilityByConfig(int configId) {
+				foreach (var pair in _abilities)
+				{
+					if (pair.Value.ConfigId == configId)
+					{
+						pair.Value.Execute();
+					}
 				}
 			}
 

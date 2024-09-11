@@ -12,7 +12,7 @@ namespace Hono.Scripts.Battle
         AttrRot,
         AttrPosition,
         AttrBaseSpeed,
-        AttrAttackTargetUid,
+        AttrAttackTargetUids,
         AttrMoveTargetUid,
         AttrFaction, 
         //HP

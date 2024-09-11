@@ -91,7 +91,7 @@ namespace Hono.Scripts.Battle {
 		}
 
 		private void singleHit(ActorLogic attacker, DamageInfo damageInfo) {
-			var targetId = attacker.GetAttr<int>(ELogicAttr.AttrAttackTargetUid);
+			var targetId = attacker.GetAttr<int>(ELogicAttr.AttrAttackTargetUids);
 			var target = ActorManager.Instance.GetActor(targetId);
 			if (target == null) return;
 			if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;

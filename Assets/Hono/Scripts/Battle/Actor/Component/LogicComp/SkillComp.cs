@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
             private ActorLogic _logic;
             private FilterSetting _skillTargetSetting;
 
-            public Skill(ActorLogic logic, int skillId,int level)
+            public Skill(ActorLogic logic, int skillId, int level)
             {
                 _level = level;
                 _curCdPercent = 0;
@@ -95,25 +95,29 @@ namespace Hono.Scripts.Battle
             /// </summary>
             public void CdBegin()
             {
-	            Debug.Log("CDBegin");
+                Debug.Log("CDBegin");
                 calculateCd();
                 _curCdPercent = 1;
             }
 
-            public void SendFailedMsg() {
-	            if (_isDisable) {
-		            Debug.Log("被禁止使用");
-	            }
-	            
-	            if (!_resEnough) {
-		            Debug.Log("能量不足");
-	            }
+            public void SendFailedMsg()
+            {
+                if (_isDisable)
+                {
+                    Debug.Log("被禁止使用");
+                }
 
-	            if (_curCdPercent <= 1) {
-		            Debug.Log("Cd中！");
-	            }
+                if (!_resEnough)
+                {
+                    Debug.Log("能量不足");
+                }
+
+                if (_curCdPercent <= 1)
+                {
+                    Debug.Log("Cd中！");
+                }
             }
-            
+
             /// <summary>
             /// 减少cd
             /// </summary>
@@ -130,11 +134,12 @@ namespace Hono.Scripts.Battle
 
             private void resourceCheck()
             {
-	            if (Data.SkillResCheck.Count == 0) {
-		            _resEnough = true;
-		            return;
-	            }
-	            
+                if (Data.SkillResCheck.Count == 0)
+                {
+                    _resEnough = true;
+                    return;
+                }
+
                 foreach (var resItems in Data.SkillResCheck)
                 {
                     foreach (var resItem in resItems.Items)
@@ -189,7 +194,9 @@ namespace Hono.Scripts.Battle
 
             public void OnSkillUsed()
             {
-                int targetUid = -1;
+                var targetUids = _logic.GetAttr<List<int>>(ELogicAttr.AttrAttackTargetUids);
+                targetUids.Clear();
+
                 //选敌
                 if (Data.SkillTargetType != ESkillTargetType.Self)
                 {
@@ -197,26 +204,38 @@ namespace Hono.Scripts.Battle
                     float minDistance = Data.SkillRange;
                     var selfPos = _logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
 
-                    foreach (var uid in targetList)
+                    if (Data.MaxTargetCount != 1)
                     {
-                        var target = ActorManager.Instance.GetActor(uid);
-                        var targetPos = target.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-                        var newMinDis = Vector3.Distance(selfPos, targetPos);
-                        if (newMinDis < minDistance)
+                        targetUids.AddRange(targetList.GetRange(0, Data.MaxTargetCount));
+                    }
+                    else
+                    {
+                        int targetUid = -1;
+                        foreach (var uid in targetList)
                         {
-                            minDistance = newMinDis;
-                            targetUid = uid;
+                            var target = ActorManager.Instance.GetActor(uid);
+                            var targetPos = target.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+                            var newMinDis = Vector3.Distance(selfPos, targetPos);
+                            if (newMinDis < minDistance)
+                            {
+                                minDistance = newMinDis;
+                                targetUid = uid;
+                            }
+                        }
+
+                        if (targetUid > 0)
+                        {
+                            targetUids.Add(targetUid);
                         }
                     }
                 }
                 else
                 {
-                    targetUid = _logic.Uid;
+                    targetUids.Add(_logic.Uid);
                 }
 
-                if (targetUid > 0)
+                if (targetUids.Count > 0)
                 {
-                    _logic.SetAttr(ELogicAttr.AttrAttackTargetUid, targetUid, false);
                     _logic._abilityController.ExecutingAbility(_abilityUid);
                     resourceCheck();
                 }
@@ -264,11 +283,11 @@ namespace Hono.Scripts.Battle
 
             public override void Init()
             {
-	            foreach (var skill in ActorLogic.LogicData.OwnerSkills)
-	            {
-		            var skillCtrl = new Skill(ActorLogic, skill[0],skill[1]);
-		            _skills.Add(skillCtrl.Id, skillCtrl);
-	            }
+                foreach (var skill in ActorLogic.LogicData.OwnerSkills)
+                {
+                    var skillCtrl = new Skill(ActorLogic, skill[0], skill[1]);
+                    _skills.Add(skillCtrl.Id, skillCtrl);
+                }
 
                 _eventChecker ??= new UseSkillChecker(ActorLogic.Uid);
                 BattleEventManager.Instance.Register(_eventChecker);
@@ -281,7 +300,7 @@ namespace Hono.Scripts.Battle
 
                 foreach (var skill in ActorLogic.LogicData.OwnerSkills)
                 {
-                    var skillCtrl = new Skill(ActorLogic, skill[0],skill[1]);
+                    var skillCtrl = new Skill(ActorLogic, skill[0], skill[1]);
                     _skills.Add(skillCtrl.Id, skillCtrl);
                 }
             }
@@ -325,11 +344,12 @@ namespace Hono.Scripts.Battle
 
                 if (skillState.IsEnable)
                 {
-	                ActorLogic._stateMachine.ChangeState(EActorState.Battle);
+                    ActorLogic._stateMachine.ChangeState(EActorState.Battle);
                     skillState.OnSkillUsed();
                 }
-                else {
-	                skillState.SendFailedMsg();
+                else
+                {
+                    skillState.SendFailedMsg();
                 }
             }
         }

@@ -68,6 +68,18 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
+        public static void CreateHitBoxOneTarget(HitBoxData hitData)
+        {
+            var hitBox = ActorManager.Instance.CreateActor(BattleSetting.DefaultHitBoxPrototypeId);
+            hitBox.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.SourceActor.Uid, false);
+            hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
+            hitBox.Variables.Set("hitBoxData", hitData);
+            var targetUid = Ability.Context.SourceActor.GetAttr<List<int>>(ELogicAttr.AttrAttackTargetUids)[0];
+            hitBox.Variables.Set("targetUid", targetUid);
+            ActorManager.Instance.AddActor(hitBox);
+        }
+        
+        [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void CreateHitBox(int targetUid, HitBoxData hitData)
         {
             var hitBox = ActorManager.Instance.CreateActor(BattleSetting.DefaultHitBoxPrototypeId);
@@ -93,6 +105,15 @@ namespace Hono.Scripts.Battle
             return 0;
         }
 
+        [AbilityFuncCache(EFuncCacheFlag.Action)]
+        public static void ExecuteAbility(int actorUid,int configId)
+        {
+            if (tryGetActor(actorUid, out var actor))
+            {
+                actor.ExecuteAbilityByConfigId(configId);
+            }
+        }
+        
         [AbilityFuncCache(EFuncCacheFlag.Action | EFuncCacheFlag.Variable)]
         public static int AddAbility(int actorUid, int ability, bool isRunNow)
         {
