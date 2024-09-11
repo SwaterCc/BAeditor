@@ -21,6 +21,18 @@ namespace Editor.AbilityEditor.TreeItem
             return NodeData.allowEditCycleNodeData.ToString();
         }
 
+        protected override float getButtonWidth()
+        {
+            return 200;
+        }
+
+        protected override GUIStyle getButtonTextStyle()
+        {
+            var buttonStyle = new GUIStyle(GUI.skin.button);
+            buttonStyle.alignment = TextAnchor.MiddleCenter;
+            return buttonStyle;
+        }
+
         protected override string getItemEffectInfo()
         {
             return "周期根节点，仅做展示";

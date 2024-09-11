@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -32,7 +33,9 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void OnBtnClicked()
         {
-            EventNodeDataWindow.Open(NodeData);
+            SettingWindow = EventNodeDataWindow.GetWindow(NodeData);
+            SettingWindow.Show();
+            SettingWindow.Focus();
         }
     }
 
@@ -40,11 +43,7 @@ namespace Editor.AbilityEditor.TreeItem
     {
         private static readonly Dictionary<EBattleEventType, string> _eventCheckerDict =
             new Dictionary<EBattleEventType, string>();
-
-
-        private ParameterMaker _func;
-        private EBattleEventType _curType;
-
+        
         private static void initDict()
         {
             if (_eventCheckerDict.Count != 0) return;
@@ -68,18 +67,26 @@ namespace Editor.AbilityEditor.TreeItem
             }
         }
 
+        private ParameterMaker _func;
+        private EBattleEventType _curType;
+        private string _varName;
+        private string _desc;
+        
         protected override void onInit()
         {
             initDict();
-            
             _func = new ParameterMaker();
             _curType = NodeData.EventNodeData.EventType;
             ParameterMaker.Init(_func, NodeData.EventNodeData.CreateCheckerFunc);
         }
 
-        private void OnDestroy()
+        private void Save()
         {
+            NodeData.EventNodeData.EventType = _curType;
             NodeData.EventNodeData.CreateCheckerFunc = _func.ToArray();
+            NodeData.EventNodeData.CaptureVarName = _varName;
+            NodeData.EventNodeData.Desc = _desc;
+            Close();
         }
 
         private void OnGUI()
@@ -114,6 +121,14 @@ namespace Editor.AbilityEditor.TreeItem
                     continue;
                 }
                 node.Draw();
+            }
+
+            _varName = SirenixEditorFields.TextField("回调变量名", _varName);
+            _desc = SirenixEditorFields.TextField("备注", _desc);
+
+            if (SirenixEditorGUI.Button("保  存", ButtonSizes.Medium))
+            {
+                Save();
             }
             EditorGUILayout.EndVertical();
             SirenixEditorGUI.EndBox();

@@ -24,8 +24,10 @@ namespace Editor.AbilityEditor.TreeItem
         }
 
         protected override void OnBtnClicked()
-        {
-            GroupNodeDataWindow.Open(NodeData);
+        { 
+            SettingWindow = GroupNodeDataWindow.GetWindow(NodeData);
+           SettingWindow.Show();
+           SettingWindow.Focus();
         }
     }
 }

@@ -182,7 +182,7 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class RepeatNodeData
     {
-        public int MaxRepeatCount;
+        public Parameter[] MaxRepeatCount;
         public string Desc;
     }
 

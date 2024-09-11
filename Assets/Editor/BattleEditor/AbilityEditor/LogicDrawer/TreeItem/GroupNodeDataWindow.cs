@@ -12,19 +12,19 @@ namespace Editor.AbilityEditor.TreeItem
         [BoxGroup("Group配置")]
         [LabelText("阶段描述")]
         public string Desc;
-        
-        
+
+        [Button("保存")]
+        public void SaveData()
+        {
+            NodeData.GroupNodeData.GroupId = GroupId;
+            NodeData.GroupNodeData.Desc = Desc;
+            Close();
+        }
+
         protected override void onInit()
         {
             GroupId = NodeData.GroupNodeData.GroupId;
             Desc = NodeData.GroupNodeData.Desc;
-        }
-
-        protected override void OnDestroy()
-        {
-            NodeData.GroupNodeData.GroupId = GroupId;
-            NodeData.GroupNodeData.Desc = Desc;
-            base.OnDestroy();
         }
     }
 }

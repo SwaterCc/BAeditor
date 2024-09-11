@@ -21,12 +21,14 @@ namespace Editor.AbilityEditor
         {
             if (source == null || source.Length == 0)
             {
+                maker.FuncParams.Clear();
                 maker.CreateFuncParam(FuncWindow.FlagMethodCache[EFuncCacheFlag.Variable][0].FuncName);
             }
             else
             {
                 int start = 0;
-                maker.Parse(source,ref start);
+                maker.FuncParams.Clear();
+                maker.Parse(source, ref start);
             }
         }
 
@@ -34,15 +36,21 @@ namespace Editor.AbilityEditor
         {
             if (Self.IsValueType)
             {
-                return $"{Self.ParamName}:{Self.Value}";
+                var valueStrs = Self.Value.ToString().Split(".");
+                var valueStr = valueStrs[^1];
+                return $"参数:{Self.ParamName}:{valueStr}";
             }
 
             if (Self.IsFunc)
             {
-                string func = $"func:{Self.FuncName}(";
-                foreach (var parameter in FuncParams)
+                string func = $"函数:{Self.FuncName}(";
+                for (var index = 0; index < FuncParams.Count; index++)
                 {
-                    func = func + parameter + ",";
+                    var parameter = FuncParams[index];
+                    if (index != FuncParams.Count - 1)
+                        func = func + parameter + ",";
+                    else
+                        func += parameter;
                 }
 
                 func += ")";
@@ -51,7 +59,7 @@ namespace Editor.AbilityEditor
 
             return "????";
         }
-        
+
         public void CreateFuncParam(string funcName)
         {
             Self = new Parameter();
@@ -188,7 +196,7 @@ namespace Editor.AbilityEditor
             if (maker.Self.IsFunc)
             {
                 EditorGUILayout.LabelField("参数:", GUILayout.Width(30));
-                if (GUILayout.Button(maker.Self.FuncName, GUILayout.Width(120)))
+                if (GUILayout.Button(maker.ToString()))
                 {
                     //打开函数界面
                     FuncWindow.Open(maker, EFuncCacheFlag.Variable);

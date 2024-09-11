@@ -120,7 +120,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 8
+      Data: 14
     - Name: 
       Entry: 7
       Data: 
@@ -357,16 +357,22 @@ MonoBehaviour:
       Data: 11|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 5
     - Name: 
       Entry: 3
-      Data: 1485842357
+      Data: 650017411
+    - Name: 
+      Entry: 3
+      Data: 1701266995
+    - Name: 
+      Entry: 3
+      Data: 1025989940
     - Name: 
       Entry: 3
       Data: 983494063
     - Name: 
       Entry: 3
-      Data: 1701266995
+      Data: 2066587482
     - Name: 
       Entry: 13
       Data: 
@@ -492,10 +498,10 @@ MonoBehaviour:
       Data: 5
     - Name: Parent
       Entry: 3
-      Data: 1588369898
+      Data: 983494063
     - Name: Depth
       Entry: 3
-      Data: 1
+      Data: 2
     - Name: BelongGroupId
       Entry: 3
       Data: -1
@@ -504,7 +510,16 @@ MonoBehaviour:
       Data: 15|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 51143624
+    - Name: 
+      Entry: 3
+      Data: 163415387
+    - Name: 
+      Entry: 3
+      Data: 907718978
     - Name: 
       Entry: 13
       Data: 
@@ -513,7 +528,7 @@ MonoBehaviour:
       Data: 
     - Name: NextIdInSameLevel
       Entry: 3
-      Data: 983494063
+      Data: 0
     - Name: ActionNodeData
       Entry: 7
       Data: 16|Hono.Scripts.Battle.Parameter[], Assembly-CSharp
@@ -765,7 +780,10 @@ MonoBehaviour:
       Data: 23|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 1485842357
     - Name: 
       Entry: 13
       Data: 
@@ -774,7 +792,7 @@ MonoBehaviour:
       Data: 
     - Name: NextIdInSameLevel
       Entry: 3
-      Data: 1701266995
+      Data: 2066587482
     - Name: ActionNodeData
       Entry: 7
       Data: 24|Hono.Scripts.Battle.Parameter[], Assembly-CSharp
@@ -1029,7 +1047,7 @@ MonoBehaviour:
       Data: 
     - Name: NextIdInSameLevel
       Entry: 3
-      Data: 0
+      Data: 1025989940
     - Name: ActionNodeData
       Entry: 7
       Data: 31|Hono.Scripts.Battle.Parameter[], Assembly-CSharp
@@ -1180,6 +1198,1259 @@ MonoBehaviour:
       Data: 
     - Name: RepeatNodeData
       Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 6
+      Data: 
+    - Name: allowEditCycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 650017411
+    - Name: $v
+      Entry: 7
+      Data: 34|Hono.Scripts.Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 650017411
+    - Name: NodeType
+      Entry: 3
+      Data: 2
+    - Name: Parent
+      Entry: 3
+      Data: 1588369898
+    - Name: Depth
+      Entry: 3
+      Data: 1
+    - Name: BelongGroupId
+      Entry: 3
+      Data: -1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 35|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 1701266995
+    - Name: ActionNodeData
+      Entry: 6
+      Data: 
+    - Name: BranchNodeData
+      Entry: 7
+      Data: 36|Hono.Scripts.Battle.BranchNodeData, Assembly-CSharp
+    - Name: Left
+      Entry: 7
+      Data: 37|Hono.Scripts.Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 7
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: GetAbilityUid
+    - Name: ParamCount
+      Entry: 3
+      Data: 4
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: IntAdd
+    - Name: ParamCount
+      Entry: 3
+      Data: 2
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: a
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 38|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: b
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 39|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: actorUid
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 40|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: configId
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 41|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: sourceId
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 42|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ResType
+      Entry: 3
+      Data: 4
+    - Name: Right
+      Entry: 7
+      Data: 43|Hono.Scripts.Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: NothingToDo
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Desc
+      Entry: 1
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: EventNodeData
+      Entry: 7
+      Data: 44|Hono.Scripts.Battle.EventNodeData, Assembly-CSharp
+    - Name: EventType
+      Entry: 3
+      Data: 0
+    - Name: CreateCheckerFunc
+      Entry: 6
+      Data: 
+    - Name: CaptureVarName
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 7
+      Data: 45|Hono.Scripts.Battle.RepeatNodeData, Assembly-CSharp
+    - Name: MaxRepeatCount
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VariableNodeData
+      Entry: 7
+      Data: 46|Hono.Scripts.Battle.VariableNodeData, Assembly-CSharp
+    - Name: OperationType
+      Entry: 3
+      Data: 0
+    - Name: Range
+      Entry: 3
+      Data: 0
+    - Name: ActorUid
+      Entry: 3
+      Data: 0
+    - Name: AbilityUid
+      Entry: 3
+      Data: 0
+    - Name: Name
+      Entry: 6
+      Data: 
+    - Name: VarParams
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: allowEditCycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 7
+      Data: 47|Hono.Scripts.Battle.TimerNodeData, Assembly-CSharp
+    - Name: FirstInterval
+      Entry: 6
+      Data: 
+    - Name: Interval
+      Entry: 6
+      Data: 
+    - Name: MaxCount
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 1
+      Data: "\u5B9A\u65F6\u5668"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: GroupNodeData
+      Entry: 7
+      Data: 48|Hono.Scripts.Battle.GroupNodeData, Assembly-CSharp
+    - Name: GroupId
+      Entry: 3
+      Data: 0
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: IsDefaultStart
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1025989940
+    - Name: $v
+      Entry: 7
+      Data: 49|Hono.Scripts.Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 1025989940
+    - Name: NodeType
+      Entry: 3
+      Data: 3
+    - Name: Parent
+      Entry: 3
+      Data: 1588369898
+    - Name: Depth
+      Entry: 3
+      Data: 1
+    - Name: BelongGroupId
+      Entry: 3
+      Data: -1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 50|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 983494063
+    - Name: ActionNodeData
+      Entry: 6
+      Data: 
+    - Name: BranchNodeData
+      Entry: 6
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 7
+      Data: 51|Hono.Scripts.Battle.VariableNodeData, Assembly-CSharp
+    - Name: OperationType
+      Entry: 3
+      Data: 0
+    - Name: Range
+      Entry: 3
+      Data: 0
+    - Name: ActorUid
+      Entry: 3
+      Data: 0
+    - Name: AbilityUid
+      Entry: 3
+      Data: 0
+    - Name: Name
+      Entry: 6
+      Data: 
+    - Name: VarParams
+      Entry: 7
+      Data: 52|Hono.Scripts.Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: GetVariableByUid
+    - Name: ParamCount
+      Entry: 3
+      Data: 4
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: Hono.Scripts.Battle.EVariableRange, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    - Name: ParamName
+      Entry: 1
+      Data: range
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 53|Hono.Scripts.Battle.EVariableRange, Assembly-CSharp
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: actorUid
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 54|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: abilityUid
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 55|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: name
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 9
+      Data: 17
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: allowEditCycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2066587482
+    - Name: $v
+      Entry: 7
+      Data: 56|Hono.Scripts.Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 2066587482
+    - Name: NodeType
+      Entry: 3
+      Data: 7
+    - Name: Parent
+      Entry: 3
+      Data: 1588369898
+    - Name: Depth
+      Entry: 3
+      Data: 1
+    - Name: BelongGroupId
+      Entry: 3
+      Data: -1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 57|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 0
+    - Name: ActionNodeData
+      Entry: 6
+      Data: 
+    - Name: BranchNodeData
+      Entry: 7
+      Data: 58|Hono.Scripts.Battle.BranchNodeData, Assembly-CSharp
+    - Name: Left
+      Entry: 6
+      Data: 
+    - Name: ResType
+      Entry: 3
+      Data: 0
+    - Name: Right
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: EventNodeData
+      Entry: 7
+      Data: 59|Hono.Scripts.Battle.EventNodeData, Assembly-CSharp
+    - Name: EventType
+      Entry: 3
+      Data: 0
+    - Name: CreateCheckerFunc
+      Entry: 6
+      Data: 
+    - Name: CaptureVarName
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 7
+      Data: 60|Hono.Scripts.Battle.RepeatNodeData, Assembly-CSharp
+    - Name: MaxRepeatCount
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VariableNodeData
+      Entry: 7
+      Data: 61|Hono.Scripts.Battle.VariableNodeData, Assembly-CSharp
+    - Name: OperationType
+      Entry: 3
+      Data: 0
+    - Name: Range
+      Entry: 3
+      Data: 0
+    - Name: ActorUid
+      Entry: 3
+      Data: 0
+    - Name: AbilityUid
+      Entry: 3
+      Data: 0
+    - Name: Name
+      Entry: 6
+      Data: 
+    - Name: VarParams
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: allowEditCycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 7
+      Data: 62|Hono.Scripts.Battle.TimerNodeData, Assembly-CSharp
+    - Name: FirstInterval
+      Entry: 6
+      Data: 
+    - Name: Interval
+      Entry: 6
+      Data: 
+    - Name: MaxCount
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 1
+      Data: "\u5B9A\u65F6\u5668"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: GroupNodeData
+      Entry: 7
+      Data: 63|Hono.Scripts.Battle.GroupNodeData, Assembly-CSharp
+    - Name: GroupId
+      Entry: 3
+      Data: 0
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: IsDefaultStart
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 51143624
+    - Name: $v
+      Entry: 7
+      Data: 64|Hono.Scripts.Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 51143624
+    - Name: NodeType
+      Entry: 3
+      Data: 6
+    - Name: Parent
+      Entry: 3
+      Data: 1485842357
+    - Name: Depth
+      Entry: 3
+      Data: 3
+    - Name: BelongGroupId
+      Entry: 3
+      Data: -1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 65|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 163415387
+    - Name: ActionNodeData
+      Entry: 6
+      Data: 
+    - Name: BranchNodeData
+      Entry: 6
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 6
+      Data: 
+    - Name: allowEditCycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 7
+      Data: 66|Hono.Scripts.Battle.TimerNodeData, Assembly-CSharp
+    - Name: FirstInterval
+      Entry: 6
+      Data: 
+    - Name: Interval
+      Entry: 6
+      Data: 
+    - Name: MaxCount
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 1
+      Data: "\u5B9A\u65F6\u5668"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 163415387
+    - Name: $v
+      Entry: 7
+      Data: 67|Hono.Scripts.Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 163415387
+    - Name: NodeType
+      Entry: 3
+      Data: 1
+    - Name: Parent
+      Entry: 3
+      Data: 1485842357
+    - Name: Depth
+      Entry: 3
+      Data: 3
+    - Name: BelongGroupId
+      Entry: 3
+      Data: -1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 68|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 907718978
+    - Name: ActionNodeData
+      Entry: 6
+      Data: 
+    - Name: BranchNodeData
+      Entry: 6
+      Data: 
+    - Name: EventNodeData
+      Entry: 7
+      Data: 69|Hono.Scripts.Battle.EventNodeData, Assembly-CSharp
+    - Name: EventType
+      Entry: 3
+      Data: 0
+    - Name: CreateCheckerFunc
+      Entry: 7
+      Data: 70|Hono.Scripts.Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: GetMotionChecker
+    - Name: ParamCount
+      Entry: 3
+      Data: 2
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: Hono.Scripts.Battle.Event.EBattleEventType, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    - Name: ParamName
+      Entry: 1
+      Data: eventType
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 71|Hono.Scripts.Battle.Event.EBattleEventType, Assembly-CSharp
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: motionId
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 72|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CaptureVarName
+      Entry: 6
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 6
+      Data: 
+    - Name: VariableNodeData
+      Entry: 6
+      Data: 
+    - Name: allowEditCycleNodeData
+      Entry: 3
+      Data: 0
+    - Name: TimerNodeData
+      Entry: 6
+      Data: 
+    - Name: GroupNodeData
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 907718978
+    - Name: $v
+      Entry: 7
+      Data: 73|Hono.Scripts.Battle.AbilityNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 907718978
+    - Name: NodeType
+      Entry: 3
+      Data: 4
+    - Name: Parent
+      Entry: 3
+      Data: 1485842357
+    - Name: Depth
+      Entry: 3
+      Data: 3
+    - Name: BelongGroupId
+      Entry: 3
+      Data: -1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 74|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: NextIdInSameLevel
+      Entry: 3
+      Data: 0
+    - Name: ActionNodeData
+      Entry: 6
+      Data: 
+    - Name: BranchNodeData
+      Entry: 6
+      Data: 
+    - Name: EventNodeData
+      Entry: 6
+      Data: 
+    - Name: RepeatNodeData
+      Entry: 7
+      Data: 75|Hono.Scripts.Battle.RepeatNodeData, Assembly-CSharp
+    - Name: MaxRepeatCount
+      Entry: 7
+      Data: 76|Hono.Scripts.Battle.Parameter[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 6
+      Data: 
+    - Name: ParamName
+      Entry: 6
+      Data: 
+    - Name: IsFunc
+      Entry: 5
+      Data: true
+    - Name: FuncName
+      Entry: 1
+      Data: GetListCount
+    - Name: ParamCount
+      Entry: 3
+      Data: 1
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
+      Data: System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    - Name: ParamName
+      Entry: 1
+      Data: list
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 77|System.Object, mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
       Data: 
     - Name: VariableNodeData
       Entry: 6

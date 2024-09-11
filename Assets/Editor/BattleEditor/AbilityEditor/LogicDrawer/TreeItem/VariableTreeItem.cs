@@ -1,6 +1,6 @@
-
 using System.Linq;
 using Hono.Scripts.Battle;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -10,8 +10,14 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class VariableTreeItem : AbilityLogicTreeItem
     {
+        private ParameterMaker _variable;
         public VariableTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        public VariableTreeItem(AbilityNodeData nodeData) : base(nodeData) { }
+
+        public VariableTreeItem(AbilityNodeData nodeData) : base(nodeData)
+        {
+            _variable = new ParameterMaker();
+            ParameterMaker.Init(_variable, nodeData.VariableNodeData.VarParams);
+        }
 
         protected override Color getButtonColor()
         {
@@ -22,7 +28,7 @@ namespace Editor.AbilityEditor.TreeItem
         {
             if (string.IsNullOrEmpty(NodeData.VariableNodeData.Desc))
             {
-                return $"调用并Set变量 {NodeData.VariableNodeData.Name} = {NodeData.VariableNodeData.VarParams.ToArray()}";
+                return $"调用并Set变量 {NodeData.VariableNodeData.Name} = {_variable}";
             }
 
             return NodeData.VariableNodeData.Desc;
@@ -35,7 +41,9 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void OnBtnClicked()
         {
-            VariableNodeDataWindow.Open(NodeData);
+            SettingWindow = VariableNodeDataWindow.GetWindow(NodeData);
+            SettingWindow.Show();
+            SettingWindow.Focus();
         }
     }
 
@@ -46,17 +54,18 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void onInit()
         {
             _variable = new ParameterMaker();
-            ParameterMaker.Init(_variable,NodeData.VariableNodeData.VarParams);
+            ParameterMaker.Init(_variable, NodeData.VariableNodeData.VarParams);
         }
 
         public override Rect GetPos()
         {
             return GUIHelper.GetEditorWindowRect().AlignCenter(400, 140);
         }
-        
-        private void OnDestroy()
+
+        private void Save()
         {
             NodeData.VariableNodeData.VarParams = _variable.ToArray();
+            Close();
         }
 
         private void OnGUI()
@@ -71,18 +80,22 @@ namespace Editor.AbilityEditor.TreeItem
             NodeData.VariableNodeData.Range =
                 (EVariableRange)SirenixEditorFields.EnumDropdown("选择范围", NodeData.VariableNodeData.Range);
 
-            
+
             NodeData.VariableNodeData.Name =
                 SirenixEditorFields.TextField("变量名", NodeData.VariableNodeData.Name);
 
             EditorGUILayout.BeginHorizontal();
-            
+
             EditorGUILayout.LabelField("变量值");
-            
+
             _variable.Draw();
-            
+
             EditorGUILayout.EndHorizontal();
-            
+
+            if (SirenixEditorGUI.Button("保   存", ButtonSizes.Medium))
+            {
+                Save();
+            }
             SirenixEditorGUI.EndBox();
         }
     }

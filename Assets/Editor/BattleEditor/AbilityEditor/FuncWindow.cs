@@ -14,20 +14,23 @@ namespace Editor.AbilityEditor
 {
     public class FuncWindow : EditorWindow
     {
+        public static int WindowCount = 0;
+        public static float xOffset = 30;
+        public static float yOffset = -20;
+        
         public static void OpenVariableToFunc(object node)
         {
             var window = CreateInstance<FuncWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
-            var maker = new ParameterMaker();
-            maker.ChangeToDefaultFunc(EFuncCacheFlag.Variable);
-            window.init((ParameterMaker)node, EFuncCacheFlag.Variable);
+            ((ParameterMaker)node).ChangeToDefaultFunc(EFuncCacheFlag.Variable);
+            window.Init((ParameterMaker)node, EFuncCacheFlag.Variable);
             window.Show();
         }
 
         public static void Open(ParameterMaker maker, EFuncCacheFlag flag)
         {
             var window = CreateInstance<FuncWindow>();
-            window.init(maker, flag);
+            window.Init(maker, flag);
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
             window.Show();
         }
@@ -139,15 +142,16 @@ namespace Editor.AbilityEditor
 
             _flagMethodCacheInit = true;
         }
+
         #endregion
 
         private ParameterMaker _origin;
         private ParameterMaker _funcHead;
         private EFuncCacheFlag _flag;
-        
+
         private FuncList _funcTree;
 
-        private void init(ParameterMaker maker, EFuncCacheFlag flag)
+        public void Init(ParameterMaker maker, EFuncCacheFlag flag)
         {
             if (_methodCache.Count == 0)
             {
@@ -156,12 +160,17 @@ namespace Editor.AbilityEditor
 
             _origin = maker;
             _funcHead = new ParameterMaker();
-            ParameterMaker.Init(_funcHead,_funcHead.ToArray());
+            ParameterMaker.Init(_funcHead, maker.ToArray());
 
             _flag = flag;
-            _funcTree = new FuncList(new TreeViewState(), _funcHead, _flagMethodCache[_flag]);
+            _funcTree = new FuncList(new TreeViewState(), _funcHead, this, _flagMethodCache[_flag]);
         }
-        
+
+        private void OnDoubleClick(string funcName)
+        {
+            _funcHead.CreateFuncParam(funcName);
+        }
+
         private void OnGUI()
         {
             EditorGUILayout.BeginVertical();
@@ -217,7 +226,7 @@ namespace Editor.AbilityEditor
 
             if (GUILayout.Button("确认修改"))
             {
-                _origin = _funcHead;
+                ParameterMaker.Init(_origin, _funcHead.ToArray());
                 AbilityEditorHelper.SearchText = "";
                 Close();
             }
@@ -234,10 +243,14 @@ namespace Editor.AbilityEditor
             public string CurSelect;
             private ParameterMaker _funcHead;
 
-            public FuncList(TreeViewState state, ParameterMaker funcHead, List<FuncInfo> infos) : base(state)
+            private FuncWindow _window;
+
+            public FuncList(TreeViewState state, ParameterMaker funcHead, FuncWindow window,
+                List<FuncInfo> infos) : base(state)
             {
                 _infos = infos;
                 _funcHead = funcHead;
+                _window = window;
                 if (funcHead.Self.IsFunc && string.IsNullOrEmpty(funcHead.Self.FuncName))
                 {
                     funcHead.Self.FuncName = infos[0].FuncName;
@@ -288,7 +301,7 @@ namespace Editor.AbilityEditor
             protected override void DoubleClickedItem(int id)
             {
                 var item = FindItem(id, rootItem);
-                _funcHead.CreateFuncParam(item.displayName);
+               _window.OnDoubleClick(item.displayName);
             }
         }
     }

@@ -1,4 +1,7 @@
 using Hono.Scripts.Battle;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
@@ -6,9 +9,12 @@ namespace Editor.AbilityEditor.TreeItem
     public class ActionTreeItem : AbilityLogicTreeItem
     {
         public ActionTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        public ActionTreeItem(AbilityNodeData nodeData) : base(nodeData) { }
-
         private ParameterMaker _actionFunc;
+        public ActionTreeItem(AbilityNodeData nodeData) : base(nodeData)
+        {
+            _actionFunc = new ParameterMaker();
+            ParameterMaker.Init(_actionFunc,NodeData.ActionNodeData);
+        }
         
         protected override Color getButtonColor()
         {
@@ -17,7 +23,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            if (_actionFunc == null || NodeData.ActionNodeData == null || NodeData.ActionNodeData.Length == 0 || string.IsNullOrEmpty(NodeData.ActionNodeData[0].FuncName))
+            if (NodeData.ActionNodeData == null || NodeData.ActionNodeData.Length == 0 || string.IsNullOrEmpty(NodeData.ActionNodeData[0].FuncName))
                 return "未初始化";
             
             return _actionFunc.ToString();
@@ -30,13 +36,15 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void OnBtnClicked()
         {
-            _actionFunc = new ParameterMaker();
-            
-            ParameterMaker.Init(_actionFunc,NodeData.ActionNodeData);
-            
-            _actionFunc.OnSave = (parameters) => { NodeData.ActionNodeData = parameters; };
-
-            FuncWindow.Open(_actionFunc, EFuncCacheFlag.Action);
+            if (SettingWindow == null)
+            {
+                var settingWindow = FuncWindow.CreateInstance<FuncWindow>();
+                settingWindow.Init(_actionFunc, EFuncCacheFlag.Action);
+                settingWindow.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
+                SettingWindow = settingWindow;
+            }
+            SettingWindow.Show();
+            SettingWindow.Focus();
         }
     }
 }

@@ -1,6 +1,6 @@
 
 using Hono.Scripts.Battle;
-
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -20,17 +20,19 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return NodeData.VariableNodeData.Desc;
+            return string.IsNullOrEmpty(NodeData.TimerNodeData.Desc)?"计时器":NodeData.TimerNodeData.Desc;
         }
 
         protected override string getItemEffectInfo()
         {
-            throw new System.NotImplementedException();
+            return "计时器节点";
         }
 
         protected override void OnBtnClicked()
         {
-            TimerNodeDataWindow.Open(NodeData);
+            SettingWindow = TimerNodeDataWindow.GetWindow(NodeData);
+            SettingWindow.Show();
+            SettingWindow.Focus();
         }
     }
     
@@ -39,6 +41,7 @@ namespace Editor.AbilityEditor.TreeItem
         private ParameterMaker _firstInterval;
         private ParameterMaker _interval;
         private ParameterMaker _maxCount;
+        private string _desc;
         
         protected override void onInit()
         {
@@ -73,15 +76,22 @@ namespace Editor.AbilityEditor.TreeItem
             _maxCount.Draw();
             EditorGUILayout.EndHorizontal();
 
-            SirenixEditorGUI.EndBox();
+            _desc = SirenixEditorFields.TextField("备注", _desc);
             
+            if (SirenixEditorGUI.Button("保  存", ButtonSizes.Medium))
+            {
+                Save();
+            }
+            SirenixEditorGUI.EndBox();
         }
         
-        private void OnDestroy()
+        private void Save()
         {
             NodeData.TimerNodeData.FirstInterval = _firstInterval.ToArray();
             NodeData.TimerNodeData.Interval = _interval.ToArray();
             NodeData.TimerNodeData.MaxCount = _maxCount.ToArray();
+            NodeData.TimerNodeData.Desc = _desc;
+            Close();
         }
     }
     
