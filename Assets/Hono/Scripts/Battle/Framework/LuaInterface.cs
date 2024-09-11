@@ -48,7 +48,7 @@ namespace Hono.Scripts.Battle
             _factionMain = _luaEnv.Global.GetInPath<LuaFunction>("Faction.GetFaction");
         }
         
-        public static DamageResults GetDamageResults(ActorLogic attacker, ActorLogic target, DamageInfo damageInfo,
+        public static DamageResults GetDamageResults(Actor attacker, Actor target, DamageInfo damageInfo,
             DamageConfig config) {
             //TODO：临时做法，会有性能开销，后续导出
             var rets = _damageProcessMain.Call(attacker, target, damageInfo, config, typeof(DamageResults));

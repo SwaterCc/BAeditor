@@ -49,6 +49,7 @@ namespace Editor.AbilityEditor
         };
 
         public Dictionary<EAbilityType, string> AbilityFolders => _abilityFolders;
+        
 
         private readonly Dictionary<EAbilityType, Dictionary<string, AbilityData>> _abilityPathWithDatas = new()
         {
@@ -94,12 +95,13 @@ namespace Editor.AbilityEditor
                 var data = AssetDatabase.LoadAssetAtPath<AbilityData>(fullPath);
                 _abilityPathWithDatas[abilityType].Add(fullPath, data);
             }
+            
         }
 
         protected override OdinMenuTree BuildMenuTree()
         {
             var treeInstance = new OdinMenuTree(false);
-
+           
             foreach (var pMenuName in _menuNames)
             {
                 treeInstance.Add(pMenuName.Value,
@@ -137,7 +139,7 @@ namespace Editor.AbilityEditor
 
             base.OnDestroy();
         }
-
+        
         protected override void OnBeginDrawEditors()
         {
             //绘制顶部创建按钮
@@ -146,9 +148,8 @@ namespace Editor.AbilityEditor
             {
                 return;
             }
-
             var toolbarHeight = this.MenuTree.Config.SearchToolbarHeight;
-
+            MenuTree.DrawSearchToolbar();
             SirenixEditorGUI.BeginHorizontalToolbar(toolbarHeight);
             {
                 if (selected != null)

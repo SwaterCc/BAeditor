@@ -144,6 +144,12 @@ namespace Hono.Scripts.Battle
                     actorIds.Add(actor.Uid);
                 }
 
+                if (_filterSetting.MaxTargetCount > 0) {
+	                if (actorIds.Count > _filterSetting.MaxTargetCount) {
+		                actorIds = actorIds.GetRange(0, _filterSetting.MaxTargetCount);
+	                }
+                }
+                
                 return actorIds;
             }
         }

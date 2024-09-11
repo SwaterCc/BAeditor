@@ -17,11 +17,20 @@ Faction.FactionIDs = { 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 
 Faction.InfoTable = {
     --找不到默认中立
-    [1] = { [EFactionType.Friendly] = { 1, 2 }, [EFactionType.Enemy] = { 3, 4, 5, 6, 7, 8, 9 } }
+    [1] = { [EFactionType.Friendly] = { 1, 2 }, [EFactionType.Enemy] = { 3, 4, 5, 6, 7, 8, 9 } },
+    [2] = { [EFactionType.Friendly] = { 1, 2 }, [EFactionType.Enemy] = { 3, 4, 5, 6, 7, 8, 9 } },
+    [3] = { [EFactionType.Friendly] = { 3, 4, 5, 6, 7, 8, 9 }, [EFactionType.Enemy] = { 1, 2 } },
+    [4] = { [EFactionType.Friendly] = { 3, 4, 5, 6, 7, 8, 9 }, [EFactionType.Enemy] = { 1, 2 } },
+    [3] = { [EFactionType.Friendly] = { 3, 4, 5, 6, 7, 8, 9 }, [EFactionType.Enemy] = { 1, 2 } },
+    [3] = { [EFactionType.Friendly] = { 3, 4, 5, 6, 7, 8, 9 }, [EFactionType.Enemy] = { 1, 2 } },
+    [3] = { [EFactionType.Friendly] = { 3, 4, 5, 6, 7, 8, 9 }, [EFactionType.Enemy] = { 1, 2 } },
+    [3] = { [EFactionType.Friendly] = { 3, 4, 5, 6, 7, 8, 9 }, [EFactionType.Enemy] = { 1, 2 } },
+    [3] = { [EFactionType.Friendly] = { 3, 4, 5, 6, 7, 8, 9 }, [EFactionType.Enemy] = { 1, 2 } }
 }
 
 Faction.GetFaction = function(id1, id2)
     if Faction.InfoTable[id1] == nil then
+        PrintDamageLog(id1    ..  id2)
         return
     end
     

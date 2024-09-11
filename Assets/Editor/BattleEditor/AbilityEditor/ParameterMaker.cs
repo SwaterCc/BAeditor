@@ -180,6 +180,7 @@ namespace Editor.AbilityEditor
         public static void Draw(this ParameterMaker maker,string formStr = "")
         {
             EditorGUILayout.BeginHorizontal();
+            var old = EditorGUIUtility.labelWidth;
             if (GUILayout.Button("▼", GUILayout.Width(22)))
             {
                 GenericMenu menu = new GenericMenu();
@@ -194,7 +195,7 @@ namespace Editor.AbilityEditor
                     AbilityEditorHelper.GetTypeAllName(typeof(string)));
                 menu.ShowAsContext();
             }
-
+            EditorGUIUtility.labelWidth = 86;
             if (maker.Self.IsFunc)
             {
                 string label = string.IsNullOrEmpty(maker.Self.ParamName) ? "调用：" : maker.Self.ParamName;
@@ -216,7 +217,7 @@ namespace Editor.AbilityEditor
                 else
                 {
                     var type = Type.GetType(maker.Self.ParamType);
-                    EditorGUIUtility.labelWidth = 100;
+                   
 
                     string label = string.IsNullOrEmpty(maker.Self.ParamName) ? "参数" : maker.Self.ParamName;
 
@@ -224,6 +225,7 @@ namespace Editor.AbilityEditor
                 }
             }
 
+            EditorGUIUtility.labelWidth = old;
             EditorGUILayout.EndHorizontal();
         }
     }

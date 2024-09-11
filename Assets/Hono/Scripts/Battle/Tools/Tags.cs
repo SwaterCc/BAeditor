@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Tools
@@ -14,14 +15,21 @@ namespace Hono.Scripts.Battle.Tools
     /// </summary>
     public class Tags
     {
-        private readonly BitArray _tags = new(256);
+        private readonly List<bool> _tags = new(256);
 
         private IEnableTagSearch _bind;
 
-        public Tags() { }
+        public Tags() {
+	        for (int i = 0; i < _tags.Capacity; i++) {
+		        _tags.Add(false);
+	        }
+        }
 
         public Tags(int[] tag)
         {
+	        for (int i = 0; i < _tags.Capacity; i++) {
+		        _tags.Add(false);
+	        }
             foreach (var i in tag)
             {
                 _tags[i] = true;
@@ -58,6 +66,18 @@ namespace Hono.Scripts.Battle.Tools
             {
                 _tags[tag] = false;
             }
+        }
+
+        public List<int> GetAllTag() {
+	        var res = new List<int>();
+	        for (int index = 0; index < _tags.Count; index++) {
+		        bool tag = _tags[index];
+		        if (tag) {
+			        res.Add(index);
+		        }
+	        }
+
+	        return res;
         }
     }
 }

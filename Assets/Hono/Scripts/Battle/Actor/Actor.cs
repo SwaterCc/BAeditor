@@ -1,4 +1,5 @@
 using Hono.Scripts.Battle.Tools;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -61,6 +62,11 @@ namespace Hono.Scripts.Battle
         /// tag
         /// </summary>
         private readonly Tags _tags;
+
+        /// <summary>
+        /// 当前坐标
+        /// </summary>
+        public Vector3 Pos => GetAttr<Vector3>(ELogicAttr.AttrPosition);
 
         public Actor(int uid)
         {

@@ -14,8 +14,9 @@ namespace Hono.Scripts.Battle {
 
 		private int _sourceActorId;
 		private int _sourceAbilityConfigId;
+		private int _targetUid;
 		private EAbilityType _sourceAbilityType;
-		private Action<ActorLogic, DamageInfo> _hitProcess;
+		private Action<Actor, DamageInfo> _hitProcess;
 		private FilterSetting _filterSetting;
 
 		private readonly Dictionary<BeHurtComp, int> _hitCountDict = new();
@@ -35,8 +36,8 @@ namespace Hono.Scripts.Battle {
 			_hitBoxData = (HitBoxData)(_variables.Get("hitBoxData"));
 
 			var attacker =  ActorManager.Instance.GetActor(_sourceActorId);
-			var targetUid = (int)(_variables.Get("targetUid"));
-			var target = ActorManager.Instance.GetActor(targetUid);
+			_targetUid = (int)(_variables.Get("targetUid"));
+			var target = ActorManager.Instance.GetActor(_targetUid);
 			var pos = target.Logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
 			SetAttr(ELogicAttr.AttrPosition, pos, false);
 			SetAttr(ELogicAttr.AttrFaction, attacker.Logic.GetAttr<int>(ELogicAttr.AttrFaction), false);
@@ -90,14 +91,13 @@ namespace Hono.Scripts.Battle {
 			}
 		}
 
-		private void singleHit(ActorLogic attacker, DamageInfo damageInfo) {
-			var targetId = attacker.GetAttr<int>(ELogicAttr.AttrAttackTargetUids);
-			var target = ActorManager.Instance.GetActor(targetId);
+		private void singleHit(Actor attacker, DamageInfo damageInfo) {
+			var target = ActorManager.Instance.GetActor(_targetUid);
 			if (target == null) return;
 			if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
 			hitCounter(beHurtComp);
 			var damageItem = makeDamageConfig();
-			var res = LuaInterface.GetDamageResults(attacker, target.Logic, damageInfo, damageItem);
+			var res = LuaInterface.GetDamageResults(attacker, target, damageInfo, damageItem);
 			beHurtComp.OnBeHurt(res);
 		}
 
@@ -130,29 +130,30 @@ namespace Hono.Scripts.Battle {
 			return damageConfig;
 		}
 
-		private void aoeHit(ActorLogic attacker, DamageInfo damageInfo) {
+		private void aoeHit(Actor attacker, DamageInfo damageInfo) {
 			//aoe会根据目标坐标二次筛选
 			var targetIds = ActorManager.Instance.UseFilter(Actor, _filterSetting);
-
+			damageInfo.HitCount = targetIds.Count;
 			foreach (var targetUid in targetIds) {
 				var target = ActorManager.Instance.GetActor(targetUid);
 				if (target == null) return;
 				if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
 				hitCounter(beHurtComp);
 				var damageItem = makeDamageConfig();
-				var res = LuaInterface.GetDamageResults(attacker, target.Logic, damageInfo, damageItem);
+				var res = LuaInterface.GetDamageResults(attacker, target, damageInfo, damageItem);
 				beHurtComp.OnBeHurt(res);
 			}
 		}
 
 		private void onHit() {
-			var attacker = ActorManager.Instance.GetActor(_sourceActorId).Logic;
+			var attacker = ActorManager.Instance.GetActor(_sourceActorId);
 
 			var damageInfo = new DamageInfo();
 			damageInfo.DamageConfigId = _hitBoxData.DamageConfigId;
 			damageInfo.SourceActorId = _sourceActorId;
 			damageInfo.SourceAbilityConfigId = _sourceAbilityConfigId;
 			damageInfo.SourceAbilityType = _sourceAbilityType;
+			
 			var abilityData = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId);
 			switch (abilityData.Type) {
 				case EAbilityType.Skill:

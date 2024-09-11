@@ -191,8 +191,8 @@ namespace Hono.Scripts.Battle
     {
         public EVariableOperationType OperationType;
         public EVariableRange Range;
-        public int ActorUid;
-        public int AbilityUid;
+        public Parameter[] ActorUid;
+        public Parameter[] AbilityUid;
         public string Name;
         public Parameter[] VarParams;
         public string Desc;

@@ -4,9 +4,10 @@
 --- DateTime: 2024/8/27 下午2:14
 
 --【【【配置】】】=======================================================================================================================================
-
 ELogicAttr = CS.Hono.Scripts.Battle.ELogicAttr
 local maxDamage = 999999
+local damageDistance = 5
+local dmgAddiTags, dmgAddiValues= {100, 101, 102, 103}, {0, 0, 0, 0}   --这几个TAG是预留的特殊tag，专门用来增伤，可增减
 
 --【【【工具】】】=========================================================================================================================================
 local function ElementDamage(attacker, target, damageInfo, damageConfig, damageArgs)
@@ -30,8 +31,8 @@ end
 local DamageModifierCondition = {
 
     CheckHitCount = function(attacker, target, damageInfo, params) --【判断伤害命中数量】
-        -- addiParam[0] 右值，比较距离。左值是实际距离
-        -- addiParam[1] 比较符，1=大于，2=大于等于，3=等于，4=小于，5=小于等于
+        -- params[0] 右值，比较距离。左值是实际距离
+        -- params[1] 比较符，1=大于，2=大于等于，3=等于，4=小于，5=小于等于
 
         --local HitCount = damageInfo.HitCount
         local HitCount = 3 --测试数据
@@ -42,11 +43,11 @@ local DamageModifierCondition = {
     end,
 
     CheckStat = function(attacker, target, damageInfo, params) --【属性绝对值对比】
-        -- addiParam[0] 对象，0=攻击者，1=目标，2=定值
-        -- addiParam[1] 属性ID
-        -- addiParam[2] 比较符，1=大于，2=大于等于，3=等于，4=小于，5=小于等于
-        -- addiParam[3] 对象，0=攻击者，1=目标，2=定值
-        -- addiParam[4] 属性ID
+        -- params[0] 对象，0=攻击者，1=目标，2=定值
+        -- params[1] 属性ID
+        -- params[2] 比较符，1=大于，2=大于等于，3=等于，4=小于，5=小于等于
+        -- params[3] 对象，0=攻击者，1=目标，2=定值
+        -- params[4] 属性ID
 
         local function GetStat(targetIndex)
             local TagetType = tonumber(params[targetIndex]) --获取对象类型，攻击者、目标、定值
@@ -73,8 +74,8 @@ local DamageModifierCondition = {
     end,
 
     CheckEnemyType = function(attacker, target, damageInfo, params) -- 【敌人强度类型】
-        -- addiParam[0] 目标的强度类型
-        -- addiParam[1] 布尔判断，0=是，1=否
+        -- params[0] 目标的强度类型
+        -- params[1] 布尔判断，0=是，1=否
 
         local enemyType = 2; --测试数据，敌人是boss
         local PrintTargetType = {
@@ -111,18 +112,18 @@ local DamageModifierCondition = {
     end,
 
     CheckDistance = function(attacker, target, damageInfo, params) --【判断距离】
-        -- addiParam[0] 右值，比较距离。左值是实际距离
-        -- addiParam[1] 比较符，1=大于，2=大于等于，3=等于，4=小于，5=小于等于
+        -- params[0] 右值，比较距离。左值是实际距离
+        -- params[1] 比较符，1=大于，2=大于等于，3=等于，4=小于，5=小于等于
 
-        local distance = 3; -- 获取相对距离，暂时没实现 local distance =  CS.UnityEngine.Vector3.Distance(attacker.position, target.position);
+        local distance = damageDistance; -- 获取相对距离，暂时没实现 local distance =  CS.UnityEngine.Vector3.Distance(attacker.position, target.position);
         local result = CompareFunc[params[1]](distance, params[0])
         combineLog(result, "判断距离")
         return result
     end,
 
     CheckDamageSourceType = function(attacker, target, damageInfo, params) --【判断伤害来源】
-        -- addiParam[0] 如果伤害来源是此类型则
-        -- addiParam[1] 布尔判断，0=是，1=否
+        -- params[0] 如果伤害来源是此类型则
+        -- params[1] 布尔判断，0=是，1=否
 
         local damageSource = damageInfo.SourceType --获取伤害来源
         local PrintDamageSource = {
@@ -157,12 +158,13 @@ local DamageModifierCondition = {
     end,
 
     CheckTags = function(attacker, target, damageInfo, params) -- 【判断Tag】
-        -- addiParam[0] 对象，0=攻击者，1=目标
-        -- addiParam[1] TagID1
-        -- addiParam[2] TagID2。。。表示and，必须同时满足给的所有tag
+        -- params[0] 对象，0=攻击者，1=目标，2=技能Tag
+        -- params[1] TagID1
+        -- params[2] TagID2。。。必须同时满足给的所有tag
         local result = true
+        local object = (params[0] == 0) and attacker or (params[0] == 1) and target
         for i = 1, params.Count - 1 do
-            if not attacker:HasTag(params[i]) then
+            if not object:HasTag(params[i]) then
                 result = false
                 break
             end
@@ -171,21 +173,21 @@ local DamageModifierCondition = {
         return result
     end,
 
-    CheckBuffByLayer = function(attacker, target, damageInfo, addiParam) --【判断BUFF】
-        -- addiParam[0] 对象，0=攻击者，1=目标
-        -- addiParam[1] A值，BUFFID
-        -- addiParam[2] 比较符，1=大于，2=大于等于，3=等于，4=小于，5=小于等于
-        -- addiParam[3] 比较BUFF层数
+    CheckBuffByLayer = function(attacker, target, damageInfo, params) --【判断BUFF】
+        -- params[0] 对象，0=攻击者，1=目标
+        -- params[1] A值，BUFFID
+        -- params[2] 比较符，1=大于，2=大于等于，3=等于，4=小于，5=小于等于
+        -- params[3] 比较BUFF层数
 
         local buffLayer = 3; --测试数据
 
-        local actor = (addiParam[0] == 1) and attacker or target
-        local buffLayer = actor.BuffLayer(addiParam[1]); -- 还没实现获取对象BUFF层数，需要程序提供接口
+        local actor = (params[0] == 1) and attacker or target
+        local buffLayer = actor.BuffLayer(params[1]); -- 还没实现获取对象BUFF层数，需要程序提供接口
 
 
-        local result = CompareFunc[addiParam[2]](buffLayer, addiParam[3])
+        local result = CompareFunc[params[2]](buffLayer, params[3])
         combineLog(true, "属性比较")
-        -- CS.UnityEngine.Debug.Log("目标：" ..tostring(actor) .."有ID【" ..addiParam[1] .. "】的BUFF->" .. buffLayer .. "层。" .. "   <color=#00FF00>BUFF层数匹配</color> 附加增伤乘区 " .. (result * 100) .. "%");
+        -- CS.UnityEngine.Debug.Log("目标：" ..tostring(actor) .."有ID【" ..params[1] .. "】的BUFF->" .. buffLayer .. "层。" .. "   <color=#00FF00>BUFF层数匹配</color> 附加增伤乘区 " .. (result * 100) .. "%");
         return result
     end
 
@@ -230,6 +232,8 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
     damageArgs.ElementPhysicalRedPCT = target:GetAttrLua(14030)                       --物理属性抗性
     damageArgs.ElementMagicPenPCT = attacker:GetAttrLua(14040)                        --元素属性抗性穿透
     damageArgs.ElementMagicRedPCT = target:GetAttrLua(14050)                          --元素属性抗性
+    damageArgs.DmgNear = attacker:GetAttrLua(16000)                                     --近距离增伤
+    damageArgs.DmgFar = attacker:GetAttrLua(16100)                                      --远距离增伤
 
     damageArgs.DmgRed = target:GetAttrLua(15300)                                      --直接减伤
     damageArgs.DmgRedNear = target:GetAttrLua(16020)                                  --近距离减伤
@@ -254,7 +258,7 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
     local DamRedFinal = 1
     local AllDamRed = {
         DmgDistanceRed = function(attacker, target, damageInfo)
-            local distance = 5;
+            local distance = damageDistance;
             local currentDistance = 1
             local result = 1
             if CompareFunc[2](currentDistance, distance) then
@@ -295,8 +299,15 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
         DamRedFinal = DamRedFinal * func(attacker, target, damageInfo)
     end
 
-    --增伤最终修正【Part.1】 计算条件检测增伤
-    local additiveFinal = 1;     --加区增伤
+    --增伤最终修正【Part.1】 静态条件检测增伤
+
+    local distanceFixed = (CompareFunc[2](CS.UnityEngine.Vector3.Distance(attacker.Pos, target.Pos), damageDistance ) == true) and damageArgs.DmgFar or damageArgs.DmgNear
+    local skillTagFixed = 0; for i = 1, #dmgAddiTags do if attacker:HasTag(dmgAddiTags[i]) then skillTagFixed = skillTagFixed + (dmgAddiValues[i] or 0) end end
+
+    local additiveFixed = ( distanceFixed + skillTagFixed ) / 10000;
+
+    --增伤最终修正【Part.2】 动态条件检测增伤
+    local additiveFinal = 1 + additiveFixed;     --加区增伤
     for i, damageFuncInfo in pairs(damageConfig.AddiTypes) do
         local isPass = true
         for idx, cid in pairs(damageFuncInfo.ConditionIds) do
@@ -305,8 +316,6 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
 
             if not result then
                 isPass = false
-                --CS.UnityEngine.Debug.Log("伤害ID【" .. damageInfo.DamageConfigId .. "】：" .. logPart .. "<color=#FD6225>【本次附加增伤中断】</color>")
-                --logPart = ""
                 break
             end
         end
@@ -315,8 +324,6 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
             additiveFinal = additiveFinal +
                     DamageApplyModifier[damageFuncInfo.ValueFuncName](attacker, target, damageInfo,
                             damageFuncInfo.ValueParams)
-            --CS.UnityEngine.Debug.Log("伤害ID【" .. damageInfo.DamageConfigId .. "】：" .. "<color=#00FF00>" .. logPart .. "</color>" .. "<color=#17F0FF>【【附加增伤乘区】】</color>-> " .. (additiveFinal * 100) .. "%")
-            --logPart = ""
         end
     end
 
@@ -348,7 +355,7 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
         damageArgs.CritDmgRate = CtirDmgFinal
     end
 
-    --增伤最终修正【Part.2】 apply条件增伤
+    --增伤最终修正【Part.3】 apply条件增伤
     damageArgs.FinalAddi = additiveFinal                          --附加增伤最终修正（包含条件检测的值）
     damageArgs.FinalMulti = multiplyFinal                         --乘区增伤最终修正（包含条件检测的值）
     damageArgs.FinalRED = DefRedFinal * EleResFinal * DamRedFinal --承伤最终修正（包含条件检测的值）
@@ -446,7 +453,7 @@ DamageFormula = {
         local finalDamageValue =
         (healAttack * damageArgs.Skill_Per) * (1 + beHealed + healUp) * damageArgs.CritDmgRate;
         logger.Info(
-                "<color=#1DDD16>DamageLog 最终治疗:<b>%s</b>  %s ID:%s  最终治疗强度:%s * 技能倍率:%s * ( 1 + 治疗效果:%s + 被治疗效果:%s )</color>",
+                "<color=#1DDD16>DamageLog 最终治疗:<b>%s</b>  %s ID:%s  最终治疗强度:%s * 技能倍率:%s * ( 1 + 额外治疗效果:%s + 额外被治疗效果:%s )</color>",
                 math.floor(finalDamageValue),
                 logger.IntToStr(damageInfo.IsCritical, "<color=#F8471B>暴击</color>"),
                 damageInfo.SourceActorId,

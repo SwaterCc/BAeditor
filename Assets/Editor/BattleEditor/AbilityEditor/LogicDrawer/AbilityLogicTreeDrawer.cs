@@ -371,8 +371,14 @@ namespace Editor.AbilityEditor
 
                     treeViewItem.UpdateDepth(_data);
 
-                    parentItem.children.Insert(args.insertAtIndex < 0 ? 0 : args.insertAtIndex, treeViewItem);
-                    parentData.ChildrenIds.Insert(args.insertAtIndex < 0 ? 0 : args.insertAtIndex, draggedItemId);
+                    if (args.insertAtIndex < parentItem.children.Count) {
+	                    parentItem.children.Insert(args.insertAtIndex < 0 ? 0 : args.insertAtIndex, treeViewItem);
+	                    parentData.ChildrenIds.Insert(args.insertAtIndex < 0 ? 0 : args.insertAtIndex, draggedItemId);
+                    }
+                    else {
+	                    parentItem.children.Add(treeViewItem);
+	                    parentData.ChildrenIds.Add(draggedItemId);
+                    }
                 }
 
                 Reload();

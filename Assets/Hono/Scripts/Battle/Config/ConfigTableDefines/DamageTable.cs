@@ -74,6 +74,11 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
+            /// 策划描述
+            /// </summary>
+            public string Desc { get; private set; }
+            
+            /// <summary>
             /// 伤害计算公式
             /// </summary>
             public string FormulaName { get; private set; }
@@ -121,17 +126,19 @@ namespace Hono.Scripts.Battle
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.FormulaName = parseString(line[1]);
+                    _row.Desc = parseString(line[1]);
             
-                    _row.DamageType = parseInt(line[2]);
+                    _row.FormulaName = parseString(line[2]);
             
-                    _row.ElementType = parseInt(line[3]);
+                    _row.DamageType = parseInt(line[3]);
             
-                    _row.ImpactValue = parseInt(line[4]);
+                    _row.ElementType = parseInt(line[4]);
             
-                    _row.AdditiveId = parseIntArray(line[5]);
+                    _row.ImpactValue = parseInt(line[5]);
             
-                    _row.MultiplyId = parseIntArray(line[6]);
+                    _row.AdditiveId = parseIntArray(line[6]);
+            
+                    _row.MultiplyId = parseIntArray(line[7]);
             
                 }
             }

@@ -52,6 +52,11 @@ namespace Hono.Scripts.Battle
             public abstract void DoJob();
 
             /// <summary>
+            /// 该节点的子节点全部执行完了
+            /// </summary>
+            public virtual void ChildrenJobFinish(){}
+            
+            /// <summary>
             /// 重置该节点，注意，同时该节点会被重置为未执行过
             /// </summary>
             public virtual void Reset()

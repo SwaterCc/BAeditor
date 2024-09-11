@@ -76,6 +76,7 @@ namespace Hono.Scripts.Battle
             hitBox.Variables.Set("hitBoxData", hitData);
             var targetUid = Ability.Context.SourceActor.GetAttr<List<int>>(ELogicAttr.AttrAttackTargetUids)[0];
             hitBox.Variables.Set("targetUid", targetUid);
+            hitBox.Variables.Set("abilityTags",Ability.Context.Invoker.Tags.GetAllTag());
             ActorManager.Instance.AddActor(hitBox);
         }
         

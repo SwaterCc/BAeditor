@@ -195,6 +195,7 @@ namespace Hono.Scripts.Battle
             public void OnSkillUsed()
             {
                 var targetUids = _logic.GetAttr<List<int>>(ELogicAttr.AttrAttackTargetUids);
+                targetUids ??= new List<int>();
                 targetUids.Clear();
 
                 //选敌
@@ -206,7 +207,12 @@ namespace Hono.Scripts.Battle
 
                     if (Data.MaxTargetCount != 1)
                     {
-                        targetUids.AddRange(targetList.GetRange(0, Data.MaxTargetCount));
+	                    if (targetList.Count > Data.MaxTargetCount) {
+		                    targetUids.AddRange(targetList.GetRange(0, Data.MaxTargetCount));
+	                    }
+	                    else {
+		                    targetUids.AddRange(targetList);
+	                    }
                     }
                     else
                     {
@@ -234,8 +240,8 @@ namespace Hono.Scripts.Battle
                     targetUids.Add(_logic.Uid);
                 }
 
-                if (targetUids.Count > 0)
-                {
+                if (targetUids.Count > 0) {
+	                _logic.SetAttr(ELogicAttr.AttrAttackTargetUids, targetUids,false);
                     _logic._abilityController.ExecutingAbility(_abilityUid);
                     resourceCheck();
                 }

@@ -48,7 +48,9 @@ namespace Hono.Scripts.Battle {
 		/// 属于Ability的变量
 		/// </summary>
 		public VarCollection Variables { get; }
-		
+
+		public Tags Tags { get; private set; }
+
 		public Ability(int uid, Actor actor, int abilityConfigId) {
 			Uid = uid;
 			Actor = actor;
@@ -58,6 +60,8 @@ namespace Hono.Scripts.Battle {
 			_state = new AbilityState(this);
 			_commands = new HashSet<ICommand>();
 			AssetManager.Instance.AddReloadHandle(this);
+			Tags = new Tags();
+		
 			_executor.Setup();
 		}
 

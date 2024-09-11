@@ -26,7 +26,7 @@ namespace Hono.Scripts.Battle
     {
         public bool OpenBoxCheck;
         [OdinSerialize] public CheckBoxData BoxData;
-
+        public int MaxTargetCount = -1;
         public List<FilterRange> Ranges = new List<FilterRange>();
         public List<FilterAttrCompare> Compares = new List<FilterAttrCompare>();
     }

@@ -16,6 +16,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public int BaseDamagePer;
         public int DamageConfigId;
+        public List<int> Tags = new List<int>();
         public int HitCount;
     }
 }

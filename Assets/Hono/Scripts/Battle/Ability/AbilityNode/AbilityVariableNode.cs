@@ -20,15 +20,21 @@ namespace Hono.Scripts.Battle
 
             public override void DoJob()
             {
-                if (_varData.VarParams.TryCallFunc(out var variableBox))
+                if (!_varData.VarParams.TryCallFunc(out var variableBox))
                 {
-                    AbilityFunction.SetVariableByUid(_varData.Range, _varData.ActorUid, _varData.AbilityUid,
-                        _varData.Name, variableBox);
+	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
                 }
-                else
+                if (!_varData.ActorUid.TryCallFunc(out var actorUid))
                 {
-                    Debug.LogError($"函数执行失败 Name {_varData.Name}");
+	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
                 }
+                if (!_varData.AbilityUid.TryCallFunc(out var abilityUid))
+                {
+	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
+                }
+                
+                AbilityFunction.SetVariableByUid(_varData.Range, (int)actorUid, (int)abilityUid,
+	                _varData.Name, variableBox);
             }
         }
     }

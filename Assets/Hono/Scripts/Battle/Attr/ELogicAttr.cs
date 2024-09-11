@@ -153,6 +153,13 @@ namespace Hono.Scripts.Battle
         AttrDmgRedExAdd = 15303,
         AttrDmgRedPer = 15304,
         AttrDmgRedExPer = 15305,
+        //近距离增伤
+        AttrDmgNear = 16000,
+        AttrDmgNearTotal = 16001,
+        AttrDmgNearAdd = 16002,
+        AttrDmgNearExAdd = 16003,
+        AttrDmgNearPer = 16004,
+        AttrDmgNearExPer = 16005,
         //近距离减伤
         AttrDmgRedNear = 16020,
         AttrDmgRedNearTotal = 16021,
@@ -160,6 +167,13 @@ namespace Hono.Scripts.Battle
         AttrDmgRedNearExAdd = 16023,
         AttrDmgRedNearPer = 16024,
         AttrDmgRedNearExPer = 16025,
+        //远距离增伤
+        AttrDmgFar = 16100,
+        AttrDmgFarTotal = 16101,
+        AttrDmgFarAdd = 16102,
+        AttrDmgFarExAdd = 16103,
+        AttrDmgFarPer = 16104,
+        AttrDmgFarExPer = 16105,
         //远距离减伤
         AttrDmgRedFar = 16120,
         AttrDmgRedFarTotal = 16121,

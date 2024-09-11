@@ -15,24 +15,20 @@ MonoBehaviour:
   SkillId: 10001
   SkillType: 0
   SkillTargetType: 0
-  SkillRange: 10
+  SkillRange: 15
   EcdMode: 0
-  SkillCD: 5
+  SkillCD: 2
   SkillResCheck: []
   CostType: 0
   SkillResCost: []
   PriorityATK: 0
   PriorityDEF: 0
   ForceFaceTarget: 0
-  SkillDamageBasePer: 50000
+  SkillDamageBasePer: 10000
   UseCustomFilter: 0
   CustomFilter:
     OpenBoxCheck: 0
-    Ranges:
-    - RangeType: 0
-      Value: 0
-    Compares:
-    - AttrType: 0
-      CompareResType: 0
-      CompareValue: 0
-  MaxTargetCount: 1
+    MaxTargetCount: 0
+    Ranges: []
+    Compares: []
+  MaxTargetCount: 3

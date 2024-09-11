@@ -233,6 +233,7 @@ namespace Editor.AbilityEditor
             if (GUILayout.Button("确认修改"))
             {
                 ParameterMaker.Init(_origin, _funcHead.ToArray());
+                _origin.Save();
                 AbilityEditorHelper.SearchText = "";
                 Close();
             }

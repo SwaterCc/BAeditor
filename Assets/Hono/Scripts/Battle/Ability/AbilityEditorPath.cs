@@ -10,6 +10,7 @@
         public static readonly string AbilityGameModePath = $"{RootPath}/Ability/GameMode";
         public static readonly string AbilityOtherPath = $"{RootPath}/Ability/Other";
         
+        
         public static readonly string SkillPath = $"{RootPath}/Skill";
         public static readonly string BuffPath = $"{RootPath}/Buff";
         public static readonly string BulletPath = $"{RootPath}/Bullet";

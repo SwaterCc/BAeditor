@@ -41,7 +41,9 @@ namespace Hono.Scripts.Battle
                 case ELogicAttr.AttrAttackSpeedPCT:
                 case ELogicAttr.AttrAttack:
                 case ELogicAttr.AttrDmgRed:
+                case ELogicAttr.AttrDmgNear:
                 case ELogicAttr.AttrDmgRedNear:
+                case ELogicAttr.AttrDmgFar:
                 case ELogicAttr.AttrDmgRedFar:
                 case ELogicAttr.AttrDmgRedBullet:
                 case ELogicAttr.AttrDmgRedMelee:

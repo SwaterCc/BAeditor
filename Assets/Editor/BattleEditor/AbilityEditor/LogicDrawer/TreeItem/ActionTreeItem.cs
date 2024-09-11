@@ -44,6 +44,8 @@ namespace Editor.AbilityEditor.TreeItem
                 settingWindow.FromString = $"→ ActionNodeId<{DrawCount}>";
                 SettingWindow = settingWindow;
             }
+
+            _actionFunc.OnSave = parameters => NodeData.ActionNodeData = parameters; 
             SettingWindow.Show();
             SettingWindow.Focus();
         }

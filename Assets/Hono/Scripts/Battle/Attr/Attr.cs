@@ -46,10 +46,10 @@ namespace Hono.Scripts.Battle {
 		}
 
 		public ICommand Set(T value, bool isTempData = false) {
+			_value = value;
 			if (isTempData || _onCommandChanged == null) {
 				return new AttrCommand<T>(this, value);
 			}
-			_value = value;
 			return null;
 		}
 

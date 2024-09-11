@@ -74,6 +74,11 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
+            /// 描述
+            /// </summary>
+            public string Desc { get; private set; }
+            
+            /// <summary>
             /// 逻辑类型(玩家养成角色0，怪物1，建筑物2，打击点3)
             /// </summary>
             public int LogicType { get; private set; }
@@ -121,17 +126,19 @@ namespace Hono.Scripts.Battle
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.LogicType = parseInt(line[1]);
+                    _row.Desc = parseString(line[1]);
             
-                    _row.ActorClassId = parseInt(line[2]);
+                    _row.LogicType = parseInt(line[2]);
             
-                    _row.AttrTemplateId = parseInt(line[3]);
+                    _row.ActorClassId = parseInt(line[3]);
             
-                    _row.OwnerSkills = parseIntTable(line[4]);
+                    _row.AttrTemplateId = parseInt(line[4]);
             
-                    _row.OwnerBuffs = parseIntArray(line[5]);
+                    _row.OwnerSkills = parseIntTable(line[5]);
             
-                    _row.ownerOtherAbility = parseIntArray(line[6]);
+                    _row.OwnerBuffs = parseIntArray(line[6]);
+            
+                    _row.ownerOtherAbility = parseIntArray(line[7]);
             
                 }
             }

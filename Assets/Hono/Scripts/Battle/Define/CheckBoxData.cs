@@ -5,10 +5,8 @@ using UnityEngine;
 namespace Hono.Scripts.Battle
 {
 	[Serializable]
-    public abstract class CheckBoxData
-    {
-	    [ReadOnly]
-	    public ECheckBoxShapeType ShapeType { get; }
+    public abstract class CheckBoxData {
+	    [ReadOnly] public ECheckBoxShapeType ShapeType;
         
 	    public Quaternion Rot = Quaternion.identity;
         //是否应用百分比存储偏移

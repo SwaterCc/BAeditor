@@ -55,6 +55,8 @@ namespace Editor.AbilityEditor
             SirenixEditorGUI.HorizontalLineSeparator();
             _data.SkillDamageBasePer = SirenixEditorFields.IntField("技能基础倍率万分比", _data.SkillDamageBasePer);
             SirenixEditorGUI.HorizontalLineSeparator();
+            _data.MaxTargetCount = EditorGUILayout.IntField("技能选择目标数量", _data.MaxTargetCount);
+            SirenixEditorGUI.HorizontalLineSeparator();
             _data.UseCustomFilter = EditorGUILayout.Toggle("是否使用自定义筛选器", _data.UseCustomFilter);
             if (_data.UseCustomFilter)
             {

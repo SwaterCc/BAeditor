@@ -63,6 +63,10 @@ namespace Hono.Scripts.Battle
                     return;
                 }
                 AbilityData = abilityData;
+
+                foreach (var tag in abilityData.Tags) {
+	                Ability.Tags.Add(tag);
+                }
                 
                 var nodeDict = AbilityData.NodeDict;
                 if (nodeDict is { Count: > 0 })
@@ -170,29 +174,11 @@ namespace Hono.Scripts.Battle
                         curNode.DoJob();
                         PassNode(nodeId);
                     }
-
-                    if (curNode.NodeData.NodeType == EAbilityNodeType.ERepeat)
-                    {
-                        _repeatNodeIds.Push(curNode.ConfigId);
+                    else {
+	                    curNode.ChildrenJobFinish();
                     }
-
-                    var nextNodeId = curNode.GetNextNode();
                     
-                    if (_repeatNodeIds.Count > 0 && nextNodeId == _repeatNodeIds.Peek())
-                    {
-                        //重复节点又回来了
-                        var repeatNode = ((AbilityRepeatNode)curNode);
-                        if (repeatNode.CheckLoopEnd())
-                        {
-                            _repeatNodeIds.Pop();
-                        }
-                        else
-                        {
-                            repeatNode.Repeat();
-                            nodeId = _nodes[nextNodeId].NodeData.ChildrenIds[0];
-                            continue;
-                        }
-                    }
+                    var nextNodeId = curNode.GetNextNode();
                     
                     if (nextNodeId != -1)
                     {

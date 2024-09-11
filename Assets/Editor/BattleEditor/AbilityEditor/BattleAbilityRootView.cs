@@ -29,11 +29,18 @@ namespace Editor.AbilityEditor
     {
         private List<int> _removeList = new List<int>();
         private bool _isUsedMulitRemove;
-
+        
+        private readonly Dictionary<EAbilityType, string> _abilityExFolders = new()
+        {
+	        { EAbilityType.Skill, AbilityEditorPath.SkillPath },
+	        { EAbilityType.Buff, AbilityEditorPath.BuffPath },
+	        { EAbilityType.Bullet, AbilityEditorPath.BuffPath },
+        };
         protected override void DrawPropertyLayout(GUIContent label)
         {
             var datas = this.ValueEntry.SmartValue.Data;
             string removePath = null;
+            int removeId = -1;
             SirenixEditorGUI.BeginBox();
             /*_isUsedMulitRemove = EditorGUILayout.Toggle("批量删除开启？", _isUsedMulitRemove, GUILayout.Width(20));
             if (_isUsedMulitRemove)
@@ -48,13 +55,7 @@ namespace Editor.AbilityEditor
                     _removeList.Clear();
                 }
             }*/
-            var searchKeyStr = SirenixEditorGUI.ToolbarSearchField("通过Id搜索");
-
-            if (!int.TryParse(searchKeyStr, out var searchKey))
-            {
-                searchKey = -1;
-            }
-
+            
             SirenixEditorGUI.BeginVerticalList();
 
 
@@ -73,8 +74,6 @@ namespace Editor.AbilityEditor
                     }
                 }*/
 
-                if (searchKey != -1 && pair.Value.ConfigId != searchKey) continue;
-
                 EditorGUILayout.LabelField($"ID:{pair.Value.ID}", GUILayout.Width(50));
                 EditorGUILayout.LabelField($"Name:{pair.Value.name}", GUILayout.Width(150));
                 EditorGUILayout.LabelField($"Desc:{pair.Value.Desc}");
@@ -82,6 +81,7 @@ namespace Editor.AbilityEditor
                 if (GUILayout.Button("删除"))
                 {
                     removePath = pair.Key;
+                    removeId = pair.Value.ID;
                 }
 
                 EditorGUILayout.EndHorizontal();
@@ -91,6 +91,12 @@ namespace Editor.AbilityEditor
             if (!string.IsNullOrEmpty(removePath))
             {
                 AssetDatabase.DeleteAsset(removePath);
+
+                if (_abilityExFolders.ContainsKey(ValueEntry.SmartValue.AbilityType)) {
+	                var exPath = _abilityExFolders[ValueEntry.SmartValue.AbilityType] + "/" + removeId + ".asset";
+	                AssetDatabase.DeleteAsset(exPath);
+                }
+                
                 ValueEntry.SmartValue.MainWindow.Reload(ValueEntry.SmartValue.AbilityType);
                 ValueEntry.SmartValue.MainWindow.ForceMenuTreeRebuild();
             }

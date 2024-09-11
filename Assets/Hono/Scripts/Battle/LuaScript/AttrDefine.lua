@@ -13,6 +13,8 @@ function init(attacker, target, damageInfo, damageConfig)
     attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRed, 0);
     attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedNear, 0);
     attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedFar, 0);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgNear, 10000);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrDmgFar, 5000);
     attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedBullet, 0);
     attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedMelee, 0);
     attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRedBuff, 0);
@@ -27,11 +29,10 @@ function init(attacker, target, damageInfo, damageConfig)
     attacker:SetAttrLuaByType(ELogicAttr.AttrElementMagicPenPCT, 3000)
     attacker:SetAttrLuaByType(ELogicAttr.AttrElementMagicRedPCT, 3000)
     attacker:SetAttrLuaByType(ELogicAttr.AttrHealIntensity, 0)
-    attacker:SetAttrLuaByType(ELogicAttr.AttrHeal, 10000)
+    attacker:SetAttrLuaByType(ELogicAttr.AttrHeal, 0)
     attacker:SetAttrLuaByType(ELogicAttr.AttrHealed, 0)
     attacker:AddTag(100)
     attacker:AddTag(101)
-    attacker:AddTag(102)
     --target属性
     target:SetAttrLuaByType(ELogicAttr.AttrEntityLevel, 10);
     target:SetAttrLuaByType(ELogicAttr.AttrAttack, 500);
@@ -62,7 +63,7 @@ function init(attacker, target, damageInfo, damageConfig)
     target:SetAttrLuaByType(ELogicAttr.AttrElementMagicRedPCT, 3000)
     target:SetAttrLuaByType(ELogicAttr.AttrHealIntensity, 0)
     target:SetAttrLuaByType(ELogicAttr.AttrHeal, 0)
-    target:SetAttrLuaByType(ELogicAttr.AttrHealed, 10000)
+    target:SetAttrLuaByType(ELogicAttr.AttrHealed, 0)
     target:AddTag(100)
     target:AddTag(101)
     target:AddTag(102)
