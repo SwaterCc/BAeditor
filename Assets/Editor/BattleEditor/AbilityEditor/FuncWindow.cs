@@ -22,17 +22,20 @@ namespace Editor.AbilityEditor
         {
             var window = CreateInstance<FuncWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
-            ((ParameterMaker)node).ChangeToDefaultFunc(EFuncCacheFlag.Variable);
-            window.Init((ParameterMaker)node, EFuncCacheFlag.Variable);
+            (ParameterMaker maker,string str) pair = ((ParameterMaker maker, string str))node;
+            pair.maker.ChangeToDefaultFunc(EFuncCacheFlag.Variable);
+            window.Init(pair.maker, EFuncCacheFlag.Variable);
             window.Show();
+            window.FromString += pair.str;
         }
 
-        public static void Open(ParameterMaker maker, EFuncCacheFlag flag)
+        public static FuncWindow Open(ParameterMaker maker, EFuncCacheFlag flag)
         {
             var window = CreateInstance<FuncWindow>();
             window.Init(maker, flag);
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
             window.Show();
+            return window;
         }
 
         #region 函数缓存
@@ -150,6 +153,7 @@ namespace Editor.AbilityEditor
         private EFuncCacheFlag _flag;
 
         private FuncList _funcTree;
+        public string FromString;
 
         public void Init(ParameterMaker maker, EFuncCacheFlag flag)
         {
@@ -174,10 +178,12 @@ namespace Editor.AbilityEditor
         private void OnGUI()
         {
             EditorGUILayout.BeginVertical();
+            SirenixEditorGUI.Title(FromString,"",TextAlignment.Center,true);
             EditorGUILayout.BeginHorizontal();
             //函数列表界面
             GUILayout.Box("", GUILayout.Width(300), GUILayout.Height(280));
-            _funcTree.OnGUI(new Rect(5, 5, 300, 280));
+            var rect = GUIHelper.GetCurrentLayoutRect();
+            _funcTree.OnGUI(new Rect(rect.x, rect.y, 300, 280));
             //函数预览界面
             SirenixEditorGUI.BeginBox();
             SirenixEditorGUI.BeginVerticalList();
@@ -220,7 +226,7 @@ namespace Editor.AbilityEditor
             {
                 foreach (var param in _funcHead.FuncParams)
                 {
-                    param.Draw();
+                    param.Draw(FromString +" -> 设置变量：" +param.Self.ParamName);
                 }
             }
 

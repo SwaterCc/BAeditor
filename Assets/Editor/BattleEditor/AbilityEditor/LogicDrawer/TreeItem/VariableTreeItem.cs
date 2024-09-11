@@ -59,7 +59,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         public override Rect GetPos()
         {
-            return GUIHelper.GetEditorWindowRect().AlignCenter(400, 140);
+            return GUIHelper.GetEditorWindowRect().AlignCenter(740, 140);
         }
 
         private void Save()
@@ -88,7 +88,7 @@ namespace Editor.AbilityEditor.TreeItem
 
             EditorGUILayout.LabelField("变量值");
 
-            _variable.Draw();
+            _variable.Draw("-> SetVariable");
 
             EditorGUILayout.EndHorizontal();
 

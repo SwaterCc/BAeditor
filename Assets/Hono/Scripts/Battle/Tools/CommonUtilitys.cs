@@ -74,7 +74,7 @@ namespace Hono.Scripts.Battle.Tools {
 			switch (data.ShapeType) {
 				case ECheckBoxShapeType.Cube:
 					var cubeData = (CheckBoxCube)data;
-					var half = new Vector3(cubeData.Length, cubeData.Height, cubeData.Width);
+					var half = new Vector3(cubeData.Length/2, cubeData.Height/2, cubeData.Width/2);
 					raycastHits.AddRange(Physics.BoxCastAll(centerPos, half, followAttackerRot * Vector3.forward,
 						data.Rot, 0.001f));
 					GizmosHelper.Instance.DrawCube(centerPos, half, finalRot, Color.green);

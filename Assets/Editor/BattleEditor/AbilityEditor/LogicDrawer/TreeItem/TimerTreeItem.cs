@@ -55,7 +55,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         public override Rect GetPos()
         {
-            return GUIHelper.GetEditorWindowRect().AlignCenter(400, 120);
+            return GUIHelper.GetEditorWindowRect().AlignCenter(740, 120);
         }
 
         private void OnGUI()

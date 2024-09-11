@@ -36,6 +36,7 @@ namespace Editor.AbilityEditor
     {
         private AbilityNodeData _cycleHeadData;
         private AbilityData _data;
+        private int _drawItemCount;
 
         public AbilityLogicTreeDrawer(TreeViewState state, AbilityData data, AbilityNodeData head) : base(state)
         {
@@ -52,7 +53,7 @@ namespace Editor.AbilityEditor
         protected override TreeViewItem BuildRoot()
         {
             var root = new EmptyItem(0, -1, "root");
-
+            _drawItemCount = 0;
             var cycleRoot = new CycleTreeItem(_cycleHeadData);
             cycleRoot.depth = 0;
             root.AddChild(cycleRoot);
@@ -104,7 +105,8 @@ namespace Editor.AbilityEditor
                         idx++;
                         childNodeData.NextIdInSameLevel = _data.NodeDict[nodeData.ChildrenIds[idx]].NodeId;
                     }
-                    
+
+                    item.DrawCount = ++_drawItemCount;
                     parent.AddChild(item);
                     setupChild(childNodeData, item);
                 }
@@ -121,8 +123,9 @@ namespace Editor.AbilityEditor
             {
                 return;
             }
-
-            SetExpanded(item.id, true);
+            
+            if (item.depth == 0) SetExpanded(item.id, true);
+            
             var rowRect = args.rowRect;
             float labelWidth = 24;
             rowRect.x = rowRect.x + 25 + 38 * item.NodeData.Depth;

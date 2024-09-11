@@ -41,6 +41,7 @@ namespace Editor.AbilityEditor.TreeItem
                 var settingWindow = FuncWindow.CreateInstance<FuncWindow>();
                 settingWindow.Init(_actionFunc, EFuncCacheFlag.Action);
                 settingWindow.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
+                settingWindow.FromString = $"→ ActionNodeId<{DrawCount}>";
                 SettingWindow = settingWindow;
             }
             SettingWindow.Show();

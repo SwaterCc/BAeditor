@@ -4,6 +4,7 @@ using Hono.Scripts.Battle;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -17,6 +18,8 @@ namespace Editor.AbilityEditor
         public bool ShowFlag = true;
 
         public EditorWindow SettingWindow;
+
+        public int DrawCount;
 
         protected AbilityLogicTreeItem(int id, int depth, string name) : base(id, depth, name) { }
 
@@ -48,7 +51,16 @@ namespace Editor.AbilityEditor
         public virtual void DrawItem(Rect lineRect)
         {
             var bgColor = GUI.backgroundColor;
-            GUI.backgroundColor = getButtonColor();
+            if (!SettingWindow.IsUnityNull())
+            {
+                GUI.backgroundColor = new Color(2,2,2);
+                ;
+            }
+            else
+            {
+                GUI.backgroundColor = getButtonColor();
+            }
+           
             lineRect.width = getButtonWidth();
             var buttonText = getButtonText();
 
@@ -59,6 +71,7 @@ namespace Editor.AbilityEditor
                 buttonText += "...";
             }
 
+            buttonText = $"<{DrawCount}>" + buttonText;
 
             if (GUI.Button(lineRect, new GUIContent(buttonText, getItemEffectInfo()), getButtonTextStyle()))
             {
@@ -120,7 +133,7 @@ namespace Editor.AbilityEditor
 
         public virtual Rect GetPos()
         {
-            return GUIHelper.GetEditorWindowRect().AlignCenter(400, 600);
+            return GUIHelper.GetEditorWindowRect().AlignCenter(740, 600);
         }
 
         public virtual GUIContent GetWindowName()

@@ -62,9 +62,11 @@ namespace Editor.AbilityEditor
 
         public void CreateFuncParam(string funcName)
         {
+            var paramName =Self.ParamName;
             Self = new Parameter();
             Self.IsFunc = true;
             Self.FuncName = funcName;
+            Self.ParamName = paramName;
             if (!FuncWindow.MethodCache.TryGetValue(Self.FuncName, out var methodInfo))
             {
                 Debug.LogError($"{Self.FuncName} 该函数未定义！");
@@ -130,7 +132,7 @@ namespace Editor.AbilityEditor
         public void ChangeToValueType(string valueTypeStr)
         {
             if (Self.IsValueType && valueTypeStr == Self.ParamType) return;
-            CreateValueParam(valueTypeStr);
+            CreateValueParam(valueTypeStr, Self.ParamName);
             FuncParams.Clear();
         }
 
@@ -175,13 +177,13 @@ namespace Editor.AbilityEditor
 
     public static class ParameterNodeDraw
     {
-        public static void Draw(this ParameterMaker maker)
+        public static void Draw(this ParameterMaker maker,string formStr = "")
         {
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("▼", GUILayout.Width(22)))
             {
                 GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("调用函数"), false, FuncWindow.OpenVariableToFunc, maker);
+                menu.AddItem(new GUIContent("调用函数"), false, FuncWindow.OpenVariableToFunc, (maker,formStr));
                 menu.AddItem(new GUIContent("使用基础类型/int"), false, maker.ChangeToValueType,
                     AbilityEditorHelper.GetTypeAllName(typeof(int)));
                 menu.AddItem(new GUIContent("使用基础类型/float"), false, maker.ChangeToValueType,
@@ -195,11 +197,13 @@ namespace Editor.AbilityEditor
 
             if (maker.Self.IsFunc)
             {
-                EditorGUILayout.LabelField("参数:", GUILayout.Width(30));
+                string label = string.IsNullOrEmpty(maker.Self.ParamName) ? "调用：" : maker.Self.ParamName;
+                EditorGUILayout.LabelField(label, GUILayout.Width(30));
                 if (GUILayout.Button(maker.ToString()))
                 {
                     //打开函数界面
-                    FuncWindow.Open(maker, EFuncCacheFlag.Variable);
+                    var window = FuncWindow.Open(maker, EFuncCacheFlag.Variable);
+                    window.FromString += formStr;
                 }
             }
 
