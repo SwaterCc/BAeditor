@@ -143,11 +143,7 @@ namespace Hono.Scripts.Battle.Event
             {
                 res = hitInfo.AbilityUId == _sourceAbility;
             }
-
-            if (_belongActorId != -1)
-            {
-                res = (res && hitInfo.ActorId == _belongActorId);
-            }
+            
 
             return res;
         }

@@ -24,12 +24,12 @@ namespace Hono.Scripts.Battle
 
             public override void DoJob()
             {
-                if (!_branchNode.Right.TryCallFunc(out var right))
+                if (!_branchNode.Right.ParseParameters(out var right))
                 {
                     Debug.LogError("Branch节点执行错误");
                 }
 
-                if (!_branchNode.Left.TryCallFunc(out var left))
+                if (!_branchNode.Left.ParseParameters(out var left))
                 {
                     Debug.LogError("Branch节点执行错误");
                 }

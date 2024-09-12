@@ -66,19 +66,6 @@ namespace Hono.Scripts.Battle
         {
             return new MotionEventChecker(eventType, motionId, null);
         }
-
-        [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void CreateHitBoxOneTarget(HitBoxData hitData)
-        {
-            var hitBox = ActorManager.Instance.CreateActor(BattleSetting.DefaultHitBoxPrototypeId);
-            hitBox.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.SourceActor.Uid, false);
-            hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
-            hitBox.Variables.Set("hitBoxData", hitData);
-            var targetUid = Ability.Context.SourceActor.GetAttr<List<int>>(ELogicAttr.AttrAttackTargetUids)[0];
-            hitBox.Variables.Set("targetUid", targetUid);
-            hitBox.Variables.Set("abilityTags",Ability.Context.Invoker.Tags.GetAllTag());
-            ActorManager.Instance.AddActor(hitBox);
-        }
         
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void CreateHitBox(int targetUid, HitBoxData hitData)
@@ -88,6 +75,7 @@ namespace Hono.Scripts.Battle
             hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
             hitBox.Variables.Set("hitBoxData", hitData);
             hitBox.Variables.Set("targetUid", targetUid);
+            hitBox.Variables.Set("abilityTags",Ability.Context.Invoker.Tags.GetAllTag());
             ActorManager.Instance.AddActor(hitBox);
         }
 
@@ -107,7 +95,7 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void ExecuteAbility(int actorUid,int configId)
+        public static void ExecuteAbility(AutoValue actorUid,int configId)
         {
             if (tryGetActor(actorUid, out var actor))
             {

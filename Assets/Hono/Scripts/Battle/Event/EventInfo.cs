@@ -4,15 +4,11 @@ namespace Hono.Scripts.Battle.Event
     
     public class HitEventInfo : IEventInfo
     {
-        /// <summary>
-        /// 打击点配置ID
-        /// </summary>
-        public int HitConfigId;
         
         /// <summary>
         /// 属于哪个角色
         /// </summary>
-        public int ActorId;
+        public int ActorUid;
 
         /// <summary>
         /// 属于哪个能力

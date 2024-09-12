@@ -32,6 +32,6 @@ namespace Hono.Scripts.Battle
         public string ValueFuncName = "normal";
 
         //[SerializeField,Tooltip("Apply的具体数值，在lua中根据自定义方法生效")]
-        public List<int> ValueParams = new List<int> { 0 };
+        public List<int> ValueParams = new List<int>();
     }
 }

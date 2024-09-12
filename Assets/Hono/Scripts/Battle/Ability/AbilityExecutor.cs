@@ -7,13 +7,6 @@ namespace Hono.Scripts.Battle
 {
     public partial class Ability
     {
-        [Flags]
-        public enum AbilityErrorCode
-        {
-            NoError = 0,
-            DataInitFailed = 1,
-        }
-        
         /// <summary>
         /// 用于执行能力节点序列
         /// </summary>

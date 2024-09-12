@@ -77,6 +77,7 @@ namespace Editor.AbilityEditor.TreeItem
             initDict();
             _func = new ParameterMaker();
             _curType = NodeData.EventNodeData.EventType;
+            _varName = NodeData.EventNodeData.CaptureVarName;
             ParameterMaker.Init(_func, NodeData.EventNodeData.CreateCheckerFunc);
         }
 

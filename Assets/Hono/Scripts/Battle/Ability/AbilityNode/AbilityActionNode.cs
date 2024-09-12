@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle
             {
                 if (NodeData.ActionNodeData[0].IsFunc)
                 {
-                    NodeData.ActionNodeData.TryCallFunc(out _);
+                    NodeData.ActionNodeData.ParseParameters(out _);
                 }
             }
         }

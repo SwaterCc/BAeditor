@@ -2017,18 +2017,15 @@ MonoBehaviour:
     - Name: OnceHitDamageCount
       Entry: 3
       Data: 1
-    - Name: ShapeType
-      Entry: 3
-      Data: 1
     - Name: DamageConfigId
       Entry: 3
       Data: 1
     - Name: AoeData
       Entry: 7
-      Data: 62|Hono.Scripts.Battle.CheckBoxSphere, Assembly-CSharp
+      Data: Hono.Scripts.Battle.CheckBoxData, Assembly-CSharp
     - Name: ShapeType
       Entry: 3
-      Data: 1
+      Data: 0
     - Name: Rot
       Entry: 7
       Data: UnityEngine.Quaternion, UnityEngine.CoreModule
@@ -2043,13 +2040,10 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 4
-      Data: 1
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
-    - Name: OffsetUsePercent
-      Entry: 5
-      Data: false
     - Name: Offset
       Entry: 7
       Data: UnityEngine.Vector3, UnityEngine.CoreModule
@@ -2065,15 +2059,30 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: WhenAbilityEndRemove
+    - Name: OffsetUsePercent
       Entry: 5
       Data: false
+    - Name: Length
+      Entry: 4
+      Data: 0
+    - Name: Width
+      Entry: 4
+      Data: 0
+    - Name: Height
+      Entry: 4
+      Data: 0
     - Name: Radius
       Entry: 4
-      Data: 5
+      Data: 0
+    - Name: Angle
+      Entry: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
+    - Name: WhenAbilityEndRemove
+      Entry: 5
+      Data: false
     - Name: UseCustomFilter
       Entry: 5
       Data: false

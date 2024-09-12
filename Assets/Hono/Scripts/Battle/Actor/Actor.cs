@@ -139,10 +139,10 @@ namespace Hono.Scripts.Battle
         {
             return _attrs.GetAttr<T>(logicAttr.ToInt());
         }
-
-        public object GetAttrBox(ELogicAttr logicAttr)
+        
+        public AutoValue GetAutoAttr(int logicAttr)
         {
-            return _attrs.GetAttrBox(logicAttr.ToInt());
+            return _attrs.GetAttrBox(logicAttr);
         }
 
         public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData)
@@ -152,7 +152,7 @@ namespace Hono.Scripts.Battle
 
         public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData)
         {
-            return _attrs.SetAttrBox(logicAttr.ToInt(), value, isTempData);
+            return _attrs.SetAutoAttr(logicAttr.ToInt(), value, isTempData);
         }
 
         public int AwardAbility(int configId, bool isRunNow)

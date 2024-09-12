@@ -46,9 +46,6 @@ namespace Hono.Scripts.Battle
         [Tooltip("单次打击造成几次伤害")]
         public int OnceHitDamageCount = 1;
         
-        [OnValueChanged("OnEnumChanged")]
-	    public ECheckBoxShapeType ShapeType;
-        
 	    /// <summary>
 	    /// 伤害数据
 	    /// </summary>
@@ -57,31 +54,13 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// Aoe打击点AABB盒子数据
         /// </summary>
-        [OdinSerialize]
         public CheckBoxData AoeData;
+        
+        public bool WhenAbilityEndRemove;
 
         public bool UseCustomFilter;
         
         [ShowIf("UseCustomFilter")]
         public FilterSetting FilterSetting;
-        
-        private void OnEnumChanged()
-        {
-	        switch (ShapeType) {
-		        case ECheckBoxShapeType.Cube:
-			        AoeData = new CheckBoxCube(ShapeType);
-			        AoeData.ShapeType = ECheckBoxShapeType.Cube;
-			        break;
-		        case ECheckBoxShapeType.Sphere:
-			        AoeData = new CheckBoxSphere(ShapeType);
-			        AoeData.ShapeType = ECheckBoxShapeType.Sphere;
-			        break;
-		        case ECheckBoxShapeType.Cylinder:
-		        case ECheckBoxShapeType.Sector:
-			        AoeData.ShapeType = ECheckBoxShapeType.Cylinder;
-			        AoeData = new CheckBoxCylinder(ShapeType);
-			        break;
-	        }
-        }
     }
 }

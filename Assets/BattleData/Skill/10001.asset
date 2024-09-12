@@ -28,6 +28,16 @@ MonoBehaviour:
   UseCustomFilter: 0
   CustomFilter:
     OpenBoxCheck: 0
+    BoxData:
+      ShapeType: 0
+      Rot: {x: 0, y: 0, z: 0, w: 0}
+      Offset: {x: 0, y: 0, z: 0}
+      OffsetUsePercent: 0
+      Length: 0
+      Width: 0
+      Height: 0
+      Radius: 0
+      Angle: 0
     MaxTargetCount: 0
     Ranges: []
     Compares: []

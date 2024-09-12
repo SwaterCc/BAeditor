@@ -28,7 +28,7 @@ namespace Hono.Scripts.Battle
             protected override void onTick(float dt)
             {
                 var curPos = _actorLogic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-                var curRot = Quaternion.FromToRotation(Vector3.forward, _actorLogic._inputHandle.MoveInputValue);
+                var curRot = Quaternion.LookRotation( _actorLogic._inputHandle.MoveInputValue,Vector3.up);
                 var offset = InputManager.Instance.InputDirection * (_baseSpeed * dt);
                 _actorLogic.SetAttr(ELogicAttr.AttrPosition, curPos + offset, false);
                 _actorLogic.SetAttr(ELogicAttr.AttrRot, curRot, false);

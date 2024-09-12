@@ -76,7 +76,7 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// Apply增伤数值万分比
             /// </summary>
-            public int DamageValue { get; private set; }
+            public IntArray DamageValue { get; private set; }
             
             /// <summary>
             /// Apply数值的方法，可以在lua中自定义计算方法，通常保持默认即可
@@ -111,7 +111,7 @@ namespace Hono.Scripts.Battle
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.DamageValue = parseInt(line[1]);
+                    _row.DamageValue = parseIntArray(line[1]);
             
                     _row.ApplyFuncName = parseString(line[2]);
             

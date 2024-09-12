@@ -13,8 +13,8 @@ namespace Hono.Scripts.Battle
 
             public void RegisterEvent()
             {
-                if (!NodeData.EventNodeData.CreateCheckerFunc.TryCallFunc(out var valueBox)) return;
-                _checker = (EventChecker)valueBox;
+                if (!NodeData.EventNodeData.CreateCheckerFunc.ParseParameters(out var valueBox)) return;
+                _checker = valueBox.GetRef<EventChecker>();
                 _checker.BindFunc(onEventFired);
                 BattleEventManager.Instance.Register(_checker);
             }

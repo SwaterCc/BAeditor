@@ -1,5 +1,4 @@
 using System;
-using Sirenix.Serialization;
 
 namespace Hono.Scripts.Battle
 {
@@ -9,16 +8,6 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public struct Parameter
     {
-        /// <summary>
-        /// 参数类型，反射得到的字符串
-        /// </summary>
-        public string ParamType;
-        
-        /// <summary>
-        /// 参数命名，反射得到的字符串
-        /// </summary>
-        public string ParamName;
-
         /// <summary>
         /// 是否是函数
         /// </summary>
@@ -30,8 +19,18 @@ namespace Hono.Scripts.Battle
         /// 是否是值类型
         /// </summary>
         public bool IsValueType;
-        
-        [OdinSerialize]
-        public object Value;
+        public AutoValue Value;
+
+        /// <summary>
+        /// 是否使用了变量
+        /// </summary>
+        public bool IsVariable;
+        public string VariableName;
+
+        /// <summary>
+        /// 是否使用属性
+        /// </summary>
+        public bool IsAttr;
+        public int AttrId;
     }
 }
