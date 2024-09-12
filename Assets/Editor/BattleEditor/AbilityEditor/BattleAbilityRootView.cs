@@ -32,9 +32,9 @@ namespace Editor.AbilityEditor
         
         private readonly Dictionary<EAbilityType, string> _abilityExFolders = new()
         {
-	        { EAbilityType.Skill, AbilityEditorPath.SkillPath },
-	        { EAbilityType.Buff, AbilityEditorPath.BuffPath },
-	        { EAbilityType.Bullet, AbilityEditorPath.BuffPath },
+	        { EAbilityType.Skill, BattleEditorPath.SkillPath },
+	        { EAbilityType.Buff, BattleEditorPath.BuffPath },
+	        { EAbilityType.Bullet, BattleEditorPath.BuffPath },
         };
         protected override void DrawPropertyLayout(GUIContent label)
         {

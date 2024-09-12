@@ -167,16 +167,8 @@ namespace Hono.Scripts.Battle {
 			return Actor.GetAttr<T>(logicAttr);
 		}
 
-		public object GetAttrBox(ELogicAttr logicAttr) {
-			return Actor.GetAttrBox(logicAttr);
-		}
-
 		public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData) {
 			return Actor.SetAttr(logicAttr, value, isTempData);
-		}
-
-		public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData) {
-			return Actor.SetAttrBox(logicAttr, value, isTempData);
 		}
 	}
 }

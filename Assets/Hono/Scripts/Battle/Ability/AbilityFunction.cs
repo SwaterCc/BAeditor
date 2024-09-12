@@ -143,18 +143,18 @@ namespace Hono.Scripts.Battle
                 return null;
             }
 
-            return actor.GetAttrBox(logicAttr);
+            return actor.GetAttrLua(logicAttr.ToInt());
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void SetAttr(int actorUid, ELogicAttr logicAttr, object value, bool isTempData)
+        public static void SetAttr(int actorUid, ELogicAttr logicAttr, AutoValue value, bool isTempData)
         {
             if (!tryGetActor(actorUid, out var actor))
             {
                 return;
             }
 
-            var command = actor.SetAttrBox(logicAttr, value, isTempData);
+            var command = actor.SetAttr(logicAttr, value, isTempData);
             if (isTempData && command != null)
                 Ability.Context.Invoker.AddCommand(command);
         }

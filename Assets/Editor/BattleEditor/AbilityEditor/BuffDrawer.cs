@@ -11,7 +11,7 @@ namespace Editor.AbilityEditor
 
         public void LoadAsset(int id)
         {
-            string path = AbilityEditorPath.BuffPath + "/" + id + ".asset";
+            string path = BattleEditorPath.BuffPath + "/" + id + ".asset";
             _data = AssetDatabase.LoadAssetAtPath<BuffData>(path);
             if (_data == null)
             {

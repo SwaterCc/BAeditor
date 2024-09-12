@@ -8,6 +8,9 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public struct Parameter
     {
+        public string ParamName;
+        public string ParamType;
+        
         /// <summary>
         /// 是否是函数
         /// </summary>

@@ -8,11 +8,15 @@ namespace Hono.Scripts.Battle
 {
     public class AttrDefine : SerializedScriptableObject
     {
-        public int id;
-        public string desc;
-        [NonSerialized]
-        [OdinSerialize]
         
-        public List<AttrDefineItem> AttrDefineItems = new List<AttrDefineItem>();
+        [TableList]
+        public List<AttrDefineItem> AttrDefines = new List<AttrDefineItem>();
+        
+        public void loadFiled()
+        {
+            
+        }
+        
+       
     }
 }

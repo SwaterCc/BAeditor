@@ -73,7 +73,7 @@ namespace Hono.Scripts.Battle
             Uid = uid;
             _tags = new Tags();
             _rtState = new ActorRTState();
-            _attrs = new AttrCollection(this, LogicAttrCreator.Create);
+            _attrs = new AttrCollection(this, AttrCreator.Create);
             _abilityController = new AbilityController(this);
             Variables = new VarCollection(this, 128);
         }
@@ -135,24 +135,14 @@ namespace Hono.Scripts.Battle
 
         #region 对外接口
 
-        public T GetAttr<T>(ELogicAttr logicAttr)
+        public T GetAttr<T>(ELogicAttr attrId)
         {
-            return _attrs.GetAttr<T>(logicAttr.ToInt());
+            return _attrs.GetAttr<T>(attrId.ToInt());
         }
         
-        public AutoValue GetAutoAttr(int logicAttr)
+        public ICommand SetAttr<T>(ELogicAttr attrId, T value, bool isTempData = false)
         {
-            return _attrs.GetAttrBox(logicAttr);
-        }
-
-        public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData)
-        {
-            return _attrs.SetAttr(logicAttr.ToInt(), value, isTempData);
-        }
-
-        public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData)
-        {
-            return _attrs.SetAutoAttr(logicAttr.ToInt(), value, isTempData);
+            return _attrs.SetAttr(attrId.ToInt(), value, isTempData);
         }
 
         public int AwardAbility(int configId, bool isRunNow)
@@ -169,6 +159,11 @@ namespace Hono.Scripts.Battle
         {
             _abilityController.ExecutingAbilityByConfig(config);
         }
+        
+        public bool HasAbility(int abilityConfigId)
+        {
+            return _abilityController.HasAbility(abilityConfigId);
+        }
 
         public bool TryGetAbility(int uid,out Ability ability)
         {
@@ -180,21 +175,15 @@ namespace Hono.Scripts.Battle
             _tags.Add(tag);
         }
 
+        public void RemoveTag(int tag)
+        {
+           
+        }
+        
         public bool HasTag(int tag)
         {
             return _tags.HasTag(tag);
         }
-
-        public bool HasAttr(ELogicAttr attr)
-        {
-            return _attrs.HasAttr(attr.ToInt());
-        }
-
-        public bool HasAbility(int abilityConfigId)
-        {
-            return _abilityController.HasAbility(abilityConfigId);
-        }
-
         #endregion
 
         #region LUA_Attr

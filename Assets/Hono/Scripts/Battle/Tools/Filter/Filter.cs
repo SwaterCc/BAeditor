@@ -127,7 +127,7 @@ namespace Hono.Scripts.Battle
 
                     foreach (var compare in _filterSetting.Compares)
                     {
-                        var left = (IComparable)actor.Logic.GetAttrBox(compare.AttrType);
+                        var left = (IComparable)actor.GetAttrLua((int)compare.AttrType);
                         int res = left.CompareTo(compare.CompareValue);
                         if (!getCompareRes(compare.CompareResType, res))
                         {

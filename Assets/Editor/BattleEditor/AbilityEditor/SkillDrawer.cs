@@ -14,7 +14,7 @@ namespace Editor.AbilityEditor
 
         public void LoadAsset(int id)
         {
-            string path = AbilityEditorPath.SkillPath + "/" + id + ".asset";
+            string path = BattleEditorPath.SkillPath + "/" + id + ".asset";
             _data = AssetDatabase.LoadAssetAtPath<SkillData>(path);
             if (_data == null)
             {

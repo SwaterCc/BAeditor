@@ -24,10 +24,6 @@ namespace Hono.Scripts.Battle {
 			return attr;
 		}
 
-		public bool HasAttr(int attrType) {
-			return _attrs.ContainsKey(attrType);
-		}
-
 		public ICommand SetAttr<T>(int attrType, T value, bool isTempData) {
 			var attrTypeInt = attrType;
 
@@ -44,28 +40,6 @@ namespace Hono.Scripts.Battle {
 			}
 
 			return null;
-		}
-
-		//TODO：性能问题
-		public ICommand SetAutoAttr(int attrType, AutoValue value, bool isTempData) {
-			var attrTypeInt = attrType;
-
-			if (!_attrs.TryGetValue(attrTypeInt, out var attr)) {
-				attr = getAttrAndSetDefault(attrType);
-				_attrs.Add(attrTypeInt, attr);
-			}
-
-			return attr.AutoSet(value, isTempData);
-		}
-
-		//TODO：性能问题
-		public AutoValue GetAttrBox(int attrType) {
-			if (!_attrs.TryGetValue(attrType, out var attr)) {
-				attr = getAttrAndSetDefault(attrType);
-				_attrs.Add(attrType, attr);
-			}
-
-			return attr.GetAuto();
 		}
 
 		public T GetAttr<T>(int attrType) {
@@ -87,10 +61,6 @@ namespace Hono.Scripts.Battle {
 	public static class AttrEnumExtensions {
 		public static int ToInt(this ELogicAttr logicAttr) {
 			return (int)logicAttr;
-		}
-
-		public static int ToInt(this EShowAttr attr) {
-			return (int)attr;
 		}
 	}
 }

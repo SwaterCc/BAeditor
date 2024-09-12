@@ -98,7 +98,7 @@ namespace Editor.AbilityEditor
                 return;
             }
 
-            Self.Value = valueType.InstantiateDefault(true);
+            Self.Value = (AutoValue)valueType.InstantiateDefault(true);
         }
 
         public void Parse(Parameter[] source, ref int start)
@@ -221,7 +221,7 @@ namespace Editor.AbilityEditor
 
                     string label = string.IsNullOrEmpty(maker.Self.ParamName) ? "参数" : maker.Self.ParamName;
 
-                    maker.Self.Value = AbilityEditorHelper.DrawLabelByType(type, label, maker.Self.Value);
+                    maker.Self.Value = (AutoValue)AbilityEditorHelper.DrawLabelByType(type, label, maker.Self.Value);
                 }
             }
 

@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle
         public ICommand AutoSet(AutoValue obj, bool isTempData = false);
         public AutoValue GetAuto();
     }
-
+    
     /// <summary>
     /// 属性基类
     /// </summary>

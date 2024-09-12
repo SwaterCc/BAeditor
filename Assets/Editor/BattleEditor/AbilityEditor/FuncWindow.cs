@@ -226,7 +226,7 @@ namespace Editor.AbilityEditor
             {
                 foreach (var param in _funcHead.FuncParams)
                 {
-                    param.Draw(FromString +" -> 设置变量：" +param.Self.ParamName);
+                   // param.Draw(FromString +" -> 设置变量：" +param.Self.ParamName);
                 }
             }
 

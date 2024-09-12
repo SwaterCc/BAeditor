@@ -1,0 +1,24 @@
+using System.Collections.Generic;
+using System.Numerics;
+
+namespace Hono.Scripts.Battle
+{
+//Auto::AttrMaker
+    public enum ELogicAttr
+    {
+        @EnumAttrDefine
+    }
+
+    public static class AttrCreator
+    {
+        public static IAttr Create(int attrType)
+        {
+            switch ((ELogicAttr)attrType)
+            {
+                @Case
+            }
+
+            return null;
+        }
+    }
+}

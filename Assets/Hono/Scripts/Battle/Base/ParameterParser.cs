@@ -27,7 +27,7 @@ namespace Hono.Scripts.Battle
 
                 if (parameters[0].IsAttr)
                 {
-                    result = Ability.Context.SourceActor.GetAutoAttr(parameters[0].AttrId);
+                   // result = Ability.Context.SourceActor.GetAutoAttr(parameters[0].AttrId);
                     return true;
                 }
             }

@@ -1,0 +1,227 @@
+ #Base
+int AttrUid 1 
+int AttrSourceActorUid 11
+int AttrSourceAbilityConfigId 12
+int SourceAbilityType 13
+Quaternion AttrRot 14
+Vector3 AttrPosition 15
+float AttrBaseSpeed 16
+IntArray AttrAttackTargetUids 17
+int AttrMoveTargetUid 18
+int AttrFaction  19
+ #HP
+
+int AttrHp   10000 
+int AttrHpPer   10001 
+int AttrMaxHp   10010 
+int AttrMaxHpTotal   10011 
+int AttrMaxHpAdd   10012 
+int AttrMaxHpExAdd   10013 
+int AttrMaxHpPer   10014 
+int AttrMaxHpExPer   10015 
+ #MP
+int AttrMp   10020 
+int AttrMpPer   10021 
+int AttrMaxMp   10030 
+int AttrMaxMpTotal   10031 
+int AttrMaxMpAdd   10032 
+int AttrMaxMpExAdd   10033 
+int AttrMaxMpPer   10034 
+int AttrMaxMpExPer   10035 
+ #攻击力
+int AttrAttack   12100 
+int AttrAttackTotal   12101 
+int AttrAttackAdd   12102 
+int AttrAttackExAdd   12103 
+int AttrAttackPer   12104 
+int AttrAttackExPer   12105 
+#防御力
+int AttrDefense   12110 
+int AttrDefenseTotal   12111 
+int AttrDefenseAdd   12112 
+int AttrDefenseExAdd   12113 
+int AttrDefensePer   12114 
+int AttrDefenseExPer   12115 
+ #护甲穿透值
+int AttrIgnoreDefense   12120 
+int AttrIgnoreDefenseTotal   12121 
+int AttrIgnoreDefenseAdd   12122 
+int AttrIgnoreDefenseExAdd   12123 
+int AttrIgnoreDefensePer   12124 
+int AttrIgnoreDefenseExPer   12125 
+ #护甲穿透万分比
+int AttrIgnoreDefensePCT   12130 
+int AttrIgnoreDefensePCTTotal   12131 
+int AttrIgnoreDefensePCTAdd   12132 
+int AttrIgnoreDefensePCTExAdd   12133 
+int AttrIgnoreDefensePCTPer   12134 
+int AttrIgnoreDefensePCTExPer   12135 
+ #暴击率
+int AttrCrit   12140 
+int AttrCritTotal   12141 
+int AttrCritAdd   12142 
+int AttrCritExAdd   12143 
+int AttrCritPer   12144 
+int AttrCritExPer   12145 
+ #暴击伤害
+int AttrCritDamage   12150 
+int AttrCritDamageTotal   12151 
+int AttrCritDamageAdd   12152 
+int AttrCritDamageExAdd   12153 
+int AttrCritDamagePer   12154 
+int AttrCritDamageExPer   12155 
+ #治疗强度
+int AttrHealIntensity   12200 
+int AttrHealIntensityTotal   12201 
+int AttrHealIntensityAdd   12202 
+int AttrHealIntensityExAdd   12203 
+int AttrHealIntensityPer   12204 
+int AttrHealIntensityExPer   12205 
+ #治疗效果
+int AttrHeal   13010 
+int AttrHealTotal   13011 
+int AttrHealAdd   13012 
+int AttrHealExAdd   13013 
+int AttrHealPer   13014 
+int AttrHealExPer   13015 
+ #被治疗效果
+int AttrHealed   13020 
+int AttrHealedTotal   13021 
+int AttrHealedAdd   13022 
+int AttrHealedExAdd   13023 
+int AttrHealedPer   13024 
+int AttrHealedExPer   13025 
+ #攻击速度
+int AttrAttackSpeedPCT   12500 
+int AttrAttackSpeedPCTTotal   12501 
+int AttrAttackSpeedPCTAdd   12502 
+int AttrAttackSpeedPCTExAdd   12503 
+int AttrAttackSpeedPCTPer   12504 
+int AttrAttackSpeedPCTExPer   12505 
+ #全属性抗性穿透
+int AttrElementPenPCT   14000 
+int AttrElementPenPCTTotal   14001 
+int AttrElementPenPCTAdd   14002 
+int AttrElementPenPCTExAdd   14003 
+int AttrElementPenPCTPer   14004 
+int AttrElementPenPCTExPer   14005 
+ #全属性抗性
+int AttrElementRedPCT   14010 
+int AttrElementRedPCTTotal   14011 
+int AttrElementRedPCTAdd   14012 
+int AttrElementRedPCTExAdd   14013 
+int AttrElementRedPCTPer   14014 
+int AttrElementRedPCTExPer   14015 
+ #物理属性抗性穿透
+int AttrElementPhysicalPenPCT   14020 
+int AttrElementPhysicalPenPCTTotal   14021 
+int AttrElementPhysicalPenPCTAdd   14022 
+int AttrElementPhysicalPenPCTExAdd   14023 
+int AttrElementPhysicalPenPCTPer   14024 
+int AttrElementPhysicalPenPCTExPer   14025 
+ #物理属性抗性
+int AttrElementPhysicalRedPCT   14030 
+int AttrElementPhysicalRedPCTTotal   14031 
+int AttrElementPhysicalRedPCTAdd   14032 
+int AttrElementPhysicalRedPCTExAdd   14033 
+int AttrElementPhysicalRedPCTPer   14034 
+int AttrElementPhysicalRedPCTExPer   14035 
+ #元素属性抗性穿透
+int AttrElementMagicPenPCT   14040 
+int AttrElementMagicPenPCTTotal   14041 
+int AttrElementMagicPenPCTAdd   14042 
+int AttrElementMagicPenPCTExAdd   14043 
+int AttrElementMagicPenPCTPer   14044 
+int AttrElementMagicPenPCTExPer   14045 
+ #元素属性抗性
+int AttrElementMagicRedPCT   14050 
+int AttrElementMagicRedPCTTotal   14051 
+int AttrElementMagicRedPCTAdd   14052 
+int AttrElementMagicRedPCTExAdd   14053 
+int AttrElementMagicRedPCTPer   14054 
+int AttrElementMagicRedPCTExPer   14055 
+ #直接减伤
+int AttrDmgRed   15300 
+int AttrDmgRedTotal   15301 
+int AttrDmgRedAdd   15302 
+int AttrDmgRedExAdd   15303 
+int AttrDmgRedPer   15304 
+int AttrDmgRedExPer   15305 
+ #近距离增伤
+int AttrDmgNear   16000 
+int AttrDmgNearTotal   16001 
+int AttrDmgNearAdd   16002 
+int AttrDmgNearExAdd   16003 
+int AttrDmgNearPer   16004 
+int AttrDmgNearExPer   16005 
+ #近距离减伤
+int AttrDmgRedNear   16020 
+int AttrDmgRedNearTotal   16021 
+int AttrDmgRedNearAdd   16022 
+int AttrDmgRedNearExAdd   16023 
+int AttrDmgRedNearPer   16024 
+int AttrDmgRedNearExPer   16025 
+ #远距离增伤
+int AttrDmgFar   16100 
+int AttrDmgFarTotal   16101 
+int AttrDmgFarAdd   16102 
+int AttrDmgFarExAdd   16103 
+int AttrDmgFarPer   16104 
+int AttrDmgFarExPer   16105 
+ #远距离减伤
+int AttrDmgRedFar   16120 
+int AttrDmgRedFarTotal   16121 
+int AttrDmgRedFarAdd   16122 
+int AttrDmgRedFarExAdd   16123 
+int AttrDmgRedFarPer   16124 
+int AttrDmgRedFarExPer   16125 
+ #子弹类型减伤
+int AttrDmgRedBullet   16220 
+int AttrDmgRedBulletTotal   16221 
+int AttrDmgRedBulletAdd   16222 
+int AttrDmgRedBulletExAdd   16223 
+int AttrDmgRedBulletPer   16224 
+int AttrDmgRedBulletExPer   16225 
+ #近战类型减伤
+int AttrDmgRedMelee   16320 
+int AttrDmgRedMeleeTotal   16321 
+int AttrDmgRedMeleeAdd   16322 
+int AttrDmgRedMeleeExAdd   16323 
+int AttrDmgRedMeleePer   16324 
+int AttrDmgRedMeleeExPer   16325 
+ #BUFF类型减伤
+int AttrDmgRedBuff   16420 
+int AttrDmgRedBuffTotal   16421 
+int AttrDmgRedBuffAdd   16422 
+int AttrDmgRedBuffExAdd   16423 
+int AttrDmgRedBuffPer   16424 
+int AttrDmgRedBuffExPer   16425 
+ #普通敌人强度减伤
+int AttrDmgRedVsNormalEnemy   16720 
+int AttrDmgRedVsNormalEnemyTotal   16721 
+int AttrDmgRedVsNormalEnemyAdd   16722 
+int AttrDmgRedVsNormalEnemyExAdd   16723 
+int AttrDmgRedVsNormalEnemyPer   16724 
+int AttrDmgRedVsNormalEnemyExPer   16725 
+ #精英敌人强度减伤
+int AttrDmgRedVsEliteEnemy   16820 
+int AttrDmgRedVsEliteEnemyTotal   16821 
+int AttrDmgRedVsEliteEnemyAdd   16822 
+int AttrDmgRedVsEliteEnemyExAdd   16823 
+int AttrDmgRedVsEliteEnemyPer   16824 
+int AttrDmgRedVsEliteEnemyExPer   16825 
+ #健康时减伤（当前生命≥70%）
+int AttrDmgRedHealthy   17020 
+int AttrDmgRedHealthyTotal   17021 
+int AttrDmgRedHealthyAdd   17022 
+int AttrDmgRedHealthyExAdd   17023 
+int AttrDmgRedHealthyPer   17024 
+int AttrDmgRedHealthyExPer   17025 
+ #不健康时减伤（当前生命＜30%）
+int AttrDmgRedNonHealthy   17120 
+int AttrDmgRedNonHealthyTotal   17121 
+int AttrDmgRedNonHealthyAdd   17122 
+int AttrDmgRedNonHealthyExAdd   17123 
+int AttrDmgRedNonHealthyPer   17124 
+int AttrDmgRedNonHealthyExPer   17125 
+int AttrEntityLevel  60010 
