@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle
             public bool IsFinish();
             public void Step(float dt);
             public bool NeedCall();
-            public void OnCallTimer();
+            public void OnTimerCallback();
         }
 
         private abstract class AbilityRunCycle
@@ -59,7 +59,7 @@ namespace Hono.Scripts.Battle
                     timer.Step(dt);
                     if (timer.NeedCall())
                     {
-                        timer.OnCallTimer();
+                        timer.OnTimerCallback();
                     }
 
                     if (timer.IsFinish())
@@ -88,8 +88,6 @@ namespace Hono.Scripts.Battle
                 onExit();
                 _timerNodes.Clear();
                 _removes.Clear();
-                if (CurState != EAbilityState.Ready)
-                    _executor.ResetCycle(getCycleType());
             }
 
             protected virtual void onExit() { }

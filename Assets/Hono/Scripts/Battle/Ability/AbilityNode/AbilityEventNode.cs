@@ -1,4 +1,3 @@
-
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 
@@ -9,12 +8,16 @@ namespace Hono.Scripts.Battle
         private class AbilityEventNode : AbilityNode
         {
             private EventChecker _checker;
+
+            private new EventNodeData _data;
+
             public AbilityEventNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) { }
 
             public void RegisterEvent()
             {
-                if (!NodeData.EventNodeData.CreateCheckerFunc.ParseParameters(out var valueBox)) return;
-                _checker = valueBox.GetRef<EventChecker>();
+                if (!_data.CreateCheckerFunc.ParseParameters(out var auto))
+                    return;
+                _checker = auto.GetRef<EventChecker>();
                 _checker.BindFunc(onEventFired);
                 BattleEventManager.Instance.Register(_checker);
             }
@@ -26,14 +29,11 @@ namespace Hono.Scripts.Battle
 
             private void onEventFired(IEventInfo eventInfo)
             {
-	            _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
-	            if (!string.IsNullOrEmpty(NodeData.EventNodeData.CaptureVarName)) {
-		            _executor.Ability.Variables.Set(NodeData.EventNodeData.CaptureVarName, eventInfo);
-	            }
-                   
-	            _executor.ExecuteNode(NodeData.ChildrenIds[0]);
-	            _executor.Ability.Variables.Delete(NodeData.EventNodeData.CaptureVarName);
-	            _context.ClearContext();
+                _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
+                eventInfo.PushInVarCollection(_executor.Ability.Variables);
+                DoChildrenJob();
+                eventInfo.ClearInVarCollection(_executor.Ability.Variables);
+                _context.ClearContext();
             }
 
             public override void DoJob() { }

@@ -9,7 +9,7 @@ namespace Hono.Scripts.Battle
             public AbilityCycleNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) { }
             public override void DoJob()
             {
-                
+                DoChildrenJob();
             }
         }   
     }

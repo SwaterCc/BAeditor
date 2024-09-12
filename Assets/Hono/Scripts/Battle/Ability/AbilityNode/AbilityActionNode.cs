@@ -9,15 +9,21 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private class AbilityActionNode : AbilityNode
         {
-            public AbilityActionNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) { }
+            private new readonly ActionNodeData _data;
+            
+            private AutoValue _funcResult;
+            public AutoValue FuncResult => _funcResult;
 
+            public AbilityActionNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
+            {
+                _data = data as ActionNodeData;
+            }
 
             public override void DoJob()
             {
-                if (NodeData.ActionNodeData[0].IsFunc)
-                {
-                    NodeData.ActionNodeData.ParseParameters(out _);
-                }
+                _data.Function?.TryCallFunc(out _funcResult);
+                
+                DoChildrenJob();
             }
         }
     }

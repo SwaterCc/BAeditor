@@ -314,19 +314,6 @@ namespace Hono.Scripts.Battle
         Faction
     }
 
-    public enum EVariableOperationType
-    {
-        /// <summary>
-        /// 创建变量
-        /// </summary>
-        Create,
-
-        /// <summary>
-        /// 修改变量
-        /// </summary>
-        Change,
-    }
-
     /// <summary>
     /// 属性修改操作类别
     /// </summary>

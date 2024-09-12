@@ -1,37 +1,38 @@
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle {
-	public partial class Ability {
-		private class AbilityRepeatNode : AbilityNode {
-			private RepeatNodeData _repeatNodeData;
-			private int _curLoopCount = 0;
-			private float _curValue = 0;
-			private int _maxCount;
+namespace Hono.Scripts.Battle
+{
+    public partial class Ability
+    {
+        private class AbilityRepeatNode : AbilityNode
+        {
+            private readonly RepeatNodeData _repeatNodeData;
+            private int _curLoopCount = 0;
+            private int _maxCount;
+            public int CurLoopCount => _curLoopCount;
+            
+            public AbilityRepeatNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
+            {
+                _repeatNodeData = data as RepeatNodeData;
+            }
 
-			public AbilityRepeatNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) {
-				_repeatNodeData = data.RepeatNodeData;
-			}
+            public override void DoJob()
+            {
+                if (!_repeatNodeData.MaxRepeatCount.ParseParameters(out var count))
+                {
+                    Debug.LogError("Foreach节点执行错误");
+                }
 
-			protected override void onReset() {
-				_curLoopCount = 0;
-				_curValue = 0;
-			}
+                _maxCount = count;
 
-			public override void ChildrenJobFinish() {
-				if (++_curLoopCount < _maxCount) {
-					resetChildren();
-				}
-			}
+                for (_curLoopCount = 0; _curLoopCount < _maxCount; _curLoopCount++)
+                {
+                    DoChildrenJob();
+                }
 
-			public override void DoJob() {
-				if (!_repeatNodeData.MaxRepeatCount.ParseParameters(out var count))
-				{
-					Debug.LogError("Foreach节点执行错误");
-				}
-
-				_maxCount = (int)count;
-			}
-		}
-	}
+                _curLoopCount = 0;
+            }
+        }
+    }
 }

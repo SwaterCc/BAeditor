@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle
     public partial class Ability
     {
         /// <summary>
-        /// 变量节点，执行变量创建或者指定变量修改
+        /// Set变量或者捕获变量
         /// </summary>
         private class AbilityVariableNode : AbilityNode
         {
@@ -15,26 +15,32 @@ namespace Hono.Scripts.Battle
 
             public AbilityVariableNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _varData = data.VariableNodeData;
+                _varData = data as VariableNodeData;
             }
 
+            private void CapturingActionResult(AbilityActionNode actionNode)
+            {
+                if (actionNode.FuncResult != null)
+                {
+                    _executor.Variables.Set(_varData.Name,actionNode.FuncResult.DeepCopy());
+                }
+            }
+            
             public override void DoJob()
             {
-                if (!_varData.VarParams.ParseParameters(out var variableBox))
+                if (Parent is AbilityActionNode actionNode)
                 {
-	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
-                }
-                if (!_varData.ActorUid.ParseParameters(out var actorUid))
-                {
-	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
-                }
-                if (!_varData.AbilityUid.ParseParameters(out var abilityUid))
-                {
-	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
+                    CapturingActionResult(actionNode);
                 }
                 
-                AbilityFunction.SetVariableByUid(_varData.Range, (int)actorUid, (int)abilityUid,
-	                _varData.Name, variableBox);
+                if (!_varData.VarParams.ParseParameters(out var autoValue))
+                {
+	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
+                }
+               
+                _executor.Variables.Set(_varData.Name,autoValue);
+                
+                DoChildrenJob();
             }
         }
     }

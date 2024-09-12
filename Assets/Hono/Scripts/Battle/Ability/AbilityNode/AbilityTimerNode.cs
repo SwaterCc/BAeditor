@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
 
             public AbilityTimerNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _timerData = NodeData.TimerNodeData;
+                _timerData = _data as TimerNodeData;
             }
 
             public override void DoJob()
@@ -81,29 +81,12 @@ namespace Hono.Scripts.Battle
                 return res;
             }
 
-            public void OnCallTimer()
+            public void OnTimerCallback()
             {
                 ++_count;
                 _duration = 0;
                 _isFirst = false;
-                resetChildren();
-                _executor.ExecuteNode(NodeData.ChildrenIds[0]);
-            }
-
-            public override int GetNextNode()
-            {
-                if (NodeData.NextIdInSameLevel > 0)
-                {
-                    //没有子节点返回自己下一个相邻节点,不用判执行，因为理论上不会跳着走
-                    return NodeData.NextIdInSameLevel;
-                }
-
-                if (NodeData.Parent > 0)
-                {
-                    return NodeData.Parent;
-                }
-
-                return -1;
+                DoChildrenJob();
             }
         }
     }

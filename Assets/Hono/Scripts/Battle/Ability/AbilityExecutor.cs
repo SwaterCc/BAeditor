@@ -13,37 +13,61 @@ namespace Hono.Scripts.Battle
         private class AbilityExecutor
         {
             private readonly Ability _ability;
-            
+
             private AbilityNode _curNode;
 
-            private Dictionary<int, AbilityNode> _nodes;
+            private readonly Dictionary<int, AbilityNode> _nodes;
 
-            private Dictionary<EAbilityAllowEditCycle, int> _cycleHeads;
-
-            private HashSet<int> _pastNodeId;
-
-            private List<AbilityEventNode> _eventNodes;
-
-            private Stack<int> _repeatNodeIds;
-
-            private bool _hasError;
+            private readonly Dictionary<EAbilityAllowEditCycle, AbilityNode> _cycleHeads;
             
+            private readonly List<AbilityEventNode> _eventNodes;
+            
+            private bool _hasError;
+
             public Ability Ability => _ability;
             public AbilityState State => _ability._state;
             public AbilityData AbilityData { get; private set; }
             public VarCollection Variables { get; private set; }
-            
+
             public AbilityExecutor(Ability ability)
             {
                 _ability = ability;
                 Variables = ability.Variables;
                 _nodes = new Dictionary<int, AbilityNode>();
-                _cycleHeads = new Dictionary<EAbilityAllowEditCycle, int>();
+                _cycleHeads = new Dictionary<EAbilityAllowEditCycle, AbilityNode>();
                 _eventNodes = new List<AbilityEventNode>();
-                _pastNodeId = new HashSet<int>();
-                _repeatNodeIds = new Stack<int>();
             }
 
+            private void setError()
+            {
+                _hasError = true;
+                Debug.LogError($"Ability {_ability.ConfigId} SetupFailed,this Ability Can not Running");
+            }
+
+            private AbilityNode createNode(AbilityExecutor executor, AbilityNodeData data)
+            {
+                switch (data.NodeType)
+                {
+                    case EAbilityNodeType.EAbilityCycle:
+                        return new AbilityCycleNode(executor, data);
+                    case EAbilityNodeType.ETimer:
+                        return new AbilityTimerNode(executor, data);
+                    case EAbilityNodeType.EBranchControl:
+                        return new AbilityBranchNode(executor, data);
+                    case EAbilityNodeType.EVariableControl:
+                        return new AbilityVariableNode(executor, data);
+                    case EAbilityNodeType.ERepeat:
+                        return new AbilityRepeatNode(executor, data);
+                    case EAbilityNodeType.EAction:
+                        return new AbilityActionNode(executor, data);
+                    case EAbilityNodeType.EGroup:
+                        return new AbilityGroupNode(executor, data);
+                }
+
+                Debug.LogError($"创建节点失败，节点ID{data.NodeId} 类型 {data.NodeType}");
+                return null;
+            }
+            
             /// <summary>
             /// 初始化所有节点
             /// </summary>
@@ -51,42 +75,56 @@ namespace Hono.Scripts.Battle
             {
                 if (!AssetManager.Instance.TryGetData<AbilityData>(_ability.ConfigId, out var abilityData))
                 {
-                    _hasError = true;
-                    Debug.LogError($"Ability {_ability.ConfigId} SetupFailed,this Ability Can not Running");
+                    setError();
                     return;
                 }
-                AbilityData = abilityData;
 
-                foreach (var tag in abilityData.Tags) {
-	                Ability.Tags.Add(tag);
+                AbilityData = abilityData;
+                foreach (var tag in abilityData.Tags)
+                {
+                    Ability.Tags.Add(tag);
                 }
-                
+
                 var nodeDict = AbilityData.NodeDict;
                 if (nodeDict is { Count: > 0 })
                 {
                     //数据转化为实际逻辑节点
                     foreach (var pair in nodeDict)
                     {
-                        var node = AbilityNode.CreateNode(this, pair.Value);
-                        _nodes.Add(node.ConfigId, node);
-
-                        if (node.NodeData.NodeType == EAbilityNodeType.EAbilityCycle)
+                        var node = createNode(this, pair.Value);
+                        if (node == null)
                         {
-                            _cycleHeads.Add(node.NodeData.allowEditCycleNodeData, node.ConfigId);
+                            setError();
+                            return;
                         }
+                        _nodes.Add(node.NodeId, node);
 
-                        if (node.NodeData.NodeType == EAbilityNodeType.EEvent)
+                        if (pair.Value.NodeType == EAbilityNodeType.EEvent)
                         {
                             _eventNodes.Add((AbilityEventNode)node);
                         }
 
-                        if (node.NodeData.NodeType == EAbilityNodeType.EGroup)
+                        if (pair.Value.NodeType == EAbilityNodeType.EGroup)
                         {
                             var executing = (ExecutingCycle)State.GetState(EAbilityState.Executing);
                             var stageNode = (AbilityGroupNode)node;
                             executing.AddStageProxy(stageNode);
                             executing.NextGroupId = AbilityData.DefaultStartGroupId;
                         }
+                    }
+
+                    //保存周期头节点
+                    foreach (var headPair in AbilityData.HeadNodeDict)
+                    {
+                        if (!_nodes.TryGetValue(headPair.Value, out var cycleNode))
+                        {
+                            setError();
+                            return;
+                        }
+
+                        _cycleHeads.Add(headPair.Key, cycleNode);
+                        //构建树结构
+                        cycleNode.Build(null);
                     }
                 }
             }
@@ -95,13 +133,14 @@ namespace Hono.Scripts.Battle
             {
                 _hasError = false;
             }
-            
+
             public void UnInstall()
             {
                 foreach (var eventNode in _eventNodes)
                 {
                     eventNode.UnRegisterEvent();
                 }
+
                 _eventNodes.Clear();
                 _cycleHeads.Clear();
                 _nodes.Clear();
@@ -109,10 +148,7 @@ namespace Hono.Scripts.Battle
 
             public void OnDestroy()
             {
-                foreach (var eventNode in _eventNodes)
-                {
-                    eventNode.UnRegisterEvent();
-                }
+                UnInstall();
             }
 
             public void RegisterEventNode()
@@ -122,27 +158,7 @@ namespace Hono.Scripts.Battle
                     eventNode.RegisterEvent();
                 }
             }
-
-            public void PassNode(int id)
-            {
-                _pastNodeId.Add(id);
-            }
-
-            public void RemovePass(int id)
-            {
-                _pastNodeId.Remove(id);
-            }
-
-            public void ResetNode(int id)
-            {
-                _nodes[id].Reset();
-            }
-
-            public bool IsPassedNode(int id)
-            {
-                return _pastNodeId.Contains(id);
-            }
-
+            
             public AbilityNode GetNode(int id)
             {
                 return _nodes[id];
@@ -150,64 +166,27 @@ namespace Hono.Scripts.Battle
 
             public bool HeadNodeHasChildren(EAbilityAllowEditCycle allowEditCycle)
             {
-                var id = _cycleHeads[allowEditCycle];
-                return _nodes[id].NodeData.ChildrenIds.Count > 0;
+                return _cycleHeads[allowEditCycle].Children.Count > 0;
             }
 
 
             public void ExecuteNode(int nodeId)
             {
-                if(_hasError) return;
-                
-                var curNode = _nodes[nodeId];
-                while (nodeId > 0)
+                if (_hasError) return;
+
+                if (_nodes.TryGetValue(nodeId, out var node))
                 {
-                    if (!IsPassedNode(nodeId))
-                    {
-                        curNode.DoJob();
-                        PassNode(nodeId);
-                    }
-                    else {
-	                    curNode.ChildrenJobFinish();
-                    }
-                    
-                    var nextNodeId = curNode.GetNextNode();
-                    
-                    if (nextNodeId != -1)
-                    {
-                        curNode = _nodes[nextNodeId];
-                    }
-                    
-                    if (curNode.NodeData.NodeType == EAbilityNodeType.ETimer && IsPassedNode(nextNodeId))
-                    {
-                        nextNodeId = -1;
-                    }
-                    
-                    nodeId = nextNodeId;
+                    node.DoJob();
                 }
             }
 
             public void ExecuteCycleNode(EAbilityAllowEditCycle allowEditCycle)
             {
-                if(_hasError) return;
-                
-                if (_cycleHeads.TryGetValue(allowEditCycle, out var cycleNodeId))
-                {
-                    ExecuteNode(cycleNodeId);
-                }
-                else
-                {
-                    Debug.Log($"{allowEditCycle} is empty！");
-                }
-            }
+                if (_hasError) return;
 
-            public void ResetCycle(EAbilityAllowEditCycle allowEditCycle)
-            {
-                if(_hasError) return;
-                
-                if (_cycleHeads.TryGetValue(allowEditCycle, out var cycleNodeId))
+                if (_cycleHeads.TryGetValue(allowEditCycle, out var cycleNode))
                 {
-                    _nodes[cycleNodeId].Reset();
+                    cycleNode.DoJob();
                 }
                 else
                 {

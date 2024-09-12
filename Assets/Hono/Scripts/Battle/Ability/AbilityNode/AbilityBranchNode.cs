@@ -14,7 +14,7 @@ namespace Hono.Scripts.Battle
             public AbilityBranchNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
                 _conditionRes = false;
-                _branchNode = NodeData.BranchNodeData;
+                _branchNode = _data as BranchNodeData;
             }
 
             protected override void onReset()
@@ -37,6 +37,15 @@ namespace Hono.Scripts.Battle
                 var res = ((IComparable)left).CompareTo((IComparable)right);
 
                 _conditionRes = getCompareRes(_branchNode.ResType, res);
+
+                if (_conditionRes)
+                {
+                    DoChildrenJob();
+                }
+                else
+                {
+                    _executor.ExecuteNode(_branchNode.LinkBranchNodeId);
+                }
             }
 
             private bool getCompareRes(ECompareResType compareResType, int flag)
@@ -56,29 +65,6 @@ namespace Hono.Scripts.Battle
                 }
 
                 return true;
-            }
-            
-            public override int GetNextNode()
-            {
-                if (_conditionRes && NodeData.ChildrenIds.Count > 0 &&
-                    !_executor.IsPassedNode(NodeData.ChildrenIds[0]))
-                {
-                    //有子节点返回第一个子节点
-                    return NodeData.ChildrenIds[0];
-                }
-
-                if (NodeData.NextIdInSameLevel > 0)
-                {
-                    //没有子节点返回自己下一个相邻节点,不用判执行，因为理论上不会跳着走
-                    return NodeData.NextIdInSameLevel;
-                }
-
-                if (NodeData.Parent > 0)
-                {
-                    return NodeData.Parent;
-                }
-
-                return -1;
             }
         }
     }
