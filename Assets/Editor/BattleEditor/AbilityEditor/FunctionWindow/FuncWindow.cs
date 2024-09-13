@@ -14,10 +14,6 @@ namespace Editor.AbilityEditor
 {
     public class FuncWindow : EditorWindow
     {
-        public static int WindowCount = 0;
-        public static float xOffset = 30;
-        public static float yOffset = -20;
-        
         public static void OpenVariableToFunc(object node)
         {
             var window = CreateInstance<FuncWindow>();

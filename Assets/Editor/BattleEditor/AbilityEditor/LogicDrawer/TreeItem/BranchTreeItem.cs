@@ -36,9 +36,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void OnBtnClicked()
         {
-            SettingWindow = BranchNodeDataWindow.GetWindow(_nodeData);
-            SettingWindow.Show();
-            SettingWindow.Focus();
+           
         }
     }
 

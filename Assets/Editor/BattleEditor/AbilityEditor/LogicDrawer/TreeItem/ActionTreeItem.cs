@@ -11,15 +11,20 @@ namespace Editor.AbilityEditor.TreeItem
         public ActionTreeItem(int id, int depth, string name) : base(id, depth, name) { }
         private readonly ActionNodeData _actionNodeData;
 
+        private ParameterMaker _funcMaker;
+        
         public ActionTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
         {
             _actionNodeData = (ActionNodeData)nodeData;
+            _funcMaker = new ParameterMaker();
             if (_actionNodeData.Function == null || _actionNodeData.Function.Length == 0)
             {//函数默认给初始值
-                var param = new Parameter();
-                param.IsFunc = true;
-                param.FuncName = "NothingToDo";
-                _actionNodeData.Function = new[] { param };
+                _funcMaker.InitFunc("NothingToDo");
+            }
+            else
+            {
+                int start = 0;
+                _funcMaker.Parse(_actionNodeData.Function,ref start);
             }
         }
 

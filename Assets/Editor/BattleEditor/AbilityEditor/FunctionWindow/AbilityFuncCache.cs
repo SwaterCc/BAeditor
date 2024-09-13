@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Tools.CustomAttribute;
 
 namespace Editor.AbilityEditor
 {
-    public class AbilityFuncCache
+    public static class AbilityFuncCacheMgr
     {
         public struct FuncInfo
         {
@@ -91,7 +92,13 @@ namespace Editor.AbilityEditor
                     info.ParamNames.Add(parameter.Name);
                 }
 
-                if(_flagMethodCache.TryGetValue(info.ReturnType,out var infoList))
+                if (!_flagMethodCache.TryGetValue(info.ReturnType, out var infoList))
+                {
+                    var list = new List<FuncInfo>();
+                    _flagMethodCache.Add(info.ReturnType,list);
+                    infoList = list;
+                }
+                infoList.Add(info);
             }
 
             _flagMethodCacheInit = true;
