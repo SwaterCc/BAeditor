@@ -6,11 +6,14 @@ namespace Hono.Scripts.Battle
 {
     public static class ParamExtension
     {
-        public static bool ParseParameters(this Parameter[] parameters, out AutoValue result)
+        public static bool ParseParameters(this ParameterInfo parameterInfo, out object result)
         {
             result = null;
-            if (parameters == null || parameters.Length == 0) return false;
+            if (parameterInfo == null || parameterInfo.Parameters == null ||
+                parameterInfo.Parameters.Length == 0) return false;
 
+            var parameters = parameterInfo.Parameters;
+            
             if (parameters.Length == 1)
             {
                 if (parameters[0].IsValueType)
@@ -27,7 +30,7 @@ namespace Hono.Scripts.Battle
 
                 if (parameters[0].IsAttr)
                 {
-                   // result = Ability.Context.SourceActor.GetAutoAttr(parameters[0].AttrId);
+                    // result = Ability.Context.SourceActor.GetAutoAttr(parameterInfo[0].AttrId);
                     return true;
                 }
             }
@@ -35,7 +38,7 @@ namespace Hono.Scripts.Battle
             return parameters.TryCallFunc(out result);
         }
 
-        public static bool TryCallFunc(this Parameter[] func, out AutoValue auto)
+        public static bool TryCallFunc(this Parameter[] func, out object auto)
         {
             auto = null;
 
@@ -56,7 +59,7 @@ namespace Hono.Scripts.Battle
         /// <param name="queue"></param>
         /// <param name="func"></param>
         /// <returns></returns>
-        public static AutoValue CallFunc(this Queue<Parameter> queue, Parameter func)
+        public static object CallFunc(this Queue<Parameter> queue, Parameter func)
         {
             var funcInfo = AbilityFuncPreLoader.GetFuncInfo(func.FuncName);
 
@@ -85,9 +88,7 @@ namespace Hono.Scripts.Battle
 
             //TODO:有消耗
             var res = funcInfo.Invoke(null, funcParams);
-            var auto = new AutoValue();
-            auto.SetRef(res);
-            return auto;
+            return res;
         }
     }
 }

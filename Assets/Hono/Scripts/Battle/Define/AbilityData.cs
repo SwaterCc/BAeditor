@@ -50,6 +50,58 @@ namespace Hono.Scripts.Battle
         /// </summary>
         [OdinSerialize]
         public Dictionary<int, AbilityNodeData> NodeDict = new();
+        
+        [NonSerialized]
+        private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
+        
+        public static AbilityNodeData GetNodeData(AbilityData abilityData, EAbilityNodeType type)
+        {
+            AbilityNodeData nodeData = null;
+            switch (type)
+            {
+                case EAbilityNodeType.EAbilityCycle:
+                    nodeData = new EditorCycleNodeData();
+                    break;
+                case EAbilityNodeType.EEvent:
+                    nodeData = new EventNodeData();
+                    break;
+                case EAbilityNodeType.EBranchControl:
+                    nodeData = new BranchNodeData();
+                    break;
+                case EAbilityNodeType.EVariableControl:
+                    nodeData = new VariableNodeData();
+                    break;
+                case EAbilityNodeType.ERepeat:
+                    nodeData = new RepeatNodeData();
+                    break;
+                case EAbilityNodeType.EAction:
+                    nodeData = new ActionNodeData();
+                    break;
+                case EAbilityNodeType.ETimer:
+                    nodeData = new TimerNodeData();
+                    break;
+                case EAbilityNodeType.EGroup:
+                    nodeData = new GroupNodeData();
+                    break;
+            }
+            
+            var id = CommonUtility.GenerateTimeBasedHashId32();
+            var maxTryCount = 500;
+            var curTryCount = 0;
+            while (abilityData.NodeDict.ContainsKey(id))
+            {
+                id = CommonUtility.GenerateTimeBasedHashId32();
+                if (++curTryCount > maxTryCount)
+                {
+                    throw new Exception("id生成错误");
+                }
+            }
+
+            nodeData.NodeId = id;
+            nodeData.NodeType = type;
+
+            return nodeData;
+        }
     }
 
     [Serializable]
@@ -89,9 +141,7 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class BranchNodeData : AbilityNodeData
     {
-        public Parameter[] Left;
-        public ECompareResType ResType;
-        public Parameter[] Right;
+        public ParameterInfo CompareFunc = new ParameterInfo(EParameterInfoType.Bool);
         public int LinkBranchNodeId = -1;
     }
     
@@ -116,22 +166,23 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class TimerNodeData : AbilityNodeData
     {
-        public Parameter[] FirstInterval;
-        public Parameter[] Interval;
-        public Parameter[] MaxCount;
+        public ParameterInfo FirstInterval = new ParameterInfo(EParameterInfoType.Float);
+        public ParameterInfo Interval = new ParameterInfo(EParameterInfoType.Float);
+        public ParameterInfo MaxCount = new ParameterInfo(EParameterInfoType.Int);
         public string Desc = "定时器";
     }
 
     [Serializable]
     public class RepeatNodeData : AbilityNodeData
     {
-        public Parameter[] MaxRepeatCount;
+        public ParameterInfo MaxRepeatCount = new(EParameterInfoType.Int);
     }
 
     [Serializable]
     public class VariableNodeData : AbilityNodeData
     {
         public string Name;
-        public Parameter[] VarParams;
+        public EParameterInfoType InfoType;
+        public Parameter[] ValueParams;
     }
 }

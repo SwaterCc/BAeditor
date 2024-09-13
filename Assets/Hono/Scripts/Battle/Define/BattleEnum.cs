@@ -379,4 +379,15 @@ namespace Hono.Scripts.Battle
         Multiply,
         Divide,
     }
+
+    public enum EParameterInfoType
+    {
+        NoInit,
+        Int,
+        Float,
+        Bool,
+        String,
+        IntList,
+        FloatList,
+    }
 }

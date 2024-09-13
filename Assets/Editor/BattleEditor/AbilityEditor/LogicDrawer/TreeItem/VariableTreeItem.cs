@@ -13,7 +13,7 @@ namespace Editor.AbilityEditor.TreeItem
         private ParameterMaker _variable;
         public VariableTreeItem(int id, int depth, string name) : base(id, depth, name) { }
 
-        public VariableTreeItem(AbilityNodeData nodeData) : base(nodeData)
+        public VariableTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree,nodeData)
         {
             _variable = new ParameterMaker();
         }
@@ -25,23 +25,17 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            if (string.IsNullOrEmpty(NodeData.VariableNodeData.Desc))
-            {
-	            ParameterMaker.Init(_variable, NodeData.VariableNodeData.VarParams);
-                return $"调用并Set变量 {NodeData.VariableNodeData.Name} = {_variable}";
-            }
-
-            return NodeData.VariableNodeData.Desc;
+            return "";
         }
 
-        protected override string getItemEffectInfo()
+        protected override string getButtonTips()
         {
             return "调用有返回值的Action";
         }
 
         protected override void OnBtnClicked()
         {
-            SettingWindow = VariableNodeDataWindow.GetWindow(NodeData);
+            SettingWindow = VariableNodeDataWindow.GetWindow(_nodeData);
             SettingWindow.Show();
             SettingWindow.Focus();
         }
@@ -55,14 +49,14 @@ namespace Editor.AbilityEditor.TreeItem
         private ParameterMaker _actorUid;
         private ParameterMaker _abilityUid;
         protected override void onInit() {
-	        _range = NodeData.VariableNodeData.Range;
-	        _name = NodeData.VariableNodeData.Name;
+	        _range = _nodeData.VariableNodeData.Range;
+	        _name = _nodeData.VariableNodeData.Name;
             _variable = new ParameterMaker();
-            ParameterMaker.Init(_variable, NodeData.VariableNodeData.VarParams);
+            ParameterMaker.Init(_variable, _nodeData.VariableNodeData.VarParams);
             _actorUid = new ParameterMaker();
-            ParameterMaker.Init(_actorUid,  NodeData.VariableNodeData.ActorUid);
+            ParameterMaker.Init(_actorUid,  _nodeData.VariableNodeData.ActorUid);
             _abilityUid = new ParameterMaker();
-            ParameterMaker.Init(_abilityUid, NodeData.VariableNodeData.AbilityUid);
+            ParameterMaker.Init(_abilityUid, _nodeData.VariableNodeData.AbilityUid);
         }
 
         public override Rect GetPos()
@@ -71,11 +65,11 @@ namespace Editor.AbilityEditor.TreeItem
         }
 
         private void Save() {
-	        NodeData.VariableNodeData.Range = _range;
-	        NodeData.VariableNodeData.Name = _name;
-            NodeData.VariableNodeData.VarParams = _variable.ToArray();
-	        NodeData.VariableNodeData.ActorUid = _actorUid.ToArray();
-	        NodeData.VariableNodeData.AbilityUid = _abilityUid.ToArray();
+	        _nodeData.VariableNodeData.Range = _range;
+	        _nodeData.VariableNodeData.Name = _name;
+            _nodeData.VariableNodeData.VarParams = _variable.ToArray();
+	        _nodeData.VariableNodeData.ActorUid = _actorUid.ToArray();
+	        _nodeData.VariableNodeData.AbilityUid = _abilityUid.ToArray();
             Close();
         }
 
@@ -85,9 +79,9 @@ namespace Editor.AbilityEditor.TreeItem
 
             EditorGUIUtility.labelWidth = 70;
             
-            NodeData.VariableNodeData.OperationType =
+            _nodeData.VariableNodeData.OperationType =
                 (EVariableOperationType)SirenixEditorFields.EnumDropdown("选择操作",
-                    NodeData.VariableNodeData.OperationType);
+                    _nodeData.VariableNodeData.OperationType);
 
             _range = (EVariableRange)SirenixEditorFields.EnumDropdown("选择范围", _range);
 

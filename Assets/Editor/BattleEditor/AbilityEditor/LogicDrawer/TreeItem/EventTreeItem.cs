@@ -14,7 +14,7 @@ namespace Editor.AbilityEditor.TreeItem
     public class EventTreeItem : AbilityLogicTreeItem
     {
         public EventTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        public EventTreeItem(AbilityNodeData nodeData) : base(nodeData) { }
+        public EventTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree,nodeData) { }
 
         protected override Color getButtonColor()
         {
@@ -23,17 +23,17 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return NodeData.EventNodeData.EventType.ToString();
+            return _nodeData.EventNodeData.EventType.ToString();
         }
 
-        protected override string getItemEffectInfo()
+        protected override string getButtonTips()
         {
             return "监听指定事件回调，与执行顺序无关";
         }
 
         protected override void OnBtnClicked()
         {
-            SettingWindow = EventNodeDataWindow.GetWindow(NodeData);
+            SettingWindow = EventNodeDataWindow.GetWindow(_nodeData);
             SettingWindow.Show();
             SettingWindow.Focus();
         }
@@ -76,17 +76,17 @@ namespace Editor.AbilityEditor.TreeItem
         {
             initDict();
             _func = new ParameterMaker();
-            _curType = NodeData.EventNodeData.EventType;
-            _varName = NodeData.EventNodeData.CaptureVarName;
-            ParameterMaker.Init(_func, NodeData.EventNodeData.CreateCheckerFunc);
+            _curType = _nodeData.EventNodeData.EventType;
+            _varName = _nodeData.EventNodeData.CaptureVarName;
+            ParameterMaker.Init(_func, _nodeData.EventNodeData.CreateCheckerFunc);
         }
 
         private void Save()
         {
-            NodeData.EventNodeData.EventType = _curType;
-            NodeData.EventNodeData.CreateCheckerFunc = _func.ToArray();
-            NodeData.EventNodeData.CaptureVarName = _varName;
-            NodeData.EventNodeData.Desc = _desc;
+            _nodeData.EventNodeData.EventType = _curType;
+            _nodeData.EventNodeData.CreateCheckerFunc = _func.ToArray();
+            _nodeData.EventNodeData.CaptureVarName = _varName;
+            _nodeData.EventNodeData.Desc = _desc;
             Close();
         }
 

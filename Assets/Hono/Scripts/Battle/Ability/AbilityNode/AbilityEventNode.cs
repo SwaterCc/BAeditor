@@ -15,9 +15,9 @@ namespace Hono.Scripts.Battle
 
             public void RegisterEvent()
             {
-                if (!_data.CreateCheckerFunc.ParseParameters(out var auto))
+                if (!_data.CreateCheckerFunc.TryCallFunc(out var auto))
                     return;
-                _checker = auto.GetRef<EventChecker>();
+                _checker = (EventChecker)auto;
                 _checker.BindFunc(onEventFired);
                 BattleEventManager.Instance.Register(_checker);
             }

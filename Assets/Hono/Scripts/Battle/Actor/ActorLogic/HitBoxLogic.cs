@@ -33,7 +33,7 @@ namespace Hono.Scripts.Battle {
 			_sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
 			_sourceAbilityConfigId = GetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId);
 			_sourceAbilityType = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId).Type;
-			_hitBoxData = _variables.Get("hitBoxData").GetRef<HitBoxData>();
+			_hitBoxData = _variables.Get<HitBoxData>("hitBoxData");
 
 			var attacker = ActorManager.Instance.GetActor(_sourceActorId);
 			_targetUid = (int)(_variables.Get("targetUid"));
@@ -151,7 +151,7 @@ namespace Hono.Scripts.Battle {
 			damageInfo.SourceActorId = _sourceActorId;
 			damageInfo.SourceAbilityConfigId = _sourceAbilityConfigId;
 			damageInfo.SourceAbilityType = _sourceAbilityType;
-			var tags = _variables.Get("abilityTags").GetRef<List<int>>();
+			var tags = _variables.Get<List<int>>("abilityTags");
 			if (tags != null) {
 				damageInfo.Tags.AddRange(tags);
 			}

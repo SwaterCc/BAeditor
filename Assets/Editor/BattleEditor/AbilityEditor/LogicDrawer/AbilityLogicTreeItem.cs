@@ -9,31 +9,56 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Editor.AbilityEditor {
-	public abstract class AbilityLogicTreeItem : TreeViewItem {
-		public AbilityNodeData NodeData;
-
-		public bool ShowFlag = true;
-
+	public abstract class AbilityLogicTreeItem : TreeViewItem
+	{
+		protected AbilityLogicTree _tree;
+		
 		public EditorWindow SettingWindow;
-
+		protected AbilityNodeData _nodeData;
 		public int DrawCount;
 
 		protected AbilityLogicTreeItem(int id, int depth, string name) : base(id, depth, name) { }
 
-		protected AbilityLogicTreeItem(AbilityNodeData nodeData) : base(nodeData.NodeId, nodeData.Depth) {
-			NodeData = nodeData;
+		protected AbilityLogicTreeItem(AbilityLogicTree tree ,AbilityNodeData nodeData) : base(nodeData.NodeId, nodeData.Depth) {
+			_nodeData = nodeData;
+			_tree = tree;
 		}
 
+		protected void AddNode(object oNodeType)
+		{
+			var nodeType = (EAbilityNodeType)oNodeType;
+			var node = AbilityData.GetNodeData(_tree.TreeData, nodeType);
+			node.ParentId = _nodeData.NodeId;
+			node.Depth = _nodeData.Depth + 1;
+			_nodeData.ChildrenIds.Add(node.NodeId);
+			EditorUtility.SetDirty(_tree.TreeData);
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
+			_tree.Reload();
+		}
+		
+		public void RemoveNode(AbilityData treeData)
+		{
+			var parentNodeData = treeData.NodeDict[_nodeData.ParentId];
+			parentNodeData.ChildrenIds.Remove(_nodeData.NodeId);
+			treeData.NodeDict.Remove(_nodeData.NodeId);
+			EditorUtility.SetDirty(treeData);
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
+		}
+		
 		protected abstract Color getButtonColor();
 
 		protected abstract string getButtonText();
 
-		protected abstract string getItemEffectInfo();
+		protected abstract string getButtonTips();
 
 		protected virtual float getButtonWidth() {
 			return 456f;
 		}
 
+		public abstract GenericMenu GetGenericMenu();
+		
 		protected virtual GUIStyle getButtonTextStyle() {
 			var leftAlignedButtonStyle = new GUIStyle(GUI.skin.button);
 			leftAlignedButtonStyle.alignment = TextAnchor.MiddleLeft;
@@ -61,10 +86,10 @@ namespace Editor.AbilityEditor {
 				buttonText += "...";
 			}
 
-			if (NodeData.NodeType != EAbilityNodeType.EAbilityCycle)
+			if (_nodeData.NodeType != EAbilityNodeType.EAbilityCycle)
 				buttonText = $"<{DrawCount}>" + buttonText;
 
-			if (GUI.Button(lineRect, new GUIContent(buttonText, getItemEffectInfo()), getButtonTextStyle())) {
+			if (GUI.Button(lineRect, new GUIContent(buttonText, getButtonTips()), getButtonTextStyle())) {
 				if (Event.current.button == 0) {
 					OnBtnClicked();
 				}
@@ -74,9 +99,8 @@ namespace Editor.AbilityEditor {
 		}
 
 		public void UpdateDepth(AbilityData data) {
-			var parentItem = data.NodeDict[NodeData.Parent];
-			NodeData.Depth = parentItem.Depth + 1;
-			//this.depth = TreeNode.depth;
+			var parentItem = data.NodeDict[_nodeData.ParentId];
+			_nodeData.Depth = parentItem.Depth + 1;
 			if (hasChildren) {
 				foreach (var treeViewItem in children) {
 					if (treeViewItem is AbilityLogicTreeItem logicTreeViewItem) {
@@ -84,75 +108,6 @@ namespace Editor.AbilityEditor {
 					}
 				}
 			}
-		}
-	}
-
-	public interface IWindowInit {
-		public void Init(AbilityNodeData nodeData);
-		public Rect GetPos();
-		public GUIContent GetWindowName();
-	}
-
-	public abstract class BaseNodeWindow<T> : EditorWindow where T : EditorWindow, IWindowInit {
-		public static EditorWindow GetWindow(AbilityNodeData nodeData) {
-			var window = GetWindow<T>();
-			window.position = window.GetPos();
-			window.titleContent = window.GetWindowName();
-			window.Init(nodeData);
-			return window;
-		}
-
-		public AbilityNodeData NodeData;
-		public Stack<EditorWindow> WindowStack = new Stack<EditorWindow>();
-
-		public void Init(AbilityNodeData nodeData) {
-			NodeData = nodeData;
-			onInit();
-		}
-
-		protected abstract void onInit();
-
-		public virtual Rect GetPos() {
-			return GUIHelper.GetEditorWindowRect().AlignCenter(740, 600);
-		}
-
-		public virtual GUIContent GetWindowName() {
-			return this.titleContent;
-		}
-
-		private void OnDestroy() {
-			foreach (var window in WindowStack) {
-				window.Close();
-			}
-
-			WindowStack.Clear();
-		}
-	}
-
-	public abstract class BaseNodeOdinWindow<T> : OdinEditorWindow where T : OdinEditorWindow, IWindowInit {
-		public static T GetWindow(AbilityNodeData nodeData) {
-			var window = GetWindow<T>();
-			window.position = window.GetPos();
-			window.titleContent = window.GetWindowName();
-			window.Init(nodeData);
-			return window;
-		}
-
-		[HideInInspector] public AbilityNodeData NodeData;
-
-		public void Init(AbilityNodeData nodeData) {
-			NodeData = nodeData;
-			onInit();
-		}
-
-		protected abstract void onInit();
-
-		public virtual Rect GetPos() {
-			return GUIHelper.GetEditorWindowRect().AlignCenter(400, 600);
-		}
-
-		public virtual GUIContent GetWindowName() {
-			return this.titleContent;
 		}
 	}
 }

@@ -21,23 +21,23 @@ namespace Hono.Scripts.Battle
 
             private string _intAttrTemp = @"
                 case ELogicAttr.@AttrName :
-                     return new Attr<int>((a, b) => a + b);";
+                     return new Attr<RefInt>((a, b) => a + b);";
 
             private string _floatAttrTemp = @"
                 case ELogicAttr.@AttrName :
-                     return new Attr<float>((a, b) => a + b);";
+                     return new Attr<RefFloat>((a, b) => a + b);";
 
             private string _boolAttrTemp = @"
                 case ELogicAttr.@AttrName :
-                     return new Attr<bool>(null);";
+                     return new Attr<RefBool>(null);";
 
             private string _v3AttrTemp = @"
                 case ELogicAttr.@AttrName :
-                     return new Attr<Vector3>((a, b) => a + b);";
+                     return new Attr<RefVector3>((a, b) => a + b);";
 
             private string _q4AttrTemp = @"
                 case ELogicAttr.@AttrName :
-                     return new Attr<Quaternion>((a, b) => b * a);";
+                     return new Attr<RefQuaternion>((a, b) => b * a);";
 
             private string _intArrayAttrTemp = @"
                 case ELogicAttr.@AttrName :

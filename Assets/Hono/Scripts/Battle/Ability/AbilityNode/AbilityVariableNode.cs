@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
             {
                 if (actionNode.FuncResult != null)
                 {
-                    _executor.Variables.Set(_varData.Name,actionNode.FuncResult.DeepCopy());
+                    _executor.Variables.Set(_varData.Name,actionNode.FuncResult);
                 }
             }
             
@@ -33,7 +33,7 @@ namespace Hono.Scripts.Battle
                     CapturingActionResult(actionNode);
                 }
                 
-                if (!_varData.VarParams.ParseParameters(out var autoValue))
+                if (!_varData.ValueParams.TryCallFunc(out var autoValue))
                 {
 	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
                 }

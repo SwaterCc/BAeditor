@@ -11,8 +11,8 @@ namespace Hono.Scripts.Battle
         {
             private new readonly ActionNodeData _data;
             
-            private AutoValue _funcResult;
-            public AutoValue FuncResult => _funcResult;
+            private object _funcResult;
+            public object FuncResult => _funcResult;
 
             public AbilityActionNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {

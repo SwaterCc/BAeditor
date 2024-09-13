@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle
                     Debug.LogError("Foreach节点执行错误");
                 }
 
-                _maxCount = count;
+                _maxCount = (int)count;
 
                 for (_curLoopCount = 0; _curLoopCount < _maxCount; _curLoopCount++)
                 {

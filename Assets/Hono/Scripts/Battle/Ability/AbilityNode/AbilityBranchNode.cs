@@ -24,20 +24,8 @@ namespace Hono.Scripts.Battle
 
             public override void DoJob()
             {
-                if (!_branchNode.Right.ParseParameters(out var right))
-                {
-                    Debug.LogError("Branch节点执行错误");
-                }
-
-                if (!_branchNode.Left.ParseParameters(out var left))
-                {
-                    Debug.LogError("Branch节点执行错误");
-                }
-
-                var res = ((IComparable)left).CompareTo((IComparable)right);
-
-                _conditionRes = getCompareRes(_branchNode.ResType, res);
-
+                _branchNode.CompareFunc.ParseParameters(out var conditionRes);
+                _conditionRes = (bool)conditionRes;
                 if (_conditionRes)
                 {
                     DoChildrenJob();
