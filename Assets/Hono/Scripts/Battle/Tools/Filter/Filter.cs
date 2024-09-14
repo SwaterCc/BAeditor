@@ -89,7 +89,7 @@ namespace Hono.Scripts.Battle
                 List<int> actorIds = new List<int>();
 
                 List<Actor> actors;
-                if (_filterSetting.OpenBoxCheck)
+                if (_filterSetting.OpenBoxCheck && _filterSetting.BoxData != null)
                 {
                     actors = new List<Actor>();
                     var pos = _filterUser.GetAttr<Vector3>(ELogicAttr.AttrPosition);
@@ -99,6 +99,8 @@ namespace Hono.Scripts.Battle
                         foreach (var uid in hitActorIds)
                         {
                             if (uid == _filterUser.Uid) continue;
+                            var unSelectable = _actorManager._uidActorDict[uid].GetAttr<int>(ELogicAttr.AttrUnselectable) != 0;
+                            if(unSelectable) continue;
                             actors.Add(_actorManager._uidActorDict[uid]);
                         }
                     }
@@ -127,7 +129,7 @@ namespace Hono.Scripts.Battle
 
                     foreach (var compare in _filterSetting.Compares)
                     {
-                        var left = (IComparable)actor.GetAttrLua((int)compare.AttrType);
+                        var left = (IComparable)actor.Logic.GetAttrBox(compare.AttrType);
                         int res = left.CompareTo(compare.CompareValue);
                         if (!getCompareRes(compare.CompareResType, res))
                         {

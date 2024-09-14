@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
 
             public AbilityTimerNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _timerData = _data as TimerNodeData;
+                _timerData = _data.TimerNodeData;
             }
 
             public override void DoJob()
@@ -31,21 +31,21 @@ namespace Hono.Scripts.Battle
                 _count = 0;
                 _isFirst = true;
                 
-                if (!_timerData.FirstInterval.ParseParameters(out var firstInterval))
+                if (!_timerData.FirstInterval.TryCallFunc(out var firstInterval))
                 {
                     Debug.LogError("Branch节点执行错误");
                 }
 
                 _firstInterval = (float)firstInterval;
                 
-                if (!_timerData.MaxCount.ParseParameters(out var maxCount))
+                if (!_timerData.MaxCount.TryCallFunc(out var maxCount))
                 {
                     Debug.LogError("Branch节点执行错误");
                 }
 
                 _maxCount = (int)maxCount;
                 
-                if (!_timerData.Interval.ParseParameters(out var interval))
+                if (!_timerData.Interval.TryCallFunc(out var interval))
                 {
                     Debug.LogError("Branch节点执行错误");
                 }
@@ -81,7 +81,7 @@ namespace Hono.Scripts.Battle
                 return res;
             }
 
-            public void OnTimerCallback()
+            public void OnCallTimer()
             {
                 ++_count;
                 _duration = 0;

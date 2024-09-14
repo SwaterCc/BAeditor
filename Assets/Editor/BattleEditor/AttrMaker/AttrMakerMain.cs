@@ -21,23 +21,23 @@ namespace Hono.Scripts.Battle
 
             private string _intAttrTemp = @"
                 case ELogicAttr.@AttrName :
-                     return new Attr<RefInt>((a, b) => a + b);";
+                     return new Attr<int>((a, b) => a + b);";
 
             private string _floatAttrTemp = @"
                 case ELogicAttr.@AttrName :
-                     return new Attr<RefFloat>((a, b) => a + b);";
+                     return new Attr<float>((a, b) => a + b);";
 
             private string _boolAttrTemp = @"
                 case ELogicAttr.@AttrName :
-                     return new Attr<RefBool>(null);";
+                     return new Attr<bool>(null);";
 
             private string _v3AttrTemp = @"
                 case ELogicAttr.@AttrName :
-                     return new Attr<RefVector3>((a, b) => a + b);";
+                     return new Attr<Vector3>((a, b) => a + b);";
 
             private string _q4AttrTemp = @"
                 case ELogicAttr.@AttrName :
-                     return new Attr<RefQuaternion>((a, b) => b * a);";
+                     return new Attr<Quaternion>((a, b) => b * a);";
 
             private string _intArrayAttrTemp = @"
                 case ELogicAttr.@AttrName :
@@ -57,7 +57,7 @@ namespace Hono.Scripts.Battle
             public AttrFileProcess()
             {
                 using (StreamReader reader =
-                       new StreamReader($"{BattleEditorPath.EditorRootPath}/AttrMaker/AttrCreatorTemplate", Encoding.Default))
+                       new StreamReader($"{AbilityEditorPath.EditorRootPath}/AttrMaker/AttrCreatorTemplate", Encoding.Default))
                 {
                     _classTempStr = reader.ReadToEnd();
                 }
@@ -66,7 +66,7 @@ namespace Hono.Scripts.Battle
             public void Process()
             {
                 
-                using (StreamReader reader = new StreamReader($"{BattleEditorPath.EditorRootPath}/AttrMaker/AttrMakerDefine",
+                using (StreamReader reader = new StreamReader($"{AbilityEditorPath.EditorRootPath}/AttrMaker/AttrMakerDefine",
                            Encoding.Default))
                 {
                     string line;

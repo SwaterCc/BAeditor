@@ -9,6 +9,8 @@ float AttrBaseSpeed 16
 IntArray AttrAttackTargetUids 17
 int AttrMoveTargetUid 18
 int AttrFaction  19
+int AttrUnselectable 20
+int AttrInvincible 21
  #HP
 
 int AttrHp   10000 
@@ -140,6 +142,15 @@ int AttrElementMagicRedPCTAdd   14052
 int AttrElementMagicRedPCTExAdd   14053 
 int AttrElementMagicRedPCTPer   14054 
 int AttrElementMagicRedPCTExPer   14055 
+
+ #伤害增加 %[x]
+int   AttrDmgA  15000
+int   AttrDmgATotal  15001
+int   AttrDmgAAdd  15002
+int   AttrDmgAExAdd  15003
+int   AttrDmgAPer  15004
+int   AttrDmgAExPer  15005
+
  #直接减伤
 int AttrDmgRed   15300 
 int AttrDmgRedTotal   15301 

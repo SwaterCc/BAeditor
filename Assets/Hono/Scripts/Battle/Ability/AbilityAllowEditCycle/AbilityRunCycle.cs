@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle
             public bool IsFinish();
             public void Step(float dt);
             public bool NeedCall();
-            public void OnTimerCallback();
+            public void OnCallTimer();
         }
 
         private abstract class AbilityRunCycle
@@ -59,7 +59,7 @@ namespace Hono.Scripts.Battle
                     timer.Step(dt);
                     if (timer.NeedCall())
                     {
-                        timer.OnTimerCallback();
+                        timer.OnCallTimer();
                     }
 
                     if (timer.IsFinish())

@@ -314,6 +314,19 @@ namespace Hono.Scripts.Battle
         Faction
     }
 
+    public enum EVariableOperationType
+    {
+        /// <summary>
+        /// 创建变量
+        /// </summary>
+        Create,
+
+        /// <summary>
+        /// 修改变量
+        /// </summary>
+        Change,
+    }
+
     /// <summary>
     /// 属性修改操作类别
     /// </summary>
@@ -378,16 +391,5 @@ namespace Hono.Scripts.Battle
         Subtract,
         Multiply,
         Divide,
-    }
-
-    public enum EParameterInfoType
-    {
-        NoInit,
-        Int,
-        Float,
-        Bool,
-        String,
-        IntList,
-        FloatList,
     }
 }

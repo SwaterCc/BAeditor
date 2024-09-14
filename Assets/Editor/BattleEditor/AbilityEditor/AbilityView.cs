@@ -49,17 +49,17 @@ namespace Editor.AbilityEditor
             {
                 var node = pair.Value;
 
-                int parentId = node.ParentId;
+                int parentId = node.Parent;
                 while (parentId > 0)
                 {
-                    var parentNode = (GroupNodeData)data.NodeDict[parentId];
+                    var parentNode = data.NodeDict[parentId];
                     if (parentNode.NodeType == EAbilityNodeType.EGroup)
                     {
-                        node.BelongGroupId = parentNode.GroupId;
+                        node.BelongGroupId = parentNode.GroupNodeData.GroupId;
                         break;
                     }
 
-                    parentId = parentNode.ParentId;
+                    parentId = parentNode.Parent;
                 }
             }
         }

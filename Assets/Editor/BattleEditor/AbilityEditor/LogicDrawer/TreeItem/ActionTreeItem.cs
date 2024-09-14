@@ -9,25 +9,13 @@ namespace Editor.AbilityEditor.TreeItem
     public class ActionTreeItem : AbilityLogicTreeItem
     {
         public ActionTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        private readonly ActionNodeData _actionNodeData;
-
-        private ParameterMaker _funcMaker;
-        
-        public ActionTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        private ParameterMaker _actionFunc;
+        public ActionTreeItem(AbilityNodeData nodeData) : base(nodeData)
         {
-            _actionNodeData = (ActionNodeData)nodeData;
-            _funcMaker = new ParameterMaker();
-            if (_actionNodeData.Function == null || _actionNodeData.Function.Length == 0)
-            {//函数默认给初始值
-                _funcMaker.InitFunc("NothingToDo");
-            }
-            else
-            {
-                int start = 0;
-                _funcMaker.Parse(_actionNodeData.Function,ref start);
-            }
+            _actionFunc = new ParameterMaker();
+            ParameterMaker.Init(_actionFunc,NodeData.ActionNodeData);
         }
-
+        
         protected override Color getButtonColor()
         {
             return new Color(1.5f, 0.3f, 0.3f);
@@ -35,31 +23,31 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            if ( _actionNodeData.Function == null || _actionNodeData.Function.Length == 0)
+            if (NodeData.ActionNodeData == null || NodeData.ActionNodeData.Length == 0 || string.IsNullOrEmpty(NodeData.ActionNodeData[0].FuncName))
                 return "未初始化";
-
-            return "";
+            
+            return _actionFunc.ToString();
         }
 
-        protected override string getButtonTips()
+        protected override string getItemEffectInfo()
         {
-            return "执行函数";
-        }
-
-        public override GenericMenu GetGenericMenu()
-        {
-            var menu = new GenericMenu();
-            if (_nodeData.ChildrenIds.Count == 0)
-            {
-                menu.AddItem(new GUIContent("创建节点/获取返回值"), false,
-                    AddNode, EAbilityNodeType.EVariableControl);
-            }
-            return menu;
+            return "执行无返回值的函数调用";
         }
 
         protected override void OnBtnClicked()
         {
-            //直接调用FuncWindow
+            if (SettingWindow == null)
+            {
+                var settingWindow = FuncWindow.CreateInstance<FuncWindow>();
+                settingWindow.Init(_actionFunc, EFuncCacheFlag.Action);
+                settingWindow.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
+                settingWindow.FromString = $"→ ActionNodeId<{DrawCount}>";
+                SettingWindow = settingWindow;
+            }
+
+            _actionFunc.OnSave = parameters => NodeData.ActionNodeData = parameters; 
+            SettingWindow.Show();
+            SettingWindow.Focus();
         }
     }
 }

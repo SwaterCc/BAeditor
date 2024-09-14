@@ -24,6 +24,10 @@ namespace Hono.Scripts.Battle {
 			return attr;
 		}
 
+		public bool HasAttr(int attrType) {
+			return _attrs.ContainsKey(attrType);
+		}
+
 		public ICommand SetAttr<T>(int attrType, T value, bool isTempData) {
 			var attrTypeInt = attrType;
 
@@ -42,7 +46,29 @@ namespace Hono.Scripts.Battle {
 			return null;
 		}
 
-		public T GetAttr<T>(int attrType) {
+		//TODO：性能问题
+		public ICommand SetAttrBox(int attrType, object value, bool isTempData) {
+			var attrTypeInt = attrType;
+
+			if (!_attrs.TryGetValue(attrTypeInt, out var attr)) {
+				attr = getAttrAndSetDefault(attrType);
+				_attrs.Add(attrTypeInt, attr);
+			}
+
+			return attr.BoxSet(value, isTempData);
+		}
+
+		//TODO：性能问题
+		public object GetAttrBox(int attrType, bool onlyBaseValue = false) {
+			if (!_attrs.TryGetValue(attrType, out var attr)) {
+				attr = getAttrAndSetDefault(attrType);
+				_attrs.Add(attrType, attr);
+			}
+
+			return attr.GetBox();
+		}
+
+		public T GetAttr<T>(int attrType, bool onlyBaseValue = false) {
 			if (!_attrs.TryGetValue(attrType, out var attr)) {
 				attr = getAttrAndSetDefault(attrType);
 				_attrs.Add(attrType, attr);

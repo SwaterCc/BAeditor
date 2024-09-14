@@ -135,14 +135,34 @@ namespace Hono.Scripts.Battle
 
         #region 对外接口
 
-        public T GetAttr<T>(ELogicAttr attrId)
+        public T GetAttr<T>(int logicAttr)
         {
-            return _attrs.GetAttr<T>(attrId.ToInt());
+	        return _attrs.GetAttr<T>(logicAttr);
         }
         
-        public ICommand SetAttr<T>(ELogicAttr attrId, T value, bool isTempData = false)
+        public T GetAttr<T>(ELogicAttr logicAttr)
         {
-            return _attrs.SetAttr(attrId.ToInt(), value, isTempData);
+            return _attrs.GetAttr<T>(logicAttr.ToInt());
+        }
+
+        public object GetAttrBox(ELogicAttr logicAttr)
+        {
+            return _attrs.GetAttrBox(logicAttr.ToInt());
+        }
+
+        public ICommand SetAttr<T>(int logicAttr, T value, bool isTempData)
+        {
+	        return _attrs.SetAttr(logicAttr, value, isTempData);
+        }
+        
+        public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData)
+        {
+            return _attrs.SetAttr(logicAttr.ToInt(), value, isTempData);
+        }
+
+        public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData)
+        {
+            return _attrs.SetAttrBox(logicAttr.ToInt(), value, isTempData);
         }
 
         public int AwardAbility(int configId, bool isRunNow)
@@ -159,11 +179,6 @@ namespace Hono.Scripts.Battle
         {
             _abilityController.ExecutingAbilityByConfig(config);
         }
-        
-        public bool HasAbility(int abilityConfigId)
-        {
-            return _abilityController.HasAbility(abilityConfigId);
-        }
 
         public bool TryGetAbility(int uid,out Ability ability)
         {
@@ -175,15 +190,21 @@ namespace Hono.Scripts.Battle
             _tags.Add(tag);
         }
 
-        public void RemoveTag(int tag)
-        {
-           
-        }
-        
         public bool HasTag(int tag)
         {
             return _tags.HasTag(tag);
         }
+
+        public bool HasAttr(ELogicAttr attr)
+        {
+            return _attrs.HasAttr(attr.ToInt());
+        }
+
+        public bool HasAbility(int abilityConfigId)
+        {
+            return _abilityController.HasAbility(abilityConfigId);
+        }
+
         #endregion
 
         #region LUA_Attr

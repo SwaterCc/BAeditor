@@ -70,6 +70,10 @@ namespace Hono.Scripts.Battle
         [AbilityFuncCache(EFuncCacheFlag.Action)]
         public static void CreateHitBox(int targetUid, HitBoxData hitData)
         {
+	        if (targetUid == 0) {
+		        Debug.LogError("targetUid is 0");
+		        return;
+	        }
             var hitBox = ActorManager.Instance.CreateActor(BattleSetting.DefaultHitBoxPrototypeId);
             hitBox.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.SourceActor.Uid, false);
             hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
@@ -95,7 +99,7 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void ExecuteAbility(AutoValue actorUid,int configId)
+        public static void ExecuteAbility(int actorUid,int configId)
         {
             if (tryGetActor(actorUid, out var actor))
             {
@@ -134,8 +138,19 @@ namespace Hono.Scripts.Battle
                 comp.AddBuff(Ability.Context.SourceActor.Uid, buffId, buffLayer);
             }
         }
+		
+		[AbilityFuncCache(EFuncCacheFlag.Action)]
+		public static void RemoveBuff(int actorUid, int buffId, int buffLayer = 1) {
+			if (!tryGetActor(actorUid, out var actor)) {
+				return;
+			}
 
-        [AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
+			if (actor.Logic.TryGetComponent<ActorLogic.BuffComp>(out var comp)) {
+				comp.RemoveByConfigId(buffId);
+			}
+		}
+
+		[AbilityFuncCache(EFuncCacheFlag.Variable | EFuncCacheFlag.Branch)]
         public static object GetAttr(int actorUid, ELogicAttr logicAttr)
         {
             if (!tryGetActor(actorUid, out var actor))
@@ -143,18 +158,18 @@ namespace Hono.Scripts.Battle
                 return null;
             }
 
-            return actor.GetAttrLua(logicAttr.ToInt());
+            return actor.GetAttrBox(logicAttr);
         }
 
         [AbilityFuncCache(EFuncCacheFlag.Action)]
-        public static void SetAttr(int actorUid, ELogicAttr logicAttr, AutoValue value, bool isTempData)
+        public static void SetAttr(int actorUid, ELogicAttr logicAttr, object value, bool isTempData)
         {
             if (!tryGetActor(actorUid, out var actor))
             {
                 return;
             }
 
-            var command = actor.SetAttr(logicAttr, value, isTempData);
+            var command = actor.SetAttrBox(logicAttr, value, isTempData);
             if (isTempData && command != null)
                 Ability.Context.Invoker.AddCommand(command);
         }

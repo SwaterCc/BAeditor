@@ -73,24 +73,27 @@ namespace Hono.Scripts.Battle.Tools {
 			List<RaycastHit> raycastHits = new List<RaycastHit>();
 			switch (data.ShapeType) {
 				case ECheckBoxShapeType.Cube:
-					var half = new Vector3(data.Length/2, data.Height/2, data.Width/2);
+					var cubeData = (CheckBoxCube)data;
+					var half = new Vector3(cubeData.Length/2, cubeData.Height/2, cubeData.Width/2);
 					raycastHits.AddRange(Physics.BoxCastAll(centerPos, half, followAttackerRot * Vector3.forward,
 						data.Rot, 0.001f));
 					GizmosHelper.Instance.DrawCube(centerPos, half, finalRot, Color.green);
 					break;
 				case ECheckBoxShapeType.Sphere:
-					raycastHits.AddRange(Physics.SphereCastAll(centerPos, data.Radius,
+					var sphereData = (CheckBoxSphere)data;
+					raycastHits.AddRange(Physics.SphereCastAll(centerPos, sphereData.Radius,
 						followAttackerRot * Vector3.forward,
 						0.001f));
-					GizmosHelper.Instance.DrawSphere(centerPos, data.Radius, finalRot, Color.green);
+					GizmosHelper.Instance.DrawSphere(centerPos, sphereData.Radius, finalRot, Color.green);
 					break;
 				case ECheckBoxShapeType.Cylinder:
-					raycastHits.AddRange(Physics.CapsuleCastAll(centerPos + Vector3.up * (data.Height / 2),
-						centerPos + Vector3.down * (data.Height / 2),
+					var cylinderData = (CheckBoxCylinder)data;
+					raycastHits.AddRange(Physics.CapsuleCastAll(centerPos + Vector3.up * (cylinderData.Height / 2),
+						centerPos + Vector3.down * (cylinderData.Height / 2),
 						0.1f,
 						followAttackerRot * Vector3.forward, 0.001f));
 					GizmosHelper.Instance.DrawCube(centerPos,
-						new Vector3(data.Radius, data.Height, data.Radius), finalRot,
+						new Vector3(cylinderData.Radius, cylinderData.Height, cylinderData.Radius), finalRot,
 						Color.green);
 					break;
 				default:
@@ -114,7 +117,62 @@ namespace Hono.Scripts.Battle.Tools {
 
 	#region ParamExtension
 
-	
+	public static class ParamExtension {
+		public static bool TryCallFunc(this Parameter[] @params, out object valueBox) {
+			var queue = new Queue<Parameter>(@params);
+			if (@params[0].IsValueType && @params.Length == 1) {
+				valueBox = @params[0].Value;
+				return true;
+			}
+
+			return tryCallFunc(queue, out valueBox);
+		}
+
+		private static bool tryCallFunc(this Queue<Parameter> queue, out object valueBox) {
+			valueBox = null;
+			var func = queue.Dequeue();
+			if (func.IsFunc) {
+				valueBox = queue.CallFunc(func);
+				return valueBox != null;
+			}
+
+			Debug.LogError("队首不是函数");
+			return false;
+		}
+
+		/// <summary>
+		/// 执行指定函数
+		/// </summary>
+		/// <param name="queue"></param>
+		/// <param name="func"></param>
+		/// <returns></returns>
+		public static object CallFunc(this Queue<Parameter> queue, Parameter func) {
+			var funcInfo = AbilityFuncPreLoader.GetFuncInfo(func.FuncName);
+
+			if (funcInfo == null) {
+				return null;
+			}
+
+			//TODO:有GC问题后续优化
+			object[] funcParams = new object[funcInfo.ParamCount];
+
+			for (int idx = 0; idx < funcInfo.ParamCount; idx++) {
+				var param = queue.Dequeue();
+
+				if (param.IsValueType) {
+					funcParams[idx] = param.Value;
+				}
+
+				if (param.IsFunc) {
+					funcParams[idx] = CallFunc(queue, param);
+				}
+			}
+
+			//TODO:有消耗
+			var res = funcInfo.Invoke(null, funcParams);
+			return res;
+		}
+	}
 
 	#endregion
 }

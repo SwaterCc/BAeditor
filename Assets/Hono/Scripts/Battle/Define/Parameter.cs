@@ -1,25 +1,8 @@
 using System;
-using UnityEngine;
+using Sirenix.Serialization;
 
 namespace Hono.Scripts.Battle
 {
-    [Serializable]
-    public class ParameterInfo
-    {
-        public EParameterInfoType ParameterValueType => _parameterInfoType;
-        
-        [SerializeField]
-        private EParameterInfoType _parameterInfoType;
-        
-        public Parameter[] Parameters;
-
-        public ParameterInfo(EParameterInfoType infoType)
-        {
-            _parameterInfoType = infoType;
-        }
-    }
-    
-    
     /// <summary>
     /// 编辑器反射参数
     /// </summary>
@@ -27,10 +10,15 @@ namespace Hono.Scripts.Battle
     public struct Parameter
     {
         /// <summary>
-        /// 参数类型
+        /// 参数类型，反射得到的字符串
         /// </summary>
         public string ParamType;
         
+        /// <summary>
+        /// 参数命名，反射得到的字符串
+        /// </summary>
+        public string ParamName;
+
         /// <summary>
         /// 是否是函数
         /// </summary>
@@ -42,18 +30,8 @@ namespace Hono.Scripts.Battle
         /// 是否是值类型
         /// </summary>
         public bool IsValueType;
-        public AutoValue Value;
-
-        /// <summary>
-        /// 是否使用了变量
-        /// </summary>
-        public bool IsVariable;
-        public string VariableName;
-
-        /// <summary>
-        /// 是否使用属性
-        /// </summary>
-        public bool IsAttr;
-        public int AttrId;
+        
+        [OdinSerialize]
+        public object Value;
     }
 }

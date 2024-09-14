@@ -2,116 +2,91 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle
-{
-    public interface IAttr
-    {
-        public void InitDefaultValue();
-        public ICommand AutoSet(AutoValue obj, bool isTempData = false);
-        public AutoValue GetAuto();
-    }
-    
-    /// <summary>
-    /// 属性基类
-    /// </summary>
-    public class Attr<T> : IAttr, ICommandCollection
-    {
-        private T _value;
-        private Type _valueType;
-        private LinkedList<ICommand> _commands;
-        private readonly Func<T, T, T> _onCommandChanged;
+namespace Hono.Scripts.Battle {
+	public interface IAttr {
+		public void InitDefaultValue();
+		public ICommand BoxSet(object obj, bool isTempData = false);
+		public object GetBox(bool onlyBaseValue = false);
+	}
 
-        public Attr(Func<T, T, T> onCommandChanged)
-        {
-            _onCommandChanged = onCommandChanged;
-            _valueType = typeof(T);
-        }
+	/// <summary>
+	/// 属性基类
+	/// </summary>
+	public class Attr<T> : IAttr, ICommandCollection {
+		private T _commandValue;
+		private T _setValue;
+		private LinkedList<ICommand> _commands;
+		private readonly Func<T, T, T> _onCommandChanged;
 
-        public ICommand AutoSet(AutoValue auto, bool isTempData = false)
-        {
-            if (auto.GetAutoType() is not T) return null;
-            
-            if (isTempData)
-            {
-                return new AttrCommand<T>(this, _value);
-            }
+		public Attr(Func<T, T, T> onCommandChanged) {
+			_onCommandChanged = onCommandChanged;
+		}
+		
+		public object GetBox(bool onlyBaseValue = false) {
+			if (onlyBaseValue || _onCommandChanged == null) {
+				return _setValue;
+			}
 
-            if (_valueType.IsClass)
-            {
-                _value = auto.GetRef<T>();
-            }
-            else
-            {
-                _value = (T)auto.Get<T>();
-            }
-            
-            return null;
-        }
+			return _commands?.Count > 0 ? _onCommandChanged.Invoke(_setValue, _commandValue) : _setValue;
+		}
+		
+		public T Get(bool onlyBaseValue = false) {
+			if (onlyBaseValue || _onCommandChanged == null) {
+				return _setValue;
+			}
 
-        public AutoValue GetAuto()
-        {
-            var auto = new AutoValue();
-            if (typeof(T).IsClass)
-            {
-                auto.SetRef(_value);
-            }
-            else
-            {
-                auto.Set<T>(_value);
-            }
+			return _commands?.Count > 0 ? _onCommandChanged.Invoke(_setValue, _commandValue) : _setValue;
+		}
 
-            return auto;
-        }
+		public ICommand Set(T value, bool isTempData = false) {
+			if (isTempData && _onCommandChanged != null) {
+				return new AttrCommand<T>(this, value);
+			}
+			_setValue = value;
+			return null;
+		}
+		
+		public ICommand BoxSet(object obj, bool isTempData = false) {
+			if (obj is not T objTyped) {
+				throw new InvalidCastException("尝试存储一个类型错误的值");
+			}
 
-        public T Get()
-        {
-            return _value;
-        }
+			if (isTempData && _onCommandChanged != null) {
+				return new AttrCommand<T>(this, objTyped);
+			}
+			_setValue = objTyped;
+			//报个错
+			return null;
+		}
 
-        public ICommand Set(T value, bool isTempData = false)
-        {
-            _value = value;
-            if (isTempData || _onCommandChanged == null)
-            {
-                return new AttrCommand<T>(this, value);
-            }
 
-            return null;
-        }
+		public void InitDefaultValue() { }
 
-        public void InitDefaultValue() { }
+		public Type GetAttrType() {
+			return typeof(T);
+		}
 
-        public Type GetAttrType()
-        {
-            return typeof(T);
-        }
+		public void AddCommand(ICommand command) {
+			_commands ??= new LinkedList<ICommand>();
+			_commands.AddLast(command);
+		}
 
-        public void AddCommand(ICommand command)
-        {
-            _commands ??= new LinkedList<ICommand>();
-            _commands.AddLast(command);
-        }
+		public void RemoveCommand(ICommand command) {
+			if (_commands != null) {
+				_commands.Remove(command);
+			}
+		}
 
-        public void RemoveCommand(ICommand command)
-        {
-            if (_commands != null)
-            {
-                _commands.Remove(command);
-            }
-        }
+		public void OnCommandChanged() {
+			if (_onCommandChanged == null) {
+				Debug.LogWarning($"Attr<{typeof(T)}> _onCommandChanged == null");
+				return;
+			}
 
-        public void OnCommandChanged()
-        {
-            if (_onCommandChanged == null)
-            {
-                Debug.LogWarning($"Attr<{typeof(T)}> _onCommandChanged == null");
-                return;
-            }
-
-            foreach (AttrCommand<T> command in _commands)
-            {
-                _value = _onCommandChanged.Invoke(_value, command.Value);
-            }
-        }
-    }
+			_commandValue = default;
+			foreach (AttrCommand<T> command in _commands) {
+				_commandValue = _onCommandChanged.Invoke(_commandValue, command.Value);
+			}
+		}
+	}
 }

@@ -360,7 +360,10 @@ MonoBehaviour:
       Data: 11|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 1583131983
     - Name: 
       Entry: 3
       Data: 1859364729
@@ -720,13 +723,10 @@ MonoBehaviour:
       Data: 24|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 2
     - Name: 
       Entry: 3
       Data: 1060775664
-    - Name: 
-      Entry: 3
-      Data: 1583131983
     - Name: 
       Entry: 3
       Data: 1754166582
@@ -871,7 +871,7 @@ MonoBehaviour:
       Data: 28|System.Int32, mscorlib
     - Name: 
       Entry: 3
-      Data: 7
+      Data: 17
     - Name: 
       Entry: 8
       Data: 
@@ -946,7 +946,7 @@ MonoBehaviour:
       Data: 
     - Name: NextIdInSameLevel
       Entry: 3
-      Data: 1583131983
+      Data: 1754166582
     - Name: ActionNodeData
       Entry: 6
       Data: 
@@ -1181,7 +1181,7 @@ MonoBehaviour:
       Data: 38|System.Int32, mscorlib
     - Name: 
       Entry: 3
-      Data: 7
+      Data: 17
     - Name: 
       Entry: 8
       Data: 
@@ -1759,10 +1759,10 @@ MonoBehaviour:
       Data: 5
     - Name: Parent
       Entry: 3
-      Data: 1859364729
+      Data: 650063277
     - Name: Depth
       Entry: 3
-      Data: 2
+      Data: 1
     - Name: BelongGroupId
       Entry: 3
       Data: -1
@@ -1780,7 +1780,7 @@ MonoBehaviour:
       Data: 
     - Name: NextIdInSameLevel
       Entry: 3
-      Data: 1754166582
+      Data: 1859364729
     - Name: ActionNodeData
       Entry: 7
       Data: 56|Hono.Scripts.Battle.Parameter[], Assembly-CSharp
@@ -1828,10 +1828,10 @@ MonoBehaviour:
       Data: true
     - Name: FuncName
       Entry: 1
-      Data: GetVariableByUid
+      Data: GetListValueByIndex
     - Name: ParamCount
       Entry: 3
-      Data: 4
+      Data: 2
     - Name: IsValueType
       Entry: 5
       Data: false
@@ -1845,32 +1845,25 @@ MonoBehaviour:
       Entry: 7
       Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
     - Name: ParamType
-      Entry: 1
-      Data: Hono.Scripts.Battle.EVariableRange, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-    - Name: ParamName
-      Entry: 1
-      Data: range
-    - Name: IsFunc
-      Entry: 5
-      Data: false
-    - Name: FuncName
       Entry: 6
       Data: 
-    - Name: ParamCount
-      Entry: 3
-      Data: 0
-    - Name: IsValueType
+    - Name: ParamName
+      Entry: 1
+      Data: list
+    - Name: IsFunc
       Entry: 5
       Data: true
-    - Name: Value
-      Entry: 7
-      Data: 57|Hono.Scripts.Battle.EVariableRange, Assembly-CSharp
-    - Name: 
+    - Name: FuncName
+      Entry: 1
+      Data: GetAttr
+    - Name: ParamCount
       Entry: 3
       Data: 2
-    - Name: 
-      Entry: 8
+    - Name: IsValueType
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -1898,7 +1891,7 @@ MonoBehaviour:
       Data: true
     - Name: Value
       Entry: 7
-      Data: 58|System.Int32, mscorlib
+      Data: 57|System.Int32, mscorlib
     - Name: 
       Entry: 3
       Data: 0
@@ -1913,10 +1906,44 @@ MonoBehaviour:
       Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
     - Name: ParamType
       Entry: 1
+      Data: Hono.Scripts.Battle.ELogicAttr, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    - Name: ParamName
+      Entry: 1
+      Data: logicAttr
+    - Name: IsFunc
+      Entry: 5
+      Data: false
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: ParamCount
+      Entry: 3
+      Data: 0
+    - Name: IsValueType
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 7
+      Data: 58|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 17
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParamType
+      Entry: 1
       Data: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
     - Name: ParamName
       Entry: 1
-      Data: abilityUid
+      Data: idx
     - Name: IsFunc
       Entry: 5
       Data: false
@@ -1935,39 +1962,6 @@ MonoBehaviour:
     - Name: 
       Entry: 3
       Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: Hono.Scripts.Battle.Parameter, Assembly-CSharp
-    - Name: ParamType
-      Entry: 1
-      Data: System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-    - Name: ParamName
-      Entry: 1
-      Data: name
-    - Name: IsFunc
-      Entry: 5
-      Data: false
-    - Name: FuncName
-      Entry: 6
-      Data: 
-    - Name: ParamCount
-      Entry: 3
-      Data: 0
-    - Name: IsValueType
-      Entry: 5
-      Data: true
-    - Name: Value
-      Entry: 7
-      Data: 60|System.String, mscorlib
-    - Name: 
-      Entry: 1
-      Data: targetUid
     - Name: 
       Entry: 8
       Data: 
@@ -1998,7 +1992,7 @@ MonoBehaviour:
       Data: true
     - Name: Value
       Entry: 7
-      Data: 61|Hono.Scripts.Battle.HitBoxData, Assembly-CSharp
+      Data: 60|Hono.Scripts.Battle.HitBoxData, Assembly-CSharp
     - Name: HitType
       Entry: 3
       Data: 0
@@ -2010,11 +2004,14 @@ MonoBehaviour:
       Data: 1
     - Name: FirstInterval
       Entry: 4
-      Data: 2
+      Data: 0
     - Name: Interval
       Entry: 4
-      Data: 0
+      Data: 2
     - Name: OnceHitDamageCount
+      Entry: 3
+      Data: 1
+    - Name: ShapeType
       Entry: 3
       Data: 1
     - Name: DamageConfigId
@@ -2022,10 +2019,10 @@ MonoBehaviour:
       Data: 1
     - Name: AoeData
       Entry: 7
-      Data: Hono.Scripts.Battle.CheckBoxData, Assembly-CSharp
+      Data: 61|Hono.Scripts.Battle.CheckBoxSphere, Assembly-CSharp
     - Name: ShapeType
       Entry: 3
-      Data: 0
+      Data: 1
     - Name: Rot
       Entry: 7
       Data: UnityEngine.Quaternion, UnityEngine.CoreModule
@@ -2040,10 +2037,13 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
+    - Name: OffsetUsePercent
+      Entry: 5
+      Data: false
     - Name: Offset
       Entry: 7
       Data: UnityEngine.Vector3, UnityEngine.CoreModule
@@ -2059,30 +2059,15 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: OffsetUsePercent
-      Entry: 5
-      Data: false
-    - Name: Length
-      Entry: 4
-      Data: 0
-    - Name: Width
-      Entry: 4
-      Data: 0
-    - Name: Height
-      Entry: 4
-      Data: 0
-    - Name: Radius
-      Entry: 4
-      Data: 0
-    - Name: Angle
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: WhenAbilityEndRemove
       Entry: 5
       Data: false
+    - Name: Radius
+      Entry: 4
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: UseCustomFilter
       Entry: 5
       Data: false
@@ -2137,8 +2122,8 @@ MonoBehaviour:
   Type: 0
   ConfigId: 10001
   Name: 
-  Desc: 
+  Desc: "\u963F\u8428\u5FB7"
   IconPath: {fileID: 0}
-  Tags: 
+  Tags: 6500000066000000670000009b000000
   DefaultStartGroupId: -1
   PreCheckerVarName: CHECKER

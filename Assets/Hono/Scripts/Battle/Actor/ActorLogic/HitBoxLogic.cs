@@ -26,22 +26,22 @@ namespace Hono.Scripts.Battle {
 		}
 
 		protected override void setupAttrs() {
-			//设置坐标
+			
 		}
 
 		protected override void onInit() {
 			_sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
 			_sourceAbilityConfigId = GetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId);
 			_sourceAbilityType = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId).Type;
-			_hitBoxData = _variables.Get<HitBoxData>("hitBoxData");
+			_hitBoxData = (HitBoxData)(_variables.Get("hitBoxData"));
 
-			var attacker = ActorManager.Instance.GetActor(_sourceActorId);
+			var attacker =  ActorManager.Instance.GetActor(_sourceActorId);
 			_targetUid = (int)(_variables.Get("targetUid"));
 			var target = ActorManager.Instance.GetActor(_targetUid);
 			var pos = target.Logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
 			SetAttr(ELogicAttr.AttrPosition, pos, false);
 			SetAttr(ELogicAttr.AttrFaction, attacker.Logic.GetAttr<int>(ELogicAttr.AttrFaction), false);
-
+			
 			_intervalDuration = _hitBoxData.Interval;
 			_curCount = 0;
 
@@ -59,9 +59,13 @@ namespace Hono.Scripts.Battle {
 				_filterSetting.OpenBoxCheck = true;
 				_filterSetting.BoxData = _hitBoxData.AoeData;
 				var skillData = AssetManager.Instance.GetData<SkillData>(_sourceAbilityConfigId);
-				var range = new FilterRange() { RangeType = EFilterRangeType.Faction, };
-
-				switch (skillData.SkillTargetType) {
+				var range = new FilterRange()
+				{
+					RangeType = EFilterRangeType.Faction,
+				};
+				
+				switch (skillData.SkillTargetType)
+				{
 					case ESkillTargetType.Enemy:
 						range.Value = (int)EFactionType.Enemy;
 						break;
@@ -69,9 +73,9 @@ namespace Hono.Scripts.Battle {
 						range.Value = (int)EFactionType.Friendly;
 						break;
 				}
-
 				_filterSetting.Ranges.Add(range);
 			}
+			
 		}
 
 		protected override void registerChildComponents() { }
@@ -111,7 +115,7 @@ namespace Hono.Scripts.Battle {
 				funcInfo.ValueFuncName = damageAddi.ApplyFuncName;
 				funcInfo.ConditionIds = damageAddi.ConditionIds;
 				funcInfo.ConditionParams = damageAddi.ConditionParams;
-				funcInfo.ValueParams = damageAddi.DamageValue;
+				funcInfo.ValueParams .AddRange(damageAddi.DamageValue);
 				damageConfig.AddiTypes.Add(funcInfo);
 			}
 
@@ -121,10 +125,9 @@ namespace Hono.Scripts.Battle {
 				funcInfo.ValueFuncName = damageMultiply.ApplyFuncName;
 				funcInfo.ConditionIds = damageMultiply.ConditionIds;
 				funcInfo.ConditionParams = damageMultiply.ConditionParams;
-				funcInfo.ValueParams = damageMultiply.DamageValue;
+				funcInfo.ValueParams .AddRange(damageMultiply.DamageValue);
 				damageConfig.MultiTypes.Add(funcInfo);
 			}
-
 			return damageConfig;
 		}
 
@@ -139,6 +142,10 @@ namespace Hono.Scripts.Battle {
 				hitCounter(beHurtComp);
 				var damageItem = makeDamageConfig();
 				var res = LuaInterface.GetDamageResults(attacker, target, damageInfo, damageItem);
+				if (beHurtComp.Actor.GetAttr<int>(ELogicAttr.AttrInvincible) != 0) {
+					Debug.Log($"actor uid: {beHurtComp.Actor.Uid}  是无敌的");
+					res.IsImmunity = true;
+				}
 				beHurtComp.OnBeHurt(res);
 			}
 		}
@@ -151,14 +158,14 @@ namespace Hono.Scripts.Battle {
 			damageInfo.SourceActorId = _sourceActorId;
 			damageInfo.SourceAbilityConfigId = _sourceAbilityConfigId;
 			damageInfo.SourceAbilityType = _sourceAbilityType;
-			var tags = _variables.Get<List<int>>("abilityTags");
+			var tags = (List<int>)_variables.Get("abilityTags");
 			if (tags != null) {
-				damageInfo.Tags.AddRange(tags);
+				damageInfo.Tags .AddRange(tags);
 			}
 			else {
 				Debug.Log("tag == null");
 			}
-
+			
 			var abilityData = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId);
 			switch (abilityData.Type) {
 				case EAbilityType.Skill:

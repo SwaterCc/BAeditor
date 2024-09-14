@@ -17,13 +17,13 @@ namespace Hono.Scripts.Battle
             
             public AbilityGroupNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _groupData = data as GroupNodeData;
+                _groupData = data.GroupNodeData;
             }
             public override void DoJob()
             {
                 
             }
-
+            
             public int GetGroupId()
             {
                 return _groupData.GroupId;

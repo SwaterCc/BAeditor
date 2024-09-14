@@ -22,17 +22,6 @@ namespace Hono.Scripts.Battle.Tools
             return _collection.GetValueOrDefault(name);
         }
 
-        public T Get<T>(string name) where T : class
-        {
-	        var obj = _collection.GetValueOrDefault(name);
-	        if (obj is T tobj)
-	        {
-		        return tobj;
-	        }
-
-	        return null;
-        }
-
         public void Set(string key, object variable) {
 	        if (string.IsNullOrEmpty(key)) {
 		        Debug.LogError("变量名为空 Set Failed");
@@ -44,7 +33,7 @@ namespace Hono.Scripts.Battle.Tools
 	        }
 	        _collection[key] = variable;
         }
-        
+
         public void Delete(string name)
         {
             if (_collection.ContainsKey(name))

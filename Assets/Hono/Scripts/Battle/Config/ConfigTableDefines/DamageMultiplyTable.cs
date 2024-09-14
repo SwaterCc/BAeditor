@@ -74,6 +74,11 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
+            /// 备注
+            /// </summary>
+            public string Desc { get; private set; }
+            
+            /// <summary>
             /// Apply增伤数值万分比
             /// </summary>
             public IntArray DamageValue { get; private set; }
@@ -111,13 +116,15 @@ namespace Hono.Scripts.Battle
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.DamageValue = parseIntArray(line[1]);
+                    _row.Desc = parseString(line[1]);
             
-                    _row.ApplyFuncName = parseString(line[2]);
+                    _row.DamageValue = parseIntArray(line[2]);
             
-                    _row.ConditionIds = parseIntArray(line[3]);
+                    _row.ApplyFuncName = parseString(line[3]);
             
-                    _row.ConditionParams = parseIntTable(line[4]);
+                    _row.ConditionIds = parseIntArray(line[4]);
+            
+                    _row.ConditionParams = parseIntTable(line[5]);
             
                 }
             }

@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle
     public partial class Ability
     {
         /// <summary>
-        /// Set变量或者捕获变量
+        /// 变量节点，执行变量创建或者指定变量修改
         /// </summary>
         private class AbilityVariableNode : AbilityNode
         {
@@ -15,32 +15,26 @@ namespace Hono.Scripts.Battle
 
             public AbilityVariableNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _varData = data as VariableNodeData;
+                _varData = data.VariableNodeData;
             }
 
-            private void CapturingActionResult(AbilityActionNode actionNode)
-            {
-                if (actionNode.FuncResult != null)
-                {
-                    _executor.Variables.Set(_varData.Name,actionNode.FuncResult);
-                }
-            }
-            
             public override void DoJob()
             {
-                if (Parent is AbilityActionNode actionNode)
-                {
-                    CapturingActionResult(actionNode);
-                }
-                
-                if (!_varData.ValueParams.TryCallFunc(out var autoValue))
+                if (!_varData.VarParams.TryCallFunc(out var variableBox))
                 {
 	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
                 }
-               
-                _executor.Variables.Set(_varData.Name,autoValue);
+                if (!_varData.ActorUid.TryCallFunc(out var actorUid))
+                {
+	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
+                }
+                if (!_varData.AbilityUid.TryCallFunc(out var abilityUid))
+                {
+	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
+                }
                 
-                DoChildrenJob();
+                AbilityFunction.SetVariableByUid(_varData.Range, (int)actorUid, (int)abilityUid,
+	                _varData.Name, variableBox);
             }
         }
     }

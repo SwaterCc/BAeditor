@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle
 
             public void OnBeHurt(DamageResults damageResults)
             {
-                Debug.Log($"造成伤害{damageResults.DamageValue}");
+                //Debug.Log($"造成伤害{damageResults.DamageValue}");
             }
         }
     }

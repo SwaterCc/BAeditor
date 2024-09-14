@@ -41,11 +41,11 @@ namespace Editor.AbilityEditor
 
         private readonly Dictionary<EAbilityType, string> _abilityFolders = new()
         {
-            { EAbilityType.Other, BattleEditorPath.AbilityOtherPath },
-            { EAbilityType.Skill, BattleEditorPath.AbilitySkillPath },
-            { EAbilityType.Buff, BattleEditorPath.AbilityBuffPath },
-            { EAbilityType.Bullet, BattleEditorPath.AbilityBulletPath },
-            { EAbilityType.GameMode, BattleEditorPath.AbilityGameModePath }
+            { EAbilityType.Other, AbilityEditorPath.AbilityOtherPath },
+            { EAbilityType.Skill, AbilityEditorPath.AbilitySkillPath },
+            { EAbilityType.Buff, AbilityEditorPath.AbilityBuffPath },
+            { EAbilityType.Bullet, AbilityEditorPath.AbilityBulletPath },
+            { EAbilityType.GameMode, AbilityEditorPath.AbilityGameModePath }
         };
 
         public Dictionary<EAbilityType, string> AbilityFolders => _abilityFolders;
@@ -131,11 +131,13 @@ namespace Editor.AbilityEditor
 
         protected override void OnDestroy()
         {
+            /*
             var selected = this.MenuTree.Selection.FirstOrDefault();
             if (selected?.Value is AbilityView abilityView)
             {
                 abilityView.Save();
             }
+            */
 
             base.OnDestroy();
         }

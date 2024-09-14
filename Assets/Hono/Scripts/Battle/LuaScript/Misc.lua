@@ -12,9 +12,9 @@ end
 
 function PrintDamageLog(text, isSuccess)
     if isSuccess == 0 or nil then
-        CS.UnityEngine.Debug.Log("<color=#00FF00>" .. text .. "</color>")
+        CS.UnityEngine.Debug.Log("<color=#00FF00>" .. tostring(text) .. "</color>")
     else
-        CS.UnityEngine.Debug.Log("<color=#FF1515>" .. text .. "</color>")
+        CS.UnityEngine.Debug.Log("<color=#FF1515>" .. tostring(text) .. "</color>")
     end
 end
 

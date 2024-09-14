@@ -1,3 +1,4 @@
-﻿Id,Apply增伤数值万分比,Apply数值的方法，可以在lua中自定义计算方法，通常保持默认即可,增伤条件ID列表,增伤条件参数表
-Id,DamageValue,ApplyFuncName,ConditionIds,ConditionParams
-int,intArray,string,intArray,intTable
+﻿Id,备注,Apply增伤数值万分比,Apply数值的方法，可以在lua中自定义计算方法，通常保持默认即可,增伤条件ID列表,增伤条件参数表
+Id,Desc,DamageValue,ApplyFuncName,ConditionIds,ConditionParams
+int,string,intArray,string,intArray,intTable
+222,疯狂之心：敌人身上每有一种不同的控制效果，你造成的持续性伤害就会提高[20.0]%[×]。不可阻挡的敌人和跟路的首领受到来自你的持续性伤害改为提高[10-40]%[x]。,500=2000=1000=4000,CrazyHeart,0,

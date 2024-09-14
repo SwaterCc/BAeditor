@@ -31,7 +31,7 @@ namespace Hono.Scripts.Battle
 
         public string Desc = "NoInit";
 
-        public string IconPath;
+        public Texture IconPath;
 
         public List<int> Tags = new();
 
@@ -50,41 +50,13 @@ namespace Hono.Scripts.Battle
         /// </summary>
         [OdinSerialize]
         public Dictionary<int, AbilityNodeData> NodeDict = new();
-        
+
         [NonSerialized]
         private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
         
         public static AbilityNodeData GetNodeData(AbilityData abilityData, EAbilityNodeType type)
         {
-            AbilityNodeData nodeData = null;
-            switch (type)
-            {
-                case EAbilityNodeType.EAbilityCycle:
-                    nodeData = new EditorCycleNodeData();
-                    break;
-                case EAbilityNodeType.EEvent:
-                    nodeData = new EventNodeData();
-                    break;
-                case EAbilityNodeType.EBranchControl:
-                    nodeData = new BranchNodeData();
-                    break;
-                case EAbilityNodeType.EVariableControl:
-                    nodeData = new VariableNodeData();
-                    break;
-                case EAbilityNodeType.ERepeat:
-                    nodeData = new RepeatNodeData();
-                    break;
-                case EAbilityNodeType.EAction:
-                    nodeData = new ActionNodeData();
-                    break;
-                case EAbilityNodeType.ETimer:
-                    nodeData = new TimerNodeData();
-                    break;
-                case EAbilityNodeType.EGroup:
-                    nodeData = new GroupNodeData();
-                    break;
-            }
-            
+            var nodeData = new AbilityNodeData();
             var id = CommonUtility.GenerateTimeBasedHashId32();
             var maxTryCount = 500;
             var curTryCount = 0;
@@ -105,58 +77,99 @@ namespace Hono.Scripts.Battle
     }
 
     [Serializable]
-    public abstract class AbilityNodeData
+    public class AbilityNodeData
     {
         public int NodeId;
 
         public EAbilityNodeType NodeType;
 
-        public int ParentId = -1;
+        public int Parent;
 
         public int Depth;
 
-        public string Desc;//编辑器描述
-        
         public int BelongGroupId = -1;
         
         public List<int> ChildrenIds = new();
 
-        public int NextIdInSameLevel = -1;
+        public int NextIdInSameLevel;
+        
+        public Parameter[] ActionNodeData;
+        
+        public BranchNodeData BranchNodeData;
+        
+        public EventNodeData EventNodeData;
+        
+        public RepeatNodeData RepeatNodeData;
+        
+        public VariableNodeData VariableNodeData;
+        
+	    public EAbilityAllowEditCycle allowEditCycleNodeData;
+        
+        public TimerNodeData TimerNodeData;
+        
+        public GroupNodeData GroupNodeData;
 
-        public bool IsDisable;
-    }
+        public void RemoveSelf(AbilityData data)
+        {
+            data.NodeDict.Remove(NodeId);
+            if (ChildrenIds.Count > 0)
+            {
+                foreach (var id in ChildrenIds)
+                {
+                    data.NodeDict[id].RemoveSelf(data);
+                }
+            }
+        }
 
-    [Serializable]
-    public class EditorCycleNodeData : AbilityNodeData
-    {
-        public EAbilityAllowEditCycle AllowEditCycleNodeData;
+        public bool IsHead()
+        {
+            return Parent == -1;
+        }
+        
+        public AbilityNodeData DeepCopy()
+        {
+	        using (var ms = new MemoryStream())
+	        {
+		        var formatter = new BinaryFormatter();
+		        formatter.Serialize(ms, this);
+		        ms.Position = 0;
+		        var copy = (AbilityNodeData)formatter.Deserialize(ms);
+            
+		        // 重置 NodeId，排除其内容
+		        copy.NodeId = 0; // 或者任何适当的默认值
+            
+		        return copy;
+	        }
+        }
     }
     
     [Serializable]
-    public class ActionNodeData : AbilityNodeData
+    public class BranchNodeData
     {
-        public Parameter[] Function;
+        public Parameter[] Left;
+        public ECompareResType ResType;
+        public Parameter[] Right;
+        public int BranchGroup;
+        public string Desc;//编辑器描述
     }
     
     [Serializable]
-    public class BranchNodeData : AbilityNodeData
-    {
-        public ParameterInfo CompareFunc = new ParameterInfo(EParameterInfoType.Bool);
-        public int LinkBranchNodeId = -1;
-    }
-    
-    [Serializable]
-    public class EventNodeData : AbilityNodeData
+    public class EventNodeData
     {
         public EBattleEventType EventType;
         public Parameter[] CreateCheckerFunc;
+        public string CaptureVarName;
+        public string Desc;
     }
 
     [Serializable]
-    public class GroupNodeData : AbilityNodeData
+    public class GroupNodeData
     {
         public int GroupId;
-        
+
+        //逻辑不用，阶段描述
+        public string Desc;
+
         /// <summary>
         /// 是否为默认开启阶段
         /// </summary>
@@ -164,25 +177,30 @@ namespace Hono.Scripts.Battle
     }
 
     [Serializable]
-    public class TimerNodeData : AbilityNodeData
+    public class TimerNodeData
     {
-        public ParameterInfo FirstInterval = new ParameterInfo(EParameterInfoType.Float);
-        public ParameterInfo Interval = new ParameterInfo(EParameterInfoType.Float);
-        public ParameterInfo MaxCount = new ParameterInfo(EParameterInfoType.Int);
+        public Parameter[] FirstInterval;
+        public Parameter[] Interval;
+        public Parameter[] MaxCount;
         public string Desc = "定时器";
     }
 
     [Serializable]
-    public class RepeatNodeData : AbilityNodeData
+    public class RepeatNodeData
     {
-        public ParameterInfo MaxRepeatCount = new(EParameterInfoType.Int);
+        public Parameter[] MaxRepeatCount;
+        public string Desc;
     }
 
     [Serializable]
-    public class VariableNodeData : AbilityNodeData
+    public class VariableNodeData
     {
+        public EVariableOperationType OperationType;
+        public EVariableRange Range;
+        public Parameter[] ActorUid;
+        public Parameter[] AbilityUid;
         public string Name;
-        public EParameterInfoType InfoType;
-        public Parameter[] ValueParams;
+        public Parameter[] VarParams;
+        public string Desc;
     }
 }

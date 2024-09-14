@@ -1,0 +1,6 @@
+﻿Id 字段：0-999保留，1000~1999版本1的所有怪，X000~X199小怪，X200~X399精英，X400~X499boss,属性描述,默认初始等级，目标单位等级，为角色时该等级=主职业等级，为怪物时即正常等级。,最大HP,最大MP,攻击力,防御力,防御穿透,防御穿透万分比,暴击率加值万分比,暴击伤害加值万分比,治疗强度,治疗效果,被治疗效果,攻击速度,全属性抗性穿透,全属性抗性,物理属性抗性穿透,物理属性抗性,元素属性抗性穿透,元素属性抗性,伤害增加万分比%[x],直接减伤%[x]
+Id,Desc,AttrEntityLevel,AttrMaxHpAdd,AttrMaxMpAdd,AttrAttackAdd,AttrDefenseAdd,AttrIgnoreDefenseAdd,AttrIgnoreDefensePCTAdd,AttrCritAdd,AttrCritDamageAdd,AttrHealIntensityAdd,AttrHealAdd,AttrHealedAdd,AttrAttackSpeedPCTAdd,AttrElementPenPCTAdd,AttrElementRedPCTAdd,AttrElementPhysicalPenPCTAdd,AttrElementPhysicalRedPCTAdd,AttrElementMagicPenPCTAdd,AttrElementMagicRedPCTAdd,AttrDmgAAdd,AttrDmgRedAdd
+int,string,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int
+1,默认角色属性,1,300,2000,100,50,0,0,0,5000,0,0,0,0,0,0,0,0,0,0,0,0
+10,测试木桩属性,1,999999999,2000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+11,测试木桩属性,1,999999999,2000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

@@ -39,9 +39,8 @@ namespace Hono.Scripts.Battle
                     else
                     {
                         _skillTargetSetting = new FilterSetting();
-                        var boxData = new CheckBoxData();
+                        var boxData = new CheckBoxSphere(ECheckBoxShapeType.Sphere);
                         boxData.Radius = Data.SkillRange;
-                        boxData.ShapeType = ECheckBoxShapeType.Sphere;
                         _skillTargetSetting.BoxData = boxData;
                         _skillTargetSetting.OpenBoxCheck = true;
                         var range = new FilterRange()

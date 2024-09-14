@@ -27,7 +27,7 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// 执行期最大时长
             /// </summary>
-            private float _maxTime = 10f;
+            private float _maxTime = 30f;
 
             private float _startTime = 0;
 
@@ -115,7 +115,7 @@ namespace Hono.Scripts.Battle
                     timer.Step(dt);
                     if (timer.NeedCall())
                     {
-                        timer.OnTimerCallback();
+                        timer.OnCallTimer();
                     }
 
                     if (timer.IsFinish())
@@ -134,7 +134,7 @@ namespace Hono.Scripts.Battle
 
             public override bool CanExit()
             {
-                bool timeOut = _maxTime < Time.realtimeSinceStartup - _startTime;
+                bool timeOut = _maxTime < Time.realtimeSinceStartup - _startTime && _ability._executor.AbilityData.Type != EAbilityType.Buff;
                 if (timeOut)
                 {
                     Debug.LogWarning($"Ability {_ability.Uid} Cid {_executor.AbilityData.ConfigId} TimeOut");

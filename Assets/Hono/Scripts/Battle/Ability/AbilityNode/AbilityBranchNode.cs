@@ -9,12 +9,14 @@ namespace Hono.Scripts.Battle
         private class AbilityBranchNode : AbilityNode
         {
             private bool _conditionRes;
+            public bool Result => _conditionRes;
+            
             private BranchNodeData _branchNode;
 
             public AbilityBranchNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
                 _conditionRes = false;
-                _branchNode = _data as BranchNodeData;
+                _branchNode = _data.BranchNodeData;
             }
 
             protected override void onReset()
@@ -24,16 +26,26 @@ namespace Hono.Scripts.Battle
 
             public override void DoJob()
             {
-                _branchNode.CompareFunc.ParseParameters(out var conditionRes);
-                _conditionRes = (bool)conditionRes;
+                if (!_branchNode.Right.TryCallFunc(out var right))
+                {
+                    Debug.LogError("Branch节点执行错误");
+                }
+
+                if (!_branchNode.Left.TryCallFunc(out var left))
+                {
+                    Debug.LogError("Branch节点执行错误");
+                }
+
+                var res = ((IComparable)left).CompareTo((IComparable)right);
+
+                _conditionRes = getCompareRes(_branchNode.ResType, res);
+                
                 if (_conditionRes)
                 {
-                    DoChildrenJob();
+	                DoChildrenJob();
                 }
-                else
-                {
-                    _executor.ExecuteNode(_branchNode.LinkBranchNodeId);
-                }
+
+                Parent.IfInfos[_data.BranchNodeData.BranchGroup] = _conditionRes;
             }
 
             private bool getCompareRes(ECompareResType compareResType, int flag)

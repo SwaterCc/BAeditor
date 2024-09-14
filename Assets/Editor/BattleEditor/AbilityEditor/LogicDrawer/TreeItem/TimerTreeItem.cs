@@ -11,7 +11,7 @@ namespace Editor.AbilityEditor.TreeItem
     public class TimerTreeItem : AbilityLogicTreeItem
     {
         public TimerTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        public TimerTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree,nodeData) { }
+        public TimerTreeItem(AbilityNodeData nodeData) : base(nodeData) { }
 
         protected override Color getButtonColor()
         {
@@ -20,33 +20,17 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return string.IsNullOrEmpty(_nodeData.TimerNodeData.Desc)?"计时器":_nodeData.TimerNodeData.Desc;
+            return string.IsNullOrEmpty(NodeData.TimerNodeData.Desc)?"计时器":NodeData.TimerNodeData.Desc;
         }
 
-        protected override string getButtonTips()
+        protected override string getItemEffectInfo()
         {
             return "计时器节点";
         }
 
-        public override GenericMenu GetGenericMenu()
-        {
-            var menu = new GenericMenu();
-            menu.AddItem(new GUIContent("创建节点/添加Action节点"), false,
-                AddNode, EAbilityNodeType.EAction);
-            menu.AddItem(new GUIContent("创建节点/添加分支节点"), false,
-                AddNode,  EAbilityNodeType.EBranchControl);
-            menu.AddItem(new GUIContent("创建节点/创建变量控制节点"), false,
-                AddNode, EAbilityNodeType.EVariableControl);
-            menu.AddItem(new GUIContent("创建节点/创建Event节点"), false,
-                AddNode, EAbilityNodeType.EEvent);
-            menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
-                AddNode, EAbilityNodeType.ERepeat);
-            return menu;
-        }
-
         protected override void OnBtnClicked()
         {
-            SettingWindow = TimerNodeDataWindow.GetWindow(_nodeData);
+            SettingWindow = TimerNodeDataWindow.GetWindow(NodeData);
             SettingWindow.Show();
             SettingWindow.Focus();
         }
@@ -62,11 +46,11 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void onInit()
         {
             _firstInterval = new ParameterMaker();
-            ParameterMaker.Init(_firstInterval,_nodeData.TimerNodeData.FirstInterval);
+            ParameterMaker.Init(_firstInterval,NodeData.TimerNodeData.FirstInterval);
             _interval = new ParameterMaker();
-            ParameterMaker.Init(_interval,_nodeData.TimerNodeData.Interval);
+            ParameterMaker.Init(_interval,NodeData.TimerNodeData.Interval);
             _maxCount = new ParameterMaker();
-            ParameterMaker.Init(_maxCount,_nodeData.TimerNodeData.MaxCount);
+            ParameterMaker.Init(_maxCount,NodeData.TimerNodeData.MaxCount);
         }
 
         public override Rect GetPos()
@@ -103,10 +87,10 @@ namespace Editor.AbilityEditor.TreeItem
         
         private void Save()
         {
-            _nodeData.TimerNodeData.FirstInterval = _firstInterval.ToArray();
-            _nodeData.TimerNodeData.Interval = _interval.ToArray();
-            _nodeData.TimerNodeData.MaxCount = _maxCount.ToArray();
-            _nodeData.TimerNodeData.Desc = _desc;
+            NodeData.TimerNodeData.FirstInterval = _firstInterval.ToArray();
+            NodeData.TimerNodeData.Interval = _interval.ToArray();
+            NodeData.TimerNodeData.MaxCount = _maxCount.ToArray();
+            NodeData.TimerNodeData.Desc = _desc;
             Close();
         }
     }

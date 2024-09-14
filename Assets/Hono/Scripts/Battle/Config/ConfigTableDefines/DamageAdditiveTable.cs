@@ -74,11 +74,6 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
-            /// Apply增伤数值万分比
-            /// </summary>
-            public IntArray DamageValue { get; private set; }
-            
-            /// <summary>
             /// Apply数值的方法，可以在lua中自定义计算方法，通常保持默认即可
             /// </summary>
             public string ApplyFuncName { get; private set; }
@@ -92,6 +87,11 @@ namespace Hono.Scripts.Battle
             /// 增伤条件参数表
             /// </summary>
             public IntTable ConditionParams { get; private set; }
+            
+            /// <summary>
+            /// Apply增伤数值万分比
+            /// </summary>
+            public IntArray DamageValue { get; private set; }
             
 
             public DamageAdditiveRow()
@@ -111,13 +111,13 @@ namespace Hono.Scripts.Battle
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.DamageValue = parseIntArray(line[1]);
+                    _row.ApplyFuncName = parseString(line[1]);
             
-                    _row.ApplyFuncName = parseString(line[2]);
+                    _row.ConditionIds = parseIntArray(line[2]);
             
-                    _row.ConditionIds = parseIntArray(line[3]);
+                    _row.ConditionParams = parseIntTable(line[3]);
             
-                    _row.ConditionParams = parseIntTable(line[4]);
+                    _row.DamageValue = parseIntArray(line[4]);
             
                 }
             }

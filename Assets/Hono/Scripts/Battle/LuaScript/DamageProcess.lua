@@ -7,7 +7,7 @@
 ELogicAttr = CS.Hono.Scripts.Battle.ELogicAttr
 local maxDamage = 999999
 local damageDistance = 5
-local dmgAddiTags, dmgAddiValues= {100, 101, 102, 103}, {0, 0, 0, 0}   --这几个TAG是预留的特殊tag，专门用来增伤，可增减
+local dmgAddiTags, dmgAddiValues= {100, 101, 102, 103}, {0,0,0,0}   --这几个TAG是预留的特殊tag，专门用来增伤，可增减
 
 --【【【工具】】】=========================================================================================================================================
 local function ElementDamage(attacker, target, damageInfo, damageConfig, damageArgs)
@@ -25,6 +25,14 @@ local function ElementDamage(attacker, target, damageInfo, damageConfig, damageA
     end
     local result = (1 - secondaryElementRed + secondaryElementPen) + (allElementPen - allElementRed)
     return result
+end
+
+function SkillHasTag(AbilityTags, tag)
+    for i = 0, AbilityTags.Count - 1 do
+        if AbilityTags[i] == tag then
+            return true    
+        end
+    end
 end
 
 --【【【条件检测】】】======================================================================================================================================
@@ -163,13 +171,23 @@ local DamageModifierCondition = {
         -- params[2] TagID2。。。必须同时满足给的所有tag
         local result = true
         local object = (params[0] == 0) and attacker or (params[0] == 1) and target
-        for i = 1, params.Count - 1 do
-            if not object:HasTag(params[i]) then
-                result = false
-                break
+        if params[0] == 2 then
+            for i = 1, params.Count - 1 do
+                if SkillHasTag(damageInfo.Tags, params[i]) then
+                    result = true
+                else
+                    result = false
+                    break
+                end
+            end
+        else
+            for i = 1, params.Count - 1 do
+                if not object:HasTag(params[i]) then
+                    result = false
+                    break
+                end
             end
         end
-        combineLog(result, "Tag比较")
         return result
     end,
 
@@ -194,6 +212,7 @@ local DamageModifierCondition = {
 }
 
 DamageModifierCheckFunc = {
+    [0] = function () return true end,
     [1] = DamageModifierCondition.CheckStat,
     [2] = DamageModifierCondition.CheckTags,
     [3] = DamageModifierCondition.CheckEnemyType,
@@ -205,46 +224,49 @@ DamageModifierCheckFunc = {
 --【【【预处理】】】=======================================================================================================================================
 local DamageApplyModifier = {
     normal = function(attacker, target, damageInfo, ValueParams)
+        PrintDamageLog(ValueParams[0])
         return ValueParams[0] / 10000
     end,
 
-    ex = function(attacker, target, damageInfo, ValueParams)
+    between = function(attacker, target, damageInfo, ValueParams)
+        return math.random(ValueParams[0] / 10000 , ValueParams[1] / 10000 )
+    end
 
-    end,
 }
 
 local damageArgs = {}
-local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig)       --【伤害计算前置流程，获取各项数值和预处理】
+local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig)        --【伤害计算前置流程，获取各项数值和预处理】
     --获取各项属性值并塞到列表里
-    damageArgs.Level_Final = attacker:GetAttrLua(60010)                               --攻击者等级
-    damageArgs.ATK_Final = attacker:GetAttrLua(12100)                                 --攻击力
-    damageArgs.Def_Final = target:GetAttrLua(12110)                                   --防御力
-    damageArgs.Skill_Per = damageInfo.BaseDamagePer / 10000                           --技能倍率
-    damageArgs.DefIgnore_Final = attacker:GetAttrLua(12120)                           --护甲穿透
-    damageArgs.DefIgnorePCT_Final = attacker:GetAttrLua(12120)                        --护甲穿透万分比
-    damageArgs.Hp_Final = attacker:GetAttrLua(10000)                                  --当前生命
-    damageArgs.Mp_Final = attacker:GetAttrLua(10020)                                  --当前奥义值
-    damageArgs.CritChance = attacker:GetAttrLua(12140)                                --当前暴击率
-    damageArgs.CritDamage = attacker:GetAttrLua(12150)                                --当前暴击伤害
+    damageArgs.Level_Final = attacker:GetAttrLua(60010)                                --攻击者等级
+    damageArgs.ATK_Final = attacker:GetAttrLua(12100)                                  --攻击力
+    damageArgs.Def_Final = target:GetAttrLua(12110)                                    --防御力
+    damageArgs.Skill_Per = damageInfo.BaseDamagePer / 10000                            --技能倍率
+    damageArgs.DefIgnore_Final = attacker:GetAttrLua(12120)                            --护甲穿透
+    damageArgs.DefIgnorePCT_Final = attacker:GetAttrLua(12120)                         --护甲穿透万分比
+    damageArgs.Hp_Final = attacker:GetAttrLua(10000)                                   --当前生命
+    damageArgs.Mp_Final = attacker:GetAttrLua(10020)                                   --当前奥义值
+    damageArgs.CritChance = attacker:GetAttrLua(12140)                                 --当前暴击率
+    damageArgs.CritDamage = attacker:GetAttrLua(12150)                                 --当前暴击伤害
     damageArgs.ElementPenPCT = attacker:GetAttrLuaByType(ELogicAttr.AttrElementPenPCT) --全属性抗性穿透
-    damageArgs.ElementRedPCT = target:GetAttrLua(14010)                               --全属性抗性
-    damageArgs.ElementPhysicalPenPCT = attacker:GetAttrLua(14020)                     --物理属性抗性穿透
-    damageArgs.ElementPhysicalRedPCT = target:GetAttrLua(14030)                       --物理属性抗性
-    damageArgs.ElementMagicPenPCT = attacker:GetAttrLua(14040)                        --元素属性抗性穿透
-    damageArgs.ElementMagicRedPCT = target:GetAttrLua(14050)                          --元素属性抗性
-    damageArgs.DmgNear = attacker:GetAttrLua(16000)                                     --近距离增伤
-    damageArgs.DmgFar = attacker:GetAttrLua(16100)                                      --远距离增伤
+    damageArgs.ElementRedPCT = target:GetAttrLua(14010)                                --全属性抗性
+    damageArgs.ElementPhysicalPenPCT = attacker:GetAttrLua(14020)                      --物理属性抗性穿透
+    damageArgs.ElementPhysicalRedPCT = target:GetAttrLua(14030)                        --物理属性抗性
+    damageArgs.ElementMagicPenPCT = attacker:GetAttrLua(14040)                         --元素属性抗性穿透
+    damageArgs.ElementMagicRedPCT = target:GetAttrLua(14050)                           --元素属性抗性
+    damageArgs.DmgNear = attacker:GetAttrLua(16000)                                    --近距离增伤
+    damageArgs.DmgFar = attacker:GetAttrLua(16100)                                     --远距离增伤
+    damageArgs.DmgA = attacker:GetAttrLua(15000)                                       --直接乘区增伤
 
-    damageArgs.DmgRed = target:GetAttrLua(15300)                                      --直接减伤
-    damageArgs.DmgRedNear = target:GetAttrLua(16020)                                  --近距离减伤
-    damageArgs.DmgRedFar = target:GetAttrLua(16120)                                   --远距离减伤
-    damageArgs.DmgRedBullet = target:GetAttrLua(16220)                                --子弹减伤
-    damageArgs.DmgRedMelee = target:GetAttrLua(16320)                                 --近战减伤
-    damageArgs.DmgRedBuff = target:GetAttrLua(16420)                                  --BUFF减伤
-    damageArgs.DmgRedVsNormalEnemy = target:GetAttrLua(16720)                         --普通怪减伤
-    damageArgs.DmgRedVsEliteEnemy = target:GetAttrLua(16820)                          --精英怪减伤
-    damageArgs.DmgRedHealthy = target:GetAttrLua(17020)                               --健康减伤
-    damageArgs.DmgRedNonHealthy = target:GetAttrLua(17120)                            --非健康减伤
+    damageArgs.DmgRed = target:GetAttrLua(15300)                                       --直接减伤
+    damageArgs.DmgRedNear = target:GetAttrLua(16020)                                   --近距离减伤
+    damageArgs.DmgRedFar = target:GetAttrLua(16120)                                    --远距离减伤
+    damageArgs.DmgRedBullet = target:GetAttrLua(16220)                                 --子弹减伤
+    damageArgs.DmgRedMelee = target:GetAttrLua(16320)                                  --近战减伤
+    damageArgs.DmgRedBuff = target:GetAttrLua(16420)                                   --BUFF减伤
+    damageArgs.DmgRedVsNormalEnemy = target:GetAttrLua(16720)                          --普通怪减伤
+    damageArgs.DmgRedVsEliteEnemy = target:GetAttrLua(16820)                           --精英怪减伤
+    damageArgs.DmgRedHealthy = target:GetAttrLua(17020)                                --健康减伤
+    damageArgs.DmgRedNonHealthy = target:GetAttrLua(17120)                             --非健康减伤
 
     --防御减伤计算
     local DefRedFinal = math.max(0,
@@ -299,63 +321,53 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
         DamRedFinal = DamRedFinal * func(attacker, target, damageInfo)
     end
 
-    --增伤最终修正【Part.1】 静态条件检测增伤
-
+    ---===============================================================================================================
+    --======================================= 增伤最终修正【Part.1】 静态条件检测增伤 ===================================
+    ---===============================================================================================================
     local distanceFixed = (CompareFunc[2](CS.UnityEngine.Vector3.Distance(attacker.Pos, target.Pos), damageDistance ) == true) and damageArgs.DmgFar or damageArgs.DmgNear
-    local skillTagFixed = 0; for i = 1, #dmgAddiTags do if attacker:HasTag(dmgAddiTags[i]) then skillTagFixed = skillTagFixed + (dmgAddiValues[i] or 0) end end
+    local skillTagFixed = 0; for i = 1, #dmgAddiTags do if SkillHasTag(damageInfo.Tags, dmgAddiTags[i]) then skillTagFixed = skillTagFixed + (dmgAddiValues[i] or 0) end end
 
     local additiveFixed = ( distanceFixed + skillTagFixed ) / 10000;
 
-    --增伤最终修正【Part.2】 动态条件检测增伤
-    local additiveFinal = 1 + additiveFixed;     --加区增伤
-    for i, damageFuncInfo in pairs(damageConfig.AddiTypes) do
-        local isPass = true
-        for idx, cid in pairs(damageFuncInfo.ConditionIds) do
-            local params = damageFuncInfo.ConditionParams[idx]
-            local result = DamageModifierCheckFunc[cid](attacker, target, damageInfo, params)
+    ---===============================================================================================================
+    --======================================= 增伤最终修正【Part.2】 动态条件检测增伤 ===================================
+    ---===============================================================================================================
 
-            if not result then
-                isPass = false
-                break
+    local function processDamageFixedType(damageType, finalValue)
+        for _, damageFuncInfo in pairs(damageConfig[damageType]) do
+            local isPass = true
+            for _, cid in pairs(damageFuncInfo.ConditionIds) do
+                local params = damageFuncInfo.ConditionParams.Count > 0 and damageFuncInfo.ConditionParams[_] or nil
+                local result = DamageModifierCheckFunc[cid](attacker, target, damageInfo, params)
+                if not result then
+                    isPass = false
+                    break
+                end
+            end
+    
+            if isPass and damageFuncInfo.ValueFuncName then
+                local FuncA = DamageApplyModifier[damageFuncInfo.ValueFuncName] or function (...) return 0 end
+                local FuncB = DamageSuffixApplyModifier[damageFuncInfo.ValueFuncName] or function (...) return 0 end
+                finalValue = finalValue + (damageType == "AddiTypes" and 1 or finalValue) * (FuncA(attacker, target, damageInfo, damageFuncInfo.ValueParams) + FuncB(attacker, target, damageInfo, damageFuncInfo.ValueParams))
             end
         end
-
-        if isPass and damageFuncInfo.ValueFuncName ~= nil then
-            additiveFinal = additiveFinal +
-                    DamageApplyModifier[damageFuncInfo.ValueFuncName](attacker, target, damageInfo,
-                            damageFuncInfo.ValueParams)
-        end
+        return finalValue
     end
+    --加区增伤
+    local additiveFinal = processDamageFixedType("AddiTypes", 1 + additiveFixed)
+    --乘区增伤
+    local multiplyFinal = processDamageFixedType("MultiTypes", 1 * (1 + damageArgs.DmgA / 10000))
+    PrintDamageLog(additiveFinal..multiplyFinal)
 
-    local multiplyFinal = 1;     --乘区增伤
-    for i, damageFuncInfo in pairs(damageConfig.MultiTypes) do
-        local isPass = true
-        for idx, cid in pairs(damageFuncInfo.ConditionIds) do
-            local params = damageFuncInfo.ConditionParams[idx]
-            local result = DamageModifierCheckFunc[cid](attacker, target, damageInfo, params)
-
-            if not result then
-                isPass = false
-                break
-            end
-        end
-
-        if isPass and damageFuncInfo.ValueFuncName ~= nil then
-            multiplyFinal = multiplyFinal +
-                    DamageApplyModifier[damageFuncInfo.ValueFuncName](attacker, target, damageInfo, damageFuncInfo.ValueParams)
-            --CS.UnityEngine.Debug.Log("伤害ID【" .. damageInfo.DamageConfigId .. "】：" .. "<color=#00FF00>" .. logPart .. "</color>" .. "<color=#1726FF>【【乘法】】</color>-> " .. multiplyFinal)
-        end
-    end
-
-    local CtirDmgFinal = 1;      --暴击
-    damageArgs.CritDmgRate = 1;
+    damageArgs.CritDmgRate = 1;     --暴伤倍率
     local IsCritical, CriticalValue = DamageProcess.CriticalProcess(attacker, target, damageInfo, damageArgs)
     if IsCritical then
-        CtirDmgFinal = CriticalValue
-        damageArgs.CritDmgRate = CtirDmgFinal
+        damageArgs.CritDmgRate = CriticalValue
     end
 
-    --增伤最终修正【Part.3】 apply条件增伤
+    ---===============================================================================================================
+    --======================================= 增伤最终修正【Part.3】 apply条件增伤 =====================================
+    ---===============================================================================================================
     damageArgs.FinalAddi = additiveFinal                          --附加增伤最终修正（包含条件检测的值）
     damageArgs.FinalMulti = multiplyFinal                         --乘区增伤最终修正（包含条件检测的值）
     damageArgs.FinalRED = DefRedFinal * EleResFinal * DamRedFinal --承伤最终修正（包含条件检测的值）
@@ -365,21 +377,20 @@ end
 DamageProcess = {}
 --计算暴击
 DamageProcess.CriticalProcess = function(attacker, target, damageInfo, damageArgs, ExCritPara)
-    local CritChance = attacker:GetAttrLua(12140) --当前暴击率
-    local CritDamage = attacker:GetAttrLua(12150) --当前暴击值
-    local CriticalValue = 10000
 
-    math.randomseed(os.time())
+    local CriticalAddValue = 10000
+
+    math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     local randomValue = math.random(0, 10000)
-    IsCritical = false
+    damageArgs.IsCritical = false
     if ExCritPara == -1 or damageInfo.SourceType == 2 then
-        return false, CriticalValue
+        return false, CriticalAddValue
     elseif
-    CritChance > randomValue or ExCritPara == 1 then
-        IsCritical = true  --伤害暴击了
-        CriticalValue = CritDamage --后续会增加条件暴击增伤，例：对脆弱目标造成暴击伤害增加500%
+        damageArgs.CritChance > randomValue or ExCritPara == 1 then
+        damageArgs.IsCritical = true  --伤害暴击了
+        CriticalAddValue = damageArgs.CritDamage --后续会增加条件暴击增伤，例：对脆弱目标造成暴击伤害增加500%
     end
-    return true, CriticalValue / 10000
+    return true, CriticalAddValue / 10000
 end
 
 DamageProcess.DamageProcessMain = function(attacker, target, damageInfo, damageConfig)
@@ -394,7 +405,7 @@ DamageProcess.DamageProcessMain = function(attacker, target, damageInfo, damageC
     --计算冲击
 
     --填充伤害结果
-    local damageResult = CS.Hono.Scripts.Battle.DamageResults(finalDamageValue, IsCritical, 999)
+    local damageResult = CS.Hono.Scripts.Battle.DamageResults(finalDamageValue, damageArgs.IsCritical, 999)
     return damageResult
 end
 
@@ -405,7 +416,7 @@ DamageFormula = {
     NormalAttack = function(attacker, target, damageInfo, damageConfig, damageArgs, triggerParam)
 
         local finalDamageValue =
-        damageArgs.ATK_Final *
+                damageArgs.ATK_Final *
                 damageArgs.Skill_Per *
                 damageArgs.FinalAddi *
                 damageArgs.FinalMulti *
@@ -418,7 +429,7 @@ DamageFormula = {
                     "<color=#F8B21B>DamageLog 元素:%s 最终伤害:<b>%s</b>  %s ID:%s  最终攻击力:%s * 技能倍率:%s * 附加增伤:%s * 乘区增伤:%s * 最终承伤:%s</color>",
                     string.sub(tostring(damageConfig.ElementType), 1, string.find(tostring(damageConfig.ElementType), " ") - 2),
                     math.floor(finalDamageValue),
-                    logger.IntToStr(damageInfo.IsCritical, "<color=#F8471B>暴击</color>"),
+                    logger.IntToStr(damageArgs.IsCritical and 1 or 0, "<color=#F8471B>暴击</color>"),
                     damageInfo.SourceActorId,
                     damageArgs.ATK_Final,
                     damageArgs.Skill_Per,
@@ -455,7 +466,7 @@ DamageFormula = {
         logger.Info(
                 "<color=#1DDD16>DamageLog 最终治疗:<b>%s</b>  %s ID:%s  最终治疗强度:%s * 技能倍率:%s * ( 1 + 额外治疗效果:%s + 额外被治疗效果:%s )</color>",
                 math.floor(finalDamageValue),
-                logger.IntToStr(damageInfo.IsCritical, "<color=#F8471B>暴击</color>"),
+                logger.IntToStr(damageArgs.IsCritical and 1 or 0, "<color=#F8471B>暴击</color>"),
                 damageInfo.SourceActorId,
                 healAttack,
                 damageArgs.Skill_Per,
@@ -513,7 +524,7 @@ DamageFormula = {
                 string.sub(tostring(damageConfig.ElementType), 1, string.find(tostring(damageConfig.ElementType), " ") - 2),
                 math.floor(finalDamageValue),
                 math.floor(finalDamageValue * math.max(1, damageInfo.HitCount)),
-                logger.IntToStr(1, "<color=#F8471B>暴击</color>"),
+                logger.IntToStr(damageArgs.IsCritical and 1 or 0, "<color=#F8471B>暴击</color>"),
                 damageInfo.SourceActorId,
                 tostring(damageArgs.Skill_Per * 100 .. "%"),
                 math.max(1, damageInfo.HitCount)

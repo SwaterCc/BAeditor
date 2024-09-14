@@ -11,9 +11,10 @@ namespace Editor.AbilityEditor.TreeItem
     public class BranchTreeItem : AbilityLogicTreeItem
     {
         public BranchTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        public BranchTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree,nodeData) { }
+        public BranchTreeItem(AbilityNodeData nodeData) : base(nodeData) { }
 
-        private ParameterMaker _compareFunc;
+        private ParameterMaker _left;
+        private ParameterMaker _right;
         
         protected override Color getButtonColor()
         {
@@ -22,21 +23,23 @@ namespace Editor.AbilityEditor.TreeItem
         
         protected override string getButtonText()
         {
-            string label = string.IsNullOrEmpty(_nodeData.BranchNodeData.Desc)
+            string label = string.IsNullOrEmpty(NodeData.BranchNodeData.Desc)
                 ? "分支（无描述）"
-                : _nodeData.BranchNodeData.Desc;
+                : NodeData.BranchNodeData.Desc;
             
             return label;
         }
 
-        protected override string getButtonTips()
+        protected override string getItemEffectInfo()
         {
             return "执行if判定，如果判定成功则执行子节点内容，判定失败则走同级的下一节点";
         }
 
         protected override void OnBtnClicked()
         {
-           
+            SettingWindow = BranchNodeDataWindow.GetWindow(NodeData);
+            SettingWindow.Show();
+            SettingWindow.Focus();
         }
     }
 
@@ -48,12 +51,12 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void onInit()
         {
             _left = new ParameterMaker();
-            ParameterMaker.Init(_left, _nodeData.BranchNodeData.Left);
+            ParameterMaker.Init(_left, NodeData.BranchNodeData.Left);
 
-            _type = _nodeData.BranchNodeData.ResType;
+            _type = NodeData.BranchNodeData.ResType;
             
             _right = new ParameterMaker();
-            ParameterMaker.Init(_right, _nodeData.BranchNodeData.Right);
+            ParameterMaker.Init(_right, NodeData.BranchNodeData.Right);
         }
 
         public override Rect GetPos()
@@ -68,9 +71,9 @@ namespace Editor.AbilityEditor.TreeItem
 
         private void saveData()
         {
-            _nodeData.BranchNodeData.Left = _left.ToArray();
-            _nodeData.BranchNodeData.ResType = _type;
-            _nodeData.BranchNodeData.Right = _right.ToArray();
+            NodeData.BranchNodeData.Left = _left.ToArray();
+            NodeData.BranchNodeData.ResType = _type;
+            NodeData.BranchNodeData.Right = _right.ToArray();
             Close();
         }
 
@@ -112,7 +115,7 @@ namespace Editor.AbilityEditor.TreeItem
             _right.Draw();
             EditorGUILayout.EndVertical();
             SirenixEditorGUI.BeginBox();
-            _nodeData.BranchNodeData.Desc = EditorGUILayout.TextField("节点描述:", _nodeData.BranchNodeData.Desc);
+            NodeData.BranchNodeData.Desc = EditorGUILayout.TextField("节点描述:", NodeData.BranchNodeData.Desc);
             if (SirenixEditorGUI.Button("保   存", ButtonSizes.Medium))
             {
                 saveData();

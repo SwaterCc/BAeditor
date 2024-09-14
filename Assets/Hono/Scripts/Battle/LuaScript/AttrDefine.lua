@@ -7,7 +7,7 @@ function init(attacker, target, damageInfo, damageConfig)
     attacker:SetAttrLuaByType(ELogicAttr.AttrDefense, 100);
     attacker:SetAttrLuaByType(ELogicAttr.AttrIgnoreDefense, 50);
     attacker:SetAttrLuaByType(ELogicAttr.AttrIgnoreDefensePCT, 10000);
-    attacker:SetAttrLuaByType(ELogicAttr.AttrCrit, 3000);
+    attacker:SetAttrLuaByType(ELogicAttr.AttrCrit, 0);
     attacker:SetAttrLuaByType(ELogicAttr.AttrCritDamage, 15000);
     attacker:SetAttrLuaByType(ELogicAttr.AttrAttackSpeedPCT, 0);
     attacker:SetAttrLuaByType(ELogicAttr.AttrDmgRed, 0);
@@ -67,6 +67,13 @@ function init(attacker, target, damageInfo, damageConfig)
     target:AddTag(100)
     target:AddTag(101)
     target:AddTag(102)
+    --target:AddTag(201)  --控制效果A
+    --target:AddTag(202)  --控制效果B
+    --target:AddTag(203)  --控制效果C
+    --target:AddTag(221)  --不可阻挡
+    --target:AddTag(222)  --是BOSS
+    --target:AddTag(223)  --脆弱
+
 end
 
 local enumDefine = {

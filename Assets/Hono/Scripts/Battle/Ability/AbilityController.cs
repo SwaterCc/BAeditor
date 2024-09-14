@@ -9,7 +9,9 @@ namespace Hono.Scripts.Battle {
 			private readonly Dictionary<int, Ability> _abilities = new();
 			private readonly Dictionary<int, Dictionary<int,Ability>>_configDict = new();
 			private readonly Actor _actor;
-
+			private readonly List<Ability> _addUidCache = new List<Ability>();
+			private readonly List<int> _removeUid = new List<int>();
+			
 			public AbilityController(Actor actor) {
 				_actor = actor;
 			}
@@ -34,9 +36,11 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public void AwardAbility(Ability ability, bool isRunNow) {
-				if (_abilities.TryAdd(ability.Uid, ability)) {
-					if (isRunNow) ability.Execute();
+				if (_abilities.ContainsKey(ability.Uid)) {
+					return;
 				}
+				if (isRunNow) ability.Execute();
+				_addUidCache.Add(ability);
 			}
 
 			/// <summary>
@@ -47,8 +51,9 @@ namespace Hono.Scripts.Battle {
 			/// <param name="isRunNow"></param>
 			public int AwardAbility(int configId, bool isRunNow) {
 				var ability = new Ability(_idGenerator.GenerateId(), _actor, configId);
-				if (_abilities.TryAdd(ability.Uid, ability)) {
+				if (!_abilities.ContainsKey(ability.Uid)) {
 					if (isRunNow) ability.Execute();
+					_addUidCache.Add(ability);
 				}
 
 				return ability.Uid;
@@ -74,19 +79,34 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public void RemoveAbility(int uid) {
-				if (_abilities.TryGetValue(uid, out var ability)) {
-					ability.OnDestroy();
-					_abilities.Remove(uid);
+				if (_abilities.ContainsKey(uid)) {
+					_removeUid.Add(uid);
 				}
 			}
 
 			public void Tick(float dt) {
+
+				foreach (var ability in _addUidCache) {
+					if (!_abilities.TryAdd(ability.Uid, ability)) {
+						Debug.Log($"AbilityUid {ability.Uid} 添加失败");
+					}
+				}
+				_addUidCache.Clear();
+				
 				foreach (var abilityPair in _abilities) {
 					var ability = abilityPair.Value;
 					Ability.Context.UpdateContext((_actor, ability));
 					ability.OnTick(dt);
 					Ability.Context.ClearContext();
 				}
+				
+				foreach (var uid in _removeUid) {
+					if (_abilities.TryGetValue(uid,out var ability)) {
+						ability.OnDestroy();
+						_abilities.Remove(uid);
+					}
+				}
+				_removeUid.Clear();
 			}
 		}
 	}

@@ -162,8 +162,13 @@ namespace Hono.Scripts.Battle {
 
 	public abstract class TableRow {
 		public int Id => _id;
-		private int _id;
+		private int _id; 
+		private readonly Dictionary<string, object> _rowKeyValue = new();
 
+		public object TryGet(string filedName, out object value) {
+			return _rowKeyValue.TryGetValue(filedName, out value);
+		}
+		
 		public CSVParser Parser { get; protected set; }
 
 		public abstract class CSVParser {

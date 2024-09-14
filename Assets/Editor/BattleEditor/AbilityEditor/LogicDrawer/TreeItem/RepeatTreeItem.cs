@@ -11,7 +11,7 @@ namespace Editor.AbilityEditor.TreeItem
     public class RepeatTreeItem : AbilityLogicTreeItem
     {
         public RepeatTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        public RepeatTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree,nodeData) { }
+        public RepeatTreeItem(AbilityNodeData nodeData) : base(nodeData) { }
       
         protected override Color getButtonColor()
         {
@@ -21,33 +21,19 @@ namespace Editor.AbilityEditor.TreeItem
         protected override string getButtonText()
         {
             var maxCount = new ParameterMaker();
-            ParameterMaker.Init(maxCount,_nodeData.RepeatNodeData.MaxRepeatCount);
+            ParameterMaker.Init(maxCount,NodeData.RepeatNodeData.MaxRepeatCount);
             
             return "循环次数："+maxCount.ToString();
         }
 
-        protected override string getButtonTips()
+        protected override string getItemEffectInfo()
         {
             return "循环节点，循环指定次数";
         }
 
-        public override GenericMenu GetGenericMenu()
-        {
-            var menu = new GenericMenu();
-            menu.AddItem(new GUIContent("创建节点/添加Action节点"), false,
-                AddNode, EAbilityNodeType.EAction);
-            menu.AddItem(new GUIContent("创建节点/添加分支节点"), false,
-                AddNode,  EAbilityNodeType.EBranchControl);
-            menu.AddItem(new GUIContent("创建节点/创建变量控制节点"), false,
-                AddNode, EAbilityNodeType.EVariableControl);
-            menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
-                AddNode, EAbilityNodeType.ETimer);
-            return menu;
-        }
-
         protected override void OnBtnClicked()
         {
-            SettingWindow = RepeatNodeDataWindow.GetWindow(_nodeData);
+            SettingWindow = RepeatNodeDataWindow.GetWindow(NodeData);
             SettingWindow.Show();
             SettingWindow.Focus();
         }
@@ -60,7 +46,7 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void onInit()
         {
             _maxCount = new ParameterMaker();
-            ParameterMaker.Init(_maxCount,_nodeData.RepeatNodeData.MaxRepeatCount);
+            ParameterMaker.Init(_maxCount,NodeData.RepeatNodeData.MaxRepeatCount);
         }
 
         private void OnGUI()
@@ -80,7 +66,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         private void Save()
         {
-            _nodeData.RepeatNodeData.MaxRepeatCount = _maxCount.ToArray();
+            NodeData.RepeatNodeData.MaxRepeatCount = _maxCount.ToArray();
             Close();
         }
     }

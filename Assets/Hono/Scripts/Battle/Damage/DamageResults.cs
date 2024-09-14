@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Hono.Scripts.Battle
+﻿namespace Hono.Scripts.Battle
 {
     public class DamageResults
     {
@@ -19,15 +17,8 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public float ImpactValue;
 
-        /// <summary>
-        /// 打中的对象列表
-        /// </summary>
-        public List<int> HitUids;
-
-        /// <summary>
-        /// 伤害类型
-        /// </summary>
-        public EDamageType DamageType;
+        public bool IsImmunity;
+        
         public DamageResults(float damageValue,bool isCritical,float finalImpactValue) {
 	        DamageValue = damageValue;
 	        IsCritical = isCritical;
