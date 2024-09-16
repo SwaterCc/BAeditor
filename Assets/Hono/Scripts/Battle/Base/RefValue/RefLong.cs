@@ -2,9 +2,15 @@ using System;
 
 namespace Hono.Scripts.Battle.RefValue
 {
-    public class RefLong : RefValue<long>
+    [Serializable]
+    public class RefLong
     {
-        public RefLong(long initialValue = 0L) : base(initialValue) { }
+        public long Value;
+
+        public RefLong(long initialValue = 0L)
+        {
+            Value = initialValue;
+        }
 
         // 隐式转换到 long
         public static implicit operator long(RefLong refLong)

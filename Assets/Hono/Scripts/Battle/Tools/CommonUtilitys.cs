@@ -120,7 +120,7 @@ namespace Hono.Scripts.Battle.Tools {
 	public static class ParamExtension {
 		public static bool TryCallFunc(this Parameter[] @params, out object valueBox) {
 			var queue = new Queue<Parameter>(@params);
-			if (@params[0].IsValueType && @params.Length == 1) {
+			if (@params[0].IsBaseValue && @params.Length == 1) {
 				valueBox = @params[0].Value;
 				return true;
 			}
@@ -159,7 +159,7 @@ namespace Hono.Scripts.Battle.Tools {
 			for (int idx = 0; idx < funcInfo.ParamCount; idx++) {
 				var param = queue.Dequeue();
 
-				if (param.IsValueType) {
+				if (param.IsBaseValue) {
 					funcParams[idx] = param.Value;
 				}
 

@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 using Quaternion = System.Numerics.Quaternion;
 
 namespace Hono.Scripts.Battle.RefValue
 {
+    [Serializable]
     public class RefQuaternion
     {
         public float x;

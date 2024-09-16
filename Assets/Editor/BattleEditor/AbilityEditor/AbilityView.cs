@@ -49,17 +49,17 @@ namespace Editor.AbilityEditor
             {
                 var node = pair.Value;
 
-                int parentId = node.Parent;
+                int parentId = node.ParentId;
                 while (parentId > 0)
                 {
                     var parentNode = data.NodeDict[parentId];
                     if (parentNode.NodeType == EAbilityNodeType.EGroup)
                     {
-                        node.BelongGroupId = parentNode.GroupNodeData.GroupId;
+                        node.BelongGroupId = ((GroupNodeData)parentNode).GroupId;
                         break;
                     }
 
-                    parentId = parentNode.Parent;
+                    parentId = parentNode.ParentId;
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace Editor.AbilityEditor
         public void Save()
         {
             ExDrawer?.Save();
-            AbilityView.UpdateGroupId(AbilityData);
+            UpdateGroupId(AbilityData);
             EditorUtility.SetDirty(AbilityData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

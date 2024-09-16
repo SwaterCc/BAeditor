@@ -11,6 +11,22 @@ namespace Hono.Scripts.Battle
 
     public static class AttrCreator
     {
+        #region AttrTypeDict
+    
+        private static Dictionary<ELogicAttr, Type> _attrTypeDict = new Dictionary<ELogicAttr, Type>()
+        {
+            @AttrDictItem
+        };
+    
+        public static Type GetValueType(this ELogicAttr attrType)
+        {
+            return _attrTypeDict[attrType];
+        }
+    
+        #endregion
+    
+        #region AttrCreate
+    
         public static IAttr Create(int attrType)
         {
             switch ((ELogicAttr)attrType)
@@ -20,5 +36,7 @@ namespace Hono.Scripts.Battle
 
             return null;
         }
+        
+        #endregion
     }
 }

@@ -2,9 +2,15 @@ using System;
 
 namespace Hono.Scripts.Battle.RefValue
 {
-    public class RefFloat : RefValue<float>
+    [Serializable]
+    public class RefFloat
     {
-        public RefFloat(float initialValue = 0f) : base(initialValue) { }
+        public float Value;
+
+        public RefFloat(float initialValue = 0f)
+        {
+            Value = initialValue;
+        }
 
         // 显式转换到 RefInt 注意会产生新的对象
         public static explicit operator RefInt(RefFloat refFloat)

@@ -2,7 +2,7 @@
 
 对于Variable和Attr的获取简化
 
-保留getAttr和GetVariable 主要用来获取其他对象身上的属性和Variable
+保留getAttr和GetVariable 主要用来获取其他对象身上的属性和Variable //--改为SendMsg
 
 事件系统
 
@@ -25,7 +25,7 @@ tag限制去掉
 
 表要处理，逻辑表要细分为具体的表，然后每个类型读对应的表
 
-表要能按列遍历
+表要能按列遍历（不急）
 
 lua的开发环境，不能仅靠反射
 

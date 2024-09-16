@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -9,7 +10,8 @@ namespace Hono.Scripts.Battle
         private bool _boolValue;
         private int _intValue;
         private float _floatValue;
-        private object _ref;
+        private string _stringValue;
+        private object _serializableRef;
         private Type _finalType;
 
         private void check<T>()
@@ -18,111 +20,36 @@ namespace Hono.Scripts.Battle
                 Debug.LogWarning($"AutoValue finalType is {_finalType} but cast to {typeof(T)}");
         }
 
-        public AutoValue DeepCopy()
-        {
-            var clone = (AutoValue)this.MemberwiseClone();
-
-            // Â§ÑÁêÜÂºïÁî®Á±ªÂûãÁöÑÊ∑±Êã∑Ë¥ù
-            if (_ref is ICloneable cloneableRef)
-            {
-                clone._ref = cloneableRef.Clone();
-            }
-            else if (_ref != null && !(_ref is ValueType))
-            {
-                throw new InvalidOperationException(
-                    $"The referenced object of type {_ref.GetType()} does not implement ICloneable and cannot be deeply copied.");
-            }
-
-            return clone;
-        }
-
         public Type GetAutoType()
         {
             return _finalType;
         }
-
-        public object Get<T>()
-        {
-            var type = typeof(T);
-            
-            if (type == typeof(int))
-            {
-                return _intValue;
-            }
-
-            if (type == typeof(float))
-            {
-                return _floatValue;
-            }
-
-            if (type == typeof(bool))
-            {
-                return _boolValue;
-            }
-
-            return _ref;
-        }
-
-        public void Set<T>(object value)
-        {
-            var type = typeof(T);
-            _finalType = type;
-            if (type.IsClass)
-            {
-                _ref = value;
-                return;
-            }
-
-            if (type == typeof(int))
-            {
-                _intValue = Convert.ToInt32(value);
-            }
-            else if (type == typeof(float))
-            {
-                _floatValue = Convert.ToSingle(value);
-            }
-            else if (type == typeof(bool))
-            {
-                _boolValue = Convert.ToBoolean(value);
-            }
-            else
-            {
-                Debug.LogWarning($"AutoSet‰ºöÂ∞ÜÊú™ÂÆö‰πâÁöÑÂÄºÁ±ªÂûãË£ÖÁÆ±ÔºåËØ•ÂÄºÁ±ªÂûã‰∏∫{type}");
-                _ref = value;
-            }
-        }
-
-        public void SetRef<T>(T classObj)
-        {
-            if (typeof(T).IsValueType)
-            {
-                throw new Exception($"‰ΩøÁî®ÂÄºÁ±ªÂûãÊñπÊ≥ïÂ≠òÂÇ®ÂºïÁî®Á±ªÂûã {nameof(T)}!");
-            }
-
-            if (classObj == null)
-            {
-                Debug.LogWarning("Â∞ùËØïÁºìÂ≠ò‰∏Ä‰∏™null");
-            }
-
-            _finalType = typeof(T);
-            _ref = classObj;
-        }
-
+        
         public int GetInt() => _intValue;
         public float GetFloat() => _floatValue;
         public bool GetBool() => _boolValue;
         public string GetString() => this;
 
-        public T GetRef<T>()
+        public T GetSerializableRef<T>() where T : class
         {
-            if (_ref is T castRef)
+            if (!typeof(T).IsSerializable)
             {
-                return castRef;
+                throw new InvalidCastException("±ÿ–Î «ø…–Ú¡–ªØ∂‘œÛ");
             }
 
-            throw new InvalidCastException("AutoValue GetRef Failed!");
+            return (T)_serializableRef;
         }
+        
+        public void SetSerializableRef<T>(T obj) where T : class
+        {
+            if (!typeof(T).IsSerializable)
+            {
+                throw new InvalidCastException("±ÿ–Î «ø…–Ú¡–ªØ∂‘œÛ");
+            }
 
+            _serializableRef = obj;
+        }
+        
         public static implicit operator int(AutoValue auto)
         {
             auto.check<int>();
@@ -144,7 +71,7 @@ namespace Hono.Scripts.Battle
         public static implicit operator string(AutoValue auto)
         {
             auto.check<string>();
-            return (string)auto._ref;
+            return auto._stringValue;
         }
 
         public static implicit operator AutoValue(int value)
@@ -181,7 +108,7 @@ namespace Hono.Scripts.Battle
         {
             var auto = new AutoValue
             {
-                _ref = value,
+                _stringValue = value,
                 _finalType = value.GetType()
             };
             return auto;

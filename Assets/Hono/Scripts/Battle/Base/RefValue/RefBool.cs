@@ -1,8 +1,16 @@
+using System;
+
 namespace Hono.Scripts.Battle.RefValue
 {
-    public class RefBool : RefValue<bool>
+    [Serializable]
+    public class RefBool
     {
-        public RefBool(bool initialValue = false) : base(initialValue) { }
+        public bool Value;
+
+        public RefBool(bool initialValue = false)
+        {
+            Value = initialValue;
+        }
 
         // 隐式转换到 bool
         public static implicit operator bool(RefBool refBool)
@@ -32,6 +40,11 @@ namespace Hono.Scripts.Battle.RefValue
         {
             if (!(obj is RefBool)) return false;
             return this == (RefBool)obj;
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString();
         }
     }
 }

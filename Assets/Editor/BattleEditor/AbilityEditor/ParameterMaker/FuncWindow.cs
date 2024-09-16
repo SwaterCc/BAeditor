@@ -14,17 +14,6 @@ namespace Editor.AbilityEditor
 {
     public class FuncWindow : EditorWindow
     {
-        public static void OpenVariableToFunc(object node)
-        {
-            var window = CreateInstance<FuncWindow>();
-            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
-            (ParameterMaker maker,string str) pair = ((ParameterMaker maker, string str))node;
-            pair.maker.ChangeToDefaultFunc(EFuncCacheFlag.Variable);
-            window.Init(pair.maker, EFuncCacheFlag.Variable);
-            window.Show();
-            window.FromString += pair.str;
-        }
-
         public static FuncWindow Open(ParameterMaker maker, EFuncCacheFlag flag)
         {
             var window = CreateInstance<FuncWindow>();
@@ -33,7 +22,117 @@ namespace Editor.AbilityEditor
             window.Show();
             return window;
         }
-        
+
+        #region 函数缓存
+
+        public struct FuncInfo
+        {
+            public string FuncName;
+            public int ParamCount;
+            public List<string> ParamNames;
+        }
+
+        private static Dictionary<EFuncCacheFlag, List<FuncInfo>> _flagMethodCache =
+            new Dictionary<EFuncCacheFlag, List<FuncInfo>>()
+            {
+                { EFuncCacheFlag.Variable, new List<FuncInfo>() },
+                { EFuncCacheFlag.Action, new List<FuncInfo>() },
+                { EFuncCacheFlag.Branch, new List<FuncInfo>() },
+            };
+
+        private static bool _flagMethodCacheInit = false;
+
+        public static Dictionary<EFuncCacheFlag, List<FuncInfo>> FlagMethodCache
+        {
+            get
+            {
+                if (!_flagMethodCacheInit)
+                {
+                    initFuncCache();
+                }
+
+                return _flagMethodCache;
+            }
+        }
+
+        private static Dictionary<string, MethodInfo> _methodCache =
+            new Dictionary<string, MethodInfo>();
+
+        public static Dictionary<string, MethodInfo> MethodCache
+        {
+            get
+            {
+                if (_methodCache.Count == 0)
+                {
+                    initFuncCache();
+                }
+
+                return _methodCache;
+            }
+        }
+
+        private static void initFuncCache()
+        {
+            // 获取 MyStaticClass 类型信息
+            Type type = typeof(AbilityFunction);
+
+            MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
+
+            foreach (var method in methods)
+            {
+                AbilityFuncCache attr = null;
+                foreach (var obj in method.GetCustomAttributes(typeof(AbilityFuncCache), false))
+                {
+                    if (obj is AbilityFuncCache cache)
+                    {
+                        attr = cache;
+                    }
+                }
+
+                if (attr == null) continue;
+
+                if (!_methodCache.TryGetValue(method.Name, out var methodInfo))
+                {
+                    methodInfo = method;
+                    _methodCache.Add(method.Name, method);
+                }
+
+                var info = new FuncInfo
+                {
+                    FuncName = method.Name,
+                    ParamCount = method.GetParameters().Length
+                };
+                foreach (var parameter in method.GetParameters())
+                {
+                    if (info.ParamNames == null)
+                    {
+                        info.ParamNames = new List<string>();
+                    }
+
+                    info.ParamNames.Add(parameter.Name);
+                }
+
+                if ((attr.Flag & EFuncCacheFlag.Variable) > 0)
+                {
+                    _flagMethodCache[EFuncCacheFlag.Variable].Add(info);
+                }
+
+                if ((attr.Flag & EFuncCacheFlag.Action) > 0)
+                {
+                    _flagMethodCache[EFuncCacheFlag.Action].Add(info);
+                }
+
+                if ((attr.Flag & EFuncCacheFlag.Branch) > 0)
+                {
+                    _flagMethodCache[EFuncCacheFlag.Branch].Add(info);
+                }
+            }
+
+            _flagMethodCacheInit = true;
+        }
+
+        #endregion
+
         private ParameterMaker _origin;
         private ParameterMaker _funcHead;
         private EFuncCacheFlag _flag;
@@ -112,7 +211,7 @@ namespace Editor.AbilityEditor
             {
                 foreach (var param in _funcHead.FuncParams)
                 {
-                   // param.Draw(FromString +" -> 设置变量：" +param.Self.ParamName);
+                    param.Draw(FromString +" -> 设置变量：" +param.Self.ParamName);
                 }
             }
 

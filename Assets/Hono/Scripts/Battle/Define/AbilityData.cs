@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
     public class AbilityData : SerializedScriptableObject, IAllowedIndexing
     {
         public int ID => ConfigId;
-        
+
         public EAbilityType Type;
 
         public int ConfigId;
@@ -31,7 +31,7 @@ namespace Hono.Scripts.Battle
 
         public string Desc = "NoInit";
 
-        public Texture IconPath;
+        public string IconPath;
 
         public List<int> Tags = new();
 
@@ -42,21 +42,47 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 头节点字典
         /// </summary>
-        [OdinSerialize]
-        public Dictionary<EAbilityAllowEditCycle, int> HeadNodeDict = new();
-        
+        [OdinSerialize] public Dictionary<EAbilityAllowEditCycle, int> HeadNodeDict = new();
+
         /// <summary>
         /// 存储所有数据
         /// </summary>
-        [OdinSerialize]
-        public Dictionary<int, AbilityNodeData> NodeDict = new();
+        [OdinSerialize] public Dictionary<int, AbilityNodeData> NodeDict = new();
 
-        [NonSerialized]
-        private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
-        
+        [NonSerialized] private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
+
         public static AbilityNodeData GetNodeData(AbilityData abilityData, EAbilityNodeType type)
         {
-            var nodeData = new AbilityNodeData();
+            AbilityNodeData nodeData = null;
+
+            switch (type)
+            {
+                case EAbilityNodeType.EAbilityCycle:
+                    nodeData = new ActionNodeData();
+                    break;
+                case EAbilityNodeType.EEvent:
+                    nodeData = new EventNodeData();
+                    break;
+                case EAbilityNodeType.EBranchControl:
+                    nodeData = new BranchNodeData();
+                    break;
+                case EAbilityNodeType.EVariableControl:
+                    nodeData = new VariableNodeData();
+                    break;
+                case EAbilityNodeType.ERepeat:
+                    nodeData = new RepeatNodeData();
+                    break;
+                case EAbilityNodeType.EAction:
+                    nodeData = new ActionNodeData();
+                    break;
+                case EAbilityNodeType.ETimer:
+                    nodeData = new TimerNodeData();
+                    break;
+                case EAbilityNodeType.EGroup:
+                    nodeData = new GroupNodeData();
+                    break;
+            }
+
             var id = CommonUtility.GenerateTimeBasedHashId32();
             var maxTryCount = 500;
             var curTryCount = 0;
@@ -77,38 +103,22 @@ namespace Hono.Scripts.Battle
     }
 
     [Serializable]
-    public class AbilityNodeData
+    public abstract class AbilityNodeData
     {
         public int NodeId;
 
         public EAbilityNodeType NodeType;
 
-        public int Parent;
+        public int ParentId;
 
         public int Depth;
 
         public int BelongGroupId = -1;
-        
+
         public List<int> ChildrenIds = new();
-
-        public int NextIdInSameLevel;
         
-        public Parameter[] ActionNodeData;
+        public string Desc;
         
-        public BranchNodeData BranchNodeData;
-        
-        public EventNodeData EventNodeData;
-        
-        public RepeatNodeData RepeatNodeData;
-        
-        public VariableNodeData VariableNodeData;
-        
-	    public EAbilityAllowEditCycle allowEditCycleNodeData;
-        
-        public TimerNodeData TimerNodeData;
-        
-        public GroupNodeData GroupNodeData;
-
         public void RemoveSelf(AbilityData data)
         {
             data.NodeDict.Remove(NodeId);
@@ -123,47 +133,60 @@ namespace Hono.Scripts.Battle
 
         public bool IsHead()
         {
-            return Parent == -1;
+            return ParentId == -1;
         }
-        
+
         public AbilityNodeData DeepCopy()
         {
-	        using (var ms = new MemoryStream())
-	        {
-		        var formatter = new BinaryFormatter();
-		        formatter.Serialize(ms, this);
-		        ms.Position = 0;
-		        var copy = (AbilityNodeData)formatter.Deserialize(ms);
-            
-		        // 重置 NodeId，排除其内容
-		        copy.NodeId = 0; // 或者任何适当的默认值
-            
-		        return copy;
-	        }
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, this);
+                ms.Position = 0;
+                var copy = (AbilityNodeData)formatter.Deserialize(ms);
+
+                // 重置 NodeId，排除其内容
+                copy.NodeId = 0; // 或者任何适当的默认值
+
+                return copy;
+            }
         }
-    }
-    
-    [Serializable]
-    public class BranchNodeData
-    {
-        public Parameter[] Left;
-        public ECompareResType ResType;
-        public Parameter[] Right;
-        public int BranchGroup;
-        public string Desc;//编辑器描述
-    }
-    
-    [Serializable]
-    public class EventNodeData
-    {
-        public EBattleEventType EventType;
-        public Parameter[] CreateCheckerFunc;
-        public string CaptureVarName;
-        public string Desc;
+        
+        public virtual void CopyTo(AbilityNodeData data)
+        {
+            NodeType = data.NodeType;
+            
+        }
     }
 
     [Serializable]
-    public class GroupNodeData
+    public class ActionNodeData : AbilityNodeData
+    {
+        public Parameter[] Function;
+    }
+
+    [Serializable]
+    public class CycleNodeData : AbilityNodeData
+    {
+        public EAbilityAllowEditCycle AllowEditCycleNodeData;
+    }
+
+    [Serializable]
+    public class BranchNodeData : AbilityNodeData
+    {
+        public Parameter[] CompareFunc;
+        public int BranchGroup;
+    }
+
+    [Serializable]
+    public class EventNodeData : AbilityNodeData
+    {
+        public EBattleEventType EventType;
+        public Parameter[] CreateChecker;
+    }
+
+    [Serializable]
+    public class GroupNodeData : AbilityNodeData
     {
         public int GroupId;
 
@@ -177,30 +200,25 @@ namespace Hono.Scripts.Battle
     }
 
     [Serializable]
-    public class TimerNodeData
+    public class TimerNodeData : AbilityNodeData
     {
         public Parameter[] FirstInterval;
         public Parameter[] Interval;
         public Parameter[] MaxCount;
-        public string Desc = "定时器";
     }
 
     [Serializable]
-    public class RepeatNodeData
+    public class RepeatNodeData : AbilityNodeData
     {
         public Parameter[] MaxRepeatCount;
-        public string Desc;
+       
     }
 
     [Serializable]
-    public class VariableNodeData
+    public class VariableNodeData : AbilityNodeData
     {
-        public EVariableOperationType OperationType;
-        public EVariableRange Range;
-        public Parameter[] ActorUid;
-        public Parameter[] AbilityUid;
         public string Name;
-        public Parameter[] VarParams;
+        public Parameter[] Value;
         public string Desc;
     }
 }

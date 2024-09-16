@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.RefValue
 {
+    [Serializable]
     public class RefVector3
     {
         public float x;

@@ -11,7 +11,6 @@ namespace Hono.Scripts.Battle
         {
             public AbilityActionNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) { }
 
-
             public override void DoJob()
             {
                 if (_data.ActionNodeData[0].IsFunc)

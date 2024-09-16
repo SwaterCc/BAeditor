@@ -18,7 +18,7 @@ namespace Editor.AbilityEditor
 
         public AbilityNodeData CycleNode;
 
-        private AbilityLogicTreeDrawer _logicTreeDrawer;
+        private AbilityLogicTree _logicTree;
 
         private TreeViewState _logicState;
 
@@ -31,9 +31,9 @@ namespace Editor.AbilityEditor
 
             if (!data.HeadNodeDict.TryGetValue(allowEditCycle, out var nodeId))
             {
-                var cycleNodeData = AbilityData.GetNodeData(data, EAbilityNodeType.EAbilityCycle);
-                cycleNodeData.allowEditCycleNodeData = allowEditCycle;
-                cycleNodeData.Parent = -1;
+                var cycleNodeData = (CycleNodeData)AbilityData.GetNodeData(data, EAbilityNodeType.EAbilityCycle);
+                cycleNodeData.AllowEditCycleNodeData = allowEditCycle;
+                cycleNodeData.ParentId = -1;
 
                 data.NodeDict.Add(cycleNodeData.NodeId, cycleNodeData);
                 data.HeadNodeDict.Add(AllowEditCycle, cycleNodeData.NodeId);
@@ -45,7 +45,7 @@ namespace Editor.AbilityEditor
             }
 
             _logicState = new TreeViewState();
-            _logicTreeDrawer = new AbilityLogicTreeDrawer(_logicState, data, CycleNode);
+            _logicTree = new AbilityLogicTree(_logicState, data, CycleNode);
         }
 
         protected virtual bool getDefaultFoldout()
@@ -76,7 +76,7 @@ namespace Editor.AbilityEditor
                 //画逻辑树
                 GUILayout.Box(" ", GUILayout.Height(GetHeight()), GUILayout.Width(boxRect.width)); //无所谓这个盒子，只是占位用的
                 var treeRect = new Rect(boxRect.x, boxRect.y + headHeight, mainRect.width - 8, GetHeight() + 8);
-                _logicTreeDrawer.OnGUI(treeRect);
+                _logicTree.OnGUI(treeRect);
                 SirenixEditorGUI.EndBox();
             }
 
@@ -87,7 +87,7 @@ namespace Editor.AbilityEditor
 
         private float GetHeight()
         {
-            return _logicTreeDrawer.totalHeight;
+            return _logicTree.totalHeight;
         }
     }
 }

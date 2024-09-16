@@ -47,11 +47,21 @@ namespace Hono.Scripts.Battle
                 case ELogicAttr.@AttrName :
                      return new Attr<List<float>>(null);";
 
+            private string _intTypeStr = "     { ELogicAttr.@AttrName, typeof(int) }, \n";
+            private string _floatTypeStr = "     { ELogicAttr.@AttrName, typeof(float) }, \n";
+            private string _boolTypeStr = "     { ELogicAttr.@AttrName, typeof(bool) }, \n";
+            private string _v3TypeStr = "     { ELogicAttr.@AttrName, typeof(Vector3) }, \n";
+            private string _q4TypeStr = "     { ELogicAttr.@AttrName, typeof(Quaternion) }, \n";
+            private string _iArrayTypeStr = "     { ELogicAttr.@AttrName, typeof(List<int>) }, \n";
+            private string _fArrayTypeStr = "     { ELogicAttr.@AttrName, typeof(List<float>) }, \n";
+            
             private string _flagAttrEnum = "@EnumAttrDefine";
             private string _flagCase = "@Case";
+            private string _flagDict = "@AttrDictItem";
 
             string _attrEnumStr = "";
             string _attrCase = "";
+            string _attrDictItem = "";
             private string _genCShapePath = "Assets/Hono/Scripts/Battle/Attr";
 
             public AttrFileProcess()
@@ -92,6 +102,10 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_intAttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
+
+                            string dictItem = string.Copy(_intTypeStr);
+                            dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
+                            _attrDictItem += dictItem;
                         }
 
                         if (attrInfo[0].ToLower() == "float")
@@ -99,6 +113,10 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_floatAttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
+                            
+                            string dictItem = string.Copy(_floatTypeStr);
+                            dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
+                            _attrDictItem += dictItem;
                         }
 
                         if (attrInfo[0].ToLower() == "bool")
@@ -106,6 +124,10 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_boolAttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
+                            
+                            string dictItem = string.Copy(_boolTypeStr);
+                            dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
+                            _attrDictItem += dictItem;
                         }
 
                         if (attrInfo[0].ToLower() == "vector3")
@@ -113,6 +135,10 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_v3AttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
+                            
+                            string dictItem = string.Copy(_v3TypeStr);
+                            dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
+                            _attrDictItem += dictItem;
                         }
 
                         if (attrInfo[0].ToLower() == "quaternion")
@@ -120,6 +146,10 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_q4AttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
+                            
+                            string dictItem = string.Copy(_q4TypeStr);
+                            dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
+                            _attrDictItem += dictItem;
                         }
 
                         if (attrInfo[0].ToLower() == "intarray")
@@ -127,6 +157,10 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_intArrayAttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
+                            
+                            string dictItem = string.Copy(_iArrayTypeStr);
+                            dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
+                            _attrDictItem += dictItem;
                         }
 
                         if (attrInfo[0].ToLower() == "floatarray")
@@ -134,6 +168,10 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_floatArrayAttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
+                            
+                            string dictItem = string.Copy(_fArrayTypeStr);
+                            dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
+                            _attrDictItem += dictItem;
                         }
                     }
                 }
