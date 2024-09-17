@@ -7,6 +7,7 @@ namespace Hono.Scripts.Battle {
 			public int NodeId { get; }
 
 			protected AbilityNodeData _data;
+			public EAbilityNodeType NodeType => _data.NodeType;
 
 			protected AbilityExecutor _executor;
 			public bool IsExecuted { get; }

@@ -210,7 +210,7 @@ namespace Hono.Scripts.Battle
     public class VarSetterNodeData : AbilityNodeData
     {
         public string Name;
-        public EParameterValueType VarType;
+        public string typeString = "int";
         public Parameter Value = new();
     }
 
@@ -218,7 +218,8 @@ namespace Hono.Scripts.Battle
     public class AttrSetterNodeData : AbilityNodeData
     {
         public ELogicAttr LogicAttr;
-        public EParameterValueType VarType;
+        public string typeString = "int";
         public Parameter Value = new();
+        public bool IsTempAttr;
     }
 }

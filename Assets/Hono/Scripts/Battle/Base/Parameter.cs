@@ -33,7 +33,7 @@ namespace Hono.Scripts.Battle
         
         public string VairableName;
         
-        public EAbilityType AttrType;
+        public ELogicAttr AttrType;
 
         public Parameter() { }
 

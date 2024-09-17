@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -70,84 +73,90 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect) { }
     }
 
-    public class VarNodeDataWindow : BaseNodeWindow<VarNodeDataWindow,VarSetterNodeData>, IAbilityNodeWindow<VarSetterNodeData>
+    public class VarNodeDataWindow : BaseNodeWindow<VarNodeDataWindow, VarSetterNodeData>,
+        IAbilityNodeWindow<VarSetterNodeData>
     {
-        private ParameterMaker _variable;
-        private EVariableRange _range;
-        private string _name;
-        private ParameterMaker _actorUid;
-        private ParameterMaker _abilityUid;
+        private ParameterField _value;
+
+        private List<string> _dropList = new List<string>()
+        {
+            "int",
+            "float",
+            "bool",
+            "string",
+            //"intList",
+            //"floatList",
+            "custom"
+        };
+
+        private string _curSelect;
+        private string _customTypeStr;
+        private bool _customCastSuccess;
 
         protected override void onInit()
         {
-            _range = NodeData.VariableNodeData.Range;
-            _name = NodeData.VariableNodeData.Name;
-            _variable = new ParameterMaker();
-            ParameterMaker.Init(_variable, NodeData.VariableNodeData.VarParams);
-            _actorUid = new ParameterMaker();
-            ParameterMaker.Init(_actorUid, NodeData.VariableNodeData.ActorUid);
-            _abilityUid = new ParameterMaker();
-            ParameterMaker.Init(_abilityUid, NodeData.VariableNodeData.AbilityUid);
-        }
-
-        public override Rect GetPos()
-        {
-            return GUIHelper.GetEditorWindowRect().AlignCenter(740, 200);
-        }
-
-        private void Save()
-        {
-            NodeData.VariableNodeData.Range = _range;
-            NodeData.VariableNodeData.Name = _name;
-            NodeData.VariableNodeData.VarParams = _variable.ToArray();
-            NodeData.VariableNodeData.ActorUid = _actorUid.ToArray();
-            NodeData.VariableNodeData.AbilityUid = _abilityUid.ToArray();
-            Close();
+            _value = new ParameterField(_nodeData.Value, "变量值：",
+                AbilityFunctionHelper.GetVariableType(_nodeData.typeString));
+            _curSelect = _nodeData.typeString;
+            if (_curSelect == "custom")
+            {
+                _customTypeStr = _curSelect;
+                _customCastSuccess = Type.GetType(_customTypeStr) != null;
+            }
+            else
+            {
+                _customCastSuccess = true;
+            }
         }
 
         private void OnGUI()
         {
             SirenixEditorGUI.BeginBox();
 
-            EditorGUIUtility.labelWidth = 70;
-
-            NodeData.VariableNodeData.OperationType =
-                (EVariableOperationType)SirenixEditorFields.EnumDropdown("选择操作",
-                    NodeData.VariableNodeData.OperationType);
-
-            _range = (EVariableRange)SirenixEditorFields.EnumDropdown("选择范围", _range);
-
-            if (_range != EVariableRange.Battleground)
+            _nodeData.Name = SirenixEditorFields.TextField("变量名：", _nodeData.Name);
+            _curSelect = SirenixEditorFields.Dropdown(new GUIContent("变量类型"), _curSelect, _dropList);
+            if (_curSelect != _nodeData.typeString)
             {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUIUtility.labelWidth = 70;
-                EditorGUILayout.LabelField("ActorUid");
-                _actorUid.Draw("-> 设置ActorUid");
-                EditorGUILayout.EndHorizontal();
+                if (_curSelect != "custom")
+                {
+                    _value = new ParameterField(_nodeData.Value, "变量值：",
+                        AbilityFunctionHelper.GetVariableType(_nodeData.typeString));
+                }
+                else
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    _customTypeStr = SirenixEditorFields.TextField("类型字符串", _customTypeStr);
+                    if (SirenixEditorGUI.Button("转换检测", ButtonSizes.Medium))
+                    {
+                        var customType = Type.GetType(_customTypeStr);
+                        _customCastSuccess = customType != null;
+                        if (_customCastSuccess)
+                        {
+                            _value = new ParameterField(_nodeData.Value, "变量值：", customType);
+                        }
+                    }
+
+                    EditorGUILayout.EndHorizontal();
+                }
             }
 
-            if (_range == EVariableRange.Ability)
+            if (_customCastSuccess)
             {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUIUtility.labelWidth = 70;
-                EditorGUILayout.LabelField("AbilityUid");
-                _abilityUid.Draw("-> 设置AbilityUid");
-                EditorGUILayout.EndHorizontal();
+                _value.Draw();
+            }
+            else
+            {
+                EditorGUILayout.LabelField("类型转换失败！");
             }
 
-            EditorGUIUtility.labelWidth = 70;
-            _name = SirenixEditorFields.TextField("变量名", _name);
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUIUtility.labelWidth = 70;
-            EditorGUILayout.LabelField("变量值");
-            _variable.Draw("-> 设置变量值");
-            EditorGUILayout.EndHorizontal();
-
-
-            if (SirenixEditorGUI.Button("保   存", ButtonSizes.Medium))
+            if (SirenixEditorGUI.Button("保   存", ButtonSizes.Large))
             {
-                Save();
+                if (_customCastSuccess)
+                    Save();
+                else
+                {
+                    Debug.LogError("无法识别类型，无法保存");
+                }
             }
 
             SirenixEditorGUI.EndBox();

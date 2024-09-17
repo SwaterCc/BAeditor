@@ -1,6 +1,10 @@
 namespace Hono.Scripts.Battle.Event
 {
-    public interface IEventInfo { }
+    public interface IEventInfo
+    {
+        public void SetFieldsInAbilityVariables(Ability ability);
+        public void ClearFields(Ability ability);
+    }
     
     public class HitEventInfo : IEventInfo
     {
@@ -23,24 +27,31 @@ namespace Hono.Scripts.Battle.Event
         /// 伤害id
         /// </summary>
         public DamageResults DamageResults;
+
+        public void SetFieldsInAbilityVariables(Ability ability)
+        {
+            
+        }
+
+        public void ClearFields(Ability ability)
+        {
+            
+        }
     }
     
-    public class MotionEventInfo : IEventInfo
-    {
-        /// <summary>
-        /// 属于哪个角色
-        /// </summary>
-        public int ActorId;
-        
-        /// <summary>
-        /// 位移id
-        /// </summary>
-        public int MotionId;
-    }
 
     public class SkillUsedEventInfo : IEventInfo
     {
         public int SkillId;
         public int ActorUid;
+        public void SetFieldsInAbilityVariables(Ability ability)
+        {
+            
+        }
+
+        public void ClearFields(Ability ability)
+        {
+            
+        }
     }
 }

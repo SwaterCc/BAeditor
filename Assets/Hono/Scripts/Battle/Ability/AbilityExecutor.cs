@@ -55,6 +55,8 @@ namespace Hono.Scripts.Battle {
 						return new AbilityActionNode(executor, data);
 					case EAbilityNodeType.EGroup:
 						return new AbilityGroupNode(executor, data);
+					case EAbilityNodeType.EAttrSetter:
+						return new AbilityAttrSetterNode(executor, data);
 				}
 
 				Debug.LogError($"创建节点失败，节点ID{data.NodeId} 类型 {data.NodeType}");

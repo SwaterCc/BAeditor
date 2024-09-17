@@ -1,6 +1,7 @@
 
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -9,12 +10,21 @@ namespace Hono.Scripts.Battle
         private class AbilityEventNode : AbilityNode
         {
             private EventChecker _checker;
-            public AbilityEventNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) { }
+            private EventNodeData _eventNodeData;
+
+            public AbilityEventNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
+            {
+                _eventNodeData = (EventNodeData)_data;
+            }
 
             public void RegisterEvent()
             {
-                if (!_data.EventNodeData.CreateCheckerFunc.TryCallFunc(out var valueBox)) return;
-                _checker = (EventChecker)valueBox;
+                if (!_eventNodeData.CreateChecker.Parse(out _checker))
+                {
+                    Debug.LogError("Event½ÚµãÖ´ÐÐÊ§°Ü");
+                    return;
+                }
+                
                 _checker.BindFunc(onEventFired);
                 BattleEventManager.Instance.Register(_checker);
             }
@@ -27,11 +37,9 @@ namespace Hono.Scripts.Battle
             private void onEventFired(IEventInfo eventInfo)
             {
 	            _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
-	            if (!string.IsNullOrEmpty(_data.EventNodeData.CaptureVarName)) {
-		            _executor.Ability.Variables.Set(_data.EventNodeData.CaptureVarName, eventInfo);
-	            }
+	            eventInfo.SetFieldsInAbilityVariables(_executor.Ability);
 	            DoChildrenJob();
-	            _executor.Ability.Variables.Delete(_data.EventNodeData.CaptureVarName);
+                eventInfo.ClearFields(_executor.Ability);
 	            _context.ClearContext();
             }
 

@@ -15,26 +15,29 @@ namespace Hono.Scripts.Battle
 
             public AbilityVariableNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _varData = data.VariableNodeData;
+                _varData = (VarSetterNodeData)data;
             }
 
             public override void DoJob()
             {
-                if (!_varData.VarParams.TryCallFunc(out var variableBox))
+                object variable = null;
+                
+                if (Parent.NodeType == EAbilityNodeType.EAction)
                 {
-	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
+                    variable = ((AbilityActionNode)Parent).FuncRes;
                 }
-                if (!_varData.ActorUid.TryCallFunc(out var actorUid))
+                else
                 {
-	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
-                }
-                if (!_varData.AbilityUid.TryCallFunc(out var abilityUid))
-                {
-	                Debug.LogError($"函数执行失败 Name {_varData.Name}");
+                    if (!_varData.Value.Parse(out variable))
+                    {
+                        Debug.LogError($"函数执行失败 Name {_varData.Name}");
+                        return;
+                    }
                 }
                 
-                AbilityFunction.SetVariableByUid(_varData.Range, (int)actorUid, (int)abilityUid,
-	                _varData.Name, variableBox);
+                _executor.Ability.Variables.Set(_varData.Name,variable);
+                
+                DoChildrenJob();
             }
         }
     }

@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
 
             public AbilityTimerNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _timerData = _data.TimerNodeData;
+                _timerData = (TimerNodeData)_data;
             }
 
             public override void DoJob()
@@ -31,28 +31,24 @@ namespace Hono.Scripts.Battle
                 _count = 0;
                 _isFirst = true;
                 
-                if (!_timerData.FirstInterval.TryCallFunc(out var firstInterval))
+                if (!_timerData.FirstInterval.Parse(out _firstInterval))
                 {
-                    Debug.LogError("Branch节点执行错误");
+                    Debug.LogError("Timer节点解析FirstInterval错误");
+                    return;
+                }
+                
+                if (!_timerData.MaxCount.Parse(out _maxCount))
+                {
+                    Debug.LogError("Timer节点解析MaxCount错误");
+                    return;
+                }
+                
+                if (!_timerData.Interval.Parse(out _interval))
+                {
+                    Debug.LogError("Timer节点解析Interval错误");
+                    return;
                 }
 
-                _firstInterval = (float)firstInterval;
-                
-                if (!_timerData.MaxCount.TryCallFunc(out var maxCount))
-                {
-                    Debug.LogError("Branch节点执行错误");
-                }
-
-                _maxCount = (int)maxCount;
-                
-                if (!_timerData.Interval.TryCallFunc(out var interval))
-                {
-                    Debug.LogError("Branch节点执行错误");
-                }
-
-                _interval = (float)interval;
-                
-                
                 _executor.State.Current.TimerStart(this);
             }
 

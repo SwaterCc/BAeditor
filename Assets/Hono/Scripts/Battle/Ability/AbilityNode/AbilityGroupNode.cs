@@ -17,7 +17,7 @@ namespace Hono.Scripts.Battle
             
             public AbilityGroupNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
-                _groupData = data.GroupNodeData;
+                _groupData = (GroupNodeData)data;
             }
             public override void DoJob()
             {

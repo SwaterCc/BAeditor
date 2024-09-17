@@ -1,4 +1,5 @@
 using Hono.Scripts.Battle.Tools;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -9,13 +10,25 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private class AbilityActionNode : AbilityNode
         {
-            public AbilityActionNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) { }
+            private ActionNodeData _nodeData;
+
+            public object FuncRes => _funcRes;
+
+            private object _funcRes;
+
+            public AbilityActionNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
+            {
+                _nodeData = (ActionNodeData)base._data;
+            }
 
             public override void DoJob()
             {
-                if (_data.ActionNodeData[0].IsFunc)
+                if (_nodeData.Function.ParameterType == EParameterType.Function)
                 {
-	                _data.ActionNodeData.TryCallFunc(out _);
+                    if (!_nodeData.Function.Parse(out _funcRes))
+                    {
+                        Debug.LogError("函数执行失败！");
+                    }
                 }
                 
                 DoChildrenJob();
