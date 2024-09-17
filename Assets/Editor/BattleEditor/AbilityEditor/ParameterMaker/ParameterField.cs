@@ -23,9 +23,6 @@ namespace Editor.AbilityEditor
         private string _paramName;
         private Type _type;
         private List<string> _dropDownList;
-        private readonly GUIStyle _searchFieldStyle;
-        private readonly GUIStyle _searchFieldBackgroundStyle;
-
         public ParameterField(Parameter parameter, string paramName, Type type)
         {
             _menu = new GenericMenu();
@@ -34,17 +31,7 @@ namespace Editor.AbilityEditor
             _type = type;
             _dropDownPos = Vector2.zero;
             _dropDownList = new List<string>();
-
-            _searchFieldStyle = new GUIStyle(EditorStyles.textField)
-            {
-                padding = new RectOffset(20, 5, 3, 3) // 设置内边距，确保文本和图标之间有空间
-            };
-
-            _searchFieldBackgroundStyle = new GUIStyle(GUI.skin.box)
-            {
-                padding = new RectOffset(5, 5, 5, 5), // 内边距
-                margin = new RectOffset(0, 0, 0, 0) // 外边距
-            };
+            _searchString = "";
         }
         
         private void showMenu()
@@ -176,6 +163,15 @@ namespace Editor.AbilityEditor
                 _dropDownRect = GUILayoutUtility.GetLastRect();
                 _dropDownList.Clear();
                 //获取属性列表
+                foreach (var attrName in Enum.GetNames(typeof(ELogicAttr)))
+                {
+                    var type = Enum.Parse<ELogicAttr>(attrName).GetValueType();
+                    if (_type == type)
+                    {
+                        _dropDownList.Add(attrName);   
+                    }
+                }
+                _showDropDown = true;
             }
         }
 
@@ -183,26 +179,28 @@ namespace Editor.AbilityEditor
         {
             if (SirenixEditorGUI.Button("使用变量" + _parameter.AttrType, ButtonSizes.Medium))
             {
-                _dropDownRect = GUILayoutUtility.GetLastRect();
                 _dropDownList.Clear();
                 //获取变量列表
+                _dropDownList = AbilityView.VariableCollector.GetVariables(_type);
+                _showDropDown = true;
             }
         }
 
         private void drawDropDown()
         {
-            GUILayout.BeginArea(new Rect(_dropDownRect.x, _dropDownRect.y, 200, 200), _searchFieldBackgroundStyle);
+            SirenixEditorGUI.BeginVerticalList();
 
             // 绘制搜索栏
-            _searchString = EditorGUILayout.TextField("搜索:", _searchString, _searchFieldStyle, GUILayout.Height(20));
-
+            SirenixEditorGUI.BeginListItem();
+            _searchString = EditorGUILayout.TextField("搜索:", _searchString);
+            SirenixEditorGUI.EndListItem();
             // 创建一个滚动视图以显示下拉列表项
             _dropDownPos = EditorGUILayout.BeginScrollView(_dropDownPos, GUILayout.Height(150));
 
             // 过滤列表项并显示
             foreach (var item in _dropDownList.Where(i => i.ToLower().Contains(_searchString.ToLower())))
             {
-                if (GUILayout.Button(item))
+                if (SirenixEditorGUI.Button(item,ButtonSizes.Medium))
                 {
                     Debug.Log($"Selected: {item}");
                     _showDropDown = false; // 选择后关闭下拉框
@@ -210,7 +208,7 @@ namespace Editor.AbilityEditor
             }
 
             EditorGUILayout.EndScrollView();
-            GUILayout.EndArea();
+            SirenixEditorGUI.EndVerticalList();
         }
 
         private void handleClickOutside()

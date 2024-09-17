@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -131,7 +132,7 @@ namespace Editor.AbilityEditor
                     }
                 }
 
-                if (GUILayout.Button("确认修改"))
+                if (SirenixEditorGUI.Button("确认修改",ButtonSizes.Gigantic))
                 {
                     _onSave.Invoke(_function);
                     Close();

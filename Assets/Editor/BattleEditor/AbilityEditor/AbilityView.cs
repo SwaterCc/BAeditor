@@ -26,8 +26,10 @@ namespace Editor.AbilityEditor
         /// 能力基础数据
         /// </summary>
         public AbilityData AbilityData;
-
+        
         public IExDrawer ExDrawer;
+        
+        public static VariableCollector VariableCollector = new VariableCollector();
         public AbilityView(AbilityData abilityAbilityData)
         {
             AbilityData = abilityAbilityData;
@@ -172,7 +174,7 @@ namespace Editor.AbilityEditor
                     if (drawer != null)
                         _cycleDrawer.Add(cycle, drawer);
                 }
-
+               
                 drawer?.DrawCycle();
             }
 

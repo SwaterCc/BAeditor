@@ -48,7 +48,7 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect)
         {
             SettingWindow = FuncWindow.Open(_actionNode.Function, EParameterValueType.Any, (param) => _actionNode.Function = param);
-            SettingWindow.position = new Rect(btnRect.position, new Vector2(800, 500));
+            SettingWindow.position = new Rect(btnRect.position, new Vector2(680, 480));
         }
     }
 }

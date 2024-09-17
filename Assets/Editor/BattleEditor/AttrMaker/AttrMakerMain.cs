@@ -185,7 +185,7 @@ namespace Hono.Scripts.Battle
 
                 classCode = classCode.Replace(_flagAttrEnum, _attrEnumStr);
                 classCode = classCode.Replace(_flagCase, _attrCase);
-
+                classCode = classCode.Replace(_flagDict, _attrDictItem);
 
                 string fileName = "AttrCreator.cs";
                 string filePath = Path.Combine(_genCShapePath, fileName);

@@ -18,6 +18,10 @@ namespace Editor.AbilityEditor.TreeItem
         public VariableTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
         {
             _nodeData = (VarSetterNodeData)base._nodeData;
+            if (!string.IsNullOrEmpty(_nodeData.Name))
+            {
+                AbilityView.VariableCollector.Add(AbilityFunctionHelper.GetVariableType(_nodeData.typeString),_nodeData.Name);
+            }
         }
 
         protected override void buildMenu()
@@ -70,7 +74,14 @@ namespace Editor.AbilityEditor.TreeItem
             return "调用并Set变量";
         }
 
-        protected override void OnBtnClicked(Rect btnRect) { }
+        protected override void OnBtnClicked(Rect btnRect)
+        {
+            SettingWindow = BaseNodeWindow<VarNodeDataWindow, VarSetterNodeData>.GetSettingWindow(_tree.TreeData,
+                _nodeData,
+                (nodeData) => _nodeData = nodeData);
+            SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
+            SettingWindow.Show();
+        }
     }
 
     public class VarNodeDataWindow : BaseNodeWindow<VarNodeDataWindow, VarSetterNodeData>,
@@ -84,8 +95,8 @@ namespace Editor.AbilityEditor.TreeItem
             "float",
             "bool",
             "string",
-            //"intList",
-            //"floatList",
+            "intList",
+            "floatList",
             "custom"
         };
 
