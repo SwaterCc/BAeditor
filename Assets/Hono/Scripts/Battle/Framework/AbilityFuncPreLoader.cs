@@ -49,10 +49,10 @@ namespace Hono.Scripts.Battle
 
             foreach (var method in methods)
             {
-                AbilityFuncCache attr = null;
-                foreach (var obj in method.GetCustomAttributes(typeof(AbilityFuncCache), false))
+                AbilityMethod attr = null;
+                foreach (var obj in method.GetCustomAttributes(typeof(AbilityMethod), false))
                 {
-                    if (obj is AbilityFuncCache cache)
+                    if (obj is AbilityMethod cache)
                     {
                         attr = cache;
                     }

@@ -9,7 +9,7 @@ namespace Hono.Scripts.Battle
         Building,
         HitBox,
     }
-    
+
     public enum EActorLogicType
     {
         Pawn,
@@ -38,11 +38,12 @@ namespace Hono.Scripts.Battle
         Other,
     }
 
-    public enum EDamageElementType {
+    public enum EDamageElementType
+    {
         Physical = 1,
         Magic,
     }
-    
+
     public enum EDamageType
     {
         Normal = 1,
@@ -127,9 +128,14 @@ namespace Hono.Scripts.Battle
         EBranchControl,
 
         /// <summary>
-        /// 变量控制
+        /// 变量设置
         /// </summary>
-        EVariableControl,
+        EVariableSetter,
+
+        /// <summary>
+        /// 属性设置节点
+        /// </summary>
+        EAttrSetter,
 
         /// <summary>
         /// 遍历操作
@@ -149,7 +155,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 阶段节点
         /// </summary>
-        EGroup
+        EGroup,
     }
 
     /// <summary>
@@ -282,6 +288,7 @@ namespace Hono.Scripts.Battle
         /// 预设触发器
         /// </summary>
         Trigger,
+
         /// <summary>
         /// 射线检测，适合一帧的瞬时检测
         /// </summary>
@@ -345,16 +352,18 @@ namespace Hono.Scripts.Battle
         /// 中立
         /// </summary>
         Neutrality,
+
         /// <summary>
         /// 友善
         /// </summary>
         Friendly,
+
         /// <summary>
         /// 敌对
         /// </summary>
-        Enemy, 
+        Enemy,
     }
-    
+
     public enum ERepeatOperationType
     {
         //仅重复执行
@@ -384,12 +393,24 @@ namespace Hono.Scripts.Battle
         Stiff,
         Death
     }
-    
+
     public enum ECalculateType
     {
         Add,
         Subtract,
         Multiply,
         Divide,
+    }
+    
+    public enum EParameterValueType
+    {
+        Any,
+        Int,
+        Float,
+        Bool,
+        String,
+        IntList,
+        Enum,
+        Custom,
     }
 }

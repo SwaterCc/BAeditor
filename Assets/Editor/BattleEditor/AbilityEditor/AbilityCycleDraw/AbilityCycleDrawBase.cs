@@ -31,7 +31,7 @@ namespace Editor.AbilityEditor
 
             if (!data.HeadNodeDict.TryGetValue(allowEditCycle, out var nodeId))
             {
-                var cycleNodeData = (CycleNodeData)AbilityData.GetNodeData(data, EAbilityNodeType.EAbilityCycle);
+                var cycleNodeData = (CycleNodeData)Data.GetNodeData(EAbilityNodeType.EAbilityCycle);
                 cycleNodeData.AllowEditCycleNodeData = allowEditCycle;
                 cycleNodeData.ParentId = -1;
 

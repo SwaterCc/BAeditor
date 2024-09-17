@@ -1,4 +1,3 @@
-
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -10,120 +9,103 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class BranchTreeItem : AbilityLogicTreeItem
     {
-        public BranchTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        public BranchTreeItem(AbilityNodeData nodeData) : base(nodeData) { }
+        private BranchNodeData _branchNodeData;
 
-        private ParameterMaker _left;
-        private ParameterMaker _right;
+        public BranchTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        {
+            _branchNodeData = (BranchNodeData)_nodeData;
+        }
+
+        protected override void buildMenu()
+        {
+            _menu.AddItem(new GUIContent("创建节点/添加Action"), false,
+                AddChild, (EAbilityNodeType.EAction));
+            _menu.AddItem(new GUIContent("创建节点/添加If"), false,
+                AddChild, (EAbilityNodeType.EBranchControl));
+            _menu.AddItem(new GUIContent("创建节点/添加ElseIf"), false,
+                AddElseIfNode, (EAbilityNodeType.EBranchControl));
+            _menu.AddItem(new GUIContent("创建节点/Set变量"), false,
+                AddChild, (EAbilityNodeType.EVariableSetter));
+            _menu.AddItem(new GUIContent("创建节点/SetAttr"), false,
+                AddChild, (EAbilityNodeType.EAttrSetter));
+            _menu.AddItem(new GUIContent("创建节点/创建Event节点"), false,
+                AddChild, (EAbilityNodeType.EEvent));
+           
+            _menu.AddItem(new GUIContent("删除"), false,
+                Remove);
+        }
         
+        private void AddElseIfNode(object obj)
+        {
+            var node = (BranchNodeData)_tree.TreeData.GetNodeData(EAbilityNodeType.EBranchControl);
+            node.ParentId = _branchNodeData.ParentId;
+            node.Depth = _branchNodeData.Depth;
+            node.BranchGroup = _branchNodeData.BranchGroup;
+            node.Desc = "else if";
+            var parentNode = _tree.TreeData.NodeDict[node.ParentId];
+            var index = parentNode.ChildrenIds.IndexOf(_nodeData.NodeId);
+            parentNode.ChildrenIds.Insert(index + 1, node.NodeId);
+            _tree.TreeData.NodeDict.Add(node.NodeId, node);
+            
+            EditorUtility.SetDirty(_tree.TreeData);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            _tree.Reload();
+        }
+
         protected override Color getButtonColor()
         {
             return Color.cyan;
         }
-        
+
         protected override string getButtonText()
         {
-            string label = string.IsNullOrEmpty(NodeData.BranchNodeData.Desc)
-                ? "分支（无描述）"
-                : NodeData.BranchNodeData.Desc;
-            
+            string label = string.IsNullOrEmpty(_nodeData.Desc)
+                ? "If"
+                : _nodeData.Desc;
+
             return label;
         }
 
-        protected override string getItemEffectInfo()
+        protected override string getButtonTips()
         {
             return "执行if判定，如果判定成功则执行子节点内容，判定失败则走同级的下一节点";
         }
 
-        protected override void OnBtnClicked()
+        protected override void OnBtnClicked(Rect btnRect)
         {
-            SettingWindow = BranchNodeDataWindow.GetWindow(NodeData);
+            SettingWindow = BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>.GetSettingWindow(_tree.TreeData,
+                _branchNodeData,
+                (nodeData) => _branchNodeData = nodeData);
+            SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
             SettingWindow.Show();
-            SettingWindow.Focus();
         }
     }
 
-    public class BranchNodeDataWindow : BaseNodeWindow<BranchNodeDataWindow>, IWindowInit
+    public class BranchNodeDataWindow : BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>, IAbilityNodeWindow<BranchNodeData>
     {
-        private ParameterMaker _left;
-        private ParameterMaker _right;
-        private ECompareResType _type;
+        private ParameterField _compareFunc;
+
         protected override void onInit()
         {
-            _left = new ParameterMaker();
-            ParameterMaker.Init(_left, NodeData.BranchNodeData.Left);
-
-            _type = NodeData.BranchNodeData.ResType;
-            
-            _right = new ParameterMaker();
-            ParameterMaker.Init(_right, NodeData.BranchNodeData.Right);
-        }
-
-        public override Rect GetPos()
-        {
-            return GUIHelper.GetEditorWindowRect().AlignCenter(700, 170);
-        }
-
-        private void changeCompareType(object type)
-        {
-            _type = (ECompareResType)type;
-        }
-
-        private void saveData()
-        {
-            NodeData.BranchNodeData.Left = _left.ToArray();
-            NodeData.BranchNodeData.ResType = _type;
-            NodeData.BranchNodeData.Right = _right.ToArray();
-            Close();
-        }
-
-        private string getFlag(ECompareResType compareResType)
-        {
-            switch (compareResType)
-            {
-                case ECompareResType.Less:
-                    return "<";
-                case ECompareResType.LessAndEqual:
-                    return "<=";
-                case ECompareResType.Equal:
-                    return "==";
-                case ECompareResType.More:
-                    return ">";
-                case ECompareResType.MoreAndEqual:
-                    return ">=";
-            }
-
-            return "?";
+            _compareFunc = new ParameterField(_nodeData.CompareFunc, "判定条件", typeof(bool));
         }
 
         private void OnGUI()
         {
-            SirenixEditorGUI.BeginBox();
+            SirenixEditorGUI.BeginBox("If节点", true);
             EditorGUILayout.BeginVertical();
-            _left.Draw();
-            if (GUILayout.Button(getFlag(_type)))
-            {
-                GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("<"), false, changeCompareType, ECompareResType.Less);
-                menu.AddItem(new GUIContent("<="), false, changeCompareType, ECompareResType.LessAndEqual);
-                menu.AddItem(new GUIContent("=="), false, changeCompareType, ECompareResType.Equal);
-                menu.AddItem(new GUIContent(">"), false, changeCompareType, ECompareResType.More);
-                menu.AddItem(new GUIContent(">="), false, changeCompareType, ECompareResType.MoreAndEqual);
-                menu.ShowAsContext();
-            }
-
-            _right.Draw();
+            _compareFunc.Draw();
             EditorGUILayout.EndVertical();
             SirenixEditorGUI.BeginBox();
-            NodeData.BranchNodeData.Desc = EditorGUILayout.TextField("节点描述:", NodeData.BranchNodeData.Desc);
+            _nodeData.Desc = EditorGUILayout.TextField("节点描述:", _nodeData.Desc);
             if (SirenixEditorGUI.Button("保   存", ButtonSizes.Medium))
             {
-                saveData();
+                Save();
             }
+
             SirenixEditorGUI.EndBox();
             SirenixEditorGUI.EndBox();
         }
-        
-        
     }
 }

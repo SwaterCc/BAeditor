@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Hono.Scripts.Battle;
-using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -8,72 +7,38 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public interface IWindowInit {
-    		public void Init(AbilityNodeData nodeData);
-    		public Rect GetPos();
-    		public GUIContent GetWindowName();
-    	}
-    
-    	public abstract class BaseNodeWindow<T> : EditorWindow where T : EditorWindow, IWindowInit {
-    		public static EditorWindow GetWindow(AbilityNodeData nodeData) {
-    			var window = GetWindow<T>();
-    			window.position = window.GetPos();
-    			window.titleContent = window.GetWindowName();
-    			window.Init(nodeData);
-    			return window;
-    		}
-    
-    		public AbilityNodeData NodeData;
-    		public Stack<EditorWindow> WindowStack = new Stack<EditorWindow>();
-    
-    		public void Init(AbilityNodeData nodeData) {
-    			NodeData = nodeData;
-    			onInit();
-    		}
-    
-    		protected abstract void onInit();
-    
-    		public virtual Rect GetPos() {
-    			return GUIHelper.GetEditorWindowRect().AlignCenter(740, 600);
-    		}
-    
-    		public virtual GUIContent GetWindowName() {
-    			return this.titleContent;
-    		}
-    
-    		private void OnDestroy() {
-    			foreach (var window in WindowStack) {
-    				window.Close();
-    			}
-    
-    			WindowStack.Clear();
-    		}
-    	}
-    
-    	public abstract class BaseNodeOdinWindow<T> : OdinEditorWindow where T : OdinEditorWindow, IWindowInit {
-    		public static T GetWindow(AbilityNodeData nodeData) {
-    			var window = GetWindow<T>();
-    			window.position = window.GetPos();
-    			window.titleContent = window.GetWindowName();
-    			window.Init(nodeData);
-    			return window;
-    		}
-    
-    		[HideInInspector] public AbilityNodeData NodeData;
-    
-    		public void Init(AbilityNodeData nodeData) {
-    			NodeData = nodeData;
-    			onInit();
-    		}
-    
-    		protected abstract void onInit();
-    
-    		public virtual Rect GetPos() {
-    			return GUIHelper.GetEditorWindowRect().AlignCenter(400, 600);
-    		}
-    
-    		public virtual GUIContent GetWindowName() {
-    			return this.titleContent;
-    		}
-    	}
+    public interface IAbilityNodeWindow<out TNodeData>
+    {
+        public void Init(AbilityNodeData nodeData, Action<TNodeData> onSave);
+    }
+
+    public abstract class BaseNodeWindow<T,TNodeData> : EditorWindow where T : EditorWindow, IAbilityNodeWindow<TNodeData> where TNodeData : AbilityNodeData
+    {
+        public static EditorWindow GetSettingWindow(AbilityData treeData, TNodeData nodeData,
+            Action<TNodeData> onSave)
+        {
+            var window = GetWindow<T>();
+            var copy = treeData.DeepCopyNodeData(nodeData);
+            window.Init(copy, onSave);
+            return window;
+        }
+
+        protected TNodeData _nodeData;
+        protected Action<TNodeData> _onSave;
+
+        public void Init(AbilityNodeData nodeData, Action<TNodeData> onSave)
+        {
+            _nodeData = (TNodeData)nodeData;
+            _onSave = onSave;
+            onInit();
+        }
+
+        protected abstract void onInit();
+        
+        protected void Save()
+        {
+            _onSave.Invoke(_nodeData);
+            Close();
+        }
+    }
 }

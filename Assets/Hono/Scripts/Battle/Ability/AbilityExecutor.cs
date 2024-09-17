@@ -47,7 +47,7 @@ namespace Hono.Scripts.Battle {
 						return new AbilityTimerNode(executor, data);
 					case EAbilityNodeType.EBranchControl:
 						return new AbilityBranchNode(executor, data);
-					case EAbilityNodeType.EVariableControl:
+					case EAbilityNodeType.EVariableSetter:
 						return new AbilityVariableNode(executor, data);
 					case EAbilityNodeType.ERepeat:
 						return new AbilityRepeatNode(executor, data);

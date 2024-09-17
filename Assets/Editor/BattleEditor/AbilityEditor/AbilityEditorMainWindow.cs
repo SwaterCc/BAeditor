@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Editor.AbilityEditor.SimpleWindow;
+using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -24,6 +25,8 @@ namespace Editor.AbilityEditor
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1000, 800);
             window.titleContent = new GUIContent("Ability编辑器");
 
+            AbilityFunctionHelper.Init();
+            
             foreach (var eType in Enum.GetValues(typeof(EAbilityType)))
             {
                 window.Reload((EAbilityType)eType);

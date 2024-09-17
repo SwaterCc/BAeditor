@@ -8,12 +8,12 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class ActionTreeItem : AbilityLogicTreeItem
     {
-        public ActionTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        private ParameterMaker _actionFunc;
-        public ActionTreeItem(AbilityNodeData nodeData) : base(nodeData)
+        private ActionNodeData _actionNode;
+        
+
+        public ActionTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
         {
-            _actionFunc = new ParameterMaker();
-            ParameterMaker.Init(_actionFunc,NodeData.ActionNodeData);
+            _actionNode = (ActionNodeData)_nodeData;
         }
         
         protected override Color getButtonColor()
@@ -23,31 +23,32 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            if (NodeData.ActionNodeData == null || NodeData.ActionNodeData.Length == 0 || string.IsNullOrEmpty(NodeData.ActionNodeData[0].FuncName))
+            if (_actionNode.Function.ParameterType != EParameterType.Function)
+            {
                 return "未初始化";
-            
-            return _actionFunc.ToString();
+            }
+
+            return _actionNode.Function.ToString();
         }
 
-        protected override string getItemEffectInfo()
+        protected override string getButtonTips()
         {
             return "执行无返回值的函数调用";
         }
 
-        protected override void OnBtnClicked()
-        {
-            if (SettingWindow == null)
-            {
-                var settingWindow = FuncWindow.CreateInstance<FuncWindow>();
-                settingWindow.Init(_actionFunc, EFuncCacheFlag.Action);
-                settingWindow.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
-                settingWindow.FromString = $"→ ActionNodeId<{DrawCount}>";
-                SettingWindow = settingWindow;
-            }
 
-            _actionFunc.OnSave = parameters => NodeData.ActionNodeData = parameters; 
-            SettingWindow.Show();
-            SettingWindow.Focus();
+        protected override void buildMenu()
+        {
+            _menu.AddItem(new GUIContent("创建节点/获取返回值"), false,
+                AddChild, (EAbilityNodeType.EVariableSetter));
+            _menu.AddItem(new GUIContent("删除"), false,
+                Remove);
+        }
+        
+        protected override void OnBtnClicked(Rect btnRect)
+        {
+            SettingWindow = FuncWindow.Open(_actionNode.Function, EParameterValueType.Any, (param) => _actionNode.Function = param);
+            SettingWindow.position = new Rect(btnRect.position, new Vector2(800, 500));
         }
     }
 }

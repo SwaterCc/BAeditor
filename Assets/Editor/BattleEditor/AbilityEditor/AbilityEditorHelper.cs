@@ -73,13 +73,6 @@ namespace Editor.AbilityEditor {
 					EditorGUILayout.EndHorizontal();
 				}
 			}
-			else if (elementType.IsSerializable) {
-				if (SirenixEditorGUI.Button("编辑序列化数据", ButtonSizes.Medium)) {
-					SerializableOdinWindow.Open(ref updateValue, elementType);
-				}
-
-				return updateValue;
-			}
 
 			return afterValue;
 		}

@@ -7,6 +7,14 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
+    public enum EParameterType
+    {
+        Simple,
+        Function,
+        Variable,
+        Attr,
+    }
+
     /// <summary>
     /// 编辑器数据
     /// </summary>
@@ -16,33 +24,19 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 是否是函数
         /// </summary>
-        public bool IsFunc;
+        public EParameterType ParameterType;
 
         public string FuncName;
-        public List<Parameter> FuncParam;
-
-        /// <summary>
-        /// 是否是基础值
-        /// </summary>
-        public bool IsBaseValue;
+        public List<Parameter> FuncParams;
+        
         public object Value;
-
-        /// <summary>
-        /// 是否是自定义变量
-        /// </summary>
-        public bool IsVairable;
-
+        
         public string VairableName;
-
-        /// <summary>
-        /// 是否是属性
-        /// </summary>
-        public bool IsAttr;
-
+        
         public EAbilityType AttrType;
 
         public Parameter() { }
-        
+
         /// <summary>
         /// 拷贝构造函数
         /// </summary>
@@ -52,25 +46,20 @@ namespace Hono.Scripts.Battle
             if (parameter == null)
                 throw new ArgumentNullException(nameof(parameter));
 
-            IsFunc = parameter.IsFunc;
+            ParameterType = parameter.ParameterType;
             FuncName = parameter.FuncName;
 
             // 深拷贝 FuncParam 列表
-            if (parameter.FuncParam != null)
+            if (parameter.FuncParams != null)
             {
-                FuncParam = new List<Parameter>();
-                foreach (var param in parameter.FuncParam)
+                FuncParams = new List<Parameter>();
+                foreach (var param in parameter.FuncParams)
                 {
-                    FuncParam.Add(new Parameter(param));
+                    FuncParams.Add(new Parameter(param));
                 }
             }
-
-            IsBaseValue = parameter.IsBaseValue;
             Value = DeepCopy(parameter.Value);
-
-            IsVairable = parameter.IsVairable;
             VairableName = parameter.VairableName;
-            IsAttr = parameter.IsAttr;
             AttrType = parameter.AttrType;
         }
 
@@ -89,7 +78,6 @@ namespace Hono.Scripts.Battle
                 Debug.LogWarning("Parameter 尝试拷贝一个非可序列化对象失败，返回null");
                 return null;
             }
-               
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -111,5 +99,10 @@ namespace Hono.Scripts.Battle
             var type = obj.GetType();
             return type.IsSerializable || typeof(ISerializable).IsAssignableFrom(type);
         }
+    }
+
+    public static class ParameterHelper
+    {
+        public static void InitFunc(this Parameter parameter, string funcName = null) { }
     }
 }

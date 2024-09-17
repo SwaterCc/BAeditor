@@ -1,6 +1,6 @@
 
 using System.Collections.Generic;
-
+using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
@@ -13,8 +13,42 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class EventTreeItem : AbilityLogicTreeItem
     {
-        public EventTreeItem(int id, int depth, string name) : base(id, depth, name) { }
-        public EventTreeItem(AbilityNodeData nodeData) : base(nodeData) { }
+        private new EventNodeData _nodeData;
+
+        public EventTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        {
+            _nodeData = (EventNodeData)base._nodeData;
+        }
+
+        protected override void buildMenu()
+        {
+            _menu.AddItem(new GUIContent("创建节点/添加Action"), false,
+                AddChild, (EAbilityNodeType.EAction));
+            _menu.AddItem(new GUIContent("创建节点/添加If"), false,
+                AddChild, (EAbilityNodeType.EBranchControl));
+            _menu.AddItem(new GUIContent("创建节点/Set变量"), false,
+                AddChild, (EAbilityNodeType.EVariableSetter));
+            _menu.AddItem(new GUIContent("创建节点/SetAttr"), false,
+                AddChild, (EAbilityNodeType.EAttrSetter));
+           
+            if (!checkHasParent(EAbilityNodeType.ERepeat))
+            {
+                _menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
+                    AddChild, (EAbilityNodeType.ERepeat));
+            }
+            
+            if (!checkHasParent(EAbilityNodeType.EGroup))
+            {
+                _menu.AddItem(new GUIContent("创建节点/创建Stage节点"), false,
+                    AddChild, (EAbilityNodeType.EGroup));
+            }
+
+            if (!checkHasParent(EAbilityNodeType.ETimer))
+            {
+                _menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
+                    AddChild, (EAbilityNodeType.ETimer));
+            }
+        }
 
         protected override Color getButtonColor()
         {
@@ -23,26 +57,27 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return NodeData.EventNodeData.EventType.ToString();
+            return _nodeData.EventType.ToString();
         }
 
-        protected override string getItemEffectInfo()
+        protected override string getButtonTips()
         {
             return "监听指定事件回调，与执行顺序无关";
         }
 
-        protected override void OnBtnClicked()
+        protected override void OnBtnClicked(Rect btnRect)
         {
-            SettingWindow = EventNodeDataWindow.GetWindow(NodeData);
+            SettingWindow = BaseNodeWindow<EventNodeDataWindow, EventNodeData>.GetSettingWindow(_tree.TreeData,
+                _nodeData,
+                (nodeData) => _nodeData = nodeData);
+            SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 240);
             SettingWindow.Show();
-            SettingWindow.Focus();
         }
     }
 
-    public class EventNodeDataWindow : BaseNodeWindow<EventNodeDataWindow>, IWindowInit
+    public class EventNodeDataWindow : BaseNodeWindow<EventNodeDataWindow,EventNodeData>, IAbilityNodeWindow<EventNodeData>
     {
-        private static readonly Dictionary<EBattleEventType, string> _eventCheckerDict =
-            new Dictionary<EBattleEventType, string>();
+        private static readonly Dictionary<EBattleEventType, string> _eventCheckerDict = new();
         
         private static void initDict()
         {
@@ -67,77 +102,84 @@ namespace Editor.AbilityEditor.TreeItem
             }
         }
 
-        private ParameterMaker _func;
-        private EBattleEventType _curType;
-        private string _varName;
-        private string _desc;
-        
+        private List<ParameterField> _parameterFields;
+        private EBattleEventType _curEvent;
         protected override void onInit()
         {
             initDict();
-            _func = new ParameterMaker();
-            _curType = NodeData.EventNodeData.EventType;
-            ParameterMaker.Init(_func, NodeData.EventNodeData.CreateCheckerFunc);
+            _curEvent = _nodeData.EventType;
+            _parameterFields = new List<ParameterField>();
         }
 
-        private void Save()
+        private void initParameter()
         {
-            NodeData.EventNodeData.EventType = _curType;
-            NodeData.EventNodeData.CreateCheckerFunc = _func.ToArray();
-            NodeData.EventNodeData.CaptureVarName = _varName;
-            NodeData.EventNodeData.Desc = _desc;
-            Close();
-        }
+            if (!_eventCheckerDict.TryGetValue(_nodeData.EventType, out var value))
+            {
+                return;
+            }
+            if (!AbilityFunctionHelper.TryGetFuncInfo(value, out var funcInfo))
+            {
+                return;
+            }
 
+            _nodeData.CreateChecker.ParameterType = EParameterType.Function;
+            _nodeData.CreateChecker.FuncName = value;
+            _nodeData.CreateChecker.FuncParams ??= new List<Parameter>();
+            _nodeData.CreateChecker.FuncParams.Clear();
+            foreach (var paramInfo in funcInfo.ParamInfos)
+            {
+                var parameter = new Parameter();
+                _nodeData.CreateChecker.FuncParams.Add(parameter);
+                var param = new ParameterField(parameter, paramInfo.ParamName, paramInfo.ParamType);
+                _parameterFields.Add(param);
+            }
+        }
+        
         private void OnGUI()
         {
             SirenixEditorGUI.BeginBox();
 
-            var type = (EBattleEventType)SirenixEditorFields.EnumDropdown("事件类型", _curType);
-            
-            if (!_eventCheckerDict.TryGetValue(type, out var value))
-            {
-                SirenixEditorGUI.BeginBox("参数设置");
-                EditorGUILayout.LabelField("该事件暂时不支持配置");
-                SirenixEditorGUI.EndBox();
-                SirenixEditorGUI.EndBox();
-                return;
-            }
-            
-            if (type != _curType)
-            {
-                _curType = type;
-                _func.CreateFuncParam(value);
-            }
+            _nodeData.EventType = (EBattleEventType)SirenixEditorFields.EnumDropdown("事件类型", _nodeData.EventType);
 
-            SirenixEditorGUI.BeginBox("参数设置");
-            bool isFirst = true;
-            EditorGUILayout.BeginVertical();
-            foreach (var node in _func.FuncParams)
+
+            if (_curEvent == EBattleEventType.NoInit || string.IsNullOrEmpty(_nodeData.CreateChecker.FuncName))
             {
-                if (isFirst)
+                EditorGUILayout.LabelField("未初始化，请选择事件类型");
+            }
+            else
+            {
+                if (_curEvent != _nodeData.EventType)
                 {
-                    isFirst = false;
-                    continue;
+                     initParameter();
                 }
-                node.Draw();
+
+                if (_parameterFields.Count == 0)
+                {
+                    EditorGUILayout.LabelField("未找到参数");
+                }
+                else
+                {
+                    SirenixEditorGUI.BeginBox("参数设置");
+                    
+                    EditorGUILayout.BeginVertical();
+                    
+                    foreach (var parameterField in _parameterFields)
+                    {
+                        parameterField.Draw();
+                    }
+                    
+                    _nodeData.Desc = SirenixEditorFields.TextField("备注",  _nodeData.Desc );
+
+                    if (SirenixEditorGUI.Button("保  存", ButtonSizes.Medium))
+                    {
+                        Save();
+                    }
+                    EditorGUILayout.EndVertical();
+                    SirenixEditorGUI.EndBox();
+                }
             }
-
-            _varName = SirenixEditorFields.TextField("回调变量名", _varName);
-            _desc = SirenixEditorFields.TextField("备注", _desc);
-
-            if (SirenixEditorGUI.Button("保  存", ButtonSizes.Medium))
-            {
-                Save();
-            }
-            EditorGUILayout.EndVertical();
+      
             SirenixEditorGUI.EndBox();
-            SirenixEditorGUI.EndBox();
-        }
-
-        public override GUIContent GetWindowName()
-        {
-            return new GUIContent("事件节点");
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Hono.Scripts.Battle {
 					node.Build(this);
 
 					if (node._data.NodeType == EAbilityNodeType.EBranchControl) {
-						IfInfos.TryAdd(node._data.BranchNodeData.BranchGroup, false);
+						IfInfos.TryAdd(((BranchNodeData)(node._data)).BranchGroup, false);
 					}
 				}
 			}
@@ -50,7 +50,7 @@ namespace Hono.Scripts.Battle {
 			public void DoChildrenJob() {
 				foreach (var node in Children) {
 					if (node._data.NodeType == EAbilityNodeType.EBranchControl) {
-						var ifGroupId = node._data.BranchNodeData.BranchGroup;
+						var ifGroupId = ((BranchNodeData)(node._data)).BranchGroup;
 						Debug.Log($"IfGroupId {ifGroupId}");
 						if (IfInfos.TryGetValue(ifGroupId, out var hasSuccess) && hasSuccess) {
 							continue;

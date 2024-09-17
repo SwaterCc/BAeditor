@@ -6,8 +6,7 @@ using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine;
-using UnityEngine.Serialization;
+using Unity.VisualScripting;
 
 namespace Hono.Scripts.Battle
 {
@@ -49,9 +48,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         [OdinSerialize] public Dictionary<int, AbilityNodeData> NodeDict = new();
 
-        [NonSerialized] private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
-
-        public static AbilityNodeData GetNodeData(AbilityData abilityData, EAbilityNodeType type)
+        public AbilityNodeData GetNodeData(EAbilityNodeType type)
         {
             AbilityNodeData nodeData = null;
 
@@ -66,8 +63,11 @@ namespace Hono.Scripts.Battle
                 case EAbilityNodeType.EBranchControl:
                     nodeData = new BranchNodeData();
                     break;
-                case EAbilityNodeType.EVariableControl:
-                    nodeData = new VariableNodeData();
+                case EAbilityNodeType.EVariableSetter:
+                    nodeData = new VarSetterNodeData();
+                    break;
+                case EAbilityNodeType.EAttrSetter:
+                    nodeData = new AttrSetterNodeData();
                     break;
                 case EAbilityNodeType.ERepeat:
                     nodeData = new RepeatNodeData();
@@ -83,10 +83,19 @@ namespace Hono.Scripts.Battle
                     break;
             }
 
+            nodeData.NodeId = GenNodeId();
+            nodeData.NodeType = type;
+
+            return nodeData;
+        }
+
+
+        private int GenNodeId()
+        {
             var id = CommonUtility.GenerateTimeBasedHashId32();
             var maxTryCount = 500;
             var curTryCount = 0;
-            while (abilityData.NodeDict.ContainsKey(id))
+            while (NodeDict.ContainsKey(id))
             {
                 id = CommonUtility.GenerateTimeBasedHashId32();
                 if (++curTryCount > maxTryCount)
@@ -95,10 +104,19 @@ namespace Hono.Scripts.Battle
                 }
             }
 
-            nodeData.NodeId = id;
-            nodeData.NodeType = type;
-
-            return nodeData;
+            return id;
+        }
+        
+        public  TNodeType DeepCopyNodeData<TNodeType>(TNodeType nodeData) where TNodeType : AbilityNodeData
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, nodeData);
+                ms.Position = 0;
+                var copy = (TNodeType)formatter.Deserialize(ms);
+                return copy;
+            }
         }
     }
 
@@ -135,34 +153,12 @@ namespace Hono.Scripts.Battle
         {
             return ParentId == -1;
         }
-
-        public AbilityNodeData DeepCopy()
-        {
-            using (var ms = new MemoryStream())
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(ms, this);
-                ms.Position = 0;
-                var copy = (AbilityNodeData)formatter.Deserialize(ms);
-
-                // 重置 NodeId，排除其内容
-                copy.NodeId = 0; // 或者任何适当的默认值
-
-                return copy;
-            }
-        }
-        
-        public virtual void CopyTo(AbilityNodeData data)
-        {
-            NodeType = data.NodeType;
-            
-        }
     }
 
     [Serializable]
     public class ActionNodeData : AbilityNodeData
     {
-        public Parameter[] Function;
+        public Parameter Function = new();
     }
 
     [Serializable]
@@ -174,7 +170,7 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class BranchNodeData : AbilityNodeData
     {
-        public Parameter[] CompareFunc;
+        public Parameter CompareFunc = new();
         public int BranchGroup;
     }
 
@@ -182,16 +178,13 @@ namespace Hono.Scripts.Battle
     public class EventNodeData : AbilityNodeData
     {
         public EBattleEventType EventType;
-        public Parameter[] CreateChecker;
+        public Parameter CreateChecker = new();
     }
 
     [Serializable]
     public class GroupNodeData : AbilityNodeData
     {
         public int GroupId;
-
-        //逻辑不用，阶段描述
-        public string Desc;
 
         /// <summary>
         /// 是否为默认开启阶段
@@ -202,23 +195,30 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class TimerNodeData : AbilityNodeData
     {
-        public Parameter[] FirstInterval;
-        public Parameter[] Interval;
-        public Parameter[] MaxCount;
+        public Parameter FirstInterval = new();
+        public Parameter Interval = new();
+        public Parameter MaxCount = new();
     }
 
     [Serializable]
     public class RepeatNodeData : AbilityNodeData
     {
-        public Parameter[] MaxRepeatCount;
-       
+        public Parameter MaxRepeatCount = new();
     }
 
     [Serializable]
-    public class VariableNodeData : AbilityNodeData
+    public class VarSetterNodeData : AbilityNodeData
     {
         public string Name;
-        public Parameter[] Value;
-        public string Desc;
+        public EParameterValueType VarType;
+        public Parameter Value = new();
+    }
+
+    [Serializable]
+    public class AttrSetterNodeData : AbilityNodeData
+    {
+        public ELogicAttr LogicAttr;
+        public EParameterValueType VarType;
+        public Parameter Value = new();
     }
 }

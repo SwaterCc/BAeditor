@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -8,48 +10,64 @@ using Sirenix.Utilities.Editor;
 using UnityEngine;
 using Object = System.Object;
 
-namespace Editor.AbilityEditor.SimpleWindow
+namespace Editor.AbilityEditor
 {
     public class SerializableOdinWindow : OdinEditorWindow
     {
-        public static void Open(ref object serializableObject,Type type,string label = "创建序列化参数")
+        public static void Open(object serializableObject, Type type, Action<object> onSave)
         {
             var window = GetWindow<SerializableOdinWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(450, 500);
             window.titleContent = new GUIContent("创建序列化参数");
-            window.init(ref serializableObject,type);
+            window.init(serializableObject, type, onSave);
         }
 
+        private Action<object> _onSave;
         private Type _type;
-        private void init(ref object serializableObject,Type type)
+        private void init(object serializableObject,Type type, Action<object> onSave)
         {
             _type = type;
+            
+            if (serializableObject == null)
+            {
+                Debug.LogError($"{_type} is null");
+                return;
+            }
+            
             if (!_type.IsSerializable)
             {
                 Debug.LogError($"{_type} is not Serializable");
                 return;
             }
-            
-            serializableObject ??= (_type.InstantiateDefault(true));
-            Setting = serializableObject;
+
+            _onSave = onSave;
+            Setting = DeepCopy(serializableObject);
+        }
+
+        private object DeepCopy(object serializableObject)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, serializableObject);
+                ms.Position = 0;
+                var copy = formatter.Deserialize(ms);
+                
+                return copy;
+            }
         }
         
         [OdinSerialize]
         [NonSerialized]
         [VerticalGroup("setting")]
         public object Setting;
-
-        [VerticalGroup("clear")]
-        [Button("重置")]
-        public void clear()
-        {
-            Setting = (_type.InstantiateDefault(true));
-        }
+        
 
         [VerticalGroup("end")]
         [Button("保存")]
         public void Save()
         {
+            _onSave.Invoke(Setting);
             Close();
         }
     }

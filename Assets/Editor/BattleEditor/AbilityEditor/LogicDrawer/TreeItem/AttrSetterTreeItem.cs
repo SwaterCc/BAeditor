@@ -1,20 +1,15 @@
-
-using System;
-using Hono.Scripts.Battle;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities.Editor;
-using UnityEditor;
+﻿using Hono.Scripts.Battle;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class RepeatTreeItem : AbilityLogicTreeItem
+    public class AttrSetterTreeItem : AbilityLogicTreeItem
     {
-        private new RepeatNodeData _nodeData;
+        private new AttrSetterNodeData _nodeData;
 
-        public RepeatTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public AttrSetterTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
         {
-            _nodeData = (RepeatNodeData)base._nodeData;
+            _nodeData = (AttrSetterNodeData)base._nodeData;
         }
 
         protected override void buildMenu()
@@ -32,11 +27,19 @@ namespace Editor.AbilityEditor.TreeItem
                 _menu.AddItem(new GUIContent("创建节点/创建Event节点"), false,
                     AddChild, (EAbilityNodeType.EEvent));
             }
+
+            if (checkHasParent(EAbilityNodeType.ERepeat))
+            {
+                _menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
+                    AddChild, (EAbilityNodeType.ERepeat));
+            }
+
             if (checkHasParent(EAbilityNodeType.EGroup))
             {
                 _menu.AddItem(new GUIContent("创建节点/创建Group节点"), false,
                     AddChild, (EAbilityNodeType.EGroup));
             }
+
             if (checkHasParent(EAbilityNodeType.ETimer))
             {
                 _menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
@@ -46,22 +49,22 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override Color getButtonColor()
         {
-            return Color.green;
+            return Color.magenta;
         }
 
         protected override string getButtonText()
         {
-            return "循环";
+            return "设置属性";
         }
 
         protected override string getButtonTips()
         {
-            return "循环节点，循环指定次数";
+            return "设置属性";
         }
 
         protected override void OnBtnClicked(Rect btnRect)
         {
-            SettingWindow = BaseNodeWindow<RepeatNodeDataWindow, RepeatNodeData>.GetSettingWindow(_tree.TreeData,
+            SettingWindow = BaseNodeWindow<AttrSetterWindow, AttrSetterNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
                 (nodeData) => _nodeData = nodeData);
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
@@ -69,26 +72,9 @@ namespace Editor.AbilityEditor.TreeItem
         }
     }
 
-    public class RepeatNodeDataWindow : BaseNodeWindow<RepeatNodeDataWindow,RepeatNodeData>, IAbilityNodeWindow<RepeatNodeData>
+    public class AttrSetterWindow : BaseNodeWindow<AttrSetterWindow, AttrSetterNodeData>,
+        IAbilityNodeWindow<AttrSetterNodeData>
     {
-
-        private ParameterField _maxCount;
-        protected override void onInit()
-        {
-            _maxCount = new ParameterField(_nodeData.MaxRepeatCount, "循环次数", typeof(int));
-        }
-
-        private void OnGUI()
-        {
-            SirenixEditorGUI.BeginBox("设置循环次数");
-            
-            _maxCount.Draw();
-            
-            if (SirenixEditorGUI.Button("保  存", ButtonSizes.Medium))
-            {
-                Save();
-            }
-            SirenixEditorGUI.EndBox();
-        }
+        protected override void onInit() { }
     }
 }

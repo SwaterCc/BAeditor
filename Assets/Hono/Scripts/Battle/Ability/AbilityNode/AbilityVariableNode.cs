@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private class AbilityVariableNode : AbilityNode
         {
-            private readonly VariableNodeData _varData;
+            private readonly VarSetterNodeData _varData;
 
             public AbilityVariableNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {

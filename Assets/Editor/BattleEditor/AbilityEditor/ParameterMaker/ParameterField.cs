@@ -1,67 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.RefValue;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public enum EParameterValueType
-    {
-        Any,
-        Int,
-        Float,
-        Bool,
-        String,
-        IntList,
-        FloatList,
-        Custom,
-    }
-
-
-    public class ParameterFieldSetting
-    {
-        public ParameterField.AllowShowType DefaultShowType;
-        public int AllowShowType;
-        public EParameterValueType ValueType;
-        public string ParamName;
-    }
-
-
     public class ParameterField
     {
-        [Flags]
-        public enum AllowShowType
-        {
-            BaseValue = 0,
-            Function = 1 << 0,
-            Variable = 1 << 1,
-            Attr = 1 << 2,
-            All = ~0,
-        }
-
-        private readonly ParameterFieldSetting _setting;
         private readonly GenericMenu _menu;
-        private AllowShowType _currentShowType;
-        private Parameter _parameter;
+        private readonly Parameter _parameter;
         private string _searchString;
         private Vector2 _dropDownPos;
         private bool _showDropDown;
         private Rect _dropDownRect;
+        private string _paramName;
+        private Type _type;
         private List<string> _dropDownList;
         private readonly GUIStyle _searchFieldStyle;
         private readonly GUIStyle _searchFieldBackgroundStyle;
 
-        public ParameterField(ParameterFieldSetting setting, Parameter parameterMaker)
+        public ParameterField(Parameter parameter, string paramName, Type type)
         {
-            _setting = setting;
             _menu = new GenericMenu();
-            _currentShowType = setting.DefaultShowType;
-            _parameter = new Parameter(parameterMaker);
+            _parameter = parameter;
+            _paramName = paramName;
+            _type = type;
             _dropDownPos = Vector2.zero;
             _dropDownList = new List<string>();
 
@@ -76,56 +46,48 @@ namespace Editor.AbilityEditor
                 margin = new RectOffset(0, 0, 0, 0) // 外边距
             };
         }
-
+        
         private void showMenu()
         {
-            if ((_setting.AllowShowType & (int)AllowShowType.Function) > 0)
-            {
-                _menu.AddItem(new GUIContent("调用函数"), false, () => _currentShowType = AllowShowType.Function);
-            }
+            _menu.AddItem(new GUIContent("调用函数"), false, () => { _parameter.ParameterType = EParameterType.Function; });
 
-            if ((_setting.AllowShowType & (int)AllowShowType.BaseValue) > 0)
-            {
-                _menu.AddItem(new GUIContent("使用基础类型"), false, () => _currentShowType = AllowShowType.BaseValue);
-            }
+            _menu.AddItem(new GUIContent("直接输入"), false, () => { _parameter.ParameterType = EParameterType.Simple; });
 
-            if ((_setting.AllowShowType & (int)AllowShowType.Variable) > 0)
-            {
-                _menu.AddItem(new GUIContent("自定义变量"), false, () => _currentShowType = AllowShowType.Variable);
-            }
+            _menu.AddItem(new GUIContent("自定义变量"), false,
+                () => { _parameter.ParameterType = EParameterType.Variable; });
 
-            if ((_setting.AllowShowType & (int)AllowShowType.Attr) > 0)
-            {
-                _menu.AddItem(new GUIContent("属性"), false, () => _currentShowType = AllowShowType.Attr);
-            }
+            _menu.AddItem(new GUIContent("属性"), false, () => { _parameter.ParameterType = EParameterType.Attr; });
 
             _menu.ShowAsContext();
         }
-
 
         public void Draw()
         {
             EditorGUILayout.BeginHorizontal();
             var old = EditorGUIUtility.labelWidth;
-            if (GUILayout.Button("▼", GUILayout.Width(22)))
+
+            if (_type.GetParameterValueType() != EParameterValueType.Custom)
             {
-                showMenu();
+                if (GUILayout.Button("▼", GUILayout.Width(22)))
+                {
+                    showMenu();
+                }
             }
 
-            EditorGUILayout.LabelField(new GUIContent(_setting.ParamName), GUILayout.Width(60));
+            EditorGUILayout.LabelField(new GUIContent(_paramName), GUILayout.Width(60));
 
-            switch (_currentShowType)
+            switch (_parameter.ParameterType)
             {
-                case AllowShowType.BaseValue:
+                case EParameterType.Simple:
                     baseDraw();
                     break;
-                case AllowShowType.Function:
+                case EParameterType.Function:
                     functionDraw();
                     break;
-                case AllowShowType.Variable:
+                case EParameterType.Variable:
                     variableDraw();
                     break;
-                case AllowShowType.Attr:
+                case EParameterType.Attr:
                     attrDraw();
                     break;
             }
@@ -144,42 +106,56 @@ namespace Editor.AbilityEditor
 
         private void functionDraw()
         {
-            if (SirenixEditorGUI.Button("调用函数" + _parameter.FuncName, ButtonSizes.Medium))
+            string text = "";
+            if (string.IsNullOrEmpty(_parameter.FuncName))
             {
-                //打开函数窗口
+                text = "未选择函数";
             }
+            else
+            {
+                text = "调用函数" + _parameter.FuncName;
+            }
+
+            if (SirenixEditorGUI.Button(text, ButtonSizes.Medium)) { }
         }
 
         private void baseDraw()
         {
             //变量名加按钮
-            switch (_setting.ValueType)
+            switch (_type.GetParameterValueType())
             {
                 case EParameterValueType.Int:
+                    _parameter.Value ??= new RefInt();
                     _parameter.Value = SirenixEditorFields.IntField((RefInt)_parameter.Value);
                     break;
                 case EParameterValueType.Float:
+                    _parameter.Value ??= new RefFloat();
                     _parameter.Value = SirenixEditorFields.FloatField((RefFloat)_parameter.Value);
                     break;
                 case EParameterValueType.Bool:
+                    _parameter.Value ??= new RefBool();
                     string select = ((RefBool)_parameter.Value).ToString();
                     _parameter.Value =
                         SirenixEditorFields.Dropdown(new GUIContent(""), select, new[] { "true", "false" });
                     _parameter.Value = bool.Parse(select);
                     break;
                 case EParameterValueType.String:
+                    _parameter.Value ??= "";
                     _parameter.Value = SirenixEditorFields.TextField((string)_parameter.Value);
                     break;
+                case EParameterValueType.Enum:
+                    _parameter.Value ??= _type.InstantiateDefault(true);
+                    _parameter.Value = SirenixEditorFields.EnumDropdown((Enum)_parameter.Value);
+                    break;
                 case EParameterValueType.Custom:
-                    var type = _parameter.Value.GetType();
-                    if (SirenixEditorGUI.Button(type.Name, ButtonSizes.Medium))
+                    _parameter.Value ??= _type.InstantiateDefault(true);
+                    if (SirenixEditorGUI.Button("编辑：" + _type.Name, ButtonSizes.Medium))
                     {
-                        //打开序列化窗口
+                        SerializableOdinWindow.Open(_parameter.Value, _type, (data) => _parameter.Value = data);
                     }
-
                     break;
                 default:
-                    EditorGUILayout.LabelField($"还未实现{_setting.ValueType}");
+                    EditorGUILayout.LabelField($"还未实现{_type}");
                     break;
             }
         }
@@ -188,6 +164,7 @@ namespace Editor.AbilityEditor
         {
             if (SirenixEditorGUI.Button("使用属性" + _parameter.AttrType, ButtonSizes.Medium))
             {
+                _dropDownRect = GUILayoutUtility.GetLastRect();
                 _dropDownList.Clear();
                 //获取属性列表
             }
@@ -197,6 +174,7 @@ namespace Editor.AbilityEditor
         {
             if (SirenixEditorGUI.Button("使用变量" + _parameter.AttrType, ButtonSizes.Medium))
             {
+                _dropDownRect = GUILayoutUtility.GetLastRect();
                 _dropDownList.Clear();
                 //获取变量列表
             }

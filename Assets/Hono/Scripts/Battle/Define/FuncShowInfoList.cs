@@ -62,10 +62,10 @@ namespace Hono.Scripts.Battle
 
             foreach (var method in methods)
             {
-                AbilityFuncCache attr = null;
-                foreach (var obj in  method.GetCustomAttributes(typeof(AbilityFuncCache), false))
+                AbilityMethod attr = null;
+                foreach (var obj in  method.GetCustomAttributes(typeof(AbilityMethod), false))
                 {
-                    if (obj is AbilityFuncCache cache)
+                    if (obj is AbilityMethod cache)
                     {
                         attr = cache;
                     }
@@ -81,19 +81,14 @@ namespace Hono.Scripts.Battle
 
                 var funcShowInfo = new FuncShowInfo();
                 funcShowInfo.FuncName = method.Name;
-                funcShowInfo.FuncDesc = attr.FuncDesc;
                 funcShowInfo.ReturnType = method.ReturnType.ToString();
-                funcShowInfo.OverloadTag = attr.OverLoadedTag;
                 int idx = 0;
                 foreach (var parameter in method.GetParameters())
                 {
                     var param = new ParamShowInfo();
                     param.Type = parameter.ParameterType.ToString();
                     param.Name = parameter.Name;
-                    if (attr.ParamDesc.Length == method.GetParameters().Length)
-                    {
-                        param.Desc = attr.ParamDesc[idx++];
-                    }
+                   
                     funcShowInfo.Params.Add(param);
                 }
                 funcList.Add(funcShowInfo);
