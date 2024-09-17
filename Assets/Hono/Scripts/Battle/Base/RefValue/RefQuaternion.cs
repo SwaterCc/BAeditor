@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Quaternion = System.Numerics.Quaternion;
 
 namespace Hono.Scripts.Battle.RefValue
 {
@@ -30,10 +29,10 @@ namespace Hono.Scripts.Battle.RefValue
 
         public RefQuaternion(Quaternion quaternion)
         {
-            x = quaternion.X;
-            y = quaternion.Y;
-            z = quaternion.Z;
-            w = quaternion.W;
+            x = quaternion.x;
+            y = quaternion.y;
+            z = quaternion.z;
+            w = quaternion.w;
         }
 
         // 将当前实例转换为 Quaternion
@@ -45,10 +44,10 @@ namespace Hono.Scripts.Battle.RefValue
         // 从 Quaternion 更新当前实例
         public void FromQuaternion(Quaternion quaternion)
         {
-            x = quaternion.X;
-            y = quaternion.Y;
-            z = quaternion.Z;
-            w = quaternion.W;
+            x = quaternion.x;
+            y = quaternion.y;
+            z = quaternion.z;
+            w = quaternion.w;
         }
 
         // 重载运算符，用于隐式转换
@@ -66,14 +65,6 @@ namespace Hono.Scripts.Battle.RefValue
         public static RefQuaternion operator *(RefQuaternion a, RefQuaternion b)
         {
             return new RefQuaternion(a.ToQuaternion() * b.ToQuaternion());
-        }
-
-        // 方法：四元数与标量乘法
-        public static RefQuaternion operator *(RefQuaternion a, float scalar)
-        {
-            Quaternion q = new Quaternion(a.x, a.y, a.z, a.w);
-            q *= scalar;
-            return new RefQuaternion(q);
         }
 
         // 方法：四元数逆

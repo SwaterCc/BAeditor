@@ -139,20 +139,46 @@ namespace Editor.AbilityEditor.TreeItem
         {
             SirenixEditorGUI.BeginBox();
 
+            _nodeData.IsEvent = SirenixEditorFields.Dropdown(new GUIContent("选择类型："), _nodeData.IsEvent, new[] { true, false },
+                new[] { "事件", "消息" });
+
+            if (_nodeData.IsEvent)
+            {
+                showEvent();
+            }
+            else
+            {
+                showMsg();
+            }
+      
+            SirenixEditorGUI.EndBox();
+        }
+
+        private void showMsg()
+        {
+            _nodeData.MsgName = SirenixEditorFields.TextField("消息Key：", _nodeData.MsgName);
+            if (SirenixEditorGUI.Button("保  存", ButtonSizes.Medium))
+            {
+                Save();
+            }
+        }
+
+        private void showEvent()
+        {
             _nodeData.EventType = (EBattleEventType)SirenixEditorFields.EnumDropdown("事件类型", _nodeData.EventType);
-
-
+            
+            if (_curEvent != _nodeData.EventType)
+            {
+                initParameter();
+                _curEvent = _nodeData.EventType;
+            }
+            
             if (_curEvent == EBattleEventType.NoInit || string.IsNullOrEmpty(_nodeData.CreateChecker.FuncName))
             {
                 EditorGUILayout.LabelField("未初始化，请选择事件类型");
             }
             else
             {
-                if (_curEvent != _nodeData.EventType)
-                {
-                     initParameter();
-                }
-
                 if (_parameterFields.Count == 0)
                 {
                     EditorGUILayout.LabelField("未找到参数");
@@ -178,8 +204,6 @@ namespace Editor.AbilityEditor.TreeItem
                     SirenixEditorGUI.EndBox();
                 }
             }
-      
-            SirenixEditorGUI.EndBox();
         }
     }
 }

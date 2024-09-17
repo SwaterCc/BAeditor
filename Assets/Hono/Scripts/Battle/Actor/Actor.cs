@@ -58,6 +58,8 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private readonly AttrCollection _attrs;
 
+        private readonly MessageCollection _message;
+
         /// <summary>
         /// tag
         /// </summary>
@@ -75,6 +77,7 @@ namespace Hono.Scripts.Battle
             _rtState = new ActorRTState();
             _attrs = new AttrCollection(this, AttrCreator.Create);
             _abilityController = new AbilityController(this);
+            _message = new MessageCollection(this);
             Variables = new VarCollection(this, 128);
         }
 
@@ -101,6 +104,7 @@ namespace Hono.Scripts.Battle
         {
             Logic?.Init();
             _show?.Init();
+            _message.Init();
         }
 
         /// <summary>
@@ -129,12 +133,23 @@ namespace Hono.Scripts.Battle
         {
             _show.Destroy();
             Logic.Destroy();
+            _message.UnInit();
         }
 
         #endregion
 
         #region 对外接口
 
+        public void AddMsgListener(MessageListener listener)
+        {
+            _message.AddListener(listener);
+        }
+        
+        public void RemoveMsgListener(MessageListener listener)
+        {
+            _message.RemoveListener(listener);
+        }
+        
         public T GetAttr<T>(int logicAttr)
         {
 	        return _attrs.GetAttr<T>(logicAttr);
@@ -195,6 +210,11 @@ namespace Hono.Scripts.Battle
             return _tags.HasTag(tag);
         }
 
+        public void RemoveTag(int tag)
+        {
+            _tags.Remove(tag);
+        }
+        
         public bool HasAttr(ELogicAttr attr)
         {
             return _attrs.HasAttr(attr.ToInt());

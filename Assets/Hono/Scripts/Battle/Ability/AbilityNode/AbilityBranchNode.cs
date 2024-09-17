@@ -39,25 +39,6 @@ namespace Hono.Scripts.Battle
 
                 Parent.IfInfos[_branchNode.BranchGroup] = _conditionRes;
             }
-
-            private bool getCompareRes(ECompareResType compareResType, int flag)
-            {
-                switch (compareResType)
-                {
-                    case ECompareResType.Less:
-                        return flag < 0;
-                    case ECompareResType.LessAndEqual:
-                        return flag <= 0;
-                    case ECompareResType.Equal:
-                        return flag == 0;
-                    case ECompareResType.More:
-                        return flag > 0;
-                    case ECompareResType.MoreAndEqual:
-                        return flag >= 0;
-                }
-
-                return true;
-            }
         }
     }
 }

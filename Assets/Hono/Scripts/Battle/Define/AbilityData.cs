@@ -177,8 +177,10 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class EventNodeData : AbilityNodeData
     {
+        public bool IsEvent;
         public EBattleEventType EventType;
         public Parameter CreateChecker = new();
+        public string MsgName;
     }
 
     [Serializable]

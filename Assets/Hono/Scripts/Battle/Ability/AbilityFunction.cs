@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Runtime.InteropServices.ComTypes;
 using Hono.Scripts.Battle.Event;
@@ -45,7 +46,7 @@ namespace Hono.Scripts.Battle
             Convert(flagStr + msg, p1, p2, p3);
 #endif
         }
-        
+
         [AbilityMethod(false)]
         public static EventChecker GetEmptyChecker(EBattleEventType eventType)
         {
@@ -96,7 +97,24 @@ namespace Hono.Scripts.Battle
             ActorManager.Instance.AddActor(hitBox);
         }*/
 
-        
+        [AbilityMethod]
+        public static void SendMsg(int actorUid, string msg, object p1, object p2, object p3, object p4, object p5)
+        {
+            if (tryGetActor(actorUid, out var actor))
+            {
+                var msgCache = new MsgCache()
+                {
+                    MsgKey =  msg,
+                    P1 = p1,
+                    P2 = p2,
+                    P3 = p3,
+                    P4 = p4,
+                    P5 = p5,
+                };
+                MessageCenter.Instance.AddMsg(actor.Uid, msgCache);
+            }
+        }
+
         [AbilityMethod]
         public static void ExecuteAbility(int actorUid, int configId)
         {
@@ -151,21 +169,7 @@ namespace Hono.Scripts.Battle
                 comp.RemoveByConfigId(buffId);
             }
         }
-        
-        [AbilityMethod]
-        public static int CalculateInt(int left, ECalculateType calculateType, int right)
-        {
-            Debug.LogWarning("CalculateInt没实现");
-            return 0;
-        }
-        
-        [AbilityMethod]
-        public static int CalculateFloat(float left, ECalculateType calculateType, float right)
-        {
-            Debug.LogWarning("CalculateFloat没实现");
-            return 0;
-        }
-        
+
         [AbilityMethod]
         public static int GetListCount(List<int> list)
         {
@@ -197,61 +201,98 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
+        public static int CalculateInt(int left, ECalculateType calculateType, int right)
+        {
+            switch (calculateType)
+            {
+                case ECalculateType.Add:
+                    return left + right;
+                case ECalculateType.Subtract:
+                    return left - right;
+                case ECalculateType.Multiply:
+                    return left * right;
+                case ECalculateType.Divide:
+                    return right == 0 ? 0 : left / right;
+            }
+
+            return 0;
+        }
+
+        [AbilityMethod]
+        public static float CalculateFloat(float left, ECalculateType calculateType, float right)
+        {
+            switch (calculateType)
+            {
+                case ECalculateType.Add:
+                    return left + right;
+                case ECalculateType.Subtract:
+                    return left - right;
+                case ECalculateType.Multiply:
+                    return left * right;
+                case ECalculateType.Divide:
+                    return right == 0 ? 0 : left / right;
+            }
+
+            return 0;
+        }
+
+        [AbilityMethod]
+        public static bool And(bool a, bool b) => a && b;
+
+        [AbilityMethod]
+        public static bool Or(bool a, bool b) => a || b;
+
+        [AbilityMethod]
         public static bool CompareInt(int right, ECompareResType compareType, int left)
         {
-            
-            return true;
+            int res = right.CompareTo(left);
+            return getCompareRes(compareType, res);
         }
-        
+
         [AbilityMethod]
         public static bool CompareFloat(float right, ECompareResType compareType, float left)
         {
-            
-            return true;
+            int res = right.CompareTo(left);
+            return getCompareRes(compareType, res);
         }
 
         #region 数学函数
 
+        [AbilityMethod]
         public static object FloatAdd(float a, float b) => a + b;
 
-
+        [AbilityMethod]
         public static int IntAdd(int a, int b) => a + b;
 
-
+        [AbilityMethod]
         public static float FloatSubtract(float a, float b) => a - b;
 
-
+        [AbilityMethod]
         public static int IntSubtract(int a, int b) => a - b;
 
-
+        [AbilityMethod]
         public static float FloatMultiply(float a, float b) => a * b;
 
-
+        [AbilityMethod]
         public static int IntMultiply(int a, int b) => a * b;
 
-
+        [AbilityMethod]
         public static float FloatDivide(float a, float b) => a / b;
 
-
+        [AbilityMethod]
         public static int IntDivide(int a, int b) => a / b;
 
-
+        [AbilityMethod]
         public static int IntSelfAdditive(int a) => ++a;
 
-
+        [AbilityMethod]
         public static float FloatSelfAdditive(float a) => ++a;
 
-
+        [AbilityMethod]
         public static int IntSelfSubtracting(int a) => --a;
 
-
+        [AbilityMethod]
         public static float FloatSelfSubtracting(float a) => --a;
-
-
-        public static bool And(bool a, bool b) => a && b;
-
-
-        public static bool Or(bool a, bool b) => a || b;
 
         #endregion
     }
@@ -283,41 +324,23 @@ namespace Hono.Scripts.Battle
             return true;
         }
 
-        private static VarCollection getVariablesByUid(EVariableRange range, int actorUid, int abilityUid)
+        private static bool getCompareRes(ECompareResType compareResType, int flag)
         {
-            switch (range)
+            switch (compareResType)
             {
-                case EVariableRange.Battleground:
-                    return BattleRoot.BattleMode.Variables;
-                case EVariableRange.Actor:
-                {
-                    if (tryGetActor(actorUid, out var actor))
-                    {
-                        return actor.Variables;
-                    }
-
-                    break;
-                }
-                case EVariableRange.Ability:
-                {
-                    if (tryGetActor(actorUid, out var actor))
-                    {
-                        if (actorUid <= 0)
-                        {
-                            return Ability.Context.Invoker.Variables;
-                        }
-
-                        if (actor.TryGetAbility(abilityUid, out var ability))
-                        {
-                            return ability.Variables;
-                        }
-                    }
-
-                    return null;
-                }
+                case ECompareResType.Less:
+                    return flag < 0;
+                case ECompareResType.LessAndEqual:
+                    return flag <= 0;
+                case ECompareResType.Equal:
+                    return flag == 0;
+                case ECompareResType.More:
+                    return flag > 0;
+                case ECompareResType.MoreAndEqual:
+                    return flag >= 0;
             }
 
-            return null;
+            return true;
         }
     }
 }

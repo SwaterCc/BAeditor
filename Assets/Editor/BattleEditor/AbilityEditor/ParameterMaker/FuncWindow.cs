@@ -32,6 +32,18 @@ namespace Editor.AbilityEditor
             _valueType = valueType;
             _onSave = onSave;
             _parameterFields = new List<ParameterField>();
+
+            if (!string.IsNullOrEmpty(_function.FuncName))
+            {
+                var funcInfo = AbilityFunctionHelper.GetFuncInfo(_function.FuncName);
+                for (var index = 0; index < _function.FuncParams.Count; index++)
+                {
+                    var funcParam = _function.FuncParams[index];
+                    var paramInfo = funcInfo.ParamInfos[index];
+                    _parameterFields.Add(new ParameterField(funcParam, paramInfo.ParamName, paramInfo.ParamType));
+                }
+            }
+            
             _funcTree = new FunctionView(new TreeViewState(), this, _function.FuncName, AbilityFunctionHelper.GetFuncInfosByType(_valueType));
         }
         

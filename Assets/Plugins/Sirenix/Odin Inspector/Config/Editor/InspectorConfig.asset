@@ -13,7 +13,249 @@ MonoBehaviour:
   m_Name: InspectorConfig
   m_EditorClassIdentifier: 
   enableOdinInInspector: 1
-  defaultEditorBehaviour: 11
+  defaultEditorBehaviour: 9
   processMouseMoveInInspector: 1
   drawingConfig:
-    configs: []
+    configs:
+    - DrawnTypeName: LinkXmlGen, Assembly-CSharp-Editor
+      EditorTypeName: 
+    - DrawnTypeName: LuaCallCs, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: MonoBehaviourCallbackHooks, Unity.ResourceManager
+      EditorTypeName: 
+    - DrawnTypeName: TimelinePreferences, Unity.Timeline.Editor
+      EditorTypeName: 
+    - DrawnTypeName: TimelineProjectSettings, Unity.Timeline.Editor
+      EditorTypeName: 
+    - DrawnTypeName: Packages.Rider.Editor.RiderScriptEditorData, Unity.Rider.Editor
+      EditorTypeName: 
+    - DrawnTypeName: Packages.Rider.Editor.RiderScriptEditorPersistedState, Unity.Rider.Editor
+      EditorTypeName: 
+    - DrawnTypeName: Packages.Rider.Editor.UnitTesting.CallbackData, Unity.Rider.Editor
+      EditorTypeName: 
+    - DrawnTypeName: Packages.Rider.Editor.UnitTesting.SyncTestRunEventsHandler,
+        Unity.Rider.Editor
+      EditorTypeName: 
+    - DrawnTypeName: Packages.Rider.Editor.UnitTesting.TestsCallback, Unity.Rider.Editor
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.AttributeProcessorForListItemsExample,
+        Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.AttributeProcessorPriorityExample,
+        Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.Bar, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.BasicAttributeProcessorExample,
+        Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.CustomAttributeProcessorLocatorExample,
+        Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.CustomGroupExample, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.CustomizeDictionaryKeyValueExample,
+        Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.Foo, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.GenericDrawerExample, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.GenericMenuExample, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.HealthBarExample, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.InstancedDrawerExample, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.MinesweeperExample, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.PriorityExamples, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.PutAttributesOnAnyType, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.ReflectionExample, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.SelfAndChildrenExample, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.TabGroupByDeclaringType, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.ValidationExample, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.ValueAndActionResolversExample,
+        Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.RPGEditor.Armor, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.RPGEditor.Character, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.RPGEditor.CharacterOverview, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.RPGEditor.ConsumableItem, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: Sirenix.OdinInspector.Demos.RPGEditor.WeaponItem, Assembly-CSharp-firstpass
+      EditorTypeName: 
+    - DrawnTypeName: TestRunner.Callbacks.WindowResultUpdaterDataHolder, UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: TMPro.TMP_Dropdown+DropdownItem, Unity.TextMeshPro
+      EditorTypeName: 
+    - DrawnTypeName: TMPro.TMP_ScrollbarEventHandler, Unity.TextMeshPro
+      EditorTypeName: 
+    - DrawnTypeName: TMPro.TMP_SelectionCaret, Unity.TextMeshPro
+      EditorTypeName: 
+    - DrawnTypeName: TMPro.TMP_SerializedPropertyHolder, Unity.TextMeshPro.Editor
+      EditorTypeName: 
+    - DrawnTypeName: TMPro.TMP_SpriteAnimator, Unity.TextMeshPro
+      EditorTypeName: 
+    - DrawnTypeName: Tutorial.ByFile, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Tutorial.ByString, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Tutorial.CSCallLua, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Tutorial.CustomLoader, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Unity.AI.Navigation.Editor.NavMeshAssetManager, Unity.AI.Navigation.Editor
+      EditorTypeName: Sirenix.OdinInspector.Editor.OdinEditor, Sirenix.OdinInspector.Editor
+    - DrawnTypeName: Unity.VisualScripting.AnimatorMessageListener, Unity.VisualScripting.Core
+      EditorTypeName: 
+    - DrawnTypeName: Unity.VisualScripting.CoroutineRunner, Unity.VisualScripting.Core
+      EditorTypeName: 
+    - DrawnTypeName: Unity.VisualScripting.SceneVariables, Unity.VisualScripting.Core
+      EditorTypeName: 
+    - DrawnTypeName: Unity.VisualScripting.VariablesSaver, Unity.VisualScripting.Core
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.AddressableAssetSettingsDefaultObject,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Build.DataBuilders.BuildScriptBase,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Build.DataBuilders.BuildScriptFastMode,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Build.DataBuilders.BuildScriptPackedMode,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Build.DataBuilders.BuildScriptPackedPlayMode,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Build.DataBuilders.BuildScriptVirtualMode,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Settings.AddressableAssetGroupSchema,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Settings.CacheInitializationSettings,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Settings.ProfileDataSourceSettings,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Settings.GroupSchemas.BundledAssetGroupSchema,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Settings.GroupSchemas.ContentUpdateGroupSchema,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.AddressableAssets.Settings.GroupSchemas.PlayerDataGroupSchema,
+        Unity.Addressables.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestRunner.TestLaunchers.RemotePlayerLogController,
+        UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestRunner.TestLaunchers.RemoteTestRunController,
+        UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.CodeCoverage.CoverageEventData, Unity.TestTools.CodeCoverage.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.CodeCoverage.CoverageReporterListener,
+        Unity.TestTools.CodeCoverage.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.CodeCoverage.CoverageRunData, Unity.TestTools.CodeCoverage.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.CodeCoverage.Analytics.CoverageAnalytics,
+        Unity.TestTools.CodeCoverage.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.EditModeLauncher+BackgroundListener,
+        UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.EditModeRunner, UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.EditModeRunnerCallback, UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.RerunCallback, UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.RerunCallbackData, UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.TestListCacheData, UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.TestRunnerCallback, UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.Api.CallbacksDelegatorListener,
+        UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.Api.CallbacksHolder, UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.Api.TestRunnerApi, UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.CommandLineTest.ExitCallbacks,
+        UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.CommandLineTest.ExitCallbacksDataHolder,
+        UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.CommandLineTest.LogSavingCallbacks,
+        UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.CommandLineTest.ResultsSavingCallbacks,
+        UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.CommandLineTest.RunData, UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.TestTools.TestRunner.TestRun.TestJobDataHolder,
+        UnityEditor.TestRunner
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.Timeline.TimelineWindow+DoCreateTimeline, Unity.Timeline.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.Timeline.SequenceHierarchy, Unity.Timeline.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.Timeline.TimelineAssetViewModel, Unity.Timeline.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.Timeline.TimelineWindowTimeControl, Unity.Timeline.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.Timeline.Signals.SignalAssetInspector+DoCreateSignalAsset,
+        Unity.Timeline.Editor
+      EditorTypeName: 
+    - DrawnTypeName: UnityEditor.Timeline.Signals.SignalReceiverItem+UnityEventCloner,
+        Unity.Timeline.Editor
+      EditorTypeName: 
+    - DrawnTypeName: XLua.TemplateRef, Assembly-CSharp-Editor
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.AsyncTest, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.Coroutine_Runner, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.CoroutineTest, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.GenericMethodExample, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.Helloworld, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.HotfixTest, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.HotfixTest2, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.InvokeLua, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.LuaBehaviour, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.MessageBox, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.NoGc, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.RawObjectTest, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.ReImplementInLua, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: XLuaTest.SignatureLoaderTest, Assembly-CSharp
+      EditorTypeName: 

@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle
         {
             private EventChecker _checker;
             private EventNodeData _eventNodeData;
-
+            private MessageListener _messageListener;
             public AbilityEventNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
             {
                 _eventNodeData = (EventNodeData)_data;
@@ -19,19 +19,34 @@ namespace Hono.Scripts.Battle
 
             public void RegisterEvent()
             {
-                if (!_eventNodeData.CreateChecker.Parse(out _checker))
+                if (_eventNodeData.IsEvent)
                 {
-                    Debug.LogError("Event节点执行失败");
-                    return;
-                }
+                    if (!_eventNodeData.CreateChecker.Parse(out _checker))
+                    {
+                        Debug.LogError("Event节点执行失败");
+                        return;
+                    }
                 
-                _checker.BindFunc(onEventFired);
-                BattleEventManager.Instance.Register(_checker);
+                    _checker.BindFunc(onEventFired);
+                    BattleEventManager.Instance.Register(_checker);
+                }
+                else
+                {
+                    _messageListener = new MessageListener(_eventNodeData.MsgName, onMsgCall);
+                    _executor.Ability.Actor.AddMsgListener(_messageListener);
+                }
             }
 
             public void UnRegisterEvent()
             {
-                _checker.UnRegister();
+                if (_eventNodeData.IsEvent)
+                {
+                    _checker.UnRegister();
+                }
+                else
+                {
+                    _executor.Ability.Actor.AddMsgListener(_messageListener);
+                }
             }
 
             private void onEventFired(IEventInfo eventInfo)
@@ -41,6 +56,23 @@ namespace Hono.Scripts.Battle
 	            DoChildrenJob();
                 eventInfo.ClearFields(_executor.Ability);
 	            _context.ClearContext();
+            }
+
+            private void onMsgCall(object p1,object p2,object p3,object p4,object p5)
+            {
+                _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
+                _executor.Ability.Variables.Set("P1",p1);
+                _executor.Ability.Variables.Set("P2",p2);
+                _executor.Ability.Variables.Set("P3",p3);
+                _executor.Ability.Variables.Set("P4",p4);
+                _executor.Ability.Variables.Set("P5",p5);
+                DoChildrenJob();
+                _executor.Ability.Variables.Delete("P1");
+                _executor.Ability.Variables.Delete("P2");
+                _executor.Ability.Variables.Delete("P3");
+                _executor.Ability.Variables.Delete("P4");
+                _executor.Ability.Variables.Delete("P5");
+                _context.ClearContext();
             }
 
             public override void DoJob() { }

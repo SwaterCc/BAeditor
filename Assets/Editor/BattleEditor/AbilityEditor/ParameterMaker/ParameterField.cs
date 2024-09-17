@@ -66,6 +66,8 @@ namespace Editor.AbilityEditor
             EditorGUILayout.BeginHorizontal();
             var old = EditorGUIUtility.labelWidth;
 
+            EditorGUILayout.LabelField(new GUIContent(_paramName), GUILayout.Width(100));
+            
             if (_type.GetParameterValueType() != EParameterValueType.Custom)
             {
                 if (GUILayout.Button("▼", GUILayout.Width(22)))
@@ -73,9 +75,11 @@ namespace Editor.AbilityEditor
                     showMenu();
                 }
             }
-
-            EditorGUILayout.LabelField(new GUIContent(_paramName), GUILayout.Width(60));
-
+            else
+            {
+                EditorGUILayout.LabelField("",GUILayout.Width(22));
+            }
+            
             switch (_parameter.ParameterType)
             {
                 case EParameterType.Simple:
@@ -118,7 +122,9 @@ namespace Editor.AbilityEditor
 
             if (SirenixEditorGUI.Button(text, ButtonSizes.Medium))
             {
-                FuncWindow.Open(_parameter, _type.GetParameterValueType(), (parameter) => _parameter = parameter);
+                _dropDownRect = GUIHelper.GetCurrentLayoutRect();
+                var funcWindow = FuncWindow.Open(_parameter, _type.GetParameterValueType(), (parameter) => _parameter = parameter);
+                funcWindow.position = new Rect(_dropDownRect.position, new Vector2(680, 500));
             }
         }
 
@@ -128,19 +134,19 @@ namespace Editor.AbilityEditor
             switch (_type.GetParameterValueType())
             {
                 case EParameterValueType.Int:
-                    _parameter.Value ??= new RefInt();
-                    _parameter.Value = (RefInt)SirenixEditorFields.IntField((RefInt)_parameter.Value);
+                    _parameter.Value ??= new int();
+                    _parameter.Value = SirenixEditorFields.IntField((int)_parameter.Value);
                     break;
                 case EParameterValueType.Float:
-                    _parameter.Value ??= new RefFloat();
-                    _parameter.Value = (RefFloat)SirenixEditorFields.FloatField((RefFloat)_parameter.Value);
+                    _parameter.Value ??= new float();
+                    _parameter.Value = SirenixEditorFields.FloatField((float)_parameter.Value);
                     break;
                 case EParameterValueType.Bool:
-                    _parameter.Value ??= new RefBool();
-                    string select = (((RefBool)_parameter.Value).Value).ToString();
+                    _parameter.Value ??= new bool();
+                    string select = ((bool)_parameter.Value).ToString();
                     select =
                         SirenixEditorFields.Dropdown(new GUIContent(""), select, new[] { "true", "false" });
-                    _parameter.Value = (RefBool)(bool.Parse(select));
+                    _parameter.Value = bool.Parse(select);
                     break;
                 case EParameterValueType.String:
                     _parameter.Value ??= "";
