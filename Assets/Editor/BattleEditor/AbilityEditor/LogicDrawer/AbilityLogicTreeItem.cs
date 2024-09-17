@@ -152,6 +152,7 @@ namespace Editor.AbilityEditor
             node.ParentId = _nodeData.NodeId;
             node.Depth = _nodeData.Depth + 1;
             _nodeData.ChildrenIds.Add(node.NodeId);
+            _tree.TreeData.NodeDict.Add(node.NodeId, node);
             EditorUtility.SetDirty(_tree.TreeData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

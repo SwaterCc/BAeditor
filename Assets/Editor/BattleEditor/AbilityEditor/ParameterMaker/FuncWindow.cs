@@ -100,7 +100,9 @@ namespace Editor.AbilityEditor
 
             if (string.IsNullOrEmpty(_function.FuncName))
             {
+                SirenixEditorGUI.BeginBox();
                 EditorGUILayout.LabelField("未选择函数！");
+                SirenixEditorGUI.EndBox();
             }
             else
             {
@@ -122,9 +124,9 @@ namespace Editor.AbilityEditor
                     _onSave.Invoke(_function);
                     Close();
                 }
+                SirenixEditorGUI.EndBox();
             }
-
-            SirenixEditorGUI.EndBox();
+            
             EditorGUILayout.EndVertical();
         }
     }

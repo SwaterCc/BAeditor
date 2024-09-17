@@ -55,7 +55,7 @@ namespace Hono.Scripts.Battle
             switch (type)
             {
                 case EAbilityNodeType.EAbilityCycle:
-                    nodeData = new ActionNodeData();
+                    nodeData = new CycleNodeData();
                     break;
                 case EAbilityNodeType.EEvent:
                     nodeData = new EventNodeData();

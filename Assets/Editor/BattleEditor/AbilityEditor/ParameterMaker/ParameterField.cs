@@ -15,7 +15,7 @@ namespace Editor.AbilityEditor
     public class ParameterField
     {
         private readonly GenericMenu _menu;
-        private readonly Parameter _parameter;
+        private Parameter _parameter;
         private string _searchString;
         private Vector2 _dropDownPos;
         private bool _showDropDown;
@@ -116,7 +116,10 @@ namespace Editor.AbilityEditor
                 text = "调用函数" + _parameter.FuncName;
             }
 
-            if (SirenixEditorGUI.Button(text, ButtonSizes.Medium)) { }
+            if (SirenixEditorGUI.Button(text, ButtonSizes.Medium))
+            {
+                FuncWindow.Open(_parameter, _type.GetParameterValueType(), (parameter) => _parameter = parameter);
+            }
         }
 
         private void baseDraw()
@@ -126,18 +129,18 @@ namespace Editor.AbilityEditor
             {
                 case EParameterValueType.Int:
                     _parameter.Value ??= new RefInt();
-                    _parameter.Value = SirenixEditorFields.IntField((RefInt)_parameter.Value);
+                    _parameter.Value = (RefInt)SirenixEditorFields.IntField((RefInt)_parameter.Value);
                     break;
                 case EParameterValueType.Float:
                     _parameter.Value ??= new RefFloat();
-                    _parameter.Value = SirenixEditorFields.FloatField((RefFloat)_parameter.Value);
+                    _parameter.Value = (RefFloat)SirenixEditorFields.FloatField((RefFloat)_parameter.Value);
                     break;
                 case EParameterValueType.Bool:
                     _parameter.Value ??= new RefBool();
-                    string select = ((RefBool)_parameter.Value).ToString();
-                    _parameter.Value =
+                    string select = (((RefBool)_parameter.Value).Value).ToString();
+                    select =
                         SirenixEditorFields.Dropdown(new GUIContent(""), select, new[] { "true", "false" });
-                    _parameter.Value = bool.Parse(select);
+                    _parameter.Value = (RefBool)(bool.Parse(select));
                     break;
                 case EParameterValueType.String:
                     _parameter.Value ??= "";

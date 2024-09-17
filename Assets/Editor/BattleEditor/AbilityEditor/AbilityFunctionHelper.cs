@@ -25,12 +25,9 @@ namespace Editor.BattleEditor.AbilityEditor
             public Type ParamType;
         }
         
-        private static readonly Dictionary<string, FuncInfo> _funcInfoDict = new();
+        private static Dictionary<string, FuncInfo> _funcInfoDict;
 
-        private static readonly Dictionary<EParameterValueType, List<FuncInfo>> _funcInfoTypeDict = new()
-        {
-            { EParameterValueType.Any, new List<FuncInfo>() }
-        };
+        private static Dictionary<EParameterValueType, List<FuncInfo>> _funcInfoTypeDict;
         
         public static FuncInfo GetFuncInfo(string funcName)
         {
@@ -39,6 +36,12 @@ namespace Editor.BattleEditor.AbilityEditor
         
         public static bool TryGetFuncInfo(string funcName,out FuncInfo funcInfo)
         {
+            funcInfo = null;
+            if (string.IsNullOrEmpty(funcName))
+            {
+                return false;
+            }
+            
             return _funcInfoDict.TryGetValue(funcName, out funcInfo);
         }
 
@@ -134,6 +137,10 @@ namespace Editor.BattleEditor.AbilityEditor
 
         public static void Init()
         {
+            _funcInfoDict = new Dictionary<string, FuncInfo>();   
+            _funcInfoTypeDict = new();
+            _funcInfoTypeDict.Add(EParameterValueType.Any, new List<FuncInfo>());
+
             Type type = typeof(AbilityFunction);
 
             MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
