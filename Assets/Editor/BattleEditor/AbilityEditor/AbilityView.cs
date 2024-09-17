@@ -174,7 +174,7 @@ namespace Editor.AbilityEditor
                     if (drawer != null)
                         _cycleDrawer.Add(cycle, drawer);
                 }
-               
+                //AbilityView.VariableCollector.Clear();
                 drawer?.DrawCycle();
             }
 

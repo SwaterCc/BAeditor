@@ -18,6 +18,11 @@ namespace Editor.AbilityEditor.TreeItem
         public VariableTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
         {
             _nodeData = (VarSetterNodeData)base._nodeData;
+        }
+
+        public override void DrawItem(Rect lineRect)
+        {
+            base.DrawItem(lineRect);
             if (!string.IsNullOrEmpty(_nodeData.Name))
             {
                 AbilityView.VariableCollector.Add(AbilityFunctionHelper.GetVariableType(_nodeData.typeString),_nodeData.Name);
@@ -78,7 +83,7 @@ namespace Editor.AbilityEditor.TreeItem
         {
             SettingWindow = BaseNodeWindow<VarNodeDataWindow, VarSetterNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) => _nodeData = nodeData);
+                (nodeData) => _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData);
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
             SettingWindow.Show();
         }

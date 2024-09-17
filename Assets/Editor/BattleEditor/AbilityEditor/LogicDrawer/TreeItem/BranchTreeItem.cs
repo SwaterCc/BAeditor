@@ -76,7 +76,7 @@ namespace Editor.AbilityEditor.TreeItem
         {
             SettingWindow = BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>.GetSettingWindow(_tree.TreeData,
                 _branchNodeData,
-                (nodeData) => _branchNodeData = nodeData);
+                (nodeData) => _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData);
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
             SettingWindow.Show();
         }

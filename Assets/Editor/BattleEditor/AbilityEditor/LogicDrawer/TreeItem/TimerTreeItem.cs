@@ -58,7 +58,7 @@ namespace Editor.AbilityEditor.TreeItem
         {
             SettingWindow = BaseNodeWindow<TimerNodeDataWindow, TimerNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) => _nodeData = nodeData);
+                (nodeData) => _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData);
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
             SettingWindow.Show();
         }
