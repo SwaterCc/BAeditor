@@ -129,7 +129,7 @@ namespace Hono.Scripts.Battle.Event
             int sourceAbility = -1) :
             base(func)
         {
-            EventType = EBattleEventType.Hit;
+            EventType = EBattleEventType.OnHit;
             _belongActorId = belongActorId;
             _sourceAbility = sourceAbility;
         }
@@ -137,16 +137,16 @@ namespace Hono.Scripts.Battle.Event
         public override bool compare(IEventInfo info)
         {
             var res = true;
-            var hitInfo = (HitEventInfo)info;
+            var hitInfo = (HitInfo)info;
 
             if (_sourceAbility != -1)
             {
-                res = hitInfo.AbilityUId == _sourceAbility;
+                res = hitInfo.SourceAbilityConfigId == _sourceAbility;
             }
 
             if (_belongActorId != -1)
             {
-                res = (res && hitInfo.ActorId == _belongActorId);
+                res = (res && hitInfo.SourceActorId == _belongActorId);
             }
 
             return res;

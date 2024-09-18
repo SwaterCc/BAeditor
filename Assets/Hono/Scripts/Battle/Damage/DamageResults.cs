@@ -16,8 +16,6 @@
         /// 最终冲击力
         /// </summary>
         public float ImpactValue;
-
-        public bool IsImmunity;
         
         public DamageResults(float damageValue,bool isCritical,float finalImpactValue) {
 	        DamageValue = damageValue;

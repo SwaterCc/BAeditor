@@ -75,6 +75,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void OnBtnClicked(Rect btnRect)
         {
+            AbilityViewDrawer.NodeBtnClick(_nodeData);
             SettingWindow = BaseNodeWindow<EventNodeDataWindow, EventNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
                 (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
@@ -87,53 +88,27 @@ namespace Editor.AbilityEditor.TreeItem
 
     public class EventNodeDataWindow : BaseNodeWindow<EventNodeDataWindow,EventNodeData>, IAbilityNodeWindow<EventNodeData>
     {
-        private static readonly Dictionary<EBattleEventType, string> _eventCheckerDict = new();
-        
-        private static void initDict()
-        {
-            if (_eventCheckerDict.Count != 0) return;
-
-            foreach (var field in typeof(EBattleEventType).GetFields())
-            {
-                object[] attributes = field.GetCustomAttributes(typeof(EventCheckerBinder), false);
-
-                if (attributes.Length > 0)
-                {
-                    foreach (var attribute in attributes)
-                    {
-                        if (attribute is EventCheckerBinder binder)
-                        {
-                            // 获取枚举值
-                            var enumValue = (EBattleEventType)field.GetValue(null);
-                            _eventCheckerDict.Add(enumValue, binder.CreateFunc);
-                        }
-                    }
-                }
-            }
-        }
-
         private List<ParameterField> _parameterFields;
         private EBattleEventType _curEvent;
         protected override void onInit()
         {
-            initDict();
             _curEvent = _nodeData.EventType;
             _parameterFields = new List<ParameterField>();
         }
 
         private void initParameter()
         {
-            if (!_eventCheckerDict.TryGetValue(_nodeData.EventType, out var value))
+            if (!AbilityFunctionHelper.EventCheckerDict.TryGetValue(_nodeData.EventType, out var value))
             {
                 return;
             }
-            if (!AbilityFunctionHelper.TryGetFuncInfo(value, out var funcInfo))
+            if (!AbilityFunctionHelper.TryGetFuncInfo(value.CreateFuncName, out var funcInfo))
             {
                 return;
             }
 
             _nodeData.CreateChecker.ParameterType = EParameterType.Function;
-            _nodeData.CreateChecker.FuncName = value;
+            _nodeData.CreateChecker.FuncName = value.CreateFuncName;
             _nodeData.CreateChecker.FuncParams ??= new List<Parameter>();
             _nodeData.CreateChecker.FuncParams.Clear();
             foreach (var paramInfo in funcInfo.ParamInfos)
@@ -175,7 +150,8 @@ namespace Editor.AbilityEditor.TreeItem
 
         private void showEvent()
         {
-            _nodeData.EventType = (EBattleEventType)SirenixEditorFields.EnumDropdown("事件类型", _nodeData.EventType);
+            _nodeData.EventType = SirenixEditorFields.Dropdown(new GUIContent("事件类型"),
+                _nodeData.EventType, AbilityFunctionHelper.AllowEvent);
             
             if (_curEvent != _nodeData.EventType)
             {

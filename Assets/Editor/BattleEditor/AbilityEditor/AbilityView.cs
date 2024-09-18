@@ -29,7 +29,6 @@ namespace Editor.AbilityEditor
         
         public IExDrawer ExDrawer;
         
-        public static VariableCollector VariableCollector = new VariableCollector();
         public AbilityView(AbilityData abilityAbilityData)
         {
             AbilityData = abilityAbilityData;
@@ -44,7 +43,7 @@ namespace Editor.AbilityEditor
             }
             ExDrawer?.LoadAsset(AbilityData.ConfigId);
         }
-
+        
         public static void UpdateGroupId(AbilityData data)
         {
             foreach (var pair in data.NodeDict)
@@ -116,10 +115,27 @@ namespace Editor.AbilityEditor
         private Vector2 _scrollViewPos = Vector2.zero;
 
         private Dictionary<EAbilityAllowEditCycle, string> _cycleDesc;
+        
+        public static readonly VarCollector VarCollector = new();
 
+        public static AbilityData AbilityData { get; private set; }
+
+        public static AbilityNodeData BeforeClick { get; private set; }
+
+        public static void NodeBtnClick(in AbilityNodeData clickData)
+        {
+            if (clickData.NodeType != EAbilityNodeType.EAbilityCycle)
+            {
+                BeforeClick = clickData;
+            }
+        }
+        
         protected override void Initialize()
         {
             _cycleDrawer = new Dictionary<EAbilityAllowEditCycle, AbilityCycleDrawBase>();
+            AbilityData = ValueEntry.SmartValue.AbilityData;
+            VarCollector.SetAbilityData(AbilityData);
+            VarCollector.RefreshAllVariable();
         }
 
         private AbilityCycleDrawBase getDrawer(EAbilityAllowEditCycle type, AbilityData data)
@@ -163,7 +179,6 @@ namespace Editor.AbilityEditor
             SirenixEditorGUI.EndBox();
             
             itemShowView.ExDrawer?.Draw();
-            
             foreach (EAbilityAllowEditCycle cycle in Enum.GetValues(typeof(EAbilityAllowEditCycle)))
             {
                 if(cycle == EAbilityAllowEditCycle.OnReady) continue;
@@ -174,7 +189,7 @@ namespace Editor.AbilityEditor
                     if (drawer != null)
                         _cycleDrawer.Add(cycle, drawer);
                 }
-                //AbilityView.VariableCollector.Clear();
+                
                 drawer?.DrawCycle();
             }
 

@@ -58,6 +58,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void OnBtnClicked(Rect btnRect)
         {
+            AbilityViewDrawer.NodeBtnClick(_nodeData);
             SettingWindow = BaseNodeWindow<VarNodeDataWindow, VarSetterNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
                 (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
@@ -147,7 +148,10 @@ namespace Editor.AbilityEditor.TreeItem
             if (SirenixEditorGUI.Button("保   存", ButtonSizes.Large))
             {
                 if (_customCastSuccess)
+                {
+                    AbilityViewDrawer.VarCollector.RefreshAllVariable();
                     Save();
+                }
                 else
                 {
                     Debug.LogError("无法识别类型，无法保存");

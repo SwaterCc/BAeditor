@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.RefValue;
@@ -23,6 +24,7 @@ namespace Editor.AbilityEditor
         private string _paramName;
         private Type _type;
         private List<string> _dropDownList;
+
         public ParameterField(Parameter parameter, string paramName, Type type)
         {
             _menu = new GenericMenu();
@@ -33,7 +35,7 @@ namespace Editor.AbilityEditor
             _dropDownList = new List<string>();
             _searchString = "";
         }
-        
+
         private void showMenu()
         {
             _menu.AddItem(new GUIContent("调用函数"), false, () => { _parameter.ParameterType = EParameterType.Function; });
@@ -54,7 +56,7 @@ namespace Editor.AbilityEditor
             var old = EditorGUIUtility.labelWidth;
 
             EditorGUILayout.LabelField(new GUIContent(_paramName), GUILayout.Width(100));
-            
+
             if (_type.GetParameterValueType() != EParameterValueType.Custom)
             {
                 if (GUILayout.Button("▼", GUILayout.Width(22)))
@@ -64,9 +66,9 @@ namespace Editor.AbilityEditor
             }
             else
             {
-                EditorGUILayout.LabelField("",GUILayout.Width(22));
+                EditorGUILayout.LabelField("", GUILayout.Width(22));
             }
-            
+
             switch (_parameter.ParameterType)
             {
                 case EParameterType.Simple:
@@ -110,7 +112,8 @@ namespace Editor.AbilityEditor
             if (SirenixEditorGUI.Button(text, ButtonSizes.Medium))
             {
                 _dropDownRect = GUIHelper.GetCurrentLayoutRect();
-                var funcWindow = FuncWindow.Open(_parameter, _type.GetParameterValueType(), (parameter) => _parameter.CopyTo(parameter));
+                var funcWindow = FuncWindow.Open(_parameter, _type.GetParameterValueType(),
+                    (parameter) => _parameter.CopyTo(parameter));
                 funcWindow.position = new Rect(_dropDownRect.position, new Vector2(680, 500));
             }
         }
@@ -149,6 +152,7 @@ namespace Editor.AbilityEditor
                     {
                         SerializableOdinWindow.Open(_parameter.Value, _type, (data) => _parameter.Value = data);
                     }
+
                     break;
                 default:
                     EditorGUILayout.LabelField($"还未实现{_type}");
@@ -168,20 +172,43 @@ namespace Editor.AbilityEditor
                     var type = Enum.Parse<ELogicAttr>(attrName).GetValueType();
                     if (_type == type)
                     {
-                        _dropDownList.Add(attrName);   
+                        _dropDownList.Add(attrName);
                     }
                 }
+
                 _showDropDown = true;
             }
         }
 
         private void variableDraw()
         {
-            if (SirenixEditorGUI.Button("使用变量" + _parameter.AttrType, ButtonSizes.Medium))
+            if (SirenixEditorGUI.Button("使用变量" + _parameter.VairableName, ButtonSizes.Medium))
             {
                 _dropDownList.Clear();
                 //获取变量列表
-                _dropDownList = AbilityView.VariableCollector.GetVariables(_type);
+                _dropDownList = AbilityViewDrawer.VarCollector.GetVariables(_type);
+                if (AbilityViewDrawer.BeforeClick != null)
+                {
+                    EventNodeData eventNode = null;
+                    int parentId = AbilityViewDrawer.BeforeClick.ParentId;
+                    while (parentId > 0)
+                    {
+                        var parentNode = AbilityViewDrawer.AbilityData.NodeDict[parentId];
+                        parentId = parentNode.ParentId;
+                        if (parentNode.NodeType != EAbilityNodeType.EEvent) continue;
+                        eventNode = (EventNodeData)parentNode;
+                        break;
+                    }
+
+                    if (eventNode != null && AbilityFunctionHelper.EventCheckerDict.TryGetValue(eventNode.EventType,out var editorInfo))
+                    {
+                        foreach (var fieldInfo in editorInfo.EventInfoType.GetFields(BindingFlags.Public | BindingFlags.Instance))
+                        {
+                            _dropDownList.Add("EventInfo:" + fieldInfo.Name);
+                        }
+                    }
+                }
+
                 _showDropDown = true;
             }
         }
@@ -200,9 +227,18 @@ namespace Editor.AbilityEditor
             // 过滤列表项并显示
             foreach (var item in _dropDownList.Where(i => i.ToLower().Contains(_searchString.ToLower())))
             {
-                if (SirenixEditorGUI.Button(item,ButtonSizes.Medium))
+                if (SirenixEditorGUI.Button(item, ButtonSizes.Medium))
                 {
-                    _parameter.AttrType = Enum.Parse<ELogicAttr>(item);
+                    if (_parameter.ParameterType == EParameterType.Attr)
+                    {
+                        _parameter.AttrType = Enum.Parse<ELogicAttr>(item);
+                    }
+
+                    if (_parameter.ParameterType == EParameterType.Variable)
+                    {
+                        _parameter.VairableName = item;
+                    }
+
                     _showDropDown = false; // 选择后关闭下拉框
                 }
             }

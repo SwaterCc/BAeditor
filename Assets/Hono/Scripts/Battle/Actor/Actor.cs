@@ -82,6 +82,7 @@ namespace Hono.Scripts.Battle
             _abilityController = new AbilityController(this);
             _message = new MessageCollection(this);
             Variables = new VarCollection(this, 128);
+            SetAttr(ELogicAttr.AttrUid, uid, false);
         }
 
         #region 生命周期

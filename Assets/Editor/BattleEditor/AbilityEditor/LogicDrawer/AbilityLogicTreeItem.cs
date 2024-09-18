@@ -67,7 +67,6 @@ namespace Editor.AbilityEditor
             if (SettingWindow != null)
             {
                 GUI.backgroundColor = new Color(2, 2, 2);
-                ;
             }
             else
             {

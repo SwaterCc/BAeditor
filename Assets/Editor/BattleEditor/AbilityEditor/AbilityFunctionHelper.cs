@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Editor.AbilityEditor;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
 
 namespace Editor.BattleEditor.AbilityEditor
@@ -28,6 +29,18 @@ namespace Editor.BattleEditor.AbilityEditor
         private static Dictionary<string, FuncInfo> _funcInfoDict;
 
         private static Dictionary<EParameterValueType, List<FuncInfo>> _funcInfoTypeDict;
+
+        public class EventEditorInfo
+        {
+            public string CreateFuncName;
+            public Type EventInfoType;
+        }
+        
+        private static readonly Dictionary<EBattleEventType, EventEditorInfo> _eventCheckerDict = new();
+        public static Dictionary<EBattleEventType, EventEditorInfo> EventCheckerDict => _eventCheckerDict;
+
+        private static readonly List<EBattleEventType> _allowEvent = new();
+        public static  List<EBattleEventType>  AllowEvent => _allowEvent;
         
         public static FuncInfo GetFuncInfo(string funcName)
         {
@@ -44,20 +57,10 @@ namespace Editor.BattleEditor.AbilityEditor
             
             return _funcInfoDict.TryGetValue(funcName, out funcInfo);
         }
-
-        public static Dictionary<string, FuncInfo> GetAllFuncInfos()
-        {
-            return _funcInfoDict;
-        }
         
         public static List<FuncInfo> GetFuncInfosByType(EParameterValueType type)
         {
             return _funcInfoTypeDict[type];
-        }
-
-        public static string GetDefaultFuncName()
-        {
-            return "NothingToDo";
         }
         
         public static Type GetVariableType(string typeString)
@@ -137,6 +140,12 @@ namespace Editor.BattleEditor.AbilityEditor
 
         public static void Init()
         {
+            InitAbilityFuncCache();
+            InitEvent();
+        }
+
+        private static void InitAbilityFuncCache()
+        {
             _funcInfoDict = new Dictionary<string, FuncInfo>();   
             _funcInfoTypeDict = new();
             _funcInfoTypeDict.Add(EParameterValueType.Any, new List<FuncInfo>());
@@ -188,6 +197,35 @@ namespace Editor.BattleEditor.AbilityEditor
                     funcInfos.Add(info);
                 }
                 _funcInfoTypeDict[EParameterValueType.Any].Add(info);
+            }
+        }
+
+        private static void InitEvent()
+        {
+            if (_eventCheckerDict.Count != 0) return;
+
+            foreach (var field in typeof(EBattleEventType).GetFields())
+            {
+                
+                EventCheckerBinder checkerBinder = null;
+                foreach (var attribute in  field.GetCustomAttributes(typeof(EventCheckerBinder), false))
+                {
+                    if (attribute is EventCheckerBinder binder )
+                    {
+                        checkerBinder = binder;
+                        break;
+                    }
+                }
+                
+                if(checkerBinder == null) continue;
+                
+                var enumValue = (EBattleEventType)field.GetValue(null);
+                _allowEvent.Add(enumValue);
+                // 获取枚举值
+                var eventInfo = new EventEditorInfo();
+                eventInfo.CreateFuncName = checkerBinder.CreateFunc;
+                eventInfo.EventInfoType = checkerBinder.EventInfoType;
+                _eventCheckerDict.Add(enumValue, eventInfo);
             }
         }
     }

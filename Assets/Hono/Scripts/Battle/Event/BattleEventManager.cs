@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Tools;
 
 
 namespace Hono.Scripts.Battle.Event
@@ -7,19 +8,8 @@ namespace Hono.Scripts.Battle.Event
     /// <summary>
     /// 管理战斗逻辑中事件节点的注册和监听
     /// </summary>
-    public class BattleEventManager
+    public class BattleEventManager : Singleton<BattleEventManager>
     {
-        private static BattleEventManager _instance;
-
-        public static BattleEventManager Instance
-        {
-            get
-            {
-                //TODO:目前简单写，后续要判定线程加锁 @shirui
-                return _instance ??= new BattleEventManager();
-            }
-        }
-
         /// <summary>
         /// 事件注册列表
         /// </summary>
@@ -53,24 +43,11 @@ namespace Hono.Scripts.Battle.Event
                 handles.Remove(checker);
             }
         }
-        
 
         /// <summary>
         /// 触发事件
         /// </summary>
-        public void TriggerEvent(EBattleEventType eventType)
-        {
-            if (!_eventDict.TryGetValue(eventType, out var checkers)) return;
-            foreach (var checker in checkers)
-            {
-                checker.Invoke(null);
-            }
-        }
-
-        /// <summary>
-        /// 触发事件
-        /// </summary>
-        public void TriggerEvent(EBattleEventType eventType, IEventInfo eventInfo)
+        public void TriggerEvent(EBattleEventType eventType, IEventInfo eventInfo = null)
         {
             if (!_eventDict.TryGetValue(eventType, out var checkers)) return;
             foreach (var checker in checkers)

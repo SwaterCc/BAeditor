@@ -7,10 +7,13 @@ namespace Hono.Scripts.Battle.Tools.CustomAttribute
     public class EventCheckerBinder : System.Attribute
     {
         public string CreateFunc;
+
+        public Type EventInfoType;
         
-        public EventCheckerBinder(string createFunc)
+        public EventCheckerBinder(string createFunc,Type eventInfoType)
         {
             CreateFunc = createFunc;
+            EventInfoType = eventInfoType;
         }
     }
   
