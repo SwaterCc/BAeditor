@@ -23,7 +23,7 @@ namespace Hono.Scripts.Battle
                 {
                     if (!_eventNodeData.CreateChecker.Parse(out _checker))
                     {
-                        Debug.LogError("Event�ڵ�ִ��ʧ��");
+                        Debug.LogError("Event执行失败");
                         return;
                     }
                 
@@ -58,7 +58,7 @@ namespace Hono.Scripts.Battle
 	            _context.ClearContext();
             }
 
-            private void onMsgCall(object p1,object p2,object p3,object p4,object p5)
+            private void onMsgCall(int p1,int p2,int p3,int p4,int p5)
             {
                 _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
                 _executor.Ability.Variables.Set("P1",p1);

@@ -200,11 +200,31 @@ namespace Editor.AbilityEditor
                         break;
                     }
 
-                    if (eventNode != null && AbilityFunctionHelper.EventCheckerDict.TryGetValue(eventNode.EventType,out var editorInfo))
+                    if (eventNode != null)
                     {
-                        foreach (var fieldInfo in editorInfo.EventInfoType.GetFields(BindingFlags.Public | BindingFlags.Instance))
+                        if (eventNode.IsEvent)
                         {
-                            _dropDownList.Add("EventInfo:" + fieldInfo.Name);
+                            if (AbilityFunctionHelper.EventCheckerDict.TryGetValue(eventNode.EventType,
+                                    out var editorInfo))
+                            {
+                                foreach (var fieldInfo in editorInfo.EventInfoType.GetFields(BindingFlags.Public |
+                                             BindingFlags.Instance))
+                                {
+                                    if (fieldInfo.FieldType == _type)
+                                        _dropDownList.Add("EventInfo:" + fieldInfo.Name);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (typeof(int) == _type)
+                            {
+                                _dropDownList.Add("Msg:P1");
+                                _dropDownList.Add("Msg:P2");
+                                _dropDownList.Add("Msg:P3");
+                                _dropDownList.Add("Msg:P4");
+                                _dropDownList.Add("Msg:P5");
+                            }
                         }
                     }
                 }
@@ -212,6 +232,8 @@ namespace Editor.AbilityEditor
                 _showDropDown = true;
             }
         }
+
+        private void processEventNodeChildren() { }
 
         private void drawDropDown()
         {

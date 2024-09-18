@@ -98,7 +98,7 @@ namespace Hono.Scripts.Battle
         }*/
 
         [AbilityMethod]
-        public static void SendMsg(int actorUid, string msg, object p1, object p2, object p3, object p4, object p5)
+        public static void SendMsg(int actorUid, string msg, int p1, int p2, int p3, int p4, int p5)
         {
             if (tryGetActor(actorUid, out var actor))
             {

@@ -15,27 +15,20 @@ namespace Hono.Scripts.Battle.Tools
     /// </summary>
     public class Tags
     {
-        private readonly List<bool> _tags = new(256);
+        private readonly HashSet<int> _tags = new(256);
 
         private IEnableTagSearch _bind;
 
-        public Tags() {
-	        for (int i = 0; i < _tags.Capacity; i++) {
-		        _tags.Add(false);
-	        }
-        }
+        public Tags() { }
 
         public Tags(int[] tag)
         {
-	        for (int i = 0; i < _tags.Capacity; i++) {
-		        _tags.Add(false);
-	        }
             foreach (var i in tag)
             {
-                _tags[i] = true;
+                _tags.Add(i);
             }
         }
-        
+
         public Tags(IEnableTagSearch bind)
         {
             _bind = bind;
@@ -43,41 +36,28 @@ namespace Hono.Scripts.Battle.Tools
 
         public void Add(int tag)
         {
-            if (tag is <= 255 and >= 0)
-            {
-                _tags[tag] = true;
-            }
+            _tags.Add(tag);
         }
 
         public bool HasTag(int tag)
         {
-            return tag is <= 255 and >= 0 && _tags[tag];
+            return _tags.Contains(tag);
         }
 
-        public void Show() {
-	        foreach (var tag in _tags) {
-		        Debug.Log($"{(bool)tag}");
-	        }
-        }
-        
         public void Remove(int tag)
         {
-            if (tag is <= 255 and >= 0)
-            {
-                _tags[tag] = false;
-            }
+            _tags.Remove(tag);
         }
 
-        public List<int> GetAllTag() {
-	        var res = new List<int>();
-	        for (int index = 0; index < _tags.Count; index++) {
-		        bool tag = _tags[index];
-		        if (tag) {
-			        res.Add(index);
-		        }
-	        }
+        public List<int> GetAllTag()
+        {
+            var res = new List<int>();
+            foreach (var tag in _tags)
+            {
+                res.Add(tag);
+            }
 
-	        return res;
+            return res;
         }
     }
 }
