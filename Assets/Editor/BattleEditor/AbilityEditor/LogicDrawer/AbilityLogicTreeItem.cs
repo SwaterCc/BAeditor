@@ -33,6 +33,25 @@ namespace Editor.AbilityEditor
         public void ShowMenu()
         {
             buildMenu();
+            
+            if (_nodeData.NodeType != EAbilityNodeType.EAbilityCycle)
+            {
+                _menu.AddItem(new GUIContent("复制"),false,Copy);
+            }
+            else
+            {
+                _menu.AddDisabledItem(new GUIContent("复制"));
+            }
+
+            if (AbilityViewDrawer.CopyDataList != null)
+            {
+                _menu.AddItem(new GUIContent("黏贴"),false,Paste);
+            }
+            else
+            {
+                _menu.AddDisabledItem(new GUIContent("黏贴"));
+            }
+            
             _menu.ShowAsContext();
         }
 
@@ -104,8 +123,15 @@ namespace Editor.AbilityEditor
         #region 数据处理
         public void UpdateDepth(AbilityData data)
         {
-            var parentItem = data.NodeDict[_nodeData.ParentId];
-            _nodeData.Depth = parentItem.Depth + 1;
+            if (_nodeData.ParentId > 0)
+            {
+                var parentItem = data.NodeDict[_nodeData.ParentId];
+                _nodeData.Depth = parentItem.Depth + 1;
+            }
+            else
+            {
+                _nodeData.Depth = 0;
+            }
             //this.depth = TreeNode.depth;
             if (hasChildren)
             {
@@ -196,7 +222,48 @@ namespace Editor.AbilityEditor
         /// </summary>
         public void Copy()
         {
+            List<AbilityNodeData> nodeDatas = new List<AbilityNodeData>();
+            OnCopy(ref nodeDatas);
+            AbilityViewDrawer.CopyDataList = nodeDatas;
+        }
+        
+        public AbilityNodeData OnCopy(ref List<AbilityNodeData> nodeDatas)
+        {
+            AbilityNodeData selfCopy = _tree.TreeData.GetNodeData(_nodeData.NodeType);
+            selfCopy.CopyTo(_nodeData);
+            if (children != null)
+            {
+                foreach (var child in children)
+                {
+                    if (child is AbilityLogicTreeItem abilityLogicTreeItem)
+                    {
+                        var copy =  abilityLogicTreeItem.OnCopy(ref nodeDatas);
+                        copy.ParentId = selfCopy.NodeId;
+                        selfCopy.ChildrenIds.Add(copy.NodeId);
+                    }
+                }
+            }
+            nodeDatas.Add(selfCopy);
+            return selfCopy;
+        }
+
+        public void Paste()
+        {
+            foreach (var data in AbilityViewDrawer.CopyDataList)
+            {
+                _tree.TreeData.NodeDict.Add(data.NodeId,data);
+                if (_nodeData.NodeType == EAbilityNodeType.EGroup)
+                {
+                    data.BelongGroupId = ((GroupNodeData)_nodeData).GroupId;
+                }
+            }
+
+            var copyDataHead = AbilityViewDrawer.CopyDataList[^1];
+            copyDataHead.ParentId = _nodeData.NodeId;
+            _nodeData.ChildrenIds.Add(copyDataHead.NodeId);
+            AbilityViewDrawer.CopyDataList = null;
             
+            _tree.Reload();
         }
         
         #endregion

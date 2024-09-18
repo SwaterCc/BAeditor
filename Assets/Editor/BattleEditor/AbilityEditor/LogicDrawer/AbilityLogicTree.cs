@@ -39,6 +39,7 @@ namespace Editor.AbilityEditor
 
             EditorUtility.SetDirty(_treeData);
             SetupDepthsFromParentsAndChildren(root);
+            cycleRoot.UpdateDepth(_treeData);
             return root;
         }
 

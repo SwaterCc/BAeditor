@@ -141,8 +141,9 @@ namespace Editor.AbilityEditor
                 abilityView.Save();
             }
             */
-
+            
             base.OnDestroy();
+            AbilityViewDrawer.CopyDataList = null;
         }
         
         protected override void OnBeginDrawEditors()

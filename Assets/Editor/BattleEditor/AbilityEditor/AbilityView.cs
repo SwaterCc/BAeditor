@@ -129,6 +129,8 @@ namespace Editor.AbilityEditor
                 BeforeClick = clickData;
             }
         }
+
+        public static List<AbilityNodeData> CopyDataList = null;
         
         protected override void Initialize()
         {
