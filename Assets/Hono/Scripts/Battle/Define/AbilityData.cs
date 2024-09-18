@@ -220,7 +220,6 @@ namespace Hono.Scripts.Battle
     public class AttrSetterNodeData : AbilityNodeData
     {
         public ELogicAttr LogicAttr;
-        public string typeString = "int";
         public Parameter Value = new();
         public bool IsTempAttr;
     }

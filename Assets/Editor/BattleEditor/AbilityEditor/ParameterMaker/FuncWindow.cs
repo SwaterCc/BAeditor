@@ -55,6 +55,7 @@ namespace Editor.AbilityEditor
             _function.FuncName = funcName;
             _function.FuncParams ??= new List<Parameter>();
             _function.FuncParams.Clear();
+            _function.ParameterType = EParameterType.Function;
             _parameterFields.Clear();
             foreach (var paramInfo in funcInfo.ParamInfos)
             {

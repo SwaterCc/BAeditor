@@ -21,7 +21,12 @@ namespace Hono.Scripts.Battle
     
         public static Type GetValueType(this ELogicAttr attrType)
         {
-            return _attrTypeDict[attrType];
+            if (_attrTypeDict.TryGetValue(attrType, out var type))
+            {
+                return _attrTypeDict[attrType];
+            }
+        
+            return null;
         }
     
         #endregion

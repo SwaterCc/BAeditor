@@ -63,6 +63,44 @@ namespace Hono.Scripts.Battle
             AttrType = parameter.AttrType;
         }
 
+        public override string ToString()
+        {
+            string desc = "";
+
+            switch (ParameterType)
+            {
+                case EParameterType.Simple:
+                    desc = Value == null ? "null" : Value.ToString();
+                    break;
+                case EParameterType.Function:
+                    if (string.IsNullOrEmpty(FuncName))
+                    {
+                        return "函数未初始化";
+                    }
+                    desc = "调用函数：" + FuncName + "(";
+                    for (var index = 0; index < FuncParams.Count; index++)
+                    {
+                        var parameter = FuncParams[index];
+                        desc += parameter;
+                        if (index != FuncParams.Count - 1)
+                        {
+                            desc += ",";
+                        }
+                    }
+
+                    desc += ")";
+                    break;
+                case EParameterType.Variable:
+                    desc = string.IsNullOrEmpty(VairableName) ? "未设置变量名" : "变量：" + VairableName;
+                    break;
+                case EParameterType.Attr:
+                    desc = "属性：" + AttrType;
+                    break;
+            }
+            
+            return desc;
+        }
+
         /// <summary>
         /// 通过序列化实现深拷贝
         /// </summary>
@@ -89,6 +127,21 @@ namespace Hono.Scripts.Battle
         }
 
         /// <summary>
+        /// 复制
+        /// </summary>
+        public void CopyTo(Parameter copy)
+        {
+           var temp =  new Parameter(copy);
+
+           ParameterType = temp.ParameterType;
+           FuncName = temp.FuncName;
+           FuncParams = temp.FuncParams;
+           Value = temp.Value;
+           VairableName = temp.VairableName;
+           AttrType = temp.AttrType;
+        }
+
+        /// <summary>
         /// 检查对象是否可序列化
         /// </summary>
         /// <param name="obj">要检查的对象</param>
@@ -99,10 +152,5 @@ namespace Hono.Scripts.Battle
             var type = obj.GetType();
             return type.IsSerializable || typeof(ISerializable).IsAssignableFrom(type);
         }
-    }
-
-    public static class ParameterHelper
-    {
-        public static void InitFunc(this Parameter parameter, string funcName = null) { }
     }
 }

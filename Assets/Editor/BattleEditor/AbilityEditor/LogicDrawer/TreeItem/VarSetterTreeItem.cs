@@ -1,67 +1,27 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class VariableTreeItem : AbilityLogicTreeItem
+    public class VarSetterTreeItem : AbilityLogicTreeItem
     {
         private new VarSetterNodeData _nodeData;
 
-        public VariableTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public VarSetterTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
         {
             _nodeData = (VarSetterNodeData)base._nodeData;
         }
 
-        public override void DrawItem(Rect lineRect)
-        {
-            base.DrawItem(lineRect);
-            if (!string.IsNullOrEmpty(_nodeData.Name))
-            {
-                AbilityView.VariableCollector.Add(AbilityFunctionHelper.GetVariableType(_nodeData.typeString),_nodeData.Name);
-            }
-        }
-
         protected override void buildMenu()
         {
-            _menu.AddItem(new GUIContent("创建节点/添加Action"), false,
-                AddChild, (EAbilityNodeType.EAction));
-            _menu.AddItem(new GUIContent("创建节点/添加If"), false,
-                AddChild, (EAbilityNodeType.EBranchControl));
-            _menu.AddItem(new GUIContent("创建节点/Set变量"), false,
-                AddChild, (EAbilityNodeType.EVariableSetter));
-            _menu.AddItem(new GUIContent("创建节点/SetAttr"), false,
-                AddChild, (EAbilityNodeType.EAttrSetter));
-            if (checkHasParent(EAbilityNodeType.EEvent))
-            {
-                _menu.AddItem(new GUIContent("创建节点/创建Event节点"), false,
-                    AddChild, (EAbilityNodeType.EEvent));
-            }
-
-            if (checkHasParent(EAbilityNodeType.ERepeat))
-            {
-                _menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
-                    AddChild, (EAbilityNodeType.ERepeat));
-            }
-
-            if (checkHasParent(EAbilityNodeType.EGroup))
-            {
-                _menu.AddItem(new GUIContent("创建节点/创建Group节点"), false,
-                    AddChild, (EAbilityNodeType.EGroup));
-            }
-
-            if (checkHasParent(EAbilityNodeType.ETimer))
-            {
-                _menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
-                    AddChild, (EAbilityNodeType.ETimer));
-            }
+            _menu.AddItem(new GUIContent("删除"), false,
+                Remove);
         }
 
         protected override Color getButtonColor()
@@ -71,19 +31,38 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return "调用并Set变量";
+            var parentData = _tree.TreeData.NodeDict[_nodeData.ParentId];
+            string name = string.IsNullOrEmpty(_nodeData.Name) ? "未设置" : _nodeData.Name;
+            if (parentData is ActionNodeData parentActionData)
+            {
+              
+                if(AbilityFunctionHelper.TryGetFuncInfo(parentActionData.Function.FuncName, out var funcInfo))
+                {
+                    if (funcInfo.ReturnType == typeof(void))
+                    {
+                        return "获取返回值失败函数没有返回值!!";
+                    }
+                    
+                    return "获取返回值 (name：" + name + ") 返回值类型：" + funcInfo.ReturnType;
+                }
+                return "获取函数失败";
+            }
+
+            return "设置变量 " + name + " = " + _nodeData.Value;
         }
 
         protected override string getButtonTips()
         {
-            return "调用并Set变量";
+            return "Set变量";
         }
 
         protected override void OnBtnClicked(Rect btnRect)
         {
             SettingWindow = BaseNodeWindow<VarNodeDataWindow, VarSetterNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) => _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData);
+                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                    _nodeData = nodeData;
+                });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
             SettingWindow.Show();
         }

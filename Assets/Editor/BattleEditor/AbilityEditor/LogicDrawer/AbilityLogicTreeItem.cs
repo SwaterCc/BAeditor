@@ -89,7 +89,8 @@ namespace Editor.AbilityEditor
 
             if (GUI.Button(lineRect, new GUIContent(buttonText, getButtonTips()), getButtonTextStyle()))
             {
-                var btnRect = GUILayoutUtility.GetLastRect();
+                var btnRect =  EditorGUIUtility.GetMainWindowPosition();
+                
                 if (Event.current.button == 0)
                 {
                     OnBtnClicked(btnRect);
@@ -188,6 +189,7 @@ namespace Editor.AbilityEditor
             EditorUtility.SetDirty(_tree.TreeData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            _tree.Reload();
         }
 
         /// <summary>

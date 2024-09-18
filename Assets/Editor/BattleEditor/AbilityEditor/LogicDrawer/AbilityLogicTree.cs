@@ -60,7 +60,10 @@ namespace Editor.AbilityEditor
                             item = new BranchTreeItem(this, childNodeData);
                             break;
                         case EAbilityNodeType.EVariableSetter:
-                            item = new VariableTreeItem(this, childNodeData);
+                            item = new VarSetterTreeItem(this, childNodeData);
+                            break;
+                        case EAbilityNodeType.EAttrSetter:
+                            item = new AttrSetterTreeItem(this, childNodeData);
                             break;
                         case EAbilityNodeType.ERepeat:
                             item = new RepeatTreeItem(this, childNodeData);

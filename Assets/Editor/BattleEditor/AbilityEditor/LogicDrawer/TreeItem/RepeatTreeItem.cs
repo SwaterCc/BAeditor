@@ -27,21 +27,14 @@ namespace Editor.AbilityEditor.TreeItem
                 AddChild, (EAbilityNodeType.EVariableSetter));
             _menu.AddItem(new GUIContent("创建节点/SetAttr"), false,
                 AddChild, (EAbilityNodeType.EAttrSetter));
-            if (checkHasParent(EAbilityNodeType.EEvent))
-            {
-                _menu.AddItem(new GUIContent("创建节点/创建Event节点"), false,
-                    AddChild, (EAbilityNodeType.EEvent));
-            }
-            if (checkHasParent(EAbilityNodeType.EGroup))
-            {
-                _menu.AddItem(new GUIContent("创建节点/创建Group节点"), false,
-                    AddChild, (EAbilityNodeType.EGroup));
-            }
+            
             if (checkHasParent(EAbilityNodeType.ETimer))
             {
                 _menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
                     AddChild, (EAbilityNodeType.ETimer));
             }
+            _menu.AddItem(new GUIContent("删除"), false,
+                Remove);
         }
 
         protected override Color getButtonColor()
@@ -51,7 +44,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return "循环";
+            return "循环次数 : " + _nodeData.MaxRepeatCount;
         }
 
         protected override string getButtonTips()
@@ -63,7 +56,9 @@ namespace Editor.AbilityEditor.TreeItem
         {
             SettingWindow = BaseNodeWindow<RepeatNodeDataWindow, RepeatNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) =>  _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData);
+                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                    _nodeData = nodeData;
+                });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
             SettingWindow.Show();
         }

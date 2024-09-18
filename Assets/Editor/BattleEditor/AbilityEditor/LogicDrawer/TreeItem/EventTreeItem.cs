@@ -1,4 +1,4 @@
-
+using System;
 using System.Collections.Generic;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
@@ -42,12 +42,9 @@ namespace Editor.AbilityEditor.TreeItem
                 _menu.AddItem(new GUIContent("创建节点/创建Stage节点"), false,
                     AddChild, (EAbilityNodeType.EGroup));
             }
-
-            if (!checkHasParent(EAbilityNodeType.ETimer))
-            {
-                _menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
-                    AddChild, (EAbilityNodeType.ETimer));
-            }
+            
+            _menu.AddItem(new GUIContent("删除"), false,
+                Remove);
         }
 
         protected override Color getButtonColor()
@@ -57,19 +54,32 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return _nodeData.EventType.ToString();
+            string text = "";
+            if (_nodeData.IsEvent)
+            {
+                text = "等待事件：" + Enum.GetName(typeof(EBattleEventType), _nodeData.EventType);
+            }
+            else
+            {
+                var msgName = string.IsNullOrEmpty(_nodeData.MsgName) ? "未定义" : _nodeData.MsgName;
+                text = "等待消息：" + msgName;
+            }
+            
+            return text;
         }
 
         protected override string getButtonTips()
         {
-            return "监听指定事件回调，与执行顺序无关";
+            return "监听指定事件或消息回调，与执行顺序无关";
         }
 
         protected override void OnBtnClicked(Rect btnRect)
         {
             SettingWindow = BaseNodeWindow<EventNodeDataWindow, EventNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) =>  _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData);
+                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                    _nodeData = nodeData;
+                });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 240);
             SettingWindow.Show();
         }

@@ -58,6 +58,9 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private readonly AttrCollection _attrs;
 
+        /// <summary>
+        /// 消息容器
+        /// </summary>
         private readonly MessageCollection _message;
 
         /// <summary>

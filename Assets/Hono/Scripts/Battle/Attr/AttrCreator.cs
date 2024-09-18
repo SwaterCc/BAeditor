@@ -425,7 +425,7 @@ namespace Hono.Scripts.Battle
 
         public static Type GetValueType(this ELogicAttr attrType)
         {
-            return _attrTypeDict[attrType];
+            return _attrTypeDict.GetValueOrDefault(attrType);
         }
 
         #endregion

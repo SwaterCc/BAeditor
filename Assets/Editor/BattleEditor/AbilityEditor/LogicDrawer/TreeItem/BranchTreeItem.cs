@@ -9,11 +9,11 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class BranchTreeItem : AbilityLogicTreeItem
     {
-        private BranchNodeData _branchNodeData;
+        private new BranchNodeData _nodeData;
 
         public BranchTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
         {
-            _branchNodeData = (BranchNodeData)_nodeData;
+            _nodeData = (BranchNodeData)base._nodeData;
         }
 
         protected override void buildMenu()
@@ -38,9 +38,9 @@ namespace Editor.AbilityEditor.TreeItem
         private void AddElseIfNode(object obj)
         {
             var node = (BranchNodeData)_tree.TreeData.GetNodeData(EAbilityNodeType.EBranchControl);
-            node.ParentId = _branchNodeData.ParentId;
-            node.Depth = _branchNodeData.Depth;
-            node.BranchGroup = _branchNodeData.BranchGroup;
+            node.ParentId = _nodeData.ParentId;
+            node.Depth = _nodeData.Depth;
+            node.BranchGroup = _nodeData.BranchGroup;
             node.Desc = "else if";
             var parentNode = _tree.TreeData.NodeDict[node.ParentId];
             var index = parentNode.ChildrenIds.IndexOf(_nodeData.NodeId);
@@ -64,7 +64,7 @@ namespace Editor.AbilityEditor.TreeItem
                 ? "If"
                 : _nodeData.Desc;
 
-            return label;
+            return label +" : "+ _nodeData.CompareFunc;
         }
 
         protected override string getButtonTips()
@@ -75,8 +75,10 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect)
         {
             SettingWindow = BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>.GetSettingWindow(_tree.TreeData,
-                _branchNodeData,
-                (nodeData) => _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData);
+                _nodeData,
+                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                    _nodeData = nodeData;
+                });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
             SettingWindow.Show();
         }

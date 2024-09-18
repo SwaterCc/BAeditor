@@ -38,6 +38,9 @@ namespace Editor.AbilityEditor.TreeItem
                 _menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
                     AddChild, (EAbilityNodeType.ETimer));
             }
+            
+            _menu.AddItem(new GUIContent("删除"), false,
+                Remove);
         }
 
         protected override Color getButtonColor()
@@ -59,7 +62,9 @@ namespace Editor.AbilityEditor.TreeItem
         {
             SettingWindow = BaseNodeWindow<GroupNodeDataWindow, GroupNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) =>  _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData);
+                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                    _nodeData = nodeData;
+                });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
             SettingWindow.Show();
         }

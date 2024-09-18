@@ -37,16 +37,19 @@ namespace Editor.AbilityEditor.TreeItem
                 _menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
                     AddChild, (EAbilityNodeType.ERepeat));
             }
+            _menu.AddItem(new GUIContent("删除"), false,
+                Remove);
         }
 
         protected override Color getButtonColor()
         {
-            return new Color(0.2f, 1.0f, 0.3f);
+            return new Color(1f, 2.0f, 0.3f);
         }
 
         protected override string getButtonText()
         {
-            return string.IsNullOrEmpty(_nodeData.Desc) ? "计时器" : _nodeData.Desc;
+            return "计时器 首次调用间隔：" + _nodeData.FirstInterval + " 间隔：" + _nodeData.Interval + " 调用次数：" +
+                   _nodeData.MaxCount;
         }
 
         protected override string getButtonTips()
@@ -58,7 +61,9 @@ namespace Editor.AbilityEditor.TreeItem
         {
             SettingWindow = BaseNodeWindow<TimerNodeDataWindow, TimerNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) => _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData);
+                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                    _nodeData = nodeData;
+                });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
             SettingWindow.Show();
         }

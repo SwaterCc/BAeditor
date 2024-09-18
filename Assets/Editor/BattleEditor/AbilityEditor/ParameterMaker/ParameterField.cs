@@ -110,7 +110,7 @@ namespace Editor.AbilityEditor
             if (SirenixEditorGUI.Button(text, ButtonSizes.Medium))
             {
                 _dropDownRect = GUIHelper.GetCurrentLayoutRect();
-                var funcWindow = FuncWindow.Open(_parameter, _type.GetParameterValueType(), (parameter) => _parameter = parameter);
+                var funcWindow = FuncWindow.Open(_parameter, _type.GetParameterValueType(), (parameter) => _parameter.CopyTo(parameter));
                 funcWindow.position = new Rect(_dropDownRect.position, new Vector2(680, 500));
             }
         }
@@ -202,7 +202,7 @@ namespace Editor.AbilityEditor
             {
                 if (SirenixEditorGUI.Button(item,ButtonSizes.Medium))
                 {
-                    Debug.Log($"Selected: {item}");
+                    _parameter.AttrType = Enum.Parse<ELogicAttr>(item);
                     _showDropDown = false; // 选择后关闭下拉框
                 }
             }

@@ -23,7 +23,7 @@ namespace Hono.Scripts.Battle
                 {
                     if (!_eventNodeData.CreateChecker.Parse(out _checker))
                     {
-                        Debug.LogError("Event½ÚµãÖ´ÐÐÊ§°Ü");
+                        Debug.LogError("Eventï¿½Úµï¿½Ö´ï¿½ï¿½Ê§ï¿½ï¿½");
                         return;
                     }
                 
@@ -45,7 +45,7 @@ namespace Hono.Scripts.Battle
                 }
                 else
                 {
-                    _executor.Ability.Actor.AddMsgListener(_messageListener);
+                    _executor.Ability.Actor.RemoveMsgListener(_messageListener);
                 }
             }
 
