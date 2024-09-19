@@ -39,7 +39,7 @@ namespace Hono.Scripts.Battle.Tools
         [Button("给自己加属性")]
         public void SetAttr(int attrId,int value) {
 	        var actor = ActorManager.Instance.GetActor(ActorUid);
-	        actor.SetAttr<int>(attrId, value,false);
+	        actor.SetAttr<int>(attrId, actor.GetAttr<int>(attrId)  + value, false);
         }
 
         private void Update() {
