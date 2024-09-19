@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -73,6 +74,7 @@ namespace Hono.Scripts.Battle
             return actor;
         }
         
+        
         public void Tick(float dt)
         {
             if (_addCaches.Count != 0)
@@ -134,12 +136,7 @@ namespace Hono.Scripts.Battle
 
             return null;
         }
-
-        public List<Actor> GetRunningActors()
-        {
-            return _runningActorList;
-        }
-
+        
         public bool TryGetActor(int uid, out Actor actor)
         {
             return _uidActorDict.TryGetValue(uid, out actor);

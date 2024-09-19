@@ -69,22 +69,33 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static int CreateHitBox(int targetUid, HitBoxData hitData)
+        public static List<int> CreateHitBoxToTargets(HitBoxData hitData)
         {
-            if (targetUid == 0)
+            var hitBoxUids = new List<int>();
+            //返回打击点的Uid
+            var targetUids = Ability.Context.SourceActor.GetAttr<List<int>>(ELogicAttr.AttrAttackTargetUids);
+            if (targetUids == null)
             {
-                Debug.LogError("targetUid is 0");
-                return -1;
+                Debug.LogWarning($"form abilityId {Ability.Context.Invoker.Uid}目标列表是空的，未创建打击点！");
+                return new List<int>();
             }
 
-            var hitBox = ActorManager.Instance.CreateActor(BattleSetting.DefaultHitBoxPrototypeId);
-            hitBox.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.SourceActor.Uid, false);
-            hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
-            hitBox.Variables.Set("hitBoxData", hitData);
-            hitBox.Variables.Set("targetUid", targetUid);
-            hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
-            ActorManager.Instance.AddActor(hitBox);
-            return hitBox.Uid;
+            
+            foreach (var targetUid in targetUids)
+            {
+                if (targetUid == 0) continue;
+                
+                var hitBox = ActorManager.Instance.CreateActor(BattleSetting.DefaultHitBoxPrototypeId);
+                hitBox.SetAttr(ELogicAttr.AttrSourceActorUid, Ability.Context.SourceActor.Uid, false);
+                hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
+                hitBox.Variables.Set("hitBoxData", hitData);
+                hitBox.Variables.Set("targetUid", targetUid);
+                hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
+                ActorManager.Instance.AddActor(hitBox);
+                hitBoxUids.Add(hitBox.Uid);
+            }
+
+            return hitBoxUids;
         }
 
         /*[AbilityFuncCache(EFuncCacheFlag.Action)]
@@ -104,7 +115,7 @@ namespace Hono.Scripts.Battle
             {
                 var msgCache = new MsgCache()
                 {
-                    MsgKey =  msg,
+                    MsgKey = msg,
                     P1 = p1,
                     P2 = p2,
                     P3 = p3,
@@ -113,6 +124,13 @@ namespace Hono.Scripts.Battle
                 };
                 MessageCenter.Instance.AddMsg(actor.Uid, msgCache);
             }
+        }
+
+        [AbilityMethod]
+        public static List<int> SelectTargets(int maxSelectCount,FilterSetting setting)
+        {
+            Debug.LogWarning("未实现");
+            return new List<int>();
         }
 
         [AbilityMethod]

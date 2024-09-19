@@ -102,6 +102,11 @@ namespace Hono.Scripts.Battle
         }
 
         /// <summary>
+        /// 传承数据
+        /// </summary>
+       
+        
+        /// <summary>
         /// 加入Rt列表后执行，一般是创建后的第一帧先执行了Init 之后会同帧调用 Tick Update
         /// </summary>
         public void Init()

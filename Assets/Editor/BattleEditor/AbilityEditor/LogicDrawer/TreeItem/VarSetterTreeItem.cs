@@ -33,18 +33,19 @@ namespace Editor.AbilityEditor.TreeItem
         {
             var parentData = _tree.TreeData.NodeDict[_nodeData.ParentId];
             string name = string.IsNullOrEmpty(_nodeData.Name) ? "未设置" : _nodeData.Name;
+
             if (parentData is ActionNodeData parentActionData)
             {
-              
-                if(AbilityFunctionHelper.TryGetFuncInfo(parentActionData.Function.FuncName, out var funcInfo))
+                if (AbilityFunctionHelper.TryGetFuncInfo(parentActionData.Function.FuncName, out var funcInfo))
                 {
                     if (funcInfo.ReturnType == typeof(void))
                     {
                         return "获取返回值失败函数没有返回值!!";
                     }
-                    
+
                     return "获取返回值 (name：" + name + ") 返回值类型：" + funcInfo.ReturnType;
                 }
+
                 return "获取函数失败";
             }
 
@@ -61,7 +62,9 @@ namespace Editor.AbilityEditor.TreeItem
             AbilityViewDrawer.NodeBtnClick(_nodeData);
             SettingWindow = BaseNodeWindow<VarNodeDataWindow, VarSetterNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                (nodeData) =>
+                {
+                    _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
                 });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
@@ -88,6 +91,7 @@ namespace Editor.AbilityEditor.TreeItem
         private string _curSelect;
         private string _customTypeStr;
         private bool _customCastSuccess;
+        private bool _isGetReturn;
 
         protected override void onInit()
         {
@@ -103,6 +107,8 @@ namespace Editor.AbilityEditor.TreeItem
             {
                 _customCastSuccess = true;
             }
+
+            _isGetReturn = false;
         }
 
         private void OnGUI()
@@ -110,6 +116,27 @@ namespace Editor.AbilityEditor.TreeItem
             SirenixEditorGUI.BeginBox();
 
             _nodeData.Name = SirenixEditorFields.TextField("变量名：", _nodeData.Name);
+
+            if (_nodeData.ParentId > 0)
+            {
+                var parentNode = AbilityViewDrawer.AbilityData.NodeDict[_nodeData.ParentId];
+                if (parentNode.NodeType == EAbilityNodeType.EAction)
+                {
+                    var actionNode = (ActionNodeData)parentNode;
+                    if (AbilityFunctionHelper.TryGetFuncInfo(actionNode.Function.FuncName, out var funcInfo))
+                    {
+                        if (funcInfo.ReturnType == typeof(void))
+                        {
+                            _isGetReturn = false;
+                        }
+
+                        _curSelect = funcInfo.ReturnType.ToString();
+                        _isGetReturn = true;
+                    }
+                }
+            }
+
+
             _curSelect = SirenixEditorFields.Dropdown(new GUIContent("变量类型"), _curSelect, _dropList);
             if (_curSelect != _nodeData.typeString)
             {
@@ -136,21 +163,28 @@ namespace Editor.AbilityEditor.TreeItem
                 }
             }
 
-            if (_customCastSuccess)
+            if (!_isGetReturn)
             {
-                _value.Draw();
+                if (_customCastSuccess)
+                {
+                    _value.Draw();
+                }
+                else
+                {
+                    EditorGUILayout.LabelField("类型转换失败！");
+                }
             }
             else
             {
-                EditorGUILayout.LabelField("类型转换失败！");
+                _nodeData.typeString = _curSelect;
             }
 
             if (SirenixEditorGUI.Button("保   存", ButtonSizes.Large))
             {
                 if (_customCastSuccess)
                 {
-                    AbilityViewDrawer.VarCollector.RefreshAllVariable();
                     Save();
+                    AbilityViewDrawer.VarCollector.RefreshAllVariable();
                 }
                 else
                 {

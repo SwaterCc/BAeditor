@@ -57,16 +57,9 @@ namespace Editor.AbilityEditor
 
             EditorGUILayout.LabelField(new GUIContent(_paramName), GUILayout.Width(100));
 
-            if (_type.GetParameterValueType() != EParameterValueType.Custom)
+            if (GUILayout.Button("▼", GUILayout.Width(22)))
             {
-                if (GUILayout.Button("▼", GUILayout.Width(22)))
-                {
-                    showMenu();
-                }
-            }
-            else
-            {
-                EditorGUILayout.LabelField("", GUILayout.Width(22));
+                showMenu();
             }
 
             switch (_parameter.ParameterType)
