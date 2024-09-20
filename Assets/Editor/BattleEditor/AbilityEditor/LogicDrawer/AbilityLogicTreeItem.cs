@@ -103,7 +103,7 @@ namespace Editor.AbilityEditor
             }
 
             if (_nodeData.NodeType != EAbilityNodeType.EAbilityCycle)
-                buttonText = $"<{DrawCount}>" + buttonText;
+                buttonText = $"<{NodeData.NodeId}>" + buttonText;
 
             if (GUI.Button(lineRect, new GUIContent(buttonText, getButtonTips()), getButtonTextStyle()))
             {
@@ -210,11 +210,25 @@ namespace Editor.AbilityEditor
         {
             var parentNodeData = _tree.TreeData.NodeDict[_nodeData.ParentId];
             parentNodeData.ChildrenIds.Remove(_nodeData.NodeId);
-            _tree.TreeData.NodeDict.Remove(_nodeData.NodeId);
+            OnRemove();
             EditorUtility.SetDirty(_tree.TreeData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             _tree.Reload();
+        }
+
+        public void OnRemove() {
+	        if (children != null) {
+		        foreach (var child in children) {
+			        if (child is AbilityLogicTreeItem aChild) {
+				        var childData = aChild._nodeData;
+				        _tree.TreeData.NodeDict.Remove(childData.NodeId);
+				        aChild.OnRemove();
+			        }
+		        }
+	        }
+	       
+	        _tree.TreeData.NodeDict.Remove(_nodeData.NodeId);
         }
 
         /// <summary>

@@ -9,15 +9,15 @@ namespace Hono.Scripts.Battle
     {
         public string MsgKey { get; }
 
-        private readonly Action<int, int, int, int, int> _callback;
+        private readonly Action<object, object, object, object, object> _callback;
 
-        public MessageListener(string msgKey, Action<int, int, int, int, int> callback)
+        public MessageListener(string msgKey, Action<object, object, object, object, object> callback)
         {
             MsgKey = msgKey;
             _callback = callback;
         }
 
-        public void Invoke(int p1, int p2, int p3, int p4, int p5)
+        public void Invoke(object p1, object p2, object p3, object p4, object p5)
         {
             _callback.Invoke(p1, p2, p3, p4, p5);
         }
@@ -53,7 +53,7 @@ namespace Hono.Scripts.Battle
         /// <param name="p4"></param>
         /// <param name="p5"></param>
         /// <returns></returns>
-        public bool SendMsg(string msg, int p1, int p2, int p3, int p4, int p5)
+        public bool SendMsg(string msg, object p1, object p2, object p3, object p4, object p5)
         {
             if (_msgHandlers.TryGetValue(msg, out var listeners))
             {
@@ -105,11 +105,11 @@ namespace Hono.Scripts.Battle
     public class MsgCache
     {
         public string MsgKey;
-        public int P1;
-        public int P2;
-        public int P3;
-        public int P4;
-        public int P5;
+        public object P1;
+        public object P2;
+        public object P3;
+        public object P4;
+        public object P5;
     }
 
     public class MessageCenter : Singleton<MessageCenter>

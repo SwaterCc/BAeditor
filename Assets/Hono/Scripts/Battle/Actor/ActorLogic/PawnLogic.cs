@@ -8,10 +8,12 @@
         {
             SetAttr<float>(ELogicAttr.AttrBaseSpeed, 10, false);
             SetAttr<int>(ELogicAttr.AttrFaction, 1,false);
-            
+          
             
             var attrRow = ConfigManager.Instance.GetTable<EntityAttrBaseTable>().Get(LogicData.AttrTemplateId);
+            SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
             SetAttr(ELogicAttr.AttrMaxHpAdd, attrRow.AttrMaxHpAdd,false);
+            SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
             SetAttr(ELogicAttr.AttrMaxMpAdd, attrRow.AttrMaxMpAdd,false);
             SetAttr(ELogicAttr.AttrAttackAdd, attrRow.AttrAttackAdd,false);
             SetAttr(ELogicAttr.AttrCritAdd, attrRow.AttrCritAdd,false);
@@ -37,7 +39,7 @@
         {
             addComponent(new SkillComp(this));
             addComponent(new BuffComp(this));
-            addComponent(new DragMoveComp(this));
+            addComponent(new MotionComp(this));
             addComponent(new BeHurtComp(this));
             addComponent(new AttrCastLv1(this));
         }

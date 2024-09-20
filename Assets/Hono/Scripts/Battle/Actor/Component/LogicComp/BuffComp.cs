@@ -20,6 +20,7 @@ namespace Hono.Scripts.Battle {
 			public int LayerCount => _layer;
 
 			public Buff(int uid, ActorLogic logic, int sourceId, BuffData data) {
+				_uid = uid;
 				_logic = logic;
 				_sourceId = sourceId;
 				_data = data;
@@ -43,9 +44,14 @@ namespace Hono.Scripts.Battle {
 			private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 			private Dictionary<int, List<Buff>> _buffControls = new();
 			private Dictionary<int, Buff> _buffs = new();
+			public Dictionary<int, Buff> BUffs => _buffs;
 			public BuffComp(ActorLogic logic) : base(logic) { }
 
-			public override void Init() { }
+			public override void Init() {
+				foreach (var buff in ActorLogic.LogicData.OwnerBuffs) {
+					AddBuff(Actor.Uid, buff);
+				}
+			}
 
 			public void AddBuff(int sourceActorId, int buffConfigId, int buffLayer = 1) {
 				var buffData = AssetManager.Instance.GetData<BuffData>(buffConfigId);
@@ -77,8 +83,8 @@ namespace Hono.Scripts.Battle {
 			}
 
 			private bool AddRule(BuffData buffData, int sourceId, List<Buff> buffList, int layerCount) {
-				switch (buffData.AddRule) {
-					case EBuffAddRule.SameSourceReplace: {
+				switch (buffData.ReplaceRule) {
+					case EBuffReplaceRule.SameSourceReplace: {
 						//同源替换
 						List<int> removes = new List<int>();
 						foreach (var buff in buffList) {
@@ -94,7 +100,7 @@ namespace Hono.Scripts.Battle {
 
 						return true;
 					}
-					case EBuffAddRule.SameSourceAdd: {
+					case EBuffReplaceRule.SameSourceAdd: {
 						//同源叠加
 						foreach (var buff in buffList) {
 							if (buff.SourceId == sourceId) {
@@ -105,12 +111,12 @@ namespace Hono.Scripts.Battle {
 
 						return true;
 					}
-					case EBuffAddRule.Add: {
+					case EBuffReplaceRule.Add: {
 						//全叠加
 						buffList[0].AddLayer(layerCount);
 						return true;
 					}
-					case EBuffAddRule.OnlyOne: {
+					case EBuffReplaceRule.OnlyOne: {
 						//非同源替换
 						if (buffList[0].SourceId != sourceId) {
 							RemoveByUid(buffList[0].Uid);
@@ -149,7 +155,15 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public int GetBuffLayer(int configId) {
-				return 0;
+				if (!_buffControls.TryGetValue(configId, out var buffList)) {
+					return -1;
+				}
+
+				if(buffList.Count == 0) {
+					return -1;
+				}
+
+				return buffList[0].LayerCount;
 			}
 		}
 	}

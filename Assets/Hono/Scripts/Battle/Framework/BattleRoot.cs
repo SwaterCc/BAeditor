@@ -104,6 +104,7 @@ namespace Hono.Scripts.Battle
                 firstUpdate();
 
             _battleMode.Tick(Time.deltaTime);
+         
             //临时做法
             //保证逻辑帧在表现帧之前执行一次
             Tick(Time.deltaTime);
@@ -114,6 +115,7 @@ namespace Hono.Scripts.Battle
         public void Tick(float dt)
         {
             ActorManager.Instance.Tick(dt);
+            MessageCenter.Instance.Tick(dt);
         }
 
         public void OnDestroy()

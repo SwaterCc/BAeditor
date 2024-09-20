@@ -66,28 +66,28 @@ namespace Hono.Scripts.Battle.Tools {
 			actorIds = null;
 			//获取中心坐标
 			//var offset = data.OffsetUsePercent ? vector3Sub(data.Scale, data.Offset) : data.Offset;
-			var finalRot = followAttackerRot * data.Rot;
+			var finalRot = followAttackerRot * Quaternion.Euler(data.Rot);
 			var centerPos = selectCenterPos + finalRot * data.Offset;
 
 			//最大命中数量
 			List<RaycastHit> raycastHits = new List<RaycastHit>();
 			switch (data.ShapeType) {
 				case ECheckBoxShapeType.Cube:
-					var cubeData = (CheckBoxCube)data;
+					var cubeData = data;
 					var half = new Vector3(cubeData.Length/2, cubeData.Height/2, cubeData.Width/2);
 					raycastHits.AddRange(Physics.BoxCastAll(centerPos, half, followAttackerRot * Vector3.forward,
-						data.Rot, 0.001f));
+						Quaternion.Euler(data.Rot), 0.001f));
 					GizmosHelper.Instance.DrawCube(centerPos, half, finalRot, Color.green);
 					break;
 				case ECheckBoxShapeType.Sphere:
-					var sphereData = (CheckBoxSphere)data;
+					var sphereData = data;
 					raycastHits.AddRange(Physics.SphereCastAll(centerPos, sphereData.Radius,
 						followAttackerRot * Vector3.forward,
 						0.001f));
 					GizmosHelper.Instance.DrawSphere(centerPos, sphereData.Radius, finalRot, Color.green);
 					break;
 				case ECheckBoxShapeType.Cylinder:
-					var cylinderData = (CheckBoxCylinder)data;
+					var cylinderData = data;
 					raycastHits.AddRange(Physics.CapsuleCastAll(centerPos + Vector3.up * (cylinderData.Height / 2),
 						centerPos + Vector3.down * (cylinderData.Height / 2),
 						0.1f,

@@ -51,6 +51,7 @@ namespace Editor.AbilityEditor
                 var node = pair.Value;
 
                 int parentId = node.ParentId;
+                int count = 0;
                 while (parentId > 0)
                 {
                     var parentNode = data.NodeDict[parentId];
@@ -61,6 +62,12 @@ namespace Editor.AbilityEditor
                     }
 
                     parentId = parentNode.ParentId;
+
+                    if (count++ > 1000) {
+	                    //保底
+	                    Debug.LogWarning($"有ID错误节点{parentNode.NodeId}");
+	                    break;
+                    }
                 }
             }
         }

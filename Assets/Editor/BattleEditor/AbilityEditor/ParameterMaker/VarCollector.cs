@@ -43,7 +43,7 @@ namespace Editor.AbilityEditor
                 if (list.Contains(variableNodeData.Name))
                 {
                     Debug.LogError($"配置AbilityId {_abilityData.ConfigId} 中存在重复的变量命名 name {variableNodeData.Name} ！！！");
-                    continue;
+                    
                 }
                 
                 list.Add(variableNodeData.Name);

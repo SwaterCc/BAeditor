@@ -6,7 +6,6 @@ using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using Unity.VisualScripting;
 
 namespace Hono.Scripts.Battle
 {
@@ -46,7 +45,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 存储所有数据
         /// </summary>
-        [OdinSerialize] public Dictionary<int, AbilityNodeData> NodeDict = new();
+        [Searchable][OdinSerialize] public Dictionary<int, AbilityNodeData> NodeDict = new();
 
         public AbilityNodeData GetNodeData(EAbilityNodeType type)
         {

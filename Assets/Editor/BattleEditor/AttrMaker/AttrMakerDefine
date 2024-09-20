@@ -30,6 +30,9 @@ int AttrMaxMpAdd   10032
 int AttrMaxMpExAdd   10033 
 int AttrMaxMpPer   10034 
 int AttrMaxMpExPer   10035 
+ #护盾
+int AttrShield   10040 
+int AttrShieldPer   10041 
  #攻击力
 int AttrAttack   12100 
 int AttrAttackTotal   12101 
@@ -100,6 +103,13 @@ int AttrAttackSpeedPCTAdd   12502
 int AttrAttackSpeedPCTExAdd   12503 
 int AttrAttackSpeedPCTPer   12504 
 int AttrAttackSpeedPCTExPer   12505 
+ #CDR 
+int AttrSkillCDPCT   12520 
+int AttrSkillCDPCTTotal   12521 
+int AttrSkillCDPCTAdd   12522 
+int AttrSkillCDPCTExAdd   12523 
+int AttrSkillCDPCTPer   12524 
+int AttrSkillCDPCTExPer   12525 
  #全属性抗性穿透
 int AttrElementPenPCT   14000 
 int AttrElementPenPCTTotal   14001 

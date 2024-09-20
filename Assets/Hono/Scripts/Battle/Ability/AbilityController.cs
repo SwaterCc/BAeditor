@@ -52,10 +52,11 @@ namespace Hono.Scripts.Battle {
 			public int AwardAbility(int configId, bool isRunNow) {
 				var ability = new Ability(_idGenerator.GenerateId(), _actor, configId);
 				if (!_abilities.ContainsKey(ability.Uid)) {
-					if (isRunNow) ability.Execute();
+				
 					_addUidCache.Add(ability);
 				}
-
+				if (isRunNow)
+					ability.Execute();
 				return ability.Uid;
 			}
 

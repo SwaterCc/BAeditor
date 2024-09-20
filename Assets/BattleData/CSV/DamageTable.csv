@@ -2,3 +2,17 @@
 Id,Desc,FormulaName,DamageType,ElementType,ImpactValue,AdditiveId,MultiplyId
 int,string,string,int,int,int,intArray,intArray
 1,,NormalAttack,1,1,99998,,222
+100100101,剑盾-普攻,NormalAttack,1,1,0,,
+100200101,双手剑-普攻,NormalAttack,1,1,0,,
+100300101,法杖-普攻,NormalAttack,1,2,0,,
+20100101,守卫-冲锋,NormalAttack,1,1,0,,
+20100201,守卫-顺劈斩,NormalAttack,1,1,0,,
+20100301,守卫-聚爆,NormalAttack,1,1,0,,
+20200101,战士-破碎挥砍,NormalAttack,1,1,0,,
+20200201,战士-脆弱打击,NormalAttack,1,1,0,,
+20200301,战士-毁灭斩击,NormalAttack,1,1,0,,
+20220201,战士-命中回血,HealTargetPct,1,1,0,,
+20300101,火法-火球术,NormalAttack,1,2,0,,
+20300102,火法-溅射伤害,NormalAttack,1,2,0,,
+20300201,火法-点燃伤害,NormalAttack,1,2,0,,
+20300301,火法-炽焰冲击,NormalAttack,1,2,0,,

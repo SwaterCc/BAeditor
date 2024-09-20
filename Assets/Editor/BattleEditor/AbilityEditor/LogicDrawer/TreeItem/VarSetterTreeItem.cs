@@ -135,11 +135,12 @@ namespace Editor.AbilityEditor.TreeItem
                     }
                 }
             }
-
-
+            
             _curSelect = SirenixEditorFields.Dropdown(new GUIContent("变量类型"), _curSelect, _dropList);
             if (_curSelect != _nodeData.typeString)
             {
+	            _nodeData.typeString = _curSelect;
+	            _nodeData.Value = new Parameter();
                 if (_curSelect != "custom")
                 {
                     _value = new ParameterField(_nodeData.Value, "变量值：",
@@ -174,9 +175,8 @@ namespace Editor.AbilityEditor.TreeItem
                     EditorGUILayout.LabelField("类型转换失败！");
                 }
             }
-            else
-            {
-                _nodeData.typeString = _curSelect;
+            else {
+	            _nodeData.typeString = _curSelect;
             }
 
             if (SirenixEditorGUI.Button("保   存", ButtonSizes.Large))

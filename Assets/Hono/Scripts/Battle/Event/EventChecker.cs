@@ -141,7 +141,7 @@ namespace Hono.Scripts.Battle.Event
 
             if (_sourceAbility != -1)
             {
-                res = hitInfo.SourceAbilityConfigId == _sourceAbility;
+                res = hitInfo.SourceAbilityUId == _sourceAbility;
             }
 
             if (_belongActorId != -1)

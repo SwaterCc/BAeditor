@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
+using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
@@ -25,7 +26,8 @@ namespace Hono.Scripts.Battle
     public class FilterSetting
     {
         public bool OpenBoxCheck;
-        [OdinSerialize] public CheckBoxData BoxData;
+        [ShowIf("OpenBoxCheck")]
+        public CheckBoxData BoxData = new();
         public int MaxTargetCount = -1;
         public List<FilterRange> Ranges = new List<FilterRange>();
         public List<FilterAttrCompare> Compares = new List<FilterAttrCompare>();

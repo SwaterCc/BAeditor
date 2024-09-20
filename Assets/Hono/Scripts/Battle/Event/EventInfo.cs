@@ -14,6 +14,7 @@ namespace Hono.Scripts.Battle.Event
     
     public class HitInfo : IEventInfo
     {
+		public int HitTargetUid;
         /// <summary>
         /// 伤害来源Actor
         /// </summary>
@@ -28,6 +29,11 @@ namespace Hono.Scripts.Battle.Event
         /// 伤害来源AbilityConfig
         /// </summary>
         public int SourceAbilityConfigId;
+        
+        /// <summary>
+        /// 伤害Id
+        /// </summary>
+        public int DamageConfigId;
 
         /// <summary>
         /// 属于哪个能力类型
@@ -63,7 +69,7 @@ namespace Hono.Scripts.Battle.Event
         {
             ImpactValue = results.ImpactValue;
             IsCritical = results.IsCritical;
-            FinalDamageValue = results.DamageValue;
+            FinalDamageValue = (int)results.DamageValue;
         }
 
         public void SetFieldsInAbilityVariables(Ability ability)

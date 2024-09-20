@@ -89,7 +89,7 @@ namespace Hono.Scripts.Battle
                 List<int> actorIds = new List<int>();
 
                 List<Actor> actors;
-                if (_filterSetting.OpenBoxCheck && _filterSetting.BoxData != null)
+                if (_filterSetting.OpenBoxCheck)
                 {
                     actors = new List<Actor>();
                     var pos = _filterUser.GetAttr<Vector3>(ELogicAttr.AttrPosition);

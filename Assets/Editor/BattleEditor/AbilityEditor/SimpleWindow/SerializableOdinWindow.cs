@@ -41,7 +41,7 @@ namespace Editor.AbilityEditor
             }
 
             _onSave = onSave;
-            Setting = DeepCopy(serializableObject);
+            Setting = serializableObject;
         }
 
         private object DeepCopy(object serializableObject)

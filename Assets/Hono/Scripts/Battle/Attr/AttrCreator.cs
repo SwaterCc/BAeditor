@@ -97,6 +97,12 @@ namespace Hono.Scripts.Battle
       AttrAttackSpeedPCTExAdd = 12503,
       AttrAttackSpeedPCTPer = 12504,
       AttrAttackSpeedPCTExPer = 12505,
+      AttrSkillCDPCT = 12520,
+      AttrSkillCDPCTTotal = 12521,
+      AttrSkillCDPCTAdd = 12522,
+      AttrSkillCDPCTExAdd = 12523,
+      AttrSkillCDPCTPer = 12524,
+      AttrSkillCDPCTExPer = 12525,
       AttrElementPenPCT = 14000,
       AttrElementPenPCTTotal = 14001,
       AttrElementPenPCTAdd = 14002,
@@ -311,6 +317,12 @@ namespace Hono.Scripts.Battle
      { ELogicAttr.AttrAttackSpeedPCTExAdd, typeof(int) }, 
      { ELogicAttr.AttrAttackSpeedPCTPer, typeof(int) }, 
      { ELogicAttr.AttrAttackSpeedPCTExPer, typeof(int) }, 
+     { ELogicAttr.AttrSkillCDPCT, typeof(int) }, 
+     { ELogicAttr.AttrSkillCDPCTTotal, typeof(int) }, 
+     { ELogicAttr.AttrSkillCDPCTAdd, typeof(int) }, 
+     { ELogicAttr.AttrSkillCDPCTExAdd, typeof(int) }, 
+     { ELogicAttr.AttrSkillCDPCTPer, typeof(int) }, 
+     { ELogicAttr.AttrSkillCDPCTExPer, typeof(int) }, 
      { ELogicAttr.AttrElementPenPCT, typeof(int) }, 
      { ELogicAttr.AttrElementPenPCTTotal, typeof(int) }, 
      { ELogicAttr.AttrElementPenPCTAdd, typeof(int) }, 
@@ -627,6 +639,18 @@ namespace Hono.Scripts.Battle
                 case ELogicAttr.AttrAttackSpeedPCTPer :
                      return new Attr<int>((a, b) => a + b);
                 case ELogicAttr.AttrAttackSpeedPCTExPer :
+                     return new Attr<int>((a, b) => a + b);
+                case ELogicAttr.AttrSkillCDPCT :
+                     return new Attr<int>((a, b) => a + b);
+                case ELogicAttr.AttrSkillCDPCTTotal :
+                     return new Attr<int>((a, b) => a + b);
+                case ELogicAttr.AttrSkillCDPCTAdd :
+                     return new Attr<int>((a, b) => a + b);
+                case ELogicAttr.AttrSkillCDPCTExAdd :
+                     return new Attr<int>((a, b) => a + b);
+                case ELogicAttr.AttrSkillCDPCTPer :
+                     return new Attr<int>((a, b) => a + b);
+                case ELogicAttr.AttrSkillCDPCTExPer :
                      return new Attr<int>((a, b) => a + b);
                 case ELogicAttr.AttrElementPenPCT :
                      return new Attr<int>((a, b) => a + b);

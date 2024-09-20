@@ -1,4 +1,5 @@
 using Hono.Scripts.Battle.Tools;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -73,6 +74,11 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public Vector3 Pos => GetAttr<Vector3>(ELogicAttr.AttrPosition);
 
+	    /// <summary>
+	    /// 子child
+	    /// </summary>
+        public List<Actor> Children = new List<Actor>();
+
         public Actor(int uid)
         {
             Uid = uid;
@@ -104,7 +110,9 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 传承数据
         /// </summary>
-       
+        public void PassData() {
+	        
+        }
         
         /// <summary>
         /// 加入Rt列表后执行，一般是创建后的第一帧先执行了Init 之后会同帧调用 Tick Update
@@ -148,7 +156,6 @@ namespace Hono.Scripts.Battle
         #endregion
 
         #region 对外接口
-
         public void AddMsgListener(MessageListener listener)
         {
             _message.AddListener(listener);

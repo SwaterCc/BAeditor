@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle
             private int _count;
             private bool _isFirst;
 
-            private float _maxCount;
+            private int _maxCount;
             private float _firstInterval;
             private float _interval;
 

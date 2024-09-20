@@ -58,20 +58,20 @@ namespace Hono.Scripts.Battle
 	            _context.ClearContext();
             }
 
-            private void onMsgCall(int p1,int p2,int p3,int p4,int p5)
+            private void onMsgCall(object p1,object p2,object p3,object p4,object p5)
             {
                 _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
-                _executor.Ability.Variables.Set("P1",p1);
-                _executor.Ability.Variables.Set("P2",p2);
-                _executor.Ability.Variables.Set("P3",p3);
-                _executor.Ability.Variables.Set("P4",p4);
-                _executor.Ability.Variables.Set("P5",p5);
+                _executor.Ability.Variables.Set("Msg:P1",p1);
+                _executor.Ability.Variables.Set("Msg:P2",p2);
+                _executor.Ability.Variables.Set("Msg:P3",p3);
+                _executor.Ability.Variables.Set("Msg:P4",p4);
+                _executor.Ability.Variables.Set("Msg:P5",p5);
                 DoChildrenJob();
-                _executor.Ability.Variables.Delete("P1");
-                _executor.Ability.Variables.Delete("P2");
-                _executor.Ability.Variables.Delete("P3");
-                _executor.Ability.Variables.Delete("P4");
-                _executor.Ability.Variables.Delete("P5");
+                _executor.Ability.Variables.Delete("Msg:P1");
+                _executor.Ability.Variables.Delete("Msg:P2");
+                _executor.Ability.Variables.Delete("Msg:P3");
+                _executor.Ability.Variables.Delete("Msg:P4");
+                _executor.Ability.Variables.Delete("Msg:P5");
                 _context.ClearContext();
             }
 

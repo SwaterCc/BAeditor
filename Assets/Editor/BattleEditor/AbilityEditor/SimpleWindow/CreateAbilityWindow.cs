@@ -48,7 +48,7 @@ namespace Editor.AbilityEditor.SimpleWindow
 
         private bool abilityIdCheck()
         {
-            switch (createType)
+			/*switch (createType)
             {
                 case EAbilityType.Skill:
                     return id is > 10000 and < 20000;
@@ -62,8 +62,9 @@ namespace Editor.AbilityEditor.SimpleWindow
                     return id is > 0 and < 10000;
             }
 
-            return false;
-        }
+            return false;*/
+			return true;
+		}
         
         [Button("创 建")]
         public void Create()

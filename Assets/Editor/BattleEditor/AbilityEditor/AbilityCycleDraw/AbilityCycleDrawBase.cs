@@ -66,6 +66,10 @@ namespace Editor.AbilityEditor
             SirenixEditorGUI.BeginBoxHeader();
             var headHeight = GUIHelper.GetCurrentLayoutRect().height;
             Foldout = SirenixEditorGUI.Foldout(Foldout, AllowEditCycle.ToString());
+            if(SirenixEditorGUI.Button("展开",ButtonSizes.Medium))
+            {
+	            _logicTree?.ExpandAll();
+            }
             SirenixEditorGUI.EndBoxHeader();
             if (Foldout)
             {

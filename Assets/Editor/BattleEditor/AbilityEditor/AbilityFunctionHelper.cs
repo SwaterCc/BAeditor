@@ -126,6 +126,9 @@ namespace Editor.BattleEditor.AbilityEditor
             {
                 return EParameterValueType.IntList;
             }*/
+            if (type == typeof(object)) {
+	            return EParameterValueType.Object;
+            }
             if (type.IsEnum)
             {
                 return EParameterValueType.Enum;

@@ -1,4 +1,5 @@
 ﻿
+using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -14,9 +15,11 @@ namespace Hono.Scripts.Battle
 
             protected override void onTick(float dt) { }
 
-            public void OnBeHurt(DamageResults damageResults)
+            public void OnBeHurt(HitInfo hitInfo)
             {
-                //Debug.Log($"造成伤害{damageResults.DamageValue}");
+                Actor.SetAttr(ELogicAttr.AttrHp, (int)(Actor.GetAttr<int>(ELogicAttr.AttrHp) - hitInfo.FinalDamageValue),
+	                false);
+                Debug.Log($"当前血量{Actor.GetAttr<int>(ELogicAttr.AttrHp)}");
             }
         }
     }

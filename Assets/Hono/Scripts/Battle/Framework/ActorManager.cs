@@ -44,6 +44,8 @@ namespace Hono.Scripts.Battle
                     break;
                 case EActorLogicType.Building:
                     break;
+                case EActorLogicType.Bullet:
+	                break;
                 case EActorLogicType.HitBox:
                     logic = new HitBoxLogic(actor, logicData);
                     break;
@@ -114,7 +116,7 @@ namespace Hono.Scripts.Battle
                 actor.Update(dt);
             }
         }
-
+        
         public void AddActor(Actor actor)
         {
             if (actor == null) return;

@@ -24,6 +24,7 @@ namespace Editor.AbilityEditor
         private string _paramName;
         private Type _type;
         private List<string> _dropDownList;
+        private Type _originType;
 
         public ParameterField(Parameter parameter, string paramName, Type type)
         {
@@ -31,9 +32,14 @@ namespace Editor.AbilityEditor
             _parameter = parameter;
             _paramName = paramName;
             _type = type;
+            _originType = type;
             _dropDownPos = Vector2.zero;
             _dropDownList = new List<string>();
             _searchString = "";
+            
+            if (_originType == typeof(object) && _parameter.Value != null) {
+	            _type = _parameter.Value.GetType();
+            }
         }
 
         private void showMenu()
@@ -46,6 +52,29 @@ namespace Editor.AbilityEditor
                 () => { _parameter.ParameterType = EParameterType.Variable; });
 
             _menu.AddItem(new GUIContent("属性"), false, () => { _parameter.ParameterType = EParameterType.Attr; });
+
+            if (_originType == typeof(object)) {
+	            _menu.AddItem(new GUIContent("Object/int"), false, () => {
+		            _type = typeof(int);
+		            _parameter.Value = new int();
+	            });
+	            _menu.AddItem(new GUIContent("Object/float"), false, () => {
+		            _type = typeof(float);
+		            _parameter.Value = new float();
+	            });
+	            _menu.AddItem(new GUIContent("Object/bool"), false, () => {
+		            _type = typeof(bool);
+		            _parameter.Value = new bool();
+	            });
+	            _menu.AddItem(new GUIContent("Object/string"), false, () => {
+		            _type = typeof(string);
+		            _parameter.Value = "";
+	            });
+	            _menu.AddItem(new GUIContent("Object/重置"), false, () => {
+		            _type = typeof(object);
+		            _parameter.Value = null;
+	            });
+            }
 
             _menu.ShowAsContext();
         }
@@ -61,23 +90,23 @@ namespace Editor.AbilityEditor
             {
                 showMenu();
             }
-
+            
             switch (_parameter.ParameterType)
             {
-                case EParameterType.Simple:
-                    baseDraw();
-                    break;
-                case EParameterType.Function:
-                    functionDraw();
-                    break;
-                case EParameterType.Variable:
-                    variableDraw();
-                    break;
-                case EParameterType.Attr:
-                    attrDraw();
-                    break;
+	            case EParameterType.Simple:
+		            baseDraw();
+		            break;
+	            case EParameterType.Function:
+		            functionDraw();
+		            break;
+	            case EParameterType.Variable:
+		            variableDraw();
+		            break;
+	            case EParameterType.Attr:
+		            attrDraw();
+		            break;
             }
-
+            
             if (_showDropDown)
             {
                 drawDropDown();
@@ -145,8 +174,12 @@ namespace Editor.AbilityEditor
                     {
                         SerializableOdinWindow.Open(_parameter.Value, _type, (data) => _parameter.Value = data);
                     }
-
                     break;
+                case EParameterValueType.Object:
+	                if (_parameter.Value == null) {
+		                EditorGUILayout.LabelField("←----请选择类型！");
+	                }
+	                break;
                 default:
                     EditorGUILayout.LabelField($"还未实现{_type}");
                     break;
@@ -210,14 +243,11 @@ namespace Editor.AbilityEditor
                         }
                         else
                         {
-                            if (typeof(int) == _type)
-                            {
-                                _dropDownList.Add("Msg:P1");
-                                _dropDownList.Add("Msg:P2");
-                                _dropDownList.Add("Msg:P3");
-                                _dropDownList.Add("Msg:P4");
-                                _dropDownList.Add("Msg:P5");
-                            }
+	                        _dropDownList.Add("Msg:P1");
+	                        _dropDownList.Add("Msg:P2");
+	                        _dropDownList.Add("Msg:P3");
+	                        _dropDownList.Add("Msg:P4");
+	                        _dropDownList.Add("Msg:P5");
                         }
                     }
                 }

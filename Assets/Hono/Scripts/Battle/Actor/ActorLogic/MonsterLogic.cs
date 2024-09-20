@@ -8,7 +8,9 @@ namespace Hono.Scripts.Battle
         protected override void setupAttrs() {
 
 	        var attrRow = ConfigManager.Instance.GetTable<EntityAttrBaseTable>().Get(LogicData.AttrTemplateId);
+	        SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
 	        SetAttr(ELogicAttr.AttrMaxHpAdd, attrRow.AttrMaxHpAdd,false);
+	        SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
 	        SetAttr(ELogicAttr.AttrMaxMpAdd, attrRow.AttrMaxMpAdd,false);
 	        SetAttr(ELogicAttr.AttrAttackAdd, attrRow.AttrAttackAdd,false);
 	        SetAttr(ELogicAttr.AttrCritAdd, attrRow.AttrCritAdd,false);

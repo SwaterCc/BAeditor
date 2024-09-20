@@ -77,7 +77,7 @@ namespace Hono.Scripts.Battle
                     {
                         return "函数未初始化";
                     }
-                    desc = "调用函数：" + FuncName + "(";
+                    desc = "" + FuncName + "(";
                     for (var index = 0; index < FuncParams.Count; index++)
                     {
                         var parameter = FuncParams[index];

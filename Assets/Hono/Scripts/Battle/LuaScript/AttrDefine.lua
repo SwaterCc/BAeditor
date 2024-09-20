@@ -1,3 +1,4 @@
+
 function init(attacker, target, damageInfo, damageConfig)
     --attacker属性
     attacker:SetAttrLuaByType(ELogicAttr.AttrEntityLevel, 10);
@@ -74,6 +75,9 @@ function init(attacker, target, damageInfo, damageConfig)
     --target:AddTag(222)  --是BOSS
     --target:AddTag(223)  --脆弱
 
+end
+
+function init(attacker, target, damageInfo, damageConfig)
 end
 
 local enumDefine = {

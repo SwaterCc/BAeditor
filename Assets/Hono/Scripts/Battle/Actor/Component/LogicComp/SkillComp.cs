@@ -39,7 +39,8 @@ namespace Hono.Scripts.Battle
                     else
                     {
                         _skillTargetSetting = new FilterSetting();
-                        var boxData = new CheckBoxSphere(ECheckBoxShapeType.Sphere);
+                        var boxData = new CheckBoxData();
+                        boxData.ShapeType = ECheckBoxShapeType.Sphere;
                         boxData.Radius = Data.SkillRange;
                         _skillTargetSetting.BoxData = boxData;
                         _skillTargetSetting.OpenBoxCheck = true;
@@ -123,8 +124,12 @@ namespace Hono.Scripts.Battle
             /// </summary>
             public void LessCd(float second)
             {
+             
                 var percent = second / _maxCd;
+               
                 _curCdPercent -= percent;
+                _curCdPercent = Math.Clamp(_curCdPercent, 0, 1);
+                Debug.Log($"LessCD {second} percent {percent} curCDPer {_curCdPercent}");
             }
 
             private void calculateCd()
@@ -183,7 +188,7 @@ namespace Hono.Scripts.Battle
                 //CD
                 if (_curCdPercent > 0)
                 {
-                    _curCdPercent -= (dt / _maxCd);
+                    _curCdPercent -= ((dt / _maxCd) * (_logic.GetAttr<int>(ELogicAttr.AttrSkillCDPCT) / 10000f + 1));
                 }
 
                 if (!_resEnough)
@@ -277,6 +282,7 @@ namespace Hono.Scripts.Battle
             //技能的内核逻辑依靠Ability
             //Ability可通过该组件获取技能数据
             private Dictionary<int, Skill> _skills = new();
+            public Dictionary<int, Skill> Skills => _skills;
 
             /// <summary>
             /// 当前在运行的技能
@@ -302,7 +308,7 @@ namespace Hono.Scripts.Battle
 
             public void Reload()
             {
-                clear();
+	            Clear();
 
                 foreach (var skill in ActorLogic.LogicData.OwnerSkills)
                 {
@@ -311,7 +317,7 @@ namespace Hono.Scripts.Battle
                 }
             }
 
-            private void clear()
+            public void Clear()
             {
                 foreach (var skill in _skills)
                 {
@@ -323,10 +329,14 @@ namespace Hono.Scripts.Battle
 
             public override void UnInit()
             {
-                clear();
+	            Clear();
                 BattleEventManager.Instance.UnRegister(_eventChecker);
                 AssetManager.Instance.RemoveReloadHandle(this);
             }
+
+			public bool TryGetSkill(int skillId,out Skill skill) {
+				return _skills.TryGetValue(skillId, out skill);
+			}
 
             protected override void onTick(float dt)
             {
@@ -336,6 +346,21 @@ namespace Hono.Scripts.Battle
                 }
             }
 
+            public void LearnSkill(int skillId,int level) {
+	            var skillCtrl = new Skill(ActorLogic, skillId, level);
+	            if (_skills.TryAdd(skillCtrl.Id, skillCtrl)) {
+		            Debug.LogWarning($"重复学习技能 {skillId}");
+	            }
+            }
+            
+            public void ForgetSkill(int skillId) {
+	           
+	            if (_skills.ContainsKey(skillId)) {
+		            _skills[skillId].Destroy();
+		            _skills.Remove(skillId);
+	            }
+            }
+            
             public void UseSkill(int skillId)
             {
                 if (!_skills.TryGetValue(skillId, out var skillState))

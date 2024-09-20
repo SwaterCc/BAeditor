@@ -79,7 +79,7 @@ namespace Hono.Scripts.Battle
                     }
                 }
 
-                funcInfo.Invoke(null, funcParams);
+                value = funcInfo.Invoke(null, funcParams);
             }
             
             return true;

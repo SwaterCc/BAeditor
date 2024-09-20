@@ -13,8 +13,8 @@ local dmgAddiTags, dmgAddiValues= {100, 101, 102, 103}, {0,0,0,0}   --这几个T
 local function ElementDamage(attacker, target, damageInfo, damageConfig, damageArgs)
     local secondaryElementPen = 0
     local secondaryElementRed = 0
-    local allElementPen = damageArgs.ElementPenPCT
-    local allElementRed = damageArgs.ElementRedPCT
+    local allElementPen = damageArgs.ElementPenPCT / 10000
+    local allElementRed = damageArgs.ElementRedPCT / 10000
 
     if damageConfig.ElementType == CS.Hono.Scripts.Battle.EDamageElementType.Physical then
         secondaryElementPen = damageArgs.ElementPhysicalPenPCT / 10000
@@ -357,7 +357,6 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
     local additiveFinal = processDamageFixedType("AddiTypes", 1 + additiveFixed)
     --乘区增伤
     local multiplyFinal = processDamageFixedType("MultiTypes", 1 * (1 + damageArgs.DmgA / 10000))
-    PrintDamageLog(additiveFinal..multiplyFinal)
 
     damageArgs.CritDmgRate = 1;     --暴伤倍率
     local IsCritical, CriticalValue = DamageProcess.CriticalProcess(attacker, target, damageInfo, damageArgs)
@@ -426,11 +425,11 @@ DamageFormula = {
         local finalDamageValue = math.min(maxDamage, math.max(1, finalDamageValue))
         if triggerParam ~= 1 then
             logger.Info(
-                    "<color=#F8B21B>DamageLog 元素:%s 最终伤害:<b>%s</b>  %s ID:%s  最终攻击力:%s * 技能倍率:%s * 附加增伤:%s * 乘区增伤:%s * 最终承伤:%s</color>",
+                    "<color=#F8B21B>DamageLog 元素:%s 最终伤害:<b>%s</b>  %s AbilityID:%s  最终攻击力:%s * 技能倍率:%s * 附加增伤:%s * 乘区增伤:%s * 最终承伤:%s</color>",
                     string.sub(tostring(damageConfig.ElementType), 1, string.find(tostring(damageConfig.ElementType), " ") - 2),
                     math.floor(finalDamageValue),
                     logger.IntToStr(damageArgs.IsCritical and 1 or 0, "<color=#F8471B>暴击</color>"),
-                    damageInfo.SourceActorId,
+                    damageInfo.SourceAbilityConfigId,
                     damageArgs.ATK_Final,
                     damageArgs.Skill_Per,
                     damageArgs.FinalAddi,
@@ -445,10 +444,10 @@ DamageFormula = {
         local targetMAXHP = target:GetAttrLua(10010)
         local finalDamageValue = damageArgs.Skill_Per * targetMAXHP
         logger.Info(
-                "<color=#F8B21B>DamageLog 百分比伤害:<b>%s</b>  %s ID:%s  技能倍率:%s * 目标MAXHP:%s</color>",
+                "<color=#F8B21B>DamageLog 百分比伤害:<b>%s</b>  %s AbilityID:%s  技能倍率:%s * 目标MAXHP:%s</color>",
                 math.floor(finalDamageValue),
                 logger.IntToStr(1, "<color=#1BCCF8>无法暴击</color>"),
-                damageInfo.SourceActorId,
+                damageInfo.SourceAbilityConfigId,
                 tostring(damageArgs.Skill_Per * 100 .. "%"),
                 targetMAXHP
         )
@@ -464,10 +463,10 @@ DamageFormula = {
         local finalDamageValue =
         (healAttack * damageArgs.Skill_Per) * (1 + beHealed + healUp) * damageArgs.CritDmgRate;
         logger.Info(
-                "<color=#1DDD16>DamageLog 最终治疗:<b>%s</b>  %s ID:%s  最终治疗强度:%s * 技能倍率:%s * ( 1 + 额外治疗效果:%s + 额外被治疗效果:%s )</color>",
+                "<color=#1DDD16>DamageLog 最终治疗:<b>%s</b>  %s AbilityID:%s  最终治疗强度:%s * 技能倍率:%s * ( 1 + 额外治疗效果:%s + 额外被治疗效果:%s )</color>",
                 math.floor(finalDamageValue),
                 logger.IntToStr(damageArgs.IsCritical and 1 or 0, "<color=#F8471B>暴击</color>"),
-                damageInfo.SourceActorId,
+                damageInfo.SourceAbilityConfigId,
                 healAttack,
                 damageArgs.Skill_Per,
                 healUp,
@@ -482,10 +481,10 @@ DamageFormula = {
         local finalDamageValue =
         damageArgs.Skill_Per * targetMAXHP
         logger.Info(
-                "<color=#1DDD16>DamageLog 百分比治疗:<b>%s</b>  %s ID:%s  技能倍率:%s * 目标MAXHP:%s</color>",
+                "<color=#1DDD16>DamageLog 百分比治疗:<b>%s</b>  %s AbilityID:%s  技能倍率:%s * 目标MAXHP:%s</color>",
                 math.floor(finalDamageValue),
                 logger.IntToStr(1, "<color=#1BCCF8>无法暴击</color>"),
-                damageInfo.SourceActorId,
+                damageInfo.SourceAbilityConfigId,
                 tostring(damageArgs.Skill_Per * 100 .. "%"),
                 targetMAXHP
         )
@@ -502,12 +501,12 @@ DamageFormula = {
         local finalDamageValue = DamageFormula["NormalAttack"](attacker, target, damageInfo, damageConfig, damageArgs, 1)
         local finalDamageValue = finalDamageValue * math.max(1, dotCount)
         logger.Info(
-                "<color=#F8B21B>DamageLog 元素:%s Dot总伤害:<b>%s</b>  单次伤害:%s  %s ID:%s  技能倍率:%s * BUFF层数:%s</color>",
+                "<color=#F8B21B>DamageLog 元素:%s Dot总伤害:<b>%s</b>  单次伤害:%s  %s AbilityID:%s  技能倍率:%s * BUFF层数:%s</color>",
                 string.sub(tostring(damageConfig.ElementType), 1, string.find(tostring(damageConfig.ElementType), " ") - 2),
                 math.floor(finalDamageValue),
                 math.floor(finalDamageValue / math.max(1, dotCount)),
                 logger.IntToStr(1, "<color=#1BCCF8>无法暴击</color>"),
-                damageInfo.SourceActorId,
+                damageInfo.SourceAbilityConfigId,
                 tostring(damageArgs.Skill_Per * 100 .. "%"),
                 dotCount
         )
@@ -520,12 +519,12 @@ DamageFormula = {
         --根据命中人数数量分摊
         local finalDamageValue = math.max(1, finalDamageValue) / math.max(1, damageInfo.HitCount)
         logger.Info(
-                "<color=#F8B21B>DamageLog 元素:%s 分摊后伤害:<b>%s</b>  分摊前伤害:%s  %s ID:%s  技能倍率:%s / 命中人数:%s</color>",
+                "<color=#F8B21B>DamageLog 元素:%s 分摊后伤害:<b>%s</b>  分摊前伤害:%s  %s AbilityID:%s  技能倍率:%s / 命中人数:%s</color>",
                 string.sub(tostring(damageConfig.ElementType), 1, string.find(tostring(damageConfig.ElementType), " ") - 2),
                 math.floor(finalDamageValue),
                 math.floor(finalDamageValue * math.max(1, damageInfo.HitCount)),
                 logger.IntToStr(damageArgs.IsCritical and 1 or 0, "<color=#F8471B>暴击</color>"),
-                damageInfo.SourceActorId,
+                damageInfo.SourceAbilityConfigId,
                 tostring(damageArgs.Skill_Per * 100 .. "%"),
                 math.max(1, damageInfo.HitCount)
         )
