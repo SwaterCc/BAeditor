@@ -22,61 +22,72 @@ namespace Hono.Scripts.Battle
 
         private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 
+        private bool _battleModelIsCreated;
+
+        public static int NormalHitBoxConfigId = 1;
+        
         public void Init()
         {
             _filter = new Filter(this);
         }
 
-        public Actor CreateActor(int actorPrototypeId)
-        {
-            var actorData = ConfigManager.Table<ActorPrototypeTable>().Get(actorPrototypeId);
-            var actor = new Actor(_idGenerator.GenerateId());
-            
-            ActorLogic logic = null;
-            var logicData =  ConfigManager.Table<ActorLogicTable>().Get(actorData.LogicConfigId);
-            switch ((EActorLogicType)logicData.LogicType)
-            {
-                case EActorLogicType.Pawn:
-                    logic = new PawnLogic(actor, logicData);
-                    break;
-                case EActorLogicType.Monster:
-                    logic = new MonsterLogic(actor, logicData);
-                    break;
-                case EActorLogicType.Building:
-                    break;
-                case EActorLogicType.Bullet:
-	                break;
-                case EActorLogicType.HitBox:
-                    logic = new HitBoxLogic(actor, logicData);
-                    break;
-            }
+        public Actor GetBattleMode() {
+	        if (_battleModelIsCreated) throw new Exception("重复创建BattleMode");
+	        _battleModelIsCreated = true;
+	        var actor = new Actor(_idGenerator.GenerateId(), EActorType.BattleMode);
+	        actor.Setup(new BattleModeShow(actor),new BattleMode(actor));
+	        return actor;
+        }
 
-            ActorShow show = null;
-            if (actorData.ShowConfigId > 0)
+        public Actor CreateActor(EActorType type, int configId = 0) {
+	        var actor = getActor(type, configId);
+	        actor.SetAttr(ELogicAttr.AttrSourceActorUid, actor.Uid,false);
+	        actor.SetAttr(ELogicAttr.AttrTopSourceActorUid, actor.Uid,false);
+	        return actor;
+        }
+        
+        private Actor getActor(EActorType type, int configId = 0) {
+
+	        int uid = _idGenerator.GenerateId();
+	        var actor = new Actor(uid, type);
+	        actor.SetAttr(ELogicAttr.AttrUid, uid, false);
+	        actor.SetAttr(ELogicAttr.AttrConfigId, configId, false);
+            switch (type)
             {
-                var showData =  ConfigManager.Instance.GetTable<ActorShowTable>().Get(actorData.ShowConfigId);
-                switch ((EActorShowType)showData.ShowType)
-                {
-                    case EActorShowType.LogicTest:
-                        show = new TestShow(actor, showData);
-                        break;
-                    case EActorShowType.Pawn:
-                        show = new TestShow(actor, showData);
-                        break;
-                    case EActorShowType.Monster:
-                        show = new TestShow(actor, showData);
-                        break;
-                    case EActorShowType.Building:
-                        show = new TestShow(actor, showData);
-                        break;
-                }
+	            case EActorType.Pawn:
+		            actor.Setup(new AlwaysShow(actor), new PawnLogic(actor));
+		            break;
+	            case EActorType.Monster:
+		            actor.Setup(new AlwaysShow(actor), new MonsterLogic(actor));
+		            break;
+	            case EActorType.Building:
+		            actor.Setup(new AlwaysShow(actor), new BuildingLogic(actor));
+		            break;
+	            case EActorType.Bullet:
+		            actor.Setup(new AlwaysShow(actor), new BulletLogic(actor));
+		            break;
+	            case EActorType.HitBox:
+		            actor.Setup(new AlwaysShow(actor), new HitBoxLogic(actor));
+		            break;
             }
             
-            actor.Setup(show, logic);
             return actor;
         }
         
-        
+        public Actor SummonActor(Actor summoner, EActorType type, int configId) {
+	        var summoned = getActor(type, configId);
+	        summoned.SetAttr(ELogicAttr.AttrIsSummoned, 1, false);
+	        summoned.SetAttr(ELogicAttr.AttrSourceActorUid, summoner.GetAttr<int>(ELogicAttr.AttrSourceActorUid),false);
+	        summoned.SetAttr(ELogicAttr.AttrTopSourceActorUid, summoner.GetAttr<int>(ELogicAttr.AttrTopSourceActorUid),false);
+	        return summoned;
+        }
+
+        public Actor SummonActorByAbility(Ability summonerAbility,EActorType type, int configId) {
+	        var summoned = SummonActor(summonerAbility.Actor, type, configId);
+	        summoned.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, summonerAbility.ConfigId, false);
+	        return summoned;
+        }
+
         public void Tick(float dt)
         {
             if (_addCaches.Count != 0)
@@ -121,12 +132,6 @@ namespace Hono.Scripts.Battle
         {
             if (actor == null) return;
             _addCaches.Add(actor);
-        }
-
-        public void AddActor(int configId)
-        {
-            var actor = CreateActor(configId);
-            AddActor(actor);
         }
 
         public Actor GetActor(int uid)

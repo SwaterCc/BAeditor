@@ -84,6 +84,11 @@ namespace Hono.Scripts.Battle
             public string FormulaName { get; private set; }
             
             /// <summary>
+            /// 伤害倍率万分比
+            /// </summary>
+            public int DamageRatio { get; private set; }
+            
+            /// <summary>
             /// 伤害类型(普通伤害，百分比伤害，Dot，治疗)
             /// </summary>
             public int DamageType { get; private set; }
@@ -130,15 +135,17 @@ namespace Hono.Scripts.Battle
             
                     _row.FormulaName = parseString(line[2]);
             
-                    _row.DamageType = parseInt(line[3]);
+                    _row.DamageRatio = parseInt(line[3]);
             
-                    _row.ElementType = parseInt(line[4]);
+                    _row.DamageType = parseInt(line[4]);
             
-                    _row.ImpactValue = parseInt(line[5]);
+                    _row.ElementType = parseInt(line[5]);
             
-                    _row.AdditiveId = parseIntArray(line[6]);
+                    _row.ImpactValue = parseInt(line[6]);
             
-                    _row.MultiplyId = parseIntArray(line[7]);
+                    _row.AdditiveId = parseIntArray(line[7]);
+            
+                    _row.MultiplyId = parseIntArray(line[8]);
             
                 }
             }

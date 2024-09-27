@@ -1,19 +1,21 @@
-namespace Hono.Scripts.Battle
-{
-    //当前游戏模式
-    public class BattleMode : ActorLogic
-    {
-	    public BattleMode(Actor actor, ActorLogicTable.ActorLogicRow logicData) : base(actor, logicData) { }
-	    protected override void setupAttrs() {
-		    
-	    }
+using UnityEngine;
 
-	    protected override void onInit() {
-		   
-	    }
+namespace Hono.Scripts.Battle {
+	//当前游戏模式
+	public class BattleMode : ActorLogic {
+		private VFXWorldComp _vfxWorldComp;
+		public BattleMode(Actor actor) : base(actor) { }
+		protected override void setupAttrs() { }
 
-	    protected override void registerChildComponents() {
-		    
-	    }
-    }
+		protected override void onInit() { }
+
+		protected override void registerComponents() {
+			_vfxWorldComp = new VFXWorldComp(this);
+			addComponent(_vfxWorldComp);
+		}
+
+		public void AddWorldVFX(VFXObject obj) {
+			_vfxWorldComp.AddVFXObjectToWorld(obj);
+		}
+	}
 }

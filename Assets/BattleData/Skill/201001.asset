@@ -29,7 +29,7 @@ MonoBehaviour:
   CustomFilter:
     OpenBoxCheck: 1
     BoxData:
-      ShapeType: 1
+      ShapeType: 0
       Rot:
         x: 0
         y: 0
@@ -41,11 +41,11 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 10
+      Radius: 0
       Angle: 0
-    MaxTargetCount: 1
-    Ranges:
-    - RangeType: 3
-      Value: 2
+    MaxTargetCount: -1
+    HasSelf: 0
+    Ranges: []
     Compares: []
+    FilterFunctionType: 0
   MaxTargetCount: 1

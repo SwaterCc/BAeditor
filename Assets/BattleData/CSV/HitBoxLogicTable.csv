@@ -1,0 +1,4 @@
+﻿Id,描述,模型表Id,拥有的其他Ability
+Id,Desc,Model,ownerOtherAbility
+int,string,int,intArray
+1,通用打击盒,2,

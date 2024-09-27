@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Hono.Scripts.Battle.Tools {
 	public static class LayerMask {
@@ -61,6 +62,34 @@ namespace Hono.Scripts.Battle.Tools {
 			return new IdGenerator();
 		}
 
+
+		private static Random _random = new();
+
+		/// <summary>
+		/// 从一个List<int>中随机选取指定数量的对象。
+		/// </summary>
+		/// <param name="list">源列表</param>
+		/// <param name="count">要选取的对象数量</param>
+		/// <returns>选取的对象列表</returns>
+		public static List<int> SelectRandomElements(List<int> list, int count) {
+			if (list == null)
+				throw new ArgumentNullException(nameof(list));
+
+			if (count < 0 || count > list.Count)
+				throw new ArgumentOutOfRangeException(nameof(count));
+
+			List<int> tempList = new List<int>(list);
+			List<int> selectedElements = new List<int>();
+
+			for (int i = 0; i < count; i++) {
+				int index = _random.Next(tempList.Count);
+				selectedElements.Add(tempList[index]);
+				tempList.RemoveAt(index);
+			}
+
+			return selectedElements;
+		}
+
 		public static bool HitRayCast(CheckBoxData data, Vector3 selectCenterPos, Quaternion followAttackerRot,
 			out List<int> actorIds) {
 			actorIds = null;
@@ -73,18 +102,19 @@ namespace Hono.Scripts.Battle.Tools {
 			List<RaycastHit> raycastHits = new List<RaycastHit>();
 			switch (data.ShapeType) {
 				case ECheckBoxShapeType.Cube:
-					var cubeData = data;
-					var half = new Vector3(cubeData.Length/2, cubeData.Height/2, cubeData.Width/2);
-					raycastHits.AddRange(Physics.BoxCastAll(centerPos, half, followAttackerRot * Vector3.forward,
-						Quaternion.Euler(data.Rot), 0.001f));
-					GizmosHelper.Instance.DrawCube(centerPos, half, finalRot, Color.green);
+					var boxSize = new Vector3(data.Length, data.Height, data.Width);
+					raycastHits.AddRange(Physics.BoxCastAll(centerPos, boxSize / 2, followAttackerRot * Vector3.forward,
+						finalRot, 0.001f));
+					GizmosHelper.Instance.DrawCube(centerPos, boxSize, finalRot,
+						new Color(0, 0.7f, 0.5f, 0.4f));
 					break;
 				case ECheckBoxShapeType.Sphere:
 					var sphereData = data;
 					raycastHits.AddRange(Physics.SphereCastAll(centerPos, sphereData.Radius,
 						followAttackerRot * Vector3.forward,
 						0.001f));
-					GizmosHelper.Instance.DrawSphere(centerPos, sphereData.Radius, finalRot, Color.green);
+					GizmosHelper.Instance.DrawSphere(centerPos, sphereData.Radius, finalRot,
+						new Color(0, 0.7f, 0.5f, 0.4f));
 					break;
 				case ECheckBoxShapeType.Cylinder:
 					var cylinderData = data;
@@ -92,9 +122,6 @@ namespace Hono.Scripts.Battle.Tools {
 						centerPos + Vector3.down * (cylinderData.Height / 2),
 						0.1f,
 						followAttackerRot * Vector3.forward, 0.001f));
-					GizmosHelper.Instance.DrawCube(centerPos,
-						new Vector3(cylinderData.Radius, cylinderData.Height, cylinderData.Radius), finalRot,
-						Color.green);
 					break;
 				default:
 					Debug.LogError("使用了未实现的检测");
@@ -102,8 +129,7 @@ namespace Hono.Scripts.Battle.Tools {
 			}
 
 			foreach (var raycastHit in raycastHits) {
-				Debug.Log($"handle Name {raycastHit.collider.gameObject.name}");
-				if (!raycastHit.collider.TryGetComponent<ActorModelHandle>(out var handle)) {
+				if (!raycastHit.collider.TryGetComponent<ActorModel>(out var handle)) {
 					continue;
 				}
 

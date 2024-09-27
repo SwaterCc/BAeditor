@@ -24,6 +24,8 @@ namespace Hono.Scripts.Battle
 
             private bool _clearTimer = false;
 
+            public bool ForceStop = false;
+
             /// <summary>
             /// 执行期最大时长
             /// </summary>
@@ -42,6 +44,7 @@ namespace Hono.Scripts.Battle
             protected override void onEnter()
             {
                 _startTime = Time.realtimeSinceStartup;
+                ForceStop = false;
             }
 
             protected override void onExit()
@@ -50,12 +53,18 @@ namespace Hono.Scripts.Battle
                 NextGroupId = _executor.AbilityData.DefaultStartGroupId;
                 CurProxy = null;
                 _groupTimer.Clear();
-            }
+				AllStageFinish = _stageNodeProxies.Count == 0;
+				ForceStop = false;
+			}
 
             public void AddStageProxy(IGroupNodeProxy proxy)
             {
                 _stageNodeProxies.Add(proxy.GetGroupId(), proxy);
-                AllStageFinish = false;
+                AllStageFinish = _stageNodeProxies.Count == 0;
+            }
+
+            public override void OnReset() {
+	            _stageNodeProxies.Clear();
             }
 
             public override void TimerStart(ITimer callBack)
@@ -73,6 +82,8 @@ namespace Hono.Scripts.Battle
 
             public void CurrentGroupStop()
             {
+	            if(CurProxy == null) return;
+	            
                 //清理当前阶段计时器
                 _clearTimer = true;
 
@@ -140,7 +151,7 @@ namespace Hono.Scripts.Battle
                     Debug.LogWarning($"Ability {_ability.Uid} Cid {_executor.AbilityData.ConfigId} TimeOut");
                 }
 
-                return (base.CanExit() && AllStageFinish) || timeOut;
+                return (base.CanExit() && AllStageFinish) || timeOut || ForceStop;
             }
         }
     }

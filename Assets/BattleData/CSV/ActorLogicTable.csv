@@ -1,6 +1,0 @@
-﻿Id,描述,逻辑类型(玩家养成角色0，怪物1，建筑物2，打击点3),职业ID,初始化属性模板Id,拥有技能,拥有Buff,拥有的其他Ability
-Id,Desc,LogicType,ActorClassId,AttrTemplateId,OwnerSkills,OwnerBuffs,ownerOtherAbility
-int,string,int,int,int,intTable,intArray,intArray
-1,1,0,1,1,1001001=1|202001=1|202002=1|202003=1|203001=1|203002=1|203003=1,202200=203200,
-2,2,1,1,10,,,
-3,,4,1,1,,,

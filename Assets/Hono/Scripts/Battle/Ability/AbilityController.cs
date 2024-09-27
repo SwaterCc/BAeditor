@@ -5,9 +5,8 @@ using UnityEngine;
 namespace Hono.Scripts.Battle {
 	public partial class Actor {
 		public class AbilityController {
-			private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 			private readonly Dictionary<int, Ability> _abilities = new();
-			private readonly Dictionary<int, Dictionary<int,Ability>>_configDict = new();
+			
 			private readonly Actor _actor;
 			private readonly List<Ability> _addUidCache = new List<Ability>();
 			private readonly List<int> _removeUid = new List<int>();
@@ -31,14 +30,11 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public Ability CreateAbility(int configId) {
-				var ability = new Ability(_idGenerator.GenerateId(), _actor, configId);
+				var ability = new Ability(_actor, configId);
 				return ability;
 			}
 
 			public void AwardAbility(Ability ability, bool isRunNow) {
-				if (_abilities.ContainsKey(ability.Uid)) {
-					return;
-				}
 				if (isRunNow) ability.Execute();
 				_addUidCache.Add(ability);
 			}
@@ -46,15 +42,11 @@ namespace Hono.Scripts.Battle {
 			/// <summary>
 			/// 赋予能力
 			/// </summary>
-			/// <param name="actorId"></param>
 			/// <param name="configId"></param>
 			/// <param name="isRunNow"></param>
 			public int AwardAbility(int configId, bool isRunNow) {
-				var ability = new Ability(_idGenerator.GenerateId(), _actor, configId);
-				if (!_abilities.ContainsKey(ability.Uid)) {
-				
-					_addUidCache.Add(ability);
-				}
+				var ability = new Ability(_actor, configId);
+				_addUidCache.Add(ability);
 				if (isRunNow)
 					ability.Execute();
 				return ability.Uid;
@@ -63,8 +55,15 @@ namespace Hono.Scripts.Battle {
 			/// <summary>
 			/// 执行指定能力，会从资源检测开始，未Init的会主动调用一次Init
 			/// </summary>
-			public void ExecutingAbility(int uid) {
-				if (_abilities.TryGetValue(uid, out var ability)) {
+			public void ExecutingAbility(int configId) {
+				if (_abilities.TryGetValue(configId, out var ability)) {
+					ability.Execute();
+				}
+			}
+			
+			public void ExecutingAbilityForce(int configId) {
+				if (_abilities.TryGetValue(configId, out var ability)) {
+					ability.Stop();
 					ability.Execute();
 				}
 			}
@@ -79,9 +78,9 @@ namespace Hono.Scripts.Battle {
 				}
 			}
 
-			public void RemoveAbility(int uid) {
-				if (_abilities.ContainsKey(uid)) {
-					_removeUid.Add(uid);
+			public void RemoveAbility(int configId) {
+				if (_abilities.ContainsKey(configId)) {
+					_removeUid.Add(configId);
 				}
 			}
 
@@ -89,7 +88,7 @@ namespace Hono.Scripts.Battle {
 
 				foreach (var ability in _addUidCache) {
 					if (!_abilities.TryAdd(ability.Uid, ability)) {
-						Debug.Log($"AbilityUid {ability.Uid} 添加失败");
+						Debug.Log($"AbilityUid {ability.Uid} 重复添加");
 					}
 				}
 				_addUidCache.Clear();

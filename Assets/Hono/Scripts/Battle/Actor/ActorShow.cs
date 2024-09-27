@@ -3,10 +3,12 @@ using Hono.Scripts.Battle.Tools;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using Object = UnityEngine.Object;
 
 namespace Hono.Scripts.Battle
 {
-    //表演层
+    //表演层,非引擎逻辑与引擎逻辑的接口，负责管理GameObject的创建与删除
     public abstract partial class ActorShow
     {
         public int Uid { get; }
@@ -16,12 +18,17 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// unity中对应的对象
         /// </summary>
-        public GameObject Model { get; protected set; }
+        protected GameObject Model { get; set; }
+
+        /// <summary>
+        /// 模型Id
+        /// </summary>
+        public int ModelId { get; protected set; }
 
         /// <summary>
         /// 表现数据
         /// </summary>
-        public ActorShowTable.ActorShowRow ShowData { get; }
+        public ModelTable.ModelRow ModelData { get; private set; }
         
         /// <summary>
         /// 表现组件
@@ -37,20 +44,24 @@ namespace Hono.Scripts.Battle
 
         protected VarCollection _variables;
 
-        protected ActorRTState _rtState;
+        protected ActorLogic _actorLogic;
 
-        protected ActorShow(Actor actor,ActorShowTable.ActorShowRow data) {
+        protected ActorShow(Actor actor) {
 	        Actor = actor;
             Uid = actor.Uid;
             _components = new Dictionary<Type, AShowComponent>();
-            ShowData = data;
             IsModelLoadFinish = false;
         }
 
-        public void Setup(Tags tags,VarCollection varCollection,ActorRTState rtState) {
+        public void Setup(Tags tags,VarCollection varCollection,ActorLogic actorLogic) {
 	        _tags = tags;
 	        _variables = varCollection;
-	        _rtState = rtState;
+	        _actorLogic = actorLogic;
+
+	        ModelId = _actorLogic.GetAttr<int>(ELogicAttr.AttrModelId);
+	        if (ModelId > 0) {
+		        ModelData = ConfigManager.Table<ModelTable>().Get(ModelId);
+	        }
         }
         
         public async void Init()
@@ -59,7 +70,6 @@ namespace Hono.Scripts.Battle
             await loadModel();
             
             registerComponents();
-            registerChildComponents();
             
             //对象加载完后再load组件
             foreach (var component in _components)
@@ -70,10 +80,33 @@ namespace Hono.Scripts.Battle
             IsModelLoadFinish = true;
         }
 
-        protected abstract UniTask loadModel();
+        protected virtual async UniTask loadModel() {
+	        if (ModelData == null || string.IsNullOrEmpty(ModelData.ModelPath)) return;
+
+	        try
+	        {
+		        Model = await Addressables.LoadAssetAsync<GameObject>(ModelData.ModelPath).ToUniTask();
+		        Model = Object.Instantiate(Model);
+		        if (!Model.TryGetComponent<ActorModel>(out var handle)) {
+			        handle = Model.AddComponent<ActorModel>();
+		        }
+		        handle.ActorUid = Uid;
+		        handle.ActorType = Actor.ActorType;
+		        Model.name = $"{Actor.ActorType}:{Uid}";
+	        }
+	        catch (Exception e)
+	        {
+		        Debug.LogError($"加载模型失败，路径{ModelData.ModelPath}");
+	        }
+        }
 
         public void Update(float dt)
         {
+	        if(Model == null) return;
+
+	        Model.transform.localPosition = Actor.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+	        Model.transform.localRotation = Actor.GetAttr<Quaternion>(ELogicAttr.AttrRot);
+	        
             foreach (var component in _components)
             {
                 component.Value.Update(dt);
@@ -82,29 +115,9 @@ namespace Hono.Scripts.Battle
 
         private void registerComponents()
         {
-         
+	        
         }
-
-        protected virtual void registerChildComponents() { }
-
-
-        protected void addComponent(AShowComponent component)
-        {
-            if (!_components.TryAdd(component.GetType(), component))
-            {
-                Debug.Log($"{this.GetType()}  添加组件 {component.GetType()} Failed!");
-            }
-        }
-
-        public T GetComponent<T>() where T : AShowComponent
-        {
-            if (!_components.TryGetValue(typeof(T), out var component))
-            {
-                Debug.Log($"{this.GetType()} 获取组件 {typeof(T)} 失败!");
-            }
-
-            return (T)component;
-        }
+        
 
         public void Destroy()
         {

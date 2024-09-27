@@ -3,7 +3,7 @@ namespace Hono.Scripts.Battle
     //当前游戏模式
     public class BulletLogic : ActorLogic
     {
-        public BulletLogic(Actor actor, ActorLogicTable.ActorLogicRow logicData) : base(actor, logicData) { }
+        public BulletLogic(Actor actor) : base(actor) { }
         protected override void setupAttrs() {
 		    
         }
@@ -12,7 +12,11 @@ namespace Hono.Scripts.Battle
 		   
         }
 
-        protected override void registerChildComponents() {
+        protected override void setupInput() {
+	        
+        }
+
+        protected override void registerComponents() {
 		    
         }
     }

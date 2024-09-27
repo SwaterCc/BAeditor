@@ -44,6 +44,8 @@ MonoBehaviour:
       Radius: 0
       Angle: 0
     MaxTargetCount: -1
+    HasSelf: 0
     Ranges: []
     Compares: []
+    FilterFunctionType: 0
   MaxTargetCount: 1

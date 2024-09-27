@@ -1,0 +1,6 @@
+﻿Id,描述,建筑Icon,模型表Id,初始阵营,初始化属性模板Id,拥有Buff,拥有的其他Ability
+Id,Desc,RPGIcon,Model,Faction,AttrTemplateId,OwnerBuffs,ownerOtherAbility
+int,string,string,int,int,int,intArray,intArray
+1,1,,,1,1,204200,
+2,2,,,1,10,,
+3,1,,,1,1,,

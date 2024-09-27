@@ -42,7 +42,7 @@ namespace Hono.Scripts.Battle
 
     public partial class ActorLogic
     {
-        public abstract class ALogicComponent {
+        public abstract class ALogicComponent{
 	        public Actor Actor { get;private set; }
 	        public ActorLogic ActorLogic  { get;private set; }
 

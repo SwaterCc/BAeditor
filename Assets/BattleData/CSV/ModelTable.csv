@@ -1,0 +1,14 @@
+﻿Id,描述,模型路径,动画模板
+Id,Desc,ModelPath,AnimTemplateId
+int,string,string,string
+1,测试用胶囊体,Assets/BattleData/Tools/modelTest.prefab,
+2,测试用打击盒,Assets/BattleData/Tools/HitBoxCube.prefab,
+3,测试用怪,Assets/BattleData/Tools/Monster.prefab,
+1001,,Assets/BattleRes/Characters/Character_Holo.prefab,
+1002,,Assets/BattleRes/Characters/Character_Imouto.prefab,
+1003,,Assets/BattleRes/Characters/Character_MagicGirl.prefab,
+1004,,Assets/BattleRes/Characters/Character_Oneesan.prefab,
+1005,,Assets/BattleRes/Characters/Character_Ram.prefab,
+1006,,Assets/BattleRes/Characters/Character_Rem.prefab,
+1007,,Assets/BattleRes/Characters/Character_RobotGirl.prefab,
+1008,,Assets/BattleRes/Characters/Character_Vampire.prefab,

@@ -15,11 +15,12 @@ namespace Hono.Scripts.Battle
 
             protected override void onTick(float dt) { }
 
-            public void OnBeHurt(HitInfo hitInfo)
+            public void OnBeHurt(HitDamageInfo hitDamageInfo)
             {
-                Actor.SetAttr(ELogicAttr.AttrHp, (int)(Actor.GetAttr<int>(ELogicAttr.AttrHp) - hitInfo.FinalDamageValue),
+                Actor.SetAttr(ELogicAttr.AttrHp, (int)(Actor.GetAttr<int>(ELogicAttr.AttrHp) - hitDamageInfo.FinalDamageValue),
 	                false);
                 Debug.Log($"当前血量{Actor.GetAttr<int>(ELogicAttr.AttrHp)}");
+                BattleEventManager.Instance.TriggerEvent(Actor.Uid, EBattleEventType.OnBeHit, hitDamageInfo);
             }
         }
     }

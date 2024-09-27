@@ -17,7 +17,7 @@ MonoBehaviour:
   SkillTargetType: 0
   SkillRange: 3
   EcdMode: 0
-  SkillCD: 20
+  SkillCD: 1
   SkillResCheck: []
   CostType: 0
   SkillResCost: []

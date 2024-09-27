@@ -521,6 +521,9 @@ MonoBehaviour:
     - Name: FilterSetting
       Entry: 6
       Data: 
+    - Name: IsFollowTarget
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -910,6 +913,9 @@ MonoBehaviour:
     - Name: FilterSetting
       Entry: 6
       Data: 
+    - Name: IsFollowTarget
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 

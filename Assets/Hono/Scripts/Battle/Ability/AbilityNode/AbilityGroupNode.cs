@@ -1,5 +1,7 @@
 
 
+using UnityEngine;
+
 namespace Hono.Scripts.Battle
 {
     public partial class Ability
@@ -31,6 +33,7 @@ namespace Hono.Scripts.Battle
             
             public void GroupBegin()
             {
+	            Debug.Log($"[Ability] AbilityId:{_executor.AbilityData.ConfigId} GroupBegin nodeId {NodeId} groupId {_groupData.GroupId}");
                 ((ExecutingCycle)_executor.State.Current).NextGroupId = -1;
                 DoChildrenJob();
             }

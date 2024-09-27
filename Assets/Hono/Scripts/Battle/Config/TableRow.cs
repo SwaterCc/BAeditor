@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle {
 			list.AddRange(array._array);
 			return list;
 		}
-		
+
 		public int this[int idx] => _array[idx];
 
 		public IEnumerator<int> GetEnumerator() {
@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle {
 			list.AddRange(array._array);
 			return list;
 		}
-		
+
 		public float this[int idx] => _array[idx];
 
 		public IEnumerator<float> GetEnumerator() {
@@ -84,7 +84,7 @@ namespace Hono.Scripts.Battle {
 			list.AddRange(array._array);
 			return list;
 		}
-		
+
 		public IEnumerator<string> GetEnumerator() {
 			foreach (var str in _array) {
 				yield return str;
@@ -114,9 +114,10 @@ namespace Hono.Scripts.Battle {
 			foreach (var array in intTable) {
 				table.Add(array);
 			}
+
 			return table;
 		}
-		
+
 		public IEnumerator<IntArray> GetEnumerator() {
 			foreach (var item in _tables) {
 				yield return item;
@@ -146,9 +147,10 @@ namespace Hono.Scripts.Battle {
 			foreach (var array in numTable) {
 				table.Add(array);
 			}
+
 			return table;
 		}
-		
+
 		public IEnumerator<NumberArray> GetEnumerator() {
 			foreach (var iNumberArray in _tables) {
 				yield return iNumberArray;
@@ -162,13 +164,13 @@ namespace Hono.Scripts.Battle {
 
 	public abstract class TableRow {
 		public int Id => _id;
-		private int _id; 
+		private int _id;
 		private readonly Dictionary<string, object> _rowKeyValue = new();
 
 		public object TryGet(string filedName, out object value) {
 			return _rowKeyValue.TryGetValue(filedName, out value);
 		}
-		
+
 		public CSVParser Parser { get; protected set; }
 
 		public abstract class CSVParser {
@@ -187,11 +189,11 @@ namespace Hono.Scripts.Battle {
 			protected abstract void onParse(string[] line);
 
 			protected int parseInt(string csvElement) {
-				return int.Parse(csvElement);
+				return string.IsNullOrEmpty(csvElement) ? 0 : int.Parse(csvElement);
 			}
 
 			protected float parseNumber(string csvElement) {
-				return float.Parse(csvElement);
+				return string.IsNullOrEmpty(csvElement) ? 0 : float.Parse(csvElement);
 			}
 
 			protected string parseString(string csvElement) {
@@ -199,7 +201,7 @@ namespace Hono.Scripts.Battle {
 			}
 
 			protected bool parseBool(string csvElement) {
-				return bool.Parse(csvElement);
+				return !string.IsNullOrEmpty(csvElement) && bool.Parse(csvElement);
 			}
 
 			protected IntArray parseIntArray(string csvElement) {

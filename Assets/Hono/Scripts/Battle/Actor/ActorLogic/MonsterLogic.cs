@@ -4,10 +4,17 @@ namespace Hono.Scripts.Battle
 {
     public class MonsterLogic : ActorLogic
     {
-        public MonsterLogic(Actor actor, ActorLogicTable.ActorLogicRow logicData) : base(actor, logicData) { }
-        protected override void setupAttrs() {
+	    public MonsterLogic(Actor actor) : base(actor) {
+		    MonsterConfig = ConfigManager.Table<MonsterLogicTable>().Get(actor.ConfigId);
+	    }
 
-	        var attrRow = ConfigManager.Instance.GetTable<EntityAttrBaseTable>().Get(LogicData.AttrTemplateId);
+        public MonsterLogicTable.MonsterLogicRow MonsterConfig { get; }
+
+        protected override void setupAttrs() {
+	        SetAttr(ELogicAttr.AttrModelId, MonsterConfig.ModelId, false);
+	        SetAttr(ELogicAttr.AttrFaction, MonsterConfig.Faction, false);
+	        
+	        var attrRow = ConfigManager.Table<EntityAttrBaseTable>().Get(MonsterConfig.AttrTemplateId);
 	        SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
 	        SetAttr(ELogicAttr.AttrMaxHpAdd, attrRow.AttrMaxHpAdd,false);
 	        SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
@@ -36,12 +43,13 @@ namespace Hono.Scripts.Battle
             
         }
 
-        protected override void registerChildComponents()
+        protected override void registerComponents()
         {
+	        addComponent(new AttrCastLv1(this));
             addComponent(new BeHurtComp(this));
-            addComponent(new BuffComp(this));
-            addComponent(new SkillComp(this));
-            addComponent(new AttrCastLv1(this));
+            addComponent(new BuffComp(this,() => MonsterConfig.OwnerBuffs));
+            addComponent(new SkillComp(this, () => MonsterConfig.OwnerSkills));
+            addComponent(new VFXComp(this));
         }
     }
 }

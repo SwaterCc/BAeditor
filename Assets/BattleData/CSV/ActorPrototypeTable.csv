@@ -1,7 +1,0 @@
-﻿Id,原型描述,逻辑ID(ActorLogicTableId),表现ID(ActorShowTableId),Actor类型（人物0，怪物1，建筑2，打击盒3，Npc4）,角色头像
-Id,Desc,LogicConfigId,ShowConfigId,ActorType,RPGIcon
-int,string,int,int,int,string
-1,玩家测试,1,1,0,
-2,怪物测试,2,1,1,
-3,打击点测试,3,2,3,
-4,GameRoot测试,2,1,0,

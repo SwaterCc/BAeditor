@@ -36,6 +36,11 @@ namespace Editor.AbilityEditor.TreeItem {
 				_menu.AddItem(new GUIContent("创建节点/创建Stage节点"), false,
 					AddChild, (EAbilityNodeType.EGroup));
 			}
+			
+			_menu.AddItem(new GUIContent("重置"),false,() => {
+				_nodeData.EventType = EBattleEventType.NoInit;
+				_nodeData.CreateChecker = new Parameter();
+			});
 
 			_menu.AddItem(new GUIContent("删除"), false,
 				Remove);
@@ -83,6 +88,7 @@ namespace Editor.AbilityEditor.TreeItem {
 		protected override void onInit() {
 			_parameterFields = new List<ParameterField>();
 			_curEvent = _nodeData.EventType;
+			
 			if (!AbilityFunctionHelper.EventCheckerDict.TryGetValue(_nodeData.EventType, out var value)) {
 				return;
 			}
@@ -94,6 +100,7 @@ namespace Editor.AbilityEditor.TreeItem {
 			if (!string.IsNullOrEmpty(_nodeData.CreateChecker.FuncName)) {
 				for (int index = 0; index < _nodeData.CreateChecker.FuncParams.Count; index++) {
 					Parameter parameter = _nodeData.CreateChecker.FuncParams[index];
+					if(funcInfo.ParamInfos.Count <= index) continue;
 					_parameterFields.Add(new ParameterField(parameter, funcInfo.ParamInfos[index].ParamName,
 						funcInfo.ParamInfos[index].ParamType));
 				}
@@ -113,6 +120,7 @@ namespace Editor.AbilityEditor.TreeItem {
 			_nodeData.CreateChecker.FuncName = value.CreateFuncName;
 			_nodeData.CreateChecker.FuncParams ??= new List<Parameter>();
 			_nodeData.CreateChecker.FuncParams.Clear();
+			_parameterFields.Clear();
 			foreach (var paramInfo in funcInfo.ParamInfos) {
 				var parameter = new Parameter();
 				_nodeData.CreateChecker.FuncParams.Add(parameter);
@@ -165,10 +173,9 @@ namespace Editor.AbilityEditor.TreeItem {
 					SirenixEditorGUI.BeginBox("参数设置");
 
 					EditorGUILayout.BeginVertical();
-					_nodeData.CreateChecker.FuncParams[0].Value = _nodeData.EventType;
-					for (int index = 0; index < _parameterFields.Count; index++) {
-						if (index == 0) continue;
-						ParameterField parameterField = _parameterFields[index];
+					
+					foreach (var parameterField in _parameterFields)
+					{
 						parameterField.Draw();
 					}
 

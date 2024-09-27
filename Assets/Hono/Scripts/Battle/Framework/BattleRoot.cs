@@ -10,13 +10,8 @@ namespace Hono.Scripts.Battle
 	{
 		public void Tick(float dt);
 	}
-
-	public static class BattleSetting {
-		public const int BattleModePrototypeId = 4;
-		public const int DefaultHitBoxPrototypeId = 3;
-	}
 	
-    public class BattleRoot : MonoBehaviour
+    public class BattleRoot : SingletonMonobehaviour<BattleRoot>
     {
         public List<ActorRefreshPoint> RefreshPoints = new List<ActorRefreshPoint>();
 
@@ -25,42 +20,9 @@ namespace Hono.Scripts.Battle
         private bool _allLoadFinish;
         private Actor _battleMode;
         public static Actor BattleMode => Instance._battleMode;
-
-        public static BattleRoot Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    // 尝试查找现有实例
-                    _instance = FindObjectOfType<BattleRoot>();
-
-                    // 如果没有找到，则创建新的 GameObject 并添加该组件
-                    if (_instance == null)
-                    {
-                        GameObject singletonObject = new GameObject(nameof(BattleRoot));
-                        _instance = singletonObject.AddComponent<BattleRoot>();
-                    }
-                }
-
-                return _instance;
-            }
-        }
-
+        
         protected void Awake()
         {
-            DontDestroyOnLoad(this.gameObject);
-
-            // 检查是否已经存在另一个实例
-            if (_instance != null && _instance != this)
-            {
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                _instance = this;
-            }
-
             _isFirstUpdate = true;
             //初始化Lua环境
             LuaInterface.Init();
@@ -81,7 +43,9 @@ namespace Hono.Scripts.Battle
         }
 
         private void firstUpdate() {
-	        _battleMode = ActorManager.Instance.CreateActor(BattleSetting.BattleModePrototypeId);
+	       
+	        _battleMode = ActorManager.Instance.GetBattleMode();
+	        _battleMode.Init();
             foreach (var point in RefreshPoints)
             {
                 //if (point.PointType == EPointType.Player)
@@ -102,18 +66,18 @@ namespace Hono.Scripts.Battle
 
             if (_isFirstUpdate)
                 firstUpdate();
-
-            _battleMode.Tick(Time.deltaTime);
-         
+            
             //临时做法
             //保证逻辑帧在表现帧之前执行一次
             Tick(Time.deltaTime);
-
+            
+            _battleMode.Update(Time.deltaTime);
             ActorManager.Instance.Update(Time.deltaTime);
         }
 
         public void Tick(float dt)
         {
+	        _battleMode.Tick(Time.deltaTime);
             ActorManager.Instance.Tick(dt);
             MessageCenter.Instance.Tick(dt);
         }

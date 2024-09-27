@@ -1,171 +1,75 @@
 using System;
 
-namespace Hono.Scripts.Battle.Event
-{
-    public interface IEventChecker
-    {
-        public EBattleEventType EventType { get; }
-        public bool compare(IEventInfo info);
-        public void Invoke(IEventInfo info);
-    }
+namespace Hono.Scripts.Battle.Event {
+	public interface IEventChecker {
+		public EBattleEventType EventType { get; }
+		public bool Check(int triggerEventActorUid, IEventInfo info);
+		public void Invoke(IEventInfo info);
+	}
 
-    public abstract class EventChecker : IEventChecker
-    {
-        public EBattleEventType EventType { get; protected set; }
+	public abstract class EventChecker : IEventChecker {
+		/// <summary>
+		/// 事件类型
+		/// </summary>
+		private EBattleEventType _eventType;
+		public EBattleEventType EventType => _eventType;
 
-        /// <summary>
-        /// 检测通过后调用函数
-        /// </summary>
-        private Action<IEventInfo> _func;
+		/// <summary>
+		/// 检测通过后调用函数
+		/// </summary>
+		private Action<IEventInfo> _func;
 
-        /// <summary>
-        /// 绑定的数据类型
-        /// </summary>
-        private Type _bindEventInfo;
+		/// <summary>
+		/// 失效
+		/// </summary>
+		private bool _isDisable;
 
-        private bool _isDisable;
+		/// <summary>
+		/// Checker属于的ActorUid
+		/// </summary>
+		protected readonly int _checkerBelongActorUid;
 
-        protected EventChecker(Action<IEventInfo> func = null, Type bindEventInfo = null)
-        {
-            _func = func;
-            _bindEventInfo = bindEventInfo;
-            _isDisable = false;
-        }
+		/// <summary>
+		/// 是否仅监听全部的actor发送的消息
+		/// </summary>
+		private bool _listenAllActor;
 
-        public void BindFunc(Action<IEventInfo> func)
-        {
-            _func ??= func;
-        }
+		protected EventChecker(EBattleEventType eventType, Actor actor, Action<IEventInfo> func = null) {
+			_func = func;
+			_eventType = eventType;
+			_isDisable = false;
+			_checkerBelongActorUid = actor.Uid;
+		}
 
-        public void BindEventInfoType<TEventInfo>()
-        {
-            _bindEventInfo = typeof(TEventInfo);
-        }
+		public void BindFunc(Action<IEventInfo> func) {
+			_func ??= func;
+		}
 
-        public void SetDisable(bool flag)
-        {
-            _isDisable = flag;
-        }
+		public void SetDisable(bool flag) {
+			_isDisable = flag;
+		}
 
-        public abstract bool compare(IEventInfo info);
+		public void SetIsListenAll(bool flag) {
+			_listenAllActor = flag;
+		}
 
-        public virtual void Invoke(IEventInfo info)
-        {
-            if (_isDisable) return;
-            _func?.Invoke(info);
-        }
+		public bool Check(int triggerEventActorUid, IEventInfo info) {
+			if (!_listenAllActor) {
+				return triggerEventActorUid == _checkerBelongActorUid && onCheck(info);
+			}
 
-        public void UnRegister()
-        {
-            BattleEventManager.Instance.UnRegister(this);
-        }
-    }
+			return onCheck(info);
+		}
 
+		protected abstract bool onCheck(IEventInfo info);
 
-    public class EmptyChecker : EventChecker
-    {
-        public EmptyChecker(EBattleEventType eventType, Action<IEventInfo> func = null, Type bindEventInfo = null) :
-            base(func, bindEventInfo)
-        {
-            EventType = eventType;
-        }
+		public virtual void Invoke(IEventInfo info) {
+			if (_isDisable) return;
+			_func?.Invoke(info);
+		}
 
-        public override bool compare(IEventInfo info)
-        {
-            return true;
-        }
-    }
-
-    public class UseSkillChecker : EventChecker
-    {
-        private readonly int _uid;
-
-        public UseSkillChecker(int uid) : base(null,
-            typeof(SkillUsedEventInfo))
-        {
-            EventType = EBattleEventType.UseSkill;
-            _uid = uid;
-            BindFunc(useSkill);
-        }
-
-        private void useSkill(IEventInfo eventInfo)
-        {
-            var actor = ActorManager.Instance.GetActor(_uid);
-            if (actor != null && actor.Logic.TryGetComponent<ActorLogic.SkillComp>(out var skillComp))
-            {
-                skillComp.UseSkill(((SkillUsedEventInfo)eventInfo).SkillId);
-            }
-        }
-
-        public override bool compare(IEventInfo info)
-        {
-            var skillUsedEventInfo = (SkillUsedEventInfo)info;
-            if (_uid == skillUsedEventInfo.ActorUid)
-            {
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-
-    /// <summary>
-    /// 打击点默认检测来源于该能力的打击点，全局打击点请用tag
-    /// </summary>
-    public class HitEventChecker : EventChecker
-    {
-        /// <summary>
-        /// 属于的Actor
-        /// </summary>
-        private int _belongActorId;
-
-        /// <summary>
-        /// 来源的能力
-        /// </summary>
-        private int _sourceAbility;
-
-        public HitEventChecker(Action<IEventInfo> func = null, int belongActorId = -1,
-            int sourceAbility = -1) :
-            base(func)
-        {
-            EventType = EBattleEventType.OnHit;
-            _belongActorId = belongActorId;
-            _sourceAbility = sourceAbility;
-        }
-
-        public override bool compare(IEventInfo info)
-        {
-            var res = true;
-            var hitInfo = (HitInfo)info;
-
-            if (_sourceAbility != -1)
-            {
-                res = hitInfo.SourceAbilityUId == _sourceAbility;
-            }
-
-            if (_belongActorId != -1)
-            {
-                res = (res && hitInfo.SourceActorId == _belongActorId);
-            }
-
-            return res;
-        }
-    }
-
-    public class MotionEventChecker : EventChecker
-    {
-        private int _motionId;
-
-        public MotionEventChecker(EBattleEventType eventType, int motionId, Action<IEventInfo> func) : base(func)
-        {
-            EventType = eventType;
-            _motionId = motionId;
-        }
-
-        public override bool compare(IEventInfo info)
-        {
-            return true;
-        }
-    }
+		public void UnRegister() {
+			BattleEventManager.Instance.UnRegister(this);
+		}
+	}
 }

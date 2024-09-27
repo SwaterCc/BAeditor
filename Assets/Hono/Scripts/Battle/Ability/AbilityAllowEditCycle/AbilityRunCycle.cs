@@ -43,7 +43,6 @@ namespace Hono.Scripts.Battle
 
             public void Enter()
             {
-                Debug.Log($"Enter {getCycleType()}");
                 onEnter();
                 if (CurState != EAbilityState.Ready)
                     _executor.ExecuteCycleNode(getCycleType());
@@ -83,7 +82,6 @@ namespace Hono.Scripts.Battle
 
             public void Exit()
             {
-                Debug.Log($"Exit {getCycleType()} ----> {CurState}");
                 _state.GetCycleCallback(getCycleType()).OnExit?.Invoke();
                 onExit();
                 _timerNodes.Clear();
@@ -98,6 +96,12 @@ namespace Hono.Scripts.Battle
             {
                 return _timerNodes.Count == 0;
             }
+
+            public virtual void OnReset() {
+	            
+            }
+            
+            public virtual void OnReload() { }
         }
     }
 }

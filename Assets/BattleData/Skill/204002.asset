@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d38054bcf4df42db862c858a9f8be945, type: 3}
+  m_Name: 204002
+  m_EditorClassIdentifier: 
+  SkillId: 204002
+  SkillType: 0
+  SkillTargetType: 1
+  SkillRange: 15
+  EcdMode: 0
+  SkillCD: 8
+  SkillResCheck: []
+  CostType: 0
+  SkillResCost: []
+  PriorityATK: 0
+  PriorityDEF: 0
+  ForceFaceTarget: 1
+  SkillDamageBasePer: 0
+  UseCustomFilter: 1
+  CustomFilter:
+    OpenBoxCheck: 1
+    BoxData:
+      ShapeType: 1
+      Rot:
+        x: 0
+        y: 0
+        z: 0
+      Offset:
+        x: 0
+        y: 0
+        z: 0
+      Length: 0
+      Width: 0
+      Height: 0
+      Radius: 15
+      Angle: 0
+    MaxTargetCount: -1
+    Ranges:
+    - RangeType: 3
+      Value: 1
+    Compares: []
+  MaxTargetCount: 100

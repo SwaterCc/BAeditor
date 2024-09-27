@@ -83,7 +83,6 @@ namespace Hono.Scripts.Battle
 
             public virtual void Enter()
             {
-                Debug.Log($"Enter State {getStateType()}");
                 onEnter();
             }
 
@@ -98,7 +97,6 @@ namespace Hono.Scripts.Battle
 
             public void Exit()
             {
-                Debug.Log($"Exit State {getStateType()}");
                 onExit();
                 _next = null;
             }

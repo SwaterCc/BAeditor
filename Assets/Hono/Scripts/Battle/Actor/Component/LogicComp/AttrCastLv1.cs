@@ -15,7 +15,7 @@ namespace Hono.Scripts.Battle {
 				foreach (var value in values) {
 					int attrId = (int)value;
 
-					if (attrId % 10 == 0) {
+					if (attrId > 10000 && attrId % 10 == 0) {
 						var isDefined = Enum.IsDefined(typeof(ELogicAttr), attrId + 1);
 						isDefined = isDefined && Enum.IsDefined(typeof(ELogicAttr), attrId + 2);
 						isDefined = isDefined && Enum.IsDefined(typeof(ELogicAttr), attrId + 3);
@@ -39,7 +39,7 @@ namespace Hono.Scripts.Battle {
 				var exAdd = Actor.GetAttr<int>(headId + 3);
 				var per = Actor.GetAttr<int>(headId + 4);
 
-				var final = add * (1 + per) + exAdd;
+				int final = (int)(add * (10000 + per)/10000f + exAdd);
 				Actor.SetAttr<int>(headId+1, final, false);
 				var total = Actor.GetAttr<int>(headId + 1);
 				Actor.SetAttr<int>(headId, total, false);

@@ -1,3 +1,4 @@
+using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,29 +14,19 @@ namespace Hono.Scripts.Battle
         /// 运行时唯一ID
         /// </summary>
         public int Uid { get; }
-
-        /// <summary>
-        /// 配置ID
-        /// </summary>
-        public int ConfigId { get; private set; }
-
-        /// <summary>
-        /// 是否无效
-        /// </summary>
-        public bool IsDisposable { get; private set; }
-
+        
         /// <summary>
         /// 变量黑板
         /// </summary>
         public VarCollection Variables { get; }
 
         /// <summary>
-        /// Actor基础数据
+        /// Actor基础类型
         /// </summary>
-        public ActorPrototypeTable.ActorPrototypeRow PrototypeData { get; }
+        public EActorType ActorType { get; }
 
         /// <summary>
-        /// 表现层
+        /// 表现层创建和管理者
         /// </summary>
         private ActorShow _show;
 
@@ -43,11 +34,6 @@ namespace Hono.Scripts.Battle
         /// 逻辑层对外可见
         /// </summary>
         public ActorLogic Logic { get; private set; }
-
-        /// <summary>
-        /// 当前运行状态
-        /// </summary>
-        private readonly ActorRTState _rtState;
 
         /// <summary>
         /// ability控制器
@@ -70,25 +56,29 @@ namespace Hono.Scripts.Battle
         private readonly Tags _tags;
 
         /// <summary>
+        /// 配置id
+        /// </summary>
+        public int ConfigId => GetAttr<int>(ELogicAttr.AttrConfigId);
+        
+        /// <summary>
         /// 当前坐标
         /// </summary>
         public Vector3 Pos => GetAttr<Vector3>(ELogicAttr.AttrPosition);
 
-	    /// <summary>
-	    /// 子child
-	    /// </summary>
-        public List<Actor> Children = new List<Actor>();
+        /// <summary>
+        /// 当前旋转
+        /// </summary>
+        public Quaternion Rot => GetAttr<Quaternion>(ELogicAttr.AttrRot);
 
-        public Actor(int uid)
+        public Actor(int uid, EActorType actorType)
         {
             Uid = uid;
+            ActorType = actorType;
             _tags = new Tags();
-            _rtState = new ActorRTState();
             _attrs = new AttrCollection(this, AttrCreator.Create);
             _abilityController = new AbilityController(this);
             _message = new MessageCollection(this);
             Variables = new VarCollection(this, 128);
-            SetAttr(ELogicAttr.AttrUid, uid, false);
         }
 
         #region 生命周期
@@ -102,16 +92,8 @@ namespace Hono.Scripts.Battle
         {
             Logic = logic;
             _show = show;
-            _rtState.Setup(show, logic, _attrs);
             Logic.Setup(_abilityController, _attrs, _tags, Variables);
-            _show.Setup(_tags, Variables, _rtState);
-        }
-
-        /// <summary>
-        /// 传承数据
-        /// </summary>
-        public void PassData() {
-	        
+            _show.Setup(_tags, Variables, Logic);
         }
         
         /// <summary>
@@ -119,8 +101,8 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public void Init()
         {
-            Logic?.Init();
-            _show?.Init();
+            Logic.Init();
+            _show.Init();
             _message.Init();
         }
 
@@ -130,7 +112,7 @@ namespace Hono.Scripts.Battle
         /// <param name="dt"></param>
         public void Tick(float dt)
         {
-            _rtState.Tick(dt);
+	        Logic.Tick(dt);
             _abilityController.Tick(dt);
         }
 
@@ -140,7 +122,9 @@ namespace Hono.Scripts.Battle
         /// <param name="dt"></param>
         public void Update(float dt)
         {
-            _rtState.Update(dt);
+	        if (_show == null) return;
+	        if(!_show.IsModelLoadFinish) return;
+	        _show.Update(dt);
         }
 
         /// <summary>
@@ -156,6 +140,11 @@ namespace Hono.Scripts.Battle
         #endregion
 
         #region 对外接口
+        
+        public void TriggerEvent(EBattleEventType eventType, IEventInfo eventInfo) {
+	        BattleEventManager.Instance.TriggerEvent(Uid, eventType, eventInfo);
+        }
+        
         public void AddMsgListener(MessageListener listener)
         {
             _message.AddListener(listener);
@@ -195,22 +184,7 @@ namespace Hono.Scripts.Battle
         {
             return _attrs.SetAttrBox(logicAttr.ToInt(), value, isTempData);
         }
-
-        public int AwardAbility(int configId, bool isRunNow)
-        {
-           return _abilityController.AwardAbility(configId, isRunNow);
-        }
-
-        public void ExecutingAbility(int uid)
-        {
-            _abilityController.ExecutingAbility(uid);
-        }
-
-        public void ExecuteAbilityByConfigId(int config)
-        {
-            _abilityController.ExecutingAbilityByConfig(config);
-        }
-
+        
         public bool TryGetAbility(int uid,out Ability ability)
         {
             return _abilityController.TryGetAbility(uid, out ability);
@@ -241,6 +215,13 @@ namespace Hono.Scripts.Battle
             return _abilityController.HasAbility(abilityConfigId);
         }
 
+        public int GetBuffLayer(int buff) {
+	        if (Logic.TryGetComponent<ActorLogic.BuffComp>(out var buffComp)) {
+		       return buffComp.GetBuffLayer(buff);
+	        }
+	        return -1;
+        }
+        
         #endregion
 
         #region LUA_Attr

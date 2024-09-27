@@ -1,11 +1,12 @@
 using Hono.Scripts.Battle.Tools;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle {
 	/// <summary>
 	/// 这个Ability代表了运行时流程管理
 	/// </summary>
-	public sealed partial class Ability : IVarCollectionBind,IReloadHandle {
+	public sealed partial class Ability : IVarCollectionBind, IReloadHandle {
 		/// <summary>
 		/// Ability的上下文，存储当前在运行哪个Ability
 		/// </summary>
@@ -28,7 +29,7 @@ namespace Hono.Scripts.Battle {
 		/// 该能力属于哪个Actor
 		/// </summary>
 		public Actor Actor { get; }
-		
+
 		/// <summary>
 		/// 周期类
 		/// </summary>
@@ -48,11 +49,14 @@ namespace Hono.Scripts.Battle {
 		/// 属于Ability的变量
 		/// </summary>
 		public VarCollection Variables { get; }
-
+		
+		/// <summary>
+		/// tags
+		/// </summary>
 		public Tags Tags { get; private set; }
 
-		public Ability(int uid, Actor actor, int abilityConfigId) {
-			Uid = uid;
+		public Ability(Actor actor, int abilityConfigId) {
+			Uid = abilityConfigId;
 			Actor = actor;
 			ConfigId = abilityConfigId;
 			Variables = new VarCollection(this,64);
@@ -65,13 +69,22 @@ namespace Hono.Scripts.Battle {
 			_executor.Setup();
 		}
 
+		public void Stop() {
+			if (_state.Current.CurState == EAbilityState.Executing) {
+				_state.StopExecuting();
+			}
+		}
+		
 		public void Execute() {
+			Debug.Log($"[Ability] ActorUid {Actor.Uid} Execute AbilityId:{ConfigId} Execute !");
 			_state.TryExecute();
 		}
 
 		public void Reload() {
+			Debug.Log($"Actor {Actor.Uid} Ability {_executor.Ability.ConfigId} Reload");
+			
 			//终止能力运行
-			_state.Stop();
+			_state.ForceStop();
 
 			//卸载加载好的节点
 			_executor.UnInstall();
@@ -98,12 +111,14 @@ namespace Hono.Scripts.Battle {
 
 		public void SetNextGroupId(int id) {
 			if (_state.Current.CurState == EAbilityState.Executing) {
+				Debug.Log($"[Ability] AbilityId:{ConfigId} SetNextGroupId call NextGroupId:{id}");
 				((ExecutingCycle)_state.Current).NextGroupId = id;
 			}
 		}
 
 		public void StopGroup() {
 			if (_state.Current.CurState == EAbilityState.Executing) {
+				Debug.Log($"[Ability] AbilityId:{ConfigId} StopGroup call");
 				((ExecutingCycle)_state.Current).CurrentGroupStop();
 			}
 		}

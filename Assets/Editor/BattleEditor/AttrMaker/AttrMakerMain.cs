@@ -58,7 +58,12 @@ namespace Hono.Scripts.Battle
             private string _flagAttrEnum = "@EnumAttrDefine";
             private string _flagCase = "@Case";
             private string _flagDict = "@AttrDictItem";
-
+            private string _defineTypeDesc = @"/// <summary>
+											   /// 属性类型 @AttrValueType
+											   /// </summary>
+";
+            
+            
             string _attrEnumStr = "";
             string _attrCase = "";
             string _attrDictItem = "";
@@ -94,7 +99,9 @@ namespace Hono.Scripts.Battle
                             continue;
                         }
 
-                        var define = "      "+attrInfo[1] + " = " + attrInfo[2] +",\n";
+						var defineDesc = string.Copy(_defineTypeDesc);
+						defineDesc = defineDesc.Replace("@AttrValueType", attrInfo[0]);
+                        var define = defineDesc + "      "+attrInfo[1] + " = " + attrInfo[2] +",\n";
                         _attrEnumStr += define;
 
                         if (attrInfo[0].ToLower() == "int")

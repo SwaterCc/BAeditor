@@ -25,9 +25,8 @@ namespace Hono.Scripts.Battle {
 					{ EActorState.Death ,new DeathState(this,_actorLogic)},
 					{ EActorState.Stiff ,new StiffState(this,_actorLogic)},
 				};
-				
 			}
-
+			
 			public void Init()
 			{
 				foreach (var state in _states) {

@@ -29,6 +29,11 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public int ImpactValue;
 
+		/// <summary>
+		/// 傷害倍率
+		/// </summary>
+		public int DamageRatio;
+
         /// <summary>
         /// 元素类型
         /// </summary>

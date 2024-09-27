@@ -23,7 +23,8 @@ namespace Hono.Scripts.Battle
 
         public object Invoke(object caller, object[] param)
         {
-            if (param.Length != ParamCount)
+		
+            if (param != null && param.Length != ParamCount)
             {
                 Debug.LogError("参数数量不对");
                 return null;

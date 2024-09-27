@@ -41,7 +41,7 @@ namespace Hono.Scripts.Battle
             {
                 if (_eventNodeData.IsEvent)
                 {
-                    _checker.UnRegister();
+                    _checker?.UnRegister();
                 }
                 else
                 {
@@ -51,6 +51,7 @@ namespace Hono.Scripts.Battle
 
             private void onEventFired(IEventInfo eventInfo)
             {
+	            Debug.Log($"[Ability] ActorUid {_executor.Ability.Actor.Uid} AbilityId:{_executor.AbilityData.ConfigId} EventNodeFired nodeId {NodeId}");
 	            _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
 	            eventInfo.SetFieldsInAbilityVariables(_executor.Ability);
 	            DoChildrenJob();

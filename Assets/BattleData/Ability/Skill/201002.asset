@@ -120,7 +120,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 12
+      Data: 13
     - Name: 
       Entry: 7
       Data: 
@@ -581,13 +581,31 @@ MonoBehaviour:
     - Name: MaxTargetCount
       Entry: 3
       Data: 1
+    - Name: HasSelf
+      Entry: 5
+      Data: false
     - Name: Ranges
       Entry: 7
       Data: 23|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.FilterRange, Assembly-CSharp
+    - Name: RangeType
+      Entry: 3
+      Data: 3
+    - Name: IsReverse
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -600,31 +618,22 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: Hono.Scripts.Battle.FilterAttrCompare, Assembly-CSharp
-    - Name: AttrType
-      Entry: 3
-      Data: 19
-    - Name: CompareResType
-      Entry: 3
-      Data: 2
-    - Name: CompareValue
-      Entry: 4
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 0
     - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
+    - Name: FilterFunctionType
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
+    - Name: IsFollowTarget
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -771,10 +780,13 @@ MonoBehaviour:
       Data: 30|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 3
       Data: 737003611
+    - Name: 
+      Entry: 3
+      Data: 261308282
     - Name: 
       Entry: 13
       Data: 
@@ -817,7 +829,7 @@ MonoBehaviour:
       Data: 34|System.String, mscorlib
     - Name: 
       Entry: 1
-      Data: skill2b
+      Data: 201talentskill2b
     - Name: 
       Entry: 8
       Data: 
@@ -1135,7 +1147,7 @@ MonoBehaviour:
       Data: 53|System.String, mscorlib
     - Name: 
       Entry: 1
-      Data: skill2a
+      Data: 201talentskill2a
     - Name: 
       Entry: 8
       Data: 
@@ -1715,13 +1727,31 @@ MonoBehaviour:
     - Name: MaxTargetCount
       Entry: 3
       Data: 3
+    - Name: HasSelf
+      Entry: 5
+      Data: false
     - Name: Ranges
       Entry: 7
       Data: 84|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.FilterRange, Assembly-CSharp
+    - Name: RangeType
+      Entry: 3
+      Data: 3
+    - Name: IsReverse
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -1734,19 +1764,31 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 0
     - Name: 
-      Entry: 7
-      Data: Hono.Scripts.Battle.FilterAttrCompare, Assembly-CSharp
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: FilterFunctionType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: IsFollowTarget
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VairableName
+      Entry: 6
+      Data: 
     - Name: AttrType
       Entry: 3
-      Data: 19
-    - Name: CompareResType
-      Entry: 3
-      Data: 2
-    - Name: CompareValue
-      Entry: 4
-      Data: 2
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1756,9 +1798,140 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: VairableName
+      Entry: 6
+      Data: 
+    - Name: AttrType
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 261308282
+    - Name: $v
+      Entry: 7
+      Data: 86|Hono.Scripts.Battle.ActionNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 261308282
+    - Name: NodeType
+      Entry: 3
+      Data: 6
+    - Name: ParentId
+      Entry: 3
+      Data: 1740475628
+    - Name: Depth
+      Entry: 3
+      Data: 2
+    - Name: BelongGroupId
+      Entry: 3
+      Data: -1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 87|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: Function
+      Entry: 7
+      Data: 88|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParameterType
+      Entry: 3
+      Data: 1
+    - Name: FuncName
+      Entry: 1
+      Data: AddVFX
+    - Name: FuncParams
+      Entry: 7
+      Data: 89|System.Collections.Generic.List`1[[Hono.Scripts.Battle.Parameter,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 90|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParameterType
+      Entry: 3
+      Data: 0
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: FuncParams
+      Entry: 6
+      Data: 
+    - Name: Value
+      Entry: 7
+      Data: 91|Hono.Scripts.Battle.VFXSetting, Assembly-CSharp
+    - Name: VFXPath
+      Entry: 1
+      Data: Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword
+        Trails/Plain/CFXR4 Sword Trail SLASH (360 Edge).prefab
+    - Name: Offset
+      Entry: 7
+      Data: Hono.Scripts.Battle.SVector3, Assembly-CSharp
+    - Name: x
+      Entry: 4
+      Data: 0
+    - Name: y
+      Entry: 4
+      Data: 0.3
+    - Name: z
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Rot
+      Entry: 7
+      Data: Hono.Scripts.Battle.SVector3, Assembly-CSharp
+    - Name: x
+      Entry: 4
+      Data: 90
+    - Name: y
+      Entry: 4
+      Data: 91.17
+    - Name: z
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Scale
+      Entry: 4
+      Data: 3
+    - Name: VFXBindType
+      Entry: 3
+      Data: 2
+    - Name: BoneName
+      Entry: 1
+      Data: effect_point
+    - Name: Duration
+      Entry: 4
+      Data: 1
     - Name: 
       Entry: 8
       Data: 

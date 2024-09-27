@@ -2,6 +2,7 @@ using System;
 
 namespace Hono.Scripts.Battle {
 	public enum EActorType {
+		BattleMode,
 		Pawn,
 		Monster,
 		Building,
@@ -168,6 +169,20 @@ namespace Hono.Scripts.Battle {
 		Group,
 		All
 	}
+	
+	/// <summary>
+	/// 位移类型
+	/// </summary>
+	public enum EMotionType {
+		//直线
+		Liner,
+
+		//环绕
+		Around,
+
+		//自定义曲线路径
+		Curve,
+	}
 
 	/// <summary>
 	/// cd模式
@@ -211,9 +226,11 @@ namespace Hono.Scripts.Battle {
 		OnlyOne,
 	}
 
+	/// <summary>
+	/// 添加规则
+	/// </summary>
 	public enum EApplicationRequirement {
 		HasTags,
-
 		NoTags,
 	}
 
@@ -283,11 +300,6 @@ namespace Hono.Scripts.Battle {
 	}
 
 	/// <summary>
-	/// 战斗位移的类型
-	/// </summary>
-	public enum EBattleSpecialMotionType { }
-
-	/// <summary>
 	/// 比较结果方式
 	/// </summary>
 	public enum ECompareResType {
@@ -302,7 +314,19 @@ namespace Hono.Scripts.Battle {
 		Tag,
 		ActorState,
 		AbilityID,
-		Faction
+		Faction,
+		ActorType,
+	}
+
+	public enum EFilterFunctionType {
+		None,
+		Random = 1,
+		HighestHp = 10,
+		LeastHp,
+		HighestMp = 20,
+		LeastMp,
+		Far = 30,
+		Near,
 	}
 
 	public enum EVariableOperationType {

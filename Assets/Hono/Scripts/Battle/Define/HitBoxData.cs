@@ -52,14 +52,19 @@ namespace Hono.Scripts.Battle
 	    public int DamageConfigId;
 	    
         /// <summary>
-        /// Aoe打击点AABB盒子数据
+        /// 后续删掉
         /// </summary>
-        [ShowIf("HitType",EHitType.Aoe)]
-        public CheckBoxData AoeData = new();
+        [HideInInspector]
+        public CheckBoxData AoeData;
 
-        public bool UseCustomFilter;
+        public bool UseCustomFilter = true;
         
-        [ShowIf("UseCustomFilter")]
-        public FilterSetting FilterSetting;
+        [ShowIf("HitType",EHitType.Aoe)]
+        public FilterSetting FilterSetting = new();
+
+        /// <summary>
+        /// 是否跟随目标
+        /// </summary>
+        public bool IsFollowTarget;
     }
 }

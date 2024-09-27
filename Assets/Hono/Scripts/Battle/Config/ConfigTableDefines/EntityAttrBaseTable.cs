@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using Object = System.Object;
 
 namespace Hono.Scripts.Battle
 {
@@ -71,7 +70,9 @@ namespace Hono.Scripts.Battle
 
     public partial class EntityAttrBaseTable
     {
-        public class EntityAttrBaseRow : TableRow {
+        public class EntityAttrBaseRow : TableRow
+        {
+           
             /// <summary>
             /// 属性描述
             /// </summary>

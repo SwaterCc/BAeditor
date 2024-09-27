@@ -1,5 +1,10 @@
  #Base
 int AttrUid 1 
+int AttrConfigId 2
+int AttrModelId 3
+int AttrIsSummoned 4
+int AttrActorState 5
+int AttrTopSourceActorUid 10
 int AttrSourceActorUid 11
 int AttrSourceAbilityConfigId 12
 int SourceAbilityType 13
@@ -9,11 +14,15 @@ float AttrBaseSpeed 16
 IntArray AttrAttackTargetUids 17
 int AttrMoveTargetUid 18
 int AttrFaction  19
-int AttrUnselectable 20
-int AttrInvincible 21
+int AttrUnselectable 20  //不可选中
+int AttrInvincible 21   //无敌，抵御一切伤害效果
+int AttrCantBeHatredTarget 47 //1=不会成为任何目标的仇恨对象
+int AttrCantNormalSkill 48  //沉默一般技能，非奥义技能，优先级低可先不处理
+int AttrCantMove 49  //禁足，不可移动
+int AttrStunned 50   //眩晕，生效关系：眩晕＜霸体=无敌；同一时间只允许存在一种眩晕效果
+int AttrSA 51  //superArmor直接霸体，无敌时也会自动拥有直接霸体
  #HP
-
-int AttrHp   10000 
+int AttrHp   10000  //当前HP
 int AttrHpPer   10001 
 int AttrMaxHp   10010 
 int AttrMaxHpTotal   10011 
@@ -22,7 +31,7 @@ int AttrMaxHpExAdd   10013
 int AttrMaxHpPer   10014 
 int AttrMaxHpExPer   10015 
  #MP
-int AttrMp   10020 
+int AttrMp   10020  //当前MP
 int AttrMpPer   10021 
 int AttrMaxMp   10030 
 int AttrMaxMpTotal   10031 
@@ -33,6 +42,34 @@ int AttrMaxMpExPer   10035
  #护盾
 int AttrShield   10040 
 int AttrShieldPer   10041 
+ #全局回能效率万分比
+int AttrMpRecAll  10110 
+int AttrMpRecAllTotal   10111 
+int AttrMpRecAllAdd   10112 
+int AttrMpRecAllExAdd   10113 
+int AttrMpRecAllPer   10114 
+int AttrMpRecAllExPer   10115 
+ #释放非奥义技能，角色回能万分比
+int AttrMpRecCast   10120 
+int AttrMpRecCastTotal   10121 
+int AttrMpRecCastAdd   10122 
+int AttrMpRecCastExAdd   10123 
+int AttrMpRecCastPer   10124 
+int AttrMpRecCastExPer   10125 
+ #受击回能万分比
+int AttrMpRecBehit   10130 
+int AttrMpRecBehitTotal   10131 
+int AttrMpRecBehitAdd   10132 
+int AttrMpRecBehitExAdd   10133 
+int AttrMpRecBehitPer   10134 
+int AttrMpRecBehitExPer   10135 
+ #击杀回能万分比
+int AttrMpRecKilled   10140 
+int AttrMpRecKilledTotal   10141 
+int AttrMpRecKilledAdd   10142 
+int AttrMpRecKilledExAdd   10143 
+int AttrMpRecKilledPer   10144 
+int AttrMpRecKilledExPer   10145 
  #攻击力
 int AttrAttack   12100 
 int AttrAttackTotal   12101 
@@ -61,91 +98,91 @@ int AttrIgnoreDefensePCTAdd   12132
 int AttrIgnoreDefensePCTExAdd   12133 
 int AttrIgnoreDefensePCTPer   12134 
 int AttrIgnoreDefensePCTExPer   12135 
- #暴击率
+ #暴击率万分比
 int AttrCrit   12140 
 int AttrCritTotal   12141 
 int AttrCritAdd   12142 
 int AttrCritExAdd   12143 
 int AttrCritPer   12144 
 int AttrCritExPer   12145 
- #暴击伤害
+ #暴击伤害万分比
 int AttrCritDamage   12150 
 int AttrCritDamageTotal   12151 
 int AttrCritDamageAdd   12152 
 int AttrCritDamageExAdd   12153 
 int AttrCritDamagePer   12154 
 int AttrCritDamageExPer   12155 
- #治疗强度
+ #治疗强度万分比
 int AttrHealIntensity   12200 
 int AttrHealIntensityTotal   12201 
 int AttrHealIntensityAdd   12202 
 int AttrHealIntensityExAdd   12203 
 int AttrHealIntensityPer   12204 
 int AttrHealIntensityExPer   12205 
- #治疗效果
+ #治疗效果万分比
 int AttrHeal   13010 
 int AttrHealTotal   13011 
 int AttrHealAdd   13012 
 int AttrHealExAdd   13013 
 int AttrHealPer   13014 
 int AttrHealExPer   13015 
- #被治疗效果
+ #被治疗效果万分比
 int AttrHealed   13020 
 int AttrHealedTotal   13021 
 int AttrHealedAdd   13022 
 int AttrHealedExAdd   13023 
 int AttrHealedPer   13024 
 int AttrHealedExPer   13025 
- #攻击速度
+ #攻击速度万分比
 int AttrAttackSpeedPCT   12500 
 int AttrAttackSpeedPCTTotal   12501 
 int AttrAttackSpeedPCTAdd   12502 
 int AttrAttackSpeedPCTExAdd   12503 
 int AttrAttackSpeedPCTPer   12504 
 int AttrAttackSpeedPCTExPer   12505 
- #CDR 
+ #CDR万分比
 int AttrSkillCDPCT   12520 
 int AttrSkillCDPCTTotal   12521 
 int AttrSkillCDPCTAdd   12522 
 int AttrSkillCDPCTExAdd   12523 
 int AttrSkillCDPCTPer   12524 
 int AttrSkillCDPCTExPer   12525 
- #全属性抗性穿透
+ #全属性抗性穿透万分比
 int AttrElementPenPCT   14000 
 int AttrElementPenPCTTotal   14001 
 int AttrElementPenPCTAdd   14002 
 int AttrElementPenPCTExAdd   14003 
 int AttrElementPenPCTPer   14004 
 int AttrElementPenPCTExPer   14005 
- #全属性抗性
+ #全属性抗性万分比
 int AttrElementRedPCT   14010 
 int AttrElementRedPCTTotal   14011 
 int AttrElementRedPCTAdd   14012 
 int AttrElementRedPCTExAdd   14013 
 int AttrElementRedPCTPer   14014 
 int AttrElementRedPCTExPer   14015 
- #物理属性抗性穿透
+ #物理属性抗性穿透万分比
 int AttrElementPhysicalPenPCT   14020 
 int AttrElementPhysicalPenPCTTotal   14021 
 int AttrElementPhysicalPenPCTAdd   14022 
 int AttrElementPhysicalPenPCTExAdd   14023 
 int AttrElementPhysicalPenPCTPer   14024 
 int AttrElementPhysicalPenPCTExPer   14025 
- #物理属性抗性
+ #物理属性抗性万分比
 int AttrElementPhysicalRedPCT   14030 
 int AttrElementPhysicalRedPCTTotal   14031 
 int AttrElementPhysicalRedPCTAdd   14032 
 int AttrElementPhysicalRedPCTExAdd   14033 
 int AttrElementPhysicalRedPCTPer   14034 
 int AttrElementPhysicalRedPCTExPer   14035 
- #元素属性抗性穿透
+ #元素属性抗性穿透万分比
 int AttrElementMagicPenPCT   14040 
 int AttrElementMagicPenPCTTotal   14041 
 int AttrElementMagicPenPCTAdd   14042 
 int AttrElementMagicPenPCTExAdd   14043 
 int AttrElementMagicPenPCTPer   14044 
 int AttrElementMagicPenPCTExPer   14045 
- #元素属性抗性
+ #元素属性抗性万分比
 int AttrElementMagicRedPCT   14050 
 int AttrElementMagicRedPCTTotal   14051 
 int AttrElementMagicRedPCTAdd   14052 

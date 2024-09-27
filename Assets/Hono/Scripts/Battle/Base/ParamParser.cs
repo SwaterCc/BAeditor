@@ -29,7 +29,13 @@ namespace Hono.Scripts.Battle
                     value = (T)ability.Variables.Get(parameter.VairableName);
                     break;
                 case EParameterType.Attr:
-                    value =  ability.Actor.GetAttr<T>(parameter.AttrType);
+					if(typeof(T) is object) {
+						value = (T)ability.Actor.GetAttrBox(parameter.AttrType);
+					}
+					else {
+						value = ability.Actor.GetAttr<T>(parameter.AttrType);
+					}
+                 
                     break;
             }
 

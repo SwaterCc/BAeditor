@@ -19,6 +19,8 @@ namespace Hono.Scripts.Battle
             public AbilityRunCycle Current => _curCycle;
             public bool HasExecuteOrder => _hasExecuteOrder;
 
+            public bool _exitExecuting;
+            
             private readonly Ability _ability;
             private AbilityRunCycle _curCycle;
             private bool _hasExecuteOrder;
@@ -98,7 +100,7 @@ namespace Hono.Scripts.Battle
                 catch (Exception e)
                 {
                     Debug.LogError(e);
-                    Stop();
+                    ForceStop();
                     _ability.Variables.Clear();
                 }
             }
@@ -113,21 +115,34 @@ namespace Hono.Scripts.Battle
                 _hasExecuteOrder = false;
             }
 
-            public void Stop()
+            public void ForceStop()
             {
                 _curCycle?.Exit();
                 _curCycle = null;
             }
 
+            public void StopExecuting() {
+	            ((ExecutingCycle)(_cycles[EAbilityState.Executing])).ForceStop= true;
+            }
+            
             public void Reset()
             {
+                foreach (var cycle in _cycles) {
+	                cycle.Value.OnReset();
+                }
                 _hasError = false;
+            }
+
+            public void Reload() {
+	            foreach (var cycle in _cycles) {
+		            cycle.Value.OnReload();
+	            }
             }
 
             public void OnDestroy()
             {
                 _hasExecuteOrder = false;
-                Stop();
+                ForceStop();
             }
         }
     }

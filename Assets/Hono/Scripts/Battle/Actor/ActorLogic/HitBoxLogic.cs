@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle {
 
 		private readonly Dictionary<BeHurtComp, int> _hitCountDict = new();
 
-		public HitBoxLogic(Actor actor, ActorLogicTable.ActorLogicRow logicData) : base(actor, logicData) {
+		public HitBoxLogic(Actor actor) : base(actor) {
 			_filterSetting = new FilterSetting();
 		}
 
@@ -32,14 +32,15 @@ namespace Hono.Scripts.Battle {
 			_sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
 			_sourceAbilityConfigId = GetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId);
 			_sourceAbilityType = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId).Type;
-			_hitBoxData = (HitBoxData)(_variables.Get("hitBoxData"));
+			_hitBoxData = (HitBoxData)(Variables.Get("hitBoxData"));
 
 			var attacker = ActorManager.Instance.GetActor(_sourceActorId);
-			_targetUid = (int)(_variables.Get("targetUid"));
+			_targetUid = (int)(Variables.Get("targetUid"));
 			var target = ActorManager.Instance.GetActor(_targetUid);
-			var pos = target.Logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+			var pos = target.GetAttr<Vector3>(ELogicAttr.AttrPosition);
 			SetAttr(ELogicAttr.AttrPosition, pos, false);
-			SetAttr(ELogicAttr.AttrFaction, attacker.Logic.GetAttr<int>(ELogicAttr.AttrFaction), false);
+			SetAttr(ELogicAttr.AttrRot, attacker.GetAttr<Quaternion>(ELogicAttr.AttrRot), false);
+			SetAttr(ELogicAttr.AttrFaction, attacker.GetAttr<int>(ELogicAttr.AttrFaction), false);
 
 			_intervalDuration = _hitBoxData.Interval;
 			_curCount = 0;
@@ -78,7 +79,11 @@ namespace Hono.Scripts.Battle {
 			}
 		}
 
-		protected override void registerChildComponents() { }
+		protected override void setupInput() {
+			
+		}
+
+		protected override void registerComponents() { }
 
 		private void hitCounter(BeHurtComp beHurtComp) {
 			if (_hitCountDict.TryGetValue(beHurtComp, out var count)) {
@@ -91,13 +96,12 @@ namespace Hono.Scripts.Battle {
 			}
 		}
 
-		private HitInfo makeHitInfo(DamageResults damageResults) {
+		private HitInfo makeHitInfo() {
 			var hitInfo = new HitInfo();
 			hitInfo.SourceActorId = _sourceActorId;
 			hitInfo.SourceAbilityConfigId = _sourceAbilityConfigId;
 			hitInfo.SourceAbilityType = (int)_sourceAbilityType;
-			hitInfo.SourceAbilityUId = (int)Actor.Variables.Get("abilityUid");
-			hitInfo.ParseDamageResult(damageResults);
+			hitInfo.SourceAbilityUId = _sourceAbilityConfigId;
 			hitInfo.DamageConfigId = _hitBoxData.DamageConfigId;
 			hitInfo.SourceAbilityType = (int)_sourceAbilityType;
 			return hitInfo;
@@ -110,7 +114,7 @@ namespace Hono.Scripts.Battle {
 			damageConfig.ElementType = (EDamageElementType)damage.ElementType;
 			damageConfig.FormulaName = damage.FormulaName;
 			damageConfig.ImpactValue = damage.ImpactValue;
-			Debug.Log($"damageConfig.ImpactValue {damageConfig.ImpactValue}");
+			damageConfig.DamageRatio = damage.DamageRatio;
 			foreach (var addiId in damage.AdditiveId) {
 				var damageAddi = ConfigManager.Table<DamageAdditiveTable>().Get(addiId);
 				var funcInfo = new DamageFuncInfo();
@@ -141,37 +145,53 @@ namespace Hono.Scripts.Battle {
 			hitCounter(beHurtComp);
 			var damageItem = makeDamageConfig();
 			var res = LuaInterface.GetDamageResults(attacker, target, damageInfo, damageItem);
-			var hitInfo = makeHitInfo(res);
-			hitInfo.HitTargetUid = _targetUid;
-			BattleEventManager.Instance.TriggerEvent(EBattleEventType.OnHit, hitInfo);
-			beHurtComp.OnBeHurt(hitInfo);
+			var hitInfo = makeHitInfo();
+			BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHit, hitInfo);
+			
+			var hitDamageInfo = new HitDamageInfo(hitInfo);
+			hitDamageInfo.HitTargetUid = _targetUid;
+			hitInfo.HitBoxHitCount = 1;
+			hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
+			BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHitDamage, hitDamageInfo);
+			
+			beHurtComp.OnBeHurt(hitDamageInfo);
 		}
 
 		private void aoeHit(Actor attacker, DamageInfo damageInfo) {
 			//aoe会根据目标坐标二次筛选
 			var targetIds = ActorManager.Instance.UseFilter(Actor, _filterSetting);
-			damageInfo.HitCount = targetIds.Count;
+			var finalTargets = new List<BeHurtComp>();
+			
 			foreach (var targetUid in targetIds) {
 				var target = ActorManager.Instance.GetActor(targetUid);
-				if (target == null) return;
-				if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
-				hitCounter(beHurtComp);
+				if (target == null)
+					continue;
+				if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp))
+					continue;
+				finalTargets.Add(beHurtComp);
+			}
+			
+			damageInfo.HitCount = finalTargets.Count;
+			var hitInfo = makeHitInfo();
+			hitInfo.HitBoxHitCount = finalTargets.Count;
+			BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHit, hitInfo);
+			
+			foreach (var beHurtComp in finalTargets) {
 				var damageItem = makeDamageConfig();
-				var res = LuaInterface.GetDamageResults(attacker, target, damageInfo, damageItem);
-				var hitInfo = makeHitInfo(res);
-				hitInfo.HitTargetUid = targetUid;
-
+				var res = LuaInterface.GetDamageResults(attacker, beHurtComp.Actor, damageInfo, damageItem);
+				
+				var hitDamageInfo = new HitDamageInfo(hitInfo);
+				hitDamageInfo.ParseDamageResult(res);
+				hitDamageInfo.HitTargetUid = beHurtComp.Actor.Uid;
+				
 				if (beHurtComp.Actor.GetAttr<int>(ELogicAttr.AttrInvincible) != 0) {
 					Debug.Log($"actor uid: {beHurtComp.Actor.Uid}  是无敌的");
-					hitInfo.IsImmunity = true;
+					hitDamageInfo.IsImmunity = true;
 				}
-
-				if (beHurtComp.Actor.GetAttr<int>(ELogicAttr.AttrHp) <= 0) {
-					hitInfo.IsKillTarget = true;
-				}
-
-				BattleEventManager.Instance.TriggerEvent(EBattleEventType.OnHit, hitInfo);
-				beHurtComp.OnBeHurt(hitInfo);
+				hitDamageInfo.IsKillTarget = (beHurtComp.Actor.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
+				Debug.Log($"[OnHit] hitBoxUid {Uid}: AttackUid{attacker.Uid} -----> targetUid {beHurtComp.Actor.Uid}");
+				BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHitDamage, hitDamageInfo);
+				beHurtComp.OnBeHurt(hitDamageInfo);
 			}
 		}
 
@@ -179,27 +199,14 @@ namespace Hono.Scripts.Battle {
 			var attacker = ActorManager.Instance.GetActor(_sourceActorId);
 
 			var damageInfo = new DamageInfo();
-			damageInfo.SourceActorId = _sourceActorId;
 			damageInfo.SourceAbilityConfigId = _sourceAbilityConfigId;
 			damageInfo.SourceAbilityType = _sourceAbilityType;
-			var tags = (List<int>)_variables.Get("abilityTags");
+			var tags = (List<int>)Variables.Get("abilityTags");
 			if (tags != null) {
 				damageInfo.Tags.AddRange(tags);
 			}
 			else {
 				Debug.Log("tag == null");
-			}
-
-			var abilityData = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId);
-			switch (abilityData.Type) {
-				case EAbilityType.Skill:
-					var skillData = AssetManager.Instance.GetData<SkillData>(_sourceAbilityConfigId);
-					damageInfo.BaseDamagePer = skillData.SkillDamageBasePer;
-					break;
-				case EAbilityType.Buff:
-					var buffData = AssetManager.Instance.GetData<BuffData>(_sourceAbilityConfigId);
-					damageInfo.BaseDamagePer = buffData.BuffDamageBasePer;
-					break;
 			}
 
 			for (int i = 0; i < _hitBoxData.OnceHitDamageCount; i++) {

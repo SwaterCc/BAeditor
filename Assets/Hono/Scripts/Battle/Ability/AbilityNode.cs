@@ -52,12 +52,12 @@ namespace Hono.Scripts.Battle {
 				foreach (var node in Children) {
 					if (node._data.NodeType == EAbilityNodeType.EBranchControl) {
 						var ifGroupId = ((BranchNodeData)(node._data)).BranchGroup;
-						Debug.Log($"IfGroupId {ifGroupId}");
 						if (IfInfos.TryGetValue(ifGroupId, out var hasSuccess) && hasSuccess) {
 							continue;
 						}
 					}
-
+					
+					Debug.Log($"[Ability] AbilityId:{_executor.AbilityData.ConfigId} nodeId {NodeId} NodeType {NodeType} DoChildrenJob Next Node is {node.NodeType} : {node.NodeId}");
 					node.DoJob();
 				}
 

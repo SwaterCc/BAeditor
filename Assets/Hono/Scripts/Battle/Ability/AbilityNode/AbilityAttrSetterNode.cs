@@ -17,7 +17,9 @@ namespace Hono.Scripts.Battle {
 
 				var command =
 					_executor.Ability.Actor.SetAttrBox(_attrNodeData.LogicAttr, value, _attrNodeData.IsTempAttr);
-				_executor.Ability.AddCommand(command);
+
+				if (command != null)
+					_executor.Ability.AddCommand(command);
 
 				DoChildrenJob();
 			}

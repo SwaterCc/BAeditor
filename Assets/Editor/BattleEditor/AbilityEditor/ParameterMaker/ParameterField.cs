@@ -142,7 +142,8 @@ namespace Editor.AbilityEditor
 
         private void baseDraw()
         {
-            //变量名加按钮
+	        try {
+		          //变量名加按钮
             switch (_type.GetParameterValueType())
             {
                 case EParameterValueType.Int:
@@ -184,6 +185,15 @@ namespace Editor.AbilityEditor
                     EditorGUILayout.LabelField($"还未实现{_type}");
                     break;
             }
+	        }
+	        catch (InvalidCastException e) {
+		        Debug.LogError(e);
+		        _parameter.Value = null;
+	        }
+	        catch (Exception e) {
+		        Debug.LogError(e);
+		        throw;
+	        }
         }
 
         private void attrDraw()
