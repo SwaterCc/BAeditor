@@ -81,7 +81,7 @@ namespace Editor.AbilityEditor.TreeItem
         {
             _firstInterval = new ParameterField(_nodeData.FirstInterval, "第一次触发间隔", typeof(float));
             _interval = new ParameterField(_nodeData.Interval, "触发间隔", typeof(float));
-            _maxCount = new ParameterField(_nodeData.MaxCount, "触发次数", typeof(int));
+            _maxCount = new ParameterField(_nodeData.MaxCount, "触发次数(-1为无限次)", typeof(int));
         }
 
         private void OnGUI()

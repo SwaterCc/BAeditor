@@ -26,7 +26,10 @@ namespace Hono.Scripts.Battle {
 			_filterSetting = new FilterSetting();
 		}
 
-		protected override void setupAttrs() { }
+		protected override void setupAttrs()
+		{
+			SetAttr(ELogicAttr.AttrUnselectable, 1, false);
+		}
 
 		protected override void onInit() {
 			_sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
@@ -40,8 +43,7 @@ namespace Hono.Scripts.Battle {
 			var pos = target.GetAttr<Vector3>(ELogicAttr.AttrPosition);
 			SetAttr(ELogicAttr.AttrPosition, pos, false);
 			SetAttr(ELogicAttr.AttrRot, attacker.GetAttr<Quaternion>(ELogicAttr.AttrRot), false);
-			SetAttr(ELogicAttr.AttrFaction, attacker.GetAttr<int>(ELogicAttr.AttrFaction), false);
-
+			
 			_intervalDuration = _hitBoxData.Interval;
 			_curCount = 0;
 
@@ -83,7 +85,7 @@ namespace Hono.Scripts.Battle {
 			
 		}
 
-		protected override void registerComponents() { }
+		protected override void setupComponents() { }
 
 		private void hitCounter(BeHurtComp beHurtComp) {
 			if (_hitCountDict.TryGetValue(beHurtComp, out var count)) {

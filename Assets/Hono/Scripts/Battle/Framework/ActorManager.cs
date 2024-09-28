@@ -74,16 +74,21 @@ namespace Hono.Scripts.Battle
             return actor;
         }
         
-        public Actor SummonActor(Actor summoner, EActorType type, int configId) {
+        public Actor SummonActor(Actor summoner, EActorType type, int configId ,bool fromTopSummer) {
 	        var summoned = getActor(type, configId);
 	        summoned.SetAttr(ELogicAttr.AttrIsSummoned, 1, false);
-	        summoned.SetAttr(ELogicAttr.AttrSourceActorUid, summoner.GetAttr<int>(ELogicAttr.AttrSourceActorUid),false);
+            var sourceUid = fromTopSummer
+                ? summoner.GetAttr<int>(ELogicAttr.AttrTopSourceActorUid)
+                : summoner.GetAttr<int>(ELogicAttr.AttrSourceActorUid);
+	        summoned.SetAttr(ELogicAttr.AttrSourceActorUid, sourceUid,false);
 	        summoned.SetAttr(ELogicAttr.AttrTopSourceActorUid, summoner.GetAttr<int>(ELogicAttr.AttrTopSourceActorUid),false);
-	        return summoned;
+            summoned.SetAttr(ELogicAttr.AttrFaction, summoner.GetAttr<int>(ELogicAttr.AttrFaction), false);
+            return summoned;
         }
 
-        public Actor SummonActorByAbility(Ability summonerAbility,EActorType type, int configId) {
-	        var summoned = SummonActor(summonerAbility.Actor, type, configId);
+        public Actor SummonActorByAbility(Ability summonerAbility,EActorType type, int configId, bool fromTopSummer)
+        {
+            var summoned = SummonActor(summonerAbility.Actor, type, configId, fromTopSummer);
 	        summoned.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, summonerAbility.ConfigId, false);
 	        return summoned;
         }

@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle {
 			throw new System.NotImplementedException();
 		}
 
-		protected override void registerComponents() {
+		protected override void setupComponents() {
 			throw new System.NotImplementedException();
 		}
 	}

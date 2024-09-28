@@ -40,7 +40,7 @@
 			_inputHandle = new PawnLeaderInput();
 		}
 
-		protected override void registerComponents() {
+		protected override void setupComponents() {
 			addComponent(new AttrCastLv1(this));
 			addComponent(new SkillComp(this, () => PawnLogicRow.OwnerSkills));
 			addComponent(new BuffComp(this,() => PawnLogicRow.OwnerBuffs));

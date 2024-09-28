@@ -43,7 +43,7 @@ namespace Hono.Scripts.Battle
             
         }
 
-        protected override void registerComponents()
+        protected override void setupComponents()
         {
 	        addComponent(new AttrCastLv1(this));
             addComponent(new BeHurtComp(this));

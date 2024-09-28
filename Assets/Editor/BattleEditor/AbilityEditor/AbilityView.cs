@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
@@ -39,6 +40,9 @@ namespace Editor.AbilityEditor
                     break;
                 case EAbilityType.Buff:
                     ExDrawer = new BuffDrawer();
+                    break;
+                case EAbilityType.Bullet:
+                    ExDrawer = new BulletDrawer();
                     break;
             }
             ExDrawer?.LoadAsset(AbilityData.ConfigId);
@@ -100,6 +104,7 @@ namespace Editor.AbilityEditor
                         await AssetManager.Instance.ReloadAsset<BuffData>(AbilityData.ConfigId);
                         break;
                     case EAbilityType.Bullet:
+                        await AssetManager.Instance.ReloadAsset<BulletData>(AbilityData.ConfigId);
                         break;
                     case EAbilityType.GameMode:
                         break;

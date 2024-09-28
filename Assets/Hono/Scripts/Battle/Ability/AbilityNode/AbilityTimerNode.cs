@@ -54,7 +54,7 @@ namespace Hono.Scripts.Battle
 
             public bool IsFinish()
             {
-                return _count >= _maxCount;
+                return _maxCount != -1 && _count >= _maxCount;
             }
 
             public void Step(float dt)

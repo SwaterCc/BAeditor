@@ -21,7 +21,7 @@ namespace Hono.Scripts.Battle {
 				return _motionDict.Count > 0;
 			}
 
-			public int AddMotion(int moveTargetUid, MotionSetting motionSetting) {
+			public int AddMotion(int moveTargetUid, MotionSetting motionSetting, Action<int> moveCallBack = null) {
 				if (moveTargetUid <= 0) {
 					Debug.LogError("找不到位移目标");
 					return -1;
@@ -33,7 +33,7 @@ namespace Hono.Scripts.Battle {
 				}
 
 				var uid = _idGenerator.GenerateId();
-				var motion = new Motion(ActorLogic, moveTarget, motionSetting);
+				var motion = new Motion(ActorLogic, moveTarget, motionSetting, moveCallBack);
 				_motionDict.Add(uid, motion);
 				MotionAdd?.Invoke(motion);
 				return uid;

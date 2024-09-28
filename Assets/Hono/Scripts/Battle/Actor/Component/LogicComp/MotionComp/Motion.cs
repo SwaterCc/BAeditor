@@ -1,6 +1,5 @@
-using Hono.Scripts.Battle.Event;
 using System;
-using Unity.Mathematics;
+using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle {
@@ -15,6 +14,7 @@ namespace Hono.Scripts.Battle {
 			private MotionEventInfo _motionEventInfo;
 			private Vector3 _moveOffset;
 			private float _speed;
+			private Action<int> _moveCollisionCallBack;
 			
 			private bool _isBegin;
 			public bool IsBegin => _isBegin; 
@@ -22,16 +22,15 @@ namespace Hono.Scripts.Battle {
 			private bool _isEnd;
 			public bool IsEnd => _isEnd;
 
-			public Motion(ActorLogic logic, Actor target, MotionSetting setting) {
+			public Motion(ActorLogic logic, Actor target, MotionSetting setting,Action<int> callBack = null) {
 				_moveTargetUid = target.Uid;
 				_setting = setting;
 				_logic = logic;
 				_moveOffset = Vector3.zero;
-				_motionEventInfo = new MotionEventInfo() {
-					MotionId = setting.EventId
-				};
+				_motionEventInfo = new MotionEventInfo();
 				_speed = setting.Speed;
 				_moveTargetPos = target.Pos;
+				_moveCollisionCallBack = callBack;
 			}
 
 			#region 重载运算符
@@ -66,7 +65,7 @@ namespace Hono.Scripts.Battle {
 					_moveTargetPos = target.Pos;
 				}
 				else {
-					if (math.abs(Vector3.Distance(_logic.Actor.Pos, _moveTargetPos)) < 0.25f) {
+					if (Mathf.Abs(Vector3.Distance(_logic.Actor.Pos, _moveTargetPos)) < 0.25f) {
 						_isEnd = true;
 					}
 				}
@@ -107,7 +106,12 @@ namespace Hono.Scripts.Battle {
 			}
 			
 			public void OnMoveCollision(int colliderUid) {
+				_moveCollisionCallBack?.Invoke(colliderUid);
+				
 				if(_setting.TriggerEventClose) return;
+
+				_motionEventInfo.MotionCollisionId = colliderUid;
+				BattleEventManager.Instance.TriggerEvent(_logic.Uid, EBattleEventType.OnMoveCollision, _motionEventInfo);
 				
 				if (!_setting.StopAfterCollision) {
 					if (colliderUid != _moveTargetUid) {
@@ -115,7 +119,6 @@ namespace Hono.Scripts.Battle {
 					}
 				}
 				
-				BattleEventManager.Instance.TriggerEvent(_logic.Uid, EBattleEventType.OnMoveCollision, _motionEventInfo);
 				_isEnd = true;
 			}
 

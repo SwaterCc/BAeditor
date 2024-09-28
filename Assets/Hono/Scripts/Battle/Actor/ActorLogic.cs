@@ -81,12 +81,13 @@ namespace Hono.Scripts.Battle {
 			
 			setupAttrs();
 			setupInput();
+			setupComponents();
 			setupStateMachine();
 		}
 
 		public void Init() {
 			onInit();
-			registerComponents();
+			
 			foreach (var component in _components) {
 				component.Value.Init();
 			}
@@ -100,7 +101,7 @@ namespace Hono.Scripts.Battle {
 
 		protected abstract void onInit();
 
-		protected abstract void registerComponents();
+		protected abstract void setupComponents();
 
 		protected void addComponent(ALogicComponent component) {
 			if (!_components.TryAdd(component.GetType(), component)) {

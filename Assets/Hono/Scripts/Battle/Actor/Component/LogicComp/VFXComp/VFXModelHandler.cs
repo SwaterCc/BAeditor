@@ -1,10 +1,6 @@
 using Cysharp.Threading.Tasks;
-using Hono.Scripts.Battle.Tools;
-using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Serialization;
@@ -38,8 +34,8 @@ namespace Hono.Scripts.Battle {
 			}
 
 			if (!_hasError) {
-				foreach (var transform in EffectPointList) {
-					_effectPoints.Add(transform.name, transform);
+				foreach (var point in EffectPointList) {
+					_effectPoints.Add(transform.name, point);
 				}
 
 				List<UniTask> tasks = new();

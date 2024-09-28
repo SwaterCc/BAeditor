@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle
 		public void Tick(float dt);
 	}
 	
-    public class BattleRoot : SingletonMonobehaviour<BattleRoot>
+    public class BattleRoot : MonoSingleton<BattleRoot>
     {
         public List<ActorRefreshPoint> RefreshPoints = new List<ActorRefreshPoint>();
 

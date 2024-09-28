@@ -9,7 +9,7 @@ namespace Hono.Scripts.Battle {
 
 		protected override void onInit() { }
 
-		protected override void registerComponents() {
+		protected override void setupComponents() {
 			_vfxWorldComp = new VFXWorldComp(this);
 			addComponent(_vfxWorldComp);
 		}

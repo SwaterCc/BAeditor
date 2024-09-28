@@ -77,7 +77,7 @@ namespace Hono.Scripts.Battle
             var loadSuccess = addLoadTask<AbilityData>(ref tasks, DataPath.AbilityRoot);
             loadSuccess = loadSuccess && addLoadTask<SkillData>(ref tasks, DataPath.SkillFolder);
             loadSuccess = loadSuccess && addLoadTask<BuffData>(ref tasks, DataPath.BuffFolder);
-            //_isLoadFinish = addLoadTask<BulletData>(ref tasks,DataPath.BulletFolder);
+            loadSuccess = loadSuccess && addLoadTask<BulletData>(ref tasks, DataPath.BulletFolder);
             try
             {
                 if (loadSuccess)
@@ -162,17 +162,7 @@ namespace Hono.Scripts.Battle
                 }
 
                 await UniTask.WhenAll(tasks);
-
-                /*int succeedCount = 0;
-                foreach (var task in tasks)
-                {
-                    if (task.Status == UniTaskStatus.Succeeded)
-                    {
-                        ++succeedCount;
-                    }
-                }
-
-                Debug.Log($"加载完成！加载数量 {succeedCount}");*/
+                
             }
             catch (Exception e)
             {
