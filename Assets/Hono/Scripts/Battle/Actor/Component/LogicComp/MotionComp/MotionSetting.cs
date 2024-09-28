@@ -23,7 +23,7 @@ namespace Hono.Scripts.Battle {
 		/// 移动时朝向目标
 		/// </summary>
 		[LabelText("移动时朝向目标")]
-		public bool MovingNoChangeRot;
+		public bool MovingFaceToTarget;
 		
 		/// <summary>
 		/// 不响应输入

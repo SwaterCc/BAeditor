@@ -29,7 +29,7 @@ namespace Hono.Scripts.Battle
             }
 
             protected ActorLogic _actorLogic;
-            private ActorStateMachine _stateMachine;
+            protected ActorStateMachine _stateMachine;
             protected readonly Dictionary<EActorState, List<AStateTransform>> _transDict;
             
             protected EActorState _defaultState;

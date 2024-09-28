@@ -6,6 +6,7 @@ namespace Hono.Scripts.Battle {
 	public partial class ActorLogic {
 		public class Motion {
 			private MotionSetting _setting;
+			public MotionSetting Setting => _setting;
 			private int _moveTargetUid;
 			private Vector3 _moveTargetPos;
 			private bool _targetSurvive;
@@ -22,12 +23,13 @@ namespace Hono.Scripts.Battle {
 			private bool _isEnd;
 			public bool IsEnd => _isEnd;
 
-			public Motion(ActorLogic logic, Actor target, MotionSetting setting,Action<int> callBack = null) {
+			public Motion(int uid ,ActorLogic logic, Actor target, MotionSetting setting,Action<int> callBack = null) {
 				_moveTargetUid = target.Uid;
 				_setting = setting;
 				_logic = logic;
 				_moveOffset = Vector3.zero;
 				_motionEventInfo = new MotionEventInfo();
+				_motionEventInfo.MotionUid = uid;
 				_speed = setting.Speed;
 				_moveTargetPos = target.Pos;
 				_moveCollisionCallBack = callBack;

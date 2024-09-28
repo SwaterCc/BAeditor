@@ -147,7 +147,6 @@ namespace Hono.Scripts.Battle
             }
         }
 
-
         [AbilityMethod]
         public static int AddVFX(VFXSetting setting)
         {

@@ -1,5 +1,8 @@
 namespace Hono.Scripts.Battle.Event {
-	public class MotionEventInfo : IEventInfo {
+	public class MotionEventInfo : IEventInfo
+	{
+		public int MotionUid;
+		
 		public int MotionCollisionId;
 
 		public void SetFieldsInAbilityVariables(Ability ability) { }

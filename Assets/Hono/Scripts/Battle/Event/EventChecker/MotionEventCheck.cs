@@ -2,16 +2,19 @@ using System;
 
 namespace Hono.Scripts.Battle.Event {
 	public class MotionEventChecker : EventChecker {
-		private int _motionId;
+		private int _motionUid;
 
-		public MotionEventChecker(EBattleEventType eventType, Actor actor, int motionId, Action<IEventInfo> func) :
+		public MotionEventChecker(EBattleEventType eventType, Actor actor, int motionUid, Action<IEventInfo> func) :
 			base(eventType, actor, func) {
-			_motionId = motionId;
+			_motionUid = motionUid;
 		}
 
 		protected override bool onCheck(IEventInfo info) {
 			var motionInfo = (MotionEventInfo)info;
-			return _motionId == motionInfo.MotionId;
+
+			if (_motionUid <= 0) return true;
+			
+			return _motionUid == motionInfo.MotionUid;
 		}
 	}
 }
