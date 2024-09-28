@@ -15,7 +15,7 @@ namespace Editor.AbilityEditor.SimpleWindow
         {
             var window = GetWindow<FilterSettingWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(450, 500);
-            window.titleContent = new GUIContent("创建Ability");
+            window.titleContent = new GUIContent("设置筛选器");
             window.init(ref filterSetting);
         }
 
@@ -25,8 +25,6 @@ namespace Editor.AbilityEditor.SimpleWindow
             Setting = filterSetting;
         }
         
-        [OdinSerialize]
-        [NonSerialized]
         [VerticalGroup("setting")]
         public FilterSetting Setting;
 

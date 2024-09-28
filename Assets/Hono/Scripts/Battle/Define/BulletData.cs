@@ -21,6 +21,6 @@ namespace Hono.Scripts.Battle
         public float BulletLifeTime;
         public int MaxHitCount;
         
-        public FilterSetting FilterSetting;
+        public FilterSetting FilterSetting = new(true);
     }
 }
