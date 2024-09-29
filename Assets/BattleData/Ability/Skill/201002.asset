@@ -294,7 +294,10 @@ MonoBehaviour:
       Data: 11|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 4
+    - Name: 
+      Entry: 3
+      Data: 261308282
     - Name: 
       Entry: 3
       Data: 1740475628
@@ -521,6 +524,9 @@ MonoBehaviour:
     - Name: FilterSetting
       Entry: 7
       Data: 21|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+    - Name: _isOnlyCondition
+      Entry: 5
+      Data: false
     - Name: OpenBoxCheck
       Entry: 5
       Data: true
@@ -780,13 +786,10 @@ MonoBehaviour:
       Data: 30|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 1
     - Name: 
       Entry: 3
       Data: 737003611
-    - Name: 
-      Entry: 3
-      Data: 261308282
     - Name: 
       Entry: 13
       Data: 
@@ -1667,6 +1670,9 @@ MonoBehaviour:
     - Name: FilterSetting
       Entry: 7
       Data: 82|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+    - Name: _isOnlyCondition
+      Entry: 5
+      Data: false
     - Name: OpenBoxCheck
       Entry: 5
       Data: true
@@ -1833,10 +1839,10 @@ MonoBehaviour:
       Data: 6
     - Name: ParentId
       Entry: 3
-      Data: 1740475628
+      Data: 724015140
     - Name: Depth
       Entry: 3
-      Data: 2
+      Data: 1
     - Name: BelongGroupId
       Entry: 3
       Data: -1

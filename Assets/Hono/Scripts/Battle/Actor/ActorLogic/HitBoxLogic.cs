@@ -56,29 +56,7 @@ namespace Hono.Scripts.Battle {
 					break;
 			}
 
-			if (_sourceAbilityType == EAbilityType.Skill && _hitBoxData.HitType == EHitType.Aoe) {
-				if (_hitBoxData.UseCustomFilter) {
-					_filterSetting = _hitBoxData.FilterSetting;
-				}
-				else {
-					//来源于技能的打击点要继承技能的基础筛选条件
-					_filterSetting.OpenBoxCheck = true;
-					_filterSetting.BoxData = _hitBoxData.AoeData;
-					var skillData = AssetManager.Instance.GetData<SkillData>(_sourceAbilityConfigId);
-					var range = new FilterRange() { RangeType = EFilterRangeType.Faction, };
-
-					switch (skillData.SkillTargetType) {
-						case ESkillTargetType.Enemy:
-							range.Value = (int)EFactionType.Enemy;
-							break;
-						case ESkillTargetType.Friendly:
-							range.Value = (int)EFactionType.Friendly;
-							break;
-					}
-
-					_filterSetting.Ranges.Add(range);
-				}
-			}
+			_filterSetting = _hitBoxData.FilterSetting;
 		}
 
 		protected override void setupInput() {
@@ -151,6 +129,7 @@ namespace Hono.Scripts.Battle {
 			BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHit, hitInfo);
 			
 			var hitDamageInfo = new HitDamageInfo(hitInfo);
+			hitDamageInfo.ParseDamageResult(res);
 			hitDamageInfo.HitTargetUid = _targetUid;
 			hitInfo.HitBoxHitCount = 1;
 			hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;

@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d38054bcf4df42db862c858a9f8be945, type: 3}
-  m_Name: 201002
+  m_Name: 1006001
   m_EditorClassIdentifier: 
-  SkillId: 201002
+  SkillId: 1006001
   SkillType: 0
   SkillTargetType: 0
-  SkillRange: 3
+  SkillRange: 0
   EcdMode: 0
-  SkillCD: 1
+  SkillCD: 0
   SkillResCheck: []
   CostType: 0
   SkillResCost: []
   PriorityATK: 0
   PriorityDEF: 0
-  ForceFaceTarget: 1
-  SkillDamageBasePer: 15000
-  UseCustomFilter: 0
+  ForceFaceTarget: 0
+  SkillDamageBasePer: 0
+  UseCustomFilter: 1
   CustomFilter:
     _isOnlyCondition: 0
-    OpenBoxCheck: 1
+    OpenBoxCheck: 0
     BoxData:
       ShapeType: 0
       Rot:
@@ -44,7 +44,7 @@ MonoBehaviour:
       Height: 0
       Radius: 0
       Angle: 0
-    MaxTargetCount: -1
+    MaxTargetCount: 0
     HasSelf: 0
     Ranges: []
     Compares: []

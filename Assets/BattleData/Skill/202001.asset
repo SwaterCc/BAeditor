@@ -27,6 +27,7 @@ MonoBehaviour:
   SkillDamageBasePer: 15000
   UseCustomFilter: 0
   CustomFilter:
+    _isOnlyCondition: 0
     OpenBoxCheck: 0
     BoxData:
       ShapeType: 0
@@ -44,6 +45,9 @@ MonoBehaviour:
       Radius: 0
       Angle: 0
     MaxTargetCount: -1
+    HasSelf: 0
     Ranges: []
     Compares: []
+    FilterFunctionType: 0
   MaxTargetCount: 1
+  SelectSelf: 0

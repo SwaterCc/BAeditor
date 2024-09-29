@@ -113,6 +113,11 @@ namespace Hono.Scripts.Battle
             /// </summary>
             public IntArray MultiplyId { get; private set; }
             
+            /// <summary>
+            /// 受击特效路径
+            /// </summary>
+            public string BeHitVFXPath { get; private set; }
+            
 
             public DamageRow()
             {
@@ -146,6 +151,8 @@ namespace Hono.Scripts.Battle
                     _row.AdditiveId = parseIntArray(line[7]);
             
                     _row.MultiplyId = parseIntArray(line[8]);
+            
+                    _row.BeHitVFXPath = parseString(line[9]);
             
                 }
             }

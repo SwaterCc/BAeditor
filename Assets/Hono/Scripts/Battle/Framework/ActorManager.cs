@@ -64,7 +64,7 @@ namespace Hono.Scripts.Battle
 		            actor.Setup(new AlwaysShow(actor), new BuildingLogic(actor));
 		            break;
 	            case EActorType.Bullet:
-		            actor.Setup(new AlwaysShow(actor), new BulletLogic(actor));
+		            actor.Setup(new BulletShow(actor), new BulletLogic(actor));
 		            break;
 	            case EActorType.HitBox:
 		            actor.Setup(new AlwaysShow(actor), new HitBoxLogic(actor));

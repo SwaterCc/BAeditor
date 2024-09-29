@@ -119,7 +119,7 @@ namespace Hono.Scripts.Battle
             return damageConfig;
         }
         
-        private void onHit() {
+        private void onHit(int targetUid) {
             var attacker = ActorManager.Instance.GetActor(_sourceActorId);
 
             var damageInfo = new DamageInfo();
@@ -133,20 +133,20 @@ namespace Hono.Scripts.Battle
                 Debug.Log("tag == null");
             }
             
-            var target = ActorManager.Instance.GetActor(_targetUid);
+            var target = ActorManager.Instance.GetActor(targetUid);
             if (target == null) return;
             if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
            
             var damageItem = makeDamageConfig();
             var res = LuaInterface.GetDamageResults(attacker, target, damageInfo, damageItem);
             var hitInfo = makeHitInfo();
-            BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHit, hitInfo);
+            BattleEventManager.Instance.TriggerEvent(Actor.Uid, EBattleEventType.OnHit, hitInfo);
 			
             var hitDamageInfo = new HitDamageInfo(hitInfo);
             hitDamageInfo.HitTargetUid = _targetUid;
             hitInfo.HitBoxHitCount = 1;
             hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
-            BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHitDamage, hitDamageInfo);
+            BattleEventManager.Instance.TriggerEvent(Actor.Uid, EBattleEventType.OnHitDamage, hitDamageInfo);
 			
             beHurtComp.OnBeHurt(hitDamageInfo);
         }
@@ -161,18 +161,19 @@ namespace Hono.Scripts.Battle
             if (_bulletData.IsHitPathActor)
             {
                 ++_hitCount;
-                onHit();
-                if (_hitCount >= _bulletData.MaxHitCount)
+                onHit(uid);
+                
+                if (_hitCount >= _bulletData.MaxHitCount || uid == _targetUid)
                 {
                     dead();
-                    return;
                 }
             }
-
-            if (uid != _targetUid) return;
+            else {
+	            if (uid != _targetUid) return;
             
-            onHit();
-            dead();
+	            onHit(_targetUid);
+	            dead();
+            }
         }
     }
 }

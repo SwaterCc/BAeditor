@@ -35,7 +35,7 @@ namespace Hono.Scripts.Battle {
 
 			if (!_hasError) {
 				foreach (var point in EffectPointList) {
-					_effectPoints.Add(transform.name, point);
+					_effectPoints.Add(point.name, point);
 				}
 
 				List<UniTask> tasks = new();
@@ -66,6 +66,8 @@ namespace Hono.Scripts.Battle {
 				else {
 					obj = Instantiate(obj, vfxObject.Pos, vfxObject.Rot);
 				}
+
+				obj.transform.localScale = vfxObject.Scale;
 
 				_vfxShowDict.Add(vfxObject.Uid, obj);
 			}

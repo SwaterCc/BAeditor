@@ -24,6 +24,7 @@ namespace Hono.Scripts.Battle {
 			else {
 				_motionComp.MotionAdd += onMotionAdd;
 				_motionComp.MotionRemove += onMotionRemove;
+				_openCheck = _motionComp.HasMotion();
 			}
 		}
 

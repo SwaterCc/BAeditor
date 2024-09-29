@@ -8,16 +8,23 @@ namespace Hono.Scripts.Battle {
 		private bool _isExpired;
 		public bool IsExpired => _isExpired;
 		private int _uid;
-		public int Uid => _uid;
-		
+
+		public int Uid {
+			get => _uid;
+			set => _uid = value;
+		}
+
 		public Vector3 Pos;
 
 		public Quaternion Rot;
+
+		public Vector3 Scale;
 
 		public VFXObject(int uid ,VFXSetting setting) {
 			_setting = setting;
 			_isExpired = false;
 			_uid = uid;
+			Scale = setting.Scale * Vector3.one;
 		}
 		
 		public void OnTick(float dt) {

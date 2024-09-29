@@ -21,6 +21,20 @@ namespace Hono.Scripts.Battle
 	                false);
                 Debug.Log($"当前血量{Actor.GetAttr<int>(ELogicAttr.AttrHp)}");
                 BattleEventManager.Instance.TriggerEvent(Actor.Uid, EBattleEventType.OnBeHit, hitDamageInfo);
+                //添加受击特效
+
+                var damageRow = ConfigManager.Table<DamageTable>().Get(hitDamageInfo.DamageConfigId);
+                if (ActorLogic.TryGetComponent<VFXComp>(out var comp)) {
+
+	                var setting = new VFXSetting() {
+		                VFXBindType = EVFXType.InWorld,
+		                Duration = 3,
+		                Offset = new SVector3(0, 0.5f, 0),
+		                VFXPath = damageRow.BeHitVFXPath
+	                };
+
+	                comp.AddVFXObject(setting);
+                }
             }
         }
     }

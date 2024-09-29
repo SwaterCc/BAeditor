@@ -521,6 +521,9 @@ MonoBehaviour:
     - Name: FilterSetting
       Entry: 7
       Data: 21|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+    - Name: _isOnlyCondition
+      Entry: 5
+      Data: false
     - Name: OpenBoxCheck
       Entry: 5
       Data: true

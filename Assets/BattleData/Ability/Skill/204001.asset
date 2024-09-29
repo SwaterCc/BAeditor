@@ -524,6 +524,9 @@ MonoBehaviour:
     - Name: FilterSetting
       Entry: 7
       Data: 21|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+    - Name: _isOnlyCondition
+      Entry: 5
+      Data: false
     - Name: OpenBoxCheck
       Entry: 5
       Data: true
@@ -584,6 +587,9 @@ MonoBehaviour:
     - Name: MaxTargetCount
       Entry: 3
       Data: 2
+    - Name: HasSelf
+      Entry: 5
+      Data: false
     - Name: Ranges
       Entry: 7
       Data: 23|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
@@ -597,6 +603,9 @@ MonoBehaviour:
     - Name: RangeType
       Entry: 3
       Data: 3
+    - Name: IsReverse
+      Entry: 5
+      Data: false
     - Name: Value
       Entry: 3
       Data: 1
@@ -622,6 +631,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: FilterFunctionType
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -956,6 +968,9 @@ MonoBehaviour:
     - Name: FilterSetting
       Entry: 7
       Data: 40|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+    - Name: _isOnlyCondition
+      Entry: 5
+      Data: false
     - Name: OpenBoxCheck
       Entry: 5
       Data: true
@@ -1016,6 +1031,9 @@ MonoBehaviour:
     - Name: MaxTargetCount
       Entry: 3
       Data: 2
+    - Name: HasSelf
+      Entry: 5
+      Data: false
     - Name: Ranges
       Entry: 7
       Data: 42|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
@@ -1029,6 +1047,9 @@ MonoBehaviour:
     - Name: RangeType
       Entry: 3
       Data: 3
+    - Name: IsReverse
+      Entry: 5
+      Data: false
     - Name: Value
       Entry: 3
       Data: 2
@@ -1054,6 +1075,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: FilterFunctionType
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 

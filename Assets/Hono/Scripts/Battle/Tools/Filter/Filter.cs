@@ -220,7 +220,7 @@ namespace Hono.Scripts.Battle
 
                             var aDis = Math.Abs(Vector3.Distance(aPos, selfPos));
                             var bDis = Math.Abs(Vector3.Distance(bPos, selfPos));
-                            return aDis.CompareTo(bDis);
+                            return aDis.CompareTo(bDis) * -1;
                         });
                         break;
                     case EFilterFunctionType.Near:
@@ -232,7 +232,7 @@ namespace Hono.Scripts.Battle
 
                             var aDis = Math.Abs(Vector3.Distance(aPos, selfPos));
                             var bDis = Math.Abs(Vector3.Distance(bPos, selfPos));
-                            return aDis.CompareTo(bDis) * -1;
+                            return aDis.CompareTo(bDis);
                         });
                         break;
                     case EFilterFunctionType.Random:

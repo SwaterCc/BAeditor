@@ -380,6 +380,7 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
     damageArgs.FinalAddi = additiveFinal                          --附加增伤最终修正（包含条件检测的值）
     damageArgs.FinalMulti = multiplyFinal                         --乘区增伤最终修正（包含条件检测的值）
     damageArgs.FinalRED = DefRedFinal * EleResFinal * DamRedFinal --承伤最终修正（包含条件检测的值）
+    --PrintDamageLog(DefRedFinal  ..  EleResFinal  ..  DamRedFinal)
 end
 
 --【【【主流程】】】=======================================================================================================================================

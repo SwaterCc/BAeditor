@@ -67,6 +67,8 @@ namespace Editor.AbilityEditor
            
             SirenixEditorGUI.EndBox();
             EditorGUIUtility.labelWidth = oldWidth;
+            
+            _data.MaxTargetCount = _data.CustomFilter.MaxTargetCount;
         }
 
         public void Save()

@@ -67,37 +67,49 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static void CreateHitBox(int targetUid, HitBoxData hitData, bool fromTopSummer = false)
+        public static void CreateHitBox(int attackUid, int targetUid, HitBoxData hitData, bool fromTopSummer = false)
         {
-            //返回打击点的Uid
-            if (targetUid == 0) return;
-            if (!ActorManager.Instance.TryGetActor(targetUid, out _)) return;
+		
+			if (!tryGetActor(attackUid, out var attack)) {
+				return;
+			}
 
-            var hitBox = ActorManager.Instance.SummonActorByAbility(Ability.Context.Invoker, EActorType.HitBox,
+			if (!tryGetActor(targetUid, out var target)) {
+				return;
+			}
+
+			var hitBox = ActorManager.Instance.SummonActor(attack, EActorType.HitBox,
                 ActorManager.NormalHitBoxConfigId, fromTopSummer);
+			hitBox.SetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
             hitBox.Variables.Set("hitBoxData", hitData);
-            hitBox.Variables.Set("targetUid", targetUid);
+            hitBox.Variables.Set("targetUid", target.Uid);
             hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
             ActorManager.Instance.AddActor(hitBox);
         }
 
         [AbilityMethod]
-        public static void CreateHitBoxes(List<int> targetUids, HitBoxData hitData, bool fromTopSummer = false)
+        public static void CreateHitBoxes(int attackUid,List<int> targetUids, HitBoxData hitData, bool fromTopSummer = false)
         {
-            //返回打击点的Uid
-            if (targetUids is not { Count: > 0 }) return;
+
+			if (!tryGetActor(attackUid, out var attack)) {
+				return;
+			}
+
+			//返回打击点的Uid
+			if (targetUids is not { Count: > 0 }) return;
 
             foreach (var targetUid in targetUids)
             {
                 if (targetUid == 0) continue;
 
-                var hitBox = ActorManager.Instance.SummonActorByAbility(Ability.Context.Invoker, EActorType.HitBox,
-                    ActorManager.NormalHitBoxConfigId, fromTopSummer);
-                hitBox.Variables.Set("hitBoxData", hitData);
-                hitBox.Variables.Set("targetUid", targetUid);
-                hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
-                ActorManager.Instance.AddActor(hitBox);
-            }
+				var hitBox = ActorManager.Instance.SummonActor(attack, EActorType.HitBox,
+				ActorManager.NormalHitBoxConfigId, fromTopSummer);
+				hitBox.SetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
+				hitBox.Variables.Set("hitBoxData", hitData);
+				hitBox.Variables.Set("targetUid", targetUid);
+				hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
+				ActorManager.Instance.AddActor(hitBox);
+			}
         }
 
         [AbilityMethod]
@@ -148,9 +160,13 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static int AddVFX(VFXSetting setting)
+        public static int AddVFX(VFXSetting setting,int vfxTargetUid = 0)
         {
-            if (Ability.Context.SourceActor.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
+			if(!tryGetActor(vfxTargetUid,out var target)) {
+				return -1;
+			}
+
+            if (target.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
             {
                 return vfxComp.AddVFXObject(setting);
             }
@@ -160,9 +176,12 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static void RemoveVFX(int vfxUid)
+        public static void RemoveVFX(int vfxUid, int vfxTargetUid = 0)
         {
-            if (Ability.Context.SourceActor.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
+			if (!tryGetActor(vfxTargetUid, out var target)) {
+				return;
+			}
+			if (target.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
             {
                 vfxComp.RemoveVFX(vfxUid);
             }

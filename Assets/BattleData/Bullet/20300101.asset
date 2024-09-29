@@ -9,25 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d38054bcf4df42db862c858a9f8be945, type: 3}
-  m_Name: 201002
+  m_Script: {fileID: 11500000, guid: 0cd1463f66e5440ea590f25350e942f0, type: 3}
+  m_Name: 20300101
   m_EditorClassIdentifier: 
-  SkillId: 201002
-  SkillType: 0
-  SkillTargetType: 0
-  SkillRange: 3
-  EcdMode: 0
-  SkillCD: 1
-  SkillResCheck: []
-  CostType: 0
-  SkillResCost: []
-  PriorityATK: 0
-  PriorityDEF: 0
-  ForceFaceTarget: 1
-  SkillDamageBasePer: 15000
-  UseCustomFilter: 0
-  CustomFilter:
-    _isOnlyCondition: 0
+  Id: 20300101
+  CustomMotion: 0
+  MotionType: 0
+  Offset: {x: 0, y: 1, z: 0.5}
+  CloseFollowTarget: 0
+  BulletSpeed: 10
+  IsHitPathActor: 0
+  DamageConfigId: 20300101
+  BulletLifeTime: 2
+  MaxHitCount: 1
+  FilterSetting:
+    _isOnlyCondition: 1
     OpenBoxCheck: 1
     BoxData:
       ShapeType: 0
@@ -46,8 +42,9 @@ MonoBehaviour:
       Angle: 0
     MaxTargetCount: -1
     HasSelf: 0
-    Ranges: []
+    Ranges:
+    - RangeType: 3
+      IsReverse: 0
+      Value: 2
     Compares: []
     FilterFunctionType: 0
-  MaxTargetCount: 1
-  SelectSelf: 0

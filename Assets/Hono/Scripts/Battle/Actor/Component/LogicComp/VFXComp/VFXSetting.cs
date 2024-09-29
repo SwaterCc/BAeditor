@@ -18,7 +18,7 @@ namespace Hono.Scripts.Battle {
 
 		public SVector3 Offset;
 		public SVector3 Rot;
-		public float Scale;
+		public float Scale = 1;
 
 		public EVFXType VFXBindType;
 		[ShowIf("VFXBindType",EVFXType.BindActorBone)]

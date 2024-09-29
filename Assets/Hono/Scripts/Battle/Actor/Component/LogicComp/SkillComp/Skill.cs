@@ -26,30 +26,7 @@ namespace Hono.Scripts.Battle {
 				Data = AssetManager.Instance.GetData<SkillData>(skillId);
 				_isDisable = false;
 
-				if (Data.SkillTargetType != ESkillTargetType.Self) {
-					if (Data.UseCustomFilter) {
-						_skillTargetSetting = Data.CustomFilter;
-					}
-					else {
-						_skillTargetSetting = new FilterSetting();
-						var boxData = new CheckBoxData();
-						boxData.ShapeType = ECheckBoxShapeType.Sphere;
-						boxData.Radius = Data.SkillRange;
-						_skillTargetSetting.BoxData = boxData;
-						_skillTargetSetting.OpenBoxCheck = true;
-						var range = new FilterRange() { RangeType = EFilterRangeType.Faction, };
-						switch (Data.SkillTargetType) {
-							case ESkillTargetType.Enemy:
-								range.Value = (int)EFactionType.Enemy;
-								break;
-							case ESkillTargetType.Friendly:
-								range.Value = (int)EFactionType.Friendly;
-								break;
-						}
-
-						_skillTargetSetting.Ranges.Add(range);
-					}
-				}
+				_skillTargetSetting = Data.CustomFilter;
 
 				var ability = _logic._abilityController.CreateAbility(Data.SkillId);
 				_abilityUid = ability.Uid;
@@ -173,35 +150,8 @@ namespace Hono.Scripts.Battle {
 				targetUids.Clear();
 
 				//选敌
-				if (Data.SkillTargetType != ESkillTargetType.Self) {
-					var targetList = ActorManager.Instance.UseFilter(_logic.Actor, _skillTargetSetting);
-					float minDistance = 9999;
-					var selfPos = _logic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-
-					if (Data.MaxTargetCount != 1) {
-						if (targetList.Count > Data.MaxTargetCount) {
-							targetUids.AddRange(targetList.GetRange(0, Data.MaxTargetCount));
-						}
-						else {
-							targetUids.AddRange(targetList);
-						}
-					}
-					else {
-						int targetUid = -1;
-						foreach (var uid in targetList) {
-							var target = ActorManager.Instance.GetActor(uid);
-							var targetPos = target.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-							var newMinDis = Vector3.Distance(selfPos, targetPos);
-							if (newMinDis < minDistance) {
-								minDistance = newMinDis;
-								targetUid = uid;
-							}
-						}
-
-						if (targetUid > 0) {
-							targetUids.Add(targetUid);
-						}
-					}
+				if (!Data.SelectSelf ) {
+					targetUids = ActorManager.Instance.UseFilter(_logic.Actor, _skillTargetSetting);
 				}
 				else {
 					targetUids.Add(_logic.Uid);

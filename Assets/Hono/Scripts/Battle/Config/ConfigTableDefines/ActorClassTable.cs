@@ -81,7 +81,7 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// 职业技能
             /// </summary>
-            public IntArray Skills { get; private set; }
+            public IntTable Skills { get; private set; }
             
             /// <summary>
             /// 职业Buff
@@ -108,7 +108,7 @@ namespace Hono.Scripts.Battle
                     
                     _row.ActorClassType = parseInt(line[1]);
             
-                    _row.Skills = parseIntArray(line[2]);
+                    _row.Skills = parseIntTable(line[2]);
             
                     _row.Buffs = parseIntArray(line[3]);
             

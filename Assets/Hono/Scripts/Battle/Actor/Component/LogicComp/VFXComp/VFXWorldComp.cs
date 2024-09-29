@@ -11,6 +11,7 @@ namespace Hono.Scripts.Battle {
 			}
 			
 			public void AddVFXObjectToWorld(VFXObject obj) {
+				obj.Uid = _idGenerator.GenerateId();
 				AddVFXToList(obj);
 			}
 		}

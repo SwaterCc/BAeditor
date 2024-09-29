@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle {
 		/// 视觉特效
 		/// </summary>
 		public class VFXComp : ALogicComponent {
-			private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
+			protected readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
 			private Dictionary<int,VFXObject> _vfxs = new();
 			public Dictionary<int,VFXObject> VFXObjects => _vfxs;
 

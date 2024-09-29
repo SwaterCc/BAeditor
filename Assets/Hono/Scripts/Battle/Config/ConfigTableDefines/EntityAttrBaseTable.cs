@@ -183,6 +183,11 @@ namespace Hono.Scripts.Battle
             /// </summary>
             public int AttrDmgRedAdd { get; private set; }
             
+            /// <summary>
+            /// CDR万分比
+            /// </summary>
+            public int AttrSkillCDPCTAdd { get; private set; }
+            
 
             public EntityAttrBaseRow()
             {
@@ -244,6 +249,8 @@ namespace Hono.Scripts.Battle
                     _row.AttrDmgAAdd = parseInt(line[21]);
             
                     _row.AttrDmgRedAdd = parseInt(line[22]);
+            
+                    _row.AttrSkillCDPCTAdd = parseInt(line[23]);
             
                 }
             }

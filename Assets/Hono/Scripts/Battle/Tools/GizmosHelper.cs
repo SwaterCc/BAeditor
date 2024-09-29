@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle.Tools {
 		public Color DrawColor;
 		public float Radius;
 		
-		public float MaxDrawDuration = 5;
+		public float MaxDrawDuration = 2;
 
 		public void Update(float dt) {
 			_duration += dt;
