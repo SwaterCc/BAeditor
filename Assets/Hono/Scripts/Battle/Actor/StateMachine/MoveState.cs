@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle
             {
                 _transDict[EActorState.Battle].Add(new AStateTransform(EActorState.Battle));
                 _transDict[EActorState.Death].Add(new AStateTransform(EActorState.Death));
-                _transDict[EActorState.Idle].Add(new AStateTransform(EActorState.Idle,() => _actorLogic._inputHandle.MoveInputValue.magnitude == 0));
+                _transDict[EActorState.Idle].Add(new AStateTransform(EActorState.Idle,() => _actorLogic.ActorInput.MoveInputValue.magnitude == 0));
                 _transDict[EActorState.Stiff].Add(new AStateTransform(EActorState.Stiff));
 
                 _baseSpeed = _actorLogic.GetAttr<float>(ELogicAttr.AttrBaseSpeed);
@@ -36,7 +36,7 @@ namespace Hono.Scripts.Battle
                 }
                 
                 var curPos = _actorLogic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-                var curRot = Quaternion.LookRotation( _actorLogic._inputHandle.MoveInputValue,Vector3.up);
+                var curRot = Quaternion.LookRotation( _actorLogic.ActorInput.MoveInputValue,Vector3.up);
                 var offset = InputManager.Instance.InputDirection * (_baseSpeed * dt);
                 _actorLogic.SetAttr(ELogicAttr.AttrPosition, curPos + offset, false);
 

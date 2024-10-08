@@ -44,6 +44,9 @@ namespace Hono.Scripts.Battle
 	            {
 		            Skill skill = new(ActorLogic, skillInfo[0], skillInfo[1]);
 		            _skills.Add(skill.Id, skill);
+		            if (skill.Data.SkillType == ESkillType.PassiveSkill) {
+			            UseSkill(skill.Id);
+		            }
 	            }
                 
                 BattleEventManager.Instance.Register(_eventChecker);
@@ -98,7 +101,7 @@ namespace Hono.Scripts.Battle
 
             public void LearnSkill(int skillId,int level) {
 	            var skillCtrl = new Skill(ActorLogic, skillId, level);
-	            if (_skills.TryAdd(skillCtrl.Id, skillCtrl)) {
+	            if (!_skills.TryAdd(skillCtrl.Id, skillCtrl)) {
 		            Debug.LogWarning($"重复学习技能 {skillId}");
 	            }
             }
@@ -129,8 +132,10 @@ namespace Hono.Scripts.Battle
 
                 if (skillState.IsEnable)
                 {
-                    ActorLogic._stateMachine.ChangeState(EActorState.Battle);
                     skillState.OnSkillUsed();
+                    if (skillState.IsExecuting && skillState.Data.SkillType != ESkillType.PassiveSkill) {
+	                    ActorLogic._stateMachine.ChangeState(EActorState.Battle);
+                    }
                 }
                 else
                 {

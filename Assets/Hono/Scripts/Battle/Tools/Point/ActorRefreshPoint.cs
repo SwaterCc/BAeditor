@@ -1,12 +1,12 @@
 using Sirenix.OdinInspector;
+using System;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Tools {
-	
 	public class ActorRefreshPoint : MonoBehaviour {
 		public EActorType PointCreateType;
 		public int ConfigId;
-
+		
 		[Button("创建Actor")]
 		public void CreateActor() {
 			var actor = ActorManager.Instance.CreateActor(PointCreateType, ConfigId);

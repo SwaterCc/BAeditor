@@ -61,12 +61,12 @@ namespace Hono.Scripts.Battle {
 		/// <summary>
 		/// 输入来源
 		/// </summary>
-		protected IInputHandle _inputHandle;
+		protected ActorInput ActorInput;
 
 		public ActorLogic(Actor actor) {
 			Actor = actor;
 			Uid = actor.Uid;
-			_inputHandle = new NoInput();
+			ActorInput = new NoInput(this);
 			_stateMachine = new ActorStateMachine(this);
 			_components = new Dictionary<Type, ALogicComponent>();
 		}

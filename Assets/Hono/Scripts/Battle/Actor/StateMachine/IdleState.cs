@@ -16,7 +16,7 @@
                 _transDict[EActorState.Battle].Add(new AStateTransform(EActorState.Battle));
                 _transDict[EActorState.Death].Add(new AStateTransform(EActorState.Death));
                 _transDict[EActorState.Move].Add(new AStateTransform(EActorState.Move,
-                    () => _actorLogic._inputHandle.MoveInputValue.magnitude > 0));
+                    () => _actorLogic.ActorInput.MoveInputValue.magnitude > 0));
                 _transDict[EActorState.Stiff].Add(new AStateTransform(EActorState.Stiff));
             }
         }

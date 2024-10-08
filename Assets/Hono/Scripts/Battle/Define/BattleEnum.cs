@@ -10,21 +10,6 @@ namespace Hono.Scripts.Battle {
 		HitBox,
 	}
 
-	public enum EActorLogicType {
-		Pawn,
-		Monster,
-		Building,
-		Bullet,
-		HitBox,
-	}
-
-	public enum EActorShowType {
-		LogicTest,
-		Pawn,
-		Monster,
-		Building,
-	}
-
 	/// <summary>
 	/// 能力配置的归属类型
 	/// </summary>
@@ -154,8 +139,10 @@ namespace Hono.Scripts.Battle {
 	/// 技能类型
 	/// </summary>
 	public enum ESkillType {
-		Normal,
-		Singing,
+		NormalSkill,
+		WeaponSkill,
+		UltimateSkill,
+		PassiveSkill,
 	}
 
 	/// <summary>

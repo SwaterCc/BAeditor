@@ -99,9 +99,9 @@ namespace Hono.Scripts.Battle
             {
                 foreach (var actor in _addCaches)
                 {
-                    actor.Init();
                     _runningActorList.Add(actor);
                     _uidActorDict.Add(actor.Uid, actor);
+                    actor.Init();
                 }
 
                 _addCaches.Clear();

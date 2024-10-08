@@ -37,7 +37,7 @@
 		protected override void onInit() { }
 
 		protected override void setupInput() {
-			_inputHandle = new PawnLeaderInput();
+			ActorInput = new ManualControlInput(this);
 		}
 
 		protected override void setupComponents() {

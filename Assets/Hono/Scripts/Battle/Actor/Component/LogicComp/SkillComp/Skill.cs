@@ -8,13 +8,16 @@ namespace Hono.Scripts.Battle {
 		public class Skill {
 			public int Id => Data.ID;
 			public SkillData Data;
-			public bool IsEnable => (!_isDisable) && (_curCdPercent <= 0 && _resEnough);
+			public bool IsEnable => (!_isDisable) && (_curCdPercent <= 0 && _resEnough) && (!_isExecuting);
 
+			public bool IsExecuting => _isExecuting;
+			
 			private int _level;
 			private float _curCdPercent;
 			private int _abilityUid;
 			private bool _isDisable;
 			private bool _resEnough;
+			private bool _isExecuting;
 			private float _maxCd;
 			private ActorLogic _logic;
 			private FilterSetting _skillTargetSetting;
@@ -25,7 +28,7 @@ namespace Hono.Scripts.Battle {
 				_logic = logic;
 				Data = AssetManager.Instance.GetData<SkillData>(skillId);
 				_isDisable = false;
-
+				_isExecuting = false;
 				_skillTargetSetting = Data.CustomFilter;
 
 				var ability = _logic._abilityController.CreateAbility(Data.SkillId);
@@ -53,6 +56,7 @@ namespace Hono.Scripts.Battle {
 			}
 
 			private void onSkillEnd() {
+				_isExecuting = false;
 				_logic._stateMachine.ChangeState(EActorState.Idle);
 				BattleEventManager.Instance.TriggerEvent(_logic.Uid, EBattleEventType.OnSkillStop,
 					new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
@@ -78,6 +82,10 @@ namespace Hono.Scripts.Battle {
 
 				if (_curCdPercent <= 1) {
 					Debug.Log("Cd中！");
+				}
+
+				if (_isExecuting) {
+					Debug.Log("技能释放中！");
 				}
 			}
 
@@ -163,6 +171,7 @@ namespace Hono.Scripts.Battle {
 					BattleEventManager.Instance.TriggerEvent(_logic.Uid, EBattleEventType.OnSkillUseSuccess,
 						new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
 					resourceCheck();
+					_isExecuting = true;
 				}
 				else {
 					Debug.Log("技能没有找到目标！");

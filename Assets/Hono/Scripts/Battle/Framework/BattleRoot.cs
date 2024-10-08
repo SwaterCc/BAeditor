@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle
         private bool _allLoadFinish;
         private Actor _battleMode;
         public static Actor BattleMode => Instance._battleMode;
-        
+        public bool AutoUltimateSkill;
         protected void Awake()
         {
             _isFirstUpdate = true;

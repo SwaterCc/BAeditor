@@ -35,7 +35,6 @@ namespace Hono.Scripts.Battle
 	        SetAttr(ELogicAttr.AttrElementMagicRedPCTAdd, attrRow.AttrElementMagicRedPCTAdd,false);
 	        SetAttr(ELogicAttr.AttrElementPhysicalPenPCTAdd, attrRow.AttrElementPhysicalPenPCTAdd,false);
 	        SetAttr(ELogicAttr.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd,false);
-            SetAttr(ELogicAttr.AttrFaction, 4, false);
         }
 
         protected override void onInit()

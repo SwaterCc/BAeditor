@@ -69,7 +69,6 @@ namespace Hono.Scripts.Battle
         [AbilityMethod]
         public static void CreateHitBox(int attackUid, int targetUid, HitBoxData hitData, bool fromTopSummer = false)
         {
-		
 			if (!tryGetActor(attackUid, out var attack)) {
 				return;
 			}

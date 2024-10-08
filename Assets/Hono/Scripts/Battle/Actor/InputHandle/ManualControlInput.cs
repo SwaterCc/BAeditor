@@ -3,31 +3,28 @@ using UnityEngine.InputSystem;
 
 namespace Hono.Scripts.Battle
 {
-    public class PawnLeaderInput : IInputHandle
+	/// <summary>
+	/// 手操
+	/// </summary>
+    public class ManualControlInput : ActorInput
     {
-        public Vector3 MoveInputValue => _moveDirection;
-        
-        private Vector3 _moveDirection;
-        
-        public PawnLeaderInput() 
-        {
+        public ManualControlInput(ActorLogic logic) : base(logic) {
             InputManager.Instance.AddMoveCallBack(onMove);
             InputManager.Instance.AddMoveEndCallBack(onMoveEnd);
-           
         }
         
         private void onMove(InputAction.CallbackContext context)
         {
             var inputValue = context.ReadValue<Vector2>();
-            _moveDirection = new Vector3(-inputValue.y, 0, inputValue.x);
+            MoveInputValue = new Vector3(-inputValue.y, 0, inputValue.x);
         }
 
         private void onMoveEnd(InputAction.CallbackContext context)
         {
-            _moveDirection = Vector3.zero;
+	        MoveInputValue = Vector3.zero;
         }
 
-        private void useSkill()
+        private void useSkill(int skillId)
         {
             
         }
