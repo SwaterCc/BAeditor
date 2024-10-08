@@ -95,7 +95,7 @@ namespace Hono.Scripts.Battle {
 					dir *= -1;
 				}
 
-				_moveOffset = dir * _speed * dt;
+				_moveOffset = dir * (_speed * dt);
 				_speed -= _setting.Acceleration * dt;
 			}
 

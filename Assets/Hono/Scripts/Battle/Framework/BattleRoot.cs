@@ -21,6 +21,7 @@ namespace Hono.Scripts.Battle
         private Actor _battleMode;
         public static Actor BattleMode => Instance._battleMode;
         public bool AutoUltimateSkill;
+        public EBattleModeType BattleModeType;
         protected void Awake()
         {
             _isFirstUpdate = true;
@@ -56,6 +57,10 @@ namespace Hono.Scripts.Battle
 
             _isFirstUpdate = false;
         }
+
+        private void initBattleMode() { }
+
+        private void initActorGroup() { }
 
         public void Update()
         {

@@ -61,7 +61,5 @@ namespace Hono.Scripts.Battle
 		    HasSelf = true,
 		    BoxData = new CheckBoxData() { ShapeType = ECheckBoxShapeType.Sphere, Radius = 0.3f, },
 	    };
-
-
     }
 }

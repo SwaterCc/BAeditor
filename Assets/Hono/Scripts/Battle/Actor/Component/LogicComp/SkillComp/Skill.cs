@@ -152,7 +152,10 @@ namespace Hono.Scripts.Battle {
 				}
 			}
 
-			public void OnSkillUsed() {
+			public bool TryUseSkill()
+			{
+				if (!IsEnable) return false;
+				
 				var targetUids = _logic.GetAttr<List<int>>(ELogicAttr.AttrAttackTargetUids);
 				targetUids ??= new List<int>();
 				targetUids.Clear();
@@ -175,7 +178,10 @@ namespace Hono.Scripts.Battle {
 				}
 				else {
 					Debug.Log("技能没有找到目标！");
+					return false;
 				}
+
+				return true;
 			}
 
 			public static bool operator <(Skill control1, Skill control2) {

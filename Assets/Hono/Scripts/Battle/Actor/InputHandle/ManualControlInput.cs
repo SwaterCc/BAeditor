@@ -3,16 +3,17 @@ using UnityEngine.InputSystem;
 
 namespace Hono.Scripts.Battle
 {
-	/// <summary>
-	/// 手操
-	/// </summary>
-    public class ManualControlInput : ActorInput
+    /// <summary>
+    /// 手操
+    /// </summary>
+    public class ManualControlInput : AutoInput
     {
-        public ManualControlInput(ActorLogic logic) : base(logic) {
+        public ManualControlInput(ActorLogic logic) : base(logic)
+        {
             InputManager.Instance.AddMoveCallBack(onMove);
             InputManager.Instance.AddMoveEndCallBack(onMoveEnd);
         }
-        
+
         private void onMove(InputAction.CallbackContext context)
         {
             var inputValue = context.ReadValue<Vector2>();
@@ -21,12 +22,9 @@ namespace Hono.Scripts.Battle
 
         private void onMoveEnd(InputAction.CallbackContext context)
         {
-	        MoveInputValue = Vector3.zero;
+            MoveInputValue = Vector3.zero;
         }
 
-        private void useSkill(int skillId)
-        {
-            
-        }
+        protected override void AutoMove() { }
     }
 }

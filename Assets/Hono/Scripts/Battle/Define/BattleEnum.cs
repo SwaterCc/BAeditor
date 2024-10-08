@@ -10,6 +10,19 @@ namespace Hono.Scripts.Battle {
 		HitBox,
 	}
 
+	public enum EBattleModeType
+	{
+		/// <summary>
+		/// 歼灭
+		/// </summary>
+		WarOfAnnihilation,
+		
+		/// <summary>
+		/// 防守
+		/// </summary>
+		DefensiveBattle,
+	}
+	
 	/// <summary>
 	/// 能力配置的归属类型
 	/// </summary>

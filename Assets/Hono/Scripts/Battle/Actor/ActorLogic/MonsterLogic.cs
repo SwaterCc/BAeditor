@@ -50,5 +50,10 @@ namespace Hono.Scripts.Battle
             addComponent(new SkillComp(this, () => MonsterConfig.OwnerSkills));
             addComponent(new VFXComp(this));
         }
+
+        protected override void setupInput()
+        {
+	        ActorInput = new AutoInput(this);
+        }
     }
 }

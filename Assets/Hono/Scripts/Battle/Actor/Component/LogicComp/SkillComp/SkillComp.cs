@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle
 {
     public partial class ActorLogic
     {
-        public class SkillComp : ALogicComponent , IReloadHandle
+        public class SkillComp : ALogicComponent, IReloadHandle
         {
             //管理技能cd
             //管理技能释放前消耗检测
@@ -22,47 +22,53 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// 当前在运行的技能
             /// </summary>
-            private Skill _curSkill;
+            private Skill _beforeUsedSkill;
+
+            public Skill BeforeUsedSkill => _beforeUsedSkill;
 
             private readonly UseSkillChecker _eventChecker;
 
             private Func<IntTable> _getSkills;
 
-            public SkillComp(ActorLogic logic,Func<IntTable> getSkills) : base(logic) {
-	            _eventChecker = new UseSkillChecker(EBattleEventType.UseSkill, ActorLogic.Actor, -1, UseSkillByEvent);
-	            _getSkills = getSkills;
+            public SkillComp(ActorLogic logic, Func<IntTable> getSkills) : base(logic)
+            {
+                _eventChecker = new UseSkillChecker(EBattleEventType.UseSkill, ActorLogic.Actor, -1, UseSkillByEvent);
+                _getSkills = getSkills;
             }
 
             public override void Init()
             {
-	            if (_getSkills == null) {
-		            Debug.LogWarning($"Actor{Actor.Uid} 获取技能失败");
-		            return;
-	            }
-	            
-	            foreach (IntArray skillInfo in _getSkills.Invoke())
-	            {
-		            Skill skill = new(ActorLogic, skillInfo[0], skillInfo[1]);
-		            _skills.Add(skill.Id, skill);
-		            if (skill.Data.SkillType == ESkillType.PassiveSkill) {
-			            UseSkill(skill.Id);
-		            }
-	            }
-                
+                if (_getSkills == null)
+                {
+                    Debug.LogWarning($"Actor{Actor.Uid} 获取技能失败");
+                    return;
+                }
+
+                foreach (IntArray skillInfo in _getSkills.Invoke())
+                {
+                    Skill skill = new(ActorLogic, skillInfo[0], skillInfo[1]);
+                    _skills.Add(skill.Id, skill);
+                    if (skill.Data.SkillType == ESkillType.PassiveSkill)
+                    {
+                        UseSkill(skill.Id);
+                    }
+                }
+
                 BattleEventManager.Instance.Register(_eventChecker);
                 AssetManager.Instance.AddReloadHandle(this);
             }
 
             public void Reload()
             {
-	            Debug.Log($"Actor {ActorLogic.Uid} Reload SkillComp");
-	            Clear();
+                Debug.Log($"Actor {ActorLogic.Uid} Reload SkillComp");
+                Clear();
 
-	            if (_getSkills == null) {
-		            Debug.LogWarning($"Actor{Actor.Uid} 获取技能失败");
-		            return;
-	            }
-	            
+                if (_getSkills == null)
+                {
+                    Debug.LogWarning($"Actor{Actor.Uid} 获取技能失败");
+                    return;
+                }
+
                 foreach (IntArray skillInfo in _getSkills.Invoke())
                 {
                     Skill skill = new(ActorLogic, skillInfo[0], skillInfo[1]);
@@ -82,14 +88,15 @@ namespace Hono.Scripts.Battle
 
             public override void UnInit()
             {
-	            Clear();
+                Clear();
                 BattleEventManager.Instance.UnRegister(_eventChecker);
                 AssetManager.Instance.RemoveReloadHandle(this);
             }
 
-			public bool TryGetSkill(int skillId,out Skill skill) {
-				return _skills.TryGetValue(skillId, out skill);
-			}
+            public bool TryGetSkill(int skillId, out Skill skill)
+            {
+                return _skills.TryGetValue(skillId, out skill);
+            }
 
             protected override void onTick(float dt)
             {
@@ -99,25 +106,29 @@ namespace Hono.Scripts.Battle
                 }
             }
 
-            public void LearnSkill(int skillId,int level) {
-	            var skillCtrl = new Skill(ActorLogic, skillId, level);
-	            if (!_skills.TryAdd(skillCtrl.Id, skillCtrl)) {
-		            Debug.LogWarning($"重复学习技能 {skillId}");
-	            }
-            }
-            
-            public void ForgetSkill(int skillId) {
-	           
-	            if (_skills.ContainsKey(skillId)) {
-		            _skills[skillId].Destroy();
-		            _skills.Remove(skillId);
-	            }
+            public void LearnSkill(int skillId, int level)
+            {
+                var skillCtrl = new Skill(ActorLogic, skillId, level);
+                if (!_skills.TryAdd(skillCtrl.Id, skillCtrl))
+                {
+                    Debug.LogWarning($"重复学习技能 {skillId}");
+                }
             }
 
-            public void UseSkillByEvent(IEventInfo eventInfo) {
-	            UseSkill(((UsedSkillEventInfo)eventInfo).SkillId);
+            public void ForgetSkill(int skillId)
+            {
+                if (_skills.ContainsKey(skillId))
+                {
+                    _skills[skillId].Destroy();
+                    _skills.Remove(skillId);
+                }
             }
-            
+
+            public void UseSkillByEvent(IEventInfo eventInfo)
+            {
+                UseSkill(((UsedSkillEventInfo)eventInfo).SkillId);
+            }
+
             public void UseSkill(int skillId)
             {
                 if (!_skills.TryGetValue(skillId, out var skillState))
@@ -125,16 +136,21 @@ namespace Hono.Scripts.Battle
                     return;
                 }
 
-                if (_curSkill != null && _curSkill > skillState)
+                if (_beforeUsedSkill != null)
                 {
-                    return;
+                    if (_beforeUsedSkill.IsExecuting && _beforeUsedSkill < skillState)
+                    {
+                        Debug.Log($"[skill] 技能{_beforeUsedSkill.Id} 还在执行中");
+                        return;
+                    }
                 }
 
-                if (skillState.IsEnable)
+                if (skillState.TryUseSkill())
                 {
-                    skillState.OnSkillUsed();
-                    if (skillState.IsExecuting && skillState.Data.SkillType != ESkillType.PassiveSkill) {
-	                    ActorLogic._stateMachine.ChangeState(EActorState.Battle);
+                    _beforeUsedSkill = skillState;
+                    if (skillState.Data.SkillType != ESkillType.PassiveSkill)
+                    {
+                        ActorLogic._stateMachine.ChangeState(EActorState.Battle);
                     }
                 }
                 else
