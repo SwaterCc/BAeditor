@@ -46,6 +46,14 @@ namespace Hono.Scripts.Battle {
 		Health,
 	}
 
+	public enum EPawnGroupMemberStateType
+	{
+		Empty,
+		Normal,
+		Leader,
+		Dead,
+	}
+
 	/// <summary>
 	/// 当前Ability执行到哪一步了
 	/// </summary>

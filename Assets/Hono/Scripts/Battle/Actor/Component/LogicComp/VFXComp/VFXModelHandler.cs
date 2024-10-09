@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle {
 
 		public void Start() {
 			if (model.ActorType == EActorType.BattleMode) {
-				var actor = BattleRoot.BattleMode;
+				var actor = BattleRoot.BattleModeActor;
 				if (actor.Logic.TryGetComponent<ActorLogic.VFXWorldComp>(out var vfxWorldComp)) {
 					_vfxComp = vfxWorldComp;
 				}

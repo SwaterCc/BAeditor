@@ -47,7 +47,7 @@ namespace Hono.Scripts.Battle
 
         private async void loadConfigs()
         {
-            string folderPath = DataPath.CSVRoot;
+            string folderPath = BattleConstValue.CSVRoot;
 
             if (Directory.Exists(folderPath))
             {

@@ -74,10 +74,10 @@ namespace Hono.Scripts.Battle
 
             List<UniTask> tasks = new List<UniTask>();
 
-            var loadSuccess = addLoadTask<AbilityData>(ref tasks, DataPath.AbilityRoot);
-            loadSuccess = loadSuccess && addLoadTask<SkillData>(ref tasks, DataPath.SkillFolder);
-            loadSuccess = loadSuccess && addLoadTask<BuffData>(ref tasks, DataPath.BuffFolder);
-            loadSuccess = loadSuccess && addLoadTask<BulletData>(ref tasks, DataPath.BulletFolder);
+            var loadSuccess = addLoadTask<AbilityData>(ref tasks, BattleConstValue.AbilityRoot);
+            loadSuccess = loadSuccess && addLoadTask<SkillData>(ref tasks, BattleConstValue.SkillFolder);
+            loadSuccess = loadSuccess && addLoadTask<BuffData>(ref tasks, BattleConstValue.BuffFolder);
+            loadSuccess = loadSuccess && addLoadTask<BulletData>(ref tasks, BattleConstValue.BulletFolder);
             try
             {
                 if (loadSuccess)

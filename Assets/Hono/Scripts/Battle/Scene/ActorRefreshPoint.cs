@@ -1,8 +1,7 @@
 using Sirenix.OdinInspector;
-using System;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle.Tools {
+namespace Hono.Scripts.Battle.Scene {
 	public class ActorRefreshPoint : MonoBehaviour {
 		public EActorType PointCreateType;
 		public int ConfigId;

@@ -4,9 +4,5 @@ namespace Hono.Scripts.Battle.Event {
 		public int MotionUid;
 		
 		public int MotionCollisionId;
-
-		public void SetFieldsInAbilityVariables(Ability ability) { }
-
-		public void ClearFields(Ability ability) { }
 	}
 }

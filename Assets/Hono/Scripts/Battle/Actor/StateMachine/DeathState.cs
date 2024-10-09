@@ -1,4 +1,6 @@
-﻿namespace Hono.Scripts.Battle {
+﻿using Hono.Scripts.Battle.Event;
+
+namespace Hono.Scripts.Battle {
 	public partial class ActorLogic {
 		public class DeathState : AState {
 			public DeathState(ActorStateMachine machine, ActorLogic actorLogicLogic) : base(machine, actorLogicLogic) { }
@@ -18,6 +20,7 @@
 			protected override void onTick(float dt) {
 				if(_isDead) return;
 				ActorManager.Instance.RemoveActor(_actorLogic.Actor);
+				_actorLogic.Actor.TriggerEvent(EBattleEventType.OnActorDead, null);
 				_isDead = true;
 			}
 		}

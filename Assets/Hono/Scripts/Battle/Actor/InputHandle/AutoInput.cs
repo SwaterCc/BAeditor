@@ -40,10 +40,10 @@ namespace Hono.Scripts.Battle
                 MoveInputValue = (wayPoints[0] - curPos).normalized;
                 return;
             }
-
-            var hateTargetUid = Logic.Actor.GetAttr<int>(ELogicAttr.AttrHateTargetUid);
-
+            
             if(_noHateComp) return;
+            
+            var hateTargetUid = Logic.Actor.GetAttr<int>(ELogicAttr.AttrHateTargetUid);
             
             if (hateTargetUid <= 0)
             {
@@ -76,7 +76,7 @@ namespace Hono.Scripts.Battle
                     continue;
                 if(skill.Data.SkillType == ESkillType.PassiveSkill) 
                     continue;
-                if(skill.Data.SkillType == ESkillType.UltimateSkill && !BattleRoot.Instance.AutoUltimateSkill)
+                if(skill.Data.SkillType == ESkillType.UltimateSkill && !BattleRoot.BattleMode.AutoUltimateSkill)
                     continue;
                 SkillComp.UseSkill(skill.Id);
             }

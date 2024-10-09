@@ -4,6 +4,11 @@ namespace Hono.Scripts.Battle {
 	//当前游戏模式
 	public class BattleMode : ActorLogic {
 		private VFXWorldComp _vfxWorldComp;
+		
+		public bool AutoUltimateSkill;
+		
+		public EBattleModeType BattleModeType;
+		
 		public BattleMode(Actor actor) : base(actor) { }
 		protected override void setupAttrs() { }
 

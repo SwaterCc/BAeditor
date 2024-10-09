@@ -28,5 +28,8 @@ namespace Hono.Scripts.Battle.Event
         OnSkillUseSuccess,
         [EventCheckerBinder("GetSkillEndChecker",typeof(UsedSkillEventInfo))]
         OnSkillStop,
+        
+        OnActorEnterScene = 30,
+        OnActorDead,
     }
 }

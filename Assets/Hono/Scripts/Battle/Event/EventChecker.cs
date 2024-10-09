@@ -40,6 +40,13 @@ namespace Hono.Scripts.Battle.Event {
 			_isDisable = false;
 			_checkerBelongActorUid = actor.Uid;
 		}
+		
+		protected EventChecker(EBattleEventType eventType, int actorUid, Action<IEventInfo> func = null) {
+			_func = func;
+			_eventType = eventType;
+			_isDisable = false;
+			_checkerBelongActorUid = actorUid;
+		}
 
 		public void BindFunc(Action<IEventInfo> func) {
 			_func ??= func;

@@ -39,7 +39,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 函数信息缓存
         /// </summary>
-        private static readonly Dictionary<string, FuncInfo> CacheMethodInfos = new(64);
+        private static readonly Dictionary<string, FuncInfo> CacheMethodInfos = new(128);
         
         public static void InitAbilityFuncCache()
         {

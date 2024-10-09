@@ -1,10 +1,11 @@
-using Hono.Scripts.Battle.Tools;
-using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Map;
+using Hono.Scripts.Battle.Tools;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle.Map {
+namespace Hono.Scripts.Battle.Scene {
 	[Serializable]
 	public struct MonsterInfo {
 		public int MonsterConfigId;
