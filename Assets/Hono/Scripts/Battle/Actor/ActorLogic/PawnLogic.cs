@@ -64,8 +64,11 @@
 			addComponent(new BeHurtComp(this));
 			addComponent(new VFXComp(this));
 		}
-		
-		protected override void onTick(float dt) { }
+
+		protected override void onTick(float dt)
+		{
+			//
+		}
 
 		public void ChangeInputToAuto()
 		{

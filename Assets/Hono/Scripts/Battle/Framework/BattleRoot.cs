@@ -91,12 +91,12 @@ namespace Hono.Scripts.Battle
                     pawnLogic.GroupMemberIdx = memberIdx;
                     pawnLogic.BelongActorGroupId = groupInfo.GroupId;
                     groupState[memberIdx].Init(pawnActor.Uid,pawnActor.ConfigId,EPawnGroupMemberStateType.Normal);
+                    ActorManager.Instance.AddActor(pawnActor);
                     if (!hasLeader)
                     {
                         groupState[memberIdx].IsLeader = true;
                         hasLeader = true;
                     }
-                    ActorManager.Instance.AddActor(pawnActor);
                 }
 
                 if (groupState.MemberCount > 0)

@@ -12,7 +12,7 @@ namespace Hono.Scripts.Battle
         {
             public int MemberIdx { get; }
             private bool _isLeader;
-
+            public Vector3 GroupPos;
             public bool IsLeader
             {
                 get => _isLeader;
@@ -52,6 +52,36 @@ namespace Hono.Scripts.Battle
                     IsLeader = false;
                     _groupState.PassLeader(MemberIdx);
                 });
+                BattleEventManager.Instance.Register(_stateChecker);
+            }
+
+            public Vector3 GetCenterPos()
+            {
+                var leaderActor = ActorManager.Instance.GetActor(MemberActorUid);
+                var centerPos = leaderActor.Pos;
+                if (MemberIdx == 0)
+                {
+                    centerPos = leaderActor.Pos + leaderActor.Rot * (Vector3.back * _groupState._groupRadius);
+                }
+                if (MemberIdx == 1)
+                {
+                    centerPos = leaderActor.Pos + leaderActor.Rot * (Vector3.right * _groupState._groupRadius);
+                }
+                if (MemberIdx == 2)
+                {
+                    centerPos = leaderActor.Pos + leaderActor.Rot * (Vector3.forward * _groupState._groupRadius);
+                }
+                if (MemberIdx == 3)
+                {
+                    centerPos = leaderActor.Pos + leaderActor.Rot * (Vector3.left * _groupState._groupRadius);
+                }
+
+                return centerPos;
+            }
+
+            public void SetGroupPos(Vector3 center)
+            {
+                
             }
 
             public static explicit operator int(MemberState a)
@@ -88,7 +118,10 @@ namespace Hono.Scripts.Battle
         private readonly MemberState _member1;
         private readonly MemberState _member2;
         private readonly MemberState _member3;
-
+        
+        private Actor _leaderActor;
+        private float _groupRadius = 1.5f;
+        
         public PawnGroupState(int groupIndex)
         {
             GroupIndex = groupIndex;
@@ -124,6 +157,7 @@ namespace Hono.Scripts.Battle
 
         public void PassLeader(int memberIdx)
         {
+            _leaderActor = null;
             while (memberIdx++ < BattleConstValue.PawnGroupMemberMaxCount)
             {
                 if (this[memberIdx].StateType != EPawnGroupMemberStateType.Normal) continue;
@@ -136,7 +170,18 @@ namespace Hono.Scripts.Battle
         
         public void OnTick(float dt)
         {
-            
+            if(IsAllDead) return;
+
+            if (Leader == null) return;
+           
+            _leaderActor ??= ActorManager.Instance.GetActor(Leader.MemberActorUid);
+
+            if (_leaderActor != null)
+            {
+                var centerPos = Vector3.zero;
+                var centerRot = Quaternion.identity;
+               
+            }
         }
     }
 
@@ -170,7 +215,6 @@ namespace Hono.Scripts.Battle
         {
             foreach (var pGroupState in _groupStates)
             {
-                if(pGroupState.Value.IsAllDead) continue;
                 pGroupState.Value.OnTick(dt);
             }
 
