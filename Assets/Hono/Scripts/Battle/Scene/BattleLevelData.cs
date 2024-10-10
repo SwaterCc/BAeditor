@@ -5,10 +5,10 @@ using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle.Scene
 {
-    public class BattleLevelData : MonoBehaviour
+    public class BattleLevelData : ScriptableObject
     {
         [LabelText("队伍信息")]
-        public ActorGroupInfos GroupInfos = new();
+        public PawnGroupInfos GroupInfos = new();
 
         [LabelText("关卡类型")]
         public EBattleModeType BattleModeType;
@@ -19,13 +19,10 @@ namespace Hono.Scripts.Battle.Scene
         [LabelText("刷怪器")]
         public List<MonsterCreatorPoint> MonsterCreatorPoints;
 
-        [LabelText("静态Actor(通常为触发器)")]
-        public List<ActorRefreshPoint> StaticActor;
+        [LabelText("静态Actor数据结构")]
+        public List<ActorRefreshPoint> StaticActors;
 
-        [LabelText("路径")] 
-        public Dictionary<string, List<Transform>> WayPoint;
-
-        [LabelText("可建造区域")]
-        public List<Transform> BuildPlace;
+        [LabelText("预设路径")] 
+        public Dictionary<string, List<Vector3>> WayPoint;
     }
 }

@@ -1,6 +1,6 @@
 namespace Hono.Scripts.Battle
 {
-    public class BattleLevel
+    public class RoundStage
     {
         
     }

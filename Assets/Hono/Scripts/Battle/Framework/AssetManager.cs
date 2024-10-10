@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -61,14 +62,14 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// Demo2使用的数据类，用于加载Asset
     /// </summary>
-    public class AssetManager : Tools.Singleton<AssetManager>
+    public class AssetManager : Singleton<AssetManager> , IBattleFrameworkAsyncLoad
     {
         private readonly Dictionary<Type, IDataHelper> _assetDict = new Dictionary<Type, IDataHelper>();
         private readonly List<IReloadHandle> _reloadHandles = new List<IReloadHandle>();
         private bool _isLoadFinish;
         public bool IsLoadFinish => _isLoadFinish;
 
-        public async void Init()
+        public async UniTask AsyncLoad()
         {
             _isLoadFinish = false;
 

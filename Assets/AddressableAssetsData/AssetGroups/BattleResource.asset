@@ -56,12 +56,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a852ac01c30b3974e922dc2f77e7c379
-    m_Address: Assets/BattleData/hitboxtest.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - hitBoxData
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 56d60527c71e626429707fbedb93b45a
     m_Address: Assets/BattleData/Tools
     m_ReadOnly: 0

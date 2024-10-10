@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle {
 			}
 			catch (Exception e)
 			{
-				Debug.LogError($"¼ÓÔØÄ£ÐÍÊ§°Ü£¬Â·¾¶{ModelData.ModelPath}");
+				Debug.LogError($"åŠ è½½æ¨¡åž‹å¤±è´¥ï¼Œè·¯å¾„{ModelData.ModelPath}");
 			}
 		}
 	}

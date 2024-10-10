@@ -35,7 +35,7 @@ namespace Hono.Scripts.Battle
 	        if (_battleModelIsCreated) throw new Exception("重复创建BattleMode");
 	        _battleModelIsCreated = true;
 	        var actor = new Actor(_idGenerator.GenerateId(), EActorType.BattleMode);
-	        actor.Setup(new BattleModeShow(actor),new BattleMode(actor));
+	        actor.Setup(new BattleModeShow(actor),new BattleLevelControl(actor));
 	        return actor;
         }
 

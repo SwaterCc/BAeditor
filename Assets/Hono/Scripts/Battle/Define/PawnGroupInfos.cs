@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 namespace Hono.Scripts.Battle
 {
     [Serializable]
-    public class ActorGroup
+    public class PawnGroup
     {
         [ReadOnly]
         public int GroupId;
@@ -43,15 +43,15 @@ namespace Hono.Scripts.Battle
     }
 
     [Serializable]
-    public class ActorGroupInfos
+    public class PawnGroupInfos
     {
-        public ActorGroup Group0 = new ActorGroup() { GroupId = 0 };
-        public ActorGroup Group1 = new ActorGroup() { GroupId = 1 };
-        public ActorGroup Group2 = new ActorGroup() { GroupId = 2 };
-        public ActorGroup Group3 = new ActorGroup() { GroupId = 3 };
+        public PawnGroup Group0 = new PawnGroup() { GroupId = 0 };
+        public PawnGroup Group1 = new PawnGroup() { GroupId = 1 };
+        public PawnGroup Group2 = new PawnGroup() { GroupId = 2 };
+        public PawnGroup Group3 = new PawnGroup() { GroupId = 3 };
 
 
-        public ActorGroup this[int idx]
+        public PawnGroup this[int idx]
         {
             get { 
                 idx = Mathf.Clamp(idx, 0, BattleConstValue.PawnGroupMaxCount);

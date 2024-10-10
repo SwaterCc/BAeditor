@@ -11,41 +11,17 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// 配置管理
     /// </summary>
-    public class ConfigManager : Singleton<ConfigManager>
+    public class ConfigManager : Singleton<ConfigManager> , IBattleFrameworkAsyncLoad
     {
 	    public static T Table<T>() where T : class, ITableHelper {
 		    return Instance.GetTable<T>();
 	    }
-	    
-	    
-        private Dictionary<Type, ITableHelper> _tables = new Dictionary<Type, ITableHelper>();
+        
+        private Dictionary<Type, ITableHelper> _tables = new(32);
 
         public bool IsLoadFinish { get; private set; }
 
-        public void Init()
-        {
-            IsLoadFinish = false;
-            loadConfigs();
-        }
-
-
-        public void Reload(string className)
-        {
-#if UNITY_EDITOR
-#endif
-        }
-
-        public void ReloadAll()
-        {
-#if UNITY_EDITOR
-            IsLoadFinish = false;
-            _tables.Clear();
-            loadConfigs();
-            Debug.Log("ReloadTable Finish");
-#endif
-        }
-
-        private async void loadConfigs()
+        public async UniTask AsyncLoad()
         {
             string folderPath = BattleConstValue.CSVRoot;
 
@@ -77,8 +53,18 @@ namespace Hono.Scripts.Battle
             }
             else
             {
-                Debug.LogError("指定的文件夹不存在: " + folderPath);
+                throw new Exception("指定的文件夹不存在: " + folderPath);
             }
+        }
+        
+        public async void ReloadAll()
+        {
+#if UNITY_EDITOR
+            IsLoadFinish = false;
+            _tables.Clear();
+            await AsyncLoad();
+            Debug.Log("ReloadTable Finish");
+#endif
         }
 
         private async UniTask loadConfigAsset(string className, string assetPath)

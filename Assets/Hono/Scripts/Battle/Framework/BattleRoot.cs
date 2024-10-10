@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle
 
         private Actor _battleMode;
         public static Actor BattleModeActor => Instance._battleMode;
-        public static BattleMode BattleMode => (BattleMode)Instance._battleMode.Logic;
+        public static BattleLevelControl BattleLevelControl => (BattleLevelControl)Instance._battleMode.Logic;
 
         private BattleLevelData _battleLevelData;
         public BattleLevelData BattleLevelData => _battleLevelData;
@@ -57,7 +57,7 @@ namespace Hono.Scripts.Battle
 
         private void setupBattleLevelData()
         {
-            _battleLevelData = FindObjectOfType<BattleLevelData>();
+            
         }
 
         /// <summary>

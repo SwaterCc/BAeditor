@@ -2,14 +2,14 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle {
 	//当前游戏模式
-	public class BattleMode : ActorLogic {
+	public class BattleLevelControl : ActorLogic {
 		private VFXWorldComp _vfxWorldComp;
 		
 		public bool AutoUltimateSkill;
 		
 		public EBattleModeType BattleModeType;
 		
-		public BattleMode(Actor actor) : base(actor) { }
+		public BattleLevelControl(Actor actor) : base(actor) { }
 		protected override void setupAttrs() { }
 
 		protected override void onInit() { }
