@@ -39,7 +39,7 @@ namespace Hono.Scripts.Battle {
 				var exAdd = Actor.GetAttr<int>(headId + 3);
 				var per = Actor.GetAttr<int>(headId + 4);
 
-				int final = (int)(add * (10000 + per)/10000f + exAdd);
+				int final = (int)(add * ((10000 + per) / 10000f) + exAdd);
 				Actor.SetAttr<int>(headId+1, final, false);
 				var total = Actor.GetAttr<int>(headId + 1);
 				Actor.SetAttr<int>(headId, total, false);

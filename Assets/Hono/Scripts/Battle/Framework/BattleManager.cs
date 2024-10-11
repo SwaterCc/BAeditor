@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Scene;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
@@ -19,27 +20,41 @@ namespace Hono.Scripts.Battle
         LoadFailed,
     }
 
-    public interface IBattleFramework { }
+    public interface IBattleFramework
+    {
+    }
+
+    public interface IBattleFrameworkEnterExit : IBattleFramework
+    {
+        public void OnEnterBattle();
+        public void OnExitBattle();
+    }
 
     public interface IBattleFrameworkInit : IBattleFramework
     {
         public void Init();
     }
 
-    public interface IBattleFrameworkAsyncLoad : IBattleFramework
+    public interface IBattleFrameworkAsyncInit : IBattleFramework
     {
-        public UniTask AsyncLoad();
+        public UniTask AsyncInit();
     }
 
+    public interface IBattleFrameworkTick : IBattleFramework
+    {
+        public void Tick(float dt);
+    }
     #endregion
 
     public class BattleManager : MonoSingleton<BattleManager>
     {
         private EBattleDataLoadState _battleDataLoadState;
-
+        
+        private readonly List<IBattleFramework> _frameworks = new(32);
         private readonly List<IBattleFrameworkInit> _frameworkInits = new(16);
-        private readonly List<IBattleFrameworkAsyncLoad> _frameworkAsyncLoads = new(16);
-
+        private readonly List<IBattleFrameworkEnterExit> _frameworkEnterExits = new(16);
+        private readonly List<IBattleFrameworkAsyncInit> _frameworkAsyncLoads = new(16);
+        private readonly List<IBattleFrameworkTick> _frameworkTicks = new(16);
         private BattleLevelRoot _levelRoot;
         private string _fromScene;
         
@@ -47,20 +62,33 @@ namespace Hono.Scripts.Battle
 
         private void register(IBattleFramework framework)
         {
+            if (_frameworks.Contains(framework))
+            {
+                _frameworks.Add(framework);
+            }
+            else
+            {
+                return;
+            }
+            
             if (framework is IBattleFrameworkInit frameworkInit)
             {
-                if (!_frameworkInits.Contains(frameworkInit))
-                {
-                    _frameworkInits.Add(frameworkInit);
-                }
+                _frameworkInits.Add(frameworkInit);
             }
 
-            if (framework is IBattleFrameworkAsyncLoad frameworkLoad)
+            if (framework is IBattleFrameworkAsyncInit frameworkLoad)
             {
-                if (!_frameworkAsyncLoads.Contains(frameworkLoad))
-                {
-                    _frameworkAsyncLoads.Add(frameworkLoad);
-                }
+                _frameworkAsyncLoads.Add(frameworkLoad);
+            }
+
+            if (framework is IBattleFrameworkEnterExit frameworkEnterExit)
+            {
+                _frameworkEnterExits.Add(frameworkEnterExit);
+            }
+
+            if (framework is IBattleFrameworkTick frameworkTick)
+            {
+                _frameworkTicks.Add(frameworkTick);
             }
         }
 
@@ -68,6 +96,8 @@ namespace Hono.Scripts.Battle
         {
             register(ConfigManager.Instance);
             register(AssetManager.Instance);
+            register(BattleEventManager.Instance);
+            register(MessageCenter.Instance);
         }
 
         /// <summary>
@@ -106,7 +136,7 @@ namespace Hono.Scripts.Battle
 
             foreach (var framework in _frameworkAsyncLoads)
             {
-                tasks.Add(framework.AsyncLoad());
+                tasks.Add(framework.AsyncInit());
             }
 
             try
@@ -166,6 +196,11 @@ namespace Hono.Scripts.Battle
         public async void EnterBattle(string fromScene, string battleLevelName, bool useSave = false)
         {
             _fromScene = fromScene;
+
+            foreach (var framework in _frameworkEnterExits)
+            {
+                framework.OnEnterBattle();
+            }
             
             if (_battleDataLoadState != EBattleDataLoadState.LoadFinish)
             {
@@ -186,14 +221,22 @@ namespace Hono.Scripts.Battle
         public void ExitBattle()
         {
             _levelRoot?.ExitBattleLevel();
-            //清除所有Message
-            //清除所有Event
-
+            
+            foreach (var framework in _frameworkEnterExits)
+            {
+                framework.OnExitBattle();
+            }
+            
             switchScene(_fromScene).Forget();
         }
 
         private void Tick()
         {
+            foreach (var frameworkTick in _frameworkTicks)
+            {
+                frameworkTick.Tick(Time.deltaTime);
+            }
+            
             if(_levelRoot == null || _levelRoot.AllLoadedFinish == false) 
                 return;
             

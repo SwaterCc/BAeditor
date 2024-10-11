@@ -24,6 +24,16 @@ namespace Hono.Scripts.Battle {
 	}
 	
 	/// <summary>
+	/// 回合结算条件
+	/// </summary>
+	public enum ERoundConditionType
+	{
+		Time,
+		AbilityControl,
+		FactionActorAllDead,
+	}
+	
+	/// <summary>
 	/// 能力配置的归属类型
 	/// </summary>
 	public enum EAbilityType {
@@ -34,6 +44,27 @@ namespace Hono.Scripts.Battle {
 		Other,
 	}
 
+	public enum ERoundState
+	{
+		/// <summary>
+		/// 未启动
+		/// </summary>
+		NoActive,
+		/// <summary>
+		/// 准备期
+		/// </summary>
+		Ready,
+		/// <summary>
+		/// 运行期
+		/// </summary>
+		Running,
+		/// <summary>
+		/// 结算期
+		/// </summary>
+		Scoring,
+	}
+	
+	
 	public enum EDamageElementType {
 		Physical = 1,
 		Magic,

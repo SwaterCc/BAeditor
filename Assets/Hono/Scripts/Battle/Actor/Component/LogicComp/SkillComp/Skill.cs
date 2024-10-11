@@ -49,7 +49,7 @@ namespace Hono.Scripts.Battle {
 				}
 
 				ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnExit += onSkillEnd;
-
+				
 				_logic._abilityController.AwardAbility(ability, false);
 
 				resourceCheck();

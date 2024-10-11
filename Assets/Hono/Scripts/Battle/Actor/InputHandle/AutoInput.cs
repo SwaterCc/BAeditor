@@ -124,6 +124,8 @@ namespace Hono.Scripts.Battle
         private bool TryGetOriginPos(out Vector3 targetPos)
         {
             //if(Logic == )
+            targetPos = Vector3.zero;
+            return false;
         }
 
         protected virtual void AutoUseSkill()

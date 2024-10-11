@@ -62,14 +62,14 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// Demo2使用的数据类，用于加载Asset
     /// </summary>
-    public class AssetManager : Singleton<AssetManager> , IBattleFrameworkAsyncLoad
+    public class AssetManager : Singleton<AssetManager>, IBattleFrameworkAsyncInit
     {
         private readonly Dictionary<Type, IDataHelper> _assetDict = new Dictionary<Type, IDataHelper>();
         private readonly List<IReloadHandle> _reloadHandles = new List<IReloadHandle>();
         private bool _isLoadFinish;
         public bool IsLoadFinish => _isLoadFinish;
 
-        public async UniTask AsyncLoad()
+        public async UniTask AsyncInit()
         {
             _isLoadFinish = false;
 
@@ -163,7 +163,6 @@ namespace Hono.Scripts.Battle
                 }
 
                 await UniTask.WhenAll(tasks);
-                
             }
             catch (Exception e)
             {
@@ -199,11 +198,13 @@ namespace Hono.Scripts.Battle
             {
                 return;
             }
+
             _reloadHandles.Add(reloadHandle);
         }
 
-        public void CallReloadHandles() {
-	        var reloadList = new List<IReloadHandle>(_reloadHandles);
+        public void CallReloadHandles()
+        {
+            var reloadList = new List<IReloadHandle>(_reloadHandles);
             foreach (var handle in reloadList)
             {
                 handle.Reload();
@@ -216,9 +217,10 @@ namespace Hono.Scripts.Battle
             {
                 return;
             }
+
             _reloadHandles.Remove(reloadHandle);
         }
-        
+
         public async UniTask ReloadAsset<T>(int id) where T : ScriptableObject, IAllowedIndexing
         {
 #if UNITY_EDITOR

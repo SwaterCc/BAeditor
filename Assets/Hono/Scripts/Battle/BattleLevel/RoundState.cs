@@ -2,10 +2,14 @@ namespace Hono.Scripts.Battle
 {
     public partial class BattleLevelRoot
     {
-        public class RoundStage
+        public abstract class RoundState
         {
-            public bool CanExit;
-
+            protected Round _round;
+            protected RoundState(Round round)
+            {
+                _round = round;
+            }
+            
             public void Enter()
             {
                 

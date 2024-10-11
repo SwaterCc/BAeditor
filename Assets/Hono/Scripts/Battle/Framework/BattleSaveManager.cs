@@ -5,17 +5,17 @@ using Object = UnityEngine.Object;
 
 namespace Hono.Scripts.Battle
 {
-    public class BattleSaveManager: Singleton<BattleSaveManager>,IBattleFrameworkAsyncLoad
+    public class BattleSaveManager : Singleton<BattleSaveManager>, IBattleFrameworkAsyncInit
     {
         private BattleGameSave _gameSave;
         public BattleGameSave GameSave => _gameSave;
-        
-        public UniTask AsyncLoad()
+
+        public UniTask AsyncInit()
         {
             //加载所有存档
             return new UniTask();
         }
-        
+
         /// <summary>
         /// 是否有存档
         /// </summary>
@@ -31,7 +31,7 @@ namespace Hono.Scripts.Battle
         /// <param name="saveName"></param>
         /// <param name="gameSave"></param>
         /// <returns></returns>
-        public bool TryGetSaveData(string saveName ,out BattleGameSave gameSave)
+        public bool TryGetSaveData(string saveName, out BattleGameSave gameSave)
         {
             gameSave = null;
             return false;
@@ -40,9 +40,6 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 存储数据
         /// </summary>
-        public void Save()
-        {
-            
-        }
+        public void Save() { }
     }
 }
