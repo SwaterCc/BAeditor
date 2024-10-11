@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
 {
@@ -13,41 +14,55 @@ namespace Hono.Scripts.Battle
         [LabelText("准备期执行的Ability")]
         public int ReadyStageAbilityId = -1;
         
-        [LabelText("是否使用Ability控制回合运行")]
-        public bool UseAbilityControlRunning;
+        [LabelText("自定义回合结束")]
+        public bool Custom;
         
-        [ShowIf("UseAbilityControlRunning")]
-        [LabelText("AbilityConfigId")]
+        [ShowIf("Custom")]
+        [LabelText("使用指定Ability控制")]
         public int RunningAbilityConfigId;
         
         [HideIf("UseAbilityControlRunning")]
-        [BoxGroup("成功结算条件")]
-        [LabelText("超过指定时间后胜利(<=0 相当于不判定时间)")]
-        public float SuccessTime;
+        [BoxGroup("结算条件")]
+        [LabelText("检测时长(-1为无限时长，但是所有成功条件会强制变成即刻结算)")]
+        public float RunningCheckTime;
         
         [HideIf("UseAbilityControlRunning")]
-        [BoxGroup("成功结算条件")]
-        [LabelText("击杀指定阵营全部的单位")]
-        public List<int> KillFactionIds = new();
+        [BoxGroup("结算条件")]
+        [LabelText("成功条件(不允许出现重复条件)")]
+        public List<SuccessCondition> SuccessConditions = new();
         
         [HideIf("UseAbilityControlRunning")]
-        [BoxGroup("失败结算条件")]
-        [LabelText("超过指定时间后失败(<=0 相当于不判定时间)")]
-        public float FailedTime;
+        [BoxGroup("结算条件")]
+        [LabelText("失败结算条件(不允许出现重复条件)(全为即刻结算)")]
+        public List<FailedCondition> FailedConditions = new();
         
-        [HideIf("UseAbilityControlRunning")]
-        [BoxGroup("失败结算条件")]
-        [LabelText("指定阵营单位全部死亡后失败")]
-        public List<int> FailedFactionIds = new();
+        [LabelText("成功结算期时长(必须为有限时长最低为0)")]
+        public float SucessScoringStageTime = 0;
         
-        [LabelText("结算期时长(必须为有限时长最低为0)")]
-        public float ScoringStageTime = 0;
+        [LabelText("失败结算期时长(必须为有限时长最低为0)")]
+        public float FailedScoringStageTime = 0;
         
         [LabelText("当前波次唤醒的刷怪器")]
         public List<MonsterBuilderLinkInfo> MonsterBuilderLinkInfos = new();
         
         [LabelText("当前波次唤醒的触发器")]
         public List<int> TriggerBoxLinkInfos = new();
+    }
+
+    [Serializable]
+    public class SuccessCondition
+    {
+        public ERoundConditionType ConditionType;
+        [LabelText("是否立刻结算")]
+        public bool Flag;
+        public List<int> Params = new ();
+    }
+    
+    [Serializable]
+    public class FailedCondition
+    {
+        public ERoundConditionType ConditionType;
+        public List<int> Params = new ();
     }
     
     [Serializable]

@@ -33,7 +33,7 @@ namespace Hono.Scripts.Battle
             BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.CallLoadingUI,
                 new CallUIEventInfo() { UIFlag = false });
             
-            _battleLevelControl.GameReadyFinish();
+            _battleLevelControl.GameStart();
         }
 
         private void buildScene()

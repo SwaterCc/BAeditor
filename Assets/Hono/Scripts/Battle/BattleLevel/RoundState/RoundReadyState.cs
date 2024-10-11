@@ -26,7 +26,13 @@ namespace Hono.Scripts.Battle
 
             protected override void onTick(float dt) { }
 
-            protected override void onExit() { }
+            protected override void onExit()
+            {
+                if (_round.RoundData.ReadyStageAbilityId > 0)
+                {
+                    _round.Controller.AbilityController.RemoveAbility(_round.RoundData.ReadyStageAbilityId);
+                }
+            }
         }
     }
 }

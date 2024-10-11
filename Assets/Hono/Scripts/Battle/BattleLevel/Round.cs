@@ -16,6 +16,8 @@ namespace Hono.Scripts.Battle
             /// </summary>
             private ERoundState _curStage;
 
+            private RoundState _roundState;
+
             public RoundData RoundData { get; private set; }
 
             /// <summary>
@@ -30,35 +32,44 @@ namespace Hono.Scripts.Battle
 
             public Round(BattleLevelController controller)
             {
+                _roundState = null;
                 Controller = controller;
                 _roundStates = new()
                 {
                     {ERoundState.Ready,new RoundReadyState(this)},
-                    {ERoundState.Running,new RoundReadyState(this)},
-                    {ERoundState.Scoring,new RoundReadyState(this)},
+                    {ERoundState.Running,new RoundRunningState(this)},
+                    {ERoundState.SuccessScoring,new RoundSuccessScoringState(this)},
+                    {ERoundState.FailedScoring,new RoundFailedScoringState(this)},
                 };
             }
                 
             public void BeginNewRound(RoundData roundData)
             {
                 RoundData = roundData;
+                _roundState = null;
                 _curStage = ERoundState.Ready;
-                _roundStates[_curStage].Enter();
             }
             
             public void OnTick(float dt)
             {
                 if(_curStage == ERoundState.NoActive) return;
-                var state = _roundStates[_curStage];
-                state.Tick(dt);
-                if (state.IsAutoEnd())
+
+                if (_curStage == ERoundState.Ready && _roundState == null)
                 {
-                    _curStage = state.GetNextState();
-                    state.Exit();
+                    _roundState = _roundStates[_curStage]; 
+                    _roundState.Enter();
+                }
+                
+                _roundState.Tick(dt);
+                if (_roundState.IsAutoEnd())
+                {
+                    _curStage = _roundState.GetNextState();
+                    _roundState.Exit();
 
                     if (_curStage != ERoundState.NoActive)
                     {
-                        _roundStates[_curStage].Enter();
+                        _roundState = _roundStates[_curStage];
+                        _roundState.Enter();
                     }
                 }
             }

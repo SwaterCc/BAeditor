@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 
 namespace Hono.Scripts.Battle {
 	public enum EActorType {
@@ -28,8 +29,25 @@ namespace Hono.Scripts.Battle {
 	/// </summary>
 	public enum ERoundConditionType
 	{
-		Time,
-		FactionActorAllDead,
+		/// <summary>
+		/// 击杀指定阵营全部的单位
+		/// </summary>
+		SpecialFactionIdAllKilled,
+		
+		/// <summary>
+		/// 击杀指定阵营一定数量的单位
+		/// </summary>
+		SpecialFactionIdKilledCount,
+		
+		/// <summary>
+		/// 全部存活
+		/// </summary>
+		SpecialFactionIdAliveAll,
+		
+		/// <summary>
+		/// 指定存活数量(>=)
+		/// </summary>
+		SpecialFactionIdAliveCount,
 	}
 	
 	/// <summary>
@@ -58,9 +76,13 @@ namespace Hono.Scripts.Battle {
 		/// </summary>
 		Running,
 		/// <summary>
-		/// 结算期(清理期,只有通过该回合才会进入，回合失败会直接重开或者结算战斗)
+		/// 成功结算期(清理期,只有通过该回合才会进入，回合失败会直接重开或者结算战斗)
 		/// </summary>
-		Scoring,
+		SuccessScoring,
+		/// <summary>
+		/// 失败结算期
+		/// </summary>
+		FailedScoring,
 	}
 	
 	

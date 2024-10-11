@@ -31,7 +31,7 @@ namespace Hono.Scripts.Battle
             _vfxWorldComp.AddVFXObjectToWorld(obj);
         }
         
-        public void GameReadyFinish()
+        public void GameStart()
         {
             _currentRoundIndex = 0;
 
@@ -58,7 +58,7 @@ namespace Hono.Scripts.Battle
                 _round.BeginNewRound(_levelData.RoundDatas[_currentRoundIndex]);
                 return;
             }
-            //结算战斗
+            //结算战斗UI
         }
 
         private void onRoundFinish()
