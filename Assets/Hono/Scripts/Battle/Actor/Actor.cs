@@ -142,7 +142,7 @@ namespace Hono.Scripts.Battle
         #region 对外接口
         
         public void TriggerEvent(EBattleEventType eventType, IEventInfo eventInfo) {
-	        BattleEventManager.Instance.TriggerEvent(Uid, eventType, eventInfo);
+	        BattleEventManager.Instance.TriggerActorEvent(Uid, eventType, eventInfo);
         }
         
         public void AddMsgListener(MessageListener listener)

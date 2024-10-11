@@ -51,16 +51,32 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         /// 触发事件
         /// </summary>
-        public void TriggerEvent(int actorUid, EBattleEventType eventType, IEventInfo eventInfo = null)
+        public void TriggerActorEvent(int actorUid, EBattleEventType eventType, IEventInfo eventInfo = null)
         {
             if (!_eventDict.TryGetValue(eventType, out var checkers)) return;
             foreach (IEventChecker checker in checkers)
             {
-                if (checker.Check(actorUid, eventInfo))
+                if (checker.CheckActorOnly(actorUid, eventInfo))
                 {
                     checker.Invoke(eventInfo);
                 }
             }
         }
+        
+        /// <summary>
+        /// 触发全局事件
+        /// </summary>
+        public void TriggerGlobalEvent(EBattleEventType eventType, IEventInfo eventInfo = null)
+        {
+            if (!_eventDict.TryGetValue(eventType, out var checkers)) return;
+            foreach (IEventChecker checker in checkers)
+            {
+                if (checker.CheckGlobal(eventInfo))
+                {
+                    checker.Invoke(eventInfo);
+                }
+            }
+        }
+        
     }
 }

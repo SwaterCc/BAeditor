@@ -54,7 +54,7 @@ namespace Hono.Scripts.Battle {
 			#endregion
 			
 			public void MotionBegin() {
-				BattleEventManager.Instance.TriggerEvent(_logic.Uid, EBattleEventType.OnMotionBegin, _motionEventInfo);
+				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnMotionBegin, _motionEventInfo);
 				_isBegin = true;
 			}
 
@@ -113,7 +113,7 @@ namespace Hono.Scripts.Battle {
 				if(_setting.TriggerEventClose) return;
 
 				_motionEventInfo.MotionCollisionId = colliderUid;
-				BattleEventManager.Instance.TriggerEvent(_logic.Uid, EBattleEventType.OnMoveCollision, _motionEventInfo);
+				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnMoveCollision, _motionEventInfo);
 				
 				if (!_setting.StopAfterCollision) {
 					if (colliderUid != _moveTargetUid) {
@@ -125,7 +125,7 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public void MoveEnd() {
-				BattleEventManager.Instance.TriggerEvent(_logic.Uid, EBattleEventType.OnMotionEnd, _motionEventInfo);
+				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnMotionEnd, _motionEventInfo);
 			}
 		}
 	}

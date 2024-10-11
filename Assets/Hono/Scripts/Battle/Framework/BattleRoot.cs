@@ -65,7 +65,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private void initBattleMode()
         {
-            _battleMode = ActorManager.Instance.GetBattleMode();
+            _battleMode = ActorManager.Instance.GetBattleControl();
             _battleMode.Init();
         }
 

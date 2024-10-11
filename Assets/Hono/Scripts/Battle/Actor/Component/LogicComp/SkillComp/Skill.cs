@@ -58,7 +58,7 @@ namespace Hono.Scripts.Battle {
 			private void onSkillEnd() {
 				_isExecuting = false;
 				_logic._stateMachine.ChangeState(EActorState.Idle);
-				BattleEventManager.Instance.TriggerEvent(_logic.Uid, EBattleEventType.OnSkillStop,
+				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillStop,
 					new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
 			}
 
@@ -171,7 +171,7 @@ namespace Hono.Scripts.Battle {
 				if (targetUids.Count > 0) {
 					_logic.SetAttr(ELogicAttr.AttrAttackTargetUids, targetUids, false);
 					_logic._abilityController.ExecutingAbility(_abilityUid);
-					BattleEventManager.Instance.TriggerEvent(_logic.Uid, EBattleEventType.OnSkillUseSuccess,
+					BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillUseSuccess,
 						new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
 					resourceCheck();
 					_isExecuting = true;

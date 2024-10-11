@@ -140,13 +140,13 @@ namespace Hono.Scripts.Battle
             var damageItem = makeDamageConfig();
             var res = LuaInterface.GetDamageResults(attacker, target, damageInfo, damageItem);
             var hitInfo = makeHitInfo();
-            BattleEventManager.Instance.TriggerEvent(Actor.Uid, EBattleEventType.OnHit, hitInfo);
+            BattleEventManager.Instance.TriggerActorEvent(Actor.Uid, EBattleEventType.OnHit, hitInfo);
 			
             var hitDamageInfo = new HitDamageInfo(hitInfo);
             hitDamageInfo.HitTargetUid = _targetUid;
             hitInfo.HitBoxHitCount = 1;
             hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
-            BattleEventManager.Instance.TriggerEvent(Actor.Uid, EBattleEventType.OnHitDamage, hitDamageInfo);
+            BattleEventManager.Instance.TriggerActorEvent(Actor.Uid, EBattleEventType.OnHitDamage, hitDamageInfo);
 			
             beHurtComp.OnBeHurt(hitDamageInfo);
         }

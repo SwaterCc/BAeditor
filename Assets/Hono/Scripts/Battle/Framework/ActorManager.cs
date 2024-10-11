@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Scene;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
@@ -21,22 +22,22 @@ namespace Hono.Scripts.Battle
         private readonly List<Actor> _addCaches = new(16);
 
         private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
-
-        private bool _battleModelIsCreated;
-
-        public static int NormalHitBoxConfigId = 1;
         
-        public void Init()
+        public ActorManager()
         {
             _filter = new Filter(this);
         }
 
-        public Actor GetBattleMode() {
-	        if (_battleModelIsCreated) throw new Exception("重复创建BattleMode");
-	        _battleModelIsCreated = true;
+        public  BattleLevelController GetBattleControl(BattleLevelData battleLevelData) {
 	        var actor = new Actor(_idGenerator.GenerateId(), EActorType.BattleMode);
-	        actor.Setup(new BattleModeShow(actor),new BattleLevelControl(actor));
-	        return actor;
+            var battleLevelControl = new BattleLevelController(actor, battleLevelData);
+	        actor.Setup(new BattleModeShow(actor),battleLevelControl);
+	        return battleLevelControl;
+        }
+
+        public Actor CreateStaticActor()
+        {
+            return null;
         }
 
         public Actor CreateActor(EActorType type, int configId = 0) {
@@ -168,6 +169,18 @@ namespace Hono.Scripts.Battle
             {
                 _removeList.Add(actor);
             }
+        }
+
+        public void ClearAllActor()
+        {
+            foreach (var actor in _runningActorList)
+            {
+                actor.Destroy();
+            }
+            _runningActorList.Clear();
+            _uidActorDict.Clear();
+            _addCaches.Clear();
+            _removeList.Clear();
         }
     }
 }

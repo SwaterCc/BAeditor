@@ -31,5 +31,9 @@ namespace Hono.Scripts.Battle.Event
         
         OnActorEnterScene = 30,
         OnActorDead,
+        
+        
+        CallLoadingUI = 1000,
+        CallPawnGroupEditUI = 1001,
     }
 }

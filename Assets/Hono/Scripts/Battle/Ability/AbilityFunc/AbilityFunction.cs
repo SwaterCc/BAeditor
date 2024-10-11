@@ -71,7 +71,7 @@ namespace Hono.Scripts.Battle
 			}
 
 			var hitBox = ActorManager.Instance.SummonActor(attack, EActorType.HitBox,
-                ActorManager.NormalHitBoxConfigId, fromTopSummer);
+                1, fromTopSummer);
 			hitBox.SetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
             hitBox.Variables.Set("hitBoxData", hitData);
             hitBox.Variables.Set("targetUid", target.Uid);
@@ -95,7 +95,7 @@ namespace Hono.Scripts.Battle
                 if (targetUid == 0) continue;
 
 				var hitBox = ActorManager.Instance.SummonActor(attack, EActorType.HitBox,
-				ActorManager.NormalHitBoxConfigId, fromTopSummer);
+				1, fromTopSummer);
 				hitBox.SetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
 				hitBox.Variables.Set("hitBoxData", hitData);
 				hitBox.Variables.Set("targetUid", targetUid);
@@ -120,7 +120,7 @@ namespace Hono.Scripts.Battle
                 if (targetUid == 0) continue;
 
                 var hitBox = ActorManager.Instance.SummonActorByAbility(Ability.Context.Invoker, EActorType.HitBox,
-                    ActorManager.NormalHitBoxConfigId, false);
+                    1, false);
                 hitBox.Variables.Set("hitBoxData", hitData);
                 hitBox.Variables.Set("targetUid", targetUid);
                 hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());

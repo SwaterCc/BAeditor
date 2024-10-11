@@ -3,7 +3,8 @@ using System;
 namespace Hono.Scripts.Battle.Event {
 	public interface IEventChecker {
 		public EBattleEventType EventType { get; }
-		public bool Check(int triggerEventActorUid, IEventInfo info);
+		public bool CheckActorOnly(int triggerEventActorUid, IEventInfo info);
+		public bool CheckGlobal(IEventInfo info);
 		public void Invoke(IEventInfo info);
 	}
 
@@ -60,11 +61,16 @@ namespace Hono.Scripts.Battle.Event {
 			_listenAllActor = flag;
 		}
 
-		public bool Check(int triggerEventActorUid, IEventInfo info) {
+		public bool CheckActorOnly(int triggerEventActorUid, IEventInfo info) {
 			if (!_listenAllActor) {
 				return triggerEventActorUid == _checkerBelongActorUid && onCheck(info);
 			}
 
+			return onCheck(info);
+		}
+
+		public bool CheckGlobal(IEventInfo info)
+		{
 			return onCheck(info);
 		}
 

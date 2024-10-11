@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Scene;
 using UnityEngine;
 
@@ -8,61 +9,74 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// 关卡流程
     /// </summary>
-    public partial class BattleLevelRoot
+    public class BattleLevelRoot
     {
         private BattleLevelData _battleLevelData;
 
-        private BattleLevelControl _battleLevelControl;
-
-        public bool AllLoadedFinish { get; private set; }
+        private BattleLevelController _battleLevelControl;
 
         private PawnGroupInfos _pawnGroupInfos;
-        
+
         public async void Setup(BattleLevelData battleLevelData, bool useSave)
         {
             _battleLevelData = battleLevelData;
             _pawnGroupInfos = null;
 
-            List<UniTask> tasks = new List<UniTask>();
-            tasks.Add(buildScene());
-            if (!useSave)
-            {
-                tasks.Add(buildPawnGroup());
-            }
-            await UniTask.WhenAll(tasks);
-
-            AllLoadedFinish = true;
-
-            EnterBattleLevel();
+            //打开loading
+            BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.CallLoadingUI,
+                new CallUIEventInfo() { UIFlag = true });
+            
+            buildScene();
+            
+            await buildPawnGroup();
+            
+            BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.CallLoadingUI,
+                new CallUIEventInfo() { UIFlag = false });
+            
+            _battleLevelControl.GameReadyFinish();
         }
 
-        private async UniTask buildScene()
+        private void buildScene()
         {
             //创建静态Actor（玩家位置，刷怪点，触发器）
+            ActorManager.Instance.CreateStaticActor();
 
             //创建BattleLevelControl
+            _battleLevelControl = ActorManager.Instance.GetBattleControl(_battleLevelData);
         }
 
         private async UniTask buildPawnGroup()
         {
+            if (_pawnGroupInfos == null)
+            {
+                //打开编队界面
+                BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.CallPawnGroupEditUI,
+                    new CallUIEventInfo() { UIFlag = true });
+            }
+            
             //等待队伍编队返回
             await UniTask.WaitUntil(() => _pawnGroupInfos != null);
+            
+            //关闭编队界面
+            BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.CallPawnGroupEditUI,
+                new CallUIEventInfo() { UIFlag = false });
 
             //创建玩家Actor
         }
 
-        /// <summary>
-        /// 数据准备完毕后开始游戏
-        /// </summary>
-        public void EnterBattleLevel()
+        public void OnTick(float dt)
         {
-            
+            ActorManager.Instance.Tick(dt);
         }
 
-        public void OnTick(float dt) { }
+        public void OnUpdate(float dt)
+        {
+            ActorManager.Instance.Update(dt);
+        }
 
-        public void OnUpdate(float dt) { }
-
-        public void ExitBattleLevel() { }
+        public void UnInstall()
+        {
+            ActorManager.Instance.ClearAllActor();
+        }
     }
 }

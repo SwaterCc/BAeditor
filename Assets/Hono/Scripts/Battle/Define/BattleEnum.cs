@@ -29,7 +29,6 @@ namespace Hono.Scripts.Battle {
 	public enum ERoundConditionType
 	{
 		Time,
-		AbilityControl,
 		FactionActorAllDead,
 	}
 	
@@ -59,7 +58,7 @@ namespace Hono.Scripts.Battle {
 		/// </summary>
 		Running,
 		/// <summary>
-		/// 结算期
+		/// 结算期(清理期,只有通过该回合才会进入，回合失败会直接重开或者结算战斗)
 		/// </summary>
 		Scoring,
 	}

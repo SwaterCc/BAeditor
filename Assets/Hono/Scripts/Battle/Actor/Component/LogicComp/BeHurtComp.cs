@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle
                 Actor.SetAttr(ELogicAttr.AttrHp, (int)(Actor.GetAttr<int>(ELogicAttr.AttrHp) - hitDamageInfo.FinalDamageValue),
 	                false);
                 Debug.Log($"当前血量{Actor.GetAttr<int>(ELogicAttr.AttrHp)}");
-                BattleEventManager.Instance.TriggerEvent(Actor.Uid, EBattleEventType.OnBeHit, hitDamageInfo);
+                BattleEventManager.Instance.TriggerActorEvent(Actor.Uid, EBattleEventType.OnBeHit, hitDamageInfo);
                 //添加受击特效
 
                 var damageRow = ConfigManager.Table<DamageTable>().Get(hitDamageInfo.DamageConfigId);

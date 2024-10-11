@@ -55,7 +55,7 @@ namespace Hono.Scripts.Battle
         private readonly List<IBattleFrameworkEnterExit> _frameworkEnterExits = new(16);
         private readonly List<IBattleFrameworkAsyncInit> _frameworkAsyncLoads = new(16);
         private readonly List<IBattleFrameworkTick> _frameworkTicks = new(16);
-        private BattleLevelRoot _levelRoot;
+        private BattleLevelRoot _levelRoot = new();
         private string _fromScene;
         
         #region 框架初始化
@@ -179,8 +179,7 @@ namespace Hono.Scripts.Battle
                 //加载关卡数据
                 var battleLevelData = await Addressables.LoadAssetAsync<BattleLevelData>("path").ToUniTask();
                 
-                //创建关卡root
-                _levelRoot = new BattleLevelRoot();
+                //装载关卡root
                 _levelRoot.Setup(battleLevelData, useSave);
             }
             catch (Exception e)
@@ -196,16 +195,16 @@ namespace Hono.Scripts.Battle
         public async void EnterBattle(string fromScene, string battleLevelName, bool useSave = false)
         {
             _fromScene = fromScene;
-
-            foreach (var framework in _frameworkEnterExits)
-            {
-                framework.OnEnterBattle();
-            }
             
             if (_battleDataLoadState != EBattleDataLoadState.LoadFinish)
             {
                 Debug.LogError($"战斗数据未准备完成 当前状态{_battleDataLoadState}");
                 return;
+            }
+            
+            foreach (var framework in _frameworkEnterExits)
+            {
+                framework.OnEnterBattle();
             }
             
             //切换场景到关卡场景
@@ -220,7 +219,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public void ExitBattle()
         {
-            _levelRoot?.ExitBattleLevel();
+            _levelRoot.UnInstall();
             
             foreach (var framework in _frameworkEnterExits)
             {
@@ -237,20 +236,13 @@ namespace Hono.Scripts.Battle
                 frameworkTick.Tick(Time.deltaTime);
             }
             
-            if(_levelRoot == null || _levelRoot.AllLoadedFinish == false) 
-                return;
-            
-            _levelRoot.OnTick(Time.deltaTime);
+            _levelRoot?.OnTick(Time.deltaTime);
         }
         
         private void Update()
         {
-            if(_levelRoot == null || _levelRoot.AllLoadedFinish == false) 
-                return;
-
             Tick();
-            
-            _levelRoot.OnUpdate(Time.deltaTime);
+            _levelRoot?.OnUpdate(Time.deltaTime);
         }
 
         #endregion

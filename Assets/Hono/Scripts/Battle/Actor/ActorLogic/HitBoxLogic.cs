@@ -126,14 +126,14 @@ namespace Hono.Scripts.Battle {
 			var damageItem = makeDamageConfig();
 			var res = LuaInterface.GetDamageResults(attacker, target, damageInfo, damageItem);
 			var hitInfo = makeHitInfo();
-			BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHit, hitInfo);
+			BattleEventManager.Instance.TriggerActorEvent(_sourceActorId, EBattleEventType.OnHit, hitInfo);
 			
 			var hitDamageInfo = new HitDamageInfo(hitInfo);
 			hitDamageInfo.ParseDamageResult(res);
 			hitDamageInfo.HitTargetUid = _targetUid;
 			hitInfo.HitBoxHitCount = 1;
 			hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
-			BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHitDamage, hitDamageInfo);
+			BattleEventManager.Instance.TriggerActorEvent(_sourceActorId, EBattleEventType.OnHitDamage, hitDamageInfo);
 			
 			beHurtComp.OnBeHurt(hitDamageInfo);
 		}
@@ -155,7 +155,7 @@ namespace Hono.Scripts.Battle {
 			damageInfo.HitCount = finalTargets.Count;
 			var hitInfo = makeHitInfo();
 			hitInfo.HitBoxHitCount = finalTargets.Count;
-			BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHit, hitInfo);
+			BattleEventManager.Instance.TriggerActorEvent(_sourceActorId, EBattleEventType.OnHit, hitInfo);
 			
 			foreach (var beHurtComp in finalTargets) {
 				var damageItem = makeDamageConfig();
@@ -171,7 +171,7 @@ namespace Hono.Scripts.Battle {
 				}
 				hitDamageInfo.IsKillTarget = (beHurtComp.Actor.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
 				Debug.Log($"[OnHit] hitBoxUid {Uid}: AttackUid{attacker.Uid} -----> targetUid {beHurtComp.Actor.Uid}");
-				BattleEventManager.Instance.TriggerEvent(_sourceActorId, EBattleEventType.OnHitDamage, hitDamageInfo);
+				BattleEventManager.Instance.TriggerActorEvent(_sourceActorId, EBattleEventType.OnHitDamage, hitDamageInfo);
 				beHurtComp.OnBeHurt(hitDamageInfo);
 			}
 		}

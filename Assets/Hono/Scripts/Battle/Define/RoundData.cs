@@ -12,10 +12,7 @@ namespace Hono.Scripts.Battle
 
         [LabelText("准备期执行的Ability")]
         public int ReadyStageAbilityId = -1;
-
-        [LabelText("运行时长(-1为无限时长)")]
-        public float RunningStageTime;
-
+        
         [LabelText("是否使用Ability控制回合运行")]
         public bool UseAbilityControlRunning;
         
@@ -24,30 +21,35 @@ namespace Hono.Scripts.Battle
         public int RunningAbilityConfigId;
         
         [HideIf("UseAbilityControlRunning")]
+        [BoxGroup("成功结算条件")]
+        [LabelText("超过指定时间后胜利(<=0 相当于不判定时间)")]
+        public float SuccessTime;
+        
+        [HideIf("UseAbilityControlRunning")]
+        [BoxGroup("成功结算条件")]
+        [LabelText("击杀指定阵营全部的单位")]
+        public List<int> KillFactionIds = new();
+        
+        [HideIf("UseAbilityControlRunning")]
+        [BoxGroup("失败结算条件")]
+        [LabelText("超过指定时间后失败(<=0 相当于不判定时间)")]
+        public float FailedTime;
+        
+        [HideIf("UseAbilityControlRunning")]
+        [BoxGroup("失败结算条件")]
+        [LabelText("指定阵营单位全部死亡后失败")]
+        public List<int> FailedFactionIds = new();
+        
+        [LabelText("结算期时长(必须为有限时长最低为0)")]
+        public float ScoringStageTime = 0;
+        
         [LabelText("当前波次唤醒的刷怪器")]
         public List<MonsterBuilderLinkInfo> MonsterBuilderLinkInfos = new();
         
-        [HideIf("UseAbilityControlRunning")]
         [LabelText("当前波次唤醒的触发器")]
         public List<int> TriggerBoxLinkInfos = new();
-        
-        [LabelText("成功结算条件")]
-        public List<RoundCondition> SuccessConditions = new();
-            
-        [LabelText("失败结算条件")]
-        public List<RoundCondition> FailedConditions = new();
-
-        [LabelText("可重复挑战该波次")]
-        public bool CanRepeat;
     }
-
-    [Serializable]
-    public struct RoundCondition
-    {
-        public ERoundConditionType ConditionType;
-        public int Value;
-    }
-
+    
     [Serializable]
     public struct MonsterBuilderLinkInfo
     {

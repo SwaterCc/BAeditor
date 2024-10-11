@@ -94,14 +94,12 @@ namespace Hono.Scripts.Battle {
 
 			_stateMachine?.Init();
 		}
-		
-		protected abstract void setupAttrs();
+
+		protected virtual void setupAttrs() { }
 		protected virtual void setupInput() { }
 		protected virtual void setupStateMachine() { }
-
-		protected abstract void onInit();
-
-		protected abstract void setupComponents();
+		protected virtual void onInit() { }
+		protected virtual void setupComponents() { }
 
 		protected void addComponent(ALogicComponent component) {
 			if (!_components.TryAdd(component.GetType(), component)) {
