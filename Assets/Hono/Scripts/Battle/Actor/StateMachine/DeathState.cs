@@ -19,7 +19,7 @@ namespace Hono.Scripts.Battle {
 			
 			protected override void onTick(float dt) {
 				if(_isDead) return;
-				ActorManager.Instance.RemoveActor(_actorLogic.Actor);
+				ActorManager.Instance.RemoveActor(_actorLogic.Uid);
 				_actorLogic.Actor.TriggerEvent(EBattleEventType.OnActorDead, null);
 				_isDead = true;
 			}

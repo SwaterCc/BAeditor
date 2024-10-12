@@ -24,17 +24,17 @@ namespace Hono.Scripts.Battle
         /// Actor基础类型
         /// </summary>
         public EActorType ActorType { get; }
+        
+        /// <summary>
+        /// Actor逻辑
+        /// </summary>
+        public ActorLogic Logic { get; private set; }
 
         /// <summary>
         /// 表现层创建和管理者
         /// </summary>
-        private ActorModelController _modelController;
-
-        /// <summary>
-        /// 逻辑层对外可见
-        /// </summary>
-        public ActorLogic Logic { get; private set; }
-
+        private readonly ActorModelController _modelController;
+        
         /// <summary>
         /// ability控制器
         /// </summary>
@@ -70,10 +70,16 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public Quaternion Rot => GetAttr<Quaternion>(ELogicAttr.AttrRot);
 
+        /// <summary>
+        /// actor是否加载完成
+        /// </summary>
+        public bool ActorSetupFinish => _modelController.IsModelLoadFinish;
+
         public Actor(int uid, EActorType actorType)
         {
             Uid = uid;
             ActorType = actorType;
+            _modelController = new ActorModelController(this);
             _tags = new Tags();
             _attrs = new AttrCollection(this, AttrCreator.Create);
             _abilityController = new AbilityController(this);
@@ -86,14 +92,13 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// Create时调用，同帧执行
         /// </summary>
-        /// <param name="modelController"></param>
+        /// <param name="modelSetup"></param>
         /// <param name="logic"></param>
-        public void Setup(ActorModelController modelController, ActorLogic logic)
+        public void Setup(ActorModelController.ModelSetup modelSetup, ActorLogic logic)
         {
             Logic = logic;
-            _modelController = modelController;
             Logic.Setup(_abilityController, _attrs, _tags, Variables);
-            _modelController.Setup(_tags, Variables, Logic);
+            _modelController.Setup(modelSetup, _tags, Variables, Logic);
         }
         
         /// <summary>
@@ -102,7 +107,7 @@ namespace Hono.Scripts.Battle
         public void Init()
         {
             Logic.Init();
-            _modelController.Init();
+            _modelController.onEnterScene();
             _message.Init();
         }
 

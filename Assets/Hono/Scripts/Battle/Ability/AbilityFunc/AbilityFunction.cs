@@ -62,46 +62,53 @@ namespace Hono.Scripts.Battle
         [AbilityMethod]
         public static void CreateHitBox(int attackUid, int targetUid, HitBoxData hitData, bool fromTopSummer = false)
         {
-			if (!tryGetActor(attackUid, out var attack)) {
-				return;
-			}
+            if (!tryGetActor(attackUid, out var attack))
+            {
+                return;
+            }
 
-			if (!tryGetActor(targetUid, out var target)) {
-				return;
-			}
+            if (!tryGetActor(targetUid, out var target))
+            {
+                return;
+            }
 
-			var hitBox = ActorManager.Instance.SummonActor(attack, EActorType.HitBox,
-                1, fromTopSummer);
-			hitBox.SetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
-            hitBox.Variables.Set("hitBoxData", hitData);
-            hitBox.Variables.Set("targetUid", target.Uid);
-            hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
-            ActorManager.Instance.AddActor(hitBox);
+            ActorManager.Instance.SummonActor(attack, EActorType.HitBox,
+                1, fromTopSummer,
+                (hitBox) =>
+                {
+                    hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
+                    hitBox.Variables.Set("hitBoxData", hitData);
+                    hitBox.Variables.Set("targetUid", target.Uid);
+                    hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
+                }
+            );
         }
 
         [AbilityMethod]
-        public static void CreateHitBoxes(int attackUid,List<int> targetUids, HitBoxData hitData, bool fromTopSummer = false)
+        public static void CreateHitBoxes(int attackUid, List<int> targetUids, HitBoxData hitData,
+            bool fromTopSummer = false)
         {
+            if (!tryGetActor(attackUid, out var attack))
+            {
+                return;
+            }
 
-			if (!tryGetActor(attackUid, out var attack)) {
-				return;
-			}
-
-			//返回打击点的Uid
-			if (targetUids is not { Count: > 0 }) return;
+            //返回打击点的Uid
+            if (targetUids is not { Count: > 0 }) return;
 
             foreach (var targetUid in targetUids)
             {
                 if (targetUid == 0) continue;
 
-				var hitBox = ActorManager.Instance.SummonActor(attack, EActorType.HitBox,
-				1, fromTopSummer);
-				hitBox.SetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
-				hitBox.Variables.Set("hitBoxData", hitData);
-				hitBox.Variables.Set("targetUid", targetUid);
-				hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
-				ActorManager.Instance.AddActor(hitBox);
-			}
+                ActorManager.Instance.SummonActor(attack, EActorType.HitBox,
+                    1, fromTopSummer, (hitBox) =>
+                    {
+                        hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
+                        hitBox.Variables.Set("hitBoxData", hitData);
+                        hitBox.Variables.Set("targetUid", targetUid);
+                        hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
+                    });
+            }
         }
 
         [AbilityMethod]
@@ -119,44 +126,53 @@ namespace Hono.Scripts.Battle
             {
                 if (targetUid == 0) continue;
 
-                var hitBox = ActorManager.Instance.SummonActorByAbility(Ability.Context.Invoker, EActorType.HitBox,
-                    1, false);
-                hitBox.Variables.Set("hitBoxData", hitData);
-                hitBox.Variables.Set("targetUid", targetUid);
-                hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
-                ActorManager.Instance.AddActor(hitBox);
+                ActorManager.Instance.SummonActor(Ability.Context.SourceActor, EActorType.HitBox,
+                    1, false, (hitBox) =>
+                    {
+                        hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
+                        hitBox.Variables.Set("hitBoxData", hitData);
+                        hitBox.Variables.Set("targetUid", targetUid);
+                        hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
+                    });
             }
         }
 
         [AbilityMethod]
         public static void CreateBullet(int targetUid, int bulletConfigId, bool fromTopSummer = false)
         {
-            var bullet = ActorManager.Instance.SummonActorByAbility(Ability.Context.Invoker,EActorType.Bullet,bulletConfigId,fromTopSummer);
-            bullet.Variables.Set("targetUid", targetUid);
-            bullet.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
-            ActorManager.Instance.AddActor(bullet);
+            var bullet = ActorManager.Instance.SummonActor(Ability.Context.SourceActor, EActorType.Bullet,
+                bulletConfigId, fromTopSummer, (bullet) =>
+                {
+                    bullet.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
+                    bullet.Variables.Set("targetUid", targetUid);
+                    bullet.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
+                });
         }
 
         [AbilityMethod]
         public static void CreateBullets(List<int> targetUids, int bulletConfigId, bool fromTopSummer = false)
         {
             if (targetUids is not { Count: > 0 }) return;
-            
+
             foreach (var targetUid in targetUids)
             {
-                var bullet = ActorManager.Instance.SummonActorByAbility(Ability.Context.Invoker,EActorType.Bullet,bulletConfigId,fromTopSummer);
-                bullet.Variables.Set("targetUid", targetUid);
-                bullet.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
-                ActorManager.Instance.AddActor(bullet);
+                var bullet = ActorManager.Instance.SummonActor(Ability.Context.SourceActor, EActorType.Bullet,
+                    bulletConfigId, fromTopSummer, (bullet) =>
+                    {
+                        bullet.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
+                        bullet.Variables.Set("targetUid", targetUid);
+                        bullet.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
+                    });
             }
         }
 
         [AbilityMethod]
-        public static int AddVFX(VFXSetting setting,int vfxTargetUid = 0)
+        public static int AddVFX(VFXSetting setting, int vfxTargetUid = 0)
         {
-			if(!tryGetActor(vfxTargetUid,out var target)) {
-				return -1;
-			}
+            if (!tryGetActor(vfxTargetUid, out var target))
+            {
+                return -1;
+            }
 
             if (target.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
             {
@@ -170,10 +186,12 @@ namespace Hono.Scripts.Battle
         [AbilityMethod]
         public static void RemoveVFX(int vfxUid, int vfxTargetUid = 0)
         {
-			if (!tryGetActor(vfxTargetUid, out var target)) {
-				return;
-			}
-			if (target.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
+            if (!tryGetActor(vfxTargetUid, out var target))
+            {
+                return;
+            }
+
+            if (target.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
             {
                 vfxComp.RemoveVFX(vfxUid);
             }

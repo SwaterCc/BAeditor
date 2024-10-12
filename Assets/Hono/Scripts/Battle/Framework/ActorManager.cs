@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Scene;
 using Hono.Scripts.Battle.Tools;
-using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -20,84 +19,144 @@ namespace Hono.Scripts.Battle
 
         private readonly List<Actor> _removeList = new(16);
         private readonly List<Actor> _addCaches = new(16);
-        
+        private readonly List<Actor> _loadingCaches = new(16);
+
         public ActorManager()
         {
             _filter = new Filter(this);
         }
 
-        public BattleLevelController GetBattleControl(BattleLevelData battleLevelData) {
-	        var actor = new Actor(BattleConstValue.BattleRootControllerUid, EActorType.BattleMode);
-            var battleLevelControl = new BattleLevelController(actor, battleLevelData);
-	        actor.Setup(new BattleModeModelController(actor),battleLevelControl);
-	        return battleLevelControl;
-        }
-
-        public Actor CreateStaticActor(StaticActorModel model)
+        public BattleLevelController GetBattleControl(BattleLevelData battleLevelData)
         {
-            return null;
+            var actor = new Actor(BattleConstValue.BattleRootControllerUid, EActorType.BattleLevelController);
+            var battleLevelControl = new BattleLevelController(actor, battleLevelData);
+            actor.Setup(new ActorModelController.PreLoadModelSetup(EPreLoadGameObjectType.BattleRootModel),
+                battleLevelControl);
+            return battleLevelControl;
         }
 
-        public Actor CreateActor(EActorType type, int configId = 0) {
-	        var actor = getActor(type, configId);
-	        actor.SetAttr(ELogicAttr.AttrSourceActorUid, actor.Uid,false);
-	        actor.SetAttr(ELogicAttr.AttrTopSourceActorUid, actor.Uid,false);
-	        return actor;
-        }
-        
-        private Actor getActor(EActorType type, int configId = 0) {
-
-	        int uid = _idGenerator.GenerateId();
-	        var actor = new Actor(uid, type);
-	        actor.SetAttr(ELogicAttr.AttrUid, uid, false);
-	        actor.SetAttr(ELogicAttr.AttrConfigId, configId, false);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="type"></param>
+        /// <param name="configId"></param>
+        /// <param name="afterSetupCall"></param>
+        /// <param name="actorModel"></param>
+        /// <returns></returns>
+        private Actor getActor(int uid, EActorType type, int configId, Action<Actor> afterSetupCall, SceneActorModel actorModel)
+        {
+            var actor = new Actor(uid, type);
+            ActorModelController.ModelSetup modelSetup = null;
+            actor.SetAttr(ELogicAttr.AttrUid, uid, false);
+            actor.SetAttr(ELogicAttr.AttrConfigId, configId, false);
             switch (type)
             {
-	            case EActorType.Pawn:
-		            actor.Setup(new RtLoadModelController(actor), new PawnLogic(actor));
-		            break;
-	            case EActorType.Monster:
-		            actor.Setup(new RtLoadModelController(actor), new MonsterLogic(actor));
-		            break;
-	            case EActorType.Building:
-		            actor.Setup(new RtLoadModelController(actor), new BuildingLogic(actor));
-		            break;
-	            case EActorType.Bullet:
-		            actor.Setup(new BulletModelController(actor), new BulletLogic(actor));
-		            break;
-	            case EActorType.HitBox:
-		            actor.Setup(new RtLoadModelController(actor), new HitBoxLogic(actor));
-		            break;
+                case EActorType.Pawn:
+                    modelSetup = new ActorModelController.AsyncLoadModelSetup();
+                    actor.Setup(modelSetup, new PawnLogic(actor));
+                    break;
+                case EActorType.Monster:
+                    modelSetup = new ActorModelController.AsyncLoadModelSetup();
+                    actor.Setup(modelSetup, new MonsterLogic(actor));
+                    break;
+                case EActorType.Building:
+                    modelSetup = new ActorModelController.AsyncLoadModelSetup();
+                    actor.Setup(modelSetup, new BuildingLogic(actor));
+                    break;
+                case EActorType.Bullet:
+                    modelSetup = new ActorModelController.PreLoadModelSetup(EPreLoadGameObjectType.BulletModel);
+                    actor.Setup(modelSetup, new BulletLogic(actor));
+                    break;
+                case EActorType.HitBox:
+                    modelSetup = new ActorModelController.PreLoadModelSetup(EPreLoadGameObjectType.HitBoxModel);
+                    actor.Setup(modelSetup, new HitBoxLogic(actor));
+                    break;
+                case EActorType.MonsterBuilder:
+                    modelSetup = new ActorModelController.SceneModelSetup(actorModel);
+                    actor.Setup(modelSetup, new HitBoxLogic(actor));
+                    break;
+                case EActorType.TriggerBox:
+                    modelSetup = new ActorModelController.SceneModelSetup(actorModel);
+                    actor.Setup(modelSetup, new HitBoxLogic(actor));
+                    break;
             }
-            
+
+            afterSetupCall?.Invoke(actor);
+
             return actor;
         }
-        
-        public Actor SummonActor(Actor summoner, EActorType type, int configId ,bool fromTopSummer) {
-	        var summoned = getActor(type, configId);
-	        summoned.SetAttr(ELogicAttr.AttrIsSummoned, 1, false);
+
+
+        #region 创建流程
+
+        public int CreateSceneActor(SceneActorModel model, int configId = 0,
+            Action<Actor> afterSetupCallFunc = null)
+        {
+            var actor = getActor(model.StaticActorUid, model.ActorType, configId, afterSetupCallFunc, model);
+            actor.SetAttr(ELogicAttr.AttrSourceActorUid, actor.Uid, false);
+            actor.SetAttr(ELogicAttr.AttrTopSourceActorUid, actor.Uid, false);
+            return model.StaticActorUid;
+        }
+
+        public int CreateUniqueActor(int uniqueUid, EActorType type, int configId = 0,
+            Action<Actor> afterSetupCallFunc = null)
+        {
+            var actor = getActor(uniqueUid, type, configId, afterSetupCallFunc, null);
+            actor.SetAttr(ELogicAttr.AttrSourceActorUid, actor.Uid, false);
+            actor.SetAttr(ELogicAttr.AttrTopSourceActorUid, actor.Uid, false);
+            return uniqueUid;
+        }
+
+        public int CreateActor(EActorType type, int configId = 0, Action<Actor> afterSetupCallFunc = null)
+        {
+            int uid = ActorUidGenerator.GenerateUid(EActorUidRangeType.NormalActor);
+            var actor = getActor(uid, type, configId, afterSetupCallFunc, null);
+            actor.SetAttr(ELogicAttr.AttrSourceActorUid, actor.Uid, false);
+            actor.SetAttr(ELogicAttr.AttrTopSourceActorUid, actor.Uid, false);
+            return actor.Uid;
+        }
+
+        #endregion
+
+
+        #region 召唤流程
+        public int SummonActor(Actor summoner, EActorType type, int configId, bool fromTopSummer, Action<Actor> afterSetupCallFunc = null)
+        {
+            int uid = ActorUidGenerator.GenerateUid(EActorUidRangeType.DynamicActor);
+            var summoned = getActor(uid, type, configId, afterSetupCallFunc, null);
+            summoned.SetAttr(ELogicAttr.AttrIsSummoned, 1, false);
             var sourceUid = fromTopSummer
                 ? summoner.GetAttr<int>(ELogicAttr.AttrTopSourceActorUid)
                 : summoner.GetAttr<int>(ELogicAttr.AttrSourceActorUid);
-	        summoned.SetAttr(ELogicAttr.AttrSourceActorUid, sourceUid,false);
-	        summoned.SetAttr(ELogicAttr.AttrTopSourceActorUid, summoner.GetAttr<int>(ELogicAttr.AttrTopSourceActorUid),false);
+            summoned.SetAttr(ELogicAttr.AttrSourceActorUid, sourceUid, false);
+            summoned.SetAttr(ELogicAttr.AttrTopSourceActorUid, summoner.GetAttr<int>(ELogicAttr.AttrTopSourceActorUid),
+                false);
             summoned.SetAttr(ELogicAttr.AttrFaction, summoner.GetAttr<int>(ELogicAttr.AttrFaction), false);
-            return summoned;
+            return summoned.Uid;
         }
+        #endregion
 
-        public Actor SummonActorByAbility(Ability summonerAbility,EActorType type, int configId, bool fromTopSummer)
-        {
-            var summoned = SummonActor(summonerAbility.Actor, type, configId, fromTopSummer);
-	        summoned.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, summonerAbility.ConfigId, false);
-	        return summoned;
-        }
 
         public void Tick(float dt)
         {
-            if (_addCaches.Count != 0)
+            if (_loadingCaches.Count > 0)
+            {
+                foreach (var actor in _loadingCaches)
+                {
+                    if (actor.ActorSetupFinish)
+                    {
+                        _addCaches.Add(actor);
+                    }
+                }
+            }
+            
+            if (_addCaches.Count > 0)
             {
                 foreach (var actor in _addCaches)
                 {
+                    //从加载列表里删除
+                    _loadingCaches.Remove(actor);
                     _runningActorList.Add(actor);
                     _uidActorDict.Add(actor.Uid, actor);
                     actor.Init();
@@ -131,12 +190,6 @@ namespace Hono.Scripts.Battle
                 actor.Update(dt);
             }
         }
-        
-        public void AddActor(Actor actor)
-        {
-            if (actor == null) return;
-            _addCaches.Add(actor);
-        }
 
         public Actor GetActor(int uid)
         {
@@ -147,18 +200,10 @@ namespace Hono.Scripts.Battle
 
             return null;
         }
-        
+
         public bool TryGetActor(int uid, out Actor actor)
         {
             return _uidActorDict.TryGetValue(uid, out actor);
-        }
-
-        public void RemoveActor(Actor actor)
-        {
-            if (actor != null)
-            {
-                _removeList.Add(actor);
-            }
         }
 
         public void RemoveActor(int actorUid)
@@ -175,6 +220,7 @@ namespace Hono.Scripts.Battle
             {
                 actor.Destroy();
             }
+
             _runningActorList.Clear();
             _uidActorDict.Clear();
             _addCaches.Clear();

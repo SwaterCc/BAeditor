@@ -45,7 +45,7 @@ namespace Hono.Scripts.Battle {
 					AddVFXToList(vfxObj);
 				}
 				else {
-					((BattleLevelController)(BattleRoot.BattleModeActor.Logic)).AddWorldVFX(vfxObj);
+					BattleManager.BattleLevelController.AddWorldVFX(vfxObj);
 				}
 
 				return vfxObj.Uid;

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Scene;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -14,9 +15,13 @@ namespace Hono.Scripts.Battle
         private BattleLevelData _battleLevelData;
 
         private BattleLevelController _battleLevelControl;
+        public BattleLevelController BattleLevelController => _battleLevelControl;
 
         private PawnGroupInfos _pawnGroupInfos;
-
+        
+               
+        
+        
         public async void Setup(BattleLevelData battleLevelData, bool useSave)
         {
             _battleLevelData = battleLevelData;

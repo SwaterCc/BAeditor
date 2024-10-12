@@ -9,22 +9,19 @@ using Object = UnityEngine.Object;
 namespace Hono.Scripts.Battle
 {
     //表演层,非引擎逻辑与引擎逻辑的接口，负责管理GameObject的创建与删除
-    public abstract partial class ActorModelController
+    public partial class ActorModelController
     {
         public int Uid { get; }
 
         public Actor Actor { get; }
 
+        private GameObject _model;
+
         /// <summary>
         /// unity中对应的对象
         /// </summary>
-        protected GameObject Model { get; set; }
+        public GameObject Model => _model;
 
-        /// <summary>
-        /// 模型组装类型
-        /// </summary>
-        protected ModelSetup _modelSetup;
-        
         /// <summary>
         /// 表现组件
         /// </summary>
@@ -33,7 +30,12 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 模型是否加值完成
         /// </summary>
-        public bool IsModelLoadFinish { get; protected set; }
+        public bool IsModelLoadFinish { get; private set; }
+
+        /// <summary>
+        /// 模型来自场景
+        /// </summary>
+        public bool IsSceneModel { get; private set; }
 
         protected Tags _tags { get; private set; }
 
@@ -41,26 +43,31 @@ namespace Hono.Scripts.Battle
 
         protected ActorLogic _actorLogic  { get; private set; }
 
-        protected ActorModelController(Actor actor, ModelSetup modelSetup) {
+        public ActorModelController(Actor actor) {
 	        Actor = actor;
             Uid = actor.Uid;
             _components = new Dictionary<Type, AShowComponent>();
-            _modelSetup = modelSetup;
             IsModelLoadFinish = false;
         }
 
-        public void Setup(Tags tags,VarCollection varCollection,ActorLogic actorLogic) {
+        public void Setup(ModelSetup modelSetup, Tags tags, VarCollection varCollection, ActorLogic actorLogic) {
 	        _tags = tags;
 	        _variables = varCollection;
 	        _actorLogic = actorLogic;
-            _modelSetup.SetupModel();
+            modelSetup.SetupModel(this);
         }
         
-        public async void Init()
+        /// <summary>
+        /// ActorModel实例化到场景中
+        /// </summary>
+        public void onEnterScene()
         {
-	        
+            if (!IsSceneModel)
+            {
+                _model = Object.Instantiate(_model);
+            }
         }
-
+        
         public void Update(float dt)
         {
 	        if(Model == null) return;
@@ -79,7 +86,7 @@ namespace Hono.Scripts.Battle
         {
             if (Model != null)
             {
-                GameObject.Destroy(Model);
+                Object.Destroy(Model);
             }
 
             foreach (var component in _components)

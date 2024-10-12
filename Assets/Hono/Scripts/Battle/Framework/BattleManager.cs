@@ -55,8 +55,10 @@ namespace Hono.Scripts.Battle
         private readonly List<IBattleFrameworkEnterExit> _frameworkEnterExits = new(16);
         private readonly List<IBattleFrameworkAsyncInit> _frameworkAsyncLoads = new(16);
         private readonly List<IBattleFrameworkTick> _frameworkTicks = new(16);
-        private BattleLevelRoot _levelRoot = new();
+        private readonly BattleLevelRoot _levelRoot = new();
         private string _fromScene;
+
+        public static BattleLevelController BattleLevelController => Instance._levelRoot.BattleLevelController;
         
         #region 框架初始化
 
@@ -98,6 +100,7 @@ namespace Hono.Scripts.Battle
             register(AssetManager.Instance);
             register(BattleEventManager.Instance);
             register(MessageCenter.Instance);
+            register(GameObjectPreLoadMgr.Instance);
         }
 
         /// <summary>

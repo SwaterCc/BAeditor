@@ -66,7 +66,7 @@ namespace Hono.Scripts.Battle
 
         private void dead()
         {
-            ActorManager.Instance.RemoveActor(Actor);
+            ActorManager.Instance.RemoveActor(Actor.Uid);
         }
         
         protected override void onTick(float dt)

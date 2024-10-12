@@ -3,12 +3,14 @@ using Sirenix.OdinInspector;
 
 namespace Hono.Scripts.Battle {
 	public enum EActorType {
-		BattleMode,
+		BattleLevelController,
 		Pawn,
 		Monster,
 		Building,
 		Bullet,
 		HitBox,
+		MonsterBuilder,
+		TriggerBox,
 	}
 
 	public enum EBattleModeType
@@ -85,6 +87,12 @@ namespace Hono.Scripts.Battle {
 		FailedScoring,
 	}
 	
+	public enum EPreLoadGameObjectType
+	{
+		BattleRootModel,
+		BulletModel,
+		HitBoxModel,
+	}
 	
 	public enum EDamageElementType {
 		Physical = 1,
