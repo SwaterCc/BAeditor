@@ -39,7 +39,8 @@ namespace Hono.Scripts.Battle
         private void buildScene()
         {
             //创建静态Actor（玩家位置，刷怪点，触发器）
-            ActorManager.Instance.CreateStaticActor();
+            
+            //ActorManager.Instance.CreateStaticActor();
 
             //创建BattleLevelControl
             _battleLevelControl = ActorManager.Instance.GetBattleControl(_battleLevelData);

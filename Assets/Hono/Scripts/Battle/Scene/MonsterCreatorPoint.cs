@@ -47,10 +47,7 @@ namespace Hono.Scripts.Battle.Scene {
 		}
 		
 		private void createMonster(int configId, Vector3 pos, Quaternion rot) {
-			var actor = ActorManager.Instance.CreateActor(EActorType.Monster, configId);
-			actor.Logic.SetAttr(ELogicAttr.AttrPosition, pos, false);
-			actor.Logic.SetAttr(ELogicAttr.AttrRot, rot, false);
-			ActorManager.Instance.AddActor(actor);
+			
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 表现层创建和管理者
         /// </summary>
-        private ActorShow _show;
+        private ActorModelController _modelController;
 
         /// <summary>
         /// 逻辑层对外可见
@@ -86,14 +86,14 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// Create时调用，同帧执行
         /// </summary>
-        /// <param name="show"></param>
+        /// <param name="modelController"></param>
         /// <param name="logic"></param>
-        public void Setup(ActorShow show, ActorLogic logic)
+        public void Setup(ActorModelController modelController, ActorLogic logic)
         {
             Logic = logic;
-            _show = show;
+            _modelController = modelController;
             Logic.Setup(_abilityController, _attrs, _tags, Variables);
-            _show.Setup(_tags, Variables, Logic);
+            _modelController.Setup(_tags, Variables, Logic);
         }
         
         /// <summary>
@@ -102,7 +102,7 @@ namespace Hono.Scripts.Battle
         public void Init()
         {
             Logic.Init();
-            _show.Init();
+            _modelController.Init();
             _message.Init();
         }
 
@@ -122,9 +122,9 @@ namespace Hono.Scripts.Battle
         /// <param name="dt"></param>
         public void Update(float dt)
         {
-	        if (_show == null) return;
-	        if(!_show.IsModelLoadFinish) return;
-	        _show.Update(dt);
+	        if (_modelController == null) return;
+	        if(!_modelController.IsModelLoadFinish) return;
+	        _modelController.Update(dt);
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public void Destroy()
         {
-            _show.Destroy();
+            _modelController.Destroy();
             Logic.Destroy();
             _message.UnInit();
         }

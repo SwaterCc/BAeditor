@@ -13,15 +13,15 @@ namespace Hono.Scripts.Battle
         public void Load();
     }
 
-    public partial class ActorShow
+    public partial class ActorModelController
     {
         public abstract class AShowComponent
         {
-            protected ActorShow _actorShow;
+            protected ActorModelController ActorModelController;
 
-            protected AShowComponent(ActorShow show)
+            protected AShowComponent(ActorModelController modelController)
             {
-                _actorShow = show;
+                ActorModelController = modelController;
             }
 
             public abstract void Init();

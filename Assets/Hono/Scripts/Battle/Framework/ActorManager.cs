@@ -20,22 +20,20 @@ namespace Hono.Scripts.Battle
 
         private readonly List<Actor> _removeList = new(16);
         private readonly List<Actor> _addCaches = new(16);
-
-        private readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
         
         public ActorManager()
         {
             _filter = new Filter(this);
         }
 
-        public  BattleLevelController GetBattleControl(BattleLevelData battleLevelData) {
-	        var actor = new Actor(_idGenerator.GenerateId(), EActorType.BattleMode);
+        public BattleLevelController GetBattleControl(BattleLevelData battleLevelData) {
+	        var actor = new Actor(BattleConstValue.BattleRootControllerUid, EActorType.BattleMode);
             var battleLevelControl = new BattleLevelController(actor, battleLevelData);
-	        actor.Setup(new BattleModeShow(actor),battleLevelControl);
+	        actor.Setup(new BattleModeModelController(actor),battleLevelControl);
 	        return battleLevelControl;
         }
 
-        public Actor CreateStaticActor()
+        public Actor CreateStaticActor(StaticActorModel model)
         {
             return null;
         }
@@ -56,19 +54,19 @@ namespace Hono.Scripts.Battle
             switch (type)
             {
 	            case EActorType.Pawn:
-		            actor.Setup(new AlwaysShow(actor), new PawnLogic(actor));
+		            actor.Setup(new RtLoadModelController(actor), new PawnLogic(actor));
 		            break;
 	            case EActorType.Monster:
-		            actor.Setup(new AlwaysShow(actor), new MonsterLogic(actor));
+		            actor.Setup(new RtLoadModelController(actor), new MonsterLogic(actor));
 		            break;
 	            case EActorType.Building:
-		            actor.Setup(new AlwaysShow(actor), new BuildingLogic(actor));
+		            actor.Setup(new RtLoadModelController(actor), new BuildingLogic(actor));
 		            break;
 	            case EActorType.Bullet:
-		            actor.Setup(new BulletShow(actor), new BulletLogic(actor));
+		            actor.Setup(new BulletModelController(actor), new BulletLogic(actor));
 		            break;
 	            case EActorType.HitBox:
-		            actor.Setup(new AlwaysShow(actor), new HitBoxLogic(actor));
+		            actor.Setup(new RtLoadModelController(actor), new HitBoxLogic(actor));
 		            break;
             }
             

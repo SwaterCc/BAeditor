@@ -8,7 +8,7 @@ namespace Hono.Scripts.Battle {
 	/// Actor的逻辑，包含逻辑层自身的逻辑和关联组件，状态机，最终决定出当前Actor逻辑层的属性,逻辑层必然存在
 	/// ,逻辑层从设计理念上来讲是不知晓表现层的存在的，所以不要用逻辑层调用表现层
 	/// </summary>
-	public abstract partial class ActorLogic : ITick {
+	public abstract partial class ActorLogic {
 		/// <summary>
 		/// Actor的UID
 		/// </summary>

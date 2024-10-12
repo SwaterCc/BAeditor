@@ -12,6 +12,7 @@
         public static readonly string BuffFolder = $"{DataRoot}/Buff";
         public static readonly string BulletFolder = $"{DataRoot}/Bullet";
 
+        public const int BattleRootControllerUid = 1;
 
         /// <summary>
         /// 游戏中最大队伍数量

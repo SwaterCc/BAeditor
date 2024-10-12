@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle {
 		/// 基础状态机基类
 		/// 目前定义的状态：闲置，移动，战斗，硬直，死亡
 		/// </summary>
-		public class ActorStateMachine : ITick {
+		public class ActorStateMachine {
 			private ActorLogic _actorLogic;
 			private AState _current;
 			private EActorState _defaultState;

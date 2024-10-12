@@ -5,15 +5,15 @@ using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
 namespace Hono.Scripts.Battle {
-	public class BulletShow :ActorShow {
-		public BulletShow(Actor actor) : base(actor) {
+	public class BattleModeModelController : ActorModelController{
+		public BattleModeModelController(Actor actor) : base(actor) {
 			
 		}
 
-		protected override async UniTask loadModel() {
+		protected  override async UniTask setupModel() {
 			try
 			{
-				Model = await Addressables.LoadAssetAsync<GameObject>("Assets/BattleData/Tools/BulletModel.prefab").ToUniTask();
+				Model = await Addressables.LoadAssetAsync<GameObject>("Assets/BattleData/Tools/BattleRoot.prefab").ToUniTask();
 				Model = Object.Instantiate(Model, Vector3.zero, Quaternion.identity);
 				if (!Model.TryGetComponent<ActorModel>(out var handle)) {
 					handle = Model.AddComponent<ActorModel>();
@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle {
 			}
 			catch (Exception e)
 			{
-				Debug.LogError($"¼ÓÔØÄ£ÐÍÊ§°Ü£¬Â·¾¶{ModelData.ModelPath}");
+				Debug.LogError($"åŠ è½½æ¨¡åž‹å¤±è´¥ï¼Œè·¯å¾„{ModelData.ModelPath}");
 			}
 		}
 	}

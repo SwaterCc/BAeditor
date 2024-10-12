@@ -141,7 +141,7 @@ namespace Hono.Scripts.Battle
                     continue;
                 if (skill.Data.SkillType == ESkillType.PassiveSkill)
                     continue;
-                if (skill.Data.SkillType == ESkillType.UltimateSkill && !BattleRoot.BattleLevelControl.AutoUltimateSkill)
+                if (skill.Data.SkillType == ESkillType.UltimateSkill)
                     continue;
                 SkillComp.UseSkill(skill.Id);
             }
