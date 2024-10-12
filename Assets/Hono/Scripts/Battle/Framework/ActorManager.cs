@@ -83,7 +83,8 @@ namespace Hono.Scripts.Battle
             }
 
             afterSetupCall?.Invoke(actor);
-
+            _loadingCaches.Add(actor);
+            
             return actor;
         }
 

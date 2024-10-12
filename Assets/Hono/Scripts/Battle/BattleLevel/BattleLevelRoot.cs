@@ -19,8 +19,6 @@ namespace Hono.Scripts.Battle
 
         private PawnGroupInfos _pawnGroupInfos;
         
-               
-        
         
         public async void Setup(BattleLevelData battleLevelData, bool useSave)
         {

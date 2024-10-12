@@ -21,17 +21,17 @@ namespace Hono.Scripts.Battle
         [LabelText("使用指定Ability控制")]
         public int RunningAbilityConfigId;
         
-        [HideIf("UseAbilityControlRunning")]
+        [HideIf("Custom")]
         [BoxGroup("结算条件")]
         [LabelText("检测时长(-1为无限时长，但是所有成功条件会强制变成即刻结算)")]
         public float RunningCheckTime;
         
-        [HideIf("UseAbilityControlRunning")]
+        [HideIf("Custom")]
         [BoxGroup("结算条件")]
         [LabelText("成功条件(不允许出现重复条件)")]
         public List<SuccessCondition> SuccessConditions = new();
         
-        [HideIf("UseAbilityControlRunning")]
+        [HideIf("Custom")]
         [BoxGroup("结算条件")]
         [LabelText("失败结算条件(不允许出现重复条件)(全为即刻结算)")]
         public List<FailedCondition> FailedConditions = new();

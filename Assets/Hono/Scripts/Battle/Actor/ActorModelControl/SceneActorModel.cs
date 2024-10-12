@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -6,5 +7,10 @@ namespace Hono.Scripts.Battle
     {
         public int StaticActorUid;
         public EActorType ActorType;
+
+        private void Awake()
+        {
+            ActorManager.Instance.CreateSceneActor(this);
+        }
     }
 }

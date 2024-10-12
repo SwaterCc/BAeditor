@@ -123,84 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &300020237
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 300020239}
-  - component: {fileID: 300020238}
-  m_Layer: 2
-  m_Name: BattleLevelData
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &300020238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 300020237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd71b6b6bf4d40b1aa1908c4a4e29914, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GroupInfos:
-    Group0:
-      GroupId: 1
-      Place0: 0
-      Place1: 0
-      Place2: 0
-      Place3: 0
-    Group1:
-      GroupId: 2
-      Place0: 0
-      Place1: 0
-      Place2: 0
-      Place3: 0
-    Group2:
-      GroupId: 3
-      Place0: 0
-      Place1: 0
-      Place2: 0
-      Place3: 0
-    Group3:
-      GroupId: 4
-      Place0: 0
-      Place1: 0
-      Place2: 0
-      Place3: 0
-  BattleModeType: 0
-  GroupStartPoint:
-    GroupStart0: {fileID: 0}
-    GroupStart1: {fileID: 0}
-    GroupStart2: {fileID: 0}
-    GroupStart3: {fileID: 0}
-  MonsterCreatorPoints: []
-  StaticActor: []
-  BuildPlace: []
---- !u!4 &300020239
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 300020237}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &627060445
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,6 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b85822c730f899c458961b418626cc64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isFirstUpdate: 0
+  _hasError: 0
+  _battleLevelData: {fileID: 0}
+  <GroupCount>k__BackingField: 0
 --- !u!4 &627060447
 Transform:
   m_ObjectHideFlags: 0
@@ -647,6 +573,10 @@ PrefabInstance:
       propertyPath: ActorId
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1799370387154583506, guid: 9420fce795d6daf45869f47fe59433f1, type: 3}
+      propertyPath: ConfigId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2275276991291046704, guid: 9420fce795d6daf45869f47fe59433f1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -707,4 +637,3 @@ SceneRoots:
   - {fileID: 4275103499385460250}
   - {fileID: 798892536}
   - {fileID: 1223180365}
-  - {fileID: 300020239}
