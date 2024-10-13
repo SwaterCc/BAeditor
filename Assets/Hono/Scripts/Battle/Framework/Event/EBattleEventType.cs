@@ -32,8 +32,14 @@ namespace Hono.Scripts.Battle.Event
         OnActorEnterScene = 30,
         OnActorDead,
         
+        [EventCheckerBinder("GetTriggerBoxEnterChecker",typeof(TriggerBoxEventInfo))]
+        OnTriggerBoxEnter = 50,
+        [EventCheckerBinder("GetTriggerBoxStayChecker",typeof(TriggerBoxEventInfo))]
+        OnTriggerBoxStay = 51,
+        [EventCheckerBinder("GetTriggerBoxExitChecker",typeof(TriggerBoxEventInfo))]
+        OnTriggerBoxExit = 52,
         
-        CallLoadingUI = 1000,
+        OnCallMonsterGen = 1000,
         CallPawnGroupEditUI = 1001,
     }
 }

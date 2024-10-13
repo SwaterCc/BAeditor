@@ -30,8 +30,7 @@ namespace Hono.Scripts.Battle
         {
             var actor = new Actor(BattleConstValue.BattleRootControllerUid, EActorType.BattleLevelController);
             var battleLevelControl = new BattleController(actor);
-            actor.Setup(new ActorModelController.PreLoadModelSetup(EPreLoadGameObjectType.BattleRootModel),
-                battleLevelControl);
+            actor.Setup(new BattleControllerModel(actor), battleLevelControl);
             return battleLevelControl;
         }
 
@@ -44,47 +43,51 @@ namespace Hono.Scripts.Battle
         /// <param name="afterSetupCall"></param>
         /// <param name="actorModel"></param>
         /// <returns></returns>
-        private Actor getActor(int uid, EActorType type, int configId, Action<Actor> afterSetupCall, SceneActorModel actorModel)
+        private Actor getActor(int uid, EActorType type, int configId, Action<Actor> afterSetupCall,
+            SceneActorModel actorModel)
         {
             var actor = new Actor(uid, type);
-            ActorModelController.ModelSetup modelSetup = null;
             actor.SetAttr(ELogicAttr.AttrUid, uid, false);
             actor.SetAttr(ELogicAttr.AttrConfigId, configId, false);
             switch (type)
             {
                 case EActorType.Pawn:
-                    modelSetup = new ActorModelController.AsyncLoadModelSetup();
-                    actor.Setup(modelSetup, new PawnLogic(actor));
+                    actor.Setup(new NormalModelController(actor, actorModel), new PawnLogic(actor));
                     break;
                 case EActorType.Monster:
-                    modelSetup = new ActorModelController.AsyncLoadModelSetup();
-                    actor.Setup(modelSetup, new MonsterLogic(actor));
+                    actor.Setup(new NormalModelController(actor, actorModel), new MonsterLogic(actor));
                     break;
                 case EActorType.Building:
-                    modelSetup = new ActorModelController.AsyncLoadModelSetup();
-                    actor.Setup(modelSetup, new BuildingLogic(actor));
+                    actor.Setup(new NormalModelController(actor, actorModel), new BuildingLogic(actor));
                     break;
                 case EActorType.Bullet:
-                    modelSetup = new ActorModelController.PreLoadModelSetup(EPreLoadGameObjectType.BulletModel);
-                    actor.Setup(modelSetup, new BulletLogic(actor));
+                    actor.Setup(new SimplePreLoadModelController(actor, EPreLoadGameObjectType.BulletModel),
+                        new BulletLogic(actor));
                     break;
                 case EActorType.HitBox:
-                    modelSetup = new ActorModelController.PreLoadModelSetup(EPreLoadGameObjectType.HitBoxModel);
-                    actor.Setup(modelSetup, new HitBoxLogic(actor));
+                    actor.Setup(new SimplePreLoadModelController(actor, EPreLoadGameObjectType.BulletModel),
+                        new HitBoxLogic(actor));
                     break;
-                case EActorType.MonsterBuilder:
-                    modelSetup = new ActorModelController.SceneModelSetup(actorModel);
-                    actor.Setup(modelSetup, new HitBoxLogic(actor));
+                case EActorType.MonsterGenerator:
+                    actor.Setup(new SimpleSceneModelController(actor, actorModel), new MonsterGeneratorLogic(actor));
                     break;
                 case EActorType.TriggerBox:
-                    modelSetup = new ActorModelController.SceneModelSetup(actorModel);
-                    actor.Setup(modelSetup, new HitBoxLogic(actor));
+                    actor.Setup(new TriggerBoxModelController(actor, actorModel), new TriggerBoxLogic(actor));
+                    break;
+                case EActorType.TeamDefaultBirthPoint:
+                    actor.Setup(new SimpleSceneModelController(actor, actorModel),
+                        new TeamDefaultBirthPointLogic(actor));
+                    break;
+                case EActorType.TeamRefreshPoint:
+                    actor.Setup(new SimplePreLoadModelController(actor, EPreLoadGameObjectType.TeamRefreshPoint),
+                        new TeamRefreshPointLogic(actor));
                     break;
             }
 
             afterSetupCall?.Invoke(actor);
-            _loadingCaches.Add(actor);
             
+            _loadingCaches.Add(actor);
+
             return actor;
         }
 
@@ -122,7 +125,9 @@ namespace Hono.Scripts.Battle
 
 
         #region 召唤流程
-        public int SummonActor(Actor summoner, EActorType type, int configId, bool fromTopSummer, Action<Actor> afterSetupCallFunc = null)
+
+        public int SummonActor(Actor summoner, EActorType type, int configId, bool fromTopSummer,
+            Action<Actor> afterSetupCallFunc = null)
         {
             int uid = ActorUidGenerator.GenerateUid(EActorUidRangeType.DynamicActor);
             var summoned = getActor(uid, type, configId, afterSetupCallFunc, null);
@@ -136,6 +141,7 @@ namespace Hono.Scripts.Battle
             summoned.SetAttr(ELogicAttr.AttrFaction, summoner.GetAttr<int>(ELogicAttr.AttrFaction), false);
             return summoned.Uid;
         }
+
         #endregion
 
 
@@ -151,7 +157,7 @@ namespace Hono.Scripts.Battle
                     }
                 }
             }
-            
+
             if (_addCaches.Count > 0)
             {
                 foreach (var actor in _addCaches)

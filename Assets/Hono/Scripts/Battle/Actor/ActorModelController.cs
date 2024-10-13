@@ -1,25 +1,23 @@
-using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Tools;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
 namespace Hono.Scripts.Battle
 {
     //表演层,非引擎逻辑与引擎逻辑的接口，负责管理GameObject的创建与删除
-    public partial class ActorModelController
+    public abstract partial class ActorModelController
     {
         public int Uid { get; }
 
         public Actor Actor { get; }
 
-        private GameObject _model;
-
         /// <summary>
         /// unity中对应的对象
         /// </summary>
+        private GameObject _model;
+
         public GameObject Model => _model;
 
         /// <summary>
@@ -35,27 +33,45 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 模型来自场景
         /// </summary>
-        public bool IsSceneModel { get; private set; }
+        public bool IsSceneModel { get; protected set; }
 
         protected Tags _tags { get; private set; }
 
-        protected VarCollection _variables  { get; private set; }
+        protected VarCollection _variables { get; private set; }
 
-        protected ActorLogic _actorLogic  { get; private set; }
+        protected ActorLogic _actorLogic { get; private set; }
 
-        public ActorModelController(Actor actor) {
-	        Actor = actor;
+        protected ActorModelController(Actor actor)
+        {
+            Actor = actor;
             Uid = actor.Uid;
             _components = new Dictionary<Type, AShowComponent>();
             IsModelLoadFinish = false;
         }
 
-        public void Setup(ModelSetup modelSetup, Tags tags, VarCollection varCollection, ActorLogic actorLogic) {
-	        _tags = tags;
-	        _variables = varCollection;
-	        _actorLogic = actorLogic;
-            modelSetup.SetupModel(this);
+        /// <summary>
+        /// 子类需要设置模型加载方式
+        /// </summary>
+        protected abstract ModelSetup getModelSetup();
+        
+        /// <summary>
+        /// 组装Unity模型控制器
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="varCollection"></param>
+        /// <param name="actorLogic"></param>
+        public void Setup(Tags tags, VarCollection varCollection, ActorLogic actorLogic)
+        {
+            _tags = tags;
+            _variables = varCollection;
+            _actorLogic = actorLogic;
+            getModelSetup().SetupModel(this, () => onModelLoadFinish());
         }
+
+        /// <summary>
+        /// 模型加载完成
+        /// </summary>
+        protected virtual void onModelLoadFinish() { }
         
         /// <summary>
         /// ActorModel实例化到场景中
@@ -67,20 +83,20 @@ namespace Hono.Scripts.Battle
                 _model = Object.Instantiate(_model);
             }
         }
-        
+
         public void Update(float dt)
         {
-	        if(Model == null) return;
+            if (Model == null) return;
 
-	        Model.transform.localPosition = Actor.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-	        Model.transform.localRotation = Actor.GetAttr<Quaternion>(ELogicAttr.AttrRot);
-	        
+            Model.transform.localPosition = Actor.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+            Model.transform.localRotation = Actor.GetAttr<Quaternion>(ELogicAttr.AttrRot);
+
             foreach (var component in _components)
             {
                 component.Value.Update(dt);
             }
         }
-        
+
 
         public void Destroy()
         {

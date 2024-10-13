@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -7,14 +8,14 @@ namespace Hono.Scripts.Battle
     {
         public class SceneModelSetup : ModelSetup
         {
-            private SceneActorModel _sceneActorModel;
+            private readonly SceneActorModel _sceneActorModel;
 
             public SceneModelSetup(SceneActorModel sceneActorModel)
             {
                 _sceneActorModel = sceneActorModel;
             }
-
-            public override void SetupModel(ActorModelController modelController)
+            
+            public override void SetupModel(ActorModelController modelController, Action loadComplete = null)
             {
                 modelController._model = _sceneActorModel.gameObject;
                 modelController.IsModelLoadFinish = true;

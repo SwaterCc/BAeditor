@@ -11,8 +11,10 @@ namespace Hono.Scripts.Battle
         Building,
         Bullet,
         HitBox,
-        MonsterBuilder,
+        MonsterGenerator,
         TriggerBox,
+        TeamDefaultBirthPoint,
+        TeamRefreshPoint,
     }
 
     public enum EBattleModeType
@@ -129,6 +131,7 @@ namespace Hono.Scripts.Battle
         BattleRootModel,
         BulletModel,
         HitBoxModel,
+        TeamRefreshPoint,
     }
 
     public enum EDamageElementType

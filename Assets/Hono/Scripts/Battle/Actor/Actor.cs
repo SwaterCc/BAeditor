@@ -31,9 +31,11 @@ namespace Hono.Scripts.Battle
         public ActorLogic Logic { get; private set; }
 
         /// <summary>
-        /// 表现层创建和管理者
+        /// Unity交互层
         /// </summary>
-        private readonly ActorModelController _modelController;
+        private ActorModelController _modelController;
+
+        public ActorModelController ModelController => _modelController;
         
         /// <summary>
         /// ability控制器
@@ -79,7 +81,6 @@ namespace Hono.Scripts.Battle
         {
             Uid = uid;
             ActorType = actorType;
-            _modelController = new ActorModelController(this);
             _tags = new Tags();
             _attrs = new AttrCollection(this, AttrCreator.Create);
             _abilityController = new AbilityController(this);
@@ -92,13 +93,14 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// Create时调用，同帧执行
         /// </summary>
-        /// <param name="modelSetup"></param>
+        /// <param name="modelController"></param>
         /// <param name="logic"></param>
-        public void Setup(ActorModelController.ModelSetup modelSetup, ActorLogic logic)
+        public void Setup(ActorModelController modelController, ActorLogic logic)
         {
             Logic = logic;
             Logic.Setup(_abilityController, _attrs, _tags, Variables);
-            _modelController.Setup(modelSetup, _tags, Variables, Logic);
+            _modelController = modelController;
+            _modelController.Setup(_tags, Variables, Logic);
         }
         
         /// <summary>
@@ -225,6 +227,16 @@ namespace Hono.Scripts.Battle
 		       return buffComp.GetBuffLayer(buff);
 	        }
 	        return -1;
+        }
+
+        public void AwardAbility(int abilityId, bool runNow)
+        {
+            _abilityController.AwardAbility(abilityId, runNow);
+        }
+        
+        public void RemoveAbility(int abilityId)
+        {
+            _abilityController.RemoveAbility(abilityId);
         }
         
         #endregion

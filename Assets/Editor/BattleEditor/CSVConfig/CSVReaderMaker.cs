@@ -51,8 +51,8 @@ namespace Editor.BattleEditor.CSVConfig
         private readonly Dictionary<string, string> _parseTypeDict = new Dictionary<string, string>()
         {
             { "int", "int" },
-            { "number", "Number" },
-            { "float", "Number" },
+            { "number", "float" },
+            { "float", "float" },
             { "bool", "bool" },
             { "string", "string" },
             { "intarray", "IntArray" },

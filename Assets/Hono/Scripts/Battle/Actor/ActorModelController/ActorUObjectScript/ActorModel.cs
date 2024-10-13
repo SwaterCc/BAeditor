@@ -10,5 +10,12 @@ namespace Hono.Scripts.Battle
     {
         [ReadOnly] public int ActorUid;
         [ReadOnly] public EActorType ActorType;
+
+        protected ActorModelController ModelController { get; private set; }
+
+        public void BindModelController(ActorModelController modelController)
+        {
+            ModelController = modelController;
+        }
     }
 }

@@ -11,9 +11,10 @@ namespace Hono.Scripts.Battle
     {
         public class AsyncLoadModelSetup : ModelSetup
         {
-            public override async void SetupModel(ActorModelController modelController)
+            public override async void SetupModel(ActorModelController modelController, Action loadComplete = null)
             {
                 await asyncLoadModel(modelController);
+                loadComplete?.Invoke();
             }
 
             private async UniTask asyncLoadModel(ActorModelController modelController)
@@ -32,6 +33,8 @@ namespace Hono.Scripts.Battle
                     Debug.LogError($"加载模型失败，路径{modelData.ModelPath}");
                 }
             }
+
+           
         }
     }
 }
