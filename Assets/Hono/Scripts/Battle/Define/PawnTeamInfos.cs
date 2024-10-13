@@ -43,7 +43,7 @@ namespace Hono.Scripts.Battle
     }
 
     [Serializable]
-    public class PawnGroupInfos
+    public class PawnTeamInfos : IUIPassData
     {
         public PawnGroup Group0 = new PawnGroup() { GroupId = 0 };
         public PawnGroup Group1 = new PawnGroup() { GroupId = 1 };

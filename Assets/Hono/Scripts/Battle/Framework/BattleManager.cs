@@ -55,10 +55,14 @@ namespace Hono.Scripts.Battle
         private readonly List<IBattleFrameworkEnterExit> _frameworkEnterExits = new(16);
         private readonly List<IBattleFrameworkAsyncInit> _frameworkAsyncLoads = new(16);
         private readonly List<IBattleFrameworkTick> _frameworkTicks = new(16);
-        private readonly BattleLevelRoot _levelRoot = new();
-        private string _fromScene;
 
-        public static BattleLevelController BattleLevelController => Instance._levelRoot.BattleLevelController;
+        private string _formScene;
+        private BattleController _battleController;
+        private BattleGround _waitEnterGround;
+        private bool _popTopGround;
+        private readonly Stack<BattleGround> _groundStack = new(4);
+        
+        public static BattleController battleController => Instance._battleController;
         
         #region 框架初始化
 
@@ -110,6 +114,7 @@ namespace Hono.Scripts.Battle
         {
             //初始化Lua环境
             LuaInterface.Init();
+            
             //反射缓存
             AbilityFuncPreLoader.InitAbilityFuncCache();
 
@@ -161,60 +166,29 @@ namespace Hono.Scripts.Battle
 
         #region 战斗玩法流程
 
-        private async UniTask switchScene(string sceneName)
+        public void EnterBattle(string fromScene, int battleGroundId)
         {
-            //先进入LoadingScene
-            SceneManager.LoadScene(0);
-            List<UniTask> tasks = new List<UniTask>();
-            //固定等待0.2秒
-            tasks.Add(UniTask.WaitForSeconds(0.5f));
-            tasks.Add(SceneManager.LoadSceneAsync(sceneName).ToUniTask());
-            await UniTask.WhenAll(tasks);
-        }
-
-        /// <summary>
-        /// 给关卡创建流程
-        /// </summary>
-        private async void setupBattleLevelRoot(bool useSave)
-        {
-            try
-            {
-                //加载关卡数据
-                var battleLevelData = await Addressables.LoadAssetAsync<BattleLevelData>("path").ToUniTask();
-                
-                //装载关卡root
-                _levelRoot.Setup(battleLevelData, useSave);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"缺少关卡数据（BattleLevelData）对象 {e}");
-                //可以考虑切换回原场景
-            }
+            _formScene = fromScene;
+            PushBattleGround(battleGroundId);
         }
         
         /// <summary>
         /// 开始战斗玩法
         /// </summary>
-        public async void EnterBattle(string fromScene, string battleLevelName, bool useSave = false)
+        public void PushBattleGround(int battleGroundId, bool useSave = false)
         {
-            _fromScene = fromScene;
+            _waitEnterGround = new BattleGround("battleLevelName");
+            _waitEnterGround.OnCreate();
+        }
+
+        public void PopBattleGround()
+        {
+            _popTopGround = _groundStack.Count != 0;
+        }
+
+        private void onSwitchBattleGround()
+        {
             
-            if (_battleDataLoadState != EBattleDataLoadState.LoadFinish)
-            {
-                Debug.LogError($"战斗数据未准备完成 当前状态{_battleDataLoadState}");
-                return;
-            }
-            
-            foreach (var framework in _frameworkEnterExits)
-            {
-                framework.OnEnterBattle();
-            }
-            
-            //切换场景到关卡场景
-            await switchScene(battleLevelName);
-            
-            //切换完成，装载关卡流程
-            setupBattleLevelRoot(useSave);
         }
         
         /// <summary>
@@ -222,30 +196,65 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public void ExitBattle()
         {
-            _levelRoot.UnInstall();
-            
             foreach (var framework in _frameworkEnterExits)
             {
                 framework.OnExitBattle();
             }
+
+            foreach (var ground in _groundStack)
+            {
+                ground.OnDestroy();
+            }
+            _groundStack.Clear();
             
-            switchScene(_fromScene).Forget();
+            //返回进入时的场景
+            SceneManager.LoadScene(_formScene);
         }
 
-        private void Tick()
+        private void Tick(float dt)
         {
-            foreach (var frameworkTick in _frameworkTicks)
+            if (_battleDataLoadState != EBattleDataLoadState.LoadFinish)
             {
-                frameworkTick.Tick(Time.deltaTime);
+                Debug.LogError($"战斗数据未准备完成 当前状态{_battleDataLoadState}");
+                return;
             }
             
-            _levelRoot?.OnTick(Time.deltaTime);
+            foreach (var frameworkTick in _frameworkTicks)
+            {
+                frameworkTick.Tick(dt);
+            }
+            
+            if (_waitEnterGround != null)
+            {
+                _groundStack.Push(_waitEnterGround);
+                _waitEnterGround.EnterGround();
+                _waitEnterGround = null;
+                onSwitchBattleGround();
+            }
+            
+            if (_groundStack.Count == 0) return;
+                        
+            var curGround = _groundStack.Peek();
+            curGround.Tick(dt);
+            
+            if (_popTopGround)
+            {
+                var pop = _groundStack.Pop();
+                pop.OnDestroy();
+                if (_groundStack.Count == 0)
+                {
+                    ExitBattle();
+                }
+                else
+                {
+                    onSwitchBattleGround();
+                }
+            }
         }
         
         private void Update()
         {
-            Tick();
-            _levelRoot?.OnUpdate(Time.deltaTime);
+            Tick(Time.deltaTime);
         }
 
         #endregion

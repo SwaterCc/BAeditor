@@ -8,21 +8,11 @@ namespace Hono.Scripts.Battle
     //当前波次总共有多少Actor，用阵营索引(刷怪器的怪物是一开始就全部创建了)
     //当前波次当前还有多少Actor，用阵营索引(怪物死亡时会记录)
     //玩家阵营击杀了多少Actor，用阵营索引(behit组件中判定死亡时需要记录是否为击杀，击杀者uid，击杀者阵营)
-    public partial class BattleLevelController : ActorLogic
+    public partial class BattleController : ActorLogic
     {
         private VFXWorldComp _vfxWorldComp;
 
-        private int _currentRoundIndex;
-
-        private readonly BattleLevelData _levelData;
-
-        private readonly Round _round;
-
-        public BattleLevelController(Actor actor, BattleLevelData levelData) : base(actor)
-        {
-            _levelData = levelData;
-            _round = new Round(this);
-        }
+        public BattleController(Actor actor) : base(actor) { }
 
         protected override void setupComponents()
         {
@@ -34,47 +24,15 @@ namespace Hono.Scripts.Battle
         {
             _vfxWorldComp.AddVFXObjectToWorld(obj);
         }
-        
-        public void GameStart()
-        {
-            _currentRoundIndex = 0;
 
-            if (_currentRoundIndex >= _levelData.RoundDatas.Count)
-            {
-                Debug.LogError("关卡数据至少要有一回合！");
-                return;
-            }
-            
-            //开始游戏的第一回合
-            _round.BeginNewRound(_levelData.RoundDatas[_currentRoundIndex]);
+        public void RunAbility(int abilityConfigId)
+        {
+            AbilityController.AwardAbility(abilityConfigId, true);
         }
 
-        protected override void onTick(float dt)
+        public void RemoveAbility(int abilityConfigId)
         {
-            _round.OnTick(dt);
-        }
-
-        private void onRoundFailed()
-        {
-            if (_levelData.CanRepeat)
-            {
-                //重新开始
-                _round.BeginNewRound(_levelData.RoundDatas[_currentRoundIndex]);
-                return;
-            }
-            //结算战斗UI
-        }
-
-        private void onRoundFinish()
-        {
-            ++_currentRoundIndex;
-            if (_currentRoundIndex >= _levelData.RoundDatas.Count)
-            {
-                //通关了，打开通关UI
-                return;
-            }
-            //下一回合
-            _round.BeginNewRound(_levelData.RoundDatas[_currentRoundIndex]);
+            AbilityController.RemoveAbility(abilityConfigId);
         }
     }
 }

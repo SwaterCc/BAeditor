@@ -26,10 +26,10 @@ namespace Hono.Scripts.Battle
             _filter = new Filter(this);
         }
 
-        public BattleLevelController GetBattleControl(BattleLevelData battleLevelData)
+        public BattleController GetBattleControl()
         {
             var actor = new Actor(BattleConstValue.BattleRootControllerUid, EActorType.BattleLevelController);
-            var battleLevelControl = new BattleLevelController(actor, battleLevelData);
+            var battleLevelControl = new BattleController(actor);
             actor.Setup(new ActorModelController.PreLoadModelSetup(EPreLoadGameObjectType.BattleRootModel),
                 battleLevelControl);
             return battleLevelControl;
@@ -94,10 +94,10 @@ namespace Hono.Scripts.Battle
         public int CreateSceneActor(SceneActorModel model, int configId = 0,
             Action<Actor> afterSetupCallFunc = null)
         {
-            var actor = getActor(model.StaticActorUid, model.ActorType, configId, afterSetupCallFunc, model);
+            var actor = getActor(model.ActorUid, model.ActorType, configId, afterSetupCallFunc, model);
             actor.SetAttr(ELogicAttr.AttrSourceActorUid, actor.Uid, false);
             actor.SetAttr(ELogicAttr.AttrTopSourceActorUid, actor.Uid, false);
-            return model.StaticActorUid;
+            return model.ActorUid;
         }
 
         public int CreateUniqueActor(int uniqueUid, EActorType type, int configId = 0,

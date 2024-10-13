@@ -2,35 +2,36 @@ using Hono.Scripts.Battle.Event;
 
 namespace Hono.Scripts.Battle
 {
-    public partial class BattleLevelController
+    public partial class BattleGround
     {
         private class RoundReadyState : RoundState
         {
-            public RoundReadyState(Round round) : base(round) { }
+            public RoundReadyState(RoundController roundController) : base(roundController) { }
 
             public override ERoundState GetRoundState() => ERoundState.Ready;
-            public override ERoundState GetNextState() => ERoundState.Running;
-
-            public override bool IsAutoEnd()
-            {
-                return _round.RoundData.ReadyStageTime > 0 && _stateDuration > _round.RoundData.ReadyStageTime;
-            }
+            
 
             protected override void onEnter()
             {
-                if (_round.RoundData.ReadyStageAbilityId > 0)
+                foreach (var abilityId in CurrentRoundData.ReadyStageAbilityIds)
                 {
-                    _round.Controller.AbilityController.AwardAbility(_round.RoundData.ReadyStageAbilityId, true);
+                    BattleManager.battleController.RunAbility(abilityId);
                 }
             }
 
-            protected override void onTick(float dt) { }
+            protected override void onTick(float dt)
+            {
+                if (CurrentRoundData.ReadyStageTime >= 0 && Duration > CurrentRoundData.ReadyStageTime)
+                {
+                    Round.SwitchState(ERoundState.Running);
+                }
+            }
 
             protected override void onExit()
             {
-                if (_round.RoundData.ReadyStageAbilityId > 0)
+                foreach (var abilityId in CurrentRoundData.ReadyStageAbilityIds)
                 {
-                    _round.Controller.AbilityController.RemoveAbility(_round.RoundData.ReadyStageAbilityId);
+                    BattleManager.battleController.RemoveAbility(abilityId);
                 }
             }
         }

@@ -1,27 +1,32 @@
 ﻿namespace Hono.Scripts.Battle
 {
-    public partial class BattleLevelController
+    public partial class BattleGround
     {
         private class RoundFailedScoringState : RoundState
         {
-            public RoundFailedScoringState(Round round) : base(round) { }
+            public RoundFailedScoringState(RoundController roundController) : base(roundController) { }
             public override ERoundState GetRoundState() => ERoundState.FailedScoring;
 
-            public override ERoundState GetNextState() => ERoundState.NoActive;
-
-            public override bool IsAutoEnd()
-            {
-                return _stateDuration > _round.RoundData.FailedScoringStageTime;
-            }
 
             protected override void onEnter() { }
 
-            protected override void onTick(float dt) { }
-
-            protected override void onExit()
+            protected override void onTick(float dt)
             {
-                _round.Controller.onRoundFailed();
+                if (!(Duration > CurrentRoundData.FailedScoringStageTime)) return;
+
+                if (Round.CanRepeat)
+                {
+                    Round.SwitchState(ERoundState.Ready);
+                }
+                else
+                {
+                    Round.SwitchState(ERoundState.NoRunning);
+                    //结算战场
+                    Round.GameRunningState.ScoreBattle(false);
+                }
             }
+
+            protected override void onExit() { }
         }
     }
 }

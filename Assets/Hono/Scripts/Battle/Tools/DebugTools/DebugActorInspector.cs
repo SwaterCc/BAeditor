@@ -1,16 +1,14 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using Hono.Scripts.Battle.Event;
 using Sirenix.OdinInspector;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle
+namespace Hono.Scripts.Battle.Tools.DebugTools
 {
-    public class ActorModel : MonoBehaviour
+    public class DebugActorInspector : MonoBehaviour
     {
-        [ReadOnly] public int ActorUid;
-        [ReadOnly] public EActorType ActorType;
-        
+        public ActorModel ActorModel;
 
         public List<int> BuffList = new List<int>();
 
@@ -21,8 +19,17 @@ namespace Hono.Scripts.Battle
 
         private Actor _actor;
         
+        public void Awake()
+        {
+            if (!TryGetComponent(out ActorModel))
+            {
+                Debug.LogError("未找到ActorModel脚本");
+            }
+        }
+        
         void OnGUI()
         {
+	        if(ActorModel == null) return;
 	        // 将世界坐标转换为屏幕坐标
 	        Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0,2,0));
 
@@ -34,13 +41,13 @@ namespace Hono.Scripts.Battle
 	        guiStyle.fontSize = 22;
 	        
 	        // 绘制文本
-	        GUI.Label(new Rect(screenPosition.x, screenPosition.y, 100, 20), ActorUid.ToString(),guiStyle);
+	        GUI.Label(new Rect(screenPosition.x, screenPosition.y, 100, 20), ActorModel.ActorUid.ToString(),guiStyle);
         }
 
         [Button("给自己加buff")]
         public void AddBuff(int buffConfig) {
 	        if (_actor.Logic.TryGetComponent<ActorLogic.BuffComp>(out var comp)) {
-		        comp.AddBuff(ActorUid,buffConfig);
+		        comp.AddBuff(ActorModel.ActorUid,buffConfig);
 	        }
         }
         
@@ -78,8 +85,9 @@ namespace Hono.Scripts.Battle
         }
 
         private void Update() {
+	        if(ActorModel == null) return;
 	        
-	        _actor ??= ActorManager.Instance.GetActor(ActorUid);
+	        _actor ??= ActorManager.Instance.GetActor(ActorModel.ActorUid);
 	        
 	        if(_actor == null) return;
 	        

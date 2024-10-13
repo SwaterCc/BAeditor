@@ -12,28 +12,22 @@ namespace Hono.Scripts.Battle
         public float ReadyStageTime;
 
         [LabelText("准备期执行的Ability")]
-        public int ReadyStageAbilityId = -1;
+        public List<int> ReadyStageAbilityIds = new();
         
-        [LabelText("自定义回合结束")]
-        public bool Custom;
-        
-        [ShowIf("Custom")]
-        [LabelText("使用指定Ability控制")]
-        public int RunningAbilityConfigId;
-        
-        [HideIf("Custom")]
+        [LabelText("回合运行期执行的Ability")]
+        public List<int> RunningAbilityIds = new();
+     
         [BoxGroup("结算条件")]
         [LabelText("检测时长(-1为无限时长，但是所有成功条件会强制变成即刻结算)")]
         public float RunningCheckTime;
-        
-        [HideIf("Custom")]
+  
         [BoxGroup("结算条件")]
-        [LabelText("成功条件(不允许出现重复条件)")]
-        public List<SuccessCondition> SuccessConditions = new();
-        
-        [HideIf("Custom")]
+        [InfoBox("非立即结算的成功条件必须全部满足，最终结算时才会判定当前波次通过")]
+        [LabelText("成功条件")]
+        public List<RoundScoreCondition> SuccessConditions = new();
+   
         [BoxGroup("结算条件")]
-        [LabelText("失败结算条件(不允许出现重复条件)(全为即刻结算)")]
+        [LabelText("失败结算条件(全为即刻结算)")]
         public List<FailedCondition> FailedConditions = new();
         
         [LabelText("成功结算期时长(必须为有限时长最低为0)")]
@@ -50,19 +44,27 @@ namespace Hono.Scripts.Battle
     }
 
     [Serializable]
-    public class SuccessCondition
+    public class RoundScoreCondition
     {
+        [LabelText("结算条件类型1")]
         public ERoundConditionType ConditionType;
-        [LabelText("是否立刻结算")]
-        public bool Flag;
-        public List<int> Params = new ();
+        [LabelText("结算条件类型1参数")]
+        public int ConditionParam;
+        [LabelText("结算条件类型2")]
+        public ERoundTargetType TargetType;
+        [LabelText("结算条件类型2参数")]
+        public int TargetParam;
+        [LabelText("是否中止回合立刻结算")]
+        public bool ScoreNow;
     }
     
     [Serializable]
-    public class FailedCondition
+    public class FailedCondition : RoundScoreCondition
     {
-        public ERoundConditionType ConditionType;
-        public List<int> Params = new ();
+        public FailedCondition()
+        {
+            ScoreNow = true;
+        }
     }
     
     [Serializable]
