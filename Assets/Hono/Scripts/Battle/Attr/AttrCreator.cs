@@ -78,10 +78,6 @@ namespace Hono.Scripts.Battle
 /// <summary>
 											   /// 属性类型 int
 											   /// </summary>
-      AttrHateTargetUid = 22,
-/// <summary>
-											   /// 属性类型 int
-											   /// </summary>
       AttrCantBeHatredTarget = 47,
 /// <summary>
 											   /// 属性类型 int
@@ -99,6 +95,14 @@ namespace Hono.Scripts.Battle
 											   /// 属性类型 int
 											   /// </summary>
       AttrSA = 51,
+/// <summary>
+											   /// 属性类型 Vector3
+											   /// </summary>
+      AttrOriginPos = 150,
+/// <summary>
+											   /// 属性类型 int
+											   /// </summary>
+      AttrHateTargetUid = 151,
 /// <summary>
 											   /// 属性类型 int
 											   /// </summary>
@@ -1017,12 +1021,13 @@ namespace Hono.Scripts.Battle
      { ELogicAttr.AttrFaction, typeof(int) }, 
      { ELogicAttr.AttrUnselectable, typeof(int) }, 
      { ELogicAttr.AttrInvincible, typeof(int) }, 
-     { ELogicAttr.AttrHateTargetUid, typeof(int) }, 
      { ELogicAttr.AttrCantBeHatredTarget, typeof(int) }, 
      { ELogicAttr.AttrCantNormalSkill, typeof(int) }, 
      { ELogicAttr.AttrCantMove, typeof(int) }, 
      { ELogicAttr.AttrStunned, typeof(int) }, 
      { ELogicAttr.AttrSA, typeof(int) }, 
+     { ELogicAttr.AttrOriginPos, typeof(Vector3) }, 
+     { ELogicAttr.AttrHateTargetUid, typeof(int) }, 
      { ELogicAttr.AttrHp, typeof(int) }, 
      { ELogicAttr.AttrHpPer, typeof(int) }, 
      { ELogicAttr.AttrMaxHp, typeof(int) }, 
@@ -1302,8 +1307,6 @@ namespace Hono.Scripts.Battle
                      return new Attr<int>((a, b) => a + b);
                 case ELogicAttr.AttrInvincible :
                      return new Attr<int>((a, b) => a + b);
-                case ELogicAttr.AttrHateTargetUid :
-                     return new Attr<int>((a, b) => a + b);
                 case ELogicAttr.AttrCantBeHatredTarget :
                      return new Attr<int>((a, b) => a + b);
                 case ELogicAttr.AttrCantNormalSkill :
@@ -1313,6 +1316,10 @@ namespace Hono.Scripts.Battle
                 case ELogicAttr.AttrStunned :
                      return new Attr<int>((a, b) => a + b);
                 case ELogicAttr.AttrSA :
+                     return new Attr<int>((a, b) => a + b);
+                case ELogicAttr.AttrOriginPos :
+                     return new Attr<Vector3>((a, b) => a + b);
+                case ELogicAttr.AttrHateTargetUid :
                      return new Attr<int>((a, b) => a + b);
                 case ELogicAttr.AttrHp :
                      return new Attr<int>((a, b) => a + b);

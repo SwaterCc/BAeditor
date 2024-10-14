@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle.Scene {
 		{
 			get
 			{
-				idx = Mathf.Clamp(idx, 0, BattleConstValue.PawnGroupMaxCount-1);
+				idx = Mathf.Clamp(idx, 0, BattleConstValue.TeamMaxCount-1);
 				switch (idx)
 				{
 					case 0:

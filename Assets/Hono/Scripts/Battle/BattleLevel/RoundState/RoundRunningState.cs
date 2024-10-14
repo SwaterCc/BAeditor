@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -13,13 +14,14 @@ namespace Hono.Scripts.Battle
             private float _checkDt;
             private readonly List<RoundScoreCondition> _finalTimeCheck = new(8);
             private readonly List<RoundScoreCondition> _frameCheck = new(8);
-
+            private bool _fristTick;
             public RoundRunningState(RoundController roundController) : base(roundController) { }
-
+            private readonly MonsterGenEventInfo _monsterGenEventInfo = new();
             public override ERoundState GetRoundState() => ERoundState.Running;
 
             protected override void onEnter()
             {
+                _fristTick = true;
                 foreach (var abilityId in CurrentRoundData.RunningAbilityIds)
                 {
                     BattleManager.BattleController.RunAbility(abilityId);
@@ -44,6 +46,9 @@ namespace Hono.Scripts.Battle
             //当不限制时间时，所有成功条件都变成即刻结算条件
             protected override void onTick(float dt)
             {
+                if(_fristTick)
+                    firstTick();
+                
                 if (_checkDt > CheckInterval)
                 {
                     _checkDt = 0;
@@ -88,6 +93,26 @@ namespace Hono.Scripts.Battle
                 }
             }
 
+            private void firstTick()
+            {
+                foreach (var info in CurrentRoundData.MonsterBuilderLinkInfos)
+                {
+                    _monsterGenEventInfo.MonsterConfigId = info.ConfigId;
+                    _monsterGenEventInfo.SingleUid = info.MonsterBuilderUid;
+                    BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.OnCallMonsterGen,_monsterGenEventInfo);
+                }
+
+                foreach (var triggerUid in CurrentRoundData.TriggerBoxLinkInfos)
+                {
+                    if (ActorManager.Instance.TryGetActor(triggerUid, out var actor))
+                    {
+                        ((TriggerBoxModelController)actor.ModelController).SetActive(true);
+                    }
+                }
+                
+                _fristTick = false;
+            }
+            
             private bool checkCondition(RoundScoreCondition condition)
             {
                 var rtInfo = Round.GameRunningState.BattleGroundHandle.RuntimeInfo;
@@ -126,6 +151,14 @@ namespace Hono.Scripts.Battle
                 foreach (var abilityId in CurrentRoundData.RunningAbilityIds)
                 {
                     BattleManager.BattleController.RemoveAbility(abilityId);
+                }
+                
+                foreach (var triggerUid in CurrentRoundData.TriggerBoxLinkInfos)
+                {
+                    if (ActorManager.Instance.TryGetActor(triggerUid, out var actor))
+                    {
+                        ((TriggerBoxModelController)actor.ModelController).SetActive(false);
+                    }
                 }
             }
         }

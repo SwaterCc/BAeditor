@@ -21,6 +21,8 @@ int AttrCantNormalSkill 48  //沉默一般技能，非奥义技能，优先级低可先不处理
 int AttrCantMove 49  //禁足，不可移动
 int AttrStunned 50   //眩晕，生效关系：眩晕＜霸体=无敌；同一时间只允许存在一种眩晕效果
 int AttrSA 51  //superArmor直接霸体，无敌时也会自动拥有直接霸体
+Vector3 AttrOriginPos 150
+int AttrHateTargetUid 151
  #HP
 int AttrHp   10000  //当前HP
 int AttrHpPer   10001 

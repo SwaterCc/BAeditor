@@ -1,26 +1,17 @@
 ﻿namespace Hono.Scripts.Battle {
 	public class PawnLogic : ActorLogic {
+		
+		private readonly ActorInput _autoInput;
+
+		private readonly ActorInput _manualInput;
+		
 		public PawnLogic(Actor actor) : base(actor) {
 			PawnLogicRow = ConfigManager.Table<PawnLogicTable>().Get(Actor.ConfigId);
 			_autoInput = new AutoInput(this);
 			_manualInput = new ManualControlInput(this);
 		}
-
-		private ActorInput _autoInput;
-
-		private ActorInput _manualInput;
 		
 		public PawnLogicTable.PawnLogicRow PawnLogicRow { get; }
-
-		/// <summary>
-		/// Pawn归属的队伍Id
-		/// </summary>
-		public int BelongActorGroupId;
-		
-		/// <summary>
-		/// 在队伍中的索引
-		/// </summary>
-		public int GroupMemberIdx;
 		
 		protected override void setupAttrs() {
 			SetAttr(ELogicAttr.AttrBaseSpeed, 10f, false);
@@ -67,17 +58,14 @@
 
 		protected override void onTick(float dt)
 		{
-			//
-		}
-
-		public void ChangeInputToAuto()
-		{
-			ActorInput = _autoInput;
-		}
-
-		public void ChangeInputToManual()
-		{
-			ActorInput = _manualInput;
+			if (Actor.IsPlayerControl)
+			{
+				ActorInput = _manualInput;
+			}
+			else
+			{
+				ActorInput = _autoInput;
+			}
 		}
 	}
 }

@@ -17,10 +17,10 @@
         /// <summary>
         /// 游戏中最大队伍数量
         /// </summary>
-        public static int PawnGroupMaxCount = 4;
+        public static int TeamMaxCount = 4;
         /// <summary>
         /// 队伍成员最大数量
         /// </summary>
-        public static int PawnGroupMemberMaxCount = 4;
+        public static int TeamMemberMaxCount = 4;
     }
 }

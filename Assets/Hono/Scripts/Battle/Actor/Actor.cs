@@ -76,7 +76,15 @@ namespace Hono.Scripts.Battle
         /// actor是否加载完成
         /// </summary>
         public bool ActorSetupFinish => _modelController.IsModelLoadFinish;
+
+        /// <summary>
+        /// 是否为玩家操控单位
+        /// </summary>
+        public bool IsPlayerControl { get; set; }
         
+        public Action<Actor> OnModelLoadFinish { get; set; }
+        public Action<Actor> OnInitCallBack { get; set; }
+        public Action<Actor> OnTickCallBack { get; set; }
         public Action<Actor> OnDestroyCallBack { get; set; }
 
         public Actor(int uid, EActorType actorType)
@@ -112,8 +120,9 @@ namespace Hono.Scripts.Battle
         public void Init()
         {
             Logic.Init();
-            _modelController.onEnterScene();
+            _modelController.OnEnterScene();
             _message.Init();
+            OnInitCallBack?.Invoke(this);
         }
 
         /// <summary>
@@ -124,6 +133,7 @@ namespace Hono.Scripts.Battle
         {
 	        Logic.Tick(dt);
             _abilityController.Tick(dt);
+            OnTickCallBack?.Invoke(this);
         }
 
         /// <summary>

@@ -12,6 +12,8 @@ namespace Hono.Scripts.Battle
     {
         private VFXWorldComp _vfxWorldComp;
 
+        public BattleControllerModel ModelController => (BattleControllerModel)Actor.ModelController;
+        
         public BattleController(Actor actor) : base(actor) { }
 
         protected override void setupComponents()

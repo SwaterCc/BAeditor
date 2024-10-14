@@ -22,6 +22,7 @@ namespace Hono.Scripts.Battle
                 modelController.IsSceneModel = true;
                 modelController.Actor.SetAttr(ELogicAttr.AttrPosition, _sceneActorModel.transform.position, false);
                 modelController.Actor.SetAttr(ELogicAttr.AttrRot, _sceneActorModel.transform.rotation, false);
+                _sceneActorModel.OnModelSetupFinish(modelController.Actor);
             }
         }
     }

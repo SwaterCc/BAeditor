@@ -33,8 +33,6 @@ namespace Hono.Scripts.Battle
                 }
                 
                 _roundController.Tick(dt);
-                ActorManager.Instance.Tick(dt);
-                ActorManager.Instance.Update(dt);
             }
 
             public void ScoreBattle(bool isPass)

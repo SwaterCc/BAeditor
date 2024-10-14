@@ -11,6 +11,8 @@ namespace Hono.Scripts.Battle
         [LabelText("拥有的Ability")]
         public List<int> AbilityIds = new();
 
+        [LabelText("默认为开启状态")]
+        public bool IsDefaultOpen;
       
         private readonly Dictionary<int,float> _stayDicts = new(32);
         private TriggerBoxModelController _triggerBoxController;
@@ -22,6 +24,12 @@ namespace Hono.Scripts.Battle
             {
                 triggerComp.isTrigger = true;
             }
+        }
+
+        public override void OnModelSetupFinish(Actor actor)
+        {
+            _triggerBoxController = (TriggerBoxModelController)ModelController;
+            _triggerBoxController.SetActive(IsDefaultOpen);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -37,7 +45,6 @@ namespace Hono.Scripts.Battle
         private void Update()
         {
             if (ModelController == null) return;
-            _triggerBoxController ??= (TriggerBoxModelController)ModelController;
             
             foreach (var pair in _stayDicts)
             {

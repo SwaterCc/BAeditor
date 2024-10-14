@@ -15,10 +15,9 @@
 
             private void setTeams(IUIPassData teamInfos)
             {
-                BattleGroundHandle._pawnTeamInfos = (PawnTeamInfos)teamInfos;
+                BattleGroundHandle._pawnTeamController.BuildTeam((PawnTeamAllData)teamInfos);
                 BattleGroundHandle.switchState(EBattleStateType.LoadBattleGround);
             }
-
 
             protected override void onExit() { }
         }

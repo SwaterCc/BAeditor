@@ -148,11 +148,10 @@ namespace Hono.Scripts.Battle
         Health,
     }
 
-    public enum EPawnGroupMemberStateType
+    public enum EPawnTeamMemberStateType
     {
         Empty,
         Normal,
-        Leader,
         Dead,
     }
 

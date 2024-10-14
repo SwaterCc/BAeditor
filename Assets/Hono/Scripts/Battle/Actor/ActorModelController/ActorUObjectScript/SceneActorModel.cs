@@ -27,6 +27,7 @@ namespace Hono.Scripts.Battle
 
         protected virtual void onInit() { }
 
+        public virtual void OnModelSetupFinish(Actor actor) { }
 
         protected virtual void onRemove() { }
 

@@ -220,6 +220,8 @@ namespace Hono.Scripts.Battle
                 Debug.LogError($"战斗数据未准备完成 当前状态{_battleDataLoadState}");
                 return;
             }
+
+            _battleController ??= ActorManager.Instance.GetBattleControl();
             
             foreach (var frameworkTick in _frameworkTicks)
             {

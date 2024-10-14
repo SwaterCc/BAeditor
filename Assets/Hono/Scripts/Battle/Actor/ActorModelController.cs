@@ -18,7 +18,11 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private GameObject _model;
 
-        public GameObject Model => _model;
+        public GameObject Model
+        {
+            get => _model;
+            protected set => _model = value;
+        }
 
         /// <summary>
         /// 表现组件
@@ -53,7 +57,7 @@ namespace Hono.Scripts.Battle
         /// 子类需要设置模型加载方式
         /// </summary>
         protected abstract ModelSetup getModelSetup();
-        
+
         /// <summary>
         /// 组装Unity模型控制器
         /// </summary>
@@ -65,18 +69,25 @@ namespace Hono.Scripts.Battle
             _tags = tags;
             _variables = varCollection;
             _actorLogic = actorLogic;
-            getModelSetup().SetupModel(this, () => onModelLoadFinish());
+            getModelSetup().SetupModel(this, () =>
+            {
+                onModelLoadFinish();
+                Actor.OnModelLoadFinish?.Invoke(Actor);
+            });
         }
 
         /// <summary>
         /// 模型加载完成
         /// </summary>
-        protected virtual void onModelLoadFinish() { }
-        
+        protected virtual void onModelLoadFinish()
+        {
+           
+        }
+
         /// <summary>
         /// ActorModel实例化到场景中
         /// </summary>
-        public void onEnterScene()
+        public virtual void OnEnterScene()
         {
             if (!IsSceneModel)
             {

@@ -106,7 +106,6 @@ namespace Hono.Scripts.Battle
 
             if (hateTargetUid <= 0)
             {
-                _hateComp.UpdateHateTarget();
                 return false;
             }
 
@@ -123,9 +122,8 @@ namespace Hono.Scripts.Battle
         /// <returns></returns>
         private bool TryGetOriginPos(out Vector3 targetPos)
         {
-            //if(Logic == )
-            targetPos = Vector3.zero;
-            return false;
+            targetPos = Logic.Actor.GetAttr<Vector3>(ELogicAttr.AttrOriginPos);;
+            return true;
         }
 
         protected virtual void AutoUseSkill()
