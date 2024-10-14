@@ -1,3 +1,4 @@
+using System;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using System.Collections.Generic;
@@ -34,7 +35,6 @@ namespace Hono.Scripts.Battle
         /// Unity交互层
         /// </summary>
         private ActorModelController _modelController;
-
         public ActorModelController ModelController => _modelController;
         
         /// <summary>
@@ -76,11 +76,14 @@ namespace Hono.Scripts.Battle
         /// actor是否加载完成
         /// </summary>
         public bool ActorSetupFinish => _modelController.IsModelLoadFinish;
+        
+        public Action<Actor> OnDestroyCallBack { get; set; }
 
         public Actor(int uid, EActorType actorType)
         {
             Uid = uid;
             ActorType = actorType;
+            OnDestroyCallBack = null;
             _tags = new Tags();
             _attrs = new AttrCollection(this, AttrCreator.Create);
             _abilityController = new AbilityController(this);
@@ -139,6 +142,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public void Destroy()
         {
+            OnDestroyCallBack?.Invoke(this);
             _modelController.Destroy();
             Logic.Destroy();
             _message.UnInit();

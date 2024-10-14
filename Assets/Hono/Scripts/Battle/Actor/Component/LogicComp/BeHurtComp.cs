@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
@@ -8,7 +8,9 @@ namespace Hono.Scripts.Battle
     {
         public class BeHurtComp : ALogicComponent
         {
-            public BeHurtComp(ActorLogic logic) : base(logic) { }
+	        public Action<Actor, HitDamageInfo> OnHitKillActorCallBack { get; set; }
+
+	        public BeHurtComp(ActorLogic logic) : base(logic) { }
 
             public override void Init() { }
 
@@ -22,7 +24,6 @@ namespace Hono.Scripts.Battle
                 Debug.Log($"当前血量{Actor.GetAttr<int>(ELogicAttr.AttrHp)}");
                 BattleEventManager.Instance.TriggerActorEvent(Actor.Uid, EBattleEventType.OnBeHit, hitDamageInfo);
                 //添加受击特效
-
                 var damageRow = ConfigManager.Table<DamageTable>().Get(hitDamageInfo.DamageConfigId);
                 if (ActorLogic.TryGetComponent<VFXComp>(out var comp)) {
 
@@ -34,6 +35,11 @@ namespace Hono.Scripts.Battle
 	                };
 
 	                comp.AddVFXObject(setting);
+                }
+
+                if (hitDamageInfo.IsKillTarget)
+                {
+	                OnHitKillActorCallBack?.Invoke(Actor, hitDamageInfo);
                 }
             }
         }

@@ -16,6 +16,7 @@
 
                 if (Round.CanRepeat)
                 {
+                    Round.GameRunningState.BattleGroundHandle.RuntimeInfo.RepeatRound();
                     Round.SwitchState(ERoundState.Ready);
                 }
                 else

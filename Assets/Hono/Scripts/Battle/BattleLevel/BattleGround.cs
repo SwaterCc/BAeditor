@@ -14,13 +14,14 @@ namespace Hono.Scripts.Battle
         private BattleLevelData _levelData;
         private PawnTeamInfos _pawnTeamInfos;
         private bool _isScoreSuccess;
-        private bool _canExit;
+
+        public BattleGroundRtInfo RuntimeInfo { get; }
 
         public BattleGround(string name)
         {
             _battleGroundName = name;
             _isScoreSuccess = false;
-            _canExit = false;
+            RuntimeInfo = new BattleGroundRtInfo();
             _battleStates = new Dictionary<EBattleStateType, BattleState>()
             {
                 { EBattleStateType.NoGaming, new NoGameState(this, EBattleStateType.NoGaming) },
@@ -40,6 +41,7 @@ namespace Hono.Scripts.Battle
 
         public void OnDestroy()
         {
+            RuntimeInfo.ClearAll();
             //
         }
 

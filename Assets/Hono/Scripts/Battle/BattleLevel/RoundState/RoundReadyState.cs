@@ -13,9 +13,11 @@ namespace Hono.Scripts.Battle
 
             protected override void onEnter()
             {
+                Round.GameRunningState.BattleGroundHandle.RuntimeInfo.ClearRound();
+                
                 foreach (var abilityId in CurrentRoundData.ReadyStageAbilityIds)
                 {
-                    BattleManager.battleController.RunAbility(abilityId);
+                    BattleManager.BattleController.RunAbility(abilityId);
                 }
             }
 
@@ -31,7 +33,7 @@ namespace Hono.Scripts.Battle
             {
                 foreach (var abilityId in CurrentRoundData.ReadyStageAbilityIds)
                 {
-                    BattleManager.battleController.RemoveAbility(abilityId);
+                    BattleManager.BattleController.RemoveAbility(abilityId);
                 }
             }
         }

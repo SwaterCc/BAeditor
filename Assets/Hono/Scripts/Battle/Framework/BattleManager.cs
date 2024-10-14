@@ -62,8 +62,10 @@ namespace Hono.Scripts.Battle
         private bool _popTopGround;
         private readonly Stack<BattleGround> _groundStack = new(4);
         
-        public static BattleController battleController => Instance._battleController;
         
+        public static BattleController BattleController => Instance._battleController;
+        public static BattleGround CurrentBattleGround => Instance._groundStack.Count > 0 ? Instance._groundStack.Peek() : null;
+
         #region 框架初始化
 
         private void register(IBattleFramework framework)

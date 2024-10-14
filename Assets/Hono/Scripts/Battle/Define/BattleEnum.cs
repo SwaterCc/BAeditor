@@ -36,7 +36,7 @@ namespace Hono.Scripts.Battle
     public enum ERoundTargetType
     {
         FactionId,
-        Uid,
+        SpecialUid,
         Tag,
     }
 

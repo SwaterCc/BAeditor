@@ -49,7 +49,7 @@ namespace Hono.Scripts.Battle
         [LabelText("结算条件类型1")]
         public ERoundConditionType ConditionType;
         [LabelText("结算条件类型1参数")]
-        public int ConditionParam;
+        public int ConditionCount;
         [LabelText("结算条件类型2")]
         public ERoundTargetType TargetType;
         [LabelText("结算条件类型2参数")]
