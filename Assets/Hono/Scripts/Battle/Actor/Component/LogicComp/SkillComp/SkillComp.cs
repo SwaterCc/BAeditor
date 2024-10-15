@@ -48,10 +48,6 @@ namespace Hono.Scripts.Battle
                 {
                     Skill skill = new(ActorLogic, skillInfo[0], skillInfo[1]);
                     _skills.Add(skill.Id, skill);
-                    if (skill.Data.SkillType == ESkillType.PassiveSkill)
-                    {
-                        UseSkill(skill.Id);
-                    }
                 }
 
                 BattleEventManager.Instance.Register(_eventChecker);
@@ -131,6 +127,8 @@ namespace Hono.Scripts.Battle
 
             public void UseSkill(int skillId)
             {
+                Debug.Log($"[UseSkill] Actor{Actor.Uid} -->尝试执行技能 {skillId}");
+                
                 if (!_skills.TryGetValue(skillId, out var skillState))
                 {
                     return;
@@ -148,10 +146,6 @@ namespace Hono.Scripts.Battle
                 if (skillState.TryUseSkill())
                 {
                     _beforeUsedSkill = skillState;
-                    if (skillState.Data.SkillType != ESkillType.PassiveSkill)
-                    {
-                        ActorLogic._stateMachine.ChangeState(EActorState.Battle);
-                    }
                 }
                 else
                 {

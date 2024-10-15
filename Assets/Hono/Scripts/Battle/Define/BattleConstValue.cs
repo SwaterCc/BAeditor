@@ -12,6 +12,13 @@
         public static readonly string BuffFolder = $"{DataRoot}/Buff";
         public static readonly string BulletFolder = $"{DataRoot}/Bullet";
 
+
+        public static readonly string PreModelRoot = $"{DataRoot}/GameTestRes/TestModel";
+        public static readonly string BattleRootModel = $"{PreModelRoot}/BattleController.prefab";
+        public static readonly string BulletModel = $"{PreModelRoot}/BulletModel.prefab";
+        public static readonly string HitBoxModel = $"{PreModelRoot}/HitBoxModel.prefab";
+        public static readonly string TeamRefreshPoint = $"{PreModelRoot}/TeamRefreshPoint.prefab";
+        
         public const int BattleRootControllerUid = 1;
 
         /// <summary>

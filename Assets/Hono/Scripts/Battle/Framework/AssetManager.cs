@@ -175,6 +175,7 @@ namespace Hono.Scripts.Battle
         {
             try
             {
+                path = path.Replace("\\","/");
                 var data = await Addressables.LoadAssetAsync<T>(path).ToUniTask();
                 helper.AddData(data.ID, path, data);
             }

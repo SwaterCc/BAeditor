@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
-using UnityEngine.Serialization;
+
 
 namespace Hono.Scripts.Battle.Scene
 {
@@ -27,6 +27,7 @@ namespace Hono.Scripts.Battle.Scene
 
         [SerializeField]
         [ShowInInspector]
+        [ReadOnly]
         [LabelText("下一个Uid")]
         private int _sceneUidCounter;
 

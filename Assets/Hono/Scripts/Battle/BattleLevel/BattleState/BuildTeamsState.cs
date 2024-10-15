@@ -1,4 +1,6 @@
-﻿namespace Hono.Scripts.Battle
+﻿using Hono.Scripts.Battle.Tools;
+
+namespace Hono.Scripts.Battle
 {
     public partial class BattleGround
     {
@@ -10,7 +12,7 @@
             protected override void onEnter()
             {
                 //发消息打开编队UI
-                BattleUIInterface.CallUI("BuildTeamsUIRoot", null, setTeams);
+                BattleUIInterface.CallUI<BuildTeamsUIRoot>(null, setTeams);
             }
 
             private void setTeams(IUIPassData teamInfos)

@@ -18,9 +18,12 @@ namespace Hono.Scripts.Battle
             private HateSelection _hateSelection;
             private float _duration;
             private FilterSetting _setting;
-            public HateComp(ActorLogic logic, HateSelection hateSelection) : base(logic)
+            private int _hateUid;
+            private bool _isReturnTeam;
+            
+            public HateComp(ActorLogic logic) : base(logic)
             {
-                _hateSelection = hateSelection;
+               
             }
             
             public override void Init()
@@ -44,35 +47,65 @@ namespace Hono.Scripts.Battle
 
             protected override void onTick(float dt)
             {
-                if (_duration > 0.5f)
+                if (_duration < 0.5f)
                 {
-                    UpdateHateTarget();
-                    _duration = 0;
+                    _duration += dt;
+                    return;
                 }
 
-                _duration += dt;
+                if (_hateUid > 0)
+                {
+                    var rtState = ActorManager.Instance.GetActorRtState(_hateUid);
+                    if (rtState != EActorRunningState.Active)
+                    {
+                        _hateUid = -1;
+                    }
+                    
+                    if (Actor.ActorType == EActorType.Pawn)
+                    {
+                        var origin = Actor.GetAttr<Vector3>(ELogicAttr.AttrOriginPos);
+                        var dis = Vector3.Distance(origin, Actor.Pos);
+                        if (dis > 10.5)
+                        {
+                            _hateUid = -1;
+                            _isReturnTeam = true;
+                        }
+                    }
+                }
+                
+                if (_hateUid <= 0)
+                {
+                    if (_isReturnTeam)
+                    {
+                        var origin = Actor.GetAttr<Vector3>(ELogicAttr.AttrOriginPos);
+                        var dis = Vector3.Distance(origin, Actor.Pos);
+                        if (dis < 1f)
+                        {
+                            _isReturnTeam = false;
+                            UpdateHateTarget();
+                        }
+                    }
+                    else
+                    {
+                        UpdateHateTarget();
+                    }
+                }
+                
+                Actor.SetAttr(ELogicAttr.AttrHateTargetUid, _hateUid, false);
+                _duration = 0;
             }
 
             public void UpdateHateTarget()
             {
-                var hateUid = ActorManager.Instance.UseFilter(Actor, _setting);
-                if (hateUid.Count == 0)
+                var hateUids = ActorManager.Instance.UseFilter(Actor, _setting);
+                if (hateUids.Count == 0)
                 {
-                    Actor.SetAttr(ELogicAttr.AttrHateTargetUid, -1, false);
-                    return;
+                    _hateUid = -1;
                 }
-
-                if (Actor.ActorType == EActorType.Pawn)
+                else
                 {
-                    var origin = Actor.GetAttr<Vector3>(ELogicAttr.AttrOriginPos);
-                    var dis = Vector3.Distance(origin, Actor.Pos);
-                    if (dis > 20)
-                    {
-                        Actor.SetAttr(ELogicAttr.AttrHateTargetUid, -1, false);
-                        return;
-                    }
+                    _hateUid = hateUids[0];
                 }
-                Actor.SetAttr(ELogicAttr.AttrHateTargetUid, hateUid, false);
             }
         }
     }

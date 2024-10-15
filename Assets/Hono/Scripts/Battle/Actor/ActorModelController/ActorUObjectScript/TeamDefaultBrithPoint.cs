@@ -1,4 +1,6 @@
-﻿namespace Hono.Scripts.Battle
+﻿using UnityEngine;
+
+namespace Hono.Scripts.Battle
 {
     public class TeamDefaultBrithPoint : SceneActorModel
     {

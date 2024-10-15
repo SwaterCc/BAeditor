@@ -34,29 +34,41 @@ namespace Hono.Scripts.Battle {
 				var ability = _logic._abilityController.CreateAbility(Data.SkillId);
 				_abilityUid = ability.Uid;
 
-				if (Data.CostType == EResCostType.AfterExecute) {
-					ability.GetCycleCallback(EAbilityAllowEditCycle.OnPreExecute).OnEnter += resourceCost;
-				}
-				else {
-					ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnEnter += resourceCost;
-				}
-
-				if (Data.EcdMode == ECDMode.AfterExecute) {
-					ability.GetCycleCallback(EAbilityAllowEditCycle.OnPreExecute).OnEnter += CdBegin;
-				}
-				else {
-					ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnEnter += CdBegin;
-				}
-
-				ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnExit += onSkillEnd;
+				ability.GetCycleCallback(EAbilityAllowEditCycle.OnPreExecute).OnEnter += onAbilityBegin;
+				ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnExit += onAbilityEnd;
 				
-				_logic._abilityController.AwardAbility(ability, false);
+				_logic._abilityController.AwardAbility(ability, Data.SkillType == ESkillType.PassiveSkill);
 
 				resourceCheck();
 			}
 
-			private void onSkillEnd() {
+			private void onAbilityBegin()
+			{
+				_isExecuting = true;
+				_logic._stateMachine.ChangeState(EActorState.Battle);
+				if (Data.CostType == EResCostType.BeforeExecute)
+				{
+					resourceCost();
+				}
+				if (Data.EcdMode == ECDMode.BeforeExecute) {
+					CdBegin();
+				}
+				
+				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillUseSuccess,
+					new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
+			}
+			
+			private void onAbilityEnd() {
 				_isExecuting = false;
+				
+				if (Data.CostType == EResCostType.AfterExecute)
+				{
+					resourceCost();
+				}
+				if (Data.EcdMode == ECDMode.AfterExecute) {
+					CdBegin();
+				}
+				
 				_logic._stateMachine.ChangeState(EActorState.Idle);
 				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillStop,
 					new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
@@ -80,7 +92,7 @@ namespace Hono.Scripts.Battle {
 					Debug.Log("能量不足");
 				}
 
-				if (_curCdPercent <= 1) {
+				if (_curCdPercent != 0) {
 					Debug.Log("Cd中！");
 				}
 
@@ -161,7 +173,7 @@ namespace Hono.Scripts.Battle {
 				targetUids.Clear();
 
 				//选敌
-				if (!Data.SelectSelf ) {
+				if (!Data.SelectSelf) {
 					targetUids = ActorManager.Instance.UseFilter(_logic.Actor, _skillTargetSetting);
 				}
 				else {
@@ -170,11 +182,8 @@ namespace Hono.Scripts.Battle {
 
 				if (targetUids.Count > 0) {
 					_logic.SetAttr(ELogicAttr.AttrAttackTargetUids, targetUids, false);
+					Debug.Log($"[UseSkill] Actor{_logic.Uid} -->执行了技能 {_abilityUid}");
 					_logic._abilityController.ExecutingAbility(_abilityUid);
-					BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillUseSuccess,
-						new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
-					resourceCheck();
-					_isExecuting = true;
 				}
 				else {
 					Debug.Log("技能没有找到目标！");

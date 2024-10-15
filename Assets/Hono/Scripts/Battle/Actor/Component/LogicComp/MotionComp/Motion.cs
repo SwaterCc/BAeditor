@@ -16,6 +16,7 @@ namespace Hono.Scripts.Battle {
 			private Vector3 _moveOffset;
 			private float _speed;
 			private Action<int> _moveCollisionCallBack;
+			private const float ModelRadius = 0.25f;
 			
 			private bool _isBegin;
 			public bool IsBegin => _isBegin; 
@@ -52,6 +53,22 @@ namespace Hono.Scripts.Battle {
 				return a._moveOffset + b;
 			}
 			#endregion
+
+			private void checkCollisionAfterMove()
+			{
+				var dir = _moveOffset.normalized;
+				var boxSize = new Vector3(ModelRadius, 1, _moveOffset.magnitude);
+				var center = _logic.Actor.Pos + ModelRadius * Vector3.forward;
+				RaycastHit[] hitResults = new RaycastHit[8];
+				var size = Physics.BoxCastNonAlloc(center, boxSize / 2, dir, hitResults, _logic.Actor.Rot, 0.001f);
+				for (int i = 0; i < size; i++)
+				{
+					var hitInfo = hitResults[i];
+					if (!hitInfo.collider.TryGetComponent<ActorModel>(out var comp)) continue;
+					OnMoveCollision(comp.ActorUid);
+					break;
+				}
+			}
 			
 			public void MotionBegin() {
 				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnMotionBegin, _motionEventInfo);
@@ -67,7 +84,7 @@ namespace Hono.Scripts.Battle {
 					_moveTargetPos = target.Pos;
 				}
 				else {
-					if (Mathf.Abs(Vector3.Distance(_logic.Actor.Pos, _moveTargetPos)) < 0.25f) {
+					if (Vector3.Distance(_logic.Actor.Pos, _moveTargetPos) < ModelRadius) {
 						_isEnd = true;
 					}
 				}
@@ -83,7 +100,8 @@ namespace Hono.Scripts.Battle {
 						doCurve(dt);
 						break;
 				}
-				
+
+				checkCollisionAfterMove();
 				_dt += dt;
 			}
 

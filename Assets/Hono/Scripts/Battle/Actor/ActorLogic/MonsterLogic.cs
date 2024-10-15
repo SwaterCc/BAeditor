@@ -11,7 +11,8 @@ namespace Hono.Scripts.Battle
         public MonsterLogicTable.MonsterLogicRow MonsterConfig { get; }
 
         protected override void setupAttrs() {
-	        SetAttr(ELogicAttr.AttrModelId, MonsterConfig.ModelId, false);
+	        //SetAttr(ELogicAttr.AttrModelId, MonsterConfig.ModelId, false);
+	        SetAttr(ELogicAttr.AttrModelId, 2, false);
 	        SetAttr(ELogicAttr.AttrFaction, MonsterConfig.Faction, false);
 	        
 	        var attrRow = ConfigManager.Table<EntityAttrBaseTable>().Get(MonsterConfig.AttrTemplateId);
@@ -53,7 +54,7 @@ namespace Hono.Scripts.Battle
 
         protected override void setupInput()
         {
-	        ActorInput = new AutoInput(this);
+	        _actorInput = new AutoInput(this);
         }
     }
 }

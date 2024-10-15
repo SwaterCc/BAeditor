@@ -31,7 +31,8 @@ namespace Hono.Scripts.Battle
 		                VFXBindType = EVFXType.InWorld,
 		                Duration = 3,
 		                Offset = new SVector3(0, 0.5f, 0),
-		                VFXPath = damageRow.BeHitVFXPath
+		                //VFXPath = damageRow.BeHitVFXPath
+		                VFXPath ="Assets/BattleData/VFX/test.prefab"
 	                };
 
 	                comp.AddVFXObject(setting);

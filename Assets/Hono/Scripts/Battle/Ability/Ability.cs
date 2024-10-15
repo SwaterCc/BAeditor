@@ -76,7 +76,7 @@ namespace Hono.Scripts.Battle {
 		}
 		
 		public void Execute() {
-			Debug.Log($"[Ability] ActorUid {Actor.Uid} Execute AbilityId:{ConfigId} Execute !");
+			//Debug.Log($"[Ability] ActorUid {Actor.Uid} Execute AbilityId:{ConfigId} Execute !");
 			_state.TryExecute();
 		}
 
@@ -111,14 +111,14 @@ namespace Hono.Scripts.Battle {
 
 		public void SetNextGroupId(int id) {
 			if (_state.Current.CurState == EAbilityState.Executing) {
-				Debug.Log($"[Ability] AbilityId:{ConfigId} SetNextGroupId call NextGroupId:{id}");
+				//Debug.Log($"[Ability] AbilityId:{ConfigId} SetNextGroupId call NextGroupId:{id}");
 				((ExecutingCycle)_state.Current).NextGroupId = id;
 			}
 		}
 
 		public void StopGroup() {
 			if (_state.Current.CurState == EAbilityState.Executing) {
-				Debug.Log($"[Ability] AbilityId:{ConfigId} StopGroup call");
+				//Debug.Log($"[Ability] AbilityId:{ConfigId} StopGroup call");
 				((ExecutingCycle)_state.Current).CurrentGroupStop();
 			}
 		}

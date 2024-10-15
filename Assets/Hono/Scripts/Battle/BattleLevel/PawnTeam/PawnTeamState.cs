@@ -63,34 +63,22 @@ namespace Hono.Scripts.Battle
 
         public void CreateTeam(Vector3 teamCenter, Quaternion teamRot)
         {
+            CenterPos = teamCenter;
             foreach (var state in _memberStates)
             {
-                state.CreateMember(teamCenter);
+                state.CreateMember();
             }
         }
         
         public void OnTick(float dt)
         {
-            if (!TeamLoadFinish)
+            if (_duration > CenterPosUpdateInterval)
             {
-                foreach (var state in _memberStates)
-                {
-                    if (state.IsLoadFinish && !_loadFinishFlag.Contains(state.MemberIndex))
-                    {
-                        _loadFinishFlag.Add(state.MemberIndex);
-                    }
-                }
+                updateCenterPos();
+                _duration = 0;
             }
-            else
-            {
-                if (_duration > CenterPosUpdateInterval)
-                {
-                    updateCenterPos();
-                    _duration = 0;
-                }
 
-                _duration += dt;
-            }
+            _duration += dt;
         }
 
         public void OnPlayerControlChange(bool isControl)

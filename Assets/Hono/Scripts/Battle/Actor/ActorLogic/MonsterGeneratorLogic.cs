@@ -52,12 +52,12 @@ namespace Hono.Scripts.Battle
             _createMonsterQueue.Clear();
             foreach (var monsterInfo in _templateRow.MonsterInfos)
             {
-                for (int i = 0; i < monsterInfo[2]; i++)
+                for (int i = 0; i < monsterInfo[1]; i++)
                 {
                     var info = new GenActorInfo()
                     {
-                        ConfigId = monsterInfo[1],
-                        ActorType = (EActorType)monsterInfo[0],
+                        ConfigId = monsterInfo[0],
+                        ActorType = EActorType.Monster,
                     };
                     _createMonsterQueue.Enqueue(info);
 
@@ -129,6 +129,9 @@ namespace Hono.Scripts.Battle
             {
                 actor.SetAttr(ELogicAttr.AttrFaction, _templateRow.FactionId, false);
             }
+
+            actor.SetAttr(ELogicAttr.AttrPosition, Actor.Pos, false);
+            actor.SetAttr(ELogicAttr.AttrRot, Actor.Rot, false);
         }
 
         protected override void onTick(float dt)

@@ -42,6 +42,5 @@ Faction.GetFaction = function(id1, id2)
         end
     end
     
-    PrintDamageLog(EFactionType.Neutrality)
     return EFactionType.Neutrality
 end

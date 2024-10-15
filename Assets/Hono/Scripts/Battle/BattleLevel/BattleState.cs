@@ -1,4 +1,5 @@
 ﻿using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -18,6 +19,7 @@ namespace Hono.Scripts.Battle
 
             public void Enter()
             {
+                Debug.Log($"[BattleState] BattleState {StateType} Enter");
                 onEnter();
             }
 
@@ -34,6 +36,7 @@ namespace Hono.Scripts.Battle
             public void Exit()
             {
                 onExit();
+                Debug.Log($"[BattleState] BattleState {StateType} Exit");
             }
 
             protected abstract void onExit();

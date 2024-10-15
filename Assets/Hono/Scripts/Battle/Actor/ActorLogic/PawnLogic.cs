@@ -17,6 +17,7 @@
 			SetAttr(ELogicAttr.AttrBaseSpeed, 10f, false);
 			SetAttr(ELogicAttr.AttrFaction, PawnLogicRow.Faction, false);
 			SetAttr(ELogicAttr.AttrModelId, PawnLogicRow.ModelId, false);
+			SetAttr(ELogicAttr.AttrModelId, 1, false);
 			
 			var attrRow = ConfigManager.Table<EntityAttrBaseTable>().Get(PawnLogicRow.AttrTemplateId);
 			SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
@@ -41,10 +42,14 @@
 			SetAttr(ELogicAttr.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd, false);
 		}
 
-		protected override void onInit() { }
+		protected override void onInit()
+		{
+			_manualInput.Init();
+		}
 
-		protected override void setupInput() {
-			ActorInput = new AutoInput(this);
+		protected override void setupInput()
+		{
+			_actorInput = _autoInput;
 		}
 
 		protected override void setupComponents() {
@@ -54,17 +59,18 @@
 			addComponent(new MotionComp(this));
 			addComponent(new BeHurtComp(this));
 			addComponent(new VFXComp(this));
+			addComponent(new HateComp(this));
 		}
 
 		protected override void onTick(float dt)
 		{
 			if (Actor.IsPlayerControl)
 			{
-				ActorInput = _manualInput;
+				_actorInput = _manualInput;
 			}
 			else
 			{
-				ActorInput = _autoInput;
+				_actorInput = _autoInput;
 			}
 		}
 	}

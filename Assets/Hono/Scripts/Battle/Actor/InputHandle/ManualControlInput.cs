@@ -8,7 +8,9 @@ namespace Hono.Scripts.Battle
     /// </summary>
     public class ManualControlInput : AutoInput
     {
-        public ManualControlInput(ActorLogic logic) : base(logic)
+        public ManualControlInput(ActorLogic logic) : base(logic) { }
+
+        protected override void onInit()
         {
             InputManager.Instance.AddMoveCallBack(onMove);
             InputManager.Instance.AddMoveEndCallBack(onMoveEnd);

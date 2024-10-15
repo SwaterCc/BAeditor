@@ -1,0 +1,4 @@
+﻿Id,描述,场景路径,最大队伍数量,战斗类型
+Id,Desc,ScenePath,TeamCount,BattleType
+int,string,string,int,int
+1,战斗测试,Scenes/BattleScene/BattleGroundTest,2,

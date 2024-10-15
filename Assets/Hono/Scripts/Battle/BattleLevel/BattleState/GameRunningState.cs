@@ -32,6 +32,8 @@ namespace Hono.Scripts.Battle
                     _roundController.SwitchState(ERoundState.Ready);
                 }
                 
+                BattleGroundHandle._pawnTeamController.Tick(dt);
+                
                 _roundController.Tick(dt);
             }
 

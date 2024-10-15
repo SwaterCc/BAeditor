@@ -14,6 +14,12 @@ namespace Hono.Scripts.Battle
         public void OnEnterBattleGroundFirstTime()
         {
             getModelSetup().SetupModel(this, onLoadFinish);
+            
+            if (Model.TryGetComponent<ActorModel>(out var component))
+            {
+                component.ActorType = EActorType.BattleLevelController;
+                component.ActorUid = Uid;
+            }
         }
 
         private void onLoadFinish()

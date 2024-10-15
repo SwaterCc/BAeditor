@@ -19,6 +19,7 @@ namespace Hono.Scripts.Battle
                 {
                     BattleManager.BattleController.RunAbility(abilityId);
                 }
+                
             }
 
             protected override void onTick(float dt)

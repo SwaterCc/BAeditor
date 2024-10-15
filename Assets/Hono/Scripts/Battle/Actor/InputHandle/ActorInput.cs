@@ -6,18 +6,25 @@ namespace Hono.Scripts.Battle
     {
         protected ActorLogic Logic { get; }
 
-        private readonly ActorLogic.SkillComp _skillComp;
+        private ActorLogic.SkillComp _skillComp;
         protected ActorLogic.SkillComp SkillComp => _skillComp;
 
-        protected bool NoSkillComp { get; }
+        protected bool NoSkillComp { get; private set; }
 
         public Vector3 MoveInputValue { get; protected set; }
 
         protected ActorInput(ActorLogic logic)
         {
             Logic = logic;
-            NoSkillComp = logic.TryGetComponent(out _skillComp);
         }
+
+        public void Init()
+        {
+            NoSkillComp = !Logic.TryGetComponent(out _skillComp);
+            onInit();
+        }
+
+        protected virtual void onInit() { }
 
         public void Tick(float dt)
         {

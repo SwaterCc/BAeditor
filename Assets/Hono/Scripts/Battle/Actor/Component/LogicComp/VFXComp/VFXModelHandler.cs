@@ -52,7 +52,8 @@ namespace Hono.Scripts.Battle {
 
 		private async UniTask loadGameObject(VFXObject vfxObject) {
 			try {
-				var obj = await Addressables.LoadAssetAsync<GameObject>(vfxObject.Setting.VFXPath);
+				//var obj = await Addressables.LoadAssetAsync<GameObject>(vfxObject.Setting.VFXPath);
+				var obj = await Addressables.LoadAssetAsync<GameObject>("Assets/BattleData/VFX/test.prefab");
 				if (vfxObject.Setting.VFXBindType == EVFXType.BindActorBone) {
 					if (_effectPoints.TryGetValue(vfxObject.Setting.BoneName, out var parent)) {
 						obj = Instantiate(obj, parent);

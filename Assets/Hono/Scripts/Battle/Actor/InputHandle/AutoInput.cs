@@ -9,10 +9,7 @@ namespace Hono.Scripts.Battle
     /// </summary>
     public class AutoInput : ActorInput
     {
-        public AutoInput(ActorLogic logic) : base(logic)
-        {
-            _noHateComp = logic.TryGetComponent(out _hateComp);
-        }
+        public AutoInput(ActorLogic logic) : base(logic) { }
 
 
         private bool _noHateComp;
@@ -20,6 +17,11 @@ namespace Hono.Scripts.Battle
         protected ActorLogic.HateComp HateComp => _hateComp;
 
         private float _useSkillDt;
+
+        protected override void onInit()
+        {
+            _noHateComp = !Logic.TryGetComponent(out _hateComp);
+        }
 
         //遍历主动技能
         //如果有可以释放的则释放技能
@@ -36,44 +38,48 @@ namespace Hono.Scripts.Battle
             Vector3 moveTargetPos;
             bool hasMove = false;
 
-            if (TryGetWayPoint(out moveTargetPos))
+            var curPos = Logic.Actor.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+            var disPrecision = 0.1f;
+            
+            if (TryGetWayPoint(curPos, out moveTargetPos))
             {
                 hasMove = true;
             }
             else if (TryGetHateTarget(out moveTargetPos))
             {
+                disPrecision = 3f;
                 hasMove = true;
             }
             else if (TryGetOriginPos(out moveTargetPos))
             {
+                disPrecision = 0.2f;
                 hasMove = true;
             }
 
             if (hasMove)
             {
-                var curPos = Logic.Actor.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-                MoveInputValue = (moveTargetPos - curPos).normalized;
+                MoveInputValue = Vector3.Distance(moveTargetPos, curPos) > disPrecision ? (moveTargetPos - curPos).normalized : Vector3.zero;
                 return;
             }
-            
+
             MoveInputValue = Vector3.zero;
         }
 
         /// <summary>
         /// 路点移动
         /// </summary>
+        /// <param name="curPos"></param>
         /// <param name="targetPos"></param>
         /// <returns></returns>
-        private bool TryGetWayPoint(out Vector3 targetPos)
+        private bool TryGetWayPoint(Vector3 curPos, out Vector3 targetPos)
         {
             targetPos = Vector3.zero;
             List<Vector3> wayPoints = (List<Vector3>)Logic.Actor.Variables.Get("WayPoints");
 
             if (wayPoints is { Count: > 0 })
             {
-                var curPos = Logic.Actor.GetAttr<Vector3>(ELogicAttr.AttrPosition);
                 targetPos = wayPoints.First();
-                if (Vector3.Distance(curPos, targetPos) < 0.5f)
+                if (Vector3.Distance(curPos, targetPos) < 0.1f)
                 {
                     wayPoints.RemoveAt(0);
                     if (wayPoints.Count == 0)
@@ -122,13 +128,13 @@ namespace Hono.Scripts.Battle
         /// <returns></returns>
         private bool TryGetOriginPos(out Vector3 targetPos)
         {
-            targetPos = Logic.Actor.GetAttr<Vector3>(ELogicAttr.AttrOriginPos);;
+            targetPos = Logic.Actor.GetAttr<Vector3>(ELogicAttr.AttrOriginPos);
             return true;
         }
 
         protected virtual void AutoUseSkill()
         {
-            if (NoSkillComp) return;
+            if (SkillComp == null) return;
 
             if (SkillComp.BeforeUsedSkill is { IsExecuting: true }) return;
 
@@ -150,7 +156,7 @@ namespace Hono.Scripts.Battle
             AutoMove();
 
             _useSkillDt += dt;
-            if (!(_useSkillDt > 0.5f)) return;
+            if (!(_useSkillDt > 1.5f)) return;
 
             AutoUseSkill();
             _useSkillDt = 0;

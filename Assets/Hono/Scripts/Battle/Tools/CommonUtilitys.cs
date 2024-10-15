@@ -133,6 +133,11 @@ namespace Hono.Scripts.Battle.Tools {
 					continue;
 				}
 
+				if (handle.ActorType == EActorType.BattleLevelController)
+				{
+					continue;
+				}
+
 				actorIds ??= new List<int>();
 				actorIds.Add(handle.ActorUid);
 			}

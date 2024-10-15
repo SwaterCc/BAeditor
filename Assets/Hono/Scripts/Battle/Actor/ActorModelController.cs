@@ -79,10 +79,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 模型加载完成
         /// </summary>
-        protected virtual void onModelLoadFinish()
-        {
-           
-        }
+        protected virtual void onModelLoadFinish() { }
 
         /// <summary>
         /// ActorModel实例化到场景中
@@ -92,6 +89,12 @@ namespace Hono.Scripts.Battle
             if (!IsSceneModel)
             {
                 _model = Object.Instantiate(_model);
+
+                if (Model.TryGetComponent<ActorModel>(out var component))
+                {
+                    component.ActorType = Actor.ActorType;
+                    component.ActorUid = Uid;
+                }
             }
         }
 

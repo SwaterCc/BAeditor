@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
+    [ExecuteInEditMode]
     public class SceneActorModel : ActorModel
     {
         private BattleLevelData _levelData;

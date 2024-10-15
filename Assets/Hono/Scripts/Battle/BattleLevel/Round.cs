@@ -107,12 +107,14 @@ namespace Hono.Scripts.Battle
             
             public void SwitchState(ERoundState nextState)
             {
+                Debug.Log($"[RoundState] switchState Next {nextState}");
                 _nextState = nextState;
             }
 
             public void RoundCountAdd()
             {
                 _roundIndex++;
+                Debug.Log($"[RoundState] RoundCountAdd NextRound {_roundIndex}");
             }
 
             public void Tick(float dt)

@@ -12,13 +12,14 @@ namespace Hono.Scripts.Battle
         {
             private AsyncOperation _asyncOperation;
             private bool _isSetupScene;
+            private float _timeCounting;
             
             public LoadBattleGroundState(BattleGround battleGround, EBattleStateType stateType) : base(battleGround,
                 stateType) { }
 
-            protected override async void onEnter()
+            protected override void onEnter()
             {
-                SceneManager.LoadScene(0);
+                SceneManager.LoadScene(1);
                 _isSetupScene = false;
                 _asyncOperation = SceneManager.LoadSceneAsync(BattleGroundHandle._battleGroundName);
                 _asyncOperation.allowSceneActivation = false;
@@ -30,27 +31,34 @@ namespace Hono.Scripts.Battle
                 
                 if (!_isSetupScene)
                     setupScene();
-                
-                if(BattleGroundHandle._pawnTeamController.PawnLoadFinish)
-                    BattleGroundHandle.switchState(EBattleStateType.Playing);
+
+                Debug.Log($"[setupSceneTime] {Time.realtimeSinceStartup - _timeCounting }");
+                BattleGroundHandle.switchState(EBattleStateType.Playing);
             }
 
             private void setupScene()
             {
                 _isSetupScene = true;
+                _timeCounting = Time.realtimeSinceStartup;
                 
                 //第一时间把战场控制的Model放到Scene中
                 BattleManager.BattleController.ModelController.OnEnterBattleGroundFirstTime();
 
                 //加载BattleLevelData
                 BattleGroundHandle._levelData = Object.FindObjectOfType<BattleLevelData>();
-
+                if (BattleGroundHandle == null)
+                {
+                    Debug.LogError("当前场景缺少BattleLevelData");
+                    return;
+                }
+                
                 //创建场景Actor
                 foreach (var sceneActorModel in BattleGroundHandle._levelData.SceneActorModels)
                 {
                     ActorManager.Instance.CreateSceneActor(sceneActorModel, 0, initPawnDefaultBirthPoint);
                 }
                 
+                //创建初始队伍
                 BattleGroundHandle._pawnTeamController.CreatePawnTeams();
             }
 

@@ -10,6 +10,7 @@ namespace Hono.Scripts.Battle
         private PawnTeamState _curControlTeam;
         private readonly BattleGround _battleGround;
         public bool PawnLoadFinish { get; private set; }
+        private bool _pawnLoadFinishFirst = true;
 
         public PawnTeamController(BattleGround battleGround)
         {
@@ -33,7 +34,6 @@ namespace Hono.Scripts.Battle
         
         public void CreatePawnTeams()
         {
-            PawnLoadFinish = false;
             foreach (var teamState in _teamStates)
             {
                 if (_battleGround.TryGetTeamPoint(teamState.TeamIndex, out var centerPos))
@@ -57,11 +57,6 @@ namespace Hono.Scripts.Battle
             foreach (var teamState in _teamStates)
             {
                 teamState.OnTick(dt);
-
-                if (!PawnLoadFinish)
-                {
-                    PawnLoadFinish = PawnLoadFinish && teamState.TeamLoadFinish;
-                }
             }
         }
     }

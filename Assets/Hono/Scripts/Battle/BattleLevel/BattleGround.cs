@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
         private readonly Dictionary<EBattleStateType, BattleState> _battleStates;
 
         private BattleLevelData _levelData;
-        private PawnTeamController _pawnTeamController;
+        private readonly PawnTeamController _pawnTeamController;
         private bool _isScoreSuccess;
         private readonly Dictionary<int, Vector3> _birthPoint = new(BattleConstValue.TeamMaxCount);
         public BattleGroundRtInfo RuntimeInfo { get; }
@@ -35,11 +35,17 @@ namespace Hono.Scripts.Battle
                 { EBattleStateType.Playing, new GameRunningState(this, EBattleStateType.Playing) },
                 { EBattleStateType.Score, new ScoreState(this, EBattleStateType.Score) },
             };
+
+            _currentStateType = EBattleStateType.NoGaming;
+            _currentState = _battleStates[_currentStateType];
         }
 
         public void OnCreate() { }
 
-        public void EnterGround() { }
+        public void EnterGround()
+        {
+            switchState(EBattleStateType.BuildTeams);
+        }
 
         public void OnDestroy()
         {
@@ -49,25 +55,21 @@ namespace Hono.Scripts.Battle
 
         private void switchState(EBattleStateType nextStateType)
         {
+            Debug.Log($"[BattleState] switchState Next {nextStateType}");
             _nextStateType = nextStateType;
         }
 
-        public bool TryGetTeamPoint(int teamIdx,out Vector3 centerPos)
+        public bool TryGetTeamPoint(int teamIdx, out Vector3 centerPos)
         {
             return _birthPoint.TryGetValue(teamIdx, out centerPos);
-        }
-        
-        public void Update(float dt)
-        {
-            ///临时放置在这里
-            ActorManager.Instance.Update(dt);
         }
 
         public void Tick(float dt)
         {
             ///临时放置在这里
             ActorManager.Instance.Tick(dt);
-            _pawnTeamController.Tick(dt);
+            ///临时放置在这里
+            ActorManager.Instance.Update(dt);
             
             if (_currentState == null) return;
 

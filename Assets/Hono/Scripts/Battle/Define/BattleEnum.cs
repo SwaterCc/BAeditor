@@ -134,6 +134,13 @@ namespace Hono.Scripts.Battle
         TeamRefreshPoint,
     }
 
+    public enum EActorRunningState
+    {
+        NotExist,
+        Loading,
+        Active,
+    }
+    
     public enum EDamageElementType
     {
         Physical = 1,

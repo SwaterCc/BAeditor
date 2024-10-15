@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle
 
             private void onEventFired(IEventInfo eventInfo)
             {
-	            Debug.Log($"[Ability] ActorUid {_executor.Ability.Actor.Uid} AbilityId:{_executor.AbilityData.ConfigId} EventNodeFired nodeId {NodeId}");
+	            //Debug.Log($"[Ability] ActorUid {_executor.Ability.Actor.Uid} AbilityId:{_executor.AbilityData.ConfigId} EventNodeFired nodeId {NodeId}");
 	            _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
 	            eventInfo.SetFieldsInAbilityVariables(_executor.Ability);
 	            DoChildrenJob();

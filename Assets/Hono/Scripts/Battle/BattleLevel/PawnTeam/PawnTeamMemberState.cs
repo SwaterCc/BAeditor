@@ -30,13 +30,16 @@ namespace Hono.Scripts.Battle
             CurStateType = _actorConfigId <= 0 ? EPawnTeamMemberStateType.Empty : EPawnTeamMemberStateType.Normal;
         }
 
-        public void CreateMember(Vector3 centerPos)
+        public void CreateMember()
         {
             _actorUid = ActorManager.Instance.CreateActor(EActorType.Pawn, _actorConfigId, (actor) =>
             {
                 actor.OnModelLoadFinish += (_) => IsLoadFinish = true;
                 actor.OnTickCallBack += onPawnTick;
                 actor.OnDestroyCallBack += onPawnDead;
+
+                actor.SetAttr(ELogicAttr.AttrPosition, TeamState.GetMemberTeamPos(MemberIndex), false);
+                actor.SetAttr(ELogicAttr.AttrRot, Quaternion.identity, false);
             });
         }
         

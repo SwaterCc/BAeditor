@@ -13,11 +13,13 @@ namespace Hono.Scripts.Battle
             {
                 if (BattleGroundHandle._isScoreSuccess)
                 {
-                    BattleUIInterface.CallUI("battleScoreSuccessUI", null, onUIClose);
+                    //BattleUIInterface.CallUI("battleScoreSuccessUI", null, onUIClose);
+                    onUIClose(null);
                 }
                 else
                 {
-                    BattleUIInterface.CallUI("battleScoreFailedUI", null, onUIClose);
+                    //BattleUIInterface.CallUI("battleScoreFailedUI", null, onUIClose);
+                    onUIClose(null);
                 }
             }
 

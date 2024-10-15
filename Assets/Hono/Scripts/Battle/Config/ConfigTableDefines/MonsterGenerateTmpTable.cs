@@ -74,42 +74,42 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
-            /// 描述
+            /// ����
             /// </summary>
             public string Desc { get; private set; }
             
             /// <summary>
-            /// 延迟时间
+            /// �ӳ�ʱ��
             /// </summary>
             public float DelayTime { get; private set; }
             
             /// <summary>
-            /// 创建间隔
+            /// �������
             /// </summary>
             public float Interval { get; private set; }
             
             /// <summary>
-            /// 怪物列表，按顺序刷新
+            /// �����б����˳��ˢ�£�ActorType=configId=������
             /// </summary>
             public IntTable MonsterInfos { get; private set; }
             
             /// <summary>
-            /// 创建时添加的buff
+            /// ����ʱ��ӵ�buff
             /// </summary>
             public IntTable ExBuffs { get; private set; }
             
             /// <summary>
-            /// 额外的技能
+            /// ����ļ���
             /// </summary>
             public IntTable ExSkills { get; private set; }
             
             /// <summary>
-            /// 阵营覆盖
+            /// ��Ӫ����
             /// </summary>
             public int FactionId { get; private set; }
             
             /// <summary>
-            /// 额外Tag
+            /// ����Tag
             /// </summary>
             public IntArray ExTags { get; private set; }
             

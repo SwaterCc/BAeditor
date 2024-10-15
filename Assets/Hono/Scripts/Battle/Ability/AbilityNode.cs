@@ -57,7 +57,7 @@ namespace Hono.Scripts.Battle {
 						}
 					}
 					
-					Debug.Log($"[Ability] AbilityId:{_executor.AbilityData.ConfigId} nodeId {NodeId} NodeType {NodeType} DoChildrenJob Next Node is {node.NodeType} : {node.NodeId}");
+					//Debug.Log($"[Ability] AbilityId:{_executor.AbilityData.ConfigId} nodeId {NodeId} NodeType {NodeType} DoChildrenJob Next Node is {node.NodeType} : {node.NodeId}");
 					node.DoJob();
 				}
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -8,32 +9,57 @@ namespace Hono.Scripts.Battle
 
     public interface IUIPassData { };
 
-    public class BattleUIHandle : MonoBehaviour
+    public abstract class BattleUIHandle : MonoBehaviour
     {
-        public void OnUIInterfaceCalled(ISendToUIData sendData, Action<IUIPassData> onUICloseCallBack) { }
-    };
+        public ISendToUIData Data;
+        private Action<IUIPassData> _onUICloseCallBack;
+            
+        public virtual void OnUIInterfaceCalled(ISendToUIData sendData, Action<IUIPassData> onUICloseCallBack )
+        {
+            Data = sendData;
+            _onUICloseCallBack = onUICloseCallBack;
+            gameObject.SetActive(true);
+        }
 
+        protected abstract IUIPassData returnPassData();
+
+        protected abstract void onActiveFalse();
+        
+        public void OnDisable()
+        {
+            onActiveFalse();
+            _onUICloseCallBack.Invoke(returnPassData());
+        }
+    }
+    
     public static class BattleUIInterface
     {
-        public static bool CallUI(string uiName, ISendToUIData sendData = null,
-            Action<IUIPassData> onUICloseCallBack = null)
+        public static bool CallUI<T>(ISendToUIData sendData = null,
+            Action<IUIPassData> onUICloseCallBack = null) where T : BattleUIHandle
         {
-            var battleUIHandles = Object.FindObjectsByType<BattleUIHandle>(FindObjectsSortMode.InstanceID);
-            if (battleUIHandles == null || battleUIHandles.Length == 0)
+            var canvas = Object.FindObjectOfType<Canvas>();
+
+            if (canvas == null)
             {
+                Debug.LogError("找不到 Canvas");
                 return false;
             }
-
+            
             bool sendMsgAny = false;
-            foreach (var handle in battleUIHandles)
+            foreach (Transform child in canvas.transform)
             {
-                if (handle.name == uiName)
+                if (child.gameObject.TryGetComponent<T>(out var handle))
                 {
                     handle.OnUIInterfaceCalled(sendData, onUICloseCallBack);
                     sendMsgAny = true;
                 }
             }
-
+            
+            if (!sendMsgAny)
+            {
+                Debug.LogError($"找不到指定UI name : {nameof(T)}");
+            }
+            
             return sendMsgAny;
         }
     }

@@ -1,4 +1,5 @@
 using Hono.Scripts.Battle.Event;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -24,6 +25,7 @@ namespace Hono.Scripts.Battle
             public void Enter()
             {
                 _stateDuration = 0;
+                Debug.Log($"[RoundState] RoundState Enter {GetRoundState()}");
                 onEnter();
             }
 
@@ -40,6 +42,7 @@ namespace Hono.Scripts.Battle
             public void Exit()
             {
                 onExit();
+                Debug.Log($"[RoundState] RoundState Exit {GetRoundState()}");
             }
             protected abstract void onExit();
         }

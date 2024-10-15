@@ -31,9 +31,13 @@ namespace Hono.Scripts.Battle
             switch (objectType)
             {
                 case EPreLoadGameObjectType.BattleRootModel:
-                    return "Assets/BattleData/Tools/BattleRoot.prefab";
+                    return BattleConstValue.BattleRootModel;
                 case EPreLoadGameObjectType.BulletModel:
-                    return "Assets/BattleData/Tools/BulletModel.prefab";
+                    return BattleConstValue.BulletModel;
+                case EPreLoadGameObjectType.HitBoxModel:
+                    return BattleConstValue.HitBoxModel;
+                case EPreLoadGameObjectType.TeamRefreshPoint:
+                    return BattleConstValue.TeamRefreshPoint;
             }
 
             return null;
@@ -41,6 +45,12 @@ namespace Hono.Scripts.Battle
 
         private async UniTask loadGameObject(EPreLoadGameObjectType element)
         {
+            string path = getObjectPath(element);
+            if (string.IsNullOrEmpty(path)) 
+            {
+                Debug.LogError($"{element} 路径为空");
+                return;
+            }
             var uObj = await Addressables.LoadAssetAsync<GameObject>(getObjectPath(element)).ToUniTask();
             _objectCaches.Add(element, uObj);
         }

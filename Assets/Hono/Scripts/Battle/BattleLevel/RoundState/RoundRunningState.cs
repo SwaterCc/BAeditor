@@ -53,26 +53,28 @@ namespace Hono.Scripts.Battle
                 {
                     _checkDt = 0;
 
-                    bool successFlag = true;
+                    int successCount = 0;
                     foreach (var successCondition in _frameCheck)
                     {
-                        successFlag = successFlag && checkCondition(successCondition);
+                        if (checkCondition(successCondition))
+                        {
+                            ++successCount;
+                        }
                     }
-                    if (successFlag)
+                    if (successCount == _frameCheck.Count && successCount != 0)
                     {
                         Round.SwitchState(ERoundState.SuccessScoring);
                         return;
                     }
 
-                    bool failed = true;
+                    
                     foreach (var failedCondition in CurrentRoundData.FailedConditions)
                     {
-                        failed = failed && checkCondition(failedCondition);
-                    }
-                    if (failed)
-                    {
-                        Round.SwitchState(ERoundState.FailedScoring);
-                        return;
+                        if (checkCondition(failedCondition))
+                        {
+                            Round.SwitchState(ERoundState.FailedScoring);
+                            return;
+                        }
                     }
                 }
 

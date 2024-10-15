@@ -10,16 +10,17 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 正在运行的actor列表
         /// </summary>
-        private readonly List<Actor> _runningActorList = new();
+        private readonly List<Actor> _runningActorList = new(512);
 
         /// <summary>
         /// actor字典
         /// </summary>
-        private readonly Dictionary<int, Actor> _uidActorDict = new();
+        private readonly Dictionary<int, Actor> _uidActorDict = new(512);
 
+        private readonly Dictionary<int, Actor> _loadingCaches = new(128);
         private readonly List<Actor> _removeList = new(16);
         private readonly List<Actor> _addCaches = new(16);
-        private readonly List<Actor> _loadingCaches = new(16);
+
 
         public ActorManager()
         {
@@ -85,8 +86,8 @@ namespace Hono.Scripts.Battle
             }
 
             afterSetupCall?.Invoke(actor);
-            
-            _loadingCaches.Add(actor);
+
+            _loadingCaches.Add(actor.Uid, actor);
 
             return actor;
         }
@@ -151,9 +152,9 @@ namespace Hono.Scripts.Battle
             {
                 foreach (var actor in _loadingCaches)
                 {
-                    if (actor.ActorSetupFinish)
+                    if (actor.Value.ActorSetupFinish)
                     {
-                        _addCaches.Add(actor);
+                        _addCaches.Add(actor.Value);
                     }
                 }
             }
@@ -163,7 +164,7 @@ namespace Hono.Scripts.Battle
                 foreach (var actor in _addCaches)
                 {
                     //从加载列表里删除
-                    _loadingCaches.Remove(actor);
+                    _loadingCaches.Remove(actor.Uid);
                     _runningActorList.Add(actor);
                     _uidActorDict.Add(actor.Uid, actor);
                     actor.Init();
@@ -200,19 +201,29 @@ namespace Hono.Scripts.Battle
 
         public Actor GetActor(int uid)
         {
-            if (_uidActorDict.TryGetValue(uid, out var actor))
-            {
-                return actor;
-            }
-
-            return null;
+            return _uidActorDict.TryGetValue(uid, out var actor) ? actor : _loadingCaches.GetValueOrDefault(uid);
         }
 
         public bool TryGetActor(int uid, out Actor actor)
         {
-            return _uidActorDict.TryGetValue(uid, out actor);
+            return _loadingCaches.TryGetValue(uid, out actor) || _uidActorDict.TryGetValue(uid, out actor);
         }
 
+        public EActorRunningState GetActorRtState(int uid)
+        {
+            if (_loadingCaches.ContainsKey(uid))
+            {
+                return EActorRunningState.Loading;
+            }
+
+            if (_uidActorDict.ContainsKey(uid))
+            {
+                return EActorRunningState.Active;
+            }
+
+            return EActorRunningState.NotExist;
+        }
+        
         public void RemoveActor(int actorUid)
         {
             if (_uidActorDict.TryGetValue(actorUid, out var actor))

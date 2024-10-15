@@ -61,12 +61,11 @@ namespace Hono.Scripts.Battle {
 		/// <summary>
 		/// 输入来源
 		/// </summary>
-		protected ActorInput ActorInput;
+		protected ActorInput _actorInput;
 
 		public ActorLogic(Actor actor) {
 			Actor = actor;
 			Uid = actor.Uid;
-			ActorInput = new NoInput(this);
 			_stateMachine = new ActorStateMachine(this);
 			_components = new Dictionary<Type, ALogicComponent>();
 		}
@@ -91,12 +90,17 @@ namespace Hono.Scripts.Battle {
 			foreach (var component in _components) {
 				component.Value.Init();
 			}
-
+			
 			_stateMachine?.Init();
+			_actorInput?.Init();
 		}
 
 		protected virtual void setupAttrs() { }
-		protected virtual void setupInput() { }
+
+		protected virtual void setupInput()
+		{
+			_actorInput = new NoInput(this);
+		}
 		protected virtual void setupStateMachine() { }
 		protected virtual void onInit() { }
 		protected virtual void setupComponents() { }
@@ -133,7 +137,8 @@ namespace Hono.Scripts.Battle {
 			}
 
 			_stateMachine.Tick(dt);
-
+			_actorInput.Tick(dt);
+			
 			onTick(dt);
 		}
 

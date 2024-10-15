@@ -66,11 +66,17 @@ namespace Hono.Scripts.Battle
         public static BattleController BattleController => Instance._battleController;
         public static BattleGround CurrentBattleGround => Instance._groundStack.Count > 0 ? Instance._groundStack.Peek() : null;
 
+
+        protected void Start()
+        {
+           SetupBattleFramework();
+        }
+
         #region 框架初始化
 
         private void register(IBattleFramework framework)
         {
-            if (_frameworks.Contains(framework))
+            if (!_frameworks.Contains(framework))
             {
                 _frameworks.Add(framework);
             }
@@ -140,7 +146,7 @@ namespace Hono.Scripts.Battle
 
         private async void asyncFrameworkLoad()
         {
-            var beginTime = Time.time;
+            var beginTime = Time.realtimeSinceStartup;
             _battleDataLoadState = EBattleDataLoadState.Loading;
             List<UniTask> tasks = new List<UniTask>();
 
@@ -161,7 +167,7 @@ namespace Hono.Scripts.Battle
             }
 
             _battleDataLoadState = EBattleDataLoadState.LoadFinish;
-            Debug.LogError($"战斗数据加载完成！耗时 {Time.time - beginTime}");
+            Debug.LogError($"战斗数据加载完成！耗时 {Time.realtimeSinceStartup - beginTime}");
         }
 
         #endregion
@@ -179,13 +185,16 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public void PushBattleGround(int battleGroundId, bool useSave = false)
         {
-            _waitEnterGround = new BattleGround("battleLevelName");
+            Debug.Log($"[BattleManager] PushBattleGround");
+            var row = ConfigManager.Table<BattleSceneTable>().Get(battleGroundId);
+            _waitEnterGround = new BattleGround(row.ScenePath);
             _waitEnterGround.OnCreate();
         }
 
         public void PopBattleGround()
         {
             _popTopGround = _groundStack.Count != 0;
+            Debug.Log("[BattleManager] PopBattleGround");
         }
 
         private void onSwitchBattleGround()
@@ -198,6 +207,8 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public void ExitBattle()
         {
+            Debug.Log("[BattleManager] ExitBattle");
+            
             foreach (var framework in _frameworkEnterExits)
             {
                 framework.OnExitBattle();
@@ -259,6 +270,7 @@ namespace Hono.Scripts.Battle
         private void Update()
         {
             Tick(Time.deltaTime);
+            
         }
 
         #endregion
