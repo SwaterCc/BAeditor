@@ -12,6 +12,7 @@ namespace Hono.Scripts.Battle
         protected override void onInit()
         {
             ActorType = EActorType.MonsterGenerator;
+            name = $"MonsterGenerator:{ActorUid}";
         }
 
         public List<Vector3> GetWayPoint()

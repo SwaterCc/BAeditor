@@ -5,7 +5,7 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
 {
     public class CameraMove : MonoBehaviour
     {
-        public GameObject followActor;
+        public Actor followActor;
 
         private Vector3 originPos;
         
@@ -16,8 +16,13 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
 
         public void Update()
         {
-            if(followActor == null) return;
-            transform.localPosition = originPos + followActor.transform.position;
+            var curBattleGround = BattleManager.CurrentBattleGround;
+            if (curBattleGround == null) return;
+            
+            followActor = ActorManager.Instance.GetActor(curBattleGround.RuntimeInfo.LeaderUid);
+            if (followActor == null) return;
+            
+            transform.localPosition = originPos + followActor.Pos;
         }
     }
 }

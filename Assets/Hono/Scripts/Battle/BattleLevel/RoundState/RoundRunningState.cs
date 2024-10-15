@@ -80,19 +80,20 @@ namespace Hono.Scripts.Battle
 
                 _checkDt += dt;
 
-                if (CurrentRoundData.RunningCheckTime > 0 && Duration > CurrentRoundData.RunningCheckTime)
+                if (!(CurrentRoundData.RunningCheckTime > 0)) return;
+                
+                Round.GameRunningState.BattleGroundHandle.RuntimeInfo.CurRoundLastTime = CurrentRoundData.RunningCheckTime - Duration;
+                
+                if(Duration <= CurrentRoundData.RunningCheckTime) return;
+                foreach (var condition in _finalTimeCheck)
                 {
-                   
-                    foreach (var condition in _finalTimeCheck)
+                    if (!checkCondition(condition))
                     {
-                        if (!checkCondition(condition))
-                        {
-                            Round.SwitchState(ERoundState.FailedScoring);
-                            return;
-                        }
+                        Round.SwitchState(ERoundState.FailedScoring);
+                        return;
                     }
-                    Round.SwitchState(ERoundState.SuccessScoring);
                 }
+                Round.SwitchState(ERoundState.SuccessScoring);
             }
 
             private void firstTick()

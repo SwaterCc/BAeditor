@@ -57,9 +57,6 @@ namespace Hono.Scripts.Battle
                 {
                     ActorManager.Instance.CreateSceneActor(sceneActorModel, 0, initPawnDefaultBirthPoint);
                 }
-                
-                //创建初始队伍
-                BattleGroundHandle._pawnTeamController.CreatePawnTeams();
             }
 
             //收集出生点

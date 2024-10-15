@@ -4,29 +4,18 @@ namespace Hono.Scripts.Battle
 {
     public partial class ActorLogic
     {
-        public class MoveState : AState
+        public class MoveState : ActorLogicState
         {
             private float _baseSpeed;
             private MotionComp _motionComp;
             
-            public MoveState(ActorStateMachine machine, ActorLogic actorLogicLogic) : base(machine, actorLogicLogic) { }
-
-            protected override EActorState getStateType()
-            {
-                return EActorState.Move;
-            }
+            public MoveState(ActorStateMachine machine, EActorLogicStateType stateType) : base(machine, stateType) { }
 
             public override void Init()
             {
-                _transDict[EActorState.Battle].Add(new AStateTransform(EActorState.Battle));
-                _transDict[EActorState.Death].Add(new AStateTransform(EActorState.Death));
-                _transDict[EActorState.Idle].Add(new AStateTransform(EActorState.Idle,() => _actorLogic._actorInput.MoveInputValue.magnitude == 0));
-                _transDict[EActorState.Stiff].Add(new AStateTransform(EActorState.Stiff));
-
                 _baseSpeed = _actorLogic.GetAttr<float>(ELogicAttr.AttrBaseSpeed);
                 _motionComp = _actorLogic.GetComponent<MotionComp>();
             }
-
 
             protected override void onTick(float dt)
             {
@@ -44,6 +33,19 @@ namespace Hono.Scripts.Battle
                 {
                     _actorLogic.SetAttr(ELogicAttr.AttrRot, curRot, false);
                 }
+            }
+
+            public override bool TryGetAutoSwitchState(out EActorLogicStateType next)
+            {
+                next = StateType;
+
+                if (Mathf.Approximately(_actorLogic._actorInput.MoveInputValue.magnitude, 0))
+                {
+                    next = EActorLogicStateType.Idle;
+                    return true;
+                }
+
+                return false;
             }
         }
     }

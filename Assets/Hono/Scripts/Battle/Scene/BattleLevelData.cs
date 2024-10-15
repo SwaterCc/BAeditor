@@ -18,7 +18,7 @@ namespace Hono.Scripts.Battle.Scene
         public bool CanRepeatRound;
         
         [LabelText("波次信息")]
-        [ListDrawerSettings(ShowFoldout = true)]
+        [ListDrawerSettings(ShowFoldout = true,NumberOfItemsPerPage = 1)]
         public List<RoundData> RoundDatas = new();
 
 

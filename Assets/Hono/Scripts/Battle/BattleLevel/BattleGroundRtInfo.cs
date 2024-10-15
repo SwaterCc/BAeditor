@@ -30,6 +30,14 @@ namespace Hono.Scripts.Battle
 
         //来自玩家阵营的击杀数（玩家Uid，击杀数量）整场战斗
         private readonly Dictionary<int, int> _pawnKilledCountInBattle = new(16);
+        
+        public ERoundState CurRoundState { get; set; }
+        
+        public float CurRoundLastTime { get; set; }
+
+        public int CurRoundCount { get; set; }
+
+        public int LeaderUid { get; set; }
 
         public int GetRoundSurvivalFaction(int factionId)
         {
@@ -48,12 +56,12 @@ namespace Hono.Scripts.Battle
 
         public int GetRoundPawnKill(int uid)
         {
-            return uid >= 0 ? _pawnKilledCount.GetValueOrDefault(uid, 0) : _pawnKilledCount.Sum(pair => pair.Value);
+            return uid > 0 ? _pawnKilledCount.GetValueOrDefault(uid, 0) : _pawnKilledCount.Sum(pair => pair.Value);
         }
 
         public int GetBattlePawnKill(int uid)
         {
-            return uid >= 0 ? _pawnKilledCount.GetValueOrDefault(uid, 0) : _pawnKilledCount.Sum(pair => pair.Value);
+            return uid > 0 ? _pawnKilledCount.GetValueOrDefault(uid, 0) : _pawnKilledCount.Sum(pair => pair.Value);
         }
 
         /// <summary>
@@ -107,7 +115,7 @@ namespace Hono.Scripts.Battle
         /// 来自刷怪器的怪物死亡时的回调
         /// </summary>
         /// <param name="actor"></param>
-        public void OnGenMonsterDead(Actor actor)
+        public void OnActorDead(Actor actor)
         {
             var factionId = actor.GetAttr<int>(ELogicAttr.AttrFaction);
             if (_curFactionActorCount.ContainsKey(factionId) && _curFactionActorCount[factionId] > 0)
@@ -169,14 +177,18 @@ namespace Hono.Scripts.Battle
                     _deadFactionActorCountInBattle[factionInfo.Key] -= factionInfo.Value;
                 }
             }
+            _deadFactionActorCount.Clear();
 
-            foreach (var killInfo in _deadFactionActorCount)
+            foreach (var killInfo in _pawnKilledCount)
             {
                 if (_pawnKilledCountInBattle.ContainsKey(killInfo.Key))
                 {
                     _pawnKilledCount[killInfo.Key] -= killInfo.Value;
                 }
             }
+            _pawnKilledCount.Clear();
+            
+            _curFactionActorCount.Clear();
         }
 
         public void ClearAll()

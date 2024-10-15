@@ -50,8 +50,15 @@ namespace Hono.Scripts.Battle
             addComponent(new BuffComp(this,() => MonsterConfig.OwnerBuffs));
             addComponent(new SkillComp(this, () => MonsterConfig.OwnerSkills));
             addComponent(new VFXComp(this));
+            addComponent(new MotionComp(this));
+            addComponent(new HateComp(this));
         }
 
+        protected override void setupStateMachine()
+        {
+	        _stateMachine = new ActorStateMachine(this);
+        }
+        
         protected override void setupInput()
         {
 	        _actorInput = new AutoInput(this);

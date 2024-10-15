@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle
 
             protected virtual void onEnter() { }
 
-            public virtual void Tick(float dt)
+            public void Tick(float dt)
             {
                 foreach (var timer in _timerNodes)
                 {

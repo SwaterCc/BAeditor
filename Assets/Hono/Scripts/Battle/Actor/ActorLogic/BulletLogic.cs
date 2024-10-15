@@ -54,8 +54,6 @@ namespace Hono.Scripts.Battle
             AbilityController.AwardAbility(_bulletData.Id, true);
         }
 
-        protected override void setupInput() { }
-
         protected override void setupComponents()
         {
             _motionComp = new MotionComp(this);

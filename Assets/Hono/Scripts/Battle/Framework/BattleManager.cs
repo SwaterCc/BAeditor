@@ -167,7 +167,7 @@ namespace Hono.Scripts.Battle
             }
 
             _battleDataLoadState = EBattleDataLoadState.LoadFinish;
-            Debug.LogError($"战斗数据加载完成！耗时 {Time.realtimeSinceStartup - beginTime}");
+            Debug.Log($"战斗数据加载完成！耗时 {Time.realtimeSinceStartup - beginTime}");
         }
 
         #endregion
@@ -228,7 +228,7 @@ namespace Hono.Scripts.Battle
         {
             if (_battleDataLoadState != EBattleDataLoadState.LoadFinish)
             {
-                Debug.LogError($"战斗数据未准备完成 当前状态{_battleDataLoadState}");
+                //Debug.LogError($"战斗数据未准备完成 当前状态{_battleDataLoadState}");
                 return;
             }
 
@@ -264,6 +264,8 @@ namespace Hono.Scripts.Battle
                 {
                     onSwitchBattleGround();
                 }
+
+                _popTopGround = false;
             }
         }
         

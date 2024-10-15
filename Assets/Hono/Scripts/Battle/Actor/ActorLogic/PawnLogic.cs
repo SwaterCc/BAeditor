@@ -1,14 +1,11 @@
 ﻿namespace Hono.Scripts.Battle {
-	public class PawnLogic : ActorLogic {
-		
-		private readonly ActorInput _autoInput;
+	public class PawnLogic : ActorLogic
+	{
 
-		private readonly ActorInput _manualInput;
+		private PawnControlInput _pawnControlInput;
 		
 		public PawnLogic(Actor actor) : base(actor) {
 			PawnLogicRow = ConfigManager.Table<PawnLogicTable>().Get(Actor.ConfigId);
-			_autoInput = new AutoInput(this);
-			_manualInput = new ManualControlInput(this);
 		}
 		
 		public PawnLogicTable.PawnLogicRow PawnLogicRow { get; }
@@ -41,15 +38,11 @@
 			SetAttr(ELogicAttr.AttrElementPhysicalPenPCTAdd, attrRow.AttrElementPhysicalPenPCTAdd, false);
 			SetAttr(ELogicAttr.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd, false);
 		}
-
-		protected override void onInit()
-		{
-			_manualInput.Init();
-		}
-
+		
 		protected override void setupInput()
 		{
-			_actorInput = _autoInput;
+			_pawnControlInput = new PawnControlInput(this);;
+			_actorInput = _pawnControlInput;
 		}
 
 		protected override void setupComponents() {
@@ -62,16 +55,14 @@
 			addComponent(new HateComp(this));
 		}
 
+		protected override void setupStateMachine()
+		{
+			_stateMachine = new ActorStateMachine(this);
+		}
+
 		protected override void onTick(float dt)
 		{
-			if (Actor.IsPlayerControl)
-			{
-				_actorInput = _manualInput;
-			}
-			else
-			{
-				_actorInput = _autoInput;
-			}
+			_pawnControlInput.OpenManualControl = Actor.IsPlayerControl;
 		}
 	}
 }

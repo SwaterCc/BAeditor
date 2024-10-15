@@ -58,7 +58,7 @@ namespace Hono.Scripts.Battle
                         checkResult = actor.HasTag(range.Value);
                         break;
                     case EFilterRangeType.ActorState:
-                        checkResult = actor.Logic.CurState() == (EActorState)range.Value;
+                        checkResult = actor.Logic.CurState() == (EActorLogicStateType)range.Value;
                         break;
                     case EFilterRangeType.AbilityID:
                         checkResult = actor.HasAbility(range.Value);

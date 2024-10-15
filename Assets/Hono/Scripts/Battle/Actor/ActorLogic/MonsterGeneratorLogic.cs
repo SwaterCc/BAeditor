@@ -97,7 +97,7 @@ namespace Hono.Scripts.Battle
 
         private void onActorSetup(Actor actor)
         {
-            actor.OnDestroyCallBack += BattleManager.CurrentBattleGround.RuntimeInfo.OnGenMonsterDead;
+            actor.OnDestroyCallBack += BattleManager.CurrentBattleGround.RuntimeInfo.OnActorDead;
 
             if (actor.Logic.TryGetComponent<BeHurtComp>(out var hurtComp))
             {
@@ -130,6 +130,8 @@ namespace Hono.Scripts.Battle
                 actor.SetAttr(ELogicAttr.AttrFaction, _templateRow.FactionId, false);
             }
 
+            //actor.OnTickCallBack += self => self.SetAttr(ELogicAttr.AttrOriginPos, Actor.Pos, false); 
+            actor.SetAttr(ELogicAttr.AttrOriginPos, Actor.Pos, false); 
             actor.SetAttr(ELogicAttr.AttrPosition, Actor.Pos, false);
             actor.SetAttr(ELogicAttr.AttrRot, Actor.Rot, false);
         }

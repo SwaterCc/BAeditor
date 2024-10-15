@@ -120,37 +120,37 @@ namespace Hono.Scripts.Battle
                 }
             }
 
-            public void UseSkillByEvent(IEventInfo eventInfo)
+            private void UseSkillByEvent(IEventInfo eventInfo)
             {
-                UseSkill(((UsedSkillEventInfo)eventInfo).SkillId);
+                TryUseSkill(((UsedSkillEventInfo)eventInfo).SkillId);
             }
 
-            public void UseSkill(int skillId)
+            public bool TryUseSkill(int skillId)
             {
                 Debug.Log($"[UseSkill] Actor{Actor.Uid} -->尝试执行技能 {skillId}");
                 
-                if (!_skills.TryGetValue(skillId, out var skillState))
+                if (!_skills.TryGetValue(skillId, out var skill))
                 {
-                    return;
+                    return false;
                 }
 
                 if (_beforeUsedSkill != null)
                 {
-                    if (_beforeUsedSkill.IsExecuting && _beforeUsedSkill < skillState)
+                    if (_beforeUsedSkill.IsExecuting && _beforeUsedSkill < skill)
                     {
                         Debug.Log($"[skill] 技能{_beforeUsedSkill.Id} 还在执行中");
-                        return;
+                        return false;
                     }
                 }
 
-                if (skillState.TryUseSkill())
+                if (skill.TryUseSkill())
                 {
-                    _beforeUsedSkill = skillState;
+                    _beforeUsedSkill = skill;
+                    return true;
                 }
-                else
-                {
-                    skillState.SendFailedMsg();
-                }
+
+                skill.SendFailedMsg();
+                return false;
             }
         }
     }

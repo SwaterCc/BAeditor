@@ -58,11 +58,7 @@ namespace Hono.Scripts.Battle {
 
 			_filterSetting = _hitBoxData.FilterSetting;
 		}
-
-		protected override void setupInput() {
-			
-		}
-
+		
 		protected override void setupComponents() { }
 
 		private void hitCounter(BeHurtComp beHurtComp) {

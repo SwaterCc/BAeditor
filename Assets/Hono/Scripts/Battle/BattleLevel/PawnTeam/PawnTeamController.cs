@@ -9,7 +9,7 @@ namespace Hono.Scripts.Battle
         private readonly List<PawnTeamState> _teamStates;
         private PawnTeamState _curControlTeam;
         private readonly BattleGround _battleGround;
-        public bool PawnLoadFinish { get; private set; }
+        
         private bool _pawnLoadFinishFirst = true;
 
         public PawnTeamController(BattleGround battleGround)
@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle
             _curControlTeam = _teamStates[index];
             _curControlTeam.OnPlayerControlChange(true);
         }
-
+        
         public void Tick(float dt)
         {
             foreach (var teamState in _teamStates)

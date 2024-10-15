@@ -54,7 +54,7 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// 当前是否为最后一轮
             /// </summary>
-            public bool IsFinalRound => _roundIndex >= _allRoundData.Count - 1;
+            public bool IsFinalRound => _roundIndex >= _allRoundData.Count;
 
             /// <summary>
             /// 是否初始化下个阶段的数据
@@ -113,7 +113,8 @@ namespace Hono.Scripts.Battle
 
             public void RoundCountAdd()
             {
-                _roundIndex++;
+                ++_roundIndex;
+                BattleManager.CurrentBattleGround.RuntimeInfo.CurRoundCount = _roundIndex;
                 Debug.Log($"[RoundState] RoundCountAdd NextRound {_roundIndex}");
             }
 

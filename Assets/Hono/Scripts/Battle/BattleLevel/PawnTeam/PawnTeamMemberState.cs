@@ -9,7 +9,7 @@ namespace Hono.Scripts.Battle
         
         public bool IsLeader;
         
-        public int _actorUid;
+        private int _actorUid;
 
         private readonly int _actorConfigId;
 
@@ -32,6 +32,11 @@ namespace Hono.Scripts.Battle
 
         public void CreateMember()
         {
+            if (_actorConfigId == -1)
+            {
+                return;
+            }
+            
             _actorUid = ActorManager.Instance.CreateActor(EActorType.Pawn, _actorConfigId, (actor) =>
             {
                 actor.OnModelLoadFinish += (_) => IsLoadFinish = true;
@@ -40,6 +45,7 @@ namespace Hono.Scripts.Battle
 
                 actor.SetAttr(ELogicAttr.AttrPosition, TeamState.GetMemberTeamPos(MemberIndex), false);
                 actor.SetAttr(ELogicAttr.AttrRot, Quaternion.identity, false);
+                BattleManager.CurrentBattleGround.RuntimeInfo.AddFactionActorCount(actor.GetAttr<int>(ELogicAttr.AttrFaction));
             });
         }
         
@@ -59,12 +65,21 @@ namespace Hono.Scripts.Battle
                 TeamState.PassingLeader();
             }
             CurStateType = EPawnTeamMemberStateType.Dead;
+            
+            if (BattleManager.CurrentBattleGround != null)
+            {
+                BattleManager.CurrentBattleGround.RuntimeInfo.OnActorDead(actor);
+            }
         }
 
         public void SetPlayerControlFlag(bool isControl)
         {
             var actor = ActorManager.Instance.GetActor(_actorUid);
             actor.IsPlayerControl = isControl;
+            if (isControl)
+            {
+                BattleManager.CurrentBattleGround.RuntimeInfo.LeaderUid = actor.Uid;
+            }
         }
     }
 }

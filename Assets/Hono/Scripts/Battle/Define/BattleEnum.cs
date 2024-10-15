@@ -528,11 +528,11 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// 状态机枚举
     /// </summary>
-    public enum EActorState
+    public enum EActorLogicStateType
     {
         Idle,
         Move,
-        Battle,
+        Skill,
         Stiff,
         Death
     }

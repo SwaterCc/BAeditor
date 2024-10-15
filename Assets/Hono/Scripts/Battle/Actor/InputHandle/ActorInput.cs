@@ -5,12 +5,7 @@ namespace Hono.Scripts.Battle
     public abstract class ActorInput
     {
         protected ActorLogic Logic { get; }
-
-        private ActorLogic.SkillComp _skillComp;
-        protected ActorLogic.SkillComp SkillComp => _skillComp;
-
-        protected bool NoSkillComp { get; private set; }
-
+        
         public Vector3 MoveInputValue { get; protected set; }
 
         protected ActorInput(ActorLogic logic)
@@ -20,7 +15,6 @@ namespace Hono.Scripts.Battle
 
         public void Init()
         {
-            NoSkillComp = !Logic.TryGetComponent(out _skillComp);
             onInit();
         }
 

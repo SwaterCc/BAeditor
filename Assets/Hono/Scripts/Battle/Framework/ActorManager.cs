@@ -66,7 +66,7 @@ namespace Hono.Scripts.Battle
                         new BulletLogic(actor));
                     break;
                 case EActorType.HitBox:
-                    actor.Setup(new SimplePreLoadModelController(actor, EPreLoadGameObjectType.BulletModel),
+                    actor.Setup(new SimplePreLoadModelController(actor, EPreLoadGameObjectType.HitBoxModel),
                         new HitBoxLogic(actor));
                     break;
                 case EActorType.MonsterGenerator:

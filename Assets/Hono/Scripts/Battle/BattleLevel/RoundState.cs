@@ -27,6 +27,8 @@ namespace Hono.Scripts.Battle
                 _stateDuration = 0;
                 Debug.Log($"[RoundState] RoundState Enter {GetRoundState()}");
                 onEnter();
+                if(GetRoundState() != ERoundState.NoRunning)
+                    BattleManager.CurrentBattleGround.RuntimeInfo.CurRoundState = GetRoundState();
             }
 
             protected abstract void onEnter();

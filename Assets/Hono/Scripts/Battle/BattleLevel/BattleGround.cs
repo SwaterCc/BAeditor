@@ -50,7 +50,7 @@ namespace Hono.Scripts.Battle
         public void OnDestroy()
         {
             RuntimeInfo.ClearAll();
-            //
+            ActorManager.Instance.ClearAllActor();
         }
 
         private void switchState(EBattleStateType nextStateType)

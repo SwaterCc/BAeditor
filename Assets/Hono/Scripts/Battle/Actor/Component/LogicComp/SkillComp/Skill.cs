@@ -45,7 +45,7 @@ namespace Hono.Scripts.Battle {
 			private void onAbilityBegin()
 			{
 				_isExecuting = true;
-				_logic._stateMachine.ChangeState(EActorState.Battle);
+				_logic._stateMachine.SwitchState(EActorLogicStateType.Skill);
 				if (Data.CostType == EResCostType.BeforeExecute)
 				{
 					resourceCost();
@@ -69,7 +69,7 @@ namespace Hono.Scripts.Battle {
 					CdBegin();
 				}
 				
-				_logic._stateMachine.ChangeState(EActorState.Idle);
+				_logic._stateMachine.SwitchState(EActorLogicStateType.Idle);
 				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillStop,
 					new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
 			}

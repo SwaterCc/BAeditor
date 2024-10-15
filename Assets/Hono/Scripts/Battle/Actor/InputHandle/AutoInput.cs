@@ -10,17 +10,14 @@ namespace Hono.Scripts.Battle
     public class AutoInput : ActorInput
     {
         public AutoInput(ActorLogic logic) : base(logic) { }
-
-
-        private bool _noHateComp;
-        private ActorLogic.HateComp _hateComp;
-        protected ActorLogic.HateComp HateComp => _hateComp;
-
+        
+        private ActorLogic.SkillComp _skillComp;
+        
         private float _useSkillDt;
 
         protected override void onInit()
         {
-            _noHateComp = !Logic.TryGetComponent(out _hateComp);
+            Logic.TryGetComponent(out _skillComp);
         }
 
         //遍历主动技能
@@ -33,21 +30,19 @@ namespace Hono.Scripts.Battle
             //其次移动向仇恨目标
             //技能期间不会移动
             //玩家角色除了手操角色以外
-            if (Logic.CurState() == EActorState.Battle) return;
+            if (Logic.CurState() == EActorLogicStateType.Skill) return;
 
-            Vector3 moveTargetPos;
             bool hasMove = false;
 
             var curPos = Logic.Actor.GetAttr<Vector3>(ELogicAttr.AttrPosition);
             var disPrecision = 0.1f;
-            
-            if (TryGetWayPoint(curPos, out moveTargetPos))
-            {
-                hasMove = true;
-            }
-            else if (TryGetHateTarget(out moveTargetPos))
+            if (TryGetHateTarget(out var moveTargetPos))
             {
                 disPrecision = 3f;
+                hasMove = true;
+            }
+            else if (TryGetWayPoint(curPos, out  moveTargetPos))
+            {
                 hasMove = true;
             }
             else if (TryGetOriginPos(out moveTargetPos))
@@ -105,9 +100,7 @@ namespace Hono.Scripts.Battle
         private bool TryGetHateTarget(out Vector3 targetPos)
         {
             targetPos = Vector3.zero;
-
-            if (_noHateComp) return false;
-
+            
             var hateTargetUid = Logic.Actor.GetAttr<int>(ELogicAttr.AttrHateTargetUid);
 
             if (hateTargetUid <= 0)
@@ -134,11 +127,11 @@ namespace Hono.Scripts.Battle
 
         protected virtual void AutoUseSkill()
         {
-            if (SkillComp == null) return;
+            if (_skillComp == null) return;
 
-            if (SkillComp.BeforeUsedSkill is { IsExecuting: true }) return;
+            if (_skillComp.BeforeUsedSkill is { IsExecuting: true }) return;
 
-            foreach (var pSkill in SkillComp.Skills)
+            foreach (var pSkill in _skillComp.Skills)
             {
                 var skill = pSkill.Value;
                 if (!skill.IsEnable)
@@ -147,7 +140,10 @@ namespace Hono.Scripts.Battle
                     continue;
                 if (skill.Data.SkillType == ESkillType.UltimateSkill)
                     continue;
-                SkillComp.UseSkill(skill.Id);
+                if (_skillComp.TryUseSkill(skill.Id))
+                {
+                    return;
+                }
             }
         }
 

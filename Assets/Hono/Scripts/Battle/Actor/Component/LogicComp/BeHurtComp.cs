@@ -41,6 +41,11 @@ namespace Hono.Scripts.Battle
                 if (hitDamageInfo.IsKillTarget)
                 {
 	                OnHitKillActorCallBack?.Invoke(Actor, hitDamageInfo);
+	                ActorLogic._stateMachine.SwitchState(EActorLogicStateType.Death);
+                }
+                else
+                {
+	                ActorLogic._stateMachine.SwitchState(EActorLogicStateType.Stiff);
                 }
             }
         }

@@ -13,6 +13,10 @@
             {
                 if (!(Duration > CurrentRoundData.SucessScoringStageTime)) return;
                 
+                Round.GameRunningState.BattleGroundHandle.RuntimeInfo.CurRoundLastTime = CurrentRoundData.SucessScoringStageTime - Duration;
+                
+                Round.RoundCountAdd();
+                
                 if (Round.IsFinalRound)
                 {
                     Round.SwitchState(ERoundState.NoRunning);
@@ -22,7 +26,6 @@
                 else
                 {
                     //进入下一个轮次
-                    Round.RoundCountAdd();
                     Round.SwitchState(ERoundState.Ready);
                 }
             }

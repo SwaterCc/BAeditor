@@ -14,6 +14,8 @@
             {
                 if (!(Duration > CurrentRoundData.FailedScoringStageTime)) return;
 
+                Round.GameRunningState.BattleGroundHandle.RuntimeInfo.CurRoundLastTime = CurrentRoundData.FailedScoringStageTime - Duration;
+                
                 if (Round.CanRepeat)
                 {
                     Round.GameRunningState.BattleGroundHandle.RuntimeInfo.RepeatRound();
