@@ -127,7 +127,7 @@ namespace Hono.Scripts.Battle
 
             public bool TryUseSkill(int skillId)
             {
-                Debug.Log($"[UseSkill] Actor{Actor.Uid} -->尝试执行技能 {skillId}");
+                //Debug.Log($"[UseSkill] Actor{Actor.Uid} -->尝试执行技能 {skillId}");
                 
                 if (!_skills.TryGetValue(skillId, out var skill))
                 {
@@ -138,7 +138,7 @@ namespace Hono.Scripts.Battle
                 {
                     if (_beforeUsedSkill.IsExecuting && _beforeUsedSkill < skill)
                     {
-                        Debug.Log($"[skill] 技能{_beforeUsedSkill.Id} 还在执行中");
+                        //Debug.Log($"[skill] 技能{_beforeUsedSkill.Id} 还在执行中");
                         return false;
                     }
                 }

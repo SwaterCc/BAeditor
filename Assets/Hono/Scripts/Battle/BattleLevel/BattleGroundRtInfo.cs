@@ -183,7 +183,7 @@ namespace Hono.Scripts.Battle
             {
                 if (_pawnKilledCountInBattle.ContainsKey(killInfo.Key))
                 {
-                    _pawnKilledCount[killInfo.Key] -= killInfo.Value;
+                    _pawnKilledCountInBattle[killInfo.Key] -= killInfo.Value;
                 }
             }
             _pawnKilledCount.Clear();
