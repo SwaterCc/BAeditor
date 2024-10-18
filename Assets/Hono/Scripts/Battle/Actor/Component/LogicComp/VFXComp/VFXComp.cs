@@ -10,11 +10,13 @@ namespace Hono.Scripts.Battle {
 		/// 视觉特效
 		/// </summary>
 		public class VFXComp : ALogicComponent {
-			protected readonly CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
-			private Dictionary<int,VFXObject> _vfxs = new();
+			//特效组件的唯一Id生成器
+			private static readonly CommonUtility.IdGenerator IDGenerator = CommonUtility.GetIdGenerator();
+			
+			private readonly Dictionary<int,VFXObject> _vfxs = new(32);
 			public Dictionary<int,VFXObject> VFXObjects => _vfxs;
 
-			private List<VFXObject> _removeList = new();
+			private readonly List<VFXObject> _removeList = new(32);
 			
 			public Action<VFXObject> VFXAdd;
 			public Action<VFXObject> VFXRemove;
@@ -23,7 +25,7 @@ namespace Hono.Scripts.Battle {
 			public override void Init() { }
 
 			public int AddVFXObject(VFXSetting setting) {
-				var vfxObj = new VFXObject(_idGenerator.GenerateId(), setting);
+				var vfxObj = new VFXObject(IDGenerator.GenerateId(), setting);
 
 				switch (setting.VFXBindType) {
 					case EVFXType.InWorld:
@@ -45,7 +47,7 @@ namespace Hono.Scripts.Battle {
 					AddVFXToList(vfxObj);
 				}
 				else {
-					BattleManager.BattleController.AddWorldVFX(vfxObj);
+					BattleManager.BattleController.VFXComp?.AddVFXToList(vfxObj);
 				}
 
 				return vfxObj.Uid;
@@ -57,7 +59,7 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public void RemoveVFX(int key) {
-				if (_vfxs.TryGetValue(key,out var obj)) {
+				if (_vfxs.TryGetValue(key, out var obj)) {
 					onRemove(obj);
 				}
 			}
@@ -82,6 +84,7 @@ namespace Hono.Scripts.Battle {
 				foreach (var obj in _removeList) {
 					onRemove(obj);
 				}
+				_removeList.Clear();
 			}
 		}
 	}

@@ -89,7 +89,12 @@ namespace Hono.Scripts.Battle
             public float Interval { get; private set; }
             
             /// <summary>
-            /// �����б����˳��ˢ�£�ActorType=configId=������
+            /// ���δ����������
+            /// </summary>
+            public int MaxCreationOnce { get; private set; }
+            
+            /// <summary>
+            /// �����б����˳��ˢ��
             /// </summary>
             public IntTable MonsterInfos { get; private set; }
             
@@ -137,15 +142,17 @@ namespace Hono.Scripts.Battle
             
                     _row.Interval = parseNumber(line[3]);
             
-                    _row.MonsterInfos = parseIntTable(line[4]);
+                    _row.MaxCreationOnce = parseInt(line[4]);
             
-                    _row.ExBuffs = parseIntTable(line[5]);
+                    _row.MonsterInfos = parseIntTable(line[5]);
             
-                    _row.ExSkills = parseIntTable(line[6]);
+                    _row.ExBuffs = parseIntTable(line[6]);
             
-                    _row.FactionId = parseInt(line[7]);
+                    _row.ExSkills = parseIntTable(line[7]);
             
-                    _row.ExTags = parseIntArray(line[8]);
+                    _row.FactionId = parseInt(line[8]);
+            
+                    _row.ExTags = parseIntArray(line[9]);
             
                 }
             }

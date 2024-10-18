@@ -25,7 +25,7 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public override void DoJob() {
-				if (!_repeatNodeData.MaxRepeatCount.Parse(out _maxCount))
+				if (!_repeatNodeData.MaxRepeatCount.Parse(_executor.Ability, out _maxCount))
 				{
 					Debug.LogError("Foreach节点执行错误");
 				}

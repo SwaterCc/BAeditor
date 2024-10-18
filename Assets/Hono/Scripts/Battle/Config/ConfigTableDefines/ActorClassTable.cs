@@ -74,6 +74,16 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
+            /// 职业名字
+            /// </summary>
+            public string ClassName { get; private set; }
+            
+            /// <summary>
+            /// 职业描述
+            /// </summary>
+            public string Desc { get; private set; }
+            
+            /// <summary>
             /// 职业类型
             /// </summary>
             public int ActorClassType { get; private set; }
@@ -82,6 +92,11 @@ namespace Hono.Scripts.Battle
             /// 职业技能
             /// </summary>
             public IntTable Skills { get; private set; }
+            
+            /// <summary>
+            /// 副职业技能
+            /// </summary>
+            public IntTable SubClassSkill { get; private set; }
             
             /// <summary>
             /// 职业Buff
@@ -106,11 +121,17 @@ namespace Hono.Scripts.Battle
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.ActorClassType = parseInt(line[1]);
+                    _row.ClassName = parseString(line[1]);
             
-                    _row.Skills = parseIntTable(line[2]);
+                    _row.Desc = parseString(line[2]);
             
-                    _row.Buffs = parseIntArray(line[3]);
+                    _row.ActorClassType = parseInt(line[3]);
+            
+                    _row.Skills = parseIntTable(line[4]);
+            
+                    _row.SubClassSkill = parseIntTable(line[5]);
+            
+                    _row.Buffs = parseIntArray(line[6]);
             
                 }
             }

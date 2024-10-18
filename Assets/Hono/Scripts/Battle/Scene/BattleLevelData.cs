@@ -10,7 +10,9 @@ namespace Hono.Scripts.Battle.Scene
     public class BattleLevelData : MonoBehaviour
     {
         #region 场景数据
-
+		[LabelText("初始战斗资源")]	
+        public int InitRPCount;
+        
         [LabelText("场景对象")]
         public List<SceneActorModel> SceneActorModels = new();
         
@@ -20,8 +22,7 @@ namespace Hono.Scripts.Battle.Scene
         [LabelText("波次信息")]
         [ListDrawerSettings(ShowFoldout = true,NumberOfItemsPerPage = 1)]
         public List<RoundData> RoundDatas = new();
-
-
+        
         #endregion
 
 

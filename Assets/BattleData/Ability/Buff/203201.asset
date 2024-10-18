@@ -1591,7 +1591,7 @@ MonoBehaviour:
       Data: 77|System.Single, mscorlib
     - Name: 
       Entry: 4
-      Data: 15
+      Data: 10
     - Name: 
       Entry: 8
       Data: 
@@ -1753,7 +1753,7 @@ MonoBehaviour:
       Data: 85|System.Single, mscorlib
     - Name: 
       Entry: 4
-      Data: 10
+      Data: 5
     - Name: 
       Entry: 8
       Data: 

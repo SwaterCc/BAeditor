@@ -79,6 +79,11 @@ namespace Hono.Scripts.Battle
             public string Desc { get; private set; }
             
             /// <summary>
+            /// 模型半径
+            /// </summary>
+            public float ModelRadius { get; private set; }
+            
+            /// <summary>
             /// 模型路径
             /// </summary>
             public string ModelPath { get; private set; }
@@ -108,9 +113,11 @@ namespace Hono.Scripts.Battle
                     
                     _row.Desc = parseString(line[1]);
             
-                    _row.ModelPath = parseString(line[2]);
+                    _row.ModelRadius = parseNumber(line[2]);
             
-                    _row.AnimTemplateId = parseString(line[3]);
+                    _row.ModelPath = parseString(line[3]);
+            
+                    _row.AnimTemplateId = parseString(line[4]);
             
                 }
             }

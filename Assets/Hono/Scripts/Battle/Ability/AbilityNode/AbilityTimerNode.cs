@@ -31,19 +31,19 @@ namespace Hono.Scripts.Battle
                 _count = 0;
                 _isFirst = true;
                 
-                if (!_timerData.FirstInterval.Parse(out _firstInterval))
+                if (!_timerData.FirstInterval.Parse(_executor.Ability,out _firstInterval))
                 {
                     Debug.LogError("Timer节点解析FirstInterval错误");
                     return;
                 }
                 
-                if (!_timerData.MaxCount.Parse(out _maxCount))
+                if (!_timerData.MaxCount.Parse(_executor.Ability,out _maxCount))
                 {
                     Debug.LogError("Timer节点解析MaxCount错误");
                     return;
                 }
                 
-                if (!_timerData.Interval.Parse(out _interval))
+                if (!_timerData.Interval.Parse(_executor.Ability,out _interval))
                 {
                     Debug.LogError("Timer节点解析Interval错误");
                     return;

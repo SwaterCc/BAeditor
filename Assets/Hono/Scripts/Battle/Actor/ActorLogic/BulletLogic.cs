@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Event;
+using Hono.UI.Battle;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -28,10 +29,14 @@ namespace Hono.Scripts.Battle
 
         protected override void onInit()
         {
-            _sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
+	        _sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
+	        if(!ActorManager.Instance.TryGetActor(_sourceActorId, out var summoner))
+	        {
+		        dead();
+		        return;
+	        }
+	        
             _bulletData = AssetManager.Instance.GetData<BulletData>(GetAttr<int>(ELogicAttr.AttrConfigId));
-
-            var summoner = ActorManager.Instance.GetActor(_sourceActorId);
             _targetUid = (int)(Variables.Get("targetUid"));
            
             var summonerPos = summoner.GetAttr<Vector3>(ELogicAttr.AttrPosition);
@@ -40,12 +45,13 @@ namespace Hono.Scripts.Battle
             var startPos = summonerPos + summonerRot * _bulletData.Offset;
 
             SetAttr(ELogicAttr.AttrPosition, startPos, false);
-            
-            var motionSetting = new MotionSetting()
+
+			var motionSetting = new MotionSetting()
             {
                 MoveType = _bulletData.MotionType,
                 Speed = _bulletData.BulletSpeed,
                 Duration = _bulletData.BulletLifeTime,
+				MovingFaceToTarget = true,
                 TriggerEventClose = true
             };
 
@@ -69,6 +75,7 @@ namespace Hono.Scripts.Battle
         
         protected override void onTick(float dt)
         {
+	        
             _duration += dt;
             if (_duration > _bulletData.BulletLifeTime)
             {
@@ -119,7 +126,10 @@ namespace Hono.Scripts.Battle
         
         private void onHit(int targetUid) {
             var attacker = ActorManager.Instance.GetActor(_sourceActorId);
-
+            if (attacker == null) {
+	            //命中时攻击者已经死了
+	            return;
+            }
             var damageInfo = new DamageInfo();
             damageInfo.SourceAbilityConfigId = _bulletData.Id;
             damageInfo.SourceAbilityType = EAbilityType.Bullet;
@@ -143,12 +153,14 @@ namespace Hono.Scripts.Battle
             var hitDamageInfo = new HitDamageInfo(hitInfo);
             hitDamageInfo.HitTargetUid = _targetUid;
             hitInfo.HitBoxHitCount = 1;
+			hitDamageInfo.ParseDamageResult(res);
+			BattlePanel.ShowDamage(target.Pos,res);
             hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
             BattleEventManager.Instance.TriggerActorEvent(Actor.Uid, EBattleEventType.OnHitDamage, hitDamageInfo);
 			
             beHurtComp.OnBeHurt(hitDamageInfo);
         }
-
+        
         private void onBulletCollision(int uid)
         {
             if (!ActorManager.Instance.CheckActorPassFilter(Actor, uid, _bulletData.FilterSetting))

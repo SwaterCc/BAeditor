@@ -104,6 +104,16 @@ namespace Hono.Scripts.Battle
             public int AttrDefenseAdd { get; private set; }
             
             /// <summary>
+            /// 基础移动速度
+            /// </summary>
+            public float AttrBaseSpeed { get; private set; }
+            
+            /// <summary>
+            /// 移动速度万分比
+            /// </summary>
+            public int AttrMoveSpeedPCTAdd { get; private set; }
+            
+            /// <summary>
             /// 防御穿透
             /// </summary>
             public int AttrIgnoreDefenseAdd { get; private set; }
@@ -139,7 +149,7 @@ namespace Hono.Scripts.Battle
             public int AttrHealedAdd { get; private set; }
             
             /// <summary>
-            /// 攻击速度
+            /// 攻击速度加成
             /// </summary>
             public int AttrAttackSpeedPCTAdd { get; private set; }
             
@@ -218,39 +228,43 @@ namespace Hono.Scripts.Battle
             
                     _row.AttrDefenseAdd = parseInt(line[6]);
             
-                    _row.AttrIgnoreDefenseAdd = parseInt(line[7]);
+                    _row.AttrBaseSpeed = parseNumber(line[7]);
             
-                    _row.AttrIgnoreDefensePCTAdd = parseInt(line[8]);
+                    _row.AttrMoveSpeedPCTAdd = parseInt(line[8]);
             
-                    _row.AttrCritAdd = parseInt(line[9]);
+                    _row.AttrIgnoreDefenseAdd = parseInt(line[9]);
             
-                    _row.AttrCritDamageAdd = parseInt(line[10]);
+                    _row.AttrIgnoreDefensePCTAdd = parseInt(line[10]);
             
-                    _row.AttrHealIntensityAdd = parseInt(line[11]);
+                    _row.AttrCritAdd = parseInt(line[11]);
             
-                    _row.AttrHealAdd = parseInt(line[12]);
+                    _row.AttrCritDamageAdd = parseInt(line[12]);
             
-                    _row.AttrHealedAdd = parseInt(line[13]);
+                    _row.AttrHealIntensityAdd = parseInt(line[13]);
             
-                    _row.AttrAttackSpeedPCTAdd = parseInt(line[14]);
+                    _row.AttrHealAdd = parseInt(line[14]);
             
-                    _row.AttrElementPenPCTAdd = parseInt(line[15]);
+                    _row.AttrHealedAdd = parseInt(line[15]);
             
-                    _row.AttrElementRedPCTAdd = parseInt(line[16]);
+                    _row.AttrAttackSpeedPCTAdd = parseInt(line[16]);
             
-                    _row.AttrElementPhysicalPenPCTAdd = parseInt(line[17]);
+                    _row.AttrElementPenPCTAdd = parseInt(line[17]);
             
-                    _row.AttrElementPhysicalRedPCTAdd = parseInt(line[18]);
+                    _row.AttrElementRedPCTAdd = parseInt(line[18]);
             
-                    _row.AttrElementMagicPenPCTAdd = parseInt(line[19]);
+                    _row.AttrElementPhysicalPenPCTAdd = parseInt(line[19]);
             
-                    _row.AttrElementMagicRedPCTAdd = parseInt(line[20]);
+                    _row.AttrElementPhysicalRedPCTAdd = parseInt(line[20]);
             
-                    _row.AttrDmgAAdd = parseInt(line[21]);
+                    _row.AttrElementMagicPenPCTAdd = parseInt(line[21]);
             
-                    _row.AttrDmgRedAdd = parseInt(line[22]);
+                    _row.AttrElementMagicRedPCTAdd = parseInt(line[22]);
             
-                    _row.AttrSkillCDPCTAdd = parseInt(line[23]);
+                    _row.AttrDmgAAdd = parseInt(line[23]);
+            
+                    _row.AttrDmgRedAdd = parseInt(line[24]);
+            
+                    _row.AttrSkillCDPCTAdd = parseInt(line[25]);
             
                 }
             }

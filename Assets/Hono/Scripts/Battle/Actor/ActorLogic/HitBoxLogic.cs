@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
+using Hono.UI.Battle;
 
 namespace Hono.Scripts.Battle {
 	/// <summary>
@@ -40,7 +41,14 @@ namespace Hono.Scripts.Battle {
 			var attacker = ActorManager.Instance.GetActor(_sourceActorId);
 			_targetUid = (int)(Variables.Get("targetUid"));
 			var target = ActorManager.Instance.GetActor(_targetUid);
-			var pos = target.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+			Vector3 pos;
+			if (target == null) {
+				pos = (Vector3)(Variables.Get("targetPos"));
+			}
+			else {
+				pos = target.GetAttr<Vector3>(ELogicAttr.AttrPosition);
+			}
+			
 			SetAttr(ELogicAttr.AttrPosition, pos, false);
 			SetAttr(ELogicAttr.AttrRot, attacker.GetAttr<Quaternion>(ELogicAttr.AttrRot), false);
 			
@@ -128,6 +136,7 @@ namespace Hono.Scripts.Battle {
 			hitDamageInfo.ParseDamageResult(res);
 			hitDamageInfo.HitTargetUid = _targetUid;
 			hitInfo.HitBoxHitCount = 1;
+			BattlePanel.ShowDamage(beHurtComp.Actor.Pos, res);
 			hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
 			BattleEventManager.Instance.TriggerActorEvent(_sourceActorId, EBattleEventType.OnHitDamage, hitDamageInfo);
 			
@@ -138,7 +147,10 @@ namespace Hono.Scripts.Battle {
 			//aoe会根据目标坐标二次筛选
 			var targetIds = ActorManager.Instance.UseFilter(Actor, _filterSetting);
 			var finalTargets = new List<BeHurtComp>();
-			
+			if (targetIds == null) {
+				ActorManager.Instance.RemoveActor(this.Uid);
+				return;
+			}
 			foreach (var targetUid in targetIds) {
 				var target = ActorManager.Instance.GetActor(targetUid);
 				if (target == null)
@@ -160,7 +172,7 @@ namespace Hono.Scripts.Battle {
 				var hitDamageInfo = new HitDamageInfo(hitInfo);
 				hitDamageInfo.ParseDamageResult(res);
 				hitDamageInfo.HitTargetUid = beHurtComp.Actor.Uid;
-				
+				BattlePanel.ShowDamage(beHurtComp.Actor.Pos, res);
 				if (beHurtComp.Actor.GetAttr<int>(ELogicAttr.AttrInvincible) != 0) {
 					Debug.Log($"actor uid: {beHurtComp.Actor.Uid}  是无敌的");
 					hitDamageInfo.IsImmunity = true;
@@ -174,7 +186,10 @@ namespace Hono.Scripts.Battle {
 
 		private void onHit() {
 			var attacker = ActorManager.Instance.GetActor(_sourceActorId);
-
+			if (attacker == null) {
+				ActorManager.Instance.RemoveActor(Uid);
+			}
+			
 			var damageInfo = new DamageInfo();
 			damageInfo.SourceAbilityConfigId = _sourceAbilityConfigId;
 			damageInfo.SourceAbilityType = _sourceAbilityType;

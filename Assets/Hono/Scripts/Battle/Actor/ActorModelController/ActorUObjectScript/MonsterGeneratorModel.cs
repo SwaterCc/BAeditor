@@ -3,28 +3,19 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle
-{
-    public class MonsterGeneratorModel : SceneActorModel
-    {
-        public List<Transform> WayPoint = new ();
-        
-        protected override void onInit()
-        {
-            ActorType = EActorType.MonsterGenerator;
-            name = $"MonsterGenerator:{ActorUid}";
-        }
+namespace Hono.Scripts.Battle {
+	public class MonsterGeneratorModel : SceneActorModel {
+		public List<Transform> WayPoint = new();
 
-        public List<Vector3> GetWayPoint()
-        {
-            var result = new List<Vector3>();
+		protected override void onInit() {
+			ActorType = EActorType.MonsterGenerator;
+			name = $"MonsterGenerator:{ActorUid}";
+		}
 
-            foreach (var trans in WayPoint)
-            {
-                result.Add(trans.position);
-            }
-            
-            return result;
-        }
-    }
+		public void GetWayPoint(ref List<Vector3> wayPoints) {
+			foreach (var trans in WayPoint) {
+				wayPoints.Add(trans.position);
+			}
+		}
+	}
 }

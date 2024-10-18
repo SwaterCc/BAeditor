@@ -120,7 +120,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 11
+      Data: 9
     - Name: 
       Entry: 7
       Data: 
@@ -704,13 +704,13 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 570591827
+      Data: 900289960
     - Name: $v
       Entry: 7
       Data: 33|Hono.Scripts.Battle.ActionNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 570591827
+      Data: 900289960
     - Name: NodeType
       Entry: 3
       Data: 6
@@ -743,89 +743,20 @@ MonoBehaviour:
       Data: 35|Hono.Scripts.Battle.Parameter, Assembly-CSharp
     - Name: ParameterType
       Entry: 3
-      Data: 0
-    - Name: FuncName
-      Entry: 6
-      Data: 
-    - Name: FuncParams
-      Entry: 6
-      Data: 
-    - Name: Value
-      Entry: 6
-      Data: 
-    - Name: VairableName
-      Entry: 6
-      Data: 
-    - Name: AttrType
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 900289960
-    - Name: $v
-      Entry: 7
-      Data: 36|Hono.Scripts.Battle.ActionNodeData, Assembly-CSharp
-    - Name: NodeId
-      Entry: 3
-      Data: 900289960
-    - Name: NodeType
-      Entry: 3
-      Data: 6
-    - Name: ParentId
-      Entry: 3
-      Data: 1013830437
-    - Name: Depth
-      Entry: 3
-      Data: 2
-    - Name: BelongGroupId
-      Entry: 3
-      Data: -1
-    - Name: ChildrenIds
-      Entry: 7
-      Data: 37|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: Desc
-      Entry: 6
-      Data: 
-    - Name: Function
-      Entry: 7
-      Data: 38|Hono.Scripts.Battle.Parameter, Assembly-CSharp
-    - Name: ParameterType
-      Entry: 3
       Data: 1
     - Name: FuncName
       Entry: 1
       Data: CreateHitBoxToTargets
     - Name: FuncParams
       Entry: 7
-      Data: 39|System.Collections.Generic.List`1[[Hono.Scripts.Battle.Parameter,
+      Data: 36|System.Collections.Generic.List`1[[Hono.Scripts.Battle.Parameter,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
       Data: 1
     - Name: 
       Entry: 7
-      Data: 40|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+      Data: 37|Hono.Scripts.Battle.Parameter, Assembly-CSharp
     - Name: ParameterType
       Entry: 3
       Data: 0
@@ -837,7 +768,7 @@ MonoBehaviour:
       Data: 
     - Name: Value
       Entry: 7
-      Data: 41|Hono.Scripts.Battle.HitBoxData, Assembly-CSharp
+      Data: 38|Hono.Scripts.Battle.HitBoxData, Assembly-CSharp
     - Name: HitType
       Entry: 3
       Data: 0
@@ -861,7 +792,7 @@ MonoBehaviour:
       Data: 20700201
     - Name: AoeData
       Entry: 7
-      Data: 42|Hono.Scripts.Battle.CheckBoxData, Assembly-CSharp
+      Data: 39|Hono.Scripts.Battle.CheckBoxData, Assembly-CSharp
     - Name: ShapeType
       Entry: 3
       Data: 1
@@ -918,13 +849,16 @@ MonoBehaviour:
       Data: true
     - Name: FilterSetting
       Entry: 7
-      Data: 43|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+      Data: 40|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+    - Name: _isOnlyCondition
+      Entry: 5
+      Data: false
     - Name: OpenBoxCheck
       Entry: 5
       Data: true
     - Name: BoxData
       Entry: 7
-      Data: 44|Hono.Scripts.Battle.CheckBoxData, Assembly-CSharp
+      Data: 41|Hono.Scripts.Battle.CheckBoxData, Assembly-CSharp
     - Name: ShapeType
       Entry: 3
       Data: 1
@@ -984,7 +918,7 @@ MonoBehaviour:
       Data: false
     - Name: Ranges
       Entry: 7
-      Data: 45|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
+      Data: 42|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -1012,7 +946,7 @@ MonoBehaviour:
       Data: 
     - Name: Compares
       Entry: 7
-      Data: 46|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterAttrCompare,
+      Data: 43|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterAttrCompare,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -1073,79 +1007,10 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 105097568
-    - Name: $v
-      Entry: 7
-      Data: 47|Hono.Scripts.Battle.ActionNodeData, Assembly-CSharp
-    - Name: NodeId
-      Entry: 3
-      Data: 105097568
-    - Name: NodeType
-      Entry: 3
-      Data: 6
-    - Name: ParentId
-      Entry: 3
-      Data: 2091631844
-    - Name: Depth
-      Entry: 3
-      Data: 2
-    - Name: BelongGroupId
-      Entry: 3
-      Data: -1
-    - Name: ChildrenIds
-      Entry: 7
-      Data: 48|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: Desc
-      Entry: 6
-      Data: 
-    - Name: Function
-      Entry: 7
-      Data: 49|Hono.Scripts.Battle.Parameter, Assembly-CSharp
-    - Name: ParameterType
-      Entry: 3
-      Data: 0
-    - Name: FuncName
-      Entry: 6
-      Data: 
-    - Name: FuncParams
-      Entry: 6
-      Data: 
-    - Name: Value
-      Entry: 6
-      Data: 
-    - Name: VairableName
-      Entry: 6
-      Data: 
-    - Name: AttrType
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
       Data: 1173444022
     - Name: $v
       Entry: 7
-      Data: 50|Hono.Scripts.Battle.ActionNodeData, Assembly-CSharp
+      Data: 44|Hono.Scripts.Battle.ActionNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
       Data: 1173444022
@@ -1163,7 +1028,7 @@ MonoBehaviour:
       Data: -1
     - Name: ChildrenIds
       Entry: 7
-      Data: 51|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+      Data: 45|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 0
@@ -1178,7 +1043,7 @@ MonoBehaviour:
       Data: 
     - Name: Function
       Entry: 7
-      Data: 52|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+      Data: 46|Hono.Scripts.Battle.Parameter, Assembly-CSharp
     - Name: ParameterType
       Entry: 3
       Data: 1
@@ -1187,14 +1052,14 @@ MonoBehaviour:
       Data: AddBuff
     - Name: FuncParams
       Entry: 7
-      Data: 53|System.Collections.Generic.List`1[[Hono.Scripts.Battle.Parameter,
+      Data: 47|System.Collections.Generic.List`1[[Hono.Scripts.Battle.Parameter,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
       Data: 3
     - Name: 
       Entry: 7
-      Data: 54|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+      Data: 48|Hono.Scripts.Battle.Parameter, Assembly-CSharp
     - Name: ParameterType
       Entry: 3
       Data: 2
@@ -1206,7 +1071,7 @@ MonoBehaviour:
       Data: 
     - Name: Value
       Entry: 7
-      Data: 55|System.Int32, mscorlib
+      Data: 49|System.Int32, mscorlib
     - Name: 
       Entry: 3
       Data: 0
@@ -1224,7 +1089,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 56|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+      Data: 50|Hono.Scripts.Battle.Parameter, Assembly-CSharp
     - Name: ParameterType
       Entry: 3
       Data: 0
@@ -1236,7 +1101,7 @@ MonoBehaviour:
       Data: 
     - Name: Value
       Entry: 7
-      Data: 57|System.Int32, mscorlib
+      Data: 51|System.Int32, mscorlib
     - Name: 
       Entry: 3
       Data: 207201
@@ -1254,7 +1119,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 58|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+      Data: 52|Hono.Scripts.Battle.Parameter, Assembly-CSharp
     - Name: ParameterType
       Entry: 3
       Data: 0
@@ -1266,7 +1131,7 @@ MonoBehaviour:
       Data: 
     - Name: Value
       Entry: 7
-      Data: 59|System.Int32, mscorlib
+      Data: 53|System.Int32, mscorlib
     - Name: 
       Entry: 3
       Data: 1

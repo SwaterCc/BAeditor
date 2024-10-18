@@ -10,6 +10,7 @@ namespace Hono.Scripts.Battle
         public bool IsLeader;
         
         private int _actorUid;
+        public int ActorUid => _actorUid;
 
         private readonly int _actorConfigId;
 

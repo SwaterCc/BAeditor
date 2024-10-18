@@ -2,36 +2,59 @@
 Id,Desc,FormulaName,DamageRatio,DamageType,ElementType,ImpactValue,AdditiveId,MultiplyId,BeHitVFXPath
 int,string,string,int,int,int,int,intArray,intArray,string
 1,,NormalAttack,10000,1,1,99998,,222,
-100100101,剑盾-普攻,NormalAttack,10000,1,1,0,,,
-100200101,双手剑-普攻,NormalAttack,10000,1,1,0,,,
-100300101,法杖-普攻,NormalAttack,10000,1,2,0,,,
-100400101,棍-普攻,NormalAttack,10000,1,1,0,,,
-20100101,守卫-冲锋,NormalAttack,10000,1,1,0,,,
-20100201,守卫-顺劈斩,NormalAttack,15000,1,1,0,,,
-20100301,守卫-聚爆,NormalAttack,20000,1,1,0,,,
-20200101,战士-破碎挥砍,NormalAttack,15000,1,1,0,,,
-20200201,战士-脆弱打击,NormalAttack,20000,1,1,0,,,
-20200301,战士-毁灭斩击,NormalAttack,40000,1,1,0,,,
-20220201,战士-命中回血,HealTargetPct,2000,1,1,0,,,
+50100101,Ⅰ箭塔,NormalAttack,8000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+50200101,Ⅰ法师塔,NormalAttack,3000,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+50500101,Ⅱ回复塔,Heal,10000,4,1,0,,,Assets/BattleRes/VFX/3rd/Hovl Studio/AAA Projectiles Vol 1/Prefabs/Hit 27.prefab
+50600101,Ⅱ炮塔假子弹,NormalAttack,0,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+50600102,Ⅱ炮塔,AttackShare,20000,1,1,0,,,
+50700101,Ⅲ寒冰塔,NormalAttack,15000,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+50800101,Ⅲ火焰塔,NormalAttack,0,1,2,0,,,
+50800102,Ⅲ火焰塔-持续燃烧,NormalAttack,6000,1,2,0,,,
+50900101,Ⅳ核弹塔子弹,NormalAttack,0,1,1,0,,,
+50900102,Ⅳ核弹塔核爆,NormalAttack,100000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+100100101,剑盾-普攻,NormalAttack,2000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+100200101,双手剑-普攻,NormalAttack,4000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+100300101,法杖-普攻,NormalAttack,3000,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+100400101,棍-普攻,NormalAttack,2400,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+100500101,弓-普攻,NormalAttack,2000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+100600101,法典-普攻,NormalAttack,3000,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20100101,守卫-冲锋,NormalAttack,12000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Space/Variants/CFXR4 Plasma Shoot (Red).prefab
+20100201,守卫-顺劈斩,NormalAttack,7000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20100301,守卫-聚爆,NormalAttack,30000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20200101,战士-破碎挥砍,NormalAttack,15000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20200201,战士-脆弱打击,NormalAttack,20000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Impacts/CFXR Hit D 3D (Yellow).prefab
+20200301,战士-毁灭斩击,NormalAttack,45000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20220201,战士-命中回血,HealTargetPct,2000,4,1,0,,,
 20300101,火法-火球术,NormalAttack,25000,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Fire/CFXR3 Hit Fire A (Air).prefab
 20300102,火法-溅射伤害,NormalAttack,15000,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Fire/CFXR4 Sword Hit FIRE (Cross).prefab
 20300201,火法-点燃伤害,AttackBuffDot,3500,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Fire/CFXR4 Sword Hit FIRE (Cross).prefab
 20300301,火法-炽焰冲击,NormalAttack,60000,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Fire/CFXR3 Hit Fire A (Air).prefab
-20400101,牧师-治疗波治疗,Heal,18000,1,2,0,,,
-20400102,牧师-治疗波伤害,NormalAttack,15000,1,2,0,,,
-20400201,牧师-疗愈,Heal,20000,1,2,0,,,
-20400301,牧师-神圣赞美诗,Heal,9000,1,2,0,,,
-20500101,武僧-拨云见日下砸,NormalAttack,15000,1,1,0,,,
-20500102,武僧-拨云见日重砸,NormalAttack,40000,1,1,0,,,
+20400101,牧师-治疗波治疗,Heal,9000,4,2,0,,,Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_HealCast.prefab
+20400102,牧师-治疗波伤害,NormalAttack,15000,1,2,0,,,Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_HealCast.prefab
+20400201,牧师-疗愈,Heal,10000,4,2,0,,,Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_HealCast.prefab
+20400301,牧师-神圣赞美诗,Heal,5000,4,2,0,,,Assets/BattleRes/VFX/3rd/Hovl Studio/RPG VFX Bundle/Prefabs/Magic buffs and hits/Heal.prefab
+20500101,武僧-拨云见日下砸,NormalAttack,15000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20500102,武僧-拨云见日重砸,NormalAttack,40000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
 20500103,武僧-拨云见日回血-天赋,HealTargetPct,1500,1,1,0,,,
-20500201,武僧-护身法相横扫,NormalAttack,15000,1,1,0,,,
-20500401,武僧-重塑金身回血,HealTargetPct,4000,1,1,0,,,
-20520301,武僧-天神下凡回血-天赋,HealTargetPct,500,1,2,0,,,
-20520401,武僧-小天神下凡回血-天赋,HealTargetPct,250,1,2,0,,,
-20600101,射手-连射,NormalAttack,7000,1,1,0,,,
+20500201,武僧-护身法相横扫,NormalAttack,15000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20500202,武僧-护身法相回血,HealTargetPct,500,4,1,0,,,
+20500401,武僧-重塑金身回血,HealTargetPct,4000,4,1,0,,,
+20520301,武僧-天神下凡回血-天赋,HealTargetPct,500,4,2,0,,,
+20520401,武僧-小天神下凡回血-天赋,HealTargetPct,250,4,2,0,,,
+20600101,射手-连射,NormalAttack,7000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
 20600201,射手-,,,1,1,0,,,
-20600301,射手-致命射击,NormalAttack,60000,1,1,0,,20600301,
-20700101,德鲁伊-星涌,NormalAttack,15000,1,2,0,,20700101,
-20700201,德鲁伊-月火直伤,NormalAttack,5000,1,2,0,,,
+20600301,射手-致命射击,NormalAttack,60000,1,1,0,,20600301,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20700101,德鲁伊-星涌,NormalAttack,15000,1,2,0,,20700101,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20700201,德鲁伊-月火直伤,NormalAttack,5000,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
 20720101,德鲁伊-月火Dot,AttackBuffDot,9000,1,2,0,,,
-20700301,德鲁伊-阳炎,NormalAttack,50000,1,2,0,,,
+20700301,德鲁伊-阳炎,NormalAttack,50000,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20800101,药剂师-复合药剂-伤害,NormalAttack,15000,1,2,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+20800102,药剂师-复合药剂-治疗,Heal,15000,4,2,0,,,
+20800103,药剂师-复合药剂-假子弹,NormalAttack,0,1,2,0,,,
+20800201,药剂师-增强药剂-治疗,Heal,30000,4,2,0,,,
+20800202,药剂师-增强药剂-受击回复,HealTargetPct,600,4,2,0,,,
+20800203,药剂师-增强药剂-假子弹,NormalAttack,0,1,2,0,,,
+20800301,药剂师-皇家药剂-治疗,Heal,15000,4,2,0,,,
+20800303,药剂师-皇家药剂-假子弹,NormalAttack,0,1,2,0,,,
+300100101,弓兵-普攻,NormalAttack,4000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab
+301000101,轻骑兵-普攻,NormalAttack,5000,1,1,0,,,Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab

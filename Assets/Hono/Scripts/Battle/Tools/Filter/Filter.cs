@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Hono.Scripts.Battle
 {
@@ -11,7 +12,7 @@ namespace Hono.Scripts.Battle
     {
         private Filter _filter;
 
-        public List<int> UseFilter(Actor filterUser, FilterSetting setting)
+        public List<int> UseFilter(Actor filterUser,in FilterSetting setting)
         {
             if (setting == null)
             {
@@ -19,11 +20,12 @@ namespace Hono.Scripts.Battle
                 return null;
             }
 
+            _filter.Reset();
             _filter.SettingChange(filterUser, setting);
             return _filter.GetResults();
         }
 
-        public bool CheckActorPassFilter(Actor filterUser,int checkActorUid, FilterSetting setting)
+        public bool CheckActorPassFilter(Actor filterUser,int checkActorUid,in FilterSetting setting)
         {
             _filter.SettingChange(filterUser, setting);
             return _filter.CheckPass(checkActorUid);
@@ -34,19 +36,27 @@ namespace Hono.Scripts.Battle
             private FilterSetting _filterSetting;
             private Actor _filterUser;
             private readonly ActorManager _actorManager;
-
+            private List<int> _filterActorUids = new(32);
+            private readonly List<Actor> _filterActors = new(32);
+            private List<int> _checkBoxResult = new(32);
             internal Filter(ActorManager actorManager)
             {
                 _actorManager = actorManager;
             }
 
-            public void SettingChange(Actor filterUser, FilterSetting setting)
+            public void Reset() {
+	            _filterActorUids.Clear();
+	            _filterActors.Clear();
+	            _checkBoxResult.Clear();
+            }
+            
+            public void SettingChange(in Actor filterUser,in FilterSetting setting)
             {
                 _filterSetting = setting;
                 _filterUser = filterUser;
             }
 
-            private bool rangeCheck(Actor actor, FilterRange range)
+            private bool rangeCheck(in Actor actor,in FilterRange range)
             {
                 bool checkResult = false;
                 switch (range.RangeType)
@@ -79,7 +89,7 @@ namespace Hono.Scripts.Battle
                 return checkResult;
             }
 
-            private bool getCompareRes(ECompareResType compareResType, int flag)
+            private bool getCompareRes(in ECompareResType compareResType, int flag)
             {
                 switch (compareResType)
                 {
@@ -103,7 +113,7 @@ namespace Hono.Scripts.Battle
                 return _actorManager._uidActorDict.TryGetValue(uid, out var actor) && checkActorPass(actor);
             }
 
-            private bool checkActorPass(Actor actor)
+            private bool checkActorPass(in Actor actor)
             {
                 foreach (var range in _filterSetting.Ranges)
                 {
@@ -128,59 +138,63 @@ namespace Hono.Scripts.Battle
 
             public List<int> GetResults()
             {
+	            Profiler.BeginSample("UseFilter");
                 if (_filterSetting == null)
                 {
                     Debug.LogError("筛选器设置为空");
                     return null;
                 }
-
-                List<int> actorUids = new();
-                List<Actor> actors = new();
+                
                 if (_filterSetting.OpenBoxCheck)
                 {
                     var pos = _filterUser.GetAttr<Vector3>(ELogicAttr.AttrPosition);
                     var rot = _filterUser.GetAttr<Quaternion>(ELogicAttr.AttrRot);
-                    if (CommonUtility.HitRayCast(_filterSetting.BoxData, pos, rot, out var hitActorIds))
+                    if (CommonUtility.HitRayCast(_filterSetting.BoxData, pos, rot, ref _checkBoxResult))
                     {
-                        foreach (var uid in hitActorIds)
+                        foreach (var uid in _checkBoxResult)
                         {
+							if (_actorManager.GetActorRtState(uid) != EActorRunningState.Active)
+								continue;
                             var unSelectable =
                                 _actorManager._uidActorDict[uid].GetAttr<int>(ELogicAttr.AttrUnselectable) != 0;
                             if (unSelectable) continue;
-                            actors.Add(_actorManager._uidActorDict[uid]);
+                            if (_actorManager._uidActorDict[uid].IsExpired)
+	                            continue;
+                            _filterActors.Add(_actorManager._uidActorDict[uid]);
                         }
+                        _checkBoxResult.Clear();
                     }
                 }
                 else
                 {
-                    actors.AddRange(_actorManager._runningActorList);
+                    _filterActors.AddRange(_actorManager._runningActorList);
                 }
 
-                if (!_filterSetting.HasSelf && actors.Contains(_filterUser))
+                if (!_filterSetting.HasSelf && _filterActors.Contains(_filterUser))
                 {
-                    actors.Remove(_filterUser);
+                    _filterActors.Remove(_filterUser);
                 }
 
-                foreach (var actor in actors)
+                foreach (var actor in _filterActors)
                 {
                     if (checkActorPass(actor))
-                        actorUids.Add(actor.Uid);
+                        _filterActorUids.Add(actor.Uid);
                 }
 
                 if (_filterSetting.MaxTargetCount <= 0)
                 {
-                    return actorUids;
+                    return _filterActorUids;
                 }
 
-                if (_filterSetting.MaxTargetCount >= actorUids.Count)
+                if (_filterSetting.MaxTargetCount >= _filterActorUids.Count)
                 {
-                    return actorUids;
+                    return _filterActorUids;
                 }
 
                 switch (_filterSetting.FilterFunctionType)
                 {
                     case EFilterFunctionType.HighestHp:
-                        actorUids.Sort((aUid, bUid) =>
+                        _filterActorUids.Sort((aUid, bUid) =>
                         {
                             int aHp = _actorManager._uidActorDict[aUid].GetAttr<int>(ELogicAttr.AttrHp);
                             int bHp = _actorManager._uidActorDict[bUid].GetAttr<int>(ELogicAttr.AttrHp);
@@ -188,7 +202,7 @@ namespace Hono.Scripts.Battle
                         });
                         break;
                     case EFilterFunctionType.LeastHp:
-                        actorUids.Sort((aUid, bUid) =>
+                        _filterActorUids.Sort((aUid, bUid) =>
                         {
                             int aHp = _actorManager._uidActorDict[aUid].GetAttr<int>(ELogicAttr.AttrHp);
                             int bHp = _actorManager._uidActorDict[bUid].GetAttr<int>(ELogicAttr.AttrHp);
@@ -196,7 +210,7 @@ namespace Hono.Scripts.Battle
                         });
                         break;
                     case EFilterFunctionType.HighestMp:
-                        actorUids.Sort((aUid, bUid) =>
+                        _filterActorUids.Sort((aUid, bUid) =>
                         {
                             int aMp = _actorManager._uidActorDict[aUid].GetAttr<int>(ELogicAttr.AttrMp);
                             int bMp = _actorManager._uidActorDict[bUid].GetAttr<int>(ELogicAttr.AttrMp);
@@ -204,7 +218,7 @@ namespace Hono.Scripts.Battle
                         });
                         break;
                     case EFilterFunctionType.LeastMp:
-                        actorUids.Sort((aUid, bUid) =>
+                        _filterActorUids.Sort((aUid, bUid) =>
                         {
                             int aMp = _actorManager._uidActorDict[aUid].GetAttr<int>(ELogicAttr.AttrMp);
                             int bMp = _actorManager._uidActorDict[bUid].GetAttr<int>(ELogicAttr.AttrMp);
@@ -212,7 +226,7 @@ namespace Hono.Scripts.Battle
                         });
                         break;
                     case EFilterFunctionType.Far:
-                        actorUids.Sort((aUid, bUid) =>
+                        _filterActorUids.Sort((aUid, bUid) =>
                         {
                             var aPos = _actorManager._uidActorDict[aUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
                             var bPos = _actorManager._uidActorDict[bUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
@@ -224,7 +238,7 @@ namespace Hono.Scripts.Battle
                         });
                         break;
                     case EFilterFunctionType.Near:
-                        actorUids.Sort((aUid, bUid) =>
+                        _filterActorUids.Sort((aUid, bUid) =>
                         {
                             var aPos = _actorManager._uidActorDict[aUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
                             var bPos = _actorManager._uidActorDict[bUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
@@ -236,13 +250,17 @@ namespace Hono.Scripts.Battle
                         });
                         break;
                     case EFilterFunctionType.Random:
-                        actorUids = CommonUtility.SelectRandomElements(actorUids, _filterSetting.MaxTargetCount);
-                        return actorUids;
+                        CommonUtility.Shuffle(ref _filterActorUids);
+                        return _filterActorUids;
                 }
 
-                actorUids = actorUids.GetRange(0, _filterSetting.MaxTargetCount);
-
-                return actorUids;
+                for (int index = _filterActorUids.Count - 1; index > -1; index--) {
+	                if (index > _filterSetting.MaxTargetCount -1) {
+		                _filterActorUids.RemoveAt(index);
+	                }
+                }
+                Profiler.EndSample();
+                return _filterActorUids;
             }
         }
     }

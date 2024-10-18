@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle
         private PawnTeamState _curControlTeam;
         private readonly BattleGround _battleGround;
         
-        private bool _pawnLoadFinishFirst = true;
+        public int ControlUid => _curControlTeam?.LeaderUid ?? -1;
 
         public PawnTeamController(BattleGround battleGround)
         {

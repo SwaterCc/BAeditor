@@ -11,10 +11,10 @@ namespace Hono.Scripts.Battle
 
         public IEventInfo EventInfo;
 
-        public void UpdateContext((Actor,Ability) context)
+        public void UpdateContext(Ability context)
         {
-	        SourceActor = context.Item1;
-	        Invoker = context.Item2;
+	        SourceActor = context.Actor;
+	        Invoker = context;
         }
 
         public void ClearContext()

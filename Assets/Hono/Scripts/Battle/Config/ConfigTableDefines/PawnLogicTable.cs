@@ -74,6 +74,11 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
+            /// 角色名字
+            /// </summary>
+            public string Name { get; private set; }
+            
+            /// <summary>
             /// 描述
             /// </summary>
             public string Desc { get; private set; }
@@ -84,19 +89,29 @@ namespace Hono.Scripts.Battle
             public string RPGIcon { get; private set; }
             
             /// <summary>
-            /// 模型表Id
-            /// </summary>
-            public int ModelId { get; private set; }
-            
-            /// <summary>
             /// 职业ID
             /// </summary>
             public int ActorClassId { get; private set; }
             
             /// <summary>
+            /// 副职业ID
+            /// </summary>
+            public int ActorSubClassId { get; private set; }
+            
+            /// <summary>
             /// 初始阵营
             /// </summary>
             public int Faction { get; private set; }
+            
+            /// <summary>
+            /// 初始标签
+            /// </summary>
+            public IntArray TagList { get; private set; }
+            
+            /// <summary>
+            /// 模型表Id
+            /// </summary>
+            public int ModelId { get; private set; }
             
             /// <summary>
             /// 初始化属性模板Id
@@ -116,7 +131,12 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// 拥有的其他Ability
             /// </summary>
-            public IntArray ownerOtherAbility { get; private set; }
+            public IntTable ownerOtherAbility { get; private set; }
+            
+            /// <summary>
+            /// 不吃位移控制
+            /// </summary>
+            public int IgnoreOtherMotion { get; private set; }
             
 
             public PawnLogicRow()
@@ -136,23 +156,31 @@ namespace Hono.Scripts.Battle
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.Desc = parseString(line[1]);
+                    _row.Name = parseString(line[1]);
             
-                    _row.RPGIcon = parseString(line[2]);
+                    _row.Desc = parseString(line[2]);
             
-                    _row.ModelId = parseInt(line[3]);
+                    _row.RPGIcon = parseString(line[3]);
             
                     _row.ActorClassId = parseInt(line[4]);
             
-                    _row.Faction = parseInt(line[5]);
+                    _row.ActorSubClassId = parseInt(line[5]);
             
-                    _row.AttrTemplateId = parseInt(line[6]);
+                    _row.Faction = parseInt(line[6]);
             
-                    _row.OwnerSkills = parseIntTable(line[7]);
+                    _row.TagList = parseIntArray(line[7]);
             
-                    _row.OwnerBuffs = parseIntArray(line[8]);
+                    _row.ModelId = parseInt(line[8]);
             
-                    _row.ownerOtherAbility = parseIntArray(line[9]);
+                    _row.AttrTemplateId = parseInt(line[9]);
+            
+                    _row.OwnerSkills = parseIntTable(line[10]);
+            
+                    _row.OwnerBuffs = parseIntArray(line[11]);
+            
+                    _row.ownerOtherAbility = parseIntTable(line[12]);
+            
+                    _row.IgnoreOtherMotion = parseInt(line[13]);
             
                 }
             }

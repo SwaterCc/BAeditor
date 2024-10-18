@@ -15,6 +15,6 @@ MonoBehaviour:
   id: 207204
   ReplaceRule: 1
   AddRule: 0
-  InitLayer: 3
+  InitLayer: 1
   FilterTags: 
   BuffDamageBasePer: 0

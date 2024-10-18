@@ -17,7 +17,7 @@ MonoBehaviour:
   SkillTargetType: 0
   SkillRange: 15
   EcdMode: 0
-  SkillCD: 0
+  SkillCD: 10
   SkillResCheck: []
   CostType: 0
   SkillResCost: []
@@ -25,7 +25,7 @@ MonoBehaviour:
   PriorityDEF: 0
   ForceFaceTarget: 1
   SkillDamageBasePer: 0
-  UseCustomFilter: 0
+  UseCustomFilter: 1
   CustomFilter:
     _isOnlyCondition: 0
     OpenBoxCheck: 1
@@ -51,6 +51,9 @@ MonoBehaviour:
       IsReverse: 0
       Value: 2
     Compares: []
-    FilterFunctionType: 1
+    FilterFunctionType: 31
   MaxTargetCount: 1
   SelectSelf: 0
+  SkillName: "\u70B9\u71C3"
+  SkillDesc: 
+  SkillIconPath: 

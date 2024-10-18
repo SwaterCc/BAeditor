@@ -19,15 +19,26 @@ namespace Hono.Scripts.Battle
 
             protected override void onEnter()
             {
-                SceneManager.LoadScene(1);
-                _isSetupScene = false;
-                _asyncOperation = SceneManager.LoadSceneAsync(BattleGroundHandle._battleGroundName);
-                _asyncOperation.allowSceneActivation = false;
+                 loadingScene();
+                 _timeCounting = Time.realtimeSinceStartup;
             }
 
+            private async void loadingScene() {
+	            await SceneManager.LoadSceneAsync(1);
+	            _asyncOperation = SceneManager.LoadSceneAsync(BattleGroundHandle._battleGroundName);
+	            _asyncOperation.allowSceneActivation = false;
+            }
+            
             protected override void onTick(float dt)
             {
-                if (!_asyncOperation.isDone) return;
+	            if(_asyncOperation == null) return;
+
+	            if (Mathf.Approximately(0.9f, _asyncOperation.progress) && !_asyncOperation.isDone) {
+		            _asyncOperation.allowSceneActivation = true;
+		            return;
+	            }
+                
+                if(!_asyncOperation.isDone) return;
                 
                 if (!_isSetupScene)
                     setupScene();
@@ -39,7 +50,6 @@ namespace Hono.Scripts.Battle
             private void setupScene()
             {
                 _isSetupScene = true;
-                _timeCounting = Time.realtimeSinceStartup;
                 
                 //第一时间把战场控制的Model放到Scene中
                 BattleManager.BattleController.ModelController.OnEnterBattleGroundFirstTime();
@@ -53,9 +63,17 @@ namespace Hono.Scripts.Battle
                 }
                 
                 //创建场景Actor
-                foreach (var sceneActorModel in BattleGroundHandle._levelData.SceneActorModels)
-                {
-                    ActorManager.Instance.CreateSceneActor(sceneActorModel, 0, initPawnDefaultBirthPoint);
+                foreach (var sceneActorModel in BattleGroundHandle._levelData.SceneActorModels) {
+	                if (sceneActorModel.ActorType == EActorType.ActorRefreshPoint) {
+		                var refreshPoint = (ActorRefreshPoint)sceneActorModel;
+		                ActorManager.Instance.CreateActor(refreshPoint.CreateActorType, refreshPoint.ConfigId, (actor) => {
+			                actor.SetAttr(ELogicAttr.AttrPosition, refreshPoint.transform.position, false);
+			                actor.SetAttr(ELogicAttr.AttrRot, refreshPoint.transform.rotation, false);
+		                });
+		                continue;
+	                }
+	                ActorManager.Instance.CreateSceneActor(sceneActorModel, 0,
+		                initPawnDefaultBirthPoint);
                 }
             }
 
@@ -69,8 +87,7 @@ namespace Hono.Scripts.Battle
                 }
             }
 
-            protected override void onExit()
-            {
+            protected override void onExit() {
                 _asyncOperation = null;
             }
         }

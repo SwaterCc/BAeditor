@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Hono.Scripts.Battle {
 	public class AttrCollection {
@@ -30,7 +31,7 @@ namespace Hono.Scripts.Battle {
 
 		public ICommand SetAttr<T>(int attrType, T value, bool isTempData) {
 			var attrTypeInt = attrType;
-
+		
 			if (!_attrs.TryGetValue(attrTypeInt, out var attr)) {
 				attr = getAttrAndSetDefault(attrType);
 				_attrs.Add(attrTypeInt, attr);
@@ -42,19 +43,17 @@ namespace Hono.Scripts.Battle {
 			else {
 				Debug.LogError($"attrType {attrType} 没有{typeof(T)}类型的实现！");
 			}
-
 			return null;
 		}
 
 		//TODO：性能问题
 		public ICommand SetAttrBox(int attrType, object value, bool isTempData) {
 			var attrTypeInt = attrType;
-
+			
 			if (!_attrs.TryGetValue(attrTypeInt, out var attr)) {
 				attr = getAttrAndSetDefault(attrType);
 				_attrs.Add(attrTypeInt, attr);
 			}
-
 			return attr.BoxSet(value, isTempData);
 		}
 
@@ -64,7 +63,7 @@ namespace Hono.Scripts.Battle {
 				attr = getAttrAndSetDefault(attrType);
 				_attrs.Add(attrType, attr);
 			}
-
+			
 			return attr.GetBox();
 		}
 

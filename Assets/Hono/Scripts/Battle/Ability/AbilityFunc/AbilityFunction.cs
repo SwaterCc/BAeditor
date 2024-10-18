@@ -85,16 +85,17 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static void CreateHitBoxes(int attackUid, List<int> targetUids, HitBoxData hitData,
-            bool fromTopSummer = false)
+        public static void CreateHitBoxes(int attackUid,List<int> targetUids, HitBoxData hitData, bool fromTopSummer = false)
         {
-            if (!tryGetActor(attackUid, out var attack))
-            {
-                return;
-            }
-
             //返回打击点的Uid
             if (targetUids is not { Count: > 0 }) return;
+
+			if (!tryGetActor(attackUid, out var attack)) {
+				return;
+			}
+
+			//返回打击点的Uid
+			if (targetUids is not { Count: > 0 }) return;
 
             foreach (var targetUid in targetUids)
             {
@@ -124,7 +125,10 @@ namespace Hono.Scripts.Battle
 
             foreach (var targetUid in targetUids)
             {
-                if (targetUid == 0) continue;
+	            if(!ActorManager.Instance.TryGetActor(targetUid, out var target))
+                {
+	                continue;
+                }
 
                 ActorManager.Instance.SummonActor(Ability.Context.SourceActor, EActorType.HitBox,
                     1, false, (hitBox) =>
@@ -132,6 +136,7 @@ namespace Hono.Scripts.Battle
                         hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
                         hitBox.Variables.Set("hitBoxData", hitData);
                         hitBox.Variables.Set("targetUid", targetUid);
+                        hitBox.Variables.Set("targetPos",target.Pos);
                         hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
                     });
             }
@@ -167,12 +172,11 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static int AddVFX(VFXSetting setting, int vfxTargetUid = 0)
+        public static int AddVFX(VFXSetting setting,int vfxTargetUid = 0)
         {
-            if (!tryGetActor(vfxTargetUid, out var target))
-            {
-                return -1;
-            }
+			if(!tryGetActor(vfxTargetUid,out var target)) {
+				return -1;
+			}
 
             if (target.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
             {
@@ -186,11 +190,10 @@ namespace Hono.Scripts.Battle
         [AbilityMethod]
         public static void RemoveVFX(int vfxUid, int vfxTargetUid = 0)
         {
-            if (!tryGetActor(vfxTargetUid, out var target))
-            {
-                return;
-            }
-
+			if (!tryGetActor(vfxTargetUid, out var target)) {
+				return;
+			}
+			
             if (target.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
             {
                 vfxComp.RemoveVFX(vfxUid);
@@ -421,9 +424,9 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static void RemoveBuff(int actorUid, int buffId, int buffLayer = 1)
+        public static void RemoveBuff(int buffOwnerActorUid, int buffId, int buffLayer = 1)
         {
-            if (!tryGetActor(actorUid, out var actor))
+            if (!tryGetActor(buffOwnerActorUid, out var actor))
             {
                 return;
             }
@@ -533,7 +536,20 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static void AddBattleResource(int resourceValue, bool isPer) { }
+        public static void AddBattleResource(int resourceValue, bool isPer) {
+	        //resourceValue -> 万分比
+	        var maxMp = Ability.Context.SourceActor.GetAttr<int>(ELogicAttr.AttrMaxMp);
+	        var curMp = Ability.Context.SourceActor.GetAttr<int>(ELogicAttr.AttrMp);
+	        var value = resourceValue / 10000f;
+	        if (isPer) {
+		        curMp = (int)(curMp * (1 * value));
+	        }
+	        else {
+		        curMp += (int)value;
+	        }
+	        curMp = Mathf.Clamp(curMp, 0, maxMp);
+	        Ability.Context.SourceActor.SetAttr<int>(ELogicAttr.AttrMp,curMp,false);
+        }
 
         [AbilityMethod]
         public static float CalculateFloat(float left, ECalculateType calculateType, float right)
@@ -608,13 +624,7 @@ namespace Hono.Scripts.Battle
                 actor = ActorManager.Instance.GetActor(actorUid);
             }
 
-            if (actor == null)
-            {
-                Debug.LogError($"getActor {actorUid} failed! actor is null!");
-                return false;
-            }
-
-            return true;
+            return actor != null;
         }
 
         private static bool getCompareRes(ECompareResType compareResType, int flag)

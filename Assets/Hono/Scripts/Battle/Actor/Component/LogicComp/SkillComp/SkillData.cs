@@ -12,9 +12,9 @@ namespace Hono.Scripts.Battle
         public float SkillRange;
         public ECDMode EcdMode;
         public float SkillCD;
-        public List<ResItems> SkillResCheck = new List<ResItems>();
+        public List<ResItems> SkillResCheck = new();
         public EResCostType CostType;
-        public List<ResItems> SkillResCost = new List<ResItems>();
+        public List<ResItems> SkillResCost = new();
         public int PriorityATK;
         public int PriorityDEF;
         public bool ForceFaceTarget;
@@ -23,5 +23,8 @@ namespace Hono.Scripts.Battle
         public FilterSetting CustomFilter;
         public int MaxTargetCount = 1;//目标选择最大数量
         public bool SelectSelf = false;
-    }
+		public string SkillName;
+		public string SkillDesc;
+		public string SkillIconPath;
+	}
 }

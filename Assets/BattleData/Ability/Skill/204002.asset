@@ -524,6 +524,9 @@ MonoBehaviour:
     - Name: FilterSetting
       Entry: 7
       Data: 21|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+    - Name: _isOnlyCondition
+      Entry: 5
+      Data: false
     - Name: OpenBoxCheck
       Entry: 5
       Data: true
@@ -584,22 +587,43 @@ MonoBehaviour:
     - Name: MaxTargetCount
       Entry: 3
       Data: 1
+    - Name: HasSelf
+      Entry: 5
+      Data: false
     - Name: Ranges
       Entry: 7
       Data: 23|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 7
       Data: Hono.Scripts.Battle.FilterRange, Assembly-CSharp
     - Name: RangeType
       Entry: 3
       Data: 3
+    - Name: IsReverse
+      Entry: 5
+      Data: false
     - Name: Value
       Entry: 3
       Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.FilterRange, Assembly-CSharp
+    - Name: RangeType
+      Entry: 3
+      Data: 4
+    - Name: IsReverse
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 3
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
@@ -622,6 +646,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: FilterFunctionType
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1751,6 +1778,9 @@ MonoBehaviour:
     - Name: FilterSetting
       Entry: 7
       Data: 86|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+    - Name: _isOnlyCondition
+      Entry: 5
+      Data: false
     - Name: OpenBoxCheck
       Entry: 5
       Data: true
@@ -1811,22 +1841,43 @@ MonoBehaviour:
     - Name: MaxTargetCount
       Entry: 3
       Data: 2
+    - Name: HasSelf
+      Entry: 5
+      Data: false
     - Name: Ranges
       Entry: 7
       Data: 88|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 7
       Data: Hono.Scripts.Battle.FilterRange, Assembly-CSharp
     - Name: RangeType
       Entry: 3
       Data: 3
+    - Name: IsReverse
+      Entry: 5
+      Data: false
     - Name: Value
       Entry: 3
       Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: Hono.Scripts.Battle.FilterRange, Assembly-CSharp
+    - Name: RangeType
+      Entry: 3
+      Data: 4
+    - Name: IsReverse
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 3
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
@@ -1849,6 +1900,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: FilterFunctionType
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 

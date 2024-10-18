@@ -27,6 +27,7 @@ MonoBehaviour:
   SkillDamageBasePer: 0
   UseCustomFilter: 1
   CustomFilter:
+    _isOnlyCondition: 0
     OpenBoxCheck: 1
     BoxData:
       ShapeType: 1
@@ -41,11 +42,18 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 15
+      Radius: 10
       Angle: 0
-    MaxTargetCount: -1
+    MaxTargetCount: 1
+    HasSelf: 1
     Ranges:
     - RangeType: 3
+      IsReverse: 0
       Value: 1
     Compares: []
-  MaxTargetCount: 100
+    FilterFunctionType: 11
+  MaxTargetCount: 1
+  SelectSelf: 0
+  SkillName: 
+  SkillDesc: 
+  SkillIconPath: 

@@ -11,6 +11,7 @@ namespace Hono.Scripts.Battle
         public class PreLoadModelSetup : ModelSetup
         {
             private readonly EPreLoadGameObjectType _objectType;
+            
             public PreLoadModelSetup(EPreLoadGameObjectType objectType)
             {
                 _objectType = objectType;

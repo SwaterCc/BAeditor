@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Event;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -17,7 +18,7 @@ namespace Hono.Scripts.Battle
         private float _duration;
         private float _createMonsterInterval;
         private readonly Queue<GenActorInfo> _createMonsterQueue = new(64);
-
+        private List<Vector3> _wayPoints = new(16);
         public MonsterGeneratorLogic(Actor actor) : base(actor)
         {
             _checker = new MonsterGenEventChecker(EBattleEventType.OnCallMonsterGen, Uid, (info) =>
@@ -30,6 +31,9 @@ namespace Hono.Scripts.Battle
         protected override void onInit()
         {
             BattleEventManager.Instance.Register(_checker);
+            if (Actor.ModelController.Model.TryGetComponent<MonsterGeneratorModel>(out var comp)) {
+	            comp.GetWayPoint(ref _wayPoints);
+            }
         }
 
         protected override void onDestroy()
@@ -99,6 +103,10 @@ namespace Hono.Scripts.Battle
         {
             actor.OnDestroyCallBack += BattleManager.CurrentBattleGround.RuntimeInfo.OnActorDead;
 
+            if (_wayPoints.Count > 0) {
+	            actor.Variables.Set("WayPoints",_wayPoints);
+            }
+            
             if (actor.Logic.TryGetComponent<BeHurtComp>(out var hurtComp))
             {
                 hurtComp.OnHitKillActorCallBack += BattleManager.CurrentBattleGround.RuntimeInfo.OnActorBeKilled;

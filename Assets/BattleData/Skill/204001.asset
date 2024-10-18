@@ -17,7 +17,7 @@ MonoBehaviour:
   SkillTargetType: 1
   SkillRange: 15
   EcdMode: 0
-  SkillCD: 11
+  SkillCD: 5
   SkillResCheck: []
   CostType: 0
   SkillResCost: []
@@ -27,6 +27,7 @@ MonoBehaviour:
   SkillDamageBasePer: 18000
   UseCustomFilter: 1
   CustomFilter:
+    _isOnlyCondition: 0
     OpenBoxCheck: 1
     BoxData:
       ShapeType: 1
@@ -38,14 +39,21 @@ MonoBehaviour:
         x: 0
         y: 0
         z: 0
-      Length: 0
-      Width: 0
-      Height: 0
+      Length: 6
+      Width: 10
+      Height: 2
       Radius: 15
       Angle: 0
     MaxTargetCount: 1
+    HasSelf: 0
     Ranges:
     - RangeType: 3
-      Value: 2
+      IsReverse: 0
+      Value: 1
     Compares: []
+    FilterFunctionType: 11
   MaxTargetCount: 1
+  SelectSelf: 0
+  SkillName: 
+  SkillDesc: 
+  SkillIconPath: 

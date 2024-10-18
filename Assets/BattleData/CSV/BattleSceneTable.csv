@@ -1,4 +1,6 @@
 ﻿Id,描述,场景路径,最大队伍数量,战斗类型
 Id,Desc,ScenePath,TeamCount,BattleType
 int,string,string,int,int
-1,战斗测试,Scenes/BattleScene/BattleGroundTest,2,
+1,战斗测试,Hono/Scenes/BattleScene/BattleGroundTest,2,
+2,普通关卡,Hono/Scenes/NormalLevel_01,1,
+3,战争,Hono/Scenes/WarLevel,4,

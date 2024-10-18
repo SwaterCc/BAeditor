@@ -76,6 +76,7 @@ namespace Hono.Scripts.Battle
                 targetPos = wayPoints.First();
                 if (Vector3.Distance(curPos, targetPos) < 0.1f)
                 {
+	                Logic.Actor.SetAttr(ELogicAttr.AttrOriginPos, targetPos, false);
                     wayPoints.RemoveAt(0);
                     if (wayPoints.Count == 0)
                     {

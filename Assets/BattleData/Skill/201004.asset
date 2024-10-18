@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 201004
   m_EditorClassIdentifier: 
   SkillId: 201004
-  SkillType: 0
+  SkillType: 3
   SkillTargetType: 1
   SkillRange: 0
   EcdMode: 0
@@ -25,11 +25,12 @@ MonoBehaviour:
   PriorityDEF: 0
   ForceFaceTarget: 0
   SkillDamageBasePer: 0
-  UseCustomFilter: 0
+  UseCustomFilter: 1
   CustomFilter:
-    OpenBoxCheck: 0
+    _isOnlyCondition: 0
+    OpenBoxCheck: 1
     BoxData:
-      ShapeType: 0
+      ShapeType: 1
       Rot:
         x: 0
         y: 0
@@ -41,9 +42,15 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 0
+      Radius: 0.3
       Angle: 0
-    MaxTargetCount: -1
+    MaxTargetCount: 1
+    HasSelf: 1
     Ranges: []
     Compares: []
+    FilterFunctionType: 0
   MaxTargetCount: 1
+  SelectSelf: 1
+  SkillName: "\u575A\u6BC5"
+  SkillDesc: "\u5468\u56F45\u7C73\u6BCF\u67091\u540D\u654C\u4EBA\u65F6\u9632\u5FA1\u529B\u589E\u52A03%\uFF0C\u8BE5\u52A0\u6210\u6700\u5927\u4E0D\u8D85\u8FC730%"
+  SkillIconPath: 

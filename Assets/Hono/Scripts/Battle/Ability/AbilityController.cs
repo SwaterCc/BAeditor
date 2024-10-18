@@ -1,9 +1,14 @@
 using Hono.Scripts.Battle.Tools;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle {
 	public partial class Actor {
+		internal bool TryGetComponent<T>(out object comp) {
+			throw new NotImplementedException();
+		}
+
 		public class AbilityController {
 			private readonly Dictionary<int, Ability> _abilities = new();
 			
@@ -30,11 +35,21 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public Ability CreateAbility(int configId) {
+				if (configId <= 0) {
+					Debug.LogError("CreateAbility id is 0");
+					return null;
+				}
+				
 				var ability = new Ability(_actor, configId);
 				return ability;
 			}
 
 			public void AwardAbility(Ability ability, bool isRunNow) {
+				if (ability == null) {
+					Debug.LogError("AwardAbility ability is null");
+					return;
+				}
+					
 				if (isRunNow) ability.Execute();
 				_addUidCache.Add(ability);
 			}
@@ -45,6 +60,11 @@ namespace Hono.Scripts.Battle {
 			/// <param name="configId"></param>
 			/// <param name="isRunNow"></param>
 			public int AwardAbility(int configId, bool isRunNow) {
+				if (configId <= 0) {
+					Debug.LogError("CreateAbility id is 0");
+					return -1;
+				}
+
 				var ability = new Ability(_actor, configId);
 				_addUidCache.Add(ability);
 				if (isRunNow)
@@ -85,7 +105,14 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public void Tick(float dt) {
-
+				foreach (var uid in _removeUid) {
+					if (_abilities.TryGetValue(uid,out var ability)) {
+						ability.OnDestroy();
+						_abilities.Remove(uid);
+					}
+				}
+				_removeUid.Clear();
+				
 				foreach (var ability in _addUidCache) {
 					if (!_abilities.TryAdd(ability.Uid, ability)) {
 						Debug.Log($"AbilityUid {ability.Uid} 重复添加");
@@ -95,18 +122,8 @@ namespace Hono.Scripts.Battle {
 				
 				foreach (var abilityPair in _abilities) {
 					var ability = abilityPair.Value;
-					Ability.Context.UpdateContext((_actor, ability));
 					ability.OnTick(dt);
-					Ability.Context.ClearContext();
 				}
-				
-				foreach (var uid in _removeUid) {
-					if (_abilities.TryGetValue(uid,out var ability)) {
-						ability.OnDestroy();
-						_abilities.Remove(uid);
-					}
-				}
-				_removeUid.Clear();
 			}
 		}
 	}

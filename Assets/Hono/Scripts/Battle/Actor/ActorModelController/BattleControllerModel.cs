@@ -20,6 +20,8 @@ namespace Hono.Scripts.Battle
                 component.ActorType = EActorType.BattleLevelController;
                 component.ActorUid = Uid;
             }
+
+            Model = Object.Instantiate(Model, Vector3.zero, Quaternion.identity);
         }
 
         private void onLoadFinish()

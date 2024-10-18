@@ -23,6 +23,8 @@ namespace Hono.Scripts.Battle
                 {
                     Debug.LogError("回合数据不对，启动失败");
                 }
+
+                BattleGroundHandle.RuntimeInfo.RPCount = BattleGroundHandle._levelData.InitRPCount;
             }
 
             protected override void onTick(float dt)

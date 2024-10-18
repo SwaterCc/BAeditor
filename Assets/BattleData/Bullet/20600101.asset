@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd1463f66e5440ea590f25350e942f0, type: 3}
+  m_Name: 20600101
+  m_EditorClassIdentifier: 
+  Id: 20600101
+  CustomMotion: 0
+  MotionType: 0
+  Offset: {x: 0, y: 1, z: 0.5}
+  CloseFollowTarget: 0
+  BulletSpeed: 16
+  IsHitPathActor: 0
+  DamageConfigId: 20600101
+  BulletLifeTime: 2
+  MaxHitCount: 1
+  FilterSetting:
+    _isOnlyCondition: 1
+    OpenBoxCheck: 1
+    BoxData:
+      ShapeType: 0
+      Rot:
+        x: 0
+        y: 0
+        z: 0
+      Offset:
+        x: 0
+        y: 0
+        z: 0
+      Length: 0
+      Width: 0
+      Height: 0
+      Radius: 0
+      Angle: 0
+    MaxTargetCount: -1
+    HasSelf: 0
+    Ranges: []
+    Compares: []
+    FilterFunctionType: 0

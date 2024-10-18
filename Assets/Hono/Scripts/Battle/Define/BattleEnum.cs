@@ -15,6 +15,7 @@ namespace Hono.Scripts.Battle
         TriggerBox,
         TeamDefaultBirthPoint,
         TeamRefreshPoint,
+        ActorRefreshPoint
     }
 
     public enum EBattleModeType
@@ -207,7 +208,7 @@ namespace Hono.Scripts.Battle
         OnPreExecute,
 
         /// <summary>
-        /// 运行
+        /// 预启动
         /// </summary>
         OnExecuting,
 
@@ -217,6 +218,16 @@ namespace Hono.Scripts.Battle
         OnEndExecute,
     }
 
+    /// <summary>
+    /// 技能类型
+    /// </summary>
+    public enum ESkillType {
+	    NormalSkill,
+	    WeaponSkill,
+	    UltimateSkill,
+	    PassiveSkill,
+    }
+    
     /// <summary>
     /// 能力节点类型
     /// </summary>
@@ -267,18 +278,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         EGroup,
     }
-
-    /// <summary>
-    /// 技能类型
-    /// </summary>
-    public enum ESkillType
-    {
-        NormalSkill,
-        WeaponSkill,
-        UltimateSkill,
-        PassiveSkill,
-    }
-
+    
     /// <summary>
     /// 技能目标类型
     /// </summary>
@@ -403,16 +403,6 @@ namespace Hono.Scripts.Battle
         /// 球
         /// </summary>
         Sphere,
-
-        /// <summary>
-        /// 圆柱
-        /// </summary>
-        Cylinder,
-
-        /// <summary>
-        /// 扇形
-        /// </summary>
-        Sector
     }
 
     /// <summary>

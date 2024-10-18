@@ -34,7 +34,7 @@ namespace Hono.Scripts.Battle
         [HideIf("ShapeType",ECheckBoxShapeType.Cube)]
         public float Radius;
         
-        [ShowIf("ShapeType",ECheckBoxShapeType.Sector)]
+        [HideInInspector]
         public float Angle;
     }
 }

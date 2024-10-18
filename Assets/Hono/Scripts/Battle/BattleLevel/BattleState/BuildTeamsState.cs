@@ -13,6 +13,7 @@ namespace Hono.Scripts.Battle
             {
                 //发消息打开编队UI
                 BattleUIInterface.CallUI<BuildTeamsUIRoot>(null, setTeams);
+                //BuildTeamsUIRoot.Instance.Show();
             }
 
             private void setTeams(IUIPassData teamInfos)

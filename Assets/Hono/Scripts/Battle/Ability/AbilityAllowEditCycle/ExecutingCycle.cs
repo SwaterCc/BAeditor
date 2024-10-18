@@ -116,8 +116,12 @@ namespace Hono.Scripts.Battle
 
                 if (NextGroupId >= 0 && CurProxy == null)
                 {
-                    CurProxy = _stageNodeProxies[NextGroupId];
-                    CurProxy.GroupBegin();
+					Debug.Log($"ability GroupBegin actor {_ability.Actor.Uid} , abilityId {_ability.ConfigId} goNextGroup {NextGroupId}");
+
+					if(_stageNodeProxies.TryGetValue(NextGroupId,out CurProxy)) {
+						
+						CurProxy.GroupBegin();
+					}
                 }
 
                 //阶段定时器自己管理

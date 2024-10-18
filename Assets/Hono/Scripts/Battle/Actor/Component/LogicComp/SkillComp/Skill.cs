@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle {
 			public bool IsEnable => (!_isDisable) && (_curCdPercent <= 0 && _resEnough) && (!_isExecuting);
 
 			public bool IsExecuting => _isExecuting;
-			
+
 			private int _level;
 			private float _curCdPercent;
 			private int _abilityUid;
@@ -24,11 +24,13 @@ namespace Hono.Scripts.Battle {
 
 			public Skill(ActorLogic logic, int skillId, int level) {
 				_level = level;
-				_curCdPercent = 0;
+				_curCdPercent = 1;
 				_logic = logic;
 				Data = AssetManager.Instance.GetData<SkillData>(skillId);
 				_isDisable = false;
 				_isExecuting = false;
+				_skillTargetSetting = Data.CustomFilter;
+
 				_skillTargetSetting = Data.CustomFilter;
 
 				var ability = _logic._abilityController.CreateAbility(Data.SkillId);
@@ -36,40 +38,45 @@ namespace Hono.Scripts.Battle {
 
 				ability.GetCycleCallback(EAbilityAllowEditCycle.OnPreExecute).OnEnter += onAbilityBegin;
 				ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnExit += onAbilityEnd;
-				
+
 				_logic._abilityController.AwardAbility(ability, Data.SkillType == ESkillType.PassiveSkill);
 
 				resourceCheck();
 			}
 
-			private void onAbilityBegin()
-			{
+			private void onAbilityBegin() {
 				_isExecuting = true;
-				_logic._stateMachine.SwitchState(EActorLogicStateType.Skill);
-				if (Data.CostType == EResCostType.BeforeExecute)
-				{
+				if (Data.SkillType != ESkillType.PassiveSkill) {
+					_logic._stateMachine.SwitchState(EActorLogicStateType.Skill);
+				}
+
+				if (Data.CostType == EResCostType.BeforeExecute) {
 					resourceCost();
 				}
+
 				if (Data.EcdMode == ECDMode.BeforeExecute) {
 					CdBegin();
 				}
-				
+
 				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillUseSuccess,
 					new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
 			}
-			
+
 			private void onAbilityEnd() {
 				_isExecuting = false;
-				
-				if (Data.CostType == EResCostType.AfterExecute)
-				{
+
+				if (Data.CostType == EResCostType.AfterExecute) {
 					resourceCost();
 				}
+
 				if (Data.EcdMode == ECDMode.AfterExecute) {
 					CdBegin();
 				}
-				
-				_logic._stateMachine.SwitchState(EActorLogicStateType.Idle);
+
+				if (Data.SkillType != ESkillType.PassiveSkill) {
+					_logic._stateMachine.SwitchState(EActorLogicStateType.Idle);
+				}
+
 				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillStop,
 					new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
 			}
@@ -141,8 +148,16 @@ namespace Hono.Scripts.Battle {
 			}
 
 			private void resourceCost() {
+				if (Data.SkillResCheck.Count == 0) {
+					_resEnough = true;
+					return;
+				}
+				
 				foreach (var resItems in Data.SkillResCost) {
+					//组检测
 					foreach (var resItem in resItems.Items) {
+						
+						//单项检测
 						switch (resItem.ResourceType) {
 							case EBattleResourceType.Energy:
 								var mp = _logic.GetAttr<int>((ELogicAttr)resItem.ResId);
@@ -162,12 +177,18 @@ namespace Hono.Scripts.Battle {
 				if (!_resEnough) {
 					resourceCheck();
 				}
+
+				//更新攻速
+				var attackSpeed = _logic.GetAttr<int>(ELogicAttr.AttrAttackSpeedPCT) / 10000f + 1;
+				attackSpeed = Mathf.Clamp(attackSpeed, 0.1f, 10);
+				if (_logic.AbilityController.TryGetAbility(_abilityUid, out var ability)) {
+					ability.TimeScaleFactory = attackSpeed;
+				}
 			}
 
-			public bool TryUseSkill()
-			{
+			public bool TryUseSkill() {
 				if (!IsEnable) return false;
-				
+
 				var targetUids = _logic.GetAttr<List<int>>(ELogicAttr.AttrAttackTargetUids);
 				targetUids ??= new List<int>();
 				targetUids.Clear();
@@ -179,11 +200,20 @@ namespace Hono.Scripts.Battle {
 				else {
 					targetUids.Add(_logic.Uid);
 				}
-
+				
 				if (targetUids.Count > 0) {
 					_logic.SetAttr(ELogicAttr.AttrAttackTargetUids, targetUids, false);
 					Debug.Log($"[UseSkill] Actor{_logic.Uid} -->执行了技能 {_abilityUid}");
 					_logic._abilityController.ExecutingAbility(_abilityUid);
+
+					if (Data.ForceFaceTarget) {
+						if (ActorManager.Instance.TryGetActor(targetUids[0], out var target)) {
+							var dir = (target.Pos - _logic.Actor.Pos).normalized;
+							_logic.SetAttr(ELogicAttr.AttrRot, Quaternion.FromToRotation(Vector3.forward, dir), false);
+						}
+					}
+
+					resourceCheck();
 				}
 				else {
 					Debug.Log("技能没有找到目标！");

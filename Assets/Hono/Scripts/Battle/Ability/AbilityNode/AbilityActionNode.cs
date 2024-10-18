@@ -23,9 +23,8 @@ namespace Hono.Scripts.Battle
 
             public override void DoJob()
             {
-                if (_nodeData.Function.ParameterType == EParameterType.Function)
-                {
-                    if (!_nodeData.Function.Parse(out _funcRes))
+                if (_nodeData.Function.ParameterType == EParameterType.Function) {
+	                if (!_nodeData.Function.Parse(_executor.Ability, out _funcRes)) 
                     {
                         Debug.LogError("函数执行失败！");
                     }

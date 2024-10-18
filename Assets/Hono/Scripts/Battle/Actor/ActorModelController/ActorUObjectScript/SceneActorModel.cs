@@ -5,11 +5,10 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    [ExecuteInEditMode]
-    public class SceneActorModel : ActorModel
-    {
+    [ExecuteAlways]
+    public class SceneActorModel : ActorModel {
         private BattleLevelData _levelData;
-
+		
         private void Awake()
         {
             if (ActorUid > 0) return;

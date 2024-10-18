@@ -16,11 +16,19 @@
         /// 最终冲击力
         /// </summary>
         public float ImpactValue;
-        
-        public DamageResults(float damageValue,bool isCritical,float finalImpactValue) {
+
+		/// <summary>
+		/// 伤害类型
+		/// </summary>
+		public EDamageType DamageType;
+
+
+		public DamageResults(float damageValue,bool isCritical,float finalImpactValue, EDamageType damageType) {
 	        DamageValue = damageValue;
 	        IsCritical = isCritical;
 	        ImpactValue = finalImpactValue;
-        }
+			DamageType = damageType;
+
+		}
     }
 }

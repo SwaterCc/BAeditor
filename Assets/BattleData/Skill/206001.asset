@@ -23,13 +23,14 @@ MonoBehaviour:
   SkillResCost: []
   PriorityATK: 0
   PriorityDEF: 0
-  ForceFaceTarget: 0
+  ForceFaceTarget: 1
   SkillDamageBasePer: 0
   UseCustomFilter: 1
   CustomFilter:
+    _isOnlyCondition: 0
     OpenBoxCheck: 1
     BoxData:
-      ShapeType: 0
+      ShapeType: 1
       Rot:
         x: 0
         y: 0
@@ -41,11 +42,18 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 0
+      Radius: 10
       Angle: 0
-    MaxTargetCount: -1
+    MaxTargetCount: 1
     HasSelf: 0
-    Ranges: []
+    Ranges:
+    - RangeType: 3
+      IsReverse: 0
+      Value: 2
     Compares: []
-    FilterFunctionType: 0
+    FilterFunctionType: 31
   MaxTargetCount: 1
+  SelectSelf: 0
+  SkillName: "\u8FDE\u5C04"
+  SkillDesc: "\u5BF9\u4E00\u540D\u654C\u4EBA\u9020\u62103\u6B21\u653B\u51FB\uFF0C\u6BCF\u6B2170%\u7269\u7406\u4F24\u5BB3\uFF0C\u82E5\u51FB\u6740\u76EE\u6807\u5219\u56DE\u590D300\u70B9\u80FD\u91CF"
+  SkillIconPath: 

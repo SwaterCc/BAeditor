@@ -3,34 +3,35 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle {
 	public class VFXModelHandler : MonoBehaviour {
-		[FormerlySerializedAs("ModelHandle")] public ActorModel model;
+		public ActorModel model;
 		private ActorLogic.VFXComp _vfxComp;
 		public List<Transform> EffectPointList = new();
+		public Transform HeadPoint;
 		private readonly Dictionary<int, GameObject> _vfxShowDict = new();
 		private readonly Dictionary<string, Transform> _effectPoints = new();
 		private bool _hasError;
 
+		public void Awake() {
+			if (!TryGetComponent(out model)) {
+				model = gameObject.AddComponent<ActorModel>();
+			}
+		}
+
 		public void Start() {
-			if (model.ActorType == EActorType.BattleLevelController) {
-				var actor = BattleManager.BattleController.Actor;;
-				if (actor.Logic.TryGetComponent<ActorLogic.VFXWorldComp>(out var vfxWorldComp)) {
-					_vfxComp = vfxWorldComp;
-				}
-				else {
-					_hasError = true;
-					Debug.LogError("Get VFXWorldComp failed!");
-				}
+			Actor actor;
+			if (model.ActorType != EActorType.BattleLevelController) {
+				actor = ActorManager.Instance.GetActor(model.ActorUid);
 			}
 			else {
-				var actor = ActorManager.Instance.GetActor(model.ActorUid);
-				if (!actor.Logic.TryGetComponent(out _vfxComp)) {
-					_hasError = true;
-					Debug.LogError($"uid {model.ActorUid} Get VFXComp failed!");
-				}
+				actor = BattleManager.BattleController.Actor;
+			}
+			
+			if (actor == null || !actor.Logic.TryGetComponent(out _vfxComp)) {
+				_hasError = true;
+				Debug.LogError($"uid {model.ActorUid} Get VFXComp failed!");
 			}
 
 			if (!_hasError) {
@@ -52,8 +53,7 @@ namespace Hono.Scripts.Battle {
 
 		private async UniTask loadGameObject(VFXObject vfxObject) {
 			try {
-				//var obj = await Addressables.LoadAssetAsync<GameObject>(vfxObject.Setting.VFXPath);
-				var obj = await Addressables.LoadAssetAsync<GameObject>("Assets/BattleData/VFX/test.prefab");
+				var obj = await Addressables.LoadAssetAsync<GameObject>(vfxObject.Setting.VFXPath);
 				if (vfxObject.Setting.VFXBindType == EVFXType.BindActorBone) {
 					if (_effectPoints.TryGetValue(vfxObject.Setting.BoneName, out var parent)) {
 						obj = Instantiate(obj, parent);
@@ -61,6 +61,7 @@ namespace Hono.Scripts.Battle {
 					else {
 						obj = Instantiate(obj, transform);
 					}
+
 					obj.transform.localPosition = vfxObject.Pos;
 					obj.transform.localRotation = vfxObject.Rot;
 				}
@@ -96,7 +97,7 @@ namespace Hono.Scripts.Battle {
 		}
 
 		private void OnRemoveVFXObject(VFXObject vfxObject) {
-			if (_vfxShowDict.TryGetValue(vfxObject.Uid, out var obj)) {
+			if (_vfxShowDict.Remove(vfxObject.Uid, out var obj)) {
 				Destroy(obj);
 			}
 		}

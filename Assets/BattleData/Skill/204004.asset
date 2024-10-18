@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 204004
   m_EditorClassIdentifier: 
   SkillId: 204004
-  SkillType: 0
+  SkillType: 3
   SkillTargetType: 1
   SkillRange: 0
   EcdMode: 0
@@ -27,6 +27,7 @@ MonoBehaviour:
   SkillDamageBasePer: 0
   UseCustomFilter: 0
   CustomFilter:
+    _isOnlyCondition: 0
     OpenBoxCheck: 0
     BoxData:
       ShapeType: 0
@@ -44,6 +45,9 @@ MonoBehaviour:
       Radius: 0
       Angle: 0
     MaxTargetCount: -1
+    HasSelf: 0
     Ranges: []
     Compares: []
-  MaxTargetCount: 1
+    FilterFunctionType: 0
+  MaxTargetCount: -1
+  SelectSelf: 0

@@ -25,7 +25,7 @@ namespace Hono.Scripts.Battle
                     BattleManager.BattleController.RunAbility(abilityId);
                 }
                 
-                //´´½¨¶ÓÎé
+                //åˆ›å»ºé˜Ÿä¼
                 if (_createTeam)
                 {
                     Round.GameRunningState.BattleGroundHandle._pawnTeamController.CreatePawnTeams();

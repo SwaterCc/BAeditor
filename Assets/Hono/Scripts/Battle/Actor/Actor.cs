@@ -3,6 +3,7 @@ using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Hono.Scripts.Battle
 {
@@ -81,7 +82,12 @@ namespace Hono.Scripts.Battle
         /// 是否为玩家操控单位
         /// </summary>
         public bool IsPlayerControl { get; set; }
-        
+
+        /// <summary>
+        /// 是否为过期单位
+        /// </summary>
+        public bool IsExpired { get; set; }
+
         public Action<Actor> OnModelLoadFinish { get; set; }
         public Action<Actor> OnInitCallBack { get; set; }
         public Action<Actor> OnTickCallBack { get; set; }
@@ -131,9 +137,21 @@ namespace Hono.Scripts.Battle
         /// <param name="dt"></param>
         public void Tick(float dt)
         {
+	        if (ActorType == EActorType.Pawn) {
+		        Profiler.BeginSample("PawnActorTick");
+	        }
+	        else if(ActorType == EActorType.Monster)
+	        {
+		        Profiler.BeginSample("MonsterActorTick");
+	        }
+	        else {
+		        Profiler.BeginSample("OtherActorTick");
+	        }
+	        if(IsExpired) return;
 	        Logic.Tick(dt);
             _abilityController.Tick(dt);
             OnTickCallBack?.Invoke(this);
+            Profiler.EndSample();
         }
 
         /// <summary>
@@ -142,6 +160,7 @@ namespace Hono.Scripts.Battle
         /// <param name="dt"></param>
         public void Update(float dt)
         {
+	        if(IsExpired) return;
 	        if (_modelController == null) return;
 	        if(!_modelController.IsModelLoadFinish) return;
 	        _modelController.Update(dt);
@@ -183,7 +202,10 @@ namespace Hono.Scripts.Battle
         
         public T GetAttr<T>(ELogicAttr logicAttr)
         {
-            return _attrs.GetAttr<T>(logicAttr.ToInt());
+	        Profiler.BeginSample("SetAttr");
+	        var value = _attrs.GetAttr<T>(logicAttr.ToInt());
+	        Profiler.EndSample();
+            return value;
         }
 
         public object GetAttrBox(ELogicAttr logicAttr)
@@ -193,12 +215,18 @@ namespace Hono.Scripts.Battle
 
         public ICommand SetAttr<T>(int logicAttr, T value, bool isTempData)
         {
-	        return _attrs.SetAttr(logicAttr, value, isTempData);
+	        Profiler.BeginSample("SetAttr");
+	        var fvalue = _attrs.SetAttr(logicAttr, value, isTempData);
+	        Profiler.EndSample();
+	        return fvalue;
         }
         
         public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData)
         {
-            return _attrs.SetAttr(logicAttr.ToInt(), value, isTempData);
+	        Profiler.BeginSample("SetAttrCommand");
+	        var fvalue = _attrs.SetAttr(logicAttr.ToInt(), value, isTempData);
+	        Profiler.EndSample();
+            return fvalue;
         }
 
         public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData)

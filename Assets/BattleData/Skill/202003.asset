@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 202003
   m_EditorClassIdentifier: 
   SkillId: 202003
-  SkillType: 0
+  SkillType: 2
   SkillTargetType: 0
   SkillRange: 5
   EcdMode: 0
@@ -25,11 +25,12 @@ MonoBehaviour:
   PriorityDEF: 0
   ForceFaceTarget: 1
   SkillDamageBasePer: 40000
-  UseCustomFilter: 0
+  UseCustomFilter: 1
   CustomFilter:
-    OpenBoxCheck: 0
+    _isOnlyCondition: 0
+    OpenBoxCheck: 1
     BoxData:
-      ShapeType: 0
+      ShapeType: 1
       Rot:
         x: 0
         y: 0
@@ -41,11 +42,18 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 0
+      Radius: 3
       Angle: 0
-    MaxTargetCount: -1
+    MaxTargetCount: 3
     HasSelf: 0
-    Ranges: []
+    Ranges:
+    - RangeType: 3
+      IsReverse: 0
+      Value: 2
     Compares: []
-    FilterFunctionType: 0
-  MaxTargetCount: 1
+    FilterFunctionType: 31
+  MaxTargetCount: 3
+  SelectSelf: 0
+  SkillName: 
+  SkillDesc: 
+  SkillIconPath: 

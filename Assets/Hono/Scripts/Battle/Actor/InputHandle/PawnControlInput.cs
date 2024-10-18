@@ -33,7 +33,7 @@ namespace Hono.Scripts.Battle
 
         protected override void AutoMove()
         {
-            if (!OpenManualControl)
+            if (!OpenManualControl || !InputManager.Instance.HasMoveInput)
             {
                 base.AutoMove();
             }
@@ -47,7 +47,7 @@ namespace Hono.Scripts.Battle
             }
             else
             {
-                if (Logic.CurState() == EActorLogicStateType.Idle)
+                if (!InputManager.Instance.HasMoveInput)
                 {
                     base.AutoUseSkill();
                 }

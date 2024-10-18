@@ -7,7 +7,9 @@
             public RoundSuccessScoringState(RoundController roundController) : base(roundController) { }
             public override ERoundState GetRoundState() => ERoundState.SuccessScoring;
 
-            protected override void onEnter() { }
+            protected override void onEnter() {
+	            Round.GameRunningState.BattleGroundHandle.RuntimeInfo.RPCount += CurrentRoundData.RPCount;
+            }
 
             protected override void onTick(float dt)
             {

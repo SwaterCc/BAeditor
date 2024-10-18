@@ -2,5 +2,5 @@
 Id,Desc,DamageValue,ApplyFuncName,ConditionIds,ConditionParams
 int,string,intArray,string,intArray,intTable
 222,疯狂之心：敌人身上每有一种不同的控制效果，你造成的持续性伤害就会提高[20.0]%[×]。不可阻挡的敌人和跟路的首领受到来自你的持续性伤害改为提高[10-40]%[x]。,500=2000=1000=4000,CrazyHeart,0,
-20700101,,5000,normal,5,1=207201=1=0
-20600301,射手-致命射击,30000,normal,8,1=2=3000
+20700101,德鲁伊-星涌,5000,normal,5,1=207201=1=0
+20600301,射手-致命射击,30000,normal,8,1=5=3000

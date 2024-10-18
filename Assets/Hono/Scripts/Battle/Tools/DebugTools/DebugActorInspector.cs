@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Event;
 using Sirenix.OdinInspector;
@@ -18,6 +18,9 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
         [LabelText("显示指定属性")] public string ShowAttrText;
 
         private Actor _actor;
+
+
+		public Vector3 AttrPos = Vector3.zero;
         
         public void Awake()
         {
@@ -88,10 +91,13 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
 	        if(ActorModel == null) return;
 	        
 	        _actor ??= ActorManager.Instance.GetActor(ActorModel.ActorUid);
-	        
-	        if(_actor == null) return;
-	        
-	        if (Enum.IsDefined(typeof(ELogicAttr), ShowAttrId)) {
+			
+
+			if (_actor == null) return;
+
+			AttrPos = _actor.Pos;
+
+			if (Enum.IsDefined(typeof(ELogicAttr), ShowAttrId)) {
 		        ShowAttrText = $"{(ELogicAttr)ShowAttrId} : " + _actor.GetAttr<int>(ShowAttrId);
 	        }
 	        
@@ -108,6 +114,7 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
 			        SkillList.Add(pair.Key);
 		        }
 	        }
+	        
         }
     }
 }

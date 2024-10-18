@@ -408,7 +408,7 @@ MonoBehaviour:
       Data: 
     - Name: LogicAttr
       Entry: 3
-      Data: 12112
+      Data: 12114
     - Name: Value
       Entry: 7
       Data: 16|Hono.Scripts.Battle.Parameter, Assembly-CSharp

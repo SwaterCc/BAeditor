@@ -1,5 +1,6 @@
 using System;
 using Hono.Scripts.Battle.Event;
+using Hono.Verse;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle {
@@ -17,7 +18,7 @@ namespace Hono.Scripts.Battle {
 			private float _speed;
 			private Action<int> _moveCollisionCallBack;
 			private const float ModelRadius = 0.25f;
-			
+			private RaycastHit[] _hitResults = new RaycastHit[32];
 			private bool _isBegin;
 			public bool IsBegin => _isBegin; 
 			
@@ -59,14 +60,16 @@ namespace Hono.Scripts.Battle {
 				var dir = _moveOffset.normalized;
 				var boxSize = new Vector3(ModelRadius, 1, _moveOffset.magnitude);
 				var center = _logic.Actor.Pos + ModelRadius * Vector3.forward;
-				RaycastHit[] hitResults = new RaycastHit[8];
-				var size = Physics.BoxCastNonAlloc(center, boxSize / 2, dir, hitResults, _logic.Actor.Rot, 0.001f);
+				
+				var size = Physics.BoxCastNonAlloc(center, boxSize / 2, dir, _hitResults, _logic.Actor.Rot, 0.001f);
 				for (int i = 0; i < size; i++)
 				{
-					var hitInfo = hitResults[i];
-					if (!hitInfo.collider.TryGetComponent<ActorModel>(out var comp)) continue;
-					OnMoveCollision(comp.ActorUid);
-					break;
+					var hitInfo = _hitResults[i];
+					if (hitInfo.collider.TryGetComponent<ActorModel>(out var comp)) {
+						if (comp.ActorUid != _logic.Uid) {
+							OnMoveCollision(comp.ActorUid);
+						}
+					}
 				}
 			}
 			

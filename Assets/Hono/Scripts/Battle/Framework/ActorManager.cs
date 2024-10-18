@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Scene;
 using Hono.Scripts.Battle.Tools;
+using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Hono.Scripts.Battle
 {
@@ -26,8 +28,20 @@ namespace Hono.Scripts.Battle
         {
             _filter = new Filter(this);
         }
+		public void ForeachChracters(Action<Actor> action) {
+			foreach (var item in _runningActorList) {
+				switch (item.ActorType) {
+					case EActorType.Pawn:
+					case EActorType.Monster:
+						action(item);
+						break;
+					default:
+						break;
+				}
+			}
+		}
 
-        public BattleController GetBattleControl()
+		public BattleController GetBattleControl()
         {
             var actor = new Actor(BattleConstValue.BattleRootControllerUid, EActorType.BattleLevelController);
             var battleLevelControl = new BattleController(actor);
@@ -45,7 +59,7 @@ namespace Hono.Scripts.Battle
         /// <param name="actorModel"></param>
         /// <returns></returns>
         private Actor getActor(int uid, EActorType type, int configId, Action<Actor> afterSetupCall,
-            SceneActorModel actorModel)
+            ActorModel actorModel)
         {
             var actor = new Actor(uid, type);
             actor.SetAttr(ELogicAttr.AttrUid, uid, false);
@@ -53,13 +67,14 @@ namespace Hono.Scripts.Battle
             switch (type)
             {
                 case EActorType.Pawn:
-                    actor.Setup(new NormalModelController(actor, actorModel), new PawnLogic(actor));
+                    actor.Setup(new NormalModelController(actor, (SceneActorModel)actorModel), new PawnLogic(actor));
                     break;
                 case EActorType.Monster:
-                    actor.Setup(new NormalModelController(actor, actorModel), new MonsterLogic(actor));
+                    actor.Setup(new NormalModelController(actor, (SceneActorModel)actorModel), new MonsterLogic(actor));
                     break;
                 case EActorType.Building:
-                    actor.Setup(new NormalModelController(actor, actorModel), new BuildingLogic(actor));
+	                var buildingActorModel = actorModel == null ? null : (BuildingActorModel)actorModel;
+                    actor.Setup(new BuildingModelController(actor, buildingActorModel), new BuildingLogic(actor));
                     break;
                 case EActorType.Bullet:
                     actor.Setup(new SimplePreLoadModelController(actor, EPreLoadGameObjectType.BulletModel),
@@ -70,13 +85,13 @@ namespace Hono.Scripts.Battle
                         new HitBoxLogic(actor));
                     break;
                 case EActorType.MonsterGenerator:
-                    actor.Setup(new SimpleSceneModelController(actor, actorModel), new MonsterGeneratorLogic(actor));
+                    actor.Setup(new SimpleSceneModelController(actor, (SceneActorModel)actorModel), new MonsterGeneratorLogic(actor));
                     break;
                 case EActorType.TriggerBox:
-                    actor.Setup(new TriggerBoxModelController(actor, actorModel), new TriggerBoxLogic(actor));
+                    actor.Setup(new TriggerBoxModelController(actor, (SceneActorModel)actorModel), new TriggerBoxLogic(actor));
                     break;
                 case EActorType.TeamDefaultBirthPoint:
-                    actor.Setup(new SimpleSceneModelController(actor, actorModel),
+                    actor.Setup(new SimpleSceneModelController(actor, (SceneActorModel)actorModel),
                         new TeamDefaultBirthPointLogic(actor));
                     break;
                 case EActorType.TeamRefreshPoint:
@@ -121,6 +136,15 @@ namespace Hono.Scripts.Battle
             actor.SetAttr(ELogicAttr.AttrTopSourceActorUid, actor.Uid, false);
             return actor.Uid;
         }
+        
+        public int CreateBuilding(BuildingActorModel buildingModel,int configId = 0, Action<Actor> afterSetupCallFunc = null)
+        {
+	        int uid = buildingModel.ActorUid;
+	        var actor = getActor(uid, EActorType.Building, configId, afterSetupCallFunc, buildingModel);
+	        actor.SetAttr(ELogicAttr.AttrSourceActorUid, actor.Uid, false);
+	        actor.SetAttr(ELogicAttr.AttrTopSourceActorUid, actor.Uid, false);
+	        return actor.Uid;
+        }
 
         #endregion
 
@@ -148,6 +172,20 @@ namespace Hono.Scripts.Battle
 
         public void Tick(float dt)
         {
+	        Profiler.BeginSample("AllActorTick");
+	        
+	        if (_removeList.Count != 0)
+	        {
+		        foreach (var actor in _removeList)
+		        {
+			        actor.Destroy();
+			        _runningActorList.Remove(actor);
+			        _uidActorDict.Remove(actor.Uid);
+		        }
+
+		        _removeList.Clear();
+	        }
+	        
             if (_loadingCaches.Count > 0)
             {
                 foreach (var actor in _loadingCaches)
@@ -165,9 +203,15 @@ namespace Hono.Scripts.Battle
                 {
                     //从加载列表里删除
                     _loadingCaches.Remove(actor.Uid);
-                    _runningActorList.Add(actor);
-                    _uidActorDict.Add(actor.Uid, actor);
-                    actor.Init();
+					if (!_uidActorDict.ContainsKey(actor.Uid)) {
+						_runningActorList.Add(actor);
+						_uidActorDict.Add(actor.Uid, actor);
+						actor.Init();
+					}
+					else {
+						Debug.LogError($"出现key值重复{actor.Uid} {actor.ActorType}");
+					}
+                 
                 }
 
                 _addCaches.Clear();
@@ -177,18 +221,7 @@ namespace Hono.Scripts.Battle
             {
                 actor.Tick(dt);
             }
-
-            if (_removeList.Count != 0)
-            {
-                foreach (var actor in _removeList)
-                {
-                    actor.Destroy();
-                    _runningActorList.Remove(actor);
-                    _uidActorDict.Remove(actor.Uid);
-                }
-
-                _removeList.Clear();
-            }
+            Profiler.EndSample();
         }
 
         public void Update(float dt)
@@ -226,8 +259,8 @@ namespace Hono.Scripts.Battle
         
         public void RemoveActor(int actorUid)
         {
-            if (_uidActorDict.TryGetValue(actorUid, out var actor))
-            {
+            if (_uidActorDict.TryGetValue(actorUid, out var actor)) {
+	            actor.IsExpired = true;
                 _removeList.Add(actor);
             }
         }

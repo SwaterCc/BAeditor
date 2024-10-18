@@ -55,6 +55,11 @@ namespace Hono.Scripts.Battle {
 		/// </summary>
 		public Tags Tags { get; private set; }
 
+		/// <summary>
+		/// 逻辑帧时间缩放系数
+		/// </summary>
+		public float TimeScaleFactory;
+
 		public Ability(Actor actor, int abilityConfigId) {
 			Uid = abilityConfigId;
 			Actor = actor;
@@ -65,7 +70,7 @@ namespace Hono.Scripts.Battle {
 			_commands = new HashSet<ICommand>();
 			AssetManager.Instance.AddReloadHandle(this);
 			Tags = new Tags();
-		
+			TimeScaleFactory = 1;
 			_executor.Setup();
 		}
 
@@ -106,7 +111,7 @@ namespace Hono.Scripts.Battle {
 		}
 
 		public void OnTick(float dt) {
-			_state.Tick(dt);
+			_state.Tick(dt * TimeScaleFactory);
 		}
 
 		public void SetNextGroupId(int id) {

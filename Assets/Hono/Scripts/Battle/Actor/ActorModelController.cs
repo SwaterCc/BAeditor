@@ -32,7 +32,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 模型是否加值完成
         /// </summary>
-        public bool IsModelLoadFinish { get; private set; }
+        public bool IsModelLoadFinish { get; protected set; }
 
         /// <summary>
         /// 模型来自场景
@@ -69,7 +69,7 @@ namespace Hono.Scripts.Battle
             _tags = tags;
             _variables = varCollection;
             _actorLogic = actorLogic;
-            getModelSetup().SetupModel(this, () =>
+            getModelSetup()?.SetupModel(this, () =>
             {
                 onModelLoadFinish();
                 Actor.OnModelLoadFinish?.Invoke(Actor);

@@ -32,6 +32,9 @@ namespace Hono.Scripts.Battle
         
         [LabelText("成功结算期时长(必须为有限时长最低为0)")]
         public float SucessScoringStageTime = 0;
+
+        [LabelText("成功结算后获取的资源数量")]
+        public int RPCount;
         
         [LabelText("失败结算期时长(必须为有限时长最低为0)")]
         public float FailedScoringStageTime = 0;

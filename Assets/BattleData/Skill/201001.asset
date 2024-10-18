@@ -42,7 +42,7 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 8
+      Radius: 10
       Angle: 0
     MaxTargetCount: 1
     HasSelf: 0
@@ -54,3 +54,6 @@ MonoBehaviour:
     FilterFunctionType: 31
   MaxTargetCount: 1
   SelectSelf: 0
+  SkillName: "\u51B2\u950B"
+  SkillDesc: "\u5411\u76EE\u6807\u53D1\u8D77\u51B2\u950B\u5E76\u5BF9\u5176\u9020\u6210120%\u7269\u7406\u4F24\u5BB3"
+  SkillIconPath: 

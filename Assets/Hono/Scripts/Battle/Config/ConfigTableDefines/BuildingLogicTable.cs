@@ -64,7 +64,6 @@ namespace Hono.Scripts.Battle
         {
             return _tableData.TryGetValue(id, out data);
         }
-
        
     }
 
@@ -74,9 +73,19 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
+            /// 名字
+            /// </summary>
+            public string Name { get; private set; }
+            
+            /// <summary>
             /// 描述
             /// </summary>
             public string Desc { get; private set; }
+            
+            /// <summary>
+            /// demo临时建造消耗。对指定道具的消耗数量需求
+            /// </summary>
+            public int TempCost { get; private set; }
             
             /// <summary>
             /// 建筑Icon
@@ -94,6 +103,11 @@ namespace Hono.Scripts.Battle
             public int Faction { get; private set; }
             
             /// <summary>
+            /// 初始标签
+            /// </summary>
+            public IntArray TagList { get; private set; }
+            
+            /// <summary>
             /// 初始化属性模板Id
             /// </summary>
             public int AttrTemplateId { get; private set; }
@@ -104,9 +118,14 @@ namespace Hono.Scripts.Battle
             public IntArray OwnerBuffs { get; private set; }
             
             /// <summary>
-            /// 拥有的其他Ability
+            /// 拥有的技能
             /// </summary>
-            public IntArray ownerOtherAbility { get; private set; }
+            public IntTable ownerSkills { get; private set; }
+            
+            /// <summary>
+            /// 不吃位移控制
+            /// </summary>
+            public int IgnoreOtherMotion { get; private set; }
             
 
             public BuildingLogicRow()
@@ -126,19 +145,27 @@ namespace Hono.Scripts.Battle
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.Desc = parseString(line[1]);
+                    _row.Name = parseString(line[1]);
             
-                    _row.RPGIcon = parseString(line[2]);
+                    _row.Desc = parseString(line[2]);
             
-                    _row.Model = parseInt(line[3]);
+                    _row.TempCost = parseInt(line[3]);
             
-                    _row.Faction = parseInt(line[4]);
+                    _row.RPGIcon = parseString(line[4]);
             
-                    _row.AttrTemplateId = parseInt(line[5]);
+                    _row.Model = parseInt(line[5]);
             
-                    _row.OwnerBuffs = parseIntArray(line[6]);
+                    _row.Faction = parseInt(line[6]);
             
-                    _row.ownerOtherAbility = parseIntArray(line[7]);
+                    _row.TagList = parseIntArray(line[7]);
+            
+                    _row.AttrTemplateId = parseInt(line[8]);
+            
+                    _row.OwnerBuffs = parseIntArray(line[9]);
+            
+                    _row.ownerSkills = parseIntTable(line[10]);
+            
+                    _row.IgnoreOtherMotion = parseInt(line[11]);
             
                 }
             }

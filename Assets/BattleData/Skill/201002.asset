@@ -17,7 +17,7 @@ MonoBehaviour:
   SkillTargetType: 0
   SkillRange: 3
   EcdMode: 0
-  SkillCD: 1
+  SkillCD: 6
   SkillResCheck: []
   CostType: 0
   SkillResCost: []
@@ -25,12 +25,12 @@ MonoBehaviour:
   PriorityDEF: 0
   ForceFaceTarget: 1
   SkillDamageBasePer: 15000
-  UseCustomFilter: 0
+  UseCustomFilter: 1
   CustomFilter:
     _isOnlyCondition: 0
     OpenBoxCheck: 1
     BoxData:
-      ShapeType: 0
+      ShapeType: 1
       Rot:
         x: 0
         y: 0
@@ -42,12 +42,18 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 0
+      Radius: 3
       Angle: 0
-    MaxTargetCount: -1
-    HasSelf: 0
-    Ranges: []
+    MaxTargetCount: 1
+    HasSelf: 1
+    Ranges:
+    - RangeType: 3
+      IsReverse: 0
+      Value: 2
     Compares: []
-    FilterFunctionType: 0
+    FilterFunctionType: 31
   MaxTargetCount: 1
   SelectSelf: 0
+  SkillName: "\u987A\u5288\u65A9"
+  SkillDesc: "\u5411\u76EE\u6807\u987A\u5288\uFF0C\u547D\u4E2D\u5468\u56F45\u540D\u654C\u4EBA\uFF0C\u5206\u522B\u9020\u621070%\u7269\u7406\u4F24\u5BB3\u3002<br>\u547D\u4E2D\u76EE\u6807\u7269\u7406\u6297\u6027\u964D\u4F4E20%\uFF0C\u6301\u7EED4\u79D2"
+  SkillIconPath: 

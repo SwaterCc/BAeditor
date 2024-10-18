@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -46,11 +47,7 @@ namespace Hono.Scripts.Battle
             }
 
             public void Setup() { }
-
-            public void AddAutoSwitchCheck()
-            {
-                
-            }
+            
 
             public void Init()
             {
@@ -80,10 +77,9 @@ namespace Hono.Scripts.Battle
                     _current.Exit();
                     _current = _states[realNext];
                     _curStateType = realNext;
-                    _current.Enter();
+					_nextStateType = _curStateType;
+					_current.Enter();
                 }
-
-                _current.Tick(dt);
             }
         }
     }

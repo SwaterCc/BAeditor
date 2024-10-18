@@ -63,10 +63,7 @@ namespace Hono.Scripts.Battle
             /// </summary>
             public void OnCollision(int otherUid)
             {
-                foreach (var motion in _motionDict)
-                {
-                    motion.Value.OnMoveCollision(otherUid);
-                }
+                return;
             }
 
             protected override void onTick(float dt)
@@ -106,6 +103,10 @@ namespace Hono.Scripts.Battle
                 }
 
                 Actor.SetAttr<Vector3>(ELogicAttr.AttrPosition, curPos + finalOffset, false);
+
+				if (ForceFaceMoveTarget) {
+					Actor.SetAttr<Quaternion>(ELogicAttr.AttrRot, Quaternion.FromToRotation(Vector3.forward, finalOffset.normalized), false);
+				}
 
                 foreach (var motionUid in _removeList)
                 {

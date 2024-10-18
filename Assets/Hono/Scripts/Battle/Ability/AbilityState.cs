@@ -71,7 +71,6 @@ namespace Hono.Scripts.Battle
             /// <param name="dt"></param>
             public void Tick(float dt)
             {
-                
                 if(_hasError) return;
                 
                 try
@@ -117,8 +116,16 @@ namespace Hono.Scripts.Battle
 
             public void ForceStop()
             {
-                _curCycle?.Exit();
-                _curCycle = null;
+	            if (_curCycle != null) {
+		            _curCycle.Exit();
+		            //强制执行一下结束流程
+		            if (_curCycle.CurState != EAbilityState.EndExecute) {
+			            _curCycle = _cycles[EAbilityState.EndExecute];
+			            _curCycle.Enter();
+			            _curCycle.Exit();
+		            }
+	            }
+	            _curCycle = null;
             }
 
             public void StopExecuting() {

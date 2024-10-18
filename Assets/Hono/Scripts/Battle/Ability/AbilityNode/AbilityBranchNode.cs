@@ -26,7 +26,7 @@ namespace Hono.Scripts.Battle
 
             public override void DoJob()
             {
-                if (!_branchNode.CompareFunc.Parse(out _conditionRes))
+                if (!_branchNode.CompareFunc.Parse(_executor.Ability, out _conditionRes))
                 {
                     Debug.LogError("Branch节点执行错误");
                     return;

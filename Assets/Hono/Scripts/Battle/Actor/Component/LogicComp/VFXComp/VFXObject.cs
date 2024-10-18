@@ -28,8 +28,7 @@ namespace Hono.Scripts.Battle {
 		}
 		
 		public void OnTick(float dt) {
-			//if (_isExpired) return;
-
+	
 			if (_setting.Duration > 0 && _setting.Duration < _dt) {
 				_isExpired = true;
 			}

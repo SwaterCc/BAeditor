@@ -1,7 +1,4 @@
-using System;
-using Hono.Scripts.Battle.Event;
 using Sirenix.OdinInspector;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -12,10 +9,5 @@ namespace Hono.Scripts.Battle
         [ReadOnly] public EActorType ActorType;
 
         protected ActorModelController ModelController { get; private set; }
-
-        public void BindModelController(ActorModelController modelController)
-        {
-            ModelController = modelController;
-        }
     }
 }

@@ -74,6 +74,11 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
+            /// 名字
+            /// </summary>
+            public string Name { get; private set; }
+            
+            /// <summary>
             /// 描述
             /// </summary>
             public string Desc { get; private set; }
@@ -87,6 +92,11 @@ namespace Hono.Scripts.Battle
             /// 初始阵营
             /// </summary>
             public int Faction { get; private set; }
+            
+            /// <summary>
+            /// 初始标签
+            /// </summary>
+            public IntArray TagList { get; private set; }
             
             /// <summary>
             /// 模型表Id
@@ -111,7 +121,12 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// 拥有的其他Ability
             /// </summary>
-            public IntArray ownerOtherAbility { get; private set; }
+            public IntTable ownerOtherAbility { get; private set; }
+            
+            /// <summary>
+            /// 不吃位移控制
+            /// </summary>
+            public int IgnoreOtherMotion { get; private set; }
             
 
             public MonsterLogicRow()
@@ -131,21 +146,27 @@ namespace Hono.Scripts.Battle
                 protected override void onParse(string[] line)
                 {
                     
-                    _row.Desc = parseString(line[1]);
+                    _row.Name = parseString(line[1]);
             
-                    _row.ActorClassId = parseInt(line[2]);
+                    _row.Desc = parseString(line[2]);
             
-                    _row.Faction = parseInt(line[3]);
+                    _row.ActorClassId = parseInt(line[3]);
             
-                    _row.ModelId = parseInt(line[4]);
+                    _row.Faction = parseInt(line[4]);
             
-                    _row.AttrTemplateId = parseInt(line[5]);
+                    _row.TagList = parseIntArray(line[5]);
             
-                    _row.OwnerSkills = parseIntTable(line[6]);
+                    _row.ModelId = parseInt(line[6]);
             
-                    _row.OwnerBuffs = parseIntArray(line[7]);
+                    _row.AttrTemplateId = parseInt(line[7]);
             
-                    _row.ownerOtherAbility = parseIntArray(line[8]);
+                    _row.OwnerSkills = parseIntTable(line[8]);
+            
+                    _row.OwnerBuffs = parseIntArray(line[9]);
+            
+                    _row.ownerOtherAbility = parseIntTable(line[10]);
+            
+                    _row.IgnoreOtherMotion = parseInt(line[11]);
             
                 }
             }

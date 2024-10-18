@@ -1,4 +1,6 @@
-Id,描述,延迟时间,创建间隔,怪物列表，按顺序刷新（ActorType=configId=数量）,创建时添加的buff,额外的技能,阵营覆盖,额外Tag
-Id,Desc,DelayTime,Interval,MonsterInfos,ExBuffs,ExSkills,FactionId,ExTags
-int,string,float,float,intTable,intTable,intTable,int,intArray
-1,,1,1,22 = 10,,,,
+Id,描述,延迟时间,创建间隔,单次创建最大数量,怪物列表，按顺序刷新,创建时添加的buff,额外的技能,阵营覆盖,额外Tag
+Id,Desc,DelayTime,Interval,MaxCreationOnce,MonsterInfos,ExBuffs,ExSkills,FactionId,ExTags
+int,string,float,float,int,intTable,intTable,intTable,int,intArray
+1,,1,2,1,3001=1,,,,
+2,,1,0,10,22=5|1=5,,,,
+3,,1,0,1,9001=1,,,,

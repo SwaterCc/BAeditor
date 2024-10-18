@@ -10,13 +10,17 @@
 		
 		public PawnLogicTable.PawnLogicRow PawnLogicRow { get; }
 		
+		private float _baseSpeed;
+
 		protected override void setupAttrs() {
-			SetAttr(ELogicAttr.AttrBaseSpeed, 10f, false);
+
 			SetAttr(ELogicAttr.AttrFaction, PawnLogicRow.Faction, false);
 			SetAttr(ELogicAttr.AttrModelId, PawnLogicRow.ModelId, false);
-			SetAttr(ELogicAttr.AttrModelId, 1, false);
 			
 			var attrRow = ConfigManager.Table<EntityAttrBaseTable>().Get(PawnLogicRow.AttrTemplateId);
+			_baseSpeed = attrRow.AttrBaseSpeed;
+			SetAttr(ELogicAttr.AttrBaseSpeed, attrRow.AttrBaseSpeed, false);
+			SetAttr(ELogicAttr.AttrMoveSpeedPCTAdd, attrRow.AttrMoveSpeedPCTAdd, false);
 			SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
 			SetAttr(ELogicAttr.AttrMaxHpAdd, attrRow.AttrMaxHpAdd, false);
 			SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
@@ -46,23 +50,25 @@
 		}
 
 		protected override void setupComponents() {
-			addComponent(new AttrCastLv1(this));
+			addComponent(new AttrSimpleProgress(this));
 			addComponent(new SkillComp(this, () => PawnLogicRow.OwnerSkills));
 			addComponent(new BuffComp(this,() => PawnLogicRow.OwnerBuffs));
 			addComponent(new MotionComp(this));
 			addComponent(new BeHurtComp(this));
 			addComponent(new VFXComp(this));
 			addComponent(new HateComp(this));
+			addComponent(new MpComp(this));
 		}
-
+		
+		protected override void onTick(float dt) {
+			//临时处理移速的属性BUFF效果
+			var finalMoveSpeed = _baseSpeed * (Actor.GetAttr<int>(ELogicAttr.AttrMoveSpeedPCT) / 10000f);
+			Actor.SetAttr(ELogicAttr.AttrBaseSpeed, finalMoveSpeed, false);
+		}
+		
 		protected override void setupStateMachine()
 		{
 			_stateMachine = new ActorStateMachine(this);
-		}
-
-		protected override void onTick(float dt)
-		{
-			_pawnControlInput.OpenManualControl = Actor.IsPlayerControl;
 		}
 	}
 }

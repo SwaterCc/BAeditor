@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public override void DoJob() {
-				if (!_attrNodeData.Value.Parse(out object value)) {
+				if (!_attrNodeData.Value.Parse(_executor.Ability, out object value)) {
 					Debug.LogError($"设置属性失败 {_attrNodeData.LogicAttr}");
 					return;
 				}

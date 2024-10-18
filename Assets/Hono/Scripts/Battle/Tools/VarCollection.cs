@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle.Tools
             return _collection.GetValueOrDefault(name);
         }
 
-        public void Set(string key, object variable) {
+        public void Set(string key,in object variable) {
 	        if (string.IsNullOrEmpty(key)) {
 		        Debug.LogError("变量名为空 Set Failed");
 		        return;

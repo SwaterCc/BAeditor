@@ -55,7 +55,7 @@ namespace Hono.Scripts.Battle
 
         private void switchState(EBattleStateType nextStateType)
         {
-            Debug.Log($"[BattleState] switchState Next {nextStateType}");
+            //Debug.Log($"[BattleState] switchState Next {nextStateType}");
             _nextStateType = nextStateType;
         }
 
@@ -66,6 +66,8 @@ namespace Hono.Scripts.Battle
 
         public void Tick(float dt)
         {
+	        BattleManager.BattleController.Actor.Tick(dt);
+	        
             ///临时放置在这里
             ActorManager.Instance.Tick(dt);
             ///临时放置在这里

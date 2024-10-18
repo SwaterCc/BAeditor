@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Hono.Scripts.Battle.Tools
 {
@@ -40,14 +41,14 @@ namespace Hono.Scripts.Battle.Tools
 
             public int GetUid()
             {
-                ++_idx;
+	            int newId = Interlocked.Increment(ref _idx);
 
-                if (_idx >= _end)
-                {
-                    _idx = _start + 1;
-                }
-
-                return _idx;
+	            if (newId > _end) {
+		            _idx = _start;
+		            newId = Interlocked.Increment(ref _idx);
+	            }
+	            
+                return newId;
             }
 
             public bool CheckInRange(int uid)

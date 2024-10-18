@@ -13,13 +13,13 @@ namespace Hono.Scripts.Battle
         private const float CenterPosUpdateInterval = 0.5f;
         private const float TeamRadius = 1.618f;
         private readonly int _teamMemberCount;
-        private List<int> _loadFinishFlag;
+        
         public readonly List<Vector3> MemberDirection;
         
         public int TeamIndex { get; }
-        public bool TeamLoadFinish => _loadFinishFlag.Count == _teamMemberCount;
         public Vector3 CenterPos { get; private set; }
         public Quaternion CenterRot { get; private set; }
+        public int LeaderUid { get => _leader == null ? -1 : _leader.ActorUid; }
 
         public PawnTeamState(int teamIndex, int teamMemberCount, List<int> memberConfigIds)
         {
@@ -31,7 +31,6 @@ namespace Hono.Scripts.Battle
                 Vector3.back,
                 Vector3.left,
             };
-            _loadFinishFlag = new List<int>(teamMemberCount);
             
             TeamIndex = teamIndex;
             
@@ -72,9 +71,10 @@ namespace Hono.Scripts.Battle
         
         public void OnTick(float dt)
         {
+	        updateCenterPos();
             if (_duration > CenterPosUpdateInterval)
             {
-                updateCenterPos();
+                
                 _duration = 0;
             }
 

@@ -8,15 +8,19 @@ namespace Hono.Scripts.Battle
 		    MonsterConfig = ConfigManager.Table<MonsterLogicTable>().Get(actor.ConfigId);
 	    }
 
-        public MonsterLogicTable.MonsterLogicRow MonsterConfig { get; }
+		private float _baseSpeed;
+
+		public MonsterLogicTable.MonsterLogicRow MonsterConfig { get; }
 
         protected override void setupAttrs() {
-	        //SetAttr(ELogicAttr.AttrModelId, MonsterConfig.ModelId, false);
-	        SetAttr(ELogicAttr.AttrModelId, 2, false);
+	        SetAttr(ELogicAttr.AttrModelId, MonsterConfig.ModelId, false);
 	        SetAttr(ELogicAttr.AttrFaction, MonsterConfig.Faction, false);
 	        
 	        var attrRow = ConfigManager.Table<EntityAttrBaseTable>().Get(MonsterConfig.AttrTemplateId);
-	        SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
+			_baseSpeed = attrRow.AttrBaseSpeed;
+			SetAttr(ELogicAttr.AttrBaseSpeed, attrRow.AttrBaseSpeed, false);
+			SetAttr(ELogicAttr.AttrMoveSpeedPCTAdd, attrRow.AttrMoveSpeedPCTAdd, false);
+			SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
 	        SetAttr(ELogicAttr.AttrMaxHpAdd, attrRow.AttrMaxHpAdd,false);
 	        SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
 	        SetAttr(ELogicAttr.AttrMaxMpAdd, attrRow.AttrMaxMpAdd,false);
@@ -45,7 +49,7 @@ namespace Hono.Scripts.Battle
 
         protected override void setupComponents()
         {
-	        addComponent(new AttrCastLv1(this));
+	        addComponent(new AttrSimpleProgress(this));
             addComponent(new BeHurtComp(this));
             addComponent(new BuffComp(this,() => MonsterConfig.OwnerBuffs));
             addComponent(new SkillComp(this, () => MonsterConfig.OwnerSkills));
@@ -53,6 +57,11 @@ namespace Hono.Scripts.Battle
             addComponent(new MotionComp(this));
             addComponent(new HateComp(this));
         }
+		protected override void onTick(float dt) {
+			
+			var finalMoveSpeed = _baseSpeed * (Actor.GetAttr<int>(ELogicAttr.AttrMoveSpeedPCT) / 10000f);
+			Actor.SetAttr<float>(ELogicAttr.AttrBaseSpeed, finalMoveSpeed, false);
+		}
 
         protected override void setupStateMachine()
         {

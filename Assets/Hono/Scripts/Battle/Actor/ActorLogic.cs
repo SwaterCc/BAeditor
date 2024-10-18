@@ -2,6 +2,7 @@ using Hono.Scripts.Battle.Tools;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Hono.Scripts.Battle
 {
@@ -148,15 +149,19 @@ namespace Hono.Scripts.Battle
 
         public void Tick(float dt)
         {
+	        Profiler.BeginSample("ActorLogicComponentTick");
             foreach (var component in _components)
             {
                 component.Value.Tick(dt);
             }
-            
+            Profiler.EndSample();
+            Profiler.BeginSample("ActorLogicInput");
             _actorInput.Tick(dt);
+            Profiler.EndSample();
             _stateMachine?.Tick(dt);
-            
+            Profiler.BeginSample("ActorLogicTick");
             onTick(dt);
+            Profiler.EndSample();
         }
 
         public void Destroy()
@@ -170,7 +175,7 @@ namespace Hono.Scripts.Battle
         }
 
         protected virtual void onDestroy() { }
-
+        
         public EActorLogicStateType CurState()
         {
             return _stateMachine.CurStateType;

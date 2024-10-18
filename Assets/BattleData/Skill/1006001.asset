@@ -13,24 +13,24 @@ MonoBehaviour:
   m_Name: 1006001
   m_EditorClassIdentifier: 
   SkillId: 1006001
-  SkillType: 0
+  SkillType: 1
   SkillTargetType: 0
   SkillRange: 0
   EcdMode: 0
-  SkillCD: 0
+  SkillCD: 2
   SkillResCheck: []
   CostType: 0
   SkillResCost: []
   PriorityATK: 0
   PriorityDEF: 0
-  ForceFaceTarget: 0
+  ForceFaceTarget: 1
   SkillDamageBasePer: 0
   UseCustomFilter: 1
   CustomFilter:
     _isOnlyCondition: 0
-    OpenBoxCheck: 0
+    OpenBoxCheck: 1
     BoxData:
-      ShapeType: 0
+      ShapeType: 1
       Rot:
         x: 0
         y: 0
@@ -42,12 +42,18 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 0
+      Radius: 10
       Angle: 0
-    MaxTargetCount: 0
+    MaxTargetCount: 1
     HasSelf: 0
-    Ranges: []
+    Ranges:
+    - RangeType: 3
+      IsReverse: 0
+      Value: 2
     Compares: []
-    FilterFunctionType: 0
+    FilterFunctionType: 31
   MaxTargetCount: 1
   SelectSelf: 0
+  SkillName: 
+  SkillDesc: 
+  SkillIconPath: 

@@ -6,6 +6,7 @@
 --【【【配置】】】=======================================================================================================================================
 ELogicAttr = CS.Hono.Scripts.Battle.ELogicAttr
 local maxDamage = 999999
+local baseDamageCritRate = 10000
 local damageDistance = 5
 local dmgAddiTags, dmgAddiValues= {100, 101, 102, 103}, {0,0,0,0}   --这几个TAG是预留的特殊tag，专门用来增伤，可增减
 
@@ -208,7 +209,7 @@ local DamageModifierCondition = {
         return result
     end,
 
-    CheckHpPer = function (attacker, target, params)
+    CheckHpPer = function (attacker, target, damageInfo, params)
         -- params[0] 对象，0=攻击者，1=目标
         -- params[1] 比较符，1=大于，2=大于等于，3=等于，4=小于，5=小于等于
         -- params[2] 比较值
@@ -247,6 +248,7 @@ local DamageApplyModifier = {
 local damageArgs = {}
 local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig)        --【伤害计算前置流程，获取各项数值和预处理】
     --获取各项属性值并塞到列表里
+    damageArgs.DamageType = damageConfig.DamageType                                    --伤害类型，治疗？伤害
     damageArgs.Level_Final = attacker:GetAttrLua(60010)                                --攻击者等级
     damageArgs.ATK_Final = attacker:GetAttrLua(12100)                                  --攻击力
     damageArgs.Def_Final = target:GetAttrLua(12110)                                    --防御力
@@ -281,7 +283,7 @@ local FrontDamageProcess = function(attacker, target, damageInfo, damageConfig) 
     --防御减伤计算
     local DefRedFinal = math.max(0,
             1 - (damageArgs.Def_Final - damageArgs.DefIgnore_Final) /
-                    ((damageArgs.Def_Final) + (damageArgs.Level_Final * 5 + 500)))
+                    ((damageArgs.Def_Final) + (damageArgs.Level_Final * 5 + 50)))
 
 
     --抗性减伤计算
@@ -394,11 +396,10 @@ DamageProcess.CriticalProcess = function(attacker, target, damageInfo, damageArg
     local randomValue = math.random(0, 10000)
     damageArgs.IsCritical = false
     if ExCritPara == -1 or damageInfo.SourceType == 2 then
-        return false, CriticalAddValue
-    elseif
-        damageArgs.CritChance > randomValue or ExCritPara == 1 then
+        return false, CriticalAddValue / 10000
+    elseif  damageArgs.CritChance > randomValue or ExCritPara == 1 then
         damageArgs.IsCritical = true  --伤害暴击了
-        CriticalAddValue = damageArgs.CritDamage --后续会增加条件暴击增伤，例：对脆弱目标造成暴击伤害增加500%
+        CriticalAddValue = damageArgs.CritDamage + baseDamageCritRate --后续会增加条件暴击增伤，例：对脆弱目标造成暴击伤害增加500%
     end
     return true, CriticalAddValue / 10000
 end
@@ -415,7 +416,7 @@ DamageProcess.DamageProcessMain = function(attacker, target, damageInfo, damageC
     --计算冲击
 
     --填充伤害结果
-    local damageResult = CS.Hono.Scripts.Battle.DamageResults(finalDamageValue, damageArgs.IsCritical, 999)
+    local damageResult = CS.Hono.Scripts.Battle.DamageResults(finalDamageValue, damageArgs.IsCritical, 999, damageArgs.DamageType)
     return damageResult
 end
 
@@ -436,7 +437,7 @@ DamageFormula = {
         local finalDamageValue = math.min(maxDamage, math.max(1, finalDamageValue))
         if triggerParam ~= 1 then
             logger.Info(
-                    "<color=#F8B21B>DamageLog 元素:%s 最终伤害:<b>%s</b>  %s AbilityID:%s  最终攻击力:%s * 技能倍率:%s * 附加增伤:%s * 乘区增伤:%s * 最终承伤:%s</color> , %s",
+                    "<color=#F8B21B>DamageLog 元素:%s 最终伤害:<b>%s</b>  %s AbilityID:%s  最终攻击力:%s * 技能倍率:%s * 附加增伤:%s * 乘区增伤:%s * 暴击倍率:%s * 最终承伤:%s</color> , %s",
                     string.sub(tostring(damageConfig.ElementType), 1, string.find(tostring(damageConfig.ElementType), " ") - 2),
                     math.floor(finalDamageValue),
                     logger.IntToStr(damageArgs.IsCritical and 1 or 0, "<color=#F8471B>暴击</color>"),
@@ -445,6 +446,7 @@ DamageFormula = {
                     damageArgs.Skill_Per,
                     damageArgs.FinalAddi,
                     damageArgs.FinalMulti,
+                    damageArgs.CritDmgRate,
                     damageArgs.FinalRED,
                     tostring(attacker.Uid.." => "..target.Uid)
             )
@@ -474,9 +476,9 @@ DamageFormula = {
         local beHealed = target:GetAttrLuaByType(ELogicAttr.AttrHealed) / 10000
 
         local finalDamageValue =
-        (healAttack * damageArgs.Skill_Per) * (1 + beHealed + healUp) * damageArgs.CritDmgRate;
+        (healAttack * damageArgs.Skill_Per) * (1 + beHealed + healUp) * damageArgs.CritDmgRate * -1
         logger.Info(
-                "<color=#1DDD16>DamageLog 最终治疗:<b>%s</b>  %s AbilityID:%s  最终治疗强度:%s * 技能倍率:%s * ( 1 + 额外治疗效果:%s + 额外被治疗效果:%s )</color> , %s",
+                "<color=#1DDD16>DamageLog 最终治疗:<b>%s</b>  %s AbilityID:%s  最终治疗强度:%s * 技能倍率:%s * ( 1 + 额外治疗效果:%s + 额外被治疗效果:%s )</color> * 暴击倍率:%s , %s",
                 math.floor(finalDamageValue),
                 logger.IntToStr(damageArgs.IsCritical and 1 or 0, "<color=#F8471B>暴击</color>"),
                 damageInfo.SourceAbilityConfigId,
@@ -484,6 +486,7 @@ DamageFormula = {
                 damageArgs.Skill_Per,
                 healUp,
                 beHealed,
+                damageArgs.CritDmgRate,
                 tostring(attacker.Uid.." => "..target.Uid)
         )
 
@@ -493,7 +496,7 @@ DamageFormula = {
     HealTargetPct = function(attacker, target, damageInfo, damageConfig, damageArgs)
         local targetMAXHP = target:GetAttrLua(10010)
         local finalDamageValue =
-        damageArgs.Skill_Per * targetMAXHP
+        damageArgs.Skill_Per * targetMAXHP * -1
         logger.Info(
                 "<color=#1DDD16>DamageLog 百分比治疗:<b>%s</b>  %s AbilityID:%s  技能倍率:%s * 目标MAXHP:%s</color> , %s",
                 math.floor(finalDamageValue),

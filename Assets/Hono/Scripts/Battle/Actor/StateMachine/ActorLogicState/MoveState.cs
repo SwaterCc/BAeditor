@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
 
             public override void Init()
             {
-                _baseSpeed = _actorLogic.GetAttr<float>(ELogicAttr.AttrBaseSpeed);
+                //_baseSpeed = _actorLogic.GetAttr<float>(ELogicAttr.AttrBaseSpeed);
                 _motionComp = _actorLogic.GetComponent<MotionComp>();
             }
 
@@ -26,7 +26,8 @@ namespace Hono.Scripts.Battle
                 
                 var curPos = _actorLogic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
                 var curRot = Quaternion.LookRotation( _actorLogic._actorInput.MoveInputValue,Vector3.up);
-                var offset = _actorLogic._actorInput.MoveInputValue * (_baseSpeed * dt);
+                var finalSpeed = _actorLogic.GetAttr<float>(ELogicAttr.AttrBaseSpeed);
+                var offset = _actorLogic._actorInput.MoveInputValue * (finalSpeed * dt);
                 _actorLogic.SetAttr(ELogicAttr.AttrPosition, curPos + offset, false);
 
                 if (_motionComp is { ForceFaceMoveTarget: false })

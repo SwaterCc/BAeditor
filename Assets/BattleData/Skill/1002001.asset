@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: 1002001
   m_EditorClassIdentifier: 
   SkillId: 1002001
-  SkillType: 0
+  SkillType: 1
   SkillTargetType: 0
   SkillRange: 0
   EcdMode: 0
-  SkillCD: 0
+  SkillCD: 2
   SkillResCheck: []
   CostType: 0
   SkillResCost: []
@@ -42,7 +42,7 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 4
+      Radius: 2
       Angle: 0
     MaxTargetCount: 1
     HasSelf: 0
@@ -54,3 +54,6 @@ MonoBehaviour:
     FilterFunctionType: 31
   MaxTargetCount: 1
   SelectSelf: 0
+  SkillName: 
+  SkillDesc: 
+  SkillIconPath: 

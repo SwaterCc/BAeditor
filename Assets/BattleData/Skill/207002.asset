@@ -25,8 +25,9 @@ MonoBehaviour:
   PriorityDEF: 0
   ForceFaceTarget: 1
   SkillDamageBasePer: 0
-  UseCustomFilter: 0
+  UseCustomFilter: 1
   CustomFilter:
+    _isOnlyCondition: 0
     OpenBoxCheck: 0
     BoxData:
       ShapeType: 0
@@ -48,4 +49,8 @@ MonoBehaviour:
     Ranges: []
     Compares: []
     FilterFunctionType: 0
-  MaxTargetCount: 1
+  MaxTargetCount: -1
+  SelectSelf: 0
+  SkillName: 
+  SkillDesc: 
+  SkillIconPath: 

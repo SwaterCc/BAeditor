@@ -1,5 +1,6 @@
 using System.IO;
 using UnityEngine;
+using UnityEngine.Profiling;
 using XLua;
 
 namespace Hono.Scripts.Battle
@@ -58,13 +59,11 @@ namespace Hono.Scripts.Battle
             else {
                 Debug.LogError("lua函数返回失败");
             }
-
             return null;
         }
 
         public static int GetFaction(int factionId1,int factionId2)
         {
-            Reload();
             var rets = _factionMain.Call(factionId1, factionId2);
             if (rets is { Length: > 0 }) {
                 return (int)((long)rets[0]);
@@ -72,7 +71,6 @@ namespace Hono.Scripts.Battle
             else {
                 Debug.LogError("lua函数返回失败");
             }
-            
             return 0;
         }
         

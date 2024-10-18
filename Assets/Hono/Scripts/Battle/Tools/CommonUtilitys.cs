@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Profiling;
 using Random = System.Random;
 
 namespace Hono.Scripts.Battle.Tools {
@@ -69,80 +70,31 @@ namespace Hono.Scripts.Battle.Tools {
 		/// 从一个List<int>中随机选取指定数量的对象。
 		/// </summary>
 		/// <param name="list">源列表</param>
-		/// <param name="count">要选取的对象数量</param>
 		/// <returns>选取的对象列表</returns>
-		public static List<int> SelectRandomElements(List<int> list, int count) {
+		public static void Shuffle(ref List<int> list) {
 			if (list == null)
 				throw new ArgumentNullException(nameof(list));
 
-			if (count < 0 || count > list.Count)
-				throw new ArgumentOutOfRangeException(nameof(count));
+			int n = list.Count;
+			for (int i = n - 1; i > 0; i--) {
+				int j = _random.Next(0, i + 1);
 
-			List<int> tempList = new List<int>(list);
-			List<int> selectedElements = new List<int>();
-
-			for (int i = 0; i < count; i++) {
-				int index = _random.Next(tempList.Count);
-				selectedElements.Add(tempList[index]);
-				tempList.RemoveAt(index);
+				// 交换位置 list[i] 和 list[j]
+				(list[i], list[j]) = (list[j], list[i]);
 			}
-
-			return selectedElements;
 		}
 
-		public static bool HitRayCast(CheckBoxData data, Vector3 selectCenterPos, Quaternion followAttackerRot,
-			out List<int> actorIds) {
-			actorIds = null;
-			//获取中心坐标
-			//var offset = data.OffsetUsePercent ? vector3Sub(data.Scale, data.Offset) : data.Offset;
-			var finalRot = followAttackerRot * Quaternion.Euler(data.Rot);
-			var centerPos = selectCenterPos + finalRot * data.Offset;
+		private static RayCastHitChecker _rayCastHitChecker = new();
 
-			//最大命中数量
-			List<RaycastHit> raycastHits = new List<RaycastHit>();
-			switch (data.ShapeType) {
-				case ECheckBoxShapeType.Cube:
-					var boxSize = new Vector3(data.Length, data.Height, data.Width);
-					raycastHits.AddRange(Physics.BoxCastAll(centerPos, boxSize / 2, followAttackerRot * Vector3.forward,
-						finalRot, 0.001f));
-					GizmosHelper.Instance.DrawCube(centerPos, boxSize, finalRot,
-						new Color(0, 0.7f, 0.5f, 0.4f));
-					break;
-				case ECheckBoxShapeType.Sphere:
-					var sphereData = data;
-					raycastHits.AddRange(Physics.SphereCastAll(centerPos, sphereData.Radius,
-						followAttackerRot * Vector3.forward,
-						0.001f));
-					GizmosHelper.Instance.DrawSphere(centerPos, sphereData.Radius, finalRot,
-						new Color(0, 0.7f, 0.5f, 0.4f));
-					break;
-				case ECheckBoxShapeType.Cylinder:
-					var cylinderData = data;
-					raycastHits.AddRange(Physics.CapsuleCastAll(centerPos + Vector3.up * (cylinderData.Height / 2),
-						centerPos + Vector3.down * (cylinderData.Height / 2),
-						0.1f,
-						followAttackerRot * Vector3.forward, 0.001f));
-					break;
-				default:
-					Debug.LogError("使用了未实现的检测");
-					return false;
+		public static bool HitRayCast(CheckBoxData data, Vector3 centerPos, Quaternion rot, ref List<int> actorIds) {
+			if (actorIds == null) {
+				Debug.LogError("HitRayCast 不允许传入空的actorIds");
+				return false;
 			}
-
-			foreach (var raycastHit in raycastHits) {
-				if (!raycastHit.collider.TryGetComponent<ActorModel>(out var handle)) {
-					continue;
-				}
-
-				if (handle.ActorType == EActorType.BattleLevelController)
-				{
-					continue;
-				}
-
-				actorIds ??= new List<int>();
-				actorIds.Add(handle.ActorUid);
-			}
-
-			return actorIds != null;
+			Profiler.BeginSample("RayCastHitChecker");
+			int size = _rayCastHitChecker.GetHitActor(data, centerPos, rot, ref actorIds);
+			Profiler.EndSample();
+			return size > 0;
 		}
 	}
 }

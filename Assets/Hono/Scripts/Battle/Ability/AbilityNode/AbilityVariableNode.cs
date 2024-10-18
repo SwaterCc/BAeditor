@@ -28,7 +28,7 @@ namespace Hono.Scripts.Battle
                 }
                 else
                 {
-                    if (!_varData.Value.Parse(out variable))
+                    if (!_varData.Value.Parse(_executor.Ability,out variable))
                     {
                         Debug.LogError($"函数执行失败 Name {_varData.Name}");
                         return;

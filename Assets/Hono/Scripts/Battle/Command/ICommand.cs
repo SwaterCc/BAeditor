@@ -16,12 +16,8 @@
 	/// <summary>
 	/// 属性改变记录，目前仅记录值类型修改，引用类型的修改需要自己单独继承实现
 	/// </summary>
-	public class AttrCommand<T> : ICommand{
-		/// <summary>
-		/// 来源描述，Debug用的
-		/// </summary>
-		public string Desc = null;
-
+	public struct AttrCommand<T> : ICommand{
+		
 		/// <summary>
 		/// 修改的值
 		/// </summary>
@@ -29,7 +25,7 @@
 		
 		private ICommandCollection _collection;
 		
-		public AttrCommand(ICommandCollection collection, T value, string desc = "") {
+		public AttrCommand(ICommandCollection collection, T value) {
 			Value = value;
 			_collection = collection;
 			_collection.AddCommand(this);

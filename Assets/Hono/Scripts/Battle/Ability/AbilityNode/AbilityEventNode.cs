@@ -21,7 +21,7 @@ namespace Hono.Scripts.Battle
             {
                 if (_eventNodeData.IsEvent)
                 {
-                    if (!_eventNodeData.CreateChecker.Parse(out _checker))
+                    if (!_eventNodeData.CreateChecker.Parse(_executor.Ability,out _checker))
                     {
                         Debug.LogError("Event执行失败");
                         return;
@@ -52,16 +52,13 @@ namespace Hono.Scripts.Battle
             private void onEventFired(IEventInfo eventInfo)
             {
 	            //Debug.Log($"[Ability] ActorUid {_executor.Ability.Actor.Uid} AbilityId:{_executor.AbilityData.ConfigId} EventNodeFired nodeId {NodeId}");
-	            _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
 	            eventInfo.SetFieldsInAbilityVariables(_executor.Ability);
 	            DoChildrenJob();
                 eventInfo.ClearFields(_executor.Ability);
-	            _context.ClearContext();
             }
 
             private void onMsgCall(object p1,object p2,object p3,object p4,object p5)
             {
-                _context.UpdateContext((_executor.Ability.Actor, _executor.Ability));
                 _executor.Ability.Variables.Set("Msg:P1",p1);
                 _executor.Ability.Variables.Set("Msg:P2",p2);
                 _executor.Ability.Variables.Set("Msg:P3",p3);
@@ -73,7 +70,6 @@ namespace Hono.Scripts.Battle
                 _executor.Ability.Variables.Delete("Msg:P3");
                 _executor.Ability.Variables.Delete("Msg:P4");
                 _executor.Ability.Variables.Delete("Msg:P5");
-                _context.ClearContext();
             }
 
             public override void DoJob() { }

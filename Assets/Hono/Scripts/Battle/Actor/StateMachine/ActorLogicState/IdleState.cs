@@ -1,4 +1,6 @@
-﻿namespace Hono.Scripts.Battle
+﻿using UnityEngine;
+
+namespace Hono.Scripts.Battle
 {
     public partial class ActorLogic
     {
@@ -9,6 +11,7 @@
             public override bool TryGetAutoSwitchState(out EActorLogicStateType next)
             {
                 next = StateType;
+               
                 if (_actorLogic._actorInput.MoveInputValue.magnitude > 0)
                 {
                     next = EActorLogicStateType.Move;

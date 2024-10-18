@@ -39,6 +39,8 @@ namespace Hono.Scripts.Battle
 
         public int LeaderUid { get; set; }
 
+        public int RPCount { get; set; }
+
         public int GetRoundSurvivalFaction(int factionId)
         {
             return _curFactionActorCount.GetValueOrDefault(factionId, 0);

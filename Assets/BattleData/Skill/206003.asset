@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 206003
   m_EditorClassIdentifier: 
   SkillId: 206003
-  SkillType: 0
+  SkillType: 2
   SkillTargetType: 0
   SkillRange: 0
   EcdMode: 0
@@ -23,13 +23,14 @@ MonoBehaviour:
   SkillResCost: []
   PriorityATK: 0
   PriorityDEF: 0
-  ForceFaceTarget: 0
+  ForceFaceTarget: 1
   SkillDamageBasePer: 0
   UseCustomFilter: 1
   CustomFilter:
+    _isOnlyCondition: 0
     OpenBoxCheck: 1
     BoxData:
-      ShapeType: 0
+      ShapeType: 1
       Rot:
         x: 0
         y: 0
@@ -41,11 +42,18 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 0
+      Radius: 12
       Angle: 0
-    MaxTargetCount: -1
+    MaxTargetCount: 3
     HasSelf: 0
-    Ranges: []
+    Ranges:
+    - RangeType: 3
+      IsReverse: 0
+      Value: 2
     Compares: []
-    FilterFunctionType: 0
-  MaxTargetCount: 1
+    FilterFunctionType: 11
+  MaxTargetCount: 3
+  SelectSelf: 0
+  SkillName: "\u81F4\u547D\u5C04\u51FB"
+  SkillDesc: "\u5F3A\u529B\u62C9\u5F13\u5BF9\u4E00\u540D\u654C\u4EBA\u9020\u6210\u5F3A\u6709\u529B\u7684\u5C04\u51FB\uFF0C\u9020\u6210600%\u7269\u7406\u4F24\u5BB3<br>\u5BF9\u8840\u91CF\u4F4E\u4E8E30%\u7684\u654C\u4EBA\u4F24\u5BB3\u989D\u5916\u589E\u52A0300%"
+  SkillIconPath: 
