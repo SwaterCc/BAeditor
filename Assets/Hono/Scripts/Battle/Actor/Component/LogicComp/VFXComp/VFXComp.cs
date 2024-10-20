@@ -24,8 +24,10 @@ namespace Hono.Scripts.Battle {
 			public VFXComp(ActorLogic logic) : base(logic) { }
 			public override void Init() { }
 
-			public int AddVFXObject(VFXSetting setting) {
-				var vfxObj = new VFXObject(IDGenerator.GenerateId(), setting);
+			public int AddVFXObject(VFXSetting setting)
+			{
+				var vfxObj = AObjectPool<VFXObject>.Pool.Rent();
+				vfxObj.Init(IDGenerator.GenerateId(), setting);
 
 				switch (setting.VFXBindType) {
 					case EVFXType.InWorld:
@@ -67,6 +69,7 @@ namespace Hono.Scripts.Battle {
 			protected void onRemove(VFXObject obj) {
 				_vfxs.Remove(obj.Uid);
 				VFXRemove?.Invoke(obj);
+				AObjectPool<VFXObject>.Pool.Recycle(obj);
 			}
 			
 			protected override void onTick(float dt) {

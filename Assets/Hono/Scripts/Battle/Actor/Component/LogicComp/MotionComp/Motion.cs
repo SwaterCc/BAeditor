@@ -1,6 +1,5 @@
 using System;
 using Hono.Scripts.Battle.Event;
-using Hono.Verse;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle {

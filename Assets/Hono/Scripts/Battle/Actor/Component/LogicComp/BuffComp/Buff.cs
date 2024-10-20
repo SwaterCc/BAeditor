@@ -20,16 +20,16 @@ namespace Hono.Scripts.Battle {
 			}
 
 			public void OnAdd() {
-				_abilityUid = _logic._abilityController.AwardAbility(_data.id, true);
+				_abilityUid = _logic.AbilityController.AwardAbility(_data.id, true);
 			}
 
 			public void AddLayer(int layerCount) {
 				_layer += layerCount;
-				_logic._abilityController.ExecutingAbilityForce(ConfigId);
+				_logic.AbilityController.ExecutingAbilityForce(ConfigId);
 			}
 
 			public void OnRemove() {
-				_logic._abilityController.RemoveAbility(_abilityUid);
+				_logic.AbilityController.RemoveAbility(_abilityUid);
 			}
 		}
 	}

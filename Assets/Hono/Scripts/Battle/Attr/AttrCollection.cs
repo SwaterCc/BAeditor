@@ -80,6 +80,11 @@ namespace Hono.Scripts.Battle {
 			Debug.LogError($"Cannot cast attribute of type {attrType} to {typeof(T)}");
 			return default;
 		}
+
+		public void Clear()
+		{
+			_attrs.Clear();
+		}
 	}
 
 

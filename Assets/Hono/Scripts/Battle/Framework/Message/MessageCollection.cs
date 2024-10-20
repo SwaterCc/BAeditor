@@ -75,8 +75,9 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        public void UnInit()
+        public void Clear()
         {
+            _msgHandlers.Clear();
             MessageCenter.Instance.Unregister(Uid);
         }
     }

@@ -130,8 +130,6 @@ namespace Hono.Scripts.Battle
         {
             if (_skillComp == null) return;
 
-            if (_skillComp.BeforeUsedSkill is { IsExecuting: true }) return;
-
             foreach (var pSkill in _skillComp.Skills)
             {
                 var skill = pSkill.Value;

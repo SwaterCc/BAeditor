@@ -110,6 +110,7 @@ namespace Hono.Scripts.Battle
         {
             register(ConfigManager.Instance);
             register(AssetManager.Instance);
+            register(ObjectPoolManager.Instance);
             register(BattleEventManager.Instance);
             register(MessageCenter.Instance);
             register(GameObjectPreLoadMgr.Instance);

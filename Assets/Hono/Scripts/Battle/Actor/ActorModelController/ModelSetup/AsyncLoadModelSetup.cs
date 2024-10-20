@@ -11,30 +11,36 @@ namespace Hono.Scripts.Battle
     {
         public class AsyncLoadModelSetup : ModelSetup
         {
-            public override async void SetupModel(ActorModelController modelController, Action loadComplete = null)
+            private async UniTask asyncLoadModel(string path)
             {
-                await asyncLoadModel(modelController);
-                loadComplete?.Invoke();
-            }
-
-            private async UniTask asyncLoadModel(ActorModelController modelController)
-            {
-                var modelId = modelController.Actor.GetAttr<int>(ELogicAttr.AttrModelId);
-                var modelData = ConfigManager.Table<ModelTable>().Get(modelId);
-                if (modelData == null || string.IsNullOrEmpty(modelData.ModelPath)) return;
-
                 try
                 {
-                    modelController._model = await Addressables.LoadAssetAsync<GameObject>(modelData.ModelPath).ToUniTask();
-                    modelController.IsModelLoadFinish = true;
+                    var gameObject = await Addressables.LoadAssetAsync<GameObject>(path).ToUniTask();
+                    _gameObject = Object.Instantiate(gameObject);
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"加载模型失败，路径{modelData.ModelPath}");
+                    Debug.LogError($"加载模型失败，路径{path}");
                 }
             }
 
-           
+            protected override async void OnLoadModel()
+            {
+                var modelId = _modelController.Actor.GetAttr<int>(ELogicAttr.AttrModelId);
+                var modelData = ConfigManager.Table<ModelTable>().Get(modelId);
+                if (modelData == null || string.IsNullOrEmpty(modelData.ModelPath)) return;
+
+                _path = modelData.ModelPath;
+
+                if (!GameObjectPool.Instance.TryGet(modelData.ModelPath, out _gameObject))
+                {
+                    await asyncLoadModel(modelData.ModelPath);
+                }
+
+                _loadComplete.Invoke(_gameObject);
+            }
+
+            protected override void OnUnInit() { }
         }
     }
 }

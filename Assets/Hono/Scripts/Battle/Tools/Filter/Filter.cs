@@ -110,7 +110,7 @@ namespace Hono.Scripts.Battle
 
             public bool CheckPass(int uid)
             {
-                return _actorManager._uidActorDict.TryGetValue(uid, out var actor) && checkActorPass(actor);
+                return _actorManager._uidActorSearchDict.TryGetValue(uid, out var actor) && checkActorPass(actor);
             }
 
             private bool checkActorPass(in Actor actor)
@@ -156,11 +156,11 @@ namespace Hono.Scripts.Battle
 							if (_actorManager.GetActorRtState(uid) != EActorRunningState.Active)
 								continue;
                             var unSelectable =
-                                _actorManager._uidActorDict[uid].GetAttr<int>(ELogicAttr.AttrUnselectable) != 0;
+                                _actorManager._uidActorSearchDict[uid].GetAttr<int>(ELogicAttr.AttrUnselectable) != 0;
                             if (unSelectable) continue;
-                            if (_actorManager._uidActorDict[uid].IsExpired)
+                            if (_actorManager._uidActorSearchDict[uid].IsExpired)
 	                            continue;
-                            _filterActors.Add(_actorManager._uidActorDict[uid]);
+                            _filterActors.Add(_actorManager._uidActorSearchDict[uid]);
                         }
                         _checkBoxResult.Clear();
                     }
@@ -196,40 +196,40 @@ namespace Hono.Scripts.Battle
                     case EFilterFunctionType.HighestHp:
                         _filterActorUids.Sort((aUid, bUid) =>
                         {
-                            int aHp = _actorManager._uidActorDict[aUid].GetAttr<int>(ELogicAttr.AttrHp);
-                            int bHp = _actorManager._uidActorDict[bUid].GetAttr<int>(ELogicAttr.AttrHp);
+                            int aHp = _actorManager._uidActorSearchDict[aUid].GetAttr<int>(ELogicAttr.AttrHp);
+                            int bHp = _actorManager._uidActorSearchDict[bUid].GetAttr<int>(ELogicAttr.AttrHp);
                             return aHp.CompareTo(bHp);
                         });
                         break;
                     case EFilterFunctionType.LeastHp:
                         _filterActorUids.Sort((aUid, bUid) =>
                         {
-                            int aHp = _actorManager._uidActorDict[aUid].GetAttr<int>(ELogicAttr.AttrHp);
-                            int bHp = _actorManager._uidActorDict[bUid].GetAttr<int>(ELogicAttr.AttrHp);
+                            int aHp = _actorManager._uidActorSearchDict[aUid].GetAttr<int>(ELogicAttr.AttrHp);
+                            int bHp = _actorManager._uidActorSearchDict[bUid].GetAttr<int>(ELogicAttr.AttrHp);
                             return aHp.CompareTo(bHp) * -1;
                         });
                         break;
                     case EFilterFunctionType.HighestMp:
                         _filterActorUids.Sort((aUid, bUid) =>
                         {
-                            int aMp = _actorManager._uidActorDict[aUid].GetAttr<int>(ELogicAttr.AttrMp);
-                            int bMp = _actorManager._uidActorDict[bUid].GetAttr<int>(ELogicAttr.AttrMp);
+                            int aMp = _actorManager._uidActorSearchDict[aUid].GetAttr<int>(ELogicAttr.AttrMp);
+                            int bMp = _actorManager._uidActorSearchDict[bUid].GetAttr<int>(ELogicAttr.AttrMp);
                             return aMp.CompareTo(bMp);
                         });
                         break;
                     case EFilterFunctionType.LeastMp:
                         _filterActorUids.Sort((aUid, bUid) =>
                         {
-                            int aMp = _actorManager._uidActorDict[aUid].GetAttr<int>(ELogicAttr.AttrMp);
-                            int bMp = _actorManager._uidActorDict[bUid].GetAttr<int>(ELogicAttr.AttrMp);
+                            int aMp = _actorManager._uidActorSearchDict[aUid].GetAttr<int>(ELogicAttr.AttrMp);
+                            int bMp = _actorManager._uidActorSearchDict[bUid].GetAttr<int>(ELogicAttr.AttrMp);
                             return aMp.CompareTo(bMp) * -1;
                         });
                         break;
                     case EFilterFunctionType.Far:
                         _filterActorUids.Sort((aUid, bUid) =>
                         {
-                            var aPos = _actorManager._uidActorDict[aUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
-                            var bPos = _actorManager._uidActorDict[bUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
+                            var aPos = _actorManager._uidActorSearchDict[aUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
+                            var bPos = _actorManager._uidActorSearchDict[bUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
                             var selfPos = _filterUser.GetAttr<Vector3>(ELogicAttr.AttrPosition);
 
                             var aDis = Math.Abs(Vector3.Distance(aPos, selfPos));
@@ -240,8 +240,8 @@ namespace Hono.Scripts.Battle
                     case EFilterFunctionType.Near:
                         _filterActorUids.Sort((aUid, bUid) =>
                         {
-                            var aPos = _actorManager._uidActorDict[aUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
-                            var bPos = _actorManager._uidActorDict[bUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
+                            var aPos = _actorManager._uidActorSearchDict[aUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
+                            var bPos = _actorManager._uidActorSearchDict[bUid].GetAttr<Vector3>(ELogicAttr.AttrPosition);
                             var selfPos = _filterUser.GetAttr<Vector3>(ELogicAttr.AttrPosition);
 
                             var aDis = Math.Abs(Vector3.Distance(aPos, selfPos));

@@ -12,7 +12,7 @@ namespace Hono.Scripts.Battle
     {
         private readonly Dictionary<EPreLoadGameObjectType, GameObject> _objectCaches = new();
         private readonly Dictionary<string, GameObject> _buildingCaches = new();
-        private string[] buildingPath = {
+        private readonly string[] _buildingPath = {
 	        "Assets/BattleRes/Model/BattleBuild/Archery_Demo2.prefab",
 	        "Assets/BattleRes/Model/BattleBuild/Tower_AttackUp_Demo2.prefab",
 	        "Assets/BattleRes/Model/BattleBuild/Tower_Heal_Demo2.prefab",
@@ -32,7 +32,7 @@ namespace Hono.Scripts.Battle
                 loadTasks.Add(loadGameObject(element));
             }
 
-            foreach (var path in buildingPath) {
+            foreach (var path in _buildingPath) {
 	            loadTasks.Add(loadBuilding(path));
             }
             
@@ -45,7 +45,7 @@ namespace Hono.Scripts.Battle
 	        return _buildingCaches[path];
         }
         
-        private string getObjectPath(EPreLoadGameObjectType objectType)
+        public string GetObjectPath(EPreLoadGameObjectType objectType)
         {
             switch (objectType)
             {
@@ -64,13 +64,13 @@ namespace Hono.Scripts.Battle
 
         private async UniTask loadGameObject(EPreLoadGameObjectType element)
         {
-            string path = getObjectPath(element);
+            string path = GetObjectPath(element);
             if (string.IsNullOrEmpty(path)) 
             {
                 Debug.LogError($"{element} 路径为空");
                 return;
             }
-            var uObj = await Addressables.LoadAssetAsync<GameObject>(getObjectPath(element)).ToUniTask();
+            var uObj = await Addressables.LoadAssetAsync<GameObject>(GetObjectPath(element)).ToUniTask();
             _objectCaches.Add(element, uObj);
         }
         

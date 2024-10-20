@@ -1,8 +1,12 @@
 namespace Hono.Scripts.Battle
 {
-    public class TeamRefreshPointLogic : ActorLogic
+    public class TeamRefreshPointLogic : ActorLogic ,IPoolObject
     {
-        public TeamRefreshPointLogic(Actor actor) : base(actor) { }
-        
+        protected override void RecycleSelf()
+        {
+            AObjectPool<TeamRefreshPointLogic>.Pool.Recycle(this);
+        }
+
+        public void OnRecycle() { }
     }
 }

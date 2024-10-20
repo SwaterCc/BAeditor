@@ -6,7 +6,7 @@ namespace Hono.Scripts.Battle {
 	/// <summary>
 	/// 这个Ability代表了运行时流程管理
 	/// </summary>
-	public sealed partial class Ability : IVarCollectionBind, IReloadHandle {
+	public sealed partial class Ability : IVarCollectionBind {
 		/// <summary>
 		/// Ability的上下文，存储当前在运行哪个Ability
 		/// </summary>
@@ -68,7 +68,6 @@ namespace Hono.Scripts.Battle {
 			_executor = new AbilityExecutor(this);
 			_state = new AbilityState(this);
 			_commands = new HashSet<ICommand>();
-			AssetManager.Instance.AddReloadHandle(this);
 			Tags = new Tags();
 			TimeScaleFactory = 1;
 			_executor.Setup();
@@ -140,10 +139,10 @@ namespace Hono.Scripts.Battle {
 			foreach (var command in _commands) {
 				command.Undo();
 			}
+			_commands.Clear();
 
 			_state.OnDestroy();
 			_executor.OnDestroy();
-			AssetManager.Instance.RemoveReloadHandle(this);
 		}
 	}
 }

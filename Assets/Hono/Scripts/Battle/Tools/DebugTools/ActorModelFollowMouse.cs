@@ -1,5 +1,3 @@
-using QTool;
-using System;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Tools.DebugTools {
@@ -14,7 +12,7 @@ namespace Hono.Scripts.Battle.Tools.DebugTools {
 
 		public void Update() {
 			var mouseScreenPosition = Input.mousePosition;
-			WorldPos = _mainCamera.ScreenPointToRay(new Vector3(mouseScreenPosition.x, mouseScreenPosition.y, _mainCamera.nearClipPlane)).RayCastPlane(Vector3.up);
+			//WorldPos = _mainCamera.ScreenPointToRay(new Vector3(mouseScreenPosition.x, mouseScreenPosition.y, _mainCamera.nearClipPlane)).RayCastPlane(Vector3.up);
 			transform.position = WorldPos;
 		}
 	}

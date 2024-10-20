@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
-using Hono.UI.Battle;
 
 namespace Hono.Scripts.Battle {
 	/// <summary>
 	/// 打击点目前是每隔一段时间对打击目标结算一次伤害
 	/// </summary>
-	public class HitBoxLogic : ActorLogic {
+	public class HitBoxLogic : ActorLogic, IPoolObject {
 		private HitBoxData _hitBoxData;
 		private float _intervalDuration;
 		private int _curCount;
@@ -19,20 +18,26 @@ namespace Hono.Scripts.Battle {
 		private int _targetUid;
 		private EAbilityType _sourceAbilityType;
 		private Action<Actor, DamageInfo> _hitProcess;
-		private FilterSetting _filterSetting;
+		private FilterSetting _filterSetting = new();
 
 		private readonly Dictionary<BeHurtComp, int> _hitCountDict = new();
-
-		public HitBoxLogic(Actor actor) : base(actor) {
-			_filterSetting = new FilterSetting();
+		
+		public void OnRecycle()
+		{
+			_hitCountDict.Clear();
 		}
-
+		
+		protected override void RecycleSelf()
+		{
+			AObjectPool<HitBoxLogic>.Pool.Recycle(this);
+		}
+		
 		protected override void setupAttrs()
 		{
 			SetAttr(ELogicAttr.AttrUnselectable, 1, false);
 		}
 
-		protected override void onInit() {
+		protected override void onEnterScene() {
 			_sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
 			_sourceAbilityConfigId = GetAttr<int>(ELogicAttr.AttrSourceAbilityConfigId);
 			_sourceAbilityType = AssetManager.Instance.GetData<AbilityData>(_sourceAbilityConfigId).Type;
@@ -48,7 +53,7 @@ namespace Hono.Scripts.Battle {
 			else {
 				pos = target.GetAttr<Vector3>(ELogicAttr.AttrPosition);
 			}
-			
+
 			SetAttr(ELogicAttr.AttrPosition, pos, false);
 			SetAttr(ELogicAttr.AttrRot, attacker.GetAttr<Quaternion>(ELogicAttr.AttrRot), false);
 			
@@ -67,7 +72,7 @@ namespace Hono.Scripts.Battle {
 			_filterSetting = _hitBoxData.FilterSetting;
 		}
 		
-		protected override void setupComponents() { }
+		protected override void constructComponents() { }
 
 		private void hitCounter(BeHurtComp beHurtComp) {
 			if (_hitCountDict.TryGetValue(beHurtComp, out var count)) {
@@ -136,7 +141,7 @@ namespace Hono.Scripts.Battle {
 			hitDamageInfo.ParseDamageResult(res);
 			hitDamageInfo.HitTargetUid = _targetUid;
 			hitInfo.HitBoxHitCount = 1;
-			BattlePanel.ShowDamage(beHurtComp.Actor.Pos, res);
+			UIInterface.ShowDamage(beHurtComp.Actor.Pos, res);
 			hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
 			BattleEventManager.Instance.TriggerActorEvent(_sourceActorId, EBattleEventType.OnHitDamage, hitDamageInfo);
 			
@@ -172,7 +177,7 @@ namespace Hono.Scripts.Battle {
 				var hitDamageInfo = new HitDamageInfo(hitInfo);
 				hitDamageInfo.ParseDamageResult(res);
 				hitDamageInfo.HitTargetUid = beHurtComp.Actor.Uid;
-				BattlePanel.ShowDamage(beHurtComp.Actor.Pos, res);
+				//BattlePanel.ShowDamage(beHurtComp.Actor.Pos, res);
 				if (beHurtComp.Actor.GetAttr<int>(ELogicAttr.AttrInvincible) != 0) {
 					Debug.Log($"actor uid: {beHurtComp.Actor.Uid}  是无敌的");
 					hitDamageInfo.IsImmunity = true;
@@ -218,10 +223,8 @@ namespace Hono.Scripts.Battle {
 			_intervalDuration += dt;
 
 			if (_curCount >= _hitBoxData.MaxCount) {
-				ActorManager.Instance.RemoveActor(this.Uid);
+				ActorManager.Instance.RemoveActor(Uid);
 			}
 		}
-
-		protected override void onDestroy() { }
 	}
 }

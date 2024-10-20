@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public class MonsterGeneratorLogic : ActorLogic
+    public class MonsterGeneratorLogic : ActorLogic, IPoolObject
     {
         private class GenActorInfo
         {
@@ -19,7 +19,7 @@ namespace Hono.Scripts.Battle
         private float _createMonsterInterval;
         private readonly Queue<GenActorInfo> _createMonsterQueue = new(64);
         private List<Vector3> _wayPoints = new(16);
-        public MonsterGeneratorLogic(Actor actor) : base(actor)
+        public MonsterGeneratorLogic()
         {
             _checker = new MonsterGenEventChecker(EBattleEventType.OnCallMonsterGen, Uid, (info) =>
             {
@@ -28,7 +28,7 @@ namespace Hono.Scripts.Battle
             });
         }
 
-        protected override void onInit()
+        protected override void onEnterScene()
         {
             BattleEventManager.Instance.Register(_checker);
             if (Actor.ModelController.Model.TryGetComponent<MonsterGeneratorModel>(out var comp)) {
@@ -39,6 +39,20 @@ namespace Hono.Scripts.Battle
         protected override void onDestroy()
         {
             BattleEventManager.Instance.UnRegister(_checker);
+        }
+        
+        public void OnRecycle()
+        {
+            _isGeneratorActive = false;
+            _duration = 0;
+            _createMonsterInterval = 0;
+            _createMonsterQueue.Clear();
+            _wayPoints.Clear();
+        }
+        
+        protected override void RecycleSelf()
+        {
+            AObjectPool<MonsterGeneratorLogic>.Pool.Recycle(this);
         }
 
         /// <summary>
@@ -156,5 +170,7 @@ namespace Hono.Scripts.Battle
             _createMonsterInterval += dt;
             GeneratingMonster();
         }
+
+    
     }
 }

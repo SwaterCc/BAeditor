@@ -12,12 +12,8 @@ namespace Hono.Scripts.Battle {
 		private ActorModelFollowMouse _followMouse;
 		public int BuildTableRowId;
 		public int CostRPCount;
-
-		private void Awake() {
-			ActorUid = ActorUidGenerator.GenerateUid(EActorUidRangeType.NormalActor);
-			ActorType = EActorType.Building;
-		}
-
+		public string Path;
+		
 		private void Start() {
 			_isPreShow = true;
 			

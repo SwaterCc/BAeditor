@@ -5,45 +5,69 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle {
 	public partial class ActorLogic {
-		public class Skill {
-			public int Id => Data.ID;
+		public class Skill : IReloadHandle{
+			public int Id { get; private set; }
 			public SkillData Data;
 			public bool IsEnable => (!_isDisable) && (_curCdPercent <= 0 && _resEnough) && (!_isExecuting);
-
-			public bool IsExecuting => _isExecuting;
-
+			
 			private int _level;
 			private float _curCdPercent;
-			private int _abilityUid;
+		
 			private bool _isDisable;
 			private bool _resEnough;
 			private bool _isExecuting;
 			private float _maxCd;
-			private ActorLogic _logic;
+			private readonly ActorLogic _logic;
 			private FilterSetting _skillTargetSetting;
+			private Ability _ability;
 
 			public Skill(ActorLogic logic, int skillId, int level) {
+				Id = skillId;
+				AssetManager.Instance.AddReloadHandle(this);
+				
 				_level = level;
 				_curCdPercent = 1;
 				_logic = logic;
 				Data = AssetManager.Instance.GetData<SkillData>(skillId);
 				_isDisable = false;
 				_isExecuting = false;
+				
 				_skillTargetSetting = Data.CustomFilter;
 
-				_skillTargetSetting = Data.CustomFilter;
-
-				var ability = _logic._abilityController.CreateAbility(Data.SkillId);
-				_abilityUid = ability.Uid;
-
-				ability.GetCycleCallback(EAbilityAllowEditCycle.OnPreExecute).OnEnter += onAbilityBegin;
-				ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnExit += onAbilityEnd;
-
-				_logic._abilityController.AwardAbility(ability, Data.SkillType == ESkillType.PassiveSkill);
+				_ability = _logic.AbilityController.CreateAbility(Data.SkillId);
+			
+				_ability.GetCycleCallback(EAbilityAllowEditCycle.OnPreExecute).OnEnter += onAbilityBegin;
+				_ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnExit += onAbilityEnd;
+				
+				_logic.AbilityController.AwardAbility(_ability, Data.SkillType == ESkillType.PassiveSkill);
 
 				resourceCheck();
 			}
 
+			public static bool operator <(Skill control1, Skill control2) {
+				return control1.Data.PriorityATK > control2.Data.PriorityDEF;
+			}
+
+			public static bool operator >(Skill control1, Skill control2) {
+				return control1.Data.PriorityDEF > control2.Data.PriorityATK;
+			}
+			
+			public void Reload()
+			{
+				Data = AssetManager.Instance.GetData<SkillData>(Id);
+				_ability.Reload();
+				
+				_curCdPercent = 1;
+				_skillTargetSetting = Data.CustomFilter;
+				resourceCheck();
+			}
+			
+			public void Destroy() {
+				_logic.AbilityController.RemoveAbility(_ability.Uid);
+				_ability = null;
+				AssetManager.Instance.RemoveReloadHandle(this);
+			}
+			
 			private void onAbilityBegin() {
 				_isExecuting = true;
 				if (Data.SkillType != ESkillType.PassiveSkill) {
@@ -59,7 +83,7 @@ namespace Hono.Scripts.Battle {
 				}
 
 				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillUseSuccess,
-					new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
+					new UsedSkillEventInfo() { SkillId = _ability.Uid, CasterUid = _logic.Uid });
 			}
 
 			private void onAbilityEnd() {
@@ -78,7 +102,7 @@ namespace Hono.Scripts.Battle {
 				}
 
 				BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillStop,
-					new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
+					new UsedSkillEventInfo() { SkillId = _ability.Uid, CasterUid = _logic.Uid });
 			}
 
 			/// <summary>
@@ -181,7 +205,7 @@ namespace Hono.Scripts.Battle {
 				//更新攻速
 				var attackSpeed = _logic.GetAttr<int>(ELogicAttr.AttrAttackSpeedPCT) / 10000f + 1;
 				attackSpeed = Mathf.Clamp(attackSpeed, 0.1f, 10);
-				if (_logic.AbilityController.TryGetAbility(_abilityUid, out var ability)) {
+				if (_logic.AbilityController.TryGetAbility(_ability.Uid, out var ability)) {
 					ability.TimeScaleFactory = attackSpeed;
 				}
 			}
@@ -203,8 +227,8 @@ namespace Hono.Scripts.Battle {
 				
 				if (targetUids.Count > 0) {
 					_logic.SetAttr(ELogicAttr.AttrAttackTargetUids, targetUids, false);
-					Debug.Log($"[UseSkill] Actor{_logic.Uid} -->执行了技能 {_abilityUid}");
-					_logic._abilityController.ExecutingAbility(_abilityUid);
+					Debug.Log($"[UseSkill] Actor{_logic.Uid} -->执行了技能 {_ability.Uid}");
+					_logic.AbilityController.ExecutingAbility(_ability.Uid);
 
 					if (Data.ForceFaceTarget) {
 						if (ActorManager.Instance.TryGetActor(targetUids[0], out var target)) {
@@ -221,18 +245,6 @@ namespace Hono.Scripts.Battle {
 				}
 
 				return true;
-			}
-
-			public static bool operator <(Skill control1, Skill control2) {
-				return control1.Data.PriorityATK > control2.Data.PriorityDEF;
-			}
-
-			public static bool operator >(Skill control1, Skill control2) {
-				return control1.Data.PriorityDEF > control2.Data.PriorityATK;
-			}
-
-			public void Destroy() {
-				_logic._abilityController.RemoveAbility(_abilityUid);
 			}
 		}
 	}

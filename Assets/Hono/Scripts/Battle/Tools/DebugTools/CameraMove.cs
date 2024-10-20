@@ -1,4 +1,4 @@
-using Cinemachine;
+//using Cinemachine;
 using System;
 using UnityEngine;
 
@@ -6,7 +6,21 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
 {
     public class CameraMove : MonoBehaviour
     {
-        public Actor followActor;
+	    private Vector3 originPos;
+	    public void Awake()
+	    {
+		    originPos = transform.position;
+	    }
+
+	    private void Update()
+	    {
+		    var curBattleGround = BattleManager.CurrentBattleGround;
+		    if (curBattleGround == null) return;
+		    var followActor = ActorManager.Instance.GetActor(curBattleGround.RuntimeInfo.LeaderUid);
+		    Camera.main.transform.localPosition = originPos + followActor.Pos;
+	    }
+
+	    /*public Actor followActor;
 		public FreeLookManager lookManager;
 		public GameObject FreeLook;
 
@@ -42,6 +56,6 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
 					Camera.main.transform.localPosition = originPos + followActor.Pos;
 				}
 			}
-        }
+        }*/
     }
 }

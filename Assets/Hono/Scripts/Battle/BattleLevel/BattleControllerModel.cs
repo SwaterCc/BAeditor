@@ -4,32 +4,30 @@ namespace Hono.Scripts.Battle
 {
     public class BattleControllerModel : ActorModelController
     {
-        public BattleControllerModel(Actor actor) : base(actor) { }
-
         protected override ModelSetup getModelSetup()
         {
-            return new PreLoadModelSetup(EPreLoadGameObjectType.BattleRootModel);
+            return null;
         }
 
-        public void OnEnterBattleGroundFirstTime()
+        protected override void onEnterScene()
         {
-            getModelSetup().SetupModel(this, onLoadFinish);
+            Model = Object.Instantiate(GameObjectPreLoadMgr.Instance[EPreLoadGameObjectType.BattleRootModel]);
             
             if (Model.TryGetComponent<ActorModel>(out var component))
             {
                 component.ActorType = EActorType.BattleLevelController;
                 component.ActorUid = Uid;
             }
-
-            Model = Object.Instantiate(Model, Vector3.zero, Quaternion.identity);
         }
 
-        private void onLoadFinish()
+        protected override void onModelLoadComplete()
         {
             Model.transform.position = Vector3.zero;
             Model.transform.rotation = Quaternion.identity;
             Actor.SetAttr(ELogicAttr.AttrPosition, Vector3.zero, false);
             Actor.SetAttr(ELogicAttr.AttrRot, Quaternion.identity, false);
         }
+
+        protected override void RecycleSelf() { }
     }
 }

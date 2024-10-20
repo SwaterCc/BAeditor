@@ -32,7 +32,7 @@ namespace Hono.Scripts.Battle
         }
     }
     
-    public static class BattleUIInterface
+    public static class UIInterface
     {
         public static bool CallUI<T>(ISendToUIData sendData = null,
             Action<IUIPassData> onUICloseCallBack = null) where T : BattleUIHandle
@@ -61,6 +61,11 @@ namespace Hono.Scripts.Battle
             }
             
             return sendMsgAny;
+        }
+
+        public static void ShowDamage(Vector3 pos, DamageResults damageResults)
+        {
+            //BattlePanel.ShowDamage(target.Pos,res);
         }
     }
 }

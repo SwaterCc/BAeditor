@@ -51,27 +51,11 @@ namespace Hono.Scripts.Battle {
 			}
 		}
 
-		private async UniTask loadGameObject(VFXObject vfxObject) {
+		private async UniTask<GameObject> loadGameObject(VFXObject vfxObject) {
 			try {
 				var obj = await Addressables.LoadAssetAsync<GameObject>(vfxObject.Setting.VFXPath);
-				if (vfxObject.Setting.VFXBindType == EVFXType.BindActorBone) {
-					if (_effectPoints.TryGetValue(vfxObject.Setting.BoneName, out var parent)) {
-						obj = Instantiate(obj, parent);
-					}
-					else {
-						obj = Instantiate(obj, transform);
-					}
-
-					obj.transform.localPosition = vfxObject.Pos;
-					obj.transform.localRotation = vfxObject.Rot;
-				}
-				else {
-					obj = Instantiate(obj, vfxObject.Pos, vfxObject.Rot);
-				}
-
-				obj.transform.localScale = vfxObject.Scale;
-
-				_vfxShowDict.Add(vfxObject.Uid, obj);
+				obj = Instantiate(obj);
+				return obj;
 			}
 			catch (KeyNotFoundException e) {
 				Debug.LogError(e);
@@ -79,6 +63,8 @@ namespace Hono.Scripts.Battle {
 			catch (Exception e) {
 				Debug.LogError(e);
 			}
+
+			return null;
 		}
 
 		public void Update() {
@@ -92,13 +78,40 @@ namespace Hono.Scripts.Battle {
 			}
 		}
 
-		private void OnAddVFXObject(VFXObject vfxObject) {
-			loadGameObject(vfxObject).Forget();
+		private async void OnAddVFXObject(VFXObject vfxObject) {
+			if (!GameObjectPool.Instance.TryGet(vfxObject.Setting.VFXPath, out var obj))
+			{
+				obj = await loadGameObject(vfxObject);
+				if (obj == null)
+				{
+					return;
+				}
+			}
+			
+			if (gameObject.activeSelf)
+			{
+				if (vfxObject.Setting.VFXBindType == EVFXType.BindActorBone) {
+					obj.transform.SetParent(_effectPoints.TryGetValue(vfxObject.Setting.BoneName, out var parent)
+						? parent
+						: transform);
+				}
+				
+				obj.transform.localPosition = vfxObject.Pos;
+				obj.transform.localRotation = vfxObject.Rot;
+				obj.transform.localScale = vfxObject.Scale;
+
+				_vfxShowDict.Add(vfxObject.Uid, obj);
+			}
+			else
+			{
+				GameObjectPool.Instance.Recycle(vfxObject.Setting.VFXPath, obj);
+			}
+			
 		}
 
 		private void OnRemoveVFXObject(VFXObject vfxObject) {
 			if (_vfxShowDict.Remove(vfxObject.Uid, out var obj)) {
-				Destroy(obj);
+				GameObjectPool.Instance.Recycle(vfxObject.Setting.VFXPath, obj);
 			}
 		}
 	}

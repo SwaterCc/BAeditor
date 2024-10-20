@@ -12,7 +12,7 @@ namespace Hono.Scripts.Battle
             protected override void onEnter()
             {
                 //发消息打开编队UI
-                BattleUIInterface.CallUI<BuildTeamsUIRoot>(null, setTeams);
+                UIInterface.CallUI<BuildTeamsUIRoot>(null, setTeams);
                 //BuildTeamsUIRoot.Instance.Show();
             }
 

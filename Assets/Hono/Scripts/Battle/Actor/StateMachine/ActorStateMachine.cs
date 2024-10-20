@@ -23,7 +23,6 @@ namespace Hono.Scripts.Battle
             private EActorLogicStateType _nextStateType;
 
             private readonly Dictionary<EActorLogicStateType, ActorLogicState> _states;
-            private readonly Dictionary<EActorLogicStateType, StateAutoSwitchCheck> _stateTransforms;
 
             public ActorStateMachine(ActorLogic logic)
             {
@@ -38,16 +37,7 @@ namespace Hono.Scripts.Battle
                     { EActorLogicStateType.Death, new DeathState(this, EActorLogicStateType.Death) },
                     { EActorLogicStateType.Stiff, new StiffState(this, EActorLogicStateType.Stiff) },
                 };
-
-                _stateTransforms = null;
-
-                _nextStateType = EActorLogicStateType.Idle;
-                _curStateType = _nextStateType;
-                _current = _states[_curStateType];
             }
-
-            public void Setup() { }
-            
 
             public void Init()
             {
@@ -56,7 +46,15 @@ namespace Hono.Scripts.Battle
                     state.Value.Init();
                 }
                 
+                _nextStateType = EActorLogicStateType.Idle;
+                _curStateType = _nextStateType;
+                _current = _states[_curStateType];
                 _current.Enter();
+            }
+
+            public void UnInit()
+            {
+                _current = null;
             }
             
             public void SwitchState(EActorLogicStateType nextLogicStateType)
@@ -66,6 +64,8 @@ namespace Hono.Scripts.Battle
 
             public void Tick(float dt)
             {
+                if(_current == null) return;
+                
                 _current.Tick(dt);
 
                 var hasAutoSwitch = _current.TryGetAutoSwitchState(out var autoNext);

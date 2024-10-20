@@ -1,17 +1,25 @@
 ﻿namespace Hono.Scripts.Battle
 {
-    public class SimplePreLoadModelController : ActorModelController
+    public class SimplePreLoadModelController : ActorModelController, IPoolObject
     {
-        private readonly ModelSetup _modelSetup;
+        private readonly PreLoadModelSetup _modelSetup = new();
 
-        public SimplePreLoadModelController(Actor actor, EPreLoadGameObjectType objectType) : base(actor)
+        public void Init(Actor actor, EPreLoadGameObjectType objectType)
         {
-            _modelSetup = new PreLoadModelSetup(objectType);
+            base.Init(actor);
+            _modelSetup.Init(objectType);
         }
-        
+
         protected override ModelSetup getModelSetup()
         {
             return _modelSetup;
         }
+
+        protected override void RecycleSelf()
+        {
+            AObjectPool<SimplePreLoadModelController>.Pool.Recycle(this);
+        }
+
+        public void OnRecycle() { }
     }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Hono.Scripts.Battle {
-	public class VFXObject {
+	public class VFXObject : IPoolObject{
 		private VFXSetting _setting;
 		public VFXSetting Setting => _setting;
 		private float _dt;
@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle {
 
 		public Vector3 Scale;
 
-		public VFXObject(int uid ,VFXSetting setting) {
+		public void Init(int uid ,VFXSetting setting) {
 			_setting = setting;
 			_isExpired = false;
 			_uid = uid;
@@ -34,6 +34,14 @@ namespace Hono.Scripts.Battle {
 			}
 			
 			_dt += dt;
+		}
+
+		public void OnRecycle()
+		{
+			Pos = Vector3.zero;
+			Rot = Quaternion.identity;
+			Scale = Vector3.one;
+			_dt = 0;
 		}
 	}
 }

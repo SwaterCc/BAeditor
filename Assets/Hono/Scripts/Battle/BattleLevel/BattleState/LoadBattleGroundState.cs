@@ -52,7 +52,7 @@ namespace Hono.Scripts.Battle
                 _isSetupScene = true;
                 
                 //第一时间把战场控制的Model放到Scene中
-                BattleManager.BattleController.ModelController.OnEnterBattleGroundFirstTime();
+                BattleManager.BattleController.ModelController.EnterScene();
 
                 //加载BattleLevelData
                 BattleGroundHandle._levelData = Object.FindObjectOfType<BattleLevelData>();

@@ -17,7 +17,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// actor字典
         /// </summary>
-        private readonly Dictionary<int, Actor> _uidActorDict = new(512);
+        private readonly Dictionary<int, Actor> _uidActorSearchDict = new(512);
 
         private readonly Dictionary<int, Actor> _loadingCaches = new(128);
         private readonly List<Actor> _removeList = new(16);
@@ -43,9 +43,14 @@ namespace Hono.Scripts.Battle
 
 		public BattleController GetBattleControl()
         {
-            var actor = new Actor(BattleConstValue.BattleRootControllerUid, EActorType.BattleLevelController);
-            var battleLevelControl = new BattleController(actor);
-            actor.Setup(new BattleControllerModel(actor), battleLevelControl);
+            var actor = new Actor();
+            actor.Init(BattleConstValue.BattleRootControllerUid, EActorType.BattleLevelController);
+            var battleLevelControl = new BattleController();
+            battleLevelControl.Init(actor);
+            battleLevelControl.EnterScene();
+            var battleControllerModel = new BattleControllerModel();
+            battleControllerModel.Init(actor);
+            actor.Setup(battleControllerModel, battleLevelControl);
             return battleLevelControl;
         }
 
@@ -61,45 +66,74 @@ namespace Hono.Scripts.Battle
         private Actor getActor(int uid, EActorType type, int configId, Action<Actor> afterSetupCall,
             ActorModel actorModel)
         {
-            var actor = new Actor(uid, type);
+            var actor = AObjectPool<Actor>.Pool.Rent();
+            actor.Init(uid, type);
             actor.SetAttr(ELogicAttr.AttrUid, uid, false);
             actor.SetAttr(ELogicAttr.AttrConfigId, configId, false);
+
+            ActorLogic logic = null;
+            ActorModelController modelController = null;
             switch (type)
             {
                 case EActorType.Pawn:
-                    actor.Setup(new NormalModelController(actor, (SceneActorModel)actorModel), new PawnLogic(actor));
+                    logic = AObjectPool<PawnLogic>.Pool.Rent();
+                    logic.Init(actor);
+                    modelController = AObjectPool<NormalModelController>.Pool.Rent();
+                    modelController.Init(actor);
                     break;
                 case EActorType.Monster:
-                    actor.Setup(new NormalModelController(actor, (SceneActorModel)actorModel), new MonsterLogic(actor));
+                    logic = AObjectPool<MonsterLogic>.Pool.Rent();
+                    logic.Init(actor);
+                    modelController = AObjectPool<NormalModelController>.Pool.Rent();
+                    modelController.Init(actor);
                     break;
                 case EActorType.Building:
-	                var buildingActorModel = actorModel == null ? null : (BuildingActorModel)actorModel;
-                    actor.Setup(new BuildingModelController(actor, buildingActorModel), new BuildingLogic(actor));
+                    logic = AObjectPool<BuildingLogic>.Pool.Rent();
+                    logic.Init(actor);
+                    modelController = AObjectPool<BuildingModelController>.Pool.Rent();
+                    var buildingModel = actorModel == null ? null : (BuildingActorModel)actorModel;
+                    ((BuildingModelController)modelController).Init(actor,buildingModel);
                     break;
                 case EActorType.Bullet:
-                    actor.Setup(new SimplePreLoadModelController(actor, EPreLoadGameObjectType.BulletModel),
-                        new BulletLogic(actor));
+                    logic = AObjectPool<BulletLogic>.Pool.Rent();
+                    logic.Init(actor);
+                    modelController = AObjectPool<SimplePreLoadModelController>.Pool.Rent();
+                    ((SimplePreLoadModelController)modelController).Init(actor,EPreLoadGameObjectType.BulletModel);
                     break;
                 case EActorType.HitBox:
-                    actor.Setup(new SimplePreLoadModelController(actor, EPreLoadGameObjectType.HitBoxModel),
-                        new HitBoxLogic(actor));
+                    logic = AObjectPool<HitBoxLogic>.Pool.Rent();
+                    logic.Init(actor);
+                    modelController = AObjectPool<SimplePreLoadModelController>.Pool.Rent();
+                    ((SimplePreLoadModelController)modelController).Init(actor,EPreLoadGameObjectType.HitBoxModel);
                     break;
                 case EActorType.MonsterGenerator:
-                    actor.Setup(new SimpleSceneModelController(actor, (SceneActorModel)actorModel), new MonsterGeneratorLogic(actor));
+                    logic = AObjectPool<MonsterGeneratorLogic>.Pool.Rent();
+                    logic.Init(actor);
+                    modelController = AObjectPool<SimpleSceneModelController>.Pool.Rent();
+                    ((SimpleSceneModelController)modelController).Init(actor, (SceneActorModel)actorModel);
                     break;
                 case EActorType.TriggerBox:
-                    actor.Setup(new TriggerBoxModelController(actor, (SceneActorModel)actorModel), new TriggerBoxLogic(actor));
+                    logic = AObjectPool<TriggerBoxLogic>.Pool.Rent();
+                    logic.Init(actor);
+                    modelController = AObjectPool<TriggerBoxModelController>.Pool.Rent();
+                    ((TriggerBoxModelController)modelController).Init(actor, (SceneActorModel)actorModel);
                     break;
                 case EActorType.TeamDefaultBirthPoint:
-                    actor.Setup(new SimpleSceneModelController(actor, (SceneActorModel)actorModel),
-                        new TeamDefaultBirthPointLogic(actor));
+                    logic = AObjectPool<TeamDefaultBirthPointLogic>.Pool.Rent();
+                    logic.Init(actor);
+                    modelController = AObjectPool<SimpleSceneModelController>.Pool.Rent();
+                    ((SimpleSceneModelController)modelController).Init(actor, (SceneActorModel)actorModel);
                     break;
                 case EActorType.TeamRefreshPoint:
-                    actor.Setup(new SimplePreLoadModelController(actor, EPreLoadGameObjectType.TeamRefreshPoint),
-                        new TeamRefreshPointLogic(actor));
+                    logic = AObjectPool<TeamRefreshPointLogic>.Pool.Rent();
+                    logic.Init(actor);
+                    modelController = AObjectPool<SimpleSceneModelController>.Pool.Rent();
+                    ((SimpleSceneModelController)modelController).Init(actor, (SceneActorModel)actorModel);
                     break;
             }
 
+            actor.Setup(modelController, logic);
+            
             afterSetupCall?.Invoke(actor);
 
             _loadingCaches.Add(actor.Uid, actor);
@@ -172,20 +206,6 @@ namespace Hono.Scripts.Battle
 
         public void Tick(float dt)
         {
-	        Profiler.BeginSample("AllActorTick");
-	        
-	        if (_removeList.Count != 0)
-	        {
-		        foreach (var actor in _removeList)
-		        {
-			        actor.Destroy();
-			        _runningActorList.Remove(actor);
-			        _uidActorDict.Remove(actor.Uid);
-		        }
-
-		        _removeList.Clear();
-	        }
-	        
             if (_loadingCaches.Count > 0)
             {
                 foreach (var actor in _loadingCaches)
@@ -203,15 +223,14 @@ namespace Hono.Scripts.Battle
                 {
                     //从加载列表里删除
                     _loadingCaches.Remove(actor.Uid);
-					if (!_uidActorDict.ContainsKey(actor.Uid)) {
+					if (!_uidActorSearchDict.ContainsKey(actor.Uid)) {
 						_runningActorList.Add(actor);
-						_uidActorDict.Add(actor.Uid, actor);
-						actor.Init();
+						_uidActorSearchDict.Add(actor.Uid, actor);
+						actor.EnterScene();
 					}
 					else {
 						Debug.LogError($"出现key值重复{actor.Uid} {actor.ActorType}");
 					}
-                 
                 }
 
                 _addCaches.Clear();
@@ -221,7 +240,17 @@ namespace Hono.Scripts.Battle
             {
                 actor.Tick(dt);
             }
-            Profiler.EndSample();
+
+            if (_removeList.Count == 0) return;
+            
+            foreach (var actor in _removeList)
+            {
+                _runningActorList.Remove(actor);
+                _uidActorSearchDict.Remove(actor.Uid);
+                AObjectPool<Actor>.Pool.Recycle(actor);
+            }
+
+            _removeList.Clear();
         }
 
         public void Update(float dt)
@@ -234,12 +263,12 @@ namespace Hono.Scripts.Battle
 
         public Actor GetActor(int uid)
         {
-            return _uidActorDict.TryGetValue(uid, out var actor) ? actor : _loadingCaches.GetValueOrDefault(uid);
+            return _uidActorSearchDict.TryGetValue(uid, out var actor) ? actor : _loadingCaches.GetValueOrDefault(uid);
         }
 
         public bool TryGetActor(int uid, out Actor actor)
         {
-            return _loadingCaches.TryGetValue(uid, out actor) || _uidActorDict.TryGetValue(uid, out actor);
+            return _loadingCaches.TryGetValue(uid, out actor) || _uidActorSearchDict.TryGetValue(uid, out actor);
         }
 
         public EActorRunningState GetActorRtState(int uid)
@@ -249,7 +278,7 @@ namespace Hono.Scripts.Battle
                 return EActorRunningState.Loading;
             }
 
-            if (_uidActorDict.ContainsKey(uid))
+            if (_uidActorSearchDict.ContainsKey(uid))
             {
                 return EActorRunningState.Active;
             }
@@ -259,8 +288,9 @@ namespace Hono.Scripts.Battle
         
         public void RemoveActor(int actorUid)
         {
-            if (_uidActorDict.TryGetValue(actorUid, out var actor)) {
+            if (_uidActorSearchDict.TryGetValue(actorUid, out var actor)) {
 	            actor.IsExpired = true;
+                _uidActorSearchDict.Remove(actorUid);
                 _removeList.Add(actor);
             }
         }
@@ -269,11 +299,11 @@ namespace Hono.Scripts.Battle
         {
             foreach (var actor in _runningActorList)
             {
-                actor.Destroy();
+                AObjectPool<Actor>.Pool.Recycle(actor);
             }
 
             _runningActorList.Clear();
-            _uidActorDict.Clear();
+            _uidActorSearchDict.Clear();
             _addCaches.Clear();
             _removeList.Clear();
         }

@@ -10,22 +10,28 @@ namespace Hono.Scripts.Battle
     {
         public class PreLoadModelSetup : ModelSetup
         {
-            private readonly EPreLoadGameObjectType _objectType;
-            
-            public PreLoadModelSetup(EPreLoadGameObjectType objectType)
+            private EPreLoadGameObjectType _objectType;
+
+            public void Init(EPreLoadGameObjectType objectType)
             {
                 _objectType = objectType;
+                _path = GameObjectPreLoadMgr.Instance.GetObjectPath(objectType);
             }
 
-            public override void SetupModel(ActorModelController modelController, Action loadComplete = null)
+            protected override void OnLoadModel()
             {
-                modelController._model = GameObjectPreLoadMgr.Instance[_objectType];
-                
-                modelController.IsModelLoadFinish = true;
-                
-                loadComplete?.Invoke();
+                if (!GameObjectPool.Instance.TryGet(_path, out _gameObject))
+                {
+                    _gameObject = Object.Instantiate(GameObjectPreLoadMgr.Instance[_objectType]);
+                }
+
+                _loadComplete.Invoke(_gameObject);
+            }
+
+            protected override void OnUnInit()
+            {
+                _objectType = default;
             }
         }
     }
-   
 }

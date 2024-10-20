@@ -8,24 +8,24 @@ using UnityEngine.Profiling;
 namespace Hono.Scripts.Battle
 {
     /// <summary>
-    /// Actor 实际的行为由Logic+Show构成，用State去管理Logic和Show Actor提供对外的接口
+    /// Actor 实际的行为由Logic+ModelController组成
     /// </summary>
-    public sealed partial class Actor : IVarCollectionBind
+    public sealed partial class Actor : IVarCollectionBind, IPoolObject
     {
         /// <summary>
         /// 运行时唯一ID
         /// </summary>
-        public int Uid { get; }
+        public int Uid { get; private set; }
+        
+        /// <summary>
+        /// Actor基础类型
+        /// </summary>
+        public EActorType ActorType { get; private set;  }
         
         /// <summary>
         /// 变量黑板
         /// </summary>
         public VarCollection Variables { get; }
-
-        /// <summary>
-        /// Actor基础类型
-        /// </summary>
-        public EActorType ActorType { get; }
         
         /// <summary>
         /// Actor逻辑
@@ -35,8 +35,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// Unity交互层
         /// </summary>
-        private ActorModelController _modelController;
-        public ActorModelController ModelController => _modelController;
+        public ActorModelController ModelController { get; private set; }
         
         /// <summary>
         /// ability控制器
@@ -44,7 +43,7 @@ namespace Hono.Scripts.Battle
         private readonly AbilityController _abilityController;
 
         /// <summary>
-        /// Actor属性 (show真的需要属性吗，暂时定为不要)
+        /// Actor属性
         /// </summary>
         private readonly AttrCollection _attrs;
 
@@ -76,7 +75,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// actor是否加载完成
         /// </summary>
-        public bool ActorSetupFinish => _modelController.IsModelLoadFinish;
+        public bool ActorSetupFinish => ModelController.IsModelLoadFinish;
 
         /// <summary>
         /// 是否为玩家操控单位
@@ -88,16 +87,28 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public bool IsExpired { get; set; }
 
+        /// <summary>
+        /// Model加载完成后调用
+        /// </summary>
         public Action<Actor> OnModelLoadFinish { get; set; }
-        public Action<Actor> OnInitCallBack { get; set; }
+        
+        /// <summary>
+        /// 进入场景后调用
+        /// </summary>
+        public Action<Actor> OnEnterSceneCallBack { get; set; }
+        
+        /// <summary>
+        /// 每次Tick最后调用
+        /// </summary>
         public Action<Actor> OnTickCallBack { get; set; }
+        
+        /// <summary>
+        /// 删除时调用
+        /// </summary>
         public Action<Actor> OnDestroyCallBack { get; set; }
 
-        public Actor(int uid, EActorType actorType)
+        public Actor()
         {
-            Uid = uid;
-            ActorType = actorType;
-            OnDestroyCallBack = null;
             _tags = new Tags();
             _attrs = new AttrCollection(this, AttrCreator.Create);
             _abilityController = new AbilityController(this);
@@ -105,6 +116,38 @@ namespace Hono.Scripts.Battle
             Variables = new VarCollection(this, 128);
         }
 
+        public void Init(int uid, EActorType actorType)
+        {
+            Uid = uid;
+            ActorType = actorType;
+            IsExpired = false;
+            IsPlayerControl = false;
+        }
+        
+        public void OnRecycle()
+        {
+            //调用删除逻辑
+            Destroy();
+            
+            //清空回调
+            OnModelLoadFinish = null;
+            OnEnterSceneCallBack = null;
+            OnTickCallBack = null;
+            OnDestroyCallBack = null;
+            
+            //清空容器
+            _tags.Clear();
+            _attrs.Clear();
+            _abilityController.Clear();
+            Variables.Clear();
+            _message.Clear();
+            
+            //清空Model，Logic
+            ModelController = null;
+            Logic = null;
+        }
+        
+        
         #region 生命周期
 
         /// <summary>
@@ -116,19 +159,19 @@ namespace Hono.Scripts.Battle
         {
             Logic = logic;
             Logic.Setup(_abilityController, _attrs, _tags, Variables);
-            _modelController = modelController;
-            _modelController.Setup(_tags, Variables, Logic);
+            ModelController = modelController;
+            ModelController.Setup(_tags, Variables, Logic);
         }
         
         /// <summary>
-        /// 加入Rt列表后执行，一般是创建后的第一帧先执行了Init 之后会同帧调用 Tick Update
+        /// ModelController和Logic加载完成后，与Tick处与同一帧，先于Tick调用
         /// </summary>
-        public void Init()
+        public void EnterScene()
         {
-            Logic.Init();
-            _modelController.OnEnterScene();
+            Logic.EnterScene();
+            ModelController.EnterScene();
             _message.Init();
-            OnInitCallBack?.Invoke(this);
+            OnEnterSceneCallBack?.Invoke(this);
         }
 
         /// <summary>
@@ -137,21 +180,10 @@ namespace Hono.Scripts.Battle
         /// <param name="dt"></param>
         public void Tick(float dt)
         {
-	        if (ActorType == EActorType.Pawn) {
-		        Profiler.BeginSample("PawnActorTick");
-	        }
-	        else if(ActorType == EActorType.Monster)
-	        {
-		        Profiler.BeginSample("MonsterActorTick");
-	        }
-	        else {
-		        Profiler.BeginSample("OtherActorTick");
-	        }
 	        if(IsExpired) return;
 	        Logic.Tick(dt);
             _abilityController.Tick(dt);
             OnTickCallBack?.Invoke(this);
-            Profiler.EndSample();
         }
 
         /// <summary>
@@ -161,9 +193,9 @@ namespace Hono.Scripts.Battle
         public void Update(float dt)
         {
 	        if(IsExpired) return;
-	        if (_modelController == null) return;
-	        if(!_modelController.IsModelLoadFinish) return;
-	        _modelController.Update(dt);
+	        if (ModelController == null) return;
+	        if(!ModelController.IsModelLoadFinish) return;
+            ModelController.Update(dt);
         }
 
         /// <summary>
@@ -172,9 +204,8 @@ namespace Hono.Scripts.Battle
         public void Destroy()
         {
             OnDestroyCallBack?.Invoke(this);
-            _modelController.Destroy();
+            ModelController.Destroy();
             Logic.Destroy();
-            _message.UnInit();
         }
 
         #endregion
@@ -202,10 +233,7 @@ namespace Hono.Scripts.Battle
         
         public T GetAttr<T>(ELogicAttr logicAttr)
         {
-	        Profiler.BeginSample("SetAttr");
-	        var value = _attrs.GetAttr<T>(logicAttr.ToInt());
-	        Profiler.EndSample();
-            return value;
+            return  _attrs.GetAttr<T>(logicAttr.ToInt());
         }
 
         public object GetAttrBox(ELogicAttr logicAttr)
@@ -215,18 +243,12 @@ namespace Hono.Scripts.Battle
 
         public ICommand SetAttr<T>(int logicAttr, T value, bool isTempData)
         {
-	        Profiler.BeginSample("SetAttr");
-	        var fvalue = _attrs.SetAttr(logicAttr, value, isTempData);
-	        Profiler.EndSample();
-	        return fvalue;
+	        return _attrs.SetAttr(logicAttr, value, isTempData);
         }
         
         public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData)
         {
-	        Profiler.BeginSample("SetAttrCommand");
-	        var fvalue = _attrs.SetAttr(logicAttr.ToInt(), value, isTempData);
-	        Profiler.EndSample();
-            return fvalue;
+            return _attrs.SetAttr(logicAttr.ToInt(), value, isTempData);;
         }
 
         public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData)

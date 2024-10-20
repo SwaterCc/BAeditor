@@ -49,6 +49,11 @@ namespace Hono.Scripts.Battle.Tools
             _tags.Remove(tag);
         }
 
+        public void Clear()
+        {
+            _tags.Clear();
+        }
+        
         public List<int> GetAllTag()
         {
             var res = new List<int>();

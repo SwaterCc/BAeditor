@@ -15,17 +15,17 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// Actor的UID
         /// </summary>
-        public int Uid;
-
-        /// <summary>
-        /// 模型Id，没有则为-1
-        /// </summary>
-        public int ModelId;
+        public int Uid { get; private set; }
 
         /// <summary>
         /// Actor
         /// </summary>
-        public Actor Actor { get; }
+        public Actor Actor { get; private set; }
+
+        /// <summary>
+        /// 输入来源
+        /// </summary>
+        protected ActorInput _actorInput;
 
         /// <summary>
         /// 状态机
@@ -35,66 +35,75 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 逻辑组件
         /// </summary>
-        private readonly Dictionary<Type, ALogicComponent> _components;
+        private readonly Dictionary<Type, ALogicComponent> _components = new();
 
         /// <summary>
         /// Actor的Ability控制器
         /// </summary>
-        private Actor.AbilityController _abilityController;
-
-        protected Actor.AbilityController AbilityController => _abilityController;
+        protected Actor.AbilityController AbilityController { get; private set; }
 
         /// <summary>
         /// Actor的属性
         /// </summary>
-        private AttrCollection _attrs;
-
-        protected AttrCollection Attrs => _attrs;
+        protected AttrCollection Attrs { get; private set; }
 
         /// <summary>
         /// Actor的Tags
         /// </summary>
-        private Tags _tags;
-
-        protected Tags Tags => _tags;
+        protected Tags Tags { get; private set; }
 
         /// <summary>
         /// Actor的黑板数据
         /// </summary>
-        private VarCollection _variables;
+        protected VarCollection Variables { get; private set; }
 
-        protected VarCollection Variables => _variables;
+        protected ActorLogic()
+        {
+            Constructor();
+        }
 
-        /// <summary>
-        /// 输入来源
-        /// </summary>
-        protected ActorInput _actorInput;
+        private void Constructor()
+        {
+            constructInput();
+            constructComponents();
+            constructStateMachine();
+        }
 
-        public ActorLogic(Actor actor)
+        protected virtual void constructComponents() { }
+
+        protected virtual void constructInput()
+        {
+            _actorInput = new NoInput(this);
+        }
+
+        protected virtual void constructStateMachine() { }
+
+        public void Init(Actor actor)
         {
             Actor = actor;
             Uid = actor.Uid;
-            _components = new Dictionary<Type, ALogicComponent>();
+            
+            OnInit();
         }
+
+        protected virtual void OnInit() { }
 
         public void Setup(Actor.AbilityController controller, AttrCollection attrs, Tags tags,
             VarCollection varCollection)
         {
-            _attrs = attrs;
-            _abilityController = controller;
-            _tags = tags;
-            _variables = varCollection;
+            Attrs = attrs;
+            AbilityController = controller;
+            Tags = tags;
+            Variables = varCollection;
 
             setupAttrs();
-            setupInput();
-            setupComponents();
-            setupStateMachine();
         }
 
-        public void Init()
-        {
-            onInit();
+        protected virtual void setupAttrs() { }
 
+
+        public void EnterScene()
+        {
             foreach (var component in _components)
             {
                 component.Value.Init();
@@ -102,25 +111,20 @@ namespace Hono.Scripts.Battle
 
             _actorInput?.Init();
             _stateMachine?.Init();
+
+            onEnterScene();
         }
 
-        protected virtual void setupAttrs() { }
+        protected virtual void onEnterScene() { }
 
-        protected virtual void setupInput()
-        {
-            _actorInput = new NoInput(this);
-        }
-
-        protected virtual void setupStateMachine() { }
-        protected virtual void onInit() { }
-        protected virtual void setupComponents() { }
-
-        protected void addComponent(ALogicComponent component)
+        protected T addComponent<T>(T component) where T : ALogicComponent
         {
             if (!_components.TryAdd(component.GetType(), component))
             {
                 Debug.Log($"{this.GetType()}  添加组件 {component.GetType()} Failed!");
             }
+
+            return component;
         }
 
         public T GetComponent<T>() where T : ALogicComponent
@@ -149,19 +153,14 @@ namespace Hono.Scripts.Battle
 
         public void Tick(float dt)
         {
-	        Profiler.BeginSample("ActorLogicComponentTick");
+            _actorInput.Tick(dt);
             foreach (var component in _components)
             {
                 component.Value.Tick(dt);
             }
-            Profiler.EndSample();
-            Profiler.BeginSample("ActorLogicInput");
-            _actorInput.Tick(dt);
-            Profiler.EndSample();
+
             _stateMachine?.Tick(dt);
-            Profiler.BeginSample("ActorLogicTick");
             onTick(dt);
-            Profiler.EndSample();
         }
 
         public void Destroy()
@@ -172,10 +171,19 @@ namespace Hono.Scripts.Battle
             {
                 component.Value.UnInit();
             }
+            
+            Attrs = null;
+            AbilityController = null;
+            Tags = null;
+            Variables = null;
+
+            RecycleSelf();
         }
 
         protected virtual void onDestroy() { }
-        
+
+        protected abstract void RecycleSelf();
+
         public EActorLogicStateType CurState()
         {
             return _stateMachine.CurStateType;

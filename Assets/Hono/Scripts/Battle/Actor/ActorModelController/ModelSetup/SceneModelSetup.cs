@@ -8,21 +8,24 @@ namespace Hono.Scripts.Battle
     {
         public class SceneModelSetup : ModelSetup
         {
-            private readonly SceneActorModel _sceneActorModel;
+            private SceneActorModel _sceneActorModel;
 
-            public SceneModelSetup(SceneActorModel sceneActorModel)
+            public void Init(SceneActorModel sceneActorModel)
             {
                 _sceneActorModel = sceneActorModel;
             }
-            
-            public override void SetupModel(ActorModelController modelController, Action loadComplete = null)
+
+            protected override void OnLoadModel()
             {
-                modelController._model = _sceneActorModel.gameObject;
-                modelController.IsModelLoadFinish = true;
-                modelController.IsSceneModel = true;
-                modelController.Actor.SetAttr(ELogicAttr.AttrPosition, _sceneActorModel.transform.position, false);
-                modelController.Actor.SetAttr(ELogicAttr.AttrRot, _sceneActorModel.transform.rotation, false);
-                _sceneActorModel.OnModelSetupFinish(modelController.Actor);
+                _gameObject = _sceneActorModel.gameObject;
+                _sceneActorModel.OnModelSetupFinish(_modelController.Actor);
+                _modelController.Actor.SetAttr(ELogicAttr.AttrPosition, _sceneActorModel.transform.position, false);
+                _modelController.Actor.SetAttr(ELogicAttr.AttrRot, _sceneActorModel.transform.rotation, false);
+            }
+
+            protected override void OnUnInit()
+            {
+                _sceneActorModel = null;
             }
         }
     }

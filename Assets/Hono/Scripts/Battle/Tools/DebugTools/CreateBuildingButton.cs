@@ -1,4 +1,3 @@
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Tools.DebugTools {
@@ -20,6 +19,7 @@ namespace Hono.Scripts.Battle.Tools.DebugTools {
 			if (obj.TryGetComponent<BuildingActorModel>(out var comp)) {
 				comp.BuildTableRowId = buildingLogicRow.Id;
 				comp.CostRPCount = buildingLogicRow.TempCost;
+				comp.Path = modelRow.ModelPath;
 			}
 		}
 	}
