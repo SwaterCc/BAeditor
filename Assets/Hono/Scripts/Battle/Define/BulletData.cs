@@ -1,5 +1,8 @@
-﻿using System;
+﻿#region
+
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -7,20 +10,20 @@ namespace Hono.Scripts.Battle
     {
         public int ID => Id;
         public int Id;
-        
+
         public bool CustomMotion;
         public EMotionType MotionType = EMotionType.Liner;
 
         public Vector3 Offset;
-        
+
         public bool CloseFollowTarget;
-        
+
         public float BulletSpeed;
         public bool IsHitPathActor;
         public int DamageConfigId;
         public float BulletLifeTime;
         public int MaxHitCount;
-        
+
         public FilterSetting FilterSetting = new(true);
     }
 }

@@ -1,12 +1,15 @@
-﻿using System;
-using Sirenix.OdinInspector;
+﻿#region
+
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
     public class DebugMode : MonoBehaviour
     {
         private static DebugMode _instance;
+
         public static DebugMode Instance
         {
             get
@@ -27,10 +30,10 @@ namespace Hono.Scripts.Battle
                 return _instance;
             }
         }
-        
+
         private bool _isAutoReload = true;
         public bool AutoReloadAsset => _isAutoReload;
-        
+
         protected void Awake()
         {
             DontDestroyOnLoad(this.gameObject);
@@ -46,10 +49,7 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        public void Init()
-        {
-            
-        }
+        public void Init() { }
 
         private void OnGUI()
         {
@@ -61,13 +61,15 @@ namespace Hono.Scripts.Battle
             GUILayout.BeginHorizontal();
 
             // 绘制 Toggle 控件
-            _isAutoReload = GUILayout.Toggle(_isAutoReload, "启用Asset自动加载", GUILayout.Width(elementWidth), GUILayout.Height(elementHeight));
+            _isAutoReload = GUILayout.Toggle(_isAutoReload, "启用Asset自动加载", GUILayout.Width(elementWidth),
+                GUILayout.Height(elementHeight));
 
             // 绘制 Button 控件
             if (GUILayout.Button("重新加载表", GUILayout.Width(elementWidth), GUILayout.Height(elementHeight)))
             {
                 ConfigManager.Instance.ReloadAll();
             }
+
             // 结束水平布局
             GUILayout.EndHorizontal();
         }

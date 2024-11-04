@@ -21,9 +21,7 @@ namespace Cysharp.Threading.Tasks
         public static implicit operator ChannelWriter<TWrite>(Channel<TWrite, TRead> channel) => channel.Writer;
     }
 
-    public abstract class Channel<T> : Channel<T, T>
-    {
-    }
+    public abstract class Channel<T> : Channel<T, T> { }
 
     public abstract class ChannelReader<T>
     {
@@ -55,7 +53,8 @@ namespace Cysharp.Threading.Tasks
             throw new ChannelClosedException();
         }
 
-        public abstract IUniTaskAsyncEnumerable<T> ReadAllAsync(CancellationToken cancellationToken = default(CancellationToken));
+        public abstract IUniTaskAsyncEnumerable<T> ReadAllAsync(
+            CancellationToken cancellationToken = default(CancellationToken));
     }
 
     public abstract class ChannelWriter<T>
@@ -75,14 +74,12 @@ namespace Cysharp.Threading.Tasks
     public partial class ChannelClosedException : InvalidOperationException
     {
         public ChannelClosedException() :
-            base("Channel is already closed.")
-        { }
+            base("Channel is already closed.") { }
 
         public ChannelClosedException(string message) : base(message) { }
 
         public ChannelClosedException(Exception innerException) :
-            base("Channel is already closed", innerException)
-        { }
+            base("Channel is already closed", innerException) { }
 
         public ChannelClosedException(string message, Exception innerException) : base(message, innerException) { }
     }
@@ -292,7 +289,9 @@ namespace Cysharp.Threading.Tasks
                     this.cancellationToken = cancellationToken;
                     if (this.cancellationToken.CanBeCanceled)
                     {
-                        cancellationTokenRegistration = this.cancellationToken.RegisterWithoutCaptureExecutionContext(CancellationCallbackDelegate, this);
+                        cancellationTokenRegistration =
+                            this.cancellationToken.RegisterWithoutCaptureExecutionContext(CancellationCallbackDelegate,
+                                this);
                     }
 
                     return new UniTask<bool>(this, core.Version);
@@ -375,7 +374,8 @@ namespace Cysharp.Threading.Tasks
                 bool cacheValue;
                 bool running;
 
-                public ReadAllAsyncEnumerable(SingleConsumerUnboundedChannelReader parent, CancellationToken cancellationToken)
+                public ReadAllAsyncEnumerable(SingleConsumerUnboundedChannelReader parent,
+                    CancellationToken cancellationToken)
                 {
                     this.parent = parent;
                     this.cancellationToken1 = cancellationToken;
@@ -385,7 +385,8 @@ namespace Cysharp.Threading.Tasks
                 {
                     if (running)
                     {
-                        throw new InvalidOperationException("Enumerator is already running, does not allow call GetAsyncEnumerator twice.");
+                        throw new InvalidOperationException(
+                            "Enumerator is already running, does not allow call GetAsyncEnumerator twice.");
                     }
 
                     if (this.cancellationToken1 != cancellationToken)
@@ -395,12 +396,16 @@ namespace Cysharp.Threading.Tasks
 
                     if (this.cancellationToken1.CanBeCanceled)
                     {
-                        this.cancellationTokenRegistration1 =  this.cancellationToken1.RegisterWithoutCaptureExecutionContext(CancellationCallback1Delegate, this);
+                        this.cancellationTokenRegistration1 =
+                            this.cancellationToken1.RegisterWithoutCaptureExecutionContext(
+                                CancellationCallback1Delegate, this);
                     }
 
                     if (this.cancellationToken2.CanBeCanceled)
                     {
-                        this.cancellationTokenRegistration2 = this.cancellationToken2.RegisterWithoutCaptureExecutionContext(CancellationCallback2Delegate, this);
+                        this.cancellationTokenRegistration2 =
+                            this.cancellationToken2.RegisterWithoutCaptureExecutionContext(
+                                CancellationCallback2Delegate, this);
                     }
 
                     running = true;
@@ -415,6 +420,7 @@ namespace Cysharp.Threading.Tasks
                         {
                             return current;
                         }
+
                         parent.TryRead(out current);
                         return current;
                     }

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Serialization;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEngine;
-using Object = System.Object;
 
 namespace Editor.AbilityEditor
 {
@@ -24,16 +22,17 @@ namespace Editor.AbilityEditor
 
         private Action<object> _onSave;
         private Type _type;
-        private void init(object serializableObject,Type type, Action<object> onSave)
+
+        private void init(object serializableObject, Type type, Action<object> onSave)
         {
             _type = type;
-            
+
             if (serializableObject == null)
             {
                 Debug.LogError($"{_type} is null");
                 return;
             }
-            
+
             if (!_type.IsSerializable)
             {
                 Debug.LogError($"{_type} is not Serializable");
@@ -52,16 +51,14 @@ namespace Editor.AbilityEditor
                 formatter.Serialize(ms, serializableObject);
                 ms.Position = 0;
                 var copy = formatter.Deserialize(ms);
-                
+
                 return copy;
             }
         }
-        
-        [OdinSerialize]
-        [NonSerialized]
-        [VerticalGroup("setting")]
+
+        [OdinSerialize] [NonSerialized] [VerticalGroup("setting")]
         public object Setting;
-        
+
 
         [VerticalGroup("end")]
         [Button("保存")]

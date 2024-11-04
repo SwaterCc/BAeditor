@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1005001
   m_EditorClassIdentifier: 
   SkillId: 1005001
-  SkillType: 1
+  SkillType: 0
   SkillTargetType: 0
   SkillRange: 0
   EcdMode: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 9
+      Radius: 12
       Angle: 0
     MaxTargetCount: 1
     HasSelf: 0

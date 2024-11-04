@@ -20,7 +20,7 @@ MonoBehaviour:
   BulletSpeed: 12
   IsHitPathActor: 0
   DamageConfigId: 20200201
-  BulletLifeTime: 2
+  BulletLifeTime: 3
   MaxHitCount: 1
   FilterSetting:
     _isOnlyCondition: 1

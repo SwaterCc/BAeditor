@@ -1,14 +1,13 @@
+using System.Collections.Generic;
+using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using UnityEditor;
-    using UnityEngine;
-    using System.Collections.Generic;
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.Utilities.Editor;
-    using Sirenix.OdinInspector;
-    using Sirenix.Utilities;
-
     public class OverrideGetTargetsExampleWindow : OdinEditorWindow
     {
         [MenuItem("Tools/Odin/Demos/Odin Editor Window Demos/Draw Any Target")]
@@ -18,9 +17,7 @@ namespace Sirenix.OdinInspector.Demos
                 .position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 600);
         }
 
-        [HideLabel]
-        [Multiline(6)]
-        [SuffixLabel("This is drawn", true)]
+        [HideLabel] [Multiline(6)] [SuffixLabel("This is drawn", true)]
         public string Test;
 
         // In the default implemenentation, it simply yield returns it self.

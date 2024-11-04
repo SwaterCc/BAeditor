@@ -25,12 +25,12 @@ MonoBehaviour:
   PriorityDEF: 0
   ForceFaceTarget: 0
   SkillDamageBasePer: 0
-  UseCustomFilter: 0
+  UseCustomFilter: 1
   CustomFilter:
     _isOnlyCondition: 0
     OpenBoxCheck: 0
     BoxData:
-      ShapeType: 0
+      ShapeType: 1
       Rot:
         x: 0
         y: 0
@@ -42,15 +42,15 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 0
+      Radius: 0.3
       Angle: 0
-    MaxTargetCount: -1
+    MaxTargetCount: 1
     HasSelf: 0
     Ranges: []
     Compares: []
     FilterFunctionType: 0
-  MaxTargetCount: -1
+  MaxTargetCount: 1
   SelectSelf: 0
-  SkillName: 
-  SkillDesc: 
-  SkillIconPath: 
+  SkillName: "\u81EA\u7136\u4E4B\u8D50"
+  SkillDesc: "\u6BCF\u4E00\u6B21\u91CA\u653E\u6280\u80FD\u53EF\u4F7F\u4E0B\u4E00\u4E2A\u6280\u80FD\u91CA\u653E\u901F\u5EA6\u63D0\u9AD840%\u3002"
+  SkillIconPath: Sprites/Battle/207004

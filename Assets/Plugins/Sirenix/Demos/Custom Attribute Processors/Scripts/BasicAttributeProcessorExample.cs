@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Sirenix.OdinInspector.Editor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Sirenix.OdinInspector.Editor;
-    using UnityEngine;
-
     public class BasicAttributeProcessorExample : MonoBehaviour
     {
         public MyCustomClass Processed = new MyCustomClass();
@@ -32,7 +32,8 @@ namespace Sirenix.OdinInspector.Demos
 
         // This method will be called for any members of the type MyCustomClass.
         // In this example, this will be run for the fields MyCustomClass.Mode and MyCustomClass.Size.
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member,
+            List<Attribute> attributes)
         {
             attributes.Add(new HideLabelAttribute());
             attributes.Add(new BoxGroupAttribute("Box", showLabel: false));

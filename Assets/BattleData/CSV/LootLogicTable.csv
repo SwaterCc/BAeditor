@@ -1,0 +1,4 @@
+﻿Id,描述,功能类型,参数
+Id,Desc,LootFunctionType,LootParam
+int,string,int,intArray
+1,通用打击盒,,

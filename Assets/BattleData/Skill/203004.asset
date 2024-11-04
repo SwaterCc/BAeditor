@@ -23,7 +23,7 @@ MonoBehaviour:
   SkillResCost: []
   PriorityATK: 0
   PriorityDEF: 0
-  ForceFaceTarget: 1
+  ForceFaceTarget: 0
   SkillDamageBasePer: 0
   UseCustomFilter: 1
   CustomFilter:
@@ -51,3 +51,6 @@ MonoBehaviour:
     FilterFunctionType: 0
   MaxTargetCount: 1
   SelectSelf: 1
+  SkillName: "\u51DD\u795E\u541F\u5531"
+  SkillDesc: "\u6218\u6597\u4E2D\uFF0C\u589E\u52A0<color=#008080ff>20%<u>\u653B\u51FB\u901F\u5EA6</u></color>\u3002<br><br>\u82E5\u5468\u56F4\u6CA1\u6709\u654C\u4EBA\uFF0C\u989D\u5916\u589E\u52A0<color=#008080ff>20%<u>\u653B\u51FB\u901F\u5EA6</u></color>\u3002"
+  SkillIconPath: Sprites/Battle/203004

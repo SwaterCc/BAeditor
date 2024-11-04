@@ -29,7 +29,7 @@ namespace Cysharp.Threading.Tasks.Internal
         }
 
         /// <summary>
-        /// Optimizing utility to avoid .ToArray() that creates buffer copy(cut to just size).
+        ///     Optimizing utility to avoid .ToArray() that creates buffer copy(cut to just size).
         /// </summary>
         public static (T[] array, int length) Materialize<T>(IEnumerable<T> source)
         {
@@ -70,4 +70,3 @@ namespace Cysharp.Threading.Tasks.Internal
         }
     }
 }
-

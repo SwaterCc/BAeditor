@@ -1,31 +1,20 @@
 ﻿namespace Hono.Scripts.Battle
 {
-    public class PawnLogic : ActorLogic, IPoolObject
+    public class PawnLogic : ActorLogic
     {
-        private SkillComp _skillComp;
-        private BuffComp _buffComp;
-
         private PawnControlInput _pawnControlInput;
 
-        public PawnLogicTable.PawnLogicRow PawnLogicRow { get; private set; }
-
-        private float _baseSpeed;
-
-        protected override void OnInit()
+        public PawnLogic(Actor actor) : base(actor)
         {
             PawnLogicRow = ConfigManager.Table<PawnLogicTable>().Get(Actor.ConfigId);
-            //学技能
-            foreach (var skillInfo in PawnLogicRow.OwnerSkills)
-            {
-                _skillComp.LearnSkill(skillInfo[0], skillInfo[1]);
-            }
-
-            //初始buff
-            foreach (var buff in PawnLogicRow.OwnerBuffs)
-            {
-                _buffComp.AddBuff(Uid, buff, 1);
-            }
         }
+
+        public PawnLogicTable.PawnLogicRow PawnLogicRow { get; }
+
+        private float _baseSpeed;
+        private float _maxHpGrowUpFactor = 0.1f;
+        private float _maxAtkGrowUpFactor = 0.15f;
+        private float _maxDefGrowUpFactor = 0.15f;
 
         protected override void setupAttrs()
         {
@@ -33,18 +22,21 @@
             SetAttr(ELogicAttr.AttrModelId, PawnLogicRow.ModelId, false);
 
             var attrRow = ConfigManager.Table<EntityAttrBaseTable>().Get(PawnLogicRow.AttrTemplateId);
+            SetAttr(ELogicAttr.AttrEntityLevel, attrRow.AttrEntityLevel, false);
             _baseSpeed = attrRow.AttrBaseSpeed;
             SetAttr(ELogicAttr.AttrBaseSpeed, attrRow.AttrBaseSpeed, false);
             SetAttr(ELogicAttr.AttrMoveSpeedPCTAdd, attrRow.AttrMoveSpeedPCTAdd, false);
-            SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
-            SetAttr(ELogicAttr.AttrMaxHpAdd, attrRow.AttrMaxHpAdd, false);
-            SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
+            var _baseMaxHp = GetAttrWithFactor(attrRow.AttrMaxHpAdd, attrRow.AttrEntityLevel, _maxHpGrowUpFactor);
+            SetAttr(ELogicAttr.AttrHp, _baseMaxHp, false);
+            SetAttr(ELogicAttr.AttrMaxHpAdd, _baseMaxHp, false);
+            //SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
             SetAttr(ELogicAttr.AttrMaxMpAdd, attrRow.AttrMaxMpAdd, false);
-            SetAttr(ELogicAttr.AttrAttackAdd, attrRow.AttrAttackAdd, false);
+            var _baseAttack = GetAttrWithFactor(attrRow.AttrAttackAdd, attrRow.AttrEntityLevel, _maxAtkGrowUpFactor);
+            SetAttr(ELogicAttr.AttrAttackAdd, _baseAttack, false);
             SetAttr(ELogicAttr.AttrCritAdd, attrRow.AttrCritAdd, false);
-            SetAttr(ELogicAttr.AttrDefenseAdd, attrRow.AttrDefenseAdd, false);
+            var _baseDefense = GetAttrWithFactor(attrRow.AttrDefenseAdd, attrRow.AttrEntityLevel, _maxDefGrowUpFactor);
+            SetAttr(ELogicAttr.AttrDefenseAdd, _baseDefense, false);
             SetAttr(ELogicAttr.AttrHealAdd, attrRow.AttrHealAdd, false);
-            SetAttr(ELogicAttr.AttrEntityLevel, attrRow.AttrEntityLevel, false);
             SetAttr(ELogicAttr.AttrHealedAdd, attrRow.AttrHealedAdd, false);
             SetAttr(ELogicAttr.AttrCritDamageAdd, attrRow.AttrCritDamageAdd, false);
             SetAttr(ELogicAttr.AttrDmgAAdd, attrRow.AttrDmgAAdd, false);
@@ -56,25 +48,37 @@
             SetAttr(ELogicAttr.AttrElementMagicRedPCTAdd, attrRow.AttrElementMagicRedPCTAdd, false);
             SetAttr(ELogicAttr.AttrElementPhysicalPenPCTAdd, attrRow.AttrElementPhysicalPenPCTAdd, false);
             SetAttr(ELogicAttr.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd, false);
+            SetAttr(ELogicAttr.AttrMpRecAllAdd, attrRow.AttrMpRecAllAdd, false);
+            SetAttr(ELogicAttr.AttrMpRecAllPer, attrRow.AttrMpRecAllPer, false);
+            SetAttr(ELogicAttr.AttrMpRecKilledAdd, attrRow.AttrMpRecKilledAdd, false);
+            SetAttr(ELogicAttr.AttrMpRecBehitPer, attrRow.AttrMpRecBehitPer, false);
         }
 
-        protected override void constructInput()
+        protected override void setupInput()
         {
             _pawnControlInput = new PawnControlInput(this);
             ;
             _actorInput = _pawnControlInput;
         }
 
-        protected override void constructComponents()
+        protected override void setupComponents()
         {
-            _skillComp = addComponent(new SkillComp(this));
-            _buffComp = addComponent(new BuffComp(this));
             addComponent(new AttrSimpleProgress(this));
+            addComponent(new SkillComp(this, () => PawnLogicRow.OwnerSkills));
+            addComponent(new BuffComp(this, () => PawnLogicRow.OwnerBuffs));
             addComponent(new MotionComp(this));
             addComponent(new BeHurtComp(this));
             addComponent(new VFXComp(this));
             addComponent(new HateComp(this));
             addComponent(new MpComp(this));
+        }
+
+        protected override void onInit()
+        {
+            foreach (var tag in PawnLogicRow.TagList)
+            {
+                Actor.AddTag(tag);
+            }
         }
 
         protected override void onTick(float dt)
@@ -84,16 +88,20 @@
             Actor.SetAttr(ELogicAttr.AttrBaseSpeed, finalMoveSpeed, false);
         }
 
-        protected override void RecycleSelf()
+        static int GetAttrWithFactor(int startValue, int level, float factor)
         {
-            AObjectPool<PawnLogic>.Pool.Recycle(this);
+            int currentValue = startValue;
+            for (int i = 1; i <= level - 1; i++)
+            {
+                currentValue += (int)(currentValue * factor);
+            }
+
+            return currentValue;
         }
 
-        protected override void constructStateMachine()
+        protected override void setupStateMachine()
         {
             _stateMachine = new ActorStateMachine(this);
         }
-
-        public void OnRecycle() { }
     }
 }

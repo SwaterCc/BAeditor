@@ -1,7 +1,9 @@
-﻿using System;
+﻿#region
+
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+
+#endregion
 
 namespace Hono.Scripts.Battle.Tools.DebugTools
 {
@@ -15,20 +17,20 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
         public TextMeshProUGUI CurMonsterCount;
         public TextMeshProUGUI PawnKillCount;
         public TextMeshProUGUI DeadMonster;
-        
+
         public void Update()
         {
-            var curBattleGround = BattleManager.CurrentBattleGround;
+            var curBattleGround = BattleManager.CurBattle;
             if (curBattleGround == null) return;
 
-            var roundCount = curBattleGround.RuntimeInfo.CurRoundCount;
-            var roundState = curBattleGround.RuntimeInfo.CurRoundState;
-            var lastTime = curBattleGround.RuntimeInfo.CurRoundLastTime;
-            var curPawnCount = curBattleGround.RuntimeInfo.GetRoundSurvivalFaction(1);
-            var curMonsterCount = curBattleGround.RuntimeInfo.GetRoundSurvivalFaction(3);
-            var pawnKilledCount =  curBattleGround.RuntimeInfo.GetRoundPawnKill(0);
-            var deadMonster = curBattleGround.RuntimeInfo.GetBattleDeadFaction(3);
-            
+            var roundCount = curBattleGround.RtInfo.CurRoundCount;
+            var roundState = curBattleGround.RtInfo.CurRoundState;
+            var lastTime = curBattleGround.RtInfo.CurRoundDurationTime;
+            var curPawnCount = curBattleGround.RtInfo.GetRoundSurvivalFaction(1);
+            var curMonsterCount = curBattleGround.RtInfo.GetRoundSurvivalFaction(3);
+            var pawnKilledCount = curBattleGround.RtInfo.GetRoundPawnKill(0);
+            var deadMonster = curBattleGround.RtInfo.GetBattleDeadFaction(3);
+
             RoundCount.SetText("RoundCount:" + (roundCount + 1));
             LastTime.SetText("LastTime:" + lastTime);
             RoundState.SetText(roundState.ToString());

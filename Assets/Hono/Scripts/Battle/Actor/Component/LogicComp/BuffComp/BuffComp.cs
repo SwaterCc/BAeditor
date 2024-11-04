@@ -1,24 +1,39 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
-using Hono.Scripts.Battle.Tools;
+using System.Linq;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
     public partial class ActorLogic
     {
-        /// <summary>
-        /// 用ConfigId索引,每个buff只会有一个
-        /// </summary>
-        public class BuffComp : ALogicComponent
+	    /// <summary>
+	    ///     用ConfigId索引,每个buff只会有一个
+	    /// </summary>
+	    public class BuffComp : ALogicComponent
         {
             private readonly Dictionary<int, Buff> _buffs = new();
             public Dictionary<int, Buff> Buffs => _buffs;
 
+            private Func<IntArray> _getBuffs;
 
-            public BuffComp(ActorLogic logic) : base(logic) { }
+            public BuffComp(ActorLogic logic, Func<IntArray> getBuffs) : base(logic)
+            {
+                _getBuffs = getBuffs;
+            }
 
-            public override void Init() { }
+            public override void Init()
+            {
+                if (_getBuffs == null) return;
+                foreach (var buff in _getBuffs.Invoke())
+                {
+                    AddBuff(Actor.Uid, buff);
+                }
+            }
 
             public void AddBuff(int sourceActorId, int buffConfigId, int buffLayer = 1)
             {
@@ -28,6 +43,27 @@ namespace Hono.Scripts.Battle
                 {
                     Debug.LogError($"Id {buffConfigId} BuffData is null");
                     return;
+                }
+
+                if (buffData.FilterTags.Count > 0)
+                {
+                    switch (buffData.AddRule)
+                    {
+                        case EApplicationRequirement.HasTags:
+                            if (buffData.FilterTags.Any(tag => !ActorLogic._abilityController.HasTag(tag)))
+                            {
+                                return;
+                            }
+
+                            break;
+                        case EApplicationRequirement.NoTags:
+                            if (buffData.FilterTags.Any(tag => ActorLogic._abilityController.HasTag(tag)))
+                            {
+                                return;
+                            }
+
+                            break;
+                    }
                 }
 
                 if (!_buffs.TryGetValue(buffConfigId, out var buff))

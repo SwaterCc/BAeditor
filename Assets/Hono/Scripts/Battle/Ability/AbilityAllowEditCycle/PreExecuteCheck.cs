@@ -1,5 +1,3 @@
-using System;
-
 namespace Hono.Scripts.Battle
 {
     public partial class Ability
@@ -27,7 +25,7 @@ namespace Hono.Scripts.Battle
                 {
                     _ability.Variables.Set(_executor.AbilityData.PreCheckerVarName, false);
                     _executor.ExecuteCycleNode(_headNode);
-                    
+
                     _state.GetCycleCallback(_headNode).OnEnter?.Invoke();
                     _state.GetCycleCallback(_headNode).OnTick?.Invoke();
                     _state.GetCycleCallback(_headNode).OnExit?.Invoke();

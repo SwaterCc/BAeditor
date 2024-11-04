@@ -1,14 +1,13 @@
+using System.Linq;
+using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using Sirenix.OdinInspector.Editor;
-    using UnityEngine;
-    using UnityEditor;
-    using System.Linq;
-    using Sirenix.Utilities;
-    using System.Collections.Generic;
-    using Sirenix.Utilities.Editor;
-
     public class OdinMenuStyleExample : OdinMenuEditorWindow
     {
         [MenuItem("Tools/Odin/Demos/Odin Editor Window Demos/Odin Menu Style Example")]
@@ -50,8 +49,10 @@ namespace Sirenix.OdinInspector.Demos
                 tree.AddMenuItemAtPath("Custom Menu Items", customMenuItem);
             }
 
-            tree.AddAllAssetsAtPath("Scriptable Objects in Plugins Tree", "Plugins", typeof(ScriptableObject), true, false);
-            tree.AddAllAssetsAtPath("Scriptable Objects in Plugins Flat", "Plugins", typeof(ScriptableObject), true, true);
+            tree.AddAllAssetsAtPath("Scriptable Objects in Plugins Tree", "Plugins", typeof(ScriptableObject), true,
+                false);
+            tree.AddAllAssetsAtPath("Scriptable Objects in Plugins Flat", "Plugins", typeof(ScriptableObject), true,
+                true);
             tree.AddAllAssetsAtPath("Only Configs has Icons", "Plugins/Sirenix", true, false);
 
             tree.EnumerateTree()
@@ -86,7 +87,8 @@ namespace Sirenix.OdinInspector.Demos
             protected override void OnDrawMenuItem(Rect rect, Rect labelRect)
             {
                 labelRect.x -= 16;
-                this.instance.Enabled = GUI.Toggle(labelRect.AlignMiddle(18).AlignLeft(16), this.instance.Enabled, GUIContent.none);
+                this.instance.Enabled = GUI.Toggle(labelRect.AlignMiddle(18).AlignLeft(16), this.instance.Enabled,
+                    GUIContent.none);
 
                 // Toggle selection when pressing space.
                 if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Space)
@@ -104,7 +106,10 @@ namespace Sirenix.OdinInspector.Demos
                 }
             }
 
-            public override string SmartName { get { return this.instance.Name; } }
+            public override string SmartName
+            {
+                get { return this.instance.Name; }
+            }
         }
 
         private class SomeCustomClass

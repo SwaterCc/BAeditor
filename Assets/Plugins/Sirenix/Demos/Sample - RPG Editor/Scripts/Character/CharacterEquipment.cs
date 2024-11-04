@@ -1,22 +1,18 @@
+using System;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
-    using System;
-
     [Serializable]
     public class CharacterEquipment
     {
-        [ValidateInput("IsMainHand")]
-        public EquipableItem MainHand;
+        [ValidateInput("IsMainHand")] public EquipableItem MainHand;
 
-        [ValidateInput("IsOffHand")]
-        public EquipableItem Offhand;
+        [ValidateInput("IsOffHand")] public EquipableItem Offhand;
 
-        [ValidateInput("IsHead")]
-        public EquipableItem Head;
+        [ValidateInput("IsHead")] public EquipableItem Head;
 
-        [ValidateInput("IsBody")]
-        public EquipableItem Body;
+        [ValidateInput("IsBody")] public EquipableItem Body;
 
 #if UNITY_EDITOR
         private bool IsBody(EquipableItem value)

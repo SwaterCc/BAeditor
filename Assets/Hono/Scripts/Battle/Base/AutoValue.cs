@@ -1,6 +1,9 @@
+#region
+
 using System;
-using System.Runtime.Serialization;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -24,7 +27,7 @@ namespace Hono.Scripts.Battle
         {
             return _finalType;
         }
-        
+
         public int GetInt() => _intValue;
         public float GetFloat() => _floatValue;
         public bool GetBool() => _boolValue;
@@ -34,22 +37,22 @@ namespace Hono.Scripts.Battle
         {
             if (!typeof(T).IsSerializable)
             {
-                throw new InvalidCastException("±ÿ–Î «ø…–Ú¡–ªØ∂‘œÛ");
+                throw new InvalidCastException("ÂøÖÈ°ªÊòØÂèØÂ∫èÂàóÂåñÂØπË±°");
             }
 
             return (T)_serializableRef;
         }
-        
+
         public void SetSerializableRef<T>(T obj) where T : class
         {
             if (!typeof(T).IsSerializable)
             {
-                throw new InvalidCastException("±ÿ–Î «ø…–Ú¡–ªØ∂‘œÛ");
+                throw new InvalidCastException("ÂøÖÈ°ªÊòØÂèØÂ∫èÂàóÂåñÂØπË±°");
             }
 
             _serializableRef = obj;
         }
-        
+
         public static implicit operator int(AutoValue auto)
         {
             auto.check<int>();
@@ -76,41 +79,25 @@ namespace Hono.Scripts.Battle
 
         public static implicit operator AutoValue(int value)
         {
-            var auto = new AutoValue
-            {
-                _intValue = value,
-                _finalType = value.GetType()
-            };
+            var auto = new AutoValue { _intValue = value, _finalType = value.GetType() };
             return auto;
         }
 
         public static implicit operator AutoValue(float value)
         {
-            var auto = new AutoValue
-            {
-                _floatValue = value,
-                _finalType = value.GetType()
-            };
+            var auto = new AutoValue { _floatValue = value, _finalType = value.GetType() };
             return auto;
         }
 
         public static implicit operator AutoValue(bool value)
         {
-            var auto = new AutoValue
-            {
-                _boolValue = value,
-                _finalType = value.GetType()
-            };
+            var auto = new AutoValue { _boolValue = value, _finalType = value.GetType() };
             return auto;
         }
 
         public static implicit operator AutoValue(string value)
         {
-            var auto = new AutoValue
-            {
-                _stringValue = value,
-                _finalType = value.GetType()
-            };
+            var auto = new AutoValue { _stringValue = value, _finalType = value.GetType() };
             return auto;
         }
     }

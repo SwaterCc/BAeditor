@@ -1,13 +1,12 @@
+using System;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using UnityEngine;
-
 #if UNITY_EDITOR
-
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.Utilities.Editor;
+    using Editor;
+    using Utilities.Editor;
 
 #endif
 

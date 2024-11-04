@@ -1,32 +1,29 @@
+using System;
+using Sirenix.Utilities;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using UnityEngine;
-    using Sirenix.Utilities;
-
 #if UNITY_EDITOR
-
-    using Sirenix.Utilities.Editor;
-    using Sirenix.OdinInspector.Editor;
+    using Utilities.Editor;
+    using Editor;
     using UnityEditor;
 
 #endif
 
     public class MinesweeperExample : MonoBehaviour
     {
-        [Minesweeper]
-        public int NumberOfBombs;
+        [Minesweeper] public int NumberOfBombs;
     }
 
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class MinesweeperAttribute : Attribute
-    { }
+    public sealed class MinesweeperAttribute : Attribute { }
 
 #if UNITY_EDITOR
 
     /// <summary>
-    /// Minesweeper.
+    ///     Minesweeper.
     /// </summary>
     public sealed class MinesweeperAttributeDrawer : OdinAttributeDrawer<MinesweeperAttribute, int>
     {
@@ -43,15 +40,15 @@ namespace Sirenix.OdinInspector.Demos
 
         private readonly Color[] NumberColors = new Color[8]
         {
-            new Color32(42, 135, 238, 255),		// 1
-			new Color32(57, 233, 48, 255),		// 2
-			new Color32(253, 0, 0, 255),		// 3
-			new Color32(31, 23, 173, 255),		// 4
-			new Color32(36, 30, 155, 255),		// 5
-			new Color32(131, 29, 29, 255),		// 6
-			new Color32(40, 40, 40, 255),		// 7
-			new Color32(132, 132, 132, 255),    // 8
-		};
+            new Color32(42, 135, 238, 255), // 1
+            new Color32(57, 233, 48, 255), // 2
+            new Color32(253, 0, 0, 255), // 3
+            new Color32(31, 23, 173, 255), // 4
+            new Color32(36, 30, 155, 255), // 5
+            new Color32(131, 29, 29, 255), // 6
+            new Color32(40, 40, 40, 255), // 7
+            new Color32(132, 132, 132, 255), // 8
+        };
 
         private const float TileSize = 20;
         private const int BoardSize = 25;
@@ -71,7 +68,7 @@ namespace Sirenix.OdinInspector.Demos
             this.visibleTiles = new Tile[BoardSize, BoardSize];
             this.tiles = new Tile[BoardSize, BoardSize];
         }
-        
+
         private void StartGame(int bombs)
         {
             this.numberOfBombs = bombs;
@@ -99,14 +96,17 @@ namespace Sirenix.OdinInspector.Demos
                     {
                         this.tiles[x + 1, y] = (Tile)((int)this.tiles[x + 1, y] + 1);
                     }
+
                     if (x + 1 < BoardSize && y + 1 < BoardSize && this.tiles[x + 1, y + 1] != Tile.Bomb)
                     {
                         this.tiles[x + 1, y + 1] = (Tile)((int)this.tiles[x + 1, y + 1] + 1);
                     }
+
                     if (y + 1 < BoardSize && this.tiles[x, y + 1] != Tile.Bomb)
                     {
                         this.tiles[x, y + 1] = (Tile)((int)this.tiles[x, y + 1] + 1);
                     }
+
                     if (x - 1 >= 0 && y + 1 < BoardSize && this.tiles[x - 1, y + 1] != Tile.Bomb)
                     {
                         this.tiles[x - 1, y + 1] = (Tile)((int)this.tiles[x - 1, y + 1] + 1);
@@ -116,14 +116,17 @@ namespace Sirenix.OdinInspector.Demos
                     {
                         this.tiles[x - 1, y] = (Tile)((int)this.tiles[x - 1, y] + 1);
                     }
+
                     if (x - 1 >= 0 && y - 1 >= 0 && this.tiles[x - 1, y - 1] != Tile.Bomb)
                     {
                         this.tiles[x - 1, y - 1] = (Tile)((int)this.tiles[x - 1, y - 1] + 1);
                     }
+
                     if (y - 1 >= 0 && this.tiles[x, y - 1] != Tile.Bomb)
                     {
                         this.tiles[x, y - 1] = (Tile)((int)this.tiles[x, y - 1] + 1);
                     }
+
                     if (x + 1 < BoardSize && y - 1 >= 0 && this.tiles[x + 1, y - 1] != Tile.Bomb)
                     {
                         this.tiles[x + 1, y - 1] = (Tile)((int)this.tiles[x + 1, y - 1] + 1);
@@ -141,12 +144,15 @@ namespace Sirenix.OdinInspector.Demos
         }
 
         /// <summary>
-        /// Handles the Minesweeper game.
+        ///     Handles the Minesweeper game.
         /// </summary>
         protected override void DrawPropertyLayout(GUIContent label)
         {
             Rect rect = EditorGUILayout.GetControlRect();
-            this.ValueEntry.SmartValue = Mathf.Clamp(SirenixEditorFields.IntField(rect.AlignLeft(rect.width - 80 - 4), "Number of Bombs", this.ValueEntry.SmartValue), 1, (BoardSize * BoardSize) / 4);
+            this.ValueEntry.SmartValue =
+                Mathf.Clamp(
+                    SirenixEditorFields.IntField(rect.AlignLeft(rect.width - 80 - 4), "Number of Bombs",
+                        this.ValueEntry.SmartValue), 1, (BoardSize * BoardSize) / 4);
 
             // Start game
             if (GUI.Button(rect.AlignRight(80), "Start"))
@@ -160,6 +166,7 @@ namespace Sirenix.OdinInspector.Demos
             {
                 this.Game();
             }
+
             SirenixEditorGUI.EndShakeableGroup();
         }
 
@@ -182,7 +189,9 @@ namespace Sirenix.OdinInspector.Demos
 
                 var time = GUIHelper.TempContent(((int)this.time).ToString());
                 GUIHelper.PushContentColor(Color.black);
-                GUI.Label(rect.AlignTop(20).HorizontalPadding(4).AlignMiddle(18).AlignRight(EditorStyles.label.CalcSize(time).x), time);
+                GUI.Label(
+                    rect.AlignTop(20).HorizontalPadding(4).AlignMiddle(18)
+                        .AlignRight(EditorStyles.label.CalcSize(time).x), time);
                 GUIHelper.PopContentColor();
 
                 GUIHelper.PushColor(Color.yellow);
@@ -192,7 +201,8 @@ namespace Sirenix.OdinInspector.Demos
                 if (this.gameOver)
                 {
                     GUIHelper.PushContentColor(this.flaggedBombs == this.numberOfBombs ? Color.green : Color.red);
-                    GUI.Label(rect.AlignTop(20).HorizontalPadding(4).AlignMiddle(18), this.flaggedBombs == this.numberOfBombs ? "You win!" : "Game over!");
+                    GUI.Label(rect.AlignTop(20).HorizontalPadding(4).AlignMiddle(18),
+                        this.flaggedBombs == this.numberOfBombs ? "You win!" : "Game over!");
                     GUIHelper.PopContentColor();
                 }
             }
@@ -212,7 +222,9 @@ namespace Sirenix.OdinInspector.Demos
 
                 if (this.gameOver || visible == Tile.Open)
                 {
-                    SirenixEditorGUI.DrawSolidRect(new Rect(tileRect.x + 1, tileRect.y + 1, tileRect.width - 1, tileRect.height - 1), new Color(0.3f, 0.3f, 0.3f, 1f));
+                    SirenixEditorGUI.DrawSolidRect(
+                        new Rect(tileRect.x + 1, tileRect.y + 1, tileRect.width - 1, tileRect.height - 1),
+                        new Color(0.3f, 0.3f, 0.3f, 1f));
                 }
 
                 if ((this.gameOver || visible == Tile.Open) && tile == Tile.Bomb)
@@ -232,13 +244,16 @@ namespace Sirenix.OdinInspector.Demos
                 if ((this.gameOver || visible == Tile.Open) && (int)tile >= 1 && (int)tile <= 8)
                 {
                     GUIHelper.PushColor(this.NumberColors[(int)tile - 1]);
-                    GUI.Label(tileRect.AlignCenter(18).AlignCenter(18).AddX(2).AddY(2), ((int)tile).ToString(), EditorStyles.boldLabel);
+                    GUI.Label(tileRect.AlignCenter(18).AlignCenter(18).AddX(2).AddY(2), ((int)tile).ToString(),
+                        EditorStyles.boldLabel);
                     GUIHelper.PopColor();
                 }
 
                 if (!this.gameOver && tileRect.Contains(Event.current.mousePosition))
                 {
-                    SirenixEditorGUI.DrawSolidRect(new Rect(tileRect.x + 1, tileRect.y + 1, tileRect.width - 1, tileRect.height - 1), new Color(0f, 1f, 0f, 0.3f));
+                    SirenixEditorGUI.DrawSolidRect(
+                        new Rect(tileRect.x + 1, tileRect.y + 1, tileRect.width - 1, tileRect.height - 1),
+                        new Color(0f, 1f, 0f, 0.3f));
 
                     // Input
                     // Reveal

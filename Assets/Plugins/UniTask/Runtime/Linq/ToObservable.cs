@@ -1,6 +1,6 @@
-﻿using Cysharp.Threading.Tasks.Internal;
-using System;
+﻿using System;
 using System.Threading;
+using Cysharp.Threading.Tasks.Internal;
 
 namespace Cysharp.Threading.Tasks.Linq
 {
@@ -32,7 +32,8 @@ namespace Cysharp.Threading.Tasks.Linq
             return ctd;
         }
 
-        static async UniTaskVoid RunAsync(IUniTaskAsyncEnumerable<T> src, IObserver<T> observer, CancellationToken cancellationToken)
+        static async UniTaskVoid RunAsync(IUniTaskAsyncEnumerable<T> src, IObserver<T> observer,
+            CancellationToken cancellationToken)
         {
             // cancellationToken.IsCancellationRequested is called when Rx's Disposed.
             // when disposed, finish silently.

@@ -1,7 +1,10 @@
-using System;
+#region
+
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -14,14 +17,14 @@ namespace Hono.Scripts.Battle
             private float _checkDt;
             private readonly List<RoundScoreCondition> _finalTimeCheck = new(8);
             private readonly List<RoundScoreCondition> _frameCheck = new(8);
-            private bool _fristTick;
+            private bool _firstTick;
             public RoundRunningState(RoundController roundController) : base(roundController) { }
             private readonly MonsterGenEventInfo _monsterGenEventInfo = new();
             public override ERoundState GetRoundState() => ERoundState.Running;
 
             protected override void onEnter()
             {
-                _fristTick = true;
+                _firstTick = true;
                 foreach (var abilityId in CurrentRoundData.RunningAbilityIds)
                 {
                     BattleManager.BattleController.RunAbility(abilityId);
@@ -38,61 +41,88 @@ namespace Hono.Scripts.Battle
                         _finalTimeCheck.Add(condition);
                     }
                 }
+
+                MonsterGeneratorLogic.CurMonsterCount = 0;
             }
 
-            //½×¶Î×îÖÕ¼ì²âÊ±³¤
-            //Ê§°ÜÌõ¼þ-¼´¿Ì½áËã
-            //³É¹¦Ìõ¼þ-×îÖÕÊ±³¤µ½´ïºó¼ì²â
-            //µ±²»ÏÞÖÆÊ±¼äÊ±£¬ËùÓÐ³É¹¦Ìõ¼þ¶¼±ä³É¼´¿Ì½áËãÌõ¼þ
+            //é˜¶æ®µæœ€ç»ˆæ£€æµ‹æ—¶é•¿
+            //å¤±è´¥æ¡ä»¶-å³åˆ»ç»“ç®—
+            //æˆåŠŸæ¡ä»¶-æœ€ç»ˆæ—¶é•¿åˆ°è¾¾åŽæ£€æµ‹
+            //å½“ä¸é™åˆ¶æ—¶é—´æ—¶ï¼Œæ‰€æœ‰æˆåŠŸæ¡ä»¶éƒ½å˜æˆå³åˆ»ç»“ç®—æ¡ä»¶
             protected override void onTick(float dt)
             {
-                if(_fristTick)
+                Round.GameRunningState.BattleGroundHandle.RtInfo.CurRoundDurationTime += dt;
+                if (_firstTick)
+                {
                     firstTick();
-                
+                    return;
+                }
+
                 if (_checkDt > CheckInterval)
                 {
-                    _checkDt = 0;
-
-                    int successCount = 0;
-                    foreach (var successCondition in _frameCheck)
+                    if (CurrentRoundData.SuccessConditions.Count <= 0)
                     {
-                        if (checkCondition(successCondition))
+                        if (Round.GameRunningState.BattleGroundHandle.RtInfo.GetRoundLastMonster() <= 0)
                         {
-                            ++successCount;
+                            Round.SwitchState(ERoundState.SuccessScoring);
                         }
                     }
-                    if (successCount == _frameCheck.Count && successCount != 0)
+                    else
                     {
-                        Round.SwitchState(ERoundState.SuccessScoring);
-                        return;
-                    }
-
-                    
-                    foreach (var failedCondition in CurrentRoundData.FailedConditions)
-                    {
-                        if (checkCondition(failedCondition))
+                        int successCount = 0;
+                        foreach (var successCondition in _frameCheck)
                         {
-                            Round.SwitchState(ERoundState.FailedScoring);
+                            if (checkCondition(successCondition))
+                            {
+                                ++successCount;
+                            }
+                        }
+
+                        if (successCount == _frameCheck.Count && successCount != 0)
+                        {
+                            Round.SwitchState(ERoundState.SuccessScoring);
                             return;
                         }
                     }
+
+                    if (CurrentRoundData.FailedConditions.Count > 0)
+                    {
+                        foreach (var failedCondition in CurrentRoundData.FailedConditions)
+                        {
+                            if (checkCondition(failedCondition))
+                            {
+                                Round.SwitchState(ERoundState.FailedScoring);
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!Round.GameRunningState.BattleGroundHandle._pawnTeamController.CheckHasTeamAlive())
+                        {
+                            Round.SwitchState(ERoundState.FailedScoring);
+                        }
+                    }
+
+                    _checkDt = 0;
                 }
 
                 _checkDt += dt;
 
-                if (!(CurrentRoundData.RunningCheckTime > 0)) return;
-                
-                Round.GameRunningState.BattleGroundHandle.RuntimeInfo.CurRoundLastTime = CurrentRoundData.RunningCheckTime - Duration;
-                
-                if(Duration <= CurrentRoundData.RunningCheckTime) return;
+                if (CurrentRoundData.RunningCheckTime <= 0 || CurrentRoundData.SuccessConditions.Count == 0) return;
+
+                if (Duration <= CurrentRoundData.RunningCheckTime) return;
                 foreach (var condition in _finalTimeCheck)
                 {
-                    if (!checkCondition(condition))
+                    if (checkCondition(condition))
                     {
-                        Round.SwitchState(ERoundState.FailedScoring);
-                        return;
+                        continue;
                     }
+
+                    Round.SwitchState(ERoundState.FailedScoring);
+                    return;
                 }
+
                 Round.SwitchState(ERoundState.SuccessScoring);
             }
 
@@ -102,7 +132,9 @@ namespace Hono.Scripts.Battle
                 {
                     _monsterGenEventInfo.MonsterConfigId = info.ConfigId;
                     _monsterGenEventInfo.SingleUid = info.MonsterBuilderUid;
-                    BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.OnCallMonsterGen,_monsterGenEventInfo);
+                    _monsterGenEventInfo.Behave = EMonsterGenBehave.Summon;
+                    BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.OnCallMonsterGenerator,
+                        _monsterGenEventInfo);
                 }
 
                 foreach (var triggerUid in CurrentRoundData.TriggerBoxLinkInfos)
@@ -112,25 +144,29 @@ namespace Hono.Scripts.Battle
                         ((TriggerBoxModelController)actor.ModelController).SetActive(true);
                     }
                 }
-                
-                _fristTick = false;
+
+                _firstTick = false;
             }
-            
+
             private bool checkCondition(RoundScoreCondition condition)
             {
-                var rtInfo = Round.GameRunningState.BattleGroundHandle.RuntimeInfo;
+                var rtInfo = Round.GameRunningState.BattleGroundHandle.RtInfo;
+                int flag = 0;
                 switch (condition.TargetType)
                 {
                     case ERoundTargetType.FactionId:
                         switch (condition.ConditionType)
                         {
                             case ERoundConditionType.Survival:
-                                return rtInfo.GetRoundSurvivalFaction(condition.TargetParam) >=
-                                       condition.ConditionCount;
+                                flag = rtInfo.GetRoundSurvivalFaction(condition.TargetParam)
+                                    .CompareTo(condition.ConditionCount);
+                                return getCompareRes(condition.CompareResType, flag);
                             case ERoundConditionType.Death:
-                                return rtInfo.GetRoundDeadFaction(condition.TargetParam) >=
-                                       condition.ConditionCount;
+                                flag = rtInfo.GetRoundDeadFaction(condition.TargetParam)
+                                    .CompareTo(condition.ConditionCount);
+                                return getCompareRes(condition.CompareResType, flag);
                         }
+
                         break;
                     case ERoundTargetType.SpecialUid:
                         var hasActor = ActorManager.Instance.TryGetActor(condition.TargetParam, out _);
@@ -141,12 +177,40 @@ namespace Hono.Scripts.Battle
                             case ERoundConditionType.Death:
                                 return !hasActor;
                         }
+
                         break;
                     case ERoundTargetType.Tag:
-                        Debug.LogError("Tag»¹Ã»ÊµÏÖ");
+                        if (condition.ConditionType == ERoundConditionType.Death)
+                        {
+                            flag = rtInfo.TagDeadCount(condition.TargetParam)
+                                .CompareTo(condition.ConditionCount);
+                            return getCompareRes(condition.CompareResType, flag);
+                        }
+
+                        Debug.Log("å­˜æ´»Tagæœªå®žçŽ°");
                         break;
                 }
+
                 return false;
+            }
+
+            private bool getCompareRes(ECompareResType compareResType, int flag)
+            {
+                switch (compareResType)
+                {
+                    case ECompareResType.Less:
+                        return flag < 0;
+                    case ECompareResType.LessAndEqual:
+                        return flag <= 0;
+                    case ECompareResType.Equal:
+                        return flag == 0;
+                    case ECompareResType.More:
+                        return flag > 0;
+                    case ECompareResType.MoreAndEqual:
+                        return flag >= 0;
+                }
+
+                return true;
             }
 
             protected override void onExit()
@@ -155,7 +219,7 @@ namespace Hono.Scripts.Battle
                 {
                     BattleManager.BattleController.RemoveAbility(abilityId);
                 }
-                
+
                 foreach (var triggerUid in CurrentRoundData.TriggerBoxLinkInfos)
                 {
                     if (ActorManager.Instance.TryGetActor(triggerUid, out var actor))
@@ -163,6 +227,19 @@ namespace Hono.Scripts.Battle
                         ((TriggerBoxModelController)actor.ModelController).SetActive(false);
                     }
                 }
+
+                foreach (var info in CurrentRoundData.MonsterBuilderLinkInfos)
+                {
+                    _monsterGenEventInfo.MonsterConfigId = info.ConfigId;
+                    _monsterGenEventInfo.SingleUid = info.MonsterBuilderUid;
+                    _monsterGenEventInfo.Behave = EMonsterGenBehave.Clear;
+                    BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.OnCallMonsterGenerator,
+                        _monsterGenEventInfo);
+                }
+
+                MonsterGeneratorLogic.CurMonsterCount = 0;
+                Round.GameRunningState.BattleGroundHandle.RtInfo.CurRoundDurationTime = 0;
+                //PlayerControlPanel.Instance.Hide();
             }
         }
     }

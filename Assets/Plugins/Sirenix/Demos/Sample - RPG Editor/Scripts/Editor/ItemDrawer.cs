@@ -1,12 +1,12 @@
+using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.Utilities;
-    using Sirenix.Utilities.Editor;
-    using UnityEditor;
-    using UnityEngine;
-
     //
     // All items are scriptable objects, but we don't want to draw them with the boring scriptable object icon.
     // Here we create a custom drawer for all Item types, that renders a preview-field using the item icon followed
@@ -38,7 +38,9 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
                 GUI.Label(rect.AddXMin(50).AlignMiddle(16), EditorGUI.showMixedValue ? "-" : item.Name);
             }
 
-            this.ValueEntry.WeakSmartValue = SirenixEditorFields.UnityPreviewObjectField(rect.AlignLeft(45), item, texture, this.ValueEntry.BaseValueType);
+            this.ValueEntry.WeakSmartValue =
+                SirenixEditorFields.UnityPreviewObjectField(rect.AlignLeft(45), item, texture,
+                    this.ValueEntry.BaseValueType);
         }
     }
 }

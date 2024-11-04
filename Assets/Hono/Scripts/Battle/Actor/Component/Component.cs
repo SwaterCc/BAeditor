@@ -1,4 +1,8 @@
+#region
+
 using Cysharp.Threading.Tasks;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -7,7 +11,7 @@ namespace Hono.Scripts.Battle
         public UniTask AsyncLoad();
         public void OnLoadedFinish();
     }
-    
+
     public interface ILoad
     {
         public void Load();
@@ -29,7 +33,7 @@ namespace Hono.Scripts.Battle
             public virtual void OnDestroy() { }
 
             /// <summary>
-            /// 渲染帧
+            ///     渲染帧
             /// </summary>
             public void Update(float dt)
             {
@@ -42,20 +46,22 @@ namespace Hono.Scripts.Battle
 
     public partial class ActorLogic
     {
-        public abstract class ALogicComponent{
-	        public Actor Actor { get;private set; }
-	        public ActorLogic ActorLogic  { get;private set; }
+        public abstract class ALogicComponent
+        {
+            public Actor Actor { get; private set; }
+            public ActorLogic ActorLogic { get; private set; }
 
-            protected ALogicComponent(ActorLogic logic) {
-	            Actor = logic.Actor;
-	            ActorLogic = logic;
+            protected ALogicComponent(ActorLogic logic)
+            {
+                Actor = logic.Actor;
+                ActorLogic = logic;
             }
 
             public abstract void Init();
             public virtual void UnInit() { }
 
             /// <summary>
-            /// 逻辑帧
+            ///     逻辑帧
             /// </summary>
             public void Tick(float dt)
             {

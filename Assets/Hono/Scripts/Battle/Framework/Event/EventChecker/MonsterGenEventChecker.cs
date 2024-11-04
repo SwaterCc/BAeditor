@@ -1,11 +1,19 @@
-﻿using System;
+﻿#region
+
+using System;
+
+#endregion
 
 namespace Hono.Scripts.Battle.Event
 {
     public class MonsterGenEventChecker : EventChecker
     {
-        public MonsterGenEventChecker(EBattleEventType eventType, Actor actor, Action<IEventInfo> func = null) : base(eventType, actor, func) { }
-        public MonsterGenEventChecker(EBattleEventType eventType, int actorUid, Action<IEventInfo> func = null) : base(eventType, actorUid, func) { }
+        public MonsterGenEventChecker(EBattleEventType eventType, Actor actor, Action<IEventInfo> func = null) : base(
+            eventType, actor, func) { }
+
+        public MonsterGenEventChecker(EBattleEventType eventType, int actorUid, Action<IEventInfo> func = null) : base(
+            eventType, actorUid, func) { }
+
         protected override bool onCheck(IEventInfo info)
         {
             var monsterGenInfo = (MonsterGenEventInfo)info;
@@ -16,7 +24,7 @@ namespace Hono.Scripts.Battle.Event
 
             if (monsterGenInfo.SpecialUids.Count > 0)
                 return monsterGenInfo.SpecialUids.Contains(_checkerBelongActorUid);
-            
+
             return false;
         }
     }

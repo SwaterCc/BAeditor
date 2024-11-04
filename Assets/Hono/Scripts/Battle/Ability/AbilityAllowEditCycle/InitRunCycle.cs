@@ -24,6 +24,5 @@ namespace Hono.Scripts.Battle
                 return EAbilityState.Ready;
             }
         }
-
     }
 }

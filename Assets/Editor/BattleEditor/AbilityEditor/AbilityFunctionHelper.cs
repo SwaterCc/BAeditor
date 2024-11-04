@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Editor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
@@ -25,7 +23,7 @@ namespace Editor.BattleEditor.AbilityEditor
             public string ParamName;
             public Type ParamType;
         }
-        
+
         private static Dictionary<string, FuncInfo> _funcInfoDict;
 
         private static Dictionary<EParameterValueType, List<FuncInfo>> _funcInfoTypeDict;
@@ -35,34 +33,34 @@ namespace Editor.BattleEditor.AbilityEditor
             public string CreateFuncName;
             public Type EventInfoType;
         }
-        
+
         private static readonly Dictionary<EBattleEventType, EventEditorInfo> _eventCheckerDict = new();
         public static Dictionary<EBattleEventType, EventEditorInfo> EventCheckerDict => _eventCheckerDict;
 
         private static readonly List<EBattleEventType> _allowEvent = new();
-        public static  List<EBattleEventType>  AllowEvent => _allowEvent;
-        
+        public static List<EBattleEventType> AllowEvent => _allowEvent;
+
         public static FuncInfo GetFuncInfo(string funcName)
         {
             return _funcInfoDict[funcName];
         }
-        
-        public static bool TryGetFuncInfo(string funcName,out FuncInfo funcInfo)
+
+        public static bool TryGetFuncInfo(string funcName, out FuncInfo funcInfo)
         {
             funcInfo = null;
             if (string.IsNullOrEmpty(funcName))
             {
                 return false;
             }
-            
+
             return _funcInfoDict.TryGetValue(funcName, out funcInfo);
         }
-        
+
         public static List<FuncInfo> GetFuncInfosByType(EParameterValueType type)
         {
             return _funcInfoTypeDict[type];
         }
-        
+
         public static Type GetVariableType(string typeString)
         {
             if (typeString == "int")
@@ -103,36 +101,43 @@ namespace Editor.BattleEditor.AbilityEditor
 
             throw new InvalidCastException("类型转换失败");
         }
-        
+
         public static EParameterValueType GetParameterValueType(this Type type)
         {
             if (type == typeof(int))
             {
                 return EParameterValueType.Int;
             }
+
             if (type == typeof(bool))
             {
                 return EParameterValueType.Bool;
             }
+
             if (type == typeof(float))
             {
                 return EParameterValueType.Float;
             }
+
             if (type == typeof(string))
             {
                 return EParameterValueType.String;
             }
+
             /*if (type == typeof(List<int>))
             {
                 return EParameterValueType.IntList;
             }*/
-            if (type == typeof(object)) {
-	            return EParameterValueType.Object;
+            if (type == typeof(object))
+            {
+                return EParameterValueType.Object;
             }
+
             if (type.IsEnum)
             {
                 return EParameterValueType.Enum;
             }
+
             if (type.IsSerializable && type.IsClass)
             {
                 return EParameterValueType.Custom;
@@ -149,7 +154,7 @@ namespace Editor.BattleEditor.AbilityEditor
 
         private static void InitAbilityFuncCache()
         {
-            _funcInfoDict = new Dictionary<string, FuncInfo>();   
+            _funcInfoDict = new Dictionary<string, FuncInfo>();
             _funcInfoTypeDict = new();
             _funcInfoTypeDict.Add(EParameterValueType.Any, new List<FuncInfo>());
 
@@ -197,8 +202,10 @@ namespace Editor.BattleEditor.AbilityEditor
                         funcInfos = new List<FuncInfo>();
                         _funcInfoTypeDict.Add(valueType, funcInfos);
                     }
+
                     funcInfos.Add(info);
                 }
+
                 _funcInfoTypeDict[EParameterValueType.Any].Add(info);
             }
         }
@@ -209,19 +216,18 @@ namespace Editor.BattleEditor.AbilityEditor
 
             foreach (var field in typeof(EBattleEventType).GetFields())
             {
-                
                 EventCheckerBinder checkerBinder = null;
-                foreach (var attribute in  field.GetCustomAttributes(typeof(EventCheckerBinder), false))
+                foreach (var attribute in field.GetCustomAttributes(typeof(EventCheckerBinder), false))
                 {
-                    if (attribute is EventCheckerBinder binder )
+                    if (attribute is EventCheckerBinder binder)
                     {
                         checkerBinder = binder;
                         break;
                     }
                 }
-                
-                if(checkerBinder == null) continue;
-                
+
+                if (checkerBinder == null) continue;
+
                 var enumValue = (EBattleEventType)field.GetValue(null);
                 _allowEvent.Add(enumValue);
                 // 获取枚举值

@@ -17,10 +17,18 @@ MonoBehaviour:
   SkillTargetType: 1
   SkillRange: 0
   EcdMode: 0
-  SkillCD: 0
-  SkillResCheck: []
+  SkillCD: 12
+  SkillResCheck:
+  - Items:
+    - ResourceType: 0
+      ResId: 10020
+      Value: 2000
   CostType: 0
-  SkillResCost: []
+  SkillResCost:
+  - Items:
+    - ResourceType: 0
+      ResId: 10020
+      Value: 2000
   PriorityATK: 0
   PriorityDEF: 0
   ForceFaceTarget: 0
@@ -52,5 +60,5 @@ MonoBehaviour:
   MaxTargetCount: 1
   SelectSelf: 1
   SkillName: "\u6CD5\u5929\u8C61\u5730"
-  SkillDesc: "\u6CD5\u5929\u8C61\u5730"
-  SkillIconPath: 
+  SkillDesc: "\u53D8\u8EAB\uFF0C\u751F\u547D\u503C\u4E0A\u9650+40%\uFF0C\u9632\u5FA1\u529B+40%\uFF0C\u653B\u51FB\u529B+40%\uFF0C\u5168\u5C5E\u6027\u6297\u6027+40%\uFF0C\u6BCF\u79D2\u6062\u590D<color=#00ff00ff>5%</color>\u751F\u547D\u503C\uFF0C\u6301\u7EED10\u79D2\u3002<br><br>\u5929\u8D4B\uFF1A\u8FFD\u52A0\u201C\u9738\u4F53\u201D\u6548\u679C\u3002<br>\u5929\u8D4B\uFF1A\u5F53\u53D8\u8EAB\u7ED3\u675F\u65F6\uFF0C\u4F9D\u7136\u83B7\u5F97\u5176\u4E00\u534A\u7684\u57FA\u7840\u6548\u679C\uFF0C\u6301\u7EED5\u79D2\u3002"
+  SkillIconPath: Sprites/Battle/205003

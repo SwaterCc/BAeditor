@@ -1,4 +1,6 @@
-﻿using UnityEngine.SceneManagement;
+﻿#region
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -11,22 +13,20 @@ namespace Hono.Scripts.Battle
 
             protected override void onEnter()
             {
-                if (BattleGroundHandle._isScoreSuccess)
+                /*if (BattleGroundHandle._isScoreSuccess)
                 {
-                    //BattleUIInterface.CallUI("battleScoreSuccessUI", null, onUIClose);
-                    onUIClose(null);
+                    LevelFinishPanel.Instance.ShowSuccess();
                 }
                 else
                 {
-                    //BattleUIInterface.CallUI("battleScoreFailedUI", null, onUIClose);
-                    onUIClose(null);
-                }
-            }
+                    LevelFinishPanel.Instance.ShowFailure();
+                }*/
 
-            private void onUIClose(IUIPassData data)
-            {
-                BattleGroundHandle.switchState(EBattleStateType.NoGaming);
-                BattleManager.Instance.PopBattleGround();
+                if ((EBattleModeType)BattleGroundHandle.BattleConfig.BattleType == EBattleModeType.War &&
+                    BattleGroundHandle.SaveFileDict != null)
+                {
+                    BattleGroundHandle.SaveFileDict.BattleSaveFiles.Remove(BattleGroundHandle.BattleGroundConfigId);
+                }
             }
 
             protected override void onExit() { }

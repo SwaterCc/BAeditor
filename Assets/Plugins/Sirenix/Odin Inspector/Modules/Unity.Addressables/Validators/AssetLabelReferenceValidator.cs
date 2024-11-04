@@ -6,32 +6,32 @@
 
 #if UNITY_EDITOR
 
-using UnityEngine;
-using UnityEditor.AddressableAssets;
 using Sirenix.OdinInspector.Editor.Validation;
-using UnityEngine.AddressableAssets;
 using Sirenix.OdinInspector.Modules.Addressables.Editor;
+using UnityEditor.AddressableAssets;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 #if ODIN_VALIDATOR_3_1
 [assembly: RegisterValidationRule(typeof(AssetLabelReferenceValidator), Description =
-	"This validator ensures that AssetLabelReferences marked with the Required attribute display an error " +
-	"message if they are not set. It can also be configured to require that all AssetLabelReferences be set " +
-	"by default; the Optional attribute can then be used to exclude specific AssetLabelReferences from " +
-	"validation.")]
+    "This validator ensures that AssetLabelReferences marked with the Required attribute display an error " +
+    "message if they are not set. It can also be configured to require that all AssetLabelReferences be set " +
+    "by default; the Optional attribute can then be used to exclude specific AssetLabelReferences from " +
+    "validation.")]
 #else
 [assembly: RegisterValidator(typeof(AssetLabelReferenceValidator))]
 #endif
 
 namespace Sirenix.OdinInspector.Modules.Addressables.Editor
 {
-	/// <summary>
-	/// Validator for AssetLabelReference values.
-	/// </summary>
-	public class AssetLabelReferenceValidator : ValueValidator<AssetLabelReference>
+    /// <summary>
+    ///     Validator for AssetLabelReference values.
+    /// </summary>
+    public class AssetLabelReferenceValidator : ValueValidator<AssetLabelReference>
     {
         [Tooltip("If enabled, the validator will display an error message if the AssetLabelReference is not set. " +
-            "If disabled, the validator will only display an error message if the AssetLabelReference is set, but the " +
-            "assigned label does not exist.")]
+                 "If disabled, the validator will only display an error message if the AssetLabelReference is set, but the " +
+                 "assigned label does not exist.")]
         [ToggleLeft]
         public bool RequiredByDefault;
 
@@ -88,7 +88,6 @@ namespace Sirenix.OdinInspector.Modules.Addressables.Editor
             }
         }
     }
-
 }
 
 #endif

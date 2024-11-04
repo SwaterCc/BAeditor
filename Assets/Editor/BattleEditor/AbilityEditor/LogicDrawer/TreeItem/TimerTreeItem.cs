@@ -1,8 +1,6 @@
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
-using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
@@ -37,6 +35,7 @@ namespace Editor.AbilityEditor.TreeItem
                 _menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
                     AddChild, (EAbilityNodeType.ERepeat));
             }
+
             _menu.AddItem(new GUIContent("删除"), false,
                 Remove);
         }
@@ -62,7 +61,9 @@ namespace Editor.AbilityEditor.TreeItem
             AbilityViewDrawer.NodeBtnClick(_nodeData);
             SettingWindow = BaseNodeWindow<TimerNodeDataWindow, TimerNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                (nodeData) =>
+                {
+                    _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
                 });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
@@ -95,6 +96,7 @@ namespace Editor.AbilityEditor.TreeItem
             {
                 Save();
             }
+
             SirenixEditorGUI.EndBox();
         }
     }

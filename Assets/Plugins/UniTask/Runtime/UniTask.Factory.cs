@@ -1,8 +1,6 @@
 ﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-using Cysharp.Threading.Tasks.Internal;
 using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 
@@ -107,7 +105,7 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// helper of fire and forget void action.
+        ///     helper of fire and forget void action.
         /// </summary>
         public static void Void(Func<UniTaskVoid> asyncAction)
         {
@@ -115,7 +113,7 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// helper of fire and forget void action.
+        ///     helper of fire and forget void action.
         /// </summary>
         public static void Void(Func<CancellationToken, UniTaskVoid> asyncAction, CancellationToken cancellationToken)
         {
@@ -123,7 +121,7 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// helper of fire and forget void action.
+        ///     helper of fire and forget void action.
         /// </summary>
         public static void Void<T>(Func<T, UniTaskVoid> asyncAction, T state)
         {
@@ -131,8 +129,8 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// helper of create add UniTaskVoid to delegate.
-        /// For example: FooAction = UniTask.Action(async () => { /* */ })
+        ///     helper of create add UniTaskVoid to delegate.
+        ///     For example: FooAction = UniTask.Action(async () => { /* */ })
         /// </summary>
         public static Action Action(Func<UniTaskVoid> asyncAction)
         {
@@ -140,15 +138,16 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// helper of create add UniTaskVoid to delegate.
+        ///     helper of create add UniTaskVoid to delegate.
         /// </summary>
-        public static Action Action(Func<CancellationToken, UniTaskVoid> asyncAction, CancellationToken cancellationToken)
+        public static Action Action(Func<CancellationToken, UniTaskVoid> asyncAction,
+            CancellationToken cancellationToken)
         {
             return () => asyncAction(cancellationToken).Forget();
         }
 
         /// <summary>
-        /// helper of create add UniTaskVoid to delegate.
+        ///     helper of create add UniTaskVoid to delegate.
         /// </summary>
         public static Action Action<T>(T state, Func<T, UniTaskVoid> asyncAction)
         {
@@ -158,8 +157,8 @@ namespace Cysharp.Threading.Tasks
 #if UNITY_2018_3_OR_NEWER
 
         /// <summary>
-        /// Create async void(UniTaskVoid) UnityAction.
-        /// For example: onClick.AddListener(UniTask.UnityAction(async () => { /* */ } ))
+        ///     Create async void(UniTaskVoid) UnityAction.
+        ///     For example: onClick.AddListener(UniTask.UnityAction(async () => { /* */ } ))
         /// </summary>
         public static UnityEngine.Events.UnityAction UnityAction(Func<UniTaskVoid> asyncAction)
         {
@@ -167,17 +166,18 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// Create async void(UniTaskVoid) UnityAction.
-        /// For example: onClick.AddListener(UniTask.UnityAction(FooAsync, this.GetCancellationTokenOnDestroy()))
+        ///     Create async void(UniTaskVoid) UnityAction.
+        ///     For example: onClick.AddListener(UniTask.UnityAction(FooAsync, this.GetCancellationTokenOnDestroy()))
         /// </summary>
-        public static UnityEngine.Events.UnityAction UnityAction(Func<CancellationToken, UniTaskVoid> asyncAction, CancellationToken cancellationToken)
+        public static UnityEngine.Events.UnityAction UnityAction(Func<CancellationToken, UniTaskVoid> asyncAction,
+            CancellationToken cancellationToken)
         {
             return () => asyncAction(cancellationToken).Forget();
         }
 
         /// <summary>
-        /// Create async void(UniTaskVoid) UnityAction.
-        /// For example: onClick.AddListener(UniTask.UnityAction(FooAsync, Argument))
+        ///     Create async void(UniTaskVoid) UnityAction.
+        ///     For example: onClick.AddListener(UniTask.UnityAction(FooAsync, Argument))
         /// </summary>
         public static UnityEngine.Events.UnityAction UnityAction<T>(T state, Func<T, UniTaskVoid> asyncAction)
         {
@@ -187,7 +187,7 @@ namespace Cysharp.Threading.Tasks
 #endif
 
         /// <summary>
-        /// Defer the task creation just before call await.
+        ///     Defer the task creation just before call await.
         /// </summary>
         public static UniTask Defer(Func<UniTask> factory)
         {
@@ -195,7 +195,7 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// Defer the task creation just before call await.
+        ///     Defer the task creation just before call await.
         /// </summary>
         public static UniTask<T> Defer<T>(Func<UniTask<T>> factory)
         {
@@ -203,7 +203,7 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// Never complete.
+        ///     Never complete.
         /// </summary>
         public static UniTask Never(CancellationToken cancellationToken)
         {
@@ -211,7 +211,7 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// Never complete.
+        ///     Never complete.
         /// </summary>
         public static UniTask<T> Never<T>(CancellationToken cancellationToken)
         {
@@ -235,6 +235,7 @@ namespace Cysharp.Threading.Tasks
                     calledGet = true;
                     GC.SuppressFinalize(this);
                 }
+
                 exception.Throw();
             }
 
@@ -279,6 +280,7 @@ namespace Cysharp.Threading.Tasks
                     calledGet = true;
                     GC.SuppressFinalize(this);
                 }
+
                 exception.Throw();
                 return default;
             }
@@ -290,6 +292,7 @@ namespace Cysharp.Threading.Tasks
                     calledGet = true;
                     GC.SuppressFinalize(this);
                 }
+
                 exception.Throw();
             }
 
@@ -516,7 +519,9 @@ namespace Cysharp.Threading.Tasks
 
     internal static class CompletedTasks
     {
-        public static readonly UniTask<AsyncUnit> AsyncUnit = UniTask.FromResult(Cysharp.Threading.Tasks.AsyncUnit.Default);
+        public static readonly UniTask<AsyncUnit> AsyncUnit =
+            UniTask.FromResult(Cysharp.Threading.Tasks.AsyncUnit.Default);
+
         public static readonly UniTask<bool> True = UniTask.FromResult(true);
         public static readonly UniTask<bool> False = UniTask.FromResult(false);
         public static readonly UniTask<int> Zero = UniTask.FromResult(0);

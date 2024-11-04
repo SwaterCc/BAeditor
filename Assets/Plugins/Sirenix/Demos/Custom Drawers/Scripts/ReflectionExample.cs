@@ -1,33 +1,29 @@
+using System;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using UnityEngine;
-
 #if UNITY_EDITOR
-
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using System.Reflection;
-    using Sirenix.Utilities;
-    using Sirenix.Utilities.Editor;
+    using Utilities;
+    using Utilities.Editor;
 
 #endif
 
     // Example demonstrating how reflection can be used to enhance custom drawers.
     [TypeInfoBox(
-            "This example demonstrates how reflection can be used to extend drawers from what otherwise would be possible.\n\n" +
-            "In this case, a user can specify one of their own methods to receive a callback from the drawer chain.\n\n" +
-            "Note that this is a manual approach; it is recommended to use ValueResolver<T> and ActionResolver instead.")]
+        "This example demonstrates how reflection can be used to extend drawers from what otherwise would be possible.\n\n" +
+        "In this case, a user can specify one of their own methods to receive a callback from the drawer chain.\n\n" +
+        "Note that this is a manual approach; it is recommended to use ValueResolver<T> and ActionResolver instead.")]
     public class ReflectionExample : MonoBehaviour
     {
-        [OnClickMethod("OnClick")]
-        public int InstanceMethod;
+        [OnClickMethod("OnClick")] public int InstanceMethod;
 
-        [OnClickMethod("StaticOnClick")]
-        public int StaticMethod;
+        [OnClickMethod("StaticOnClick")] public int StaticMethod;
 
-        [OnClickMethod("InvalidOnClick")]
-        public int InvalidMethod;
+        [OnClickMethod("InvalidOnClick")] public int InvalidMethod;
 
         private void OnClick()
         {
@@ -67,11 +63,13 @@ namespace Sirenix.OdinInspector.Demos
         protected override void Initialize()
         {
             // Use reflection to find the specified method, and store the method info in the context object.
-            this.Method = this.Property.ParentType.GetMethod(this.Attribute.MethodName, Flags.StaticInstanceAnyVisibility, null, Type.EmptyTypes, null);
+            this.Method = this.Property.ParentType.GetMethod(this.Attribute.MethodName,
+                Flags.StaticInstanceAnyVisibility, null, Type.EmptyTypes, null);
 
             if (this.Method == null)
             {
-                this.ErrorMessage = "Could not find a parameterless method named '" + this.Attribute.MethodName + "' in the type '" + this.Property.ParentType + "'.";
+                this.ErrorMessage = "Could not find a parameterless method named '" + this.Attribute.MethodName +
+                                    "' in the type '" + this.Property.ParentType + "'.";
             }
         }
 
@@ -88,7 +86,8 @@ namespace Sirenix.OdinInspector.Demos
             else
             {
                 // Get the mouse down event.
-                bool clicked = Event.current.rawType == EventType.MouseDown && Event.current.button == 0 && this.Property.LastDrawnValueRect.Contains(Event.current.mousePosition);
+                bool clicked = Event.current.rawType == EventType.MouseDown && Event.current.button == 0 &&
+                               this.Property.LastDrawnValueRect.Contains(Event.current.mousePosition);
 
                 if (clicked)
                 {

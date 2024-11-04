@@ -14,9 +14,7 @@ namespace Cysharp.Threading.Tasks.Linq
     {
         public static readonly IUniTaskAsyncEnumerable<T> Instance = new Empty<T>();
 
-        Empty()
-        {
-        }
+        Empty() { }
 
         public IUniTaskAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
@@ -27,9 +25,7 @@ namespace Cysharp.Threading.Tasks.Linq
         {
             public static readonly IUniTaskAsyncEnumerator<T> Instance = new _Empty();
 
-            _Empty()
-            {
-            }
+            _Empty() { }
 
             public T Current => default;
 

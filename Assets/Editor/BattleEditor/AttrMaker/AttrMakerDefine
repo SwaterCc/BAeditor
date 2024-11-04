@@ -16,13 +16,14 @@ int AttrMoveTargetUid 18
 int AttrFaction  19
 int AttrUnselectable 20  //不可选中
 int AttrInvincible 21   //无敌，抵御一切伤害效果
+int AttrHateTargetUid 22    //仇恨目标
 int AttrCantBeHatredTarget 47 //1=不会成为任何目标的仇恨对象
 int AttrCantNormalSkill 48  //沉默一般技能，非奥义技能，优先级低可先不处理
 int AttrCantMove 49  //禁足，不可移动
 int AttrStunned 50   //眩晕，生效关系：眩晕＜霸体=无敌；同一时间只允许存在一种眩晕效果
 int AttrSA 51  //superArmor直接霸体，无敌时也会自动拥有直接霸体
-Vector3 AttrOriginPos 150
-int AttrHateTargetUid 151
+int AttrIgnoreOtherMotion 52   //1=不吃其他人的位移控制
+Vector3 AttrOriginPos 53
  #HP
 int AttrHp   10000  //当前HP
 int AttrHpPer   10001 
@@ -44,6 +45,13 @@ int AttrMaxMpExPer   10035
  #护盾
 int AttrShield   10040 
 int AttrShieldPer   10041 
+ #移动速度加成万分比
+int AttrMoveSpeedPCT   10100 
+int AttrMoveSpeedPCTTotal   10101 
+int AttrMoveSpeedPCTAdd   10102 
+int AttrMoveSpeedPCTExAdd   10103 
+int AttrMoveSpeedPCTPer   10104 
+int AttrMoveSpeedPCTExPer   10105 
  #全局回能效率万分比
 int AttrMpRecAll  10110 
 int AttrMpRecAllTotal   10111 

@@ -50,7 +50,7 @@ MonoBehaviour:
     Compares: []
     FilterFunctionType: 0
   MaxTargetCount: 1
-  SelectSelf: 1
+  SelectSelf: 0
   SkillName: 
   SkillDesc: 
   SkillIconPath: 

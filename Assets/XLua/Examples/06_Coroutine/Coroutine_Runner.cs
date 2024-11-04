@@ -1,14 +1,11 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using XLua;
-using System.Collections.Generic;
-using System.Collections;
-using System;
 
 namespace XLuaTest
 {
-    public class Coroutine_Runner : MonoBehaviour
-    {
-    }
+    public class Coroutine_Runner : MonoBehaviour { }
 
 
     public static class CoroutineConfig
@@ -19,10 +16,10 @@ namespace XLuaTest
             get
             {
                 return new List<Type>()
-            {
-                typeof(WaitForSeconds),
-                typeof(WWW)
-            };
+                {
+                    typeof(WaitForSeconds),
+                    typeof(WWW)
+                };
             }
         }
     }

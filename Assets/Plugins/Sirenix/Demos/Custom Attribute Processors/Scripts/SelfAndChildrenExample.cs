@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Sirenix.OdinInspector.Editor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Sirenix.OdinInspector.Editor;
-    using UnityEngine;
-
     public class SelfAndChildrenExample : MonoBehaviour
     {
         public SelfAndChildrenProcessed A;
@@ -31,7 +31,8 @@ namespace Sirenix.OdinInspector.Demos
             attributes.Add(new BoxGroupAttribute("Box", false));
         }
 
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member,
+            List<Attribute> attributes)
         {
             attributes.Add(new HorizontalGroupAttribute() { LabelWidth = 40 });
         }

@@ -1,8 +1,11 @@
-using System;
+#region
+
 using System.Collections.Generic;
 using System.Linq;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -11,17 +14,17 @@ namespace Hono.Scripts.Battle
         //阵营相关数据
 
         /// <summary>
-        /// 当前每个阵营actor的数量
+        ///     当前每个阵营actor的数量
         /// </summary>
         private readonly Dictionary<int, int> _curFactionActorCount = new(16);
 
         /// <summary>
-        /// 每波每个阵营的死亡数量
+        ///     每波每个阵营的死亡数量
         /// </summary>
         private readonly Dictionary<int, int> _deadFactionActorCount = new(16);
 
         /// <summary>
-        /// 整场战斗每个阵营actor的数量
+        ///     整场战斗每个阵营actor的数量
         /// </summary>
         private readonly Dictionary<int, int> _deadFactionActorCountInBattle = new(16);
 
@@ -30,10 +33,25 @@ namespace Hono.Scripts.Battle
 
         //来自玩家阵营的击杀数（玩家Uid，击杀数量）整场战斗
         private readonly Dictionary<int, int> _pawnKilledCountInBattle = new(16);
-        
+
+        /// <summary>
+        ///     当前场上的tag计数
+        /// </summary>
+        private readonly Dictionary<int, int> _curTagDict = new(64);
+
+        /// <summary>
+        ///     当前回合死亡的Tag计数
+        /// </summary>
+        private readonly Dictionary<int, int> _deadTagDict = new(64);
+
+        /// <summary>
+        ///     rouge模式属性拾取记录
+        /// </summary>
+        private readonly Dictionary<int, Dictionary<ELogicAttr, int>> _lootSettingsRecord = new(4);
+
         public ERoundState CurRoundState { get; set; }
-        
-        public float CurRoundLastTime { get; set; }
+
+        public float CurRoundDurationTime { get; set; }
 
         public int CurRoundCount { get; set; }
 
@@ -41,9 +59,44 @@ namespace Hono.Scripts.Battle
 
         public int RPCount { get; set; }
 
+        public bool OpenAutoUlt = true;
+
         public int GetRoundSurvivalFaction(int factionId)
         {
             return _curFactionActorCount.GetValueOrDefault(factionId, 0);
+        }
+
+        public int GetRoundLastMonster()
+        {
+            int count = 0;
+            foreach (var pair in _curFactionActorCount)
+            {
+                if (pair.Key != 3) continue; //临时代码
+                count += pair.Value;
+            }
+
+            return count;
+        }
+
+        public int GetRougePawnAttrChange(int uid, ELogicAttr attrType)
+        {
+            if (!_lootSettingsRecord.TryGetValue(uid, out var infoDict))
+            {
+                return 0;
+            }
+
+            return infoDict.GetValueOrDefault(attrType);
+        }
+
+        public void RecordPawnRougeAttrChange(int uid, ELogicAttr attr, int value)
+        {
+            if (!_lootSettingsRecord.TryGetValue(uid, out var infoDict))
+            {
+                infoDict = new Dictionary<ELogicAttr, int>();
+                _lootSettingsRecord.Add(uid, infoDict);
+            }
+
+            infoDict[attr] = infoDict.GetValueOrDefault(attr) + value;
         }
 
         public int GetRoundDeadFaction(int factionId)
@@ -66,8 +119,13 @@ namespace Hono.Scripts.Battle
             return uid > 0 ? _pawnKilledCount.GetValueOrDefault(uid, 0) : _pawnKilledCount.Sum(pair => pair.Value);
         }
 
+        public int TagDeadCount(int tag)
+        {
+            return _deadTagDict.GetValueOrDefault(tag);
+        }
+
         /// <summary>
-        /// 增加初始数量
+        ///     增加初始数量
         /// </summary>
         /// <param name="actorType"></param>
         /// <param name="configId"></param>
@@ -102,7 +160,7 @@ namespace Hono.Scripts.Battle
         }
 
         /// <summary>
-        /// 增加初始数量
+        ///     增加初始数量
         /// </summary>
         /// <param name="factionId"></param>
         public void AddFactionActorCount(int factionId)
@@ -114,7 +172,7 @@ namespace Hono.Scripts.Battle
         }
 
         /// <summary>
-        /// 来自刷怪器的怪物死亡时的回调
+        ///     来自刷怪器的怪物死亡时的回调
         /// </summary>
         /// <param name="actor"></param>
         public void OnActorDead(Actor actor)
@@ -128,19 +186,23 @@ namespace Hono.Scripts.Battle
                     ++_deadFactionActorCount[factionId];
                 }
             }
-            else
-            {
-                Debug.LogError("OnGenMonsterDead 清除了一个不在记录上的Monster");
-            }
 
             if (_deadFactionActorCountInBattle.TryAdd(factionId, 1))
             {
                 ++_deadFactionActorCountInBattle[factionId];
             }
+
+            foreach (var tag in actor.Tags.GetAllTag())
+            {
+                if (!_deadTagDict.TryAdd(tag, 1))
+                {
+                    ++_deadTagDict[tag];
+                }
+            }
         }
 
         /// <summary>
-        /// 当Actor被杀死时
+        ///     当Actor被杀死时
         /// </summary>
         /// <param name="beKilled"></param>
         /// <param name="damageInfo"></param>
@@ -168,6 +230,7 @@ namespace Hono.Scripts.Battle
             _curFactionActorCount.Clear();
             _pawnKilledCount.Clear();
             _deadFactionActorCount.Clear();
+            _deadTagDict.Clear();
         }
 
         public void RepeatRound()
@@ -179,6 +242,7 @@ namespace Hono.Scripts.Battle
                     _deadFactionActorCountInBattle[factionInfo.Key] -= factionInfo.Value;
                 }
             }
+
             _deadFactionActorCount.Clear();
 
             foreach (var killInfo in _pawnKilledCount)
@@ -188,8 +252,9 @@ namespace Hono.Scripts.Battle
                     _pawnKilledCountInBattle[killInfo.Key] -= killInfo.Value;
                 }
             }
+
             _pawnKilledCount.Clear();
-            
+
             _curFactionActorCount.Clear();
         }
 
@@ -197,10 +262,11 @@ namespace Hono.Scripts.Battle
         {
             _deadFactionActorCountInBattle.Clear();
             _pawnKilledCountInBattle.Clear();
-
+            _deadTagDict.Clear();
             _curFactionActorCount.Clear();
             _pawnKilledCount.Clear();
             _deadFactionActorCount.Clear();
+            _lootSettingsRecord.Clear();
         }
     }
 }

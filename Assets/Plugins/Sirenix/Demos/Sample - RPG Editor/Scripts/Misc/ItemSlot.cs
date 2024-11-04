@@ -1,8 +1,8 @@
+using System;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
-    using System;
-
     [Serializable]
     public struct ItemSlot
     {

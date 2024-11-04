@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
         {
             try
             {
-                using (StringReader  reader = new StringReader (csvFile))
+                using (StringReader reader = new StringReader(csvFile))
                 {
                     int lineCount = 0;
                     while (reader.ReadLine() is { } line)
@@ -22,6 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
+
                         var row = Activator.CreateInstance<BattleSceneRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
@@ -65,34 +66,36 @@ namespace Hono.Scripts.Battle
             return _tableData.TryGetValue(id, out data);
         }
 
-       
+        public Dictionary<int, BattleSceneRow> GetTable()
+        {
+            return _tableData;
+        }
     }
 
     public partial class BattleSceneTable
     {
         public class BattleSceneRow : TableRow
         {
-           
             /// <summary>
-            /// 描述
+            ///     描述
             /// </summary>
             public string Desc { get; private set; }
-            
+
             /// <summary>
-            /// 场景路径
+            ///     场景路径
             /// </summary>
             public string ScenePath { get; private set; }
-            
+
             /// <summary>
-            /// 最大队伍数量
+            ///     最大队伍数量
             /// </summary>
             public int TeamCount { get; private set; }
-            
+
             /// <summary>
-            /// 战斗类型
+            ///     战斗类型(1普通，2战争，3肉鸽)
             /// </summary>
             public int BattleType { get; private set; }
-            
+
 
             public BattleSceneRow()
             {
@@ -110,15 +113,13 @@ namespace Hono.Scripts.Battle
 
                 protected override void onParse(string[] line)
                 {
-                    
                     _row.Desc = parseString(line[1]);
-            
+
                     _row.ScenePath = parseString(line[2]);
-            
+
                     _row.TeamCount = parseInt(line[3]);
-            
+
                     _row.BattleType = parseInt(line[4]);
-            
                 }
             }
         }

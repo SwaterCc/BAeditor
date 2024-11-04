@@ -14,9 +14,7 @@ namespace Cysharp.Threading.Tasks.Linq
     {
         public static readonly IUniTaskAsyncEnumerable<T> Instance = new Never<T>();
 
-        Never()
-        {
-        }
+        Never() { }
 
         public IUniTaskAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {

@@ -1,20 +1,13 @@
-using System;
+#region
+
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle.Tools
 {
-    public class BuildTeamsUIRoot : BattleUIHandle
+    public class BuildTeamsUIRoot : MonoBehaviour
     {
-        public PawnTeamAllData AllData { get; set; }
-
-        protected override IUIPassData returnPassData()
-        {
-            return AllData;
-        }
-
-        protected override void onActiveFalse()
-        {
-            
-        }
+        public PawnTeamDataList DataList { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks.Internal;
 namespace Cysharp.Threading.Tasks
 {
     /// <summary>
-    /// Lightweight IProgress[T] factory.
+    ///     Lightweight IProgress[T] factory.
     /// </summary>
     public static class Progress
     {
@@ -29,14 +29,9 @@ namespace Cysharp.Threading.Tasks
         {
             public static readonly IProgress<T> Instance = new NullProgress<T>();
 
-            NullProgress()
-            {
+            NullProgress() { }
 
-            }
-
-            public void Report(T value)
-            {
-            }
+            public void Report(T value) { }
         }
 
         sealed class AnonymousProgress<T> : IProgress<T>

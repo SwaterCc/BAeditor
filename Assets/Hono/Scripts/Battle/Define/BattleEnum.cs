@@ -1,5 +1,8 @@
+#region
+
 using System;
-using Sirenix.OdinInspector;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -15,24 +18,22 @@ namespace Hono.Scripts.Battle
         TriggerBox,
         TeamDefaultBirthPoint,
         TeamRefreshPoint,
-        ActorRefreshPoint
-    }
-
-    public enum EBattleModeType
-    {
-        /// <summary>
-        /// 歼灭
-        /// </summary>
-        WarOfAnnihilation,
-
-        /// <summary>
-        /// 防守
-        /// </summary>
-        DefensiveBattle,
+        ActorRefreshPoint,
+        Loot,
     }
 
     /// <summary>
-    /// 回合结算目标条件
+    ///     战斗模式
+    /// </summary>
+    public enum EBattleModeType
+    {
+        Normal = 1,
+        War = 2,
+        Rogue = 3,
+    }
+
+    /// <summary>
+    ///     回合结算目标条件
     /// </summary>
     public enum ERoundTargetType
     {
@@ -42,7 +43,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 回合结算条件
+    ///     回合结算条件
     /// </summary>
     public enum ERoundConditionType
     {
@@ -54,7 +55,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 能力配置的归属类型
+    ///     能力配置的归属类型
     /// </summary>
     public enum EAbilityType
     {
@@ -66,65 +67,65 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 战斗玩法状态
+    ///     战斗玩法状态
     /// </summary>
     public enum EBattleStateType
     {
-        /// <summary>
-        /// 未在游玩,
-        /// </summary>
-        NoGaming,
-        
-        /// <summary>
-        /// 编队
-        /// </summary>
-        BuildTeams,
-        
-        /// <summary>
-        /// 加载战场
-        /// </summary>
-        LoadBattleGround,
-        
-        /// <summary>
-        /// 游玩
-        /// </summary>
-        Playing,
-        
-        /// <summary>
-        /// 结算
-        /// </summary>
-        Score,
+	    /// <summary>
+	    ///     未在游玩,
+	    /// </summary>
+	    NoGaming,
+
+	    /// <summary>
+	    ///     编队
+	    /// </summary>
+	    BuildTeams,
+
+	    /// <summary>
+	    ///     加载战场
+	    /// </summary>
+	    LoadBattleGround,
+
+	    /// <summary>
+	    ///     游玩
+	    /// </summary>
+	    Playing,
+
+	    /// <summary>
+	    ///     结算
+	    /// </summary>
+	    Score,
     }
 
     /// <summary>
-    /// 战斗中的波次状态
+    ///     战斗中的波次状态
     /// </summary>
     public enum ERoundState
     {
-        /// <summary>
-        /// 未执行
-        /// </summary>
-        NoRunning,
+	    /// <summary>
+	    ///     未执行
+	    /// </summary>
+	    NoRunning,
 
-        /// <summary>
-        /// 准备期
-        /// </summary>
-        Ready,
+	    /// <summary>
+	    ///     准备期
+	    /// </summary>
+	    Ready,
 
-        /// <summary>
-        /// 运行期
-        /// </summary>
-        Running,
+	    /// <summary>
+	    ///     运行期
+	    /// </summary>
+	    Running,
 
-        /// <summary>
-        /// 成功结算期(清理期,只有通过该回合才会进入，回合失败会直接重开或者结算战斗)
-        /// </summary>
-        SuccessScoring,
+	    /// <summary>
+	    ///     成功结算期(清理期,只有通过该回合才会进入，回合失败会直接重开或者结算战斗)
+	    /// </summary>
+	    SuccessScoring,
 
-        /// <summary>
-        /// 失败结算期
-        /// </summary>
-        FailedScoring,
+	    /// <summary>
+	    ///     失败结算期
+	    /// </summary>
+	    FailedScoring,
     }
 
     public enum EPreLoadGameObjectType
@@ -133,6 +134,13 @@ namespace Hono.Scripts.Battle
         BulletModel,
         HitBoxModel,
         TeamRefreshPoint,
+        LootModel,
+    }
+
+    public enum EBuildingType
+    {
+        EDefenseTower = 1,
+        EBarrackLogic = 2,
     }
 
     public enum EActorRunningState
@@ -141,7 +149,17 @@ namespace Hono.Scripts.Battle
         Loading,
         Active,
     }
-    
+
+    /// <summary>
+    ///     战利品掉落规则
+    /// </summary>
+    public enum ELootDropRule
+    {
+        NoDrop,
+        KillCount,
+        KillSpecialTag,
+    }
+
     public enum EDamageElementType
     {
         Physical = 1,
@@ -164,7 +182,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 当前Ability执行到哪一步了
+    ///     当前Ability执行到哪一步了
     /// </summary>
     public enum EAbilityState
     {
@@ -183,104 +201,134 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// Ability可编辑周期
+    ///     怪物生成器的行为
+    /// </summary>
+    public enum EMonsterGenBehave
+    {
+        Summon,
+        Pause,
+        Resume,
+        Clear,
+    }
+
+    public enum EGenMonsterActionType
+    {
+        Stay,
+        AttackPlayer
+    }
+
+    /// <summary>
+    ///     Ability可编辑周期
     /// </summary>
     public enum EAbilityAllowEditCycle
     {
-        /// <summary>
-        /// 能力初始化
-        /// </summary>
-        OnInit,
+	    /// <summary>
+	    ///     能力初始化
+	    /// </summary>
+	    OnInit,
 
-        /// <summary>
-        /// 初始化完成，且未有执行指令时的等待周期，不可编辑（目前）
-        /// </summary>
-        OnReady,
+	    /// <summary>
+	    ///     初始化完成，且未有执行指令时的等待周期，不可编辑（目前）
+	    /// </summary>
+	    OnReady,
 
-        /// <summary>
-        /// 能力执行前检测
-        /// </summary>
-        OnPreExecuteCheck,
+	    /// <summary>
+	    ///     能力执行前检测
+	    /// </summary>
+	    OnPreExecuteCheck,
 
-        /// <summary>
-        /// 预启动
-        /// </summary>
-        OnPreExecute,
+	    /// <summary>
+	    ///     预启动
+	    /// </summary>
+	    OnPreExecute,
 
-        /// <summary>
-        /// 预启动
-        /// </summary>
-        OnExecuting,
+	    /// <summary>
+	    ///     预启动
+	    /// </summary>
+	    OnExecuting,
 
-        /// <summary>
-        /// 结束
-        /// </summary>
-        OnEndExecute,
+	    /// <summary>
+	    ///     结束
+	    /// </summary>
+	    OnEndExecute,
     }
 
     /// <summary>
-    /// 技能类型
+    ///     技能类型
     /// </summary>
-    public enum ESkillType {
-	    NormalSkill,
-	    WeaponSkill,
-	    UltimateSkill,
-	    PassiveSkill,
+    public enum ESkillType
+    {
+        NormalSkill,
+        WeaponSkill,
+        UltimateSkill,
+        PassiveSkill,
+        RogueSkill,
     }
-    
+
     /// <summary>
-    /// 能力节点类型
+    ///     战利品功能
+    /// </summary>
+    public enum ELootFunctionType
+    {
+        SkillLevelUp = 1,
+        SkillLearn = 2,
+        AttrChange = 3,
+        BuffAdd = 4,
+    }
+
+    /// <summary>
+    ///     能力节点类型
     /// </summary>
     public enum EAbilityNodeType
     {
-        /// <summary>
-        /// 生命周期节点
-        /// </summary>
-        EAbilityCycle,
+	    /// <summary>
+	    ///     生命周期节点
+	    /// </summary>
+	    EAbilityCycle,
 
-        /// <summary>
-        /// 注册事件触发
-        /// </summary>
-        EEvent,
+	    /// <summary>
+	    ///     注册事件触发
+	    /// </summary>
+	    EEvent,
 
-        /// <summary>
-        /// 分支控制节点
-        /// </summary>
-        EBranchControl,
+	    /// <summary>
+	    ///     分支控制节点
+	    /// </summary>
+	    EBranchControl,
 
-        /// <summary>
-        /// 变量设置
-        /// </summary>
-        EVariableSetter,
+	    /// <summary>
+	    ///     变量设置
+	    /// </summary>
+	    EVariableSetter,
 
-        /// <summary>
-        /// 属性设置节点
-        /// </summary>
-        EAttrSetter,
+	    /// <summary>
+	    ///     属性设置节点
+	    /// </summary>
+	    EAttrSetter,
 
-        /// <summary>
-        /// 遍历操作
-        /// </summary>
-        ERepeat,
+	    /// <summary>
+	    ///     遍历操作
+	    /// </summary>
+	    ERepeat,
 
-        /// <summary>
-        /// 任务，动作
-        /// </summary>
-        EAction,
+	    /// <summary>
+	    ///     任务，动作
+	    /// </summary>
+	    EAction,
 
-        /// <summary>
-        /// 等待节点
-        /// </summary>
-        ETimer,
+	    /// <summary>
+	    ///     等待节点
+	    /// </summary>
+	    ETimer,
 
-        /// <summary>
-        /// 阶段节点
-        /// </summary>
-        EGroup,
+	    /// <summary>
+	    ///     阶段节点
+	    /// </summary>
+	    EGroup,
     }
-    
+
     /// <summary>
-    /// 技能目标类型
+    ///     技能目标类型
     /// </summary>
     public enum ESkillTargetType
     {
@@ -293,7 +341,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 位移类型
+    ///     位移类型
     /// </summary>
     public enum EMotionType
     {
@@ -308,7 +356,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// cd模式
+    ///     cd模式
     /// </summary>
     public enum ECDMode
     {
@@ -317,7 +365,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 资源消耗时机
+    ///     资源消耗时机
     /// </summary>
     public enum EResCostType
     {
@@ -326,7 +374,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 战斗资源的类型
+    ///     战斗资源的类型
     /// </summary>
     public enum EBattleResourceType
     {
@@ -336,7 +384,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// buff重复添加规则
+    ///     buff重复添加规则
     /// </summary>
     public enum EBuffReplaceRule
     {
@@ -354,7 +402,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 添加规则
+    ///     添加规则
     /// </summary>
     public enum EApplicationRequirement
     {
@@ -363,13 +411,13 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 投射物
+    ///     投射物
     /// </summary>
     public enum EBulletType { }
 
 
     /// <summary>
-    /// 技能编辑器中配置的临时变量生效范围
+    ///     技能编辑器中配置的临时变量生效范围
     /// </summary>
     public enum EVariableRange
     {
@@ -384,7 +432,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 打击点类型
+    ///     打击点类型
     /// </summary>
     public enum EHitType
     {
@@ -394,35 +442,35 @@ namespace Hono.Scripts.Battle
 
     public enum ECheckBoxShapeType
     {
-        /// <summary>
-        /// 立方体
-        /// </summary>
-        Cube,
+	    /// <summary>
+	    ///     立方体
+	    /// </summary>
+	    Cube,
 
-        /// <summary>
-        /// 球
-        /// </summary>
-        Sphere,
+	    /// <summary>
+	    ///     球
+	    /// </summary>
+	    Sphere,
     }
 
     /// <summary>
-    /// 范围检测方式
+    ///     范围检测方式
     /// </summary>
     public enum ECheckBoxBehaveType
     {
-        /// <summary>
-        /// 预设触发器
-        /// </summary>
-        Trigger,
+	    /// <summary>
+	    ///     预设触发器
+	    /// </summary>
+	    Trigger,
 
-        /// <summary>
-        /// 射线检测，适合一帧的瞬时检测
-        /// </summary>
-        RayCast,
+	    /// <summary>
+	    ///     射线检测，适合一帧的瞬时检测
+	    /// </summary>
+	    RayCast,
     }
 
     /// <summary>
-    /// 比较结果方式
+    ///     比较结果方式
     /// </summary>
     public enum ECompareResType
     {
@@ -452,23 +500,24 @@ namespace Hono.Scripts.Battle
         LeastMp,
         Far = 30,
         Near,
+        ControlPlayer = 40,
     }
 
     public enum EVariableOperationType
     {
-        /// <summary>
-        /// 创建变量
-        /// </summary>
-        Create,
+	    /// <summary>
+	    ///     创建变量
+	    /// </summary>
+	    Create,
 
-        /// <summary>
-        /// 修改变量
-        /// </summary>
-        Change,
+	    /// <summary>
+	    ///     修改变量
+	    /// </summary>
+	    Change,
     }
 
     /// <summary>
-    /// 属性修改操作类别
+    ///     属性修改操作类别
     /// </summary>
     public enum EAttrCommandType
     {
@@ -477,24 +526,24 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 阵营关系
+    ///     阵营关系
     /// </summary>
     public enum EFactionType
     {
-        /// <summary>
-        /// 中立
-        /// </summary>
-        Neutrality,
+	    /// <summary>
+	    ///     中立
+	    /// </summary>
+	    Neutrality,
 
-        /// <summary>
-        /// 友善
-        /// </summary>
-        Friendly,
+	    /// <summary>
+	    ///     友善
+	    /// </summary>
+	    Friendly,
 
-        /// <summary>
-        /// 敌对
-        /// </summary>
-        Enemy,
+	    /// <summary>
+	    ///     敌对
+	    /// </summary>
+	    Enemy,
     }
 
     public enum ERepeatOperationType
@@ -516,7 +565,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 状态机枚举
+    ///     状态机枚举
     /// </summary>
     public enum EActorLogicStateType
     {
@@ -535,6 +584,15 @@ namespace Hono.Scripts.Battle
         Divide,
     }
 
+    public enum EPathType
+    {
+        CSV,
+        Ability,
+        Skill,
+        Buff,
+        Bullet,
+    }
+
     public enum EParameterValueType
     {
         Any,
@@ -544,6 +602,7 @@ namespace Hono.Scripts.Battle
         String,
         IntList,
         Enum,
+        Vector3,
         Object,
         Custom,
     }

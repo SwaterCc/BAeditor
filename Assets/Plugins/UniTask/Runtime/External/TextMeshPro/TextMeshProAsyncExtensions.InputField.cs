@@ -1,5 +1,4 @@
 ﻿#if UNITASK_TEXTMESHPRO_SUPPORT
-
 using System;
 using System.Threading;
 using TMPro;

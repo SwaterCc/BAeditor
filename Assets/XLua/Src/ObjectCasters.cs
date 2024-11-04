@@ -4,7 +4,7 @@
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-*/
+ */
 
 #if USE_UNI_LUA
 using LuaAPI = UniLua.Lua;
@@ -13,12 +13,10 @@ using LuaCSFunction = UniLua.CSharpFunctionDelegate;
 #else
 using LuaAPI = XLua.LuaDLL.Lua;
 using RealStatePtr = System.IntPtr;
-using LuaCSFunction = XLua.LuaDLL.lua_CSFunction;
 #endif
-
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 using System.Reflection;
 
 namespace XLua
@@ -64,7 +62,8 @@ namespace XLua
 
         private bool luaTableCheck(RealStatePtr L, int idx)
         {
-            return LuaAPI.lua_isnil(L, idx) || LuaAPI.lua_istable(L, idx) || (LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TUSERDATA && translator.SafeGetCSObj(L, idx) is LuaTable);
+            return LuaAPI.lua_isnil(L, idx) || LuaAPI.lua_istable(L, idx) ||
+                   (LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TUSERDATA && translator.SafeGetCSObj(L, idx) is LuaTable);
         }
 
         private bool numberCheck(RealStatePtr L, int idx)
@@ -84,7 +83,8 @@ namespace XLua
 
         private bool bytesCheck(RealStatePtr L, int idx)
         {
-            return LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TSTRING || LuaAPI.lua_isnil(L, idx) || (LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TUSERDATA && translator.SafeGetCSObj(L, idx) is byte[]);
+            return LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TSTRING || LuaAPI.lua_isnil(L, idx) ||
+                   (LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TUSERDATA && translator.SafeGetCSObj(L, idx) is byte[]);
         }
 
         private bool boolCheck(RealStatePtr L, int idx)
@@ -104,7 +104,9 @@ namespace XLua
 
         private bool luaFunctionCheck(RealStatePtr L, int idx)
         {
-            return LuaAPI.lua_isnil(L, idx) || LuaAPI.lua_isfunction(L, idx) || (LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TUSERDATA && translator.SafeGetCSObj(L, idx) is LuaFunction);
+            return LuaAPI.lua_isnil(L, idx) || LuaAPI.lua_isfunction(L, idx) ||
+                   (LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TUSERDATA &&
+                    translator.SafeGetCSObj(L, idx) is LuaFunction);
         }
 
         private bool intptrCheck(RealStatePtr L, int idx)
@@ -129,6 +131,7 @@ namespace XLua
                         if (type_of_obj != null) return type.IsAssignableFrom(type_of_obj);
                     }
                 }
+
                 return false;
             };
 
@@ -152,7 +155,8 @@ namespace XLua
             }
             else
             {
-                if ((type.IsClass() && type.GetConstructor(System.Type.EmptyTypes) != null)) //class has default construtor
+                if ((type.IsClass() &&
+                     type.GetConstructor(System.Type.EmptyTypes) != null)) //class has default construtor
                 {
                     return (RealStatePtr L, int idx) =>
                     {
@@ -161,10 +165,7 @@ namespace XLua
                 }
                 else if (type.IsValueType())
                 {
-                    return (RealStatePtr L, int idx) =>
-                    {
-                        return LuaAPI.lua_istable(L, idx) || fixTypeCheck(L, idx);
-                    };
+                    return (RealStatePtr L, int idx) => { return LuaAPI.lua_istable(L, idx) || fixTypeCheck(L, idx); };
                 }
                 else if (type.IsArray)
                 {
@@ -175,20 +176,14 @@ namespace XLua
                 }
                 else
                 {
-                    return (RealStatePtr L, int idx) =>
-                    {
-                        return LuaAPI.lua_isnil(L, idx) || fixTypeCheck(L, idx);
-                    };
+                    return (RealStatePtr L, int idx) => { return LuaAPI.lua_isnil(L, idx) || fixTypeCheck(L, idx); };
                 }
             }
         }
 
         public ObjectCheck genNullableChecker(ObjectCheck oc)
         {
-            return (RealStatePtr L, int idx) =>
-            {
-                return LuaAPI.lua_isnil(L, idx) || oc(L, idx);
-            };
+            return (RealStatePtr L, int idx) => { return LuaAPI.lua_isnil(L, idx) || oc(L, idx); };
         }
 
         public void AddChecker(Type type, ObjectCheck oc)
@@ -205,12 +200,14 @@ namespace XLua
             {
                 return genNullableChecker(GetChecker(underlyingType));
             }
+
             ObjectCheck oc;
             if (!checkersMap.TryGetValue(type, out oc))
             {
                 oc = genChecker(type);
                 checkersMap.Add(type, oc);
             }
+
             return oc;
         }
     }
@@ -236,7 +233,7 @@ namespace XLua
             castersMap[typeof(float)] = floatCaster;
             castersMap[typeof(decimal)] = decimalCaster;
             castersMap[typeof(bool)] = getBoolean;
-            castersMap[typeof(string)] =  getString;
+            castersMap[typeof(string)] = getString;
             castersMap[typeof(object)] = getObject;
             castersMap[typeof(byte[])] = getBytes;
             castersMap[typeof(IntPtr)] = getIntptr;
@@ -319,10 +316,11 @@ namespace XLua
 
         private object getBytes(RealStatePtr L, int idx, object target)
         {
-            if(LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TSTRING)
+            if (LuaAPI.lua_type(L, idx) == LuaTypes.LUA_TSTRING)
             {
                 return LuaAPI.lua_tobytes(L, idx);
             }
+
             object obj = translator.SafeGetCSObj(L, idx);
             return (obj is RawObject) ? (obj as RawObject).Target : obj as byte[];
         }
@@ -339,52 +337,52 @@ namespace XLua
             switch (type)
             {
                 case LuaTypes.LUA_TNUMBER:
+                {
+                    if (LuaAPI.lua_isint64(L, idx))
                     {
-                        if (LuaAPI.lua_isint64(L, idx))
-                        {
-                            return LuaAPI.lua_toint64(L, idx);
-                        }
-                        else if(LuaAPI.lua_isinteger(L, idx))
-                        {
-                            return LuaAPI.xlua_tointeger(L, idx);
-                        }
-                        else
-                        {
-                            return LuaAPI.lua_tonumber(L, idx);
-                        }
+                        return LuaAPI.lua_toint64(L, idx);
                     }
+                    else if (LuaAPI.lua_isinteger(L, idx))
+                    {
+                        return LuaAPI.xlua_tointeger(L, idx);
+                    }
+                    else
+                    {
+                        return LuaAPI.lua_tonumber(L, idx);
+                    }
+                }
                 case LuaTypes.LUA_TSTRING:
-                    {
-                        return LuaAPI.lua_tostring(L, idx);
-                    }
+                {
+                    return LuaAPI.lua_tostring(L, idx);
+                }
                 case LuaTypes.LUA_TBOOLEAN:
-                    {
-                        return LuaAPI.lua_toboolean(L, idx);
-                    }
+                {
+                    return LuaAPI.lua_toboolean(L, idx);
+                }
                 case LuaTypes.LUA_TTABLE:
-                    {
-                        return getLuaTable(L, idx, null);
-                    }
+                {
+                    return getLuaTable(L, idx, null);
+                }
                 case LuaTypes.LUA_TFUNCTION:
-                    {
-                        return getLuaFunction(L, idx, null);
-                    }
+                {
+                    return getLuaFunction(L, idx, null);
+                }
                 case LuaTypes.LUA_TUSERDATA:
+                {
+                    if (LuaAPI.lua_isint64(L, idx))
                     {
-                        if (LuaAPI.lua_isint64(L, idx))
-                        {
-                            return LuaAPI.lua_toint64(L, idx);
-                        }
-                        else if(LuaAPI.lua_isuint64(L, idx))
-                        {
-                            return LuaAPI.lua_touint64(L, idx);
-                        }
-                        else
-                        {
-                            object obj = translator.SafeGetCSObj(L, idx);
-                            return (obj is RawObject) ? (obj as RawObject).Target : obj;
-                        }
+                        return LuaAPI.lua_toint64(L, idx);
                     }
+                    else if (LuaAPI.lua_isuint64(L, idx))
+                    {
+                        return LuaAPI.lua_touint64(L, idx);
+                    }
+                    else
+                    {
+                        object obj = translator.SafeGetCSObj(L, idx);
+                        return (obj is RawObject) ? (obj as RawObject).Target : obj;
+                    }
+                }
                 default:
                     return null;
             }
@@ -397,10 +395,12 @@ namespace XLua
                 object obj = translator.SafeGetCSObj(L, idx);
                 return (obj != null && obj is LuaTable) ? obj : null;
             }
+
             if (!LuaAPI.lua_istable(L, idx))
             {
                 return null;
             }
+
             LuaAPI.lua_pushvalue(L, idx);
             return new LuaTable(LuaAPI.luaL_ref(L), translator.luaEnv);
         }
@@ -412,10 +412,12 @@ namespace XLua
                 object obj = translator.SafeGetCSObj(L, idx);
                 return (obj != null && obj is LuaFunction) ? obj : null;
             }
+
             if (!LuaAPI.lua_isfunction(L, idx))
             {
                 return null;
             }
+
             LuaAPI.lua_pushvalue(L, idx);
             return new LuaFunction(LuaAPI.luaL_ref(L), translator.luaEnv);
         }
@@ -434,8 +436,9 @@ namespace XLua
                     object obj = translator.SafeGetCSObj(L, idx);
                     return (obj != null && type.IsAssignableFrom(obj.GetType())) ? obj : null;
                 }
+
                 return null;
-            }; 
+            };
 
             if (typeof(Delegate).IsAssignableFrom(type))
             {
@@ -478,6 +481,7 @@ namespace XLua
                     {
                         return null;
                     }
+
                     return translator.CreateInterfaceBridge(L, type, idx);
                 };
             }
@@ -497,6 +501,7 @@ namespace XLua
                     {
                         return Enum.ToObject(type, LuaAPI.xlua_tointeger(L, idx));
                     }
+
                     throw new InvalidCastException("invalid value for enum " + type);
                 };
             }
@@ -514,7 +519,7 @@ namespace XLua
 
                     uint len = LuaAPI.xlua_objlen(L, idx);
                     int n = LuaAPI.lua_gettop(L);
-                    idx = idx > 0 ? idx : LuaAPI.lua_gettop(L) + idx + 1;// abs of index
+                    idx = idx > 0 ? idx : LuaAPI.lua_gettop(L) + idx + 1; // abs of index
                     Type et = type.GetElementType();
                     ObjectCast elementCaster = GetCaster(et);
                     Array ary = target == null ? Array.CreateInstance(et, (int)len) : target as Array;
@@ -522,6 +527,7 @@ namespace XLua
                     {
                         throw new Exception("stack overflow while cast to Array");
                     }
+
                     for (int i = 0; i < len; ++i)
                     {
                         LuaAPI.lua_pushnumber(L, i + 1);
@@ -541,8 +547,10 @@ namespace XLua
                                 ary.SetValue(elementCaster(L, n + 1, null), i);
                             }
                         }
+
                         LuaAPI.lua_pop(L, 1);
                     }
+
                     return ary;
                 };
             }
@@ -563,7 +571,7 @@ namespace XLua
 
                     obj = target == null ? Activator.CreateInstance(type) : target;
                     int n = LuaAPI.lua_gettop(L);
-                    idx = idx > 0 ? idx : LuaAPI.lua_gettop(L) + idx + 1;// abs of index
+                    idx = idx > 0 ? idx : LuaAPI.lua_gettop(L) + idx + 1; // abs of index
                     IList list = obj as IList;
 
 
@@ -572,6 +580,7 @@ namespace XLua
                     {
                         throw new Exception("stack overflow while cast to IList");
                     }
+
                     for (int i = 0; i < len; ++i)
                     {
                         LuaAPI.lua_pushnumber(L, i + 1);
@@ -580,7 +589,8 @@ namespace XLua
                         {
                             if (translator.Assignable(L, n + 1, elementType))
                             {
-                                list[i] = elementCaster(L, n + 1, list[i]); ;
+                                list[i] = elementCaster(L, n + 1, list[i]);
+                                ;
                             }
                         }
                         else
@@ -590,8 +600,10 @@ namespace XLua
                                 list.Add(elementCaster(L, n + 1, null));
                             }
                         }
+
                         LuaAPI.lua_pop(L, 1);
                     }
+
                     return obj;
                 };
             }
@@ -614,13 +626,14 @@ namespace XLua
 
                     IDictionary dic = (target == null ? Activator.CreateInstance(type) : target) as IDictionary;
                     int n = LuaAPI.lua_gettop(L);
-                    idx = idx > 0 ? idx : LuaAPI.lua_gettop(L) + idx + 1;// abs of index
+                    idx = idx > 0 ? idx : LuaAPI.lua_gettop(L) + idx + 1; // abs of index
 
                     LuaAPI.lua_pushnil(L);
                     if (!LuaAPI.lua_checkstack(L, 1))
                     {
                         throw new Exception("stack overflow while cast to IDictionary");
                     }
+
                     while (LuaAPI.lua_next(L, idx) != 0)
                     {
                         if (translator.Assignable(L, n + 1, keyType) && translator.Assignable(L, n + 2, valueType))
@@ -628,12 +641,15 @@ namespace XLua
                             object k = keyCaster(L, n + 1, null);
                             dic[k] = valueCaster(L, n + 2, !dic.Contains(k) ? null : dic[k]);
                         }
+
                         LuaAPI.lua_pop(L, 1); // removes value, keeps key for next iteration
                     }
+
                     return dic;
                 };
             }
-            else if ((type.IsClass() && type.GetConstructor(System.Type.EmptyTypes) != null) || (type.IsValueType() && !type.IsEnum())) //class has default construtor
+            else if ((type.IsClass() && type.GetConstructor(System.Type.EmptyTypes) != null) ||
+                     (type.IsValueType() && !type.IsEnum())) //class has default construtor
             {
                 return (RealStatePtr L, int idx, object target) =>
                 {
@@ -648,11 +664,12 @@ namespace XLua
                     obj = target == null ? Activator.CreateInstance(type) : target;
 
                     int n = LuaAPI.lua_gettop(L);
-                    idx = idx > 0 ? idx : LuaAPI.lua_gettop(L) + idx + 1;// abs of index
+                    idx = idx > 0 ? idx : LuaAPI.lua_gettop(L) + idx + 1; // abs of index
                     if (!LuaAPI.lua_checkstack(L, 1))
                     {
                         throw new Exception("stack overflow while cast to " + type);
                     }
+
                     /*foreach (PropertyInfo prop in type.GetProperties())
                     {
                         var _setMethod = prop.GetSetMethod();
@@ -688,13 +705,16 @@ namespace XLua
                             try
                             {
                                 field.SetValue(obj, GetCaster(field.FieldType)(L, n + 1,
-                                        target == null || field.FieldType.IsPrimitive() || field.FieldType == typeof(string) ? null : field.GetValue(obj)));
+                                    target == null || field.FieldType.IsPrimitive() || field.FieldType == typeof(string)
+                                        ? null
+                                        : field.GetValue(obj)));
                             }
                             catch (Exception e)
                             {
                                 throw new Exception("exception in tran " + field.Name + ", msg=" + e.Message);
                             }
                         }
+
                         LuaAPI.lua_pop(L, 1);
                     }
 
@@ -729,14 +749,16 @@ namespace XLua
             Type underlyingType = Nullable.GetUnderlyingType(type);
             if (underlyingType != null)
             {
-                return genNullableCaster(GetCaster(underlyingType)); 
+                return genNullableCaster(GetCaster(underlyingType));
             }
+
             ObjectCast oc;
             if (!castersMap.TryGetValue(type, out oc))
             {
                 oc = genCaster(type);
                 castersMap.Add(type, oc);
             }
+
             return oc;
         }
     }

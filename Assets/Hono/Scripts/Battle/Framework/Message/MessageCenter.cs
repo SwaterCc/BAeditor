@@ -1,7 +1,10 @@
-﻿using System;
+﻿#region
+
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -71,7 +74,7 @@ namespace Hono.Scripts.Battle
             {
                 if (_collections.TryGetValue(pair.Key, out var collection))
                 {
-                    List<MsgCache> removes = new List<MsgCache>();
+                    List<MsgCache> removes = new();
                     foreach (var msgCache in pair.Value)
                     {
                         if (collection.SendMsg(msgCache.MsgKey, msgCache.P1, msgCache.P2, msgCache.P3, msgCache.P4,

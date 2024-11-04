@@ -1,96 +1,115 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Profiling;
 
-namespace Hono.Scripts.Battle {
-	public class AttrCollection {
-		private Actor _actor;
-		private readonly Func<int, IAttr> _creator;
+#endregion
 
-		public AttrCollection(Actor actor, Func<int, IAttr> creator) {
-			_actor = actor;
-			_creator = creator;
-		}
+namespace Hono.Scripts.Battle
+{
+    public class AttrCollection
+    {
+        private Actor _actor;
+        private readonly Func<int, IAttr> _creator;
 
-		private readonly Dictionary<int, IAttr> _attrs = new(128);
+        public AttrCollection(Actor actor, Func<int, IAttr> creator)
+        {
+            _actor = actor;
+            _creator = creator;
+        }
 
-		private IAttr getAttrAndSetDefault(int logicAttr) {
-			var attr = _creator.Invoke(logicAttr);
-			if (attr == null) {
-				throw new NullReferenceException($"create attr {logicAttr} Failed!");
-			}
+        private readonly Dictionary<int, IAttr> _attrs = new(128);
 
-			attr.InitDefaultValue();
-			return attr;
-		}
+        private IAttr getAttrAndSetDefault(int logicAttr)
+        {
+            var attr = _creator.Invoke(logicAttr);
+            if (attr == null)
+            {
+                throw new NullReferenceException($"create attr {logicAttr} Failed!");
+            }
 
-		public bool HasAttr(int attrType) {
-			return _attrs.ContainsKey(attrType);
-		}
+            attr.InitDefaultValue();
+            return attr;
+        }
 
-		public ICommand SetAttr<T>(int attrType, T value, bool isTempData) {
-			var attrTypeInt = attrType;
-		
-			if (!_attrs.TryGetValue(attrTypeInt, out var attr)) {
-				attr = getAttrAndSetDefault(attrType);
-				_attrs.Add(attrTypeInt, attr);
-			}
+        public bool HasAttr(int attrType)
+        {
+            return _attrs.ContainsKey(attrType);
+        }
 
-			if (attr is Attr<T> typedAttr) {
-				return typedAttr.Set(value, isTempData);
-			}
-			else {
-				Debug.LogError($"attrType {attrType} 没有{typeof(T)}类型的实现！");
-			}
-			return null;
-		}
+        public ICommand SetAttr<T>(int attrType, T value, bool isTempData)
+        {
+            var attrTypeInt = attrType;
 
-		//TODO：性能问题
-		public ICommand SetAttrBox(int attrType, object value, bool isTempData) {
-			var attrTypeInt = attrType;
-			
-			if (!_attrs.TryGetValue(attrTypeInt, out var attr)) {
-				attr = getAttrAndSetDefault(attrType);
-				_attrs.Add(attrTypeInt, attr);
-			}
-			return attr.BoxSet(value, isTempData);
-		}
+            if (!_attrs.TryGetValue(attrTypeInt, out var attr))
+            {
+                attr = getAttrAndSetDefault(attrType);
+                _attrs.Add(attrTypeInt, attr);
+            }
 
-		//TODO：性能问题
-		public object GetAttrBox(int attrType, bool onlyBaseValue = false) {
-			if (!_attrs.TryGetValue(attrType, out var attr)) {
-				attr = getAttrAndSetDefault(attrType);
-				_attrs.Add(attrType, attr);
-			}
-			
-			return attr.GetBox();
-		}
+            if (attr is Attr<T> typedAttr)
+            {
+                return typedAttr.Set(value, isTempData);
+            }
+            else
+            {
+                Debug.LogError($"attrType {attrType} 没有{typeof(T)}类型的实现！");
+            }
 
-		public T GetAttr<T>(int attrType, bool onlyBaseValue = false) {
-			if (!_attrs.TryGetValue(attrType, out var attr)) {
-				attr = getAttrAndSetDefault(attrType);
-				_attrs.Add(attrType, attr);
-			}
+            return null;
+        }
 
-			if (attr is Attr<T> typedAttr) {
-				return typedAttr.Get();
-			}
+        //TODO：性能问题
+        public ICommand SetAttrBox(int attrType, object value, bool isTempData)
+        {
+            var attrTypeInt = attrType;
 
-			Debug.LogError($"Cannot cast attribute of type {attrType} to {typeof(T)}");
-			return default;
-		}
+            if (!_attrs.TryGetValue(attrTypeInt, out var attr))
+            {
+                attr = getAttrAndSetDefault(attrType);
+                _attrs.Add(attrTypeInt, attr);
+            }
 
-		public void Clear()
-		{
-			_attrs.Clear();
-		}
-	}
+            return attr.BoxSet(value, isTempData);
+        }
+
+        //TODO：性能问题
+        public object GetAttrBox(int attrType, bool onlyBaseValue = false)
+        {
+            if (!_attrs.TryGetValue(attrType, out var attr))
+            {
+                attr = getAttrAndSetDefault(attrType);
+                _attrs.Add(attrType, attr);
+            }
+
+            return attr.GetBox();
+        }
+
+        public T GetAttr<T>(int attrType, bool onlyBaseValue = false)
+        {
+            if (!_attrs.TryGetValue(attrType, out var attr))
+            {
+                attr = getAttrAndSetDefault(attrType);
+                _attrs.Add(attrType, attr);
+            }
+
+            if (attr is Attr<T> typedAttr)
+            {
+                return typedAttr.Get();
+            }
+
+            Debug.LogError($"Cannot cast attribute of type {attrType} to {typeof(T)}");
+            return default;
+        }
+    }
 
 
-	public static class AttrEnumExtensions {
-		public static int ToInt(this ELogicAttr logicAttr) {
-			return (int)logicAttr;
-		}
-	}
+    public static class AttrEnumExtensions
+    {
+        public static int ToInt(this ELogicAttr logicAttr)
+        {
+            return (int)logicAttr;
+        }
+    }
 }

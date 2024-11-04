@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿#region
+
+using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -14,9 +18,10 @@ namespace Hono.Scripts.Battle
             {
                 _roundController = new RoundController(this);
             }
-           
+
             protected override void onEnter()
             {
+                BattleGroundHandle.RtInfo.RPCount = BattleGroundHandle._levelData.InitRPCount;
                 _roundInitFlag = _roundController.InitRoundController(BattleGroundHandle._levelData.RoundDatas,
                     BattleGroundHandle._levelData.CanRepeatRound);
                 if (!_roundInitFlag)
@@ -24,7 +29,11 @@ namespace Hono.Scripts.Battle
                     Debug.LogError("回合数据不对，启动失败");
                 }
 
-                BattleGroundHandle.RuntimeInfo.RPCount = BattleGroundHandle._levelData.InitRPCount;
+
+                foreach (var abilityId in BattleGroundHandle._levelData.BattleControllerAbilitys)
+                {
+                    BattleManager.BattleController.RunAbility(abilityId);
+                }
             }
 
             protected override void onTick(float dt)
@@ -33,10 +42,27 @@ namespace Hono.Scripts.Battle
                 {
                     _roundController.SwitchState(ERoundState.Ready);
                 }
-                
+
                 BattleGroundHandle._pawnTeamController.Tick(dt);
-                
+
                 _roundController.Tick(dt);
+            }
+
+            public void RoundBegin()
+            {
+                if (_roundController.CurrentState != ERoundState.Ready)
+                {
+                    return;
+                }
+
+                if (BattleGroundHandle._pawnTeamController.IsReady)
+                {
+                    _roundController.SwitchState(ERoundState.Running);
+                }
+                else
+                {
+                    Debug.LogError("队伍未准备好");
+                }
             }
 
             public void ScoreBattle(bool isPass)

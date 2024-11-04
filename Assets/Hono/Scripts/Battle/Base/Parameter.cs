@@ -1,9 +1,13 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -16,29 +20,29 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// 编辑器数据
+    ///     编辑器数据
     /// </summary>
     [Serializable]
     public class Parameter
     {
-        /// <summary>
-        /// 是否是函数
-        /// </summary>
-        public EParameterType ParameterType;
+	    /// <summary>
+	    ///     是否是函数
+	    /// </summary>
+	    public EParameterType ParameterType;
 
         public string FuncName;
         public List<Parameter> FuncParams;
-        
+
         public object Value;
-        
+
         public string VairableName;
-        
+
         public ELogicAttr AttrType;
 
         public Parameter() { }
 
         /// <summary>
-        /// 拷贝构造函数
+        ///     拷贝构造函数
         /// </summary>
         /// <param name="parameter"></param>
         public Parameter(Parameter parameter)
@@ -58,6 +62,7 @@ namespace Hono.Scripts.Battle
                     FuncParams.Add(new Parameter(param));
                 }
             }
+
             Value = DeepCopy(parameter.Value);
             VairableName = parameter.VairableName;
             AttrType = parameter.AttrType;
@@ -77,6 +82,7 @@ namespace Hono.Scripts.Battle
                     {
                         return "函数未初始化";
                     }
+
                     desc = "" + FuncName + "(";
                     for (var index = 0; index < FuncParams.Count; index++)
                     {
@@ -97,12 +103,12 @@ namespace Hono.Scripts.Battle
                     desc = "属性：" + AttrType;
                     break;
             }
-            
+
             return desc;
         }
 
         /// <summary>
-        /// 通过序列化实现深拷贝
+        ///     通过序列化实现深拷贝
         /// </summary>
         /// <param name="obj">要深拷贝的对象</param>
         /// <returns>深拷贝得到的新对象</returns>
@@ -127,22 +133,22 @@ namespace Hono.Scripts.Battle
         }
 
         /// <summary>
-        /// 复制
+        ///     复制
         /// </summary>
         public void CopyTo(Parameter copy)
         {
-           var temp =  new Parameter(copy);
+            var temp = new Parameter(copy);
 
-           ParameterType = temp.ParameterType;
-           FuncName = temp.FuncName;
-           FuncParams = temp.FuncParams;
-           Value = temp.Value;
-           VairableName = temp.VairableName;
-           AttrType = temp.AttrType;
+            ParameterType = temp.ParameterType;
+            FuncName = temp.FuncName;
+            FuncParams = temp.FuncParams;
+            Value = temp.Value;
+            VairableName = temp.VairableName;
+            AttrType = temp.AttrType;
         }
 
         /// <summary>
-        /// 检查对象是否可序列化
+        ///     检查对象是否可序列化
         /// </summary>
         /// <param name="obj">要检查的对象</param>
         /// <returns>如果对象可序列化，则为 true；否则为 false。</returns>

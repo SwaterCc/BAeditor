@@ -1,6 +1,10 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -20,7 +24,7 @@ namespace Hono.Scripts.Battle
             public bool HasExecuteOrder => _hasExecuteOrder;
 
             public bool _exitExecuting;
-            
+
             private readonly Ability _ability;
             private AbilityRunCycle _curCycle;
             private bool _hasExecuteOrder;
@@ -28,7 +32,7 @@ namespace Hono.Scripts.Battle
             private readonly Dictionary<EAbilityAllowEditCycle, CycleCallback> _callbackDict;
 
             private bool _hasError;
-            
+
             public AbilityState(Ability ability)
             {
                 _ability = ability;
@@ -66,13 +70,13 @@ namespace Hono.Scripts.Battle
             }
 
             /// <summary>
-            /// Ability初始化的下一帧执行
+            ///     Ability初始化的下一帧执行
             /// </summary>
             /// <param name="dt"></param>
             public void Tick(float dt)
             {
-                if(_hasError) return;
-                
+                if (_hasError) return;
+
                 try
                 {
                     if (_curCycle == null)
@@ -116,34 +120,42 @@ namespace Hono.Scripts.Battle
 
             public void ForceStop()
             {
-	            if (_curCycle != null) {
-		            _curCycle.Exit();
-		            //强制执行一下结束流程
-		            if (_curCycle.CurState != EAbilityState.EndExecute) {
-			            _curCycle = _cycles[EAbilityState.EndExecute];
-			            _curCycle.Enter();
-			            _curCycle.Exit();
-		            }
-	            }
-	            _curCycle = null;
+                if (_curCycle != null)
+                {
+                    _curCycle.Exit();
+                    //强制执行一下结束流程
+                    if (_curCycle.CurState != EAbilityState.EndExecute)
+                    {
+                        _curCycle = _cycles[EAbilityState.EndExecute];
+                        _curCycle.Enter();
+                        _curCycle.Exit();
+                    }
+                }
+
+                _curCycle = null;
             }
 
-            public void StopExecuting() {
-	            ((ExecutingCycle)(_cycles[EAbilityState.Executing])).ForceStop= true;
+            public void StopExecuting()
+            {
+                ((ExecutingCycle)(_cycles[EAbilityState.Executing])).ForceStop = true;
             }
-            
+
             public void Reset()
             {
-                foreach (var cycle in _cycles) {
-	                cycle.Value.OnReset();
+                foreach (var cycle in _cycles)
+                {
+                    cycle.Value.OnReset();
                 }
+
                 _hasError = false;
             }
 
-            public void Reload() {
-	            foreach (var cycle in _cycles) {
-		            cycle.Value.OnReload();
-	            }
+            public void Reload()
+            {
+                foreach (var cycle in _cycles)
+                {
+                    cycle.Value.OnReload();
+                }
             }
 
             public void OnDestroy()

@@ -1,6 +1,8 @@
-
+#region
 
 using Hono.Scripts.Battle.Tools.CustomAttribute;
+
+#endregion
 
 namespace Hono.Scripts.Battle.Event
 {
@@ -8,38 +10,73 @@ namespace Hono.Scripts.Battle.Event
     {
         //空占位，说明没有初始化,千万不要改顺序！！
         NoInit = 0,
-       
-        [EventCheckerBinder("GetHitChecker",typeof(HitDamageInfo))]
+
+        [EventCheckerBinder("GetHitChecker", typeof(HitDamageInfo))]
         OnHitDamage,
-        [EventCheckerBinder("GetHitOnceChecker",typeof(HitInfo))]
+
+        [EventCheckerBinder("GetHitOnceChecker", typeof(HitInfo))]
         OnHit,
-        [EventCheckerBinder("GetBeHitChecker",typeof(HitDamageInfo))]
+
+        [EventCheckerBinder("GetBeHitChecker", typeof(HitDamageInfo))]
         OnBeHit,
-        
-        [EventCheckerBinder("GetMotionBeginChecker",typeof(MotionEventInfo))]
+
+        [EventCheckerBinder("GetMotionBeginChecker", typeof(MotionEventInfo))]
         OnMotionBegin = 10,
-        [EventCheckerBinder("GetMotionCollisionChecker",typeof(MotionEventInfo))]
+
+        [EventCheckerBinder("GetMotionCollisionChecker", typeof(MotionEventInfo))]
         OnMoveCollision,
-        [EventCheckerBinder("GetMotionEndChecker",typeof(MotionEventInfo))]
+
+        [EventCheckerBinder("GetMotionEndChecker", typeof(MotionEventInfo))]
         OnMotionEnd,
-        
+
         UseSkill = 20,
-        [EventCheckerBinder("GetUseSkillSuccessChecker",typeof(UsedSkillEventInfo))]
+
+        [EventCheckerBinder("GetUseSkillSuccessChecker", typeof(UsedSkillEventInfo))]
         OnSkillUseSuccess,
-        [EventCheckerBinder("GetSkillEndChecker",typeof(UsedSkillEventInfo))]
+
+        [EventCheckerBinder("GetSkillEndChecker", typeof(UsedSkillEventInfo))]
         OnSkillStop,
-        
+
         OnActorEnterScene = 30,
         OnActorDead,
-        
-        [EventCheckerBinder("GetTriggerBoxEnterChecker",typeof(TriggerBoxEventInfo))]
+
+        [EventCheckerBinder("GetTriggerBoxEnterChecker", typeof(TriggerBoxEventInfo))]
         OnTriggerBoxEnter = 50,
-        [EventCheckerBinder("GetTriggerBoxStayChecker",typeof(TriggerBoxEventInfo))]
+
+        [EventCheckerBinder("GetTriggerBoxStayChecker", typeof(TriggerBoxEventInfo))]
         OnTriggerBoxStay = 51,
-        [EventCheckerBinder("GetTriggerBoxExitChecker",typeof(TriggerBoxEventInfo))]
+
+        [EventCheckerBinder("GetTriggerBoxExitChecker", typeof(TriggerBoxEventInfo))]
         OnTriggerBoxExit = 52,
-        
-        OnCallMonsterGen = 1000,
-        CallPawnGroupEditUI = 1001,
+
+        SkillCDBegin = 70,
+        SkillCDEnd,
+
+        OnCallMonsterGenerator = 1000,
+
+        [EventCheckerBinder("GetMonsterAllDeadChecker", typeof(MonsterGenRtEventInfo))]
+        OnMonsterGeneratorAllDead = 1001,
+
+        //游戏流程事件
+        [EventCheckerBinder("GetRoundReadyEnterChecker", typeof(RoundStateEventInfo))]
+        RoundReadyEnter = 500001,
+
+        [EventCheckerBinder("GetRoundReadyExitChecker", typeof(RoundStateEventInfo))]
+        RoundReadyExit,
+
+        [EventCheckerBinder("GetRoundRunningEnterChecker", typeof(RoundStateEventInfo))]
+        RoundRunningEnter = 500011,
+
+        [EventCheckerBinder("GetRoundRunningExitChecker", typeof(RoundStateEventInfo))]
+        RoundRunningExit,
+
+        [EventCheckerBinder("GetRoundScoreEnterChecker", typeof(RoundStateEventInfo))]
+        RoundScoreEnter = 500021,
+
+        [EventCheckerBinder("GetRoundScoreExitChecker", typeof(RoundStateEventInfo))]
+        RoundScoreExit,
+
+        [EventCheckerBinder("GetLootChecker", typeof(LootEventInfo))]
+        LootDrop = 500031
     }
 }

@@ -4,10 +4,10 @@
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-*/
+ */
 
-using UnityEngine;
 using System;
+using UnityEngine;
 using XLua;
 
 namespace XLuaTest
@@ -30,6 +30,7 @@ namespace XLuaTest
             c = p2;
             e.c = (byte)p1;
         }
+
         public int a;
         public int b;
         public decimal c;
@@ -83,16 +84,11 @@ namespace XLuaTest
         IExchanger ie;
         LuaFunction add;
 
-        [NonSerialized]
-        public double[] a1 = new double[] { 1, 2 };
-        [NonSerialized]
-        public Vector3[] a2 = new Vector3[] { new Vector3(1, 2, 3), new Vector3(4, 5, 6) };
-        [NonSerialized]
-        public MyStruct[] a3 = new MyStruct[] { new MyStruct(1, 2), new MyStruct(3, 4) };
-        [NonSerialized]
-        public MyEnum[] a4 = new MyEnum[] { MyEnum.E1, MyEnum.E2 };
-        [NonSerialized]
-        public decimal[] a5 = new decimal[] { 1.00001M, 2.00002M };
+        [NonSerialized] public double[] a1 = new double[] { 1, 2 };
+        [NonSerialized] public Vector3[] a2 = new Vector3[] { new Vector3(1, 2, 3), new Vector3(4, 5, 6) };
+        [NonSerialized] public MyStruct[] a3 = new MyStruct[] { new MyStruct(1, 2), new MyStruct(3, 4) };
+        [NonSerialized] public MyEnum[] a4 = new MyEnum[] { MyEnum.E1, MyEnum.E2 };
+        [NonSerialized] public decimal[] a5 = new decimal[] { 1.00001M, 2.00002M };
 
         public float FloatParamMethod(float p)
         {
@@ -235,7 +231,7 @@ namespace XLuaTest
 
         void OnDestroy()
         {
-            f1 =  null;
+            f1 = null;
             f2 = null;
             f3 = null;
             f4 = null;

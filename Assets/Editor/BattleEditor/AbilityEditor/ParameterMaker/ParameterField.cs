@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
-using Hono.Scripts.Battle.RefValue;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -36,9 +35,10 @@ namespace Editor.AbilityEditor
             _dropDownPos = Vector2.zero;
             _dropDownList = new List<string>();
             _searchString = "";
-            
-            if (_originType == typeof(object) && _parameter.Value != null) {
-	            _type = _parameter.Value.GetType();
+
+            if (_originType == typeof(object) && _parameter.Value != null)
+            {
+                _type = _parameter.Value.GetType();
             }
         }
 
@@ -53,27 +53,33 @@ namespace Editor.AbilityEditor
 
             _menu.AddItem(new GUIContent("属性"), false, () => { _parameter.ParameterType = EParameterType.Attr; });
 
-            if (_originType == typeof(object)) {
-	            _menu.AddItem(new GUIContent("Object/int"), false, () => {
-		            _type = typeof(int);
-		            _parameter.Value = new int();
-	            });
-	            _menu.AddItem(new GUIContent("Object/float"), false, () => {
-		            _type = typeof(float);
-		            _parameter.Value = new float();
-	            });
-	            _menu.AddItem(new GUIContent("Object/bool"), false, () => {
-		            _type = typeof(bool);
-		            _parameter.Value = new bool();
-	            });
-	            _menu.AddItem(new GUIContent("Object/string"), false, () => {
-		            _type = typeof(string);
-		            _parameter.Value = "";
-	            });
-	            _menu.AddItem(new GUIContent("Object/重置"), false, () => {
-		            _type = typeof(object);
-		            _parameter.Value = null;
-	            });
+            if (_originType == typeof(object))
+            {
+                _menu.AddItem(new GUIContent("Object/int"), false, () =>
+                {
+                    _type = typeof(int);
+                    _parameter.Value = new int();
+                });
+                _menu.AddItem(new GUIContent("Object/float"), false, () =>
+                {
+                    _type = typeof(float);
+                    _parameter.Value = new float();
+                });
+                _menu.AddItem(new GUIContent("Object/bool"), false, () =>
+                {
+                    _type = typeof(bool);
+                    _parameter.Value = new bool();
+                });
+                _menu.AddItem(new GUIContent("Object/string"), false, () =>
+                {
+                    _type = typeof(string);
+                    _parameter.Value = "";
+                });
+                _menu.AddItem(new GUIContent("Object/重置"), false, () =>
+                {
+                    _type = typeof(object);
+                    _parameter.Value = null;
+                });
             }
 
             _menu.ShowAsContext();
@@ -90,23 +96,23 @@ namespace Editor.AbilityEditor
             {
                 showMenu();
             }
-            
+
             switch (_parameter.ParameterType)
             {
-	            case EParameterType.Simple:
-		            baseDraw();
-		            break;
-	            case EParameterType.Function:
-		            functionDraw();
-		            break;
-	            case EParameterType.Variable:
-		            variableDraw();
-		            break;
-	            case EParameterType.Attr:
-		            attrDraw();
-		            break;
+                case EParameterType.Simple:
+                    baseDraw();
+                    break;
+                case EParameterType.Function:
+                    functionDraw();
+                    break;
+                case EParameterType.Variable:
+                    variableDraw();
+                    break;
+                case EParameterType.Attr:
+                    attrDraw();
+                    break;
             }
-            
+
             if (_showDropDown)
             {
                 drawDropDown();
@@ -142,58 +148,68 @@ namespace Editor.AbilityEditor
 
         private void baseDraw()
         {
-	        try {
-		          //变量名加按钮
-            switch (_type.GetParameterValueType())
+            try
             {
-                case EParameterValueType.Int:
-                    _parameter.Value ??= new int();
-                    _parameter.Value = SirenixEditorFields.IntField((int)_parameter.Value);
-                    break;
-                case EParameterValueType.Float:
-                    _parameter.Value ??= new float();
-                    _parameter.Value = SirenixEditorFields.FloatField((float)_parameter.Value);
-                    break;
-                case EParameterValueType.Bool:
-                    _parameter.Value ??= new bool();
-                    string select = ((bool)_parameter.Value).ToString();
-                    select =
-                        SirenixEditorFields.Dropdown(new GUIContent(""), select, new[] { "true", "false" });
-                    _parameter.Value = bool.Parse(select);
-                    break;
-                case EParameterValueType.String:
-                    _parameter.Value ??= "";
-                    _parameter.Value = SirenixEditorFields.TextField((string)_parameter.Value);
-                    break;
-                case EParameterValueType.Enum:
-                    _parameter.Value ??= _type.InstantiateDefault(true);
-                    _parameter.Value = SirenixEditorFields.EnumDropdown((Enum)_parameter.Value);
-                    break;
-                case EParameterValueType.Custom:
-                    _parameter.Value ??= _type.InstantiateDefault(true);
-                    if (SirenixEditorGUI.Button("编辑：" + _type.Name, ButtonSizes.Medium))
-                    {
-                        SerializableOdinWindow.Open(_parameter.Value, _type, (data) => _parameter.Value = data);
-                    }
-                    break;
-                case EParameterValueType.Object:
-	                if (_parameter.Value == null) {
-		                EditorGUILayout.LabelField("←----请选择类型！");
-	                }
-	                break;
-                default:
-                    EditorGUILayout.LabelField($"还未实现{_type}");
-                    break;
+                //变量名加按钮
+                switch (_type.GetParameterValueType())
+                {
+                    case EParameterValueType.Int:
+                        _parameter.Value ??= new int();
+                        _parameter.Value = SirenixEditorFields.IntField((int)_parameter.Value);
+                        break;
+                    case EParameterValueType.Float:
+                        _parameter.Value ??= new float();
+                        _parameter.Value = SirenixEditorFields.FloatField((float)_parameter.Value);
+                        break;
+                    case EParameterValueType.Bool:
+                        _parameter.Value ??= new bool();
+                        string select = ((bool)_parameter.Value).ToString();
+                        select =
+                            SirenixEditorFields.Dropdown(new GUIContent(""), select, new[] { "true", "false" });
+                        _parameter.Value = bool.Parse(select);
+                        break;
+                    case EParameterValueType.String:
+                        _parameter.Value ??= "";
+                        _parameter.Value = SirenixEditorFields.TextField((string)_parameter.Value);
+                        break;
+                    case EParameterValueType.Vector3:
+                        _parameter.Value ??= Vector3.zero;
+                        _parameter.Value = SirenixEditorFields.Vector3Field((Vector3)_parameter.Value);
+                        break;
+                    case EParameterValueType.Enum:
+                        _parameter.Value ??= _type.InstantiateDefault(true);
+                        _parameter.Value = SirenixEditorFields.EnumDropdown((Enum)_parameter.Value);
+                        break;
+                    case EParameterValueType.Custom:
+                        _parameter.Value ??= _type.InstantiateDefault(true);
+                        if (SirenixEditorGUI.Button("编辑：" + _type.Name, ButtonSizes.Medium))
+                        {
+                            SerializableOdinWindow.Open(_parameter.Value, _type, (data) => _parameter.Value = data);
+                        }
+
+                        break;
+                    case EParameterValueType.Object:
+                        if (_parameter.Value == null)
+                        {
+                            EditorGUILayout.LabelField("←----请选择类型！");
+                        }
+
+                        break;
+                    default:
+                        EditorGUILayout.LabelField($"还未实现{_type}");
+                        break;
+                }
             }
-	        }
-	        catch (InvalidCastException e) {
-		        Debug.LogError(e);
-		        _parameter.Value = null;
-	        }
-	        catch (Exception e) {
-		        Debug.LogError(e);
-		        throw;
-	        }
+            catch (InvalidCastException e)
+            {
+                Debug.LogError(e);
+                _parameter.Value = null;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                throw;
+            }
         }
 
         private void attrDraw()
@@ -253,11 +269,11 @@ namespace Editor.AbilityEditor
                         }
                         else
                         {
-	                        _dropDownList.Add("Msg:P1");
-	                        _dropDownList.Add("Msg:P2");
-	                        _dropDownList.Add("Msg:P3");
-	                        _dropDownList.Add("Msg:P4");
-	                        _dropDownList.Add("Msg:P5");
+                            _dropDownList.Add("Msg:P1");
+                            _dropDownList.Add("Msg:P2");
+                            _dropDownList.Add("Msg:P3");
+                            _dropDownList.Add("Msg:P4");
+                            _dropDownList.Add("Msg:P5");
                         }
                     }
                 }

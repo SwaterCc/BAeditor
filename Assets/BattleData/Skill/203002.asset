@@ -42,7 +42,7 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 10
+      Radius: 11
       Angle: 0
     MaxTargetCount: 1
     HasSelf: 0
@@ -55,5 +55,5 @@ MonoBehaviour:
   MaxTargetCount: 1
   SelectSelf: 0
   SkillName: "\u70B9\u71C3"
-  SkillDesc: 
-  SkillIconPath: 
+  SkillDesc: "\u70B9\u71C3\u4E00\u540D\u654C\u4EBA\uFF0C\u6BCF\u79D2\u9020\u6210<color=#00ffffff>35%<u>\u5143\u7D20\u4F24\u5BB3</color></u>\uFF0C\u6301\u7EED10\u79D2\u3002<br><br>\u70B9\u71C3\u76EE\u6807\u6B7B\u4EA1\u65F6\u89E6\u53D1\u4E00\u6B21\u706B\u7130\u6E85\u5C04\uFF0C\u6E85\u5C04\u653B\u51FB\u5468\u56F42\u4E2A\u654C\u4EBA\uFF0C\u9020\u6210<color=#00ffffff>150%<u>\u5143\u7D20\u4F24\u5BB3</color></u>\u3002"
+  SkillIconPath: Sprites/Battle/203002

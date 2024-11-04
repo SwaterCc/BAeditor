@@ -1,13 +1,17 @@
+#region
+
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
     public partial class Ability
     {
-        /// <summary>
-        /// 不暴露接口，纯逻辑态
-        /// </summary>
-        private class ReadyCycle : AbilityRunCycle
+	    /// <summary>
+	    ///     不暴露接口，纯逻辑态
+	    /// </summary>
+	    private class ReadyCycle : AbilityRunCycle
         {
             private EAbilityState _nextState = EAbilityState.Ready;
             protected override EAbilityState getCurState() => EAbilityState.Ready;
@@ -61,5 +65,4 @@ namespace Hono.Scripts.Battle
             }
         }
     }
- 
 }

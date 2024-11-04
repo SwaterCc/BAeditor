@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿#region
+
+using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -8,7 +12,7 @@ namespace Hono.Scripts.Battle
         {
             private float _baseSpeed;
             private MotionComp _motionComp;
-            
+
             public MoveState(ActorStateMachine machine, EActorLogicStateType stateType) : base(machine, stateType) { }
 
             public override void Init()
@@ -23,16 +27,35 @@ namespace Hono.Scripts.Battle
                 {
                     return;
                 }
-                
+
                 var curPos = _actorLogic.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-                var curRot = Quaternion.LookRotation( _actorLogic._actorInput.MoveInputValue,Vector3.up);
+
                 var finalSpeed = _actorLogic.GetAttr<float>(ELogicAttr.AttrBaseSpeed);
-                var offset = _actorLogic._actorInput.MoveInputValue * (finalSpeed * dt);
-                _actorLogic.SetAttr(ELogicAttr.AttrPosition, curPos + offset, false);
+                var dir = _actorLogic._actorInput.MoveInputValue;
+                dir.y = 0;
+                var offset = dir * (finalSpeed * dt);
+
+                if (_actorLogic.Actor.ModelController.Model.TryGetComponent<CharacterController>(out var CharCtrl))
+                {
+                    CharCtrl.Move(offset);
+                    var finalPos = CharCtrl.transform.position;
+                    finalPos.y = 0;
+                    _actorLogic.SetAttr(ELogicAttr.AttrPosition, finalPos, false);
+                }
+                else
+                {
+                    var finalPos = curPos + offset;
+                    finalPos.y = 0;
+                    _actorLogic.SetAttr(ELogicAttr.AttrPosition, finalPos, false);
+                }
 
                 if (_motionComp is { ForceFaceMoveTarget: false })
                 {
-                    _actorLogic.SetAttr(ELogicAttr.AttrRot, curRot, false);
+                    if (dir != Vector3.zero)
+                    {
+                        var curRot = Quaternion.LookRotation(_actorLogic._actorInput.MoveInputValue, Vector3.up);
+                        _actorLogic.SetAttr(ELogicAttr.AttrRot, curRot, false);
+                    }
                 }
             }
 

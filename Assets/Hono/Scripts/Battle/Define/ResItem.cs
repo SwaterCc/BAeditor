@@ -1,6 +1,9 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
-using UnityEngine.Serialization;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {

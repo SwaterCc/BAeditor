@@ -1,7 +1,7 @@
 ﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-using System.Threading;
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks.Internal;
 using UnityEngine;
 
@@ -19,7 +19,8 @@ namespace Cysharp.Threading.Tasks
         bool tryStop;
         bool isDisposed;
 
-        protected PlayerLoopTimer(bool periodic, PlayerLoopTiming playerLoopTiming, CancellationToken cancellationToken, Action<object> timerCallback, object state)
+        protected PlayerLoopTimer(bool periodic, PlayerLoopTiming playerLoopTiming, CancellationToken cancellationToken,
+            Action<object> timerCallback, object state)
         {
             this.periodic = periodic;
             this.playerLoopTiming = playerLoopTiming;
@@ -28,7 +29,9 @@ namespace Cysharp.Threading.Tasks
             this.state = state;
         }
 
-        public static PlayerLoopTimer Create(TimeSpan interval, bool periodic, DelayType delayType, PlayerLoopTiming playerLoopTiming, CancellationToken cancellationToken, Action<object> timerCallback, object state)
+        public static PlayerLoopTimer Create(TimeSpan interval, bool periodic, DelayType delayType,
+            PlayerLoopTiming playerLoopTiming, CancellationToken cancellationToken, Action<object> timerCallback,
+            object state)
         {
 #if UNITY_EDITOR
             // force use Realtime.
@@ -41,24 +44,30 @@ namespace Cysharp.Threading.Tasks
             switch (delayType)
             {
                 case DelayType.UnscaledDeltaTime:
-                    return new IgnoreTimeScalePlayerLoopTimer(interval, periodic, playerLoopTiming, cancellationToken, timerCallback, state);
+                    return new IgnoreTimeScalePlayerLoopTimer(interval, periodic, playerLoopTiming, cancellationToken,
+                        timerCallback, state);
                 case DelayType.Realtime:
-                    return new RealtimePlayerLoopTimer(interval, periodic, playerLoopTiming, cancellationToken, timerCallback, state);
+                    return new RealtimePlayerLoopTimer(interval, periodic, playerLoopTiming, cancellationToken,
+                        timerCallback, state);
                 case DelayType.DeltaTime:
                 default:
-                    return new DeltaTimePlayerLoopTimer(interval, periodic, playerLoopTiming, cancellationToken, timerCallback, state);
+                    return new DeltaTimePlayerLoopTimer(interval, periodic, playerLoopTiming, cancellationToken,
+                        timerCallback, state);
             }
         }
 
-        public static PlayerLoopTimer StartNew(TimeSpan interval, bool periodic, DelayType delayType, PlayerLoopTiming playerLoopTiming, CancellationToken cancellationToken, Action<object> timerCallback, object state)
+        public static PlayerLoopTimer StartNew(TimeSpan interval, bool periodic, DelayType delayType,
+            PlayerLoopTiming playerLoopTiming, CancellationToken cancellationToken, Action<object> timerCallback,
+            object state)
         {
-            var timer = Create(interval, periodic, delayType, playerLoopTiming, cancellationToken, timerCallback, state);
+            var timer = Create(interval, periodic, delayType, playerLoopTiming, cancellationToken, timerCallback,
+                state);
             timer.Restart();
             return timer;
         }
 
         /// <summary>
-        /// Restart(Reset and Start) timer.
+        ///     Restart(Reset and Start) timer.
         /// </summary>
         public void Restart()
         {
@@ -70,11 +79,12 @@ namespace Cysharp.Threading.Tasks
                 isRunning = true;
                 PlayerLoopHelper.AddAction(playerLoopTiming, this);
             }
+
             tryStop = false;
         }
 
         /// <summary>
-        /// Restart(Reset and Start) and change interval.
+        ///     Restart(Reset and Start) and change interval.
         /// </summary>
         public void Restart(TimeSpan interval)
         {
@@ -86,11 +96,12 @@ namespace Cysharp.Threading.Tasks
                 isRunning = true;
                 PlayerLoopHelper.AddAction(playerLoopTiming, this);
             }
+
             tryStop = false;
         }
 
         /// <summary>
-        /// Stop timer.
+        ///     Stop timer.
         /// </summary>
         public void Stop()
         {
@@ -111,11 +122,13 @@ namespace Cysharp.Threading.Tasks
                 isRunning = false;
                 return false;
             }
+
             if (tryStop)
             {
                 isRunning = false;
                 return false;
             }
+
             if (cancellationToken.IsCancellationRequested)
             {
                 isRunning = false;
@@ -150,7 +163,8 @@ namespace Cysharp.Threading.Tasks
         float elapsed;
         float interval;
 
-        public DeltaTimePlayerLoopTimer(TimeSpan interval, bool periodic, PlayerLoopTiming playerLoopTiming, CancellationToken cancellationToken, Action<object> timerCallback, object state)
+        public DeltaTimePlayerLoopTimer(TimeSpan interval, bool periodic, PlayerLoopTiming playerLoopTiming,
+            CancellationToken cancellationToken, Action<object> timerCallback, object state)
             : base(periodic, playerLoopTiming, cancellationToken, timerCallback, state)
         {
             ResetCore(interval);
@@ -192,7 +206,8 @@ namespace Cysharp.Threading.Tasks
         float elapsed;
         float interval;
 
-        public IgnoreTimeScalePlayerLoopTimer(TimeSpan interval, bool periodic, PlayerLoopTiming playerLoopTiming, CancellationToken cancellationToken, Action<object> timerCallback, object state)
+        public IgnoreTimeScalePlayerLoopTimer(TimeSpan interval, bool periodic, PlayerLoopTiming playerLoopTiming,
+            CancellationToken cancellationToken, Action<object> timerCallback, object state)
             : base(periodic, playerLoopTiming, cancellationToken, timerCallback, state)
         {
             ResetCore(interval);
@@ -233,7 +248,8 @@ namespace Cysharp.Threading.Tasks
         ValueStopwatch stopwatch;
         long intervalTicks;
 
-        public RealtimePlayerLoopTimer(TimeSpan interval, bool periodic, PlayerLoopTiming playerLoopTiming, CancellationToken cancellationToken, Action<object> timerCallback, object state)
+        public RealtimePlayerLoopTimer(TimeSpan interval, bool periodic, PlayerLoopTiming playerLoopTiming,
+            CancellationToken cancellationToken, Action<object> timerCallback, object state)
             : base(periodic, playerLoopTiming, cancellationToken, timerCallback, state)
         {
             ResetCore(interval);
@@ -259,4 +275,3 @@ namespace Cysharp.Threading.Tasks
         }
     }
 }
-

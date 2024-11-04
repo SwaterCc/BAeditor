@@ -1,84 +1,104 @@
-﻿using System;
+﻿#region
+
 using UnityEngine;
 
-namespace Hono.Scripts.Battle {
-	public static class ParameterParser {
-		public static bool Parse<T>(this Parameter parameter, in Ability ability, out T value) {
-			value = default;
-			if (parameter == null) {
-				return false;
-			}
+#endregion
 
-			switch (parameter.ParameterType) {
-				case EParameterType.Simple:
-					value = (T)parameter.Value;
-					break;
-				case EParameterType.Function:
-					if (!parameter.TryCallFunction(ability, out var obj)) {
-						return false;
-					}
+namespace Hono.Scripts.Battle
+{
+    public static class ParameterParser
+    {
+        public static bool Parse<T>(this Parameter parameter, in Ability ability, out T value)
+        {
+            value = default;
+            if (parameter == null)
+            {
+                return false;
+            }
 
-					value = (T)obj;
-					return true;
-				case EParameterType.Variable:
-					value = (T)ability.Variables.Get(parameter.VairableName);
-					break;
-				case EParameterType.Attr:
-					if (typeof(T) == typeof(object)) {
-						value = (T)ability.Actor.GetAttrBox(parameter.AttrType);
-					}
-					else {
-						value = ability.Actor.GetAttr<T>(parameter.AttrType);
-					}
+            switch (parameter.ParameterType)
+            {
+                case EParameterType.Simple:
+                    value = (T)parameter.Value;
+                    break;
+                case EParameterType.Function:
+                    if (!parameter.TryCallFunction(ability, out var obj))
+                    {
+                        return false;
+                    }
 
-					break;
-			}
+                    value = (T)obj;
+                    return true;
+                case EParameterType.Variable:
+                    value = (T)ability.Variables.Get(parameter.VairableName);
+                    break;
+                case EParameterType.Attr:
+                    if (typeof(T) == typeof(object))
+                    {
+                        value = (T)ability.Actor.GetAttrBox(parameter.AttrType);
+                    }
+                    else
+                    {
+                        value = ability.Actor.GetAttr<T>(parameter.AttrType);
+                    }
 
-			return true;
-		}
+                    break;
+            }
 
-		public static bool TryCallFunction(this Parameter parameter, in Ability ability, out object value) {
-			value = null;
-			if (string.IsNullOrEmpty(parameter.FuncName)) {
-				Debug.LogError("函数名为空");
-				return false;
-			}
+            return true;
+        }
 
-			var funcInfo = AbilityFuncPreLoader.GetFuncInfo(parameter.FuncName);
-			if (funcInfo == null) {
-				Debug.LogError($"获取函数失败{parameter.FuncName}");
-				return false;
-			}
+        public static bool TryCallFunction(this Parameter parameter, in Ability ability, out object value)
+        {
+            value = null;
+            if (string.IsNullOrEmpty(parameter.FuncName))
+            {
+                Debug.LogError("函数名为空");
+                return false;
+            }
 
-			if (parameter.FuncParams == null && funcInfo.ParamCount > 0) {
-				Debug.LogError($"parameter参数列表未初始化 {parameter.FuncName}");
-				return false;
-			}
+            var funcInfo = AbilityFuncPreLoader.GetFuncInfo(parameter.FuncName);
+            if (funcInfo == null)
+            {
+                Debug.LogError($"获取函数失败{parameter.FuncName}");
+                return false;
+            }
 
-			if (funcInfo.ParamCount == 0) {
-				Ability.Context.UpdateContext(ability);
-				funcInfo.Invoke(null, null);
-				Ability.Context.ClearContext();
-			}
-			else {
-				//TODO:有GC问题后续优化
-				object[] funcParams = new object[funcInfo.ParamCount];
-				for (var index = 0; index < parameter.FuncParams.Count; index++) {
-					var funcParam = parameter.FuncParams[index];
-					if (funcParam.Parse<object>(ability, out var paramValue)) {
-						funcParams[index] = paramValue;
-					}
-					else {
-						return false;
-					}
-				}
+            if (parameter.FuncParams == null && funcInfo.ParamCount > 0)
+            {
+                Debug.LogError($"parameter参数列表未初始化 {parameter.FuncName}");
+                return false;
+            }
 
-				Ability.Context.UpdateContext(ability);
-				value = funcInfo.Invoke(null, funcParams);
-				Ability.Context.ClearContext();
-			}
+            if (funcInfo.ParamCount == 0)
+            {
+                Ability.Context.UpdateContext(ability);
+                value = funcInfo.Invoke(null, null);
+                Ability.Context.ClearContext();
+            }
+            else
+            {
+                //TODO:有GC问题后续优化
+                object[] funcParams = new object[funcInfo.ParamCount];
+                for (var index = 0; index < parameter.FuncParams.Count; index++)
+                {
+                    var funcParam = parameter.FuncParams[index];
+                    if (funcParam.Parse<object>(ability, out var paramValue))
+                    {
+                        funcParams[index] = paramValue;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
 
-			return true;
-		}
-	}
+                Ability.Context.UpdateContext(ability);
+                value = funcInfo.Invoke(null, funcParams);
+                Ability.Context.ClearContext();
+            }
+
+            return true;
+        }
+    }
 }

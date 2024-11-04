@@ -1,3 +1,5 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,6 +7,8 @@ using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -60,7 +64,7 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    /// Demo2使用的数据类，用于加载Asset
+    ///     Demo2使用的数据类，用于加载Asset
     /// </summary>
     public class AssetManager : Singleton<AssetManager>, IBattleFrameworkAsyncInit
     {
@@ -70,6 +74,15 @@ namespace Hono.Scripts.Battle
         public bool IsLoadFinish => _isLoadFinish;
 
         public async UniTask AsyncInit()
+        {
+#if UNITY_EDITOR
+            await DebugModelLoad();
+#else
+			await ReleaseModelLoad();
+#endif
+        }
+
+        public async UniTask DebugModelLoad()
         {
             _isLoadFinish = false;
 
@@ -96,6 +109,53 @@ namespace Hono.Scripts.Battle
                 Debug.LogError("资源加载失败");
                 return;
             }
+
+            _isLoadFinish = true;
+        }
+
+        public async UniTask ReleaseModelLoad()
+        {
+            _isLoadFinish = false;
+            List<UniTask> tasks = new();
+            if (BattleManager.ResPaths.paths.TryGetValue(EPathType.Ability, out var paths))
+            {
+                tasks.Add(loadPathAllAssets<AbilityData>(paths));
+            }
+            else
+            {
+                Debug.LogError("Ability 加失败");
+            }
+
+            if (BattleManager.ResPaths.paths.TryGetValue(EPathType.Skill, out paths))
+            {
+                tasks.Add(loadPathAllAssets<SkillData>(paths));
+            }
+            else
+            {
+                Debug.LogError("Skill 加失败");
+            }
+
+            if (BattleManager.ResPaths.paths.TryGetValue(EPathType.Buff, out paths))
+            {
+                tasks.Add(loadPathAllAssets<BuffData>(paths));
+            }
+            else
+            {
+                Debug.LogError("Buff 加失败");
+            }
+
+            if (BattleManager.ResPaths.paths.TryGetValue(EPathType.Bullet, out paths))
+            {
+                tasks.Add(loadPathAllAssets<BulletData>(paths));
+            }
+            else
+            {
+                Debug.LogError("Bullet 加失败");
+            }
+
+            await UniTask.WhenAll(tasks);
+
+            Debug.Log("AssetManager Init Finish！");
 
             _isLoadFinish = true;
         }
@@ -175,7 +235,7 @@ namespace Hono.Scripts.Battle
         {
             try
             {
-                path = path.Replace("\\","/");
+                path = path.Replace("\\", "/");
                 var data = await Addressables.LoadAssetAsync<T>(path).ToUniTask();
                 helper.AddData(data.ID, path, data);
             }

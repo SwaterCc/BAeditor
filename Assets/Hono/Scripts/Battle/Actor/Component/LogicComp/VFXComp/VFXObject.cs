@@ -1,47 +1,48 @@
+#region
+
 using UnityEngine;
 
-namespace Hono.Scripts.Battle {
-	public class VFXObject : IPoolObject{
-		private VFXSetting _setting;
-		public VFXSetting Setting => _setting;
-		private float _dt;
-		private bool _isExpired;
-		public bool IsExpired => _isExpired;
-		private int _uid;
+#endregion
 
-		public int Uid {
-			get => _uid;
-			set => _uid = value;
-		}
+namespace Hono.Scripts.Battle
+{
+    public class VFXObject
+    {
+        private VFXSetting _setting;
+        public VFXSetting Setting => _setting;
+        private float _dt;
+        private bool _isExpired;
+        public bool IsExpired => _isExpired;
+        private int _uid;
 
-		public Vector3 Pos;
+        public int Uid
+        {
+            get => _uid;
+            set => _uid = value;
+        }
 
-		public Quaternion Rot;
+        public Vector3 Pos;
 
-		public Vector3 Scale;
+        public Quaternion Rot;
 
-		public void Init(int uid ,VFXSetting setting) {
-			_setting = setting;
-			_isExpired = false;
-			_uid = uid;
-			Scale = setting.Scale * Vector3.one;
-		}
-		
-		public void OnTick(float dt) {
-	
-			if (_setting.Duration > 0 && _setting.Duration < _dt) {
-				_isExpired = true;
-			}
-			
-			_dt += dt;
-		}
+        public Vector3 Scale;
 
-		public void OnRecycle()
-		{
-			Pos = Vector3.zero;
-			Rot = Quaternion.identity;
-			Scale = Vector3.one;
-			_dt = 0;
-		}
-	}
+        public VFXObject(int uid, VFXSetting setting)
+        {
+            _setting = setting;
+            _isExpired = false;
+            _uid = uid;
+            Scale = setting.Scale * Vector3.one;
+        }
+
+        public void OnTick(float dt)
+        {
+            if (_setting.Duration > 0 && _setting.Duration < _dt)
+            {
+                _isExpired = true;
+            }
+
+            _dt += dt;
+        }
+    }
 }

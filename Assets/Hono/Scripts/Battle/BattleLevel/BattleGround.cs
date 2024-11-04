@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
 using Hono.Scripts.Battle.Scene;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -11,19 +15,33 @@ namespace Hono.Scripts.Battle
         private BattleState _currentState;
         private readonly string _battleGroundName;
         private readonly Dictionary<EBattleStateType, BattleState> _battleStates;
-
+        private BattleController _battleController;
         private BattleLevelData _levelData;
         private readonly PawnTeamController _pawnTeamController;
+        private readonly LootController _lootController;
         private bool _isScoreSuccess;
         private readonly Dictionary<int, Vector3> _birthPoint = new(BattleConstValue.TeamMaxCount);
-        public BattleGroundRtInfo RuntimeInfo { get; }
+        private readonly Dictionary<int, int> _teamRefreshPoint = new(BattleConstValue.TeamMaxCount);
+        public BattleGroundRtInfo RtInfo { get; }
+        public int BattleGroundConfigId { get; }
+        public BattleLevelData LevelData => _levelData;
+        public PawnTeamController TeamController => _pawnTeamController;
+        public LootController LootController => _lootController;
+        public War SaveFileDict { get; }
+        public BattleSceneTable.BattleSceneRow BattleConfig { get; }
+        public bool Result => _isScoreSuccess;
+        public BattleController BattleController => _battleController;
 
-        public BattleGround(string name)
+        public BattleGround(int configId, War saveFileDict)
         {
-            _battleGroundName = name;
+            BattleGroundConfigId = configId;
+            BattleConfig = ConfigManager.Table<BattleSceneTable>().Get(configId);
+            SaveFileDict = saveFileDict;
+            _battleGroundName = BattleConfig.ScenePath;
             _isScoreSuccess = false;
             _pawnTeamController = new PawnTeamController(this);
-            RuntimeInfo = new BattleGroundRtInfo();
+            _lootController = new LootController();
+            RtInfo = new BattleGroundRtInfo();
             _battleStates = new Dictionary<EBattleStateType, BattleState>()
             {
                 { EBattleStateType.NoGaming, new NoGameState(this, EBattleStateType.NoGaming) },
@@ -44,13 +62,34 @@ namespace Hono.Scripts.Battle
 
         public void EnterGround()
         {
-            switchState(EBattleStateType.BuildTeams);
+            switchState(EBattleStateType.LoadBattleGround);
+            MonsterGeneratorLogic.CurMonsterCount = 0;
+            ActorManager.Instance.TimeScale = 1;
+            _battleController = ActorManager.Instance.GetBattleControl();
         }
 
         public void OnDestroy()
         {
-            RuntimeInfo.ClearAll();
+            foreach (var abilityId in _levelData.BattleControllerAbilitys)
+            {
+                BattleManager.BattleController.RemoveAbility(abilityId);
+            }
+
+            RtInfo.ClearAll();
             ActorManager.Instance.ClearAllActor();
+            ActorManager.Instance.TimeScale = 1;
+            MonsterGeneratorLogic.CurMonsterCount = 0;
+        }
+
+        public bool TryGetSaveFile(out BattleSaveFile saveFile)
+        {
+            saveFile = null;
+            if (SaveFileDict == null)
+            {
+                return false;
+            }
+
+            return SaveFileDict.BattleSaveFiles.TryGetValue(BattleGroundConfigId, out saveFile);
         }
 
         private void switchState(EBattleStateType nextStateType)
@@ -61,18 +100,42 @@ namespace Hono.Scripts.Battle
 
         public bool TryGetTeamPoint(int teamIdx, out Vector3 centerPos)
         {
-            return _birthPoint.TryGetValue(teamIdx, out centerPos);
+            if (!_teamRefreshPoint.TryGetValue(teamIdx, out var pointUid) || pointUid <= 0)
+            {
+                return _birthPoint.TryGetValue(teamIdx, out centerPos);
+            }
+
+            if (!ActorManager.Instance.TryGetActor(pointUid, out var point))
+            {
+                return _birthPoint.TryGetValue(teamIdx, out centerPos);
+            }
+
+            centerPos = point.Pos;
+            return true;
+        }
+
+        public void AddTeamRefreshPoint(int teamIdx, int uid)
+        {
+            if (!_teamRefreshPoint.TryGetValue(teamIdx, out var pointUid) || pointUid <= 0)
+            {
+                _teamRefreshPoint.Add(teamIdx, uid);
+            }
+            else
+            {
+                _teamRefreshPoint[teamIdx] = uid;
+                ActorManager.Instance.RemoveActor(pointUid);
+            }
         }
 
         public void Tick(float dt)
         {
-	        BattleManager.BattleController.Actor.Tick(dt);
-	        
+            BattleManager.BattleController.Actor.Tick(dt);
+
             ///临时放置在这里
             ActorManager.Instance.Tick(dt);
             ///临时放置在这里
             ActorManager.Instance.Update(dt);
-            
+
             if (_currentState == null) return;
 
             _currentState.Tick(dt);
@@ -84,6 +147,21 @@ namespace Hono.Scripts.Battle
                 _currentStateType = _nextStateType;
                 _currentState.Enter();
             }
+        }
+
+        public void RoundBegin()
+        {
+            if (_currentState.StateType != EBattleStateType.Playing)
+            {
+                return;
+            }
+
+            ((GameRunningState)_currentState).RoundBegin();
+        }
+
+        public void BuildTeam(PawnTeamDataList dataList)
+        {
+            _pawnTeamController.BuildTeam(dataList);
         }
     }
 }

@@ -6,8 +6,7 @@ namespace XLuaTest.Editor
 {
     public static class HotfixTestCfg
     {
-        [Hotfix]
-        public static List<Type> by_field = new List<Type>()
+        [Hotfix] public static List<Type> by_field = new List<Type>()
         {
             typeof(HotfixTest),
             typeof(HotfixCalc),
@@ -18,6 +17,5 @@ namespace XLuaTest.Editor
             typeof(GenericStruct<>),
             typeof(StatefullTest)
         };
-
     }
 }

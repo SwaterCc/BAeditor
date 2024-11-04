@@ -1,37 +1,47 @@
+#region
+
 using System;
 
-namespace Hono.Scripts.Battle.Event {
-	public class HitEventChecker : EventChecker {
-		/// <summary>
-		/// 来源abilityUid
-		/// </summary>
-		private int _abilitySourceUid;
+#endregion
 
-		/// <summary>
-		/// 来源的伤害Id
-		/// </summary>
-		private int _damageConfigId;
+namespace Hono.Scripts.Battle.Event
+{
+    public class HitEventChecker : EventChecker
+    {
+	    /// <summary>
+	    ///     来源abilityUid
+	    /// </summary>
+	    private int _abilitySourceUid;
 
-		public HitEventChecker(EBattleEventType eventType, Actor bindActor, int abilitySourceUid, int damageConfigId,
-			Action<IEventInfo> func = null) :
-			base(eventType, bindActor, func) {
-			_damageConfigId = damageConfigId;
-			_abilitySourceUid = abilitySourceUid;
-		}
+	    /// <summary>
+	    ///     来源的伤害Id
+	    /// </summary>
+	    private int _damageConfigId;
 
-		protected override bool onCheck(IEventInfo info) {
-			var hitInfo = (HitInfo)info;
-			bool res = true;
+        public HitEventChecker(EBattleEventType eventType, Actor bindActor, int abilitySourceUid, int damageConfigId,
+            Action<IEventInfo> func = null) :
+            base(eventType, bindActor, func)
+        {
+            _damageConfigId = damageConfigId;
+            _abilitySourceUid = abilitySourceUid;
+        }
 
-			if (_abilitySourceUid > 0) {
-				res = hitInfo.SourceAbilityUId == _abilitySourceUid;
-			}
-			
-			if (_damageConfigId > 0) {
-				res = res && hitInfo.DamageConfigId == _damageConfigId;
-			}
+        protected override bool onCheck(IEventInfo info)
+        {
+            var hitInfo = (HitInfo)info;
+            bool res = true;
 
-			return res;
-		}
-	}
+            if (_abilitySourceUid > 0)
+            {
+                res = hitInfo.SourceAbilityUId == _abilitySourceUid;
+            }
+
+            if (_damageConfigId > 0)
+            {
+                res = res && hitInfo.DamageConfigId == _damageConfigId;
+            }
+
+            return res;
+        }
+    }
 }

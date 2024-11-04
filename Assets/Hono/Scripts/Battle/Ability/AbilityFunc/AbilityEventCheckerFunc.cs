@@ -1,5 +1,9 @@
+#region
+
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -89,6 +93,55 @@ namespace Hono.Scripts.Battle
         public static EventChecker GetTriggerBoxExitChecker()
         {
             return new TriggerBoxChecker(EBattleEventType.OnTriggerBoxExit, Ability.Context.SourceActor);
+        }
+
+        [AbilityMethod(false)]
+        public static EventChecker GetRoundReadyEnterChecker()
+        {
+            return new RoundStateChecker(EBattleEventType.RoundReadyEnter);
+        }
+
+        [AbilityMethod(false)]
+        public static EventChecker GetRoundReadyExitChecker()
+        {
+            return new RoundStateChecker(EBattleEventType.RoundReadyExit);
+        }
+
+        [AbilityMethod(false)]
+        public static EventChecker GetRoundRunningEnterChecker()
+        {
+            return new RoundStateChecker(EBattleEventType.RoundRunningEnter);
+        }
+
+        [AbilityMethod(false)]
+        public static EventChecker GetRoundRunningExitChecker()
+        {
+            return new RoundStateChecker(EBattleEventType.RoundRunningExit);
+        }
+
+        [AbilityMethod(false)]
+        public static EventChecker GetRoundScoreEnterChecker()
+        {
+            return new RoundStateChecker(EBattleEventType.RoundScoreEnter);
+        }
+
+        [AbilityMethod(false)]
+        public static EventChecker GetRoundScoreExitChecker()
+        {
+            return new RoundStateChecker(EBattleEventType.RoundScoreExit);
+        }
+
+        [AbilityMethod(false)]
+        public static EventChecker GetLootChecker()
+        {
+            return new LootEventChecker(EBattleEventType.LootDrop);
+        }
+
+        [AbilityMethod(false)]
+        public static EventChecker GetMonsterAllDeadChecker(int generatorUid, int configId, int roundCount)
+        {
+            return new MonsterGenRtChecker(EBattleEventType.OnMonsterGeneratorAllDead, generatorUid, configId,
+                roundCount);
         }
     }
 }

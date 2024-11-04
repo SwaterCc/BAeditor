@@ -1,5 +1,4 @@
-﻿
-namespace Hono.Scripts.Battle.Event
+﻿namespace Hono.Scripts.Battle.Event
 {
     public class TriggerBoxEventInfo : IEventInfo
     {

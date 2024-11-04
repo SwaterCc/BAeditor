@@ -1,9 +1,11 @@
-﻿using System;
+﻿#region
+
+using System;
 using Cysharp.Threading.Tasks;
-using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using Object = UnityEngine.Object;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -11,36 +13,29 @@ namespace Hono.Scripts.Battle
     {
         public class AsyncLoadModelSetup : ModelSetup
         {
-            private async UniTask asyncLoadModel(string path)
+            public override async void SetupModel(ActorModelController modelController, Action loadComplete = null)
             {
-                try
-                {
-                    var gameObject = await Addressables.LoadAssetAsync<GameObject>(path).ToUniTask();
-                    _gameObject = Object.Instantiate(gameObject);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"加载模型失败，路径{path}");
-                }
+                await asyncLoadModel(modelController);
+                loadComplete?.Invoke();
             }
 
-            protected override async void OnLoadModel()
+            private async UniTask asyncLoadModel(ActorModelController modelController)
             {
-                var modelId = _modelController.Actor.GetAttr<int>(ELogicAttr.AttrModelId);
+                var modelId = modelController.Actor.GetAttr<int>(ELogicAttr.AttrModelId);
                 var modelData = ConfigManager.Table<ModelTable>().Get(modelId);
                 if (modelData == null || string.IsNullOrEmpty(modelData.ModelPath)) return;
 
-                _path = modelData.ModelPath;
-
-                if (!GameObjectPool.Instance.TryGet(modelData.ModelPath, out _gameObject))
+                try
                 {
-                    await asyncLoadModel(modelData.ModelPath);
+                    modelController._model =
+                        await Addressables.LoadAssetAsync<GameObject>(modelData.ModelPath).ToUniTask();
+                    modelController.IsModelLoadFinish = true;
                 }
-
-                _loadComplete.Invoke(_gameObject);
+                catch (Exception e)
+                {
+                    Debug.LogError($"加载模型失败，路径{modelData.ModelPath}");
+                }
             }
-
-            protected override void OnUnInit() { }
         }
     }
 }

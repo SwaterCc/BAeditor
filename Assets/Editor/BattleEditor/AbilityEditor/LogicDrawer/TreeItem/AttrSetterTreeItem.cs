@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
@@ -55,7 +53,9 @@ namespace Editor.AbilityEditor.TreeItem
             AbilityViewDrawer.NodeBtnClick(_nodeData);
             SettingWindow = BaseNodeWindow<AttrSetterWindow, AttrSetterNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                (nodeData) =>
+                {
+                    _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
                 });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
@@ -87,12 +87,12 @@ namespace Editor.AbilityEditor.TreeItem
             _dropDownPos = Vector2.zero;
             _curSelect = _nodeData.LogicAttr;
         }
-        
+
         private void OnGUI()
         {
             SirenixEditorGUI.BeginBox("设置属性");
 
-            string attrName ="";
+            string attrName = "";
             if (Enum.GetName(typeof(ELogicAttr), _nodeData.LogicAttr) == null)
             {
                 attrName = "未设置";
@@ -101,9 +101,9 @@ namespace Editor.AbilityEditor.TreeItem
             {
                 attrName = Enum.GetName(typeof(ELogicAttr), _nodeData.LogicAttr);
             }
-            
+
             EditorGUILayout.LabelField("当前属性：" + attrName);
-            
+
             if (!_showDropDown)
             {
                 if (SirenixEditorGUI.Button("选择属性", ButtonSizes.Medium))
@@ -124,7 +124,7 @@ namespace Editor.AbilityEditor.TreeItem
             SirenixEditorGUI.EndBox();
 
             SirenixEditorGUI.BeginBox();
-            
+
             if (SirenixEditorGUI.Button("保   存", ButtonSizes.Large))
             {
                 Save();
@@ -132,7 +132,7 @@ namespace Editor.AbilityEditor.TreeItem
 
             SirenixEditorGUI.EndBox();
         }
-        
+
         private void drawDropDown()
         {
             SirenixEditorGUI.BeginVerticalList();
@@ -161,7 +161,7 @@ namespace Editor.AbilityEditor.TreeItem
                             _value = new ParameterField(_nodeData.Value, "属性值：", _customType);
                         }
                     }
-                    
+
                     _showDropDown = false; // 选择后关闭下拉框
                 }
             }

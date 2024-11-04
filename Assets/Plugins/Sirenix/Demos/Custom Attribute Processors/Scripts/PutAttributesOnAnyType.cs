@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Sirenix.OdinInspector.Editor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Sirenix.OdinInspector.Editor;
-    using UnityEngine;
-
     [TypeInfoBox(
         "With Odin 2.0 it is now possible to decorate types indirectly through the use of AttributeProcessors.\n" +
         "This means that you can even put attributes on types that you can't access the source code of.")]
@@ -17,7 +17,8 @@ namespace Sirenix.OdinInspector.Demos
 
     public class Matrix4x4AttributeProcessor : OdinAttributeProcessor<Matrix4x4>
     {
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member,
+            List<Attribute> attributes)
         {
             if (member is FieldInfo)
             {

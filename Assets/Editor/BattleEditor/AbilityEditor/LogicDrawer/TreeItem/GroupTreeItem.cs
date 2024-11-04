@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
@@ -18,28 +16,28 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void buildMenu()
         {
-            _menu.AddItem(new GUIContent("´´½¨½Úµã/Ìí¼ÓAction"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/æ·»åŠ Action"), false,
                 AddChild, (EAbilityNodeType.EAction));
-            _menu.AddItem(new GUIContent("´´½¨½Úµã/Ìí¼ÓIf"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/æ·»åŠ If"), false,
                 AddChild, (EAbilityNodeType.EBranchControl));
-            _menu.AddItem(new GUIContent("´´½¨½Úµã/Set±äÁ¿"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/Setå˜é‡"), false,
                 AddChild, (EAbilityNodeType.EVariableSetter));
-            _menu.AddItem(new GUIContent("´´½¨½Úµã/SetAttr"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/SetAttr"), false,
                 AddChild, (EAbilityNodeType.EAttrSetter));
 
             if (!checkHasParent(EAbilityNodeType.ERepeat))
             {
-                _menu.AddItem(new GUIContent("´´½¨½Úµã/´´½¨Repeat½Úµã"), false,
+                _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/åˆ›å»ºRepeatèŠ‚ç‚¹"), false,
                     AddChild, (EAbilityNodeType.ERepeat));
             }
 
             if (!checkHasParent(EAbilityNodeType.ETimer))
             {
-                _menu.AddItem(new GUIContent("´´½¨½Úµã/´´½¨Timer½Úµã"), false,
+                _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/åˆ›å»ºTimerèŠ‚ç‚¹"), false,
                     AddChild, (EAbilityNodeType.ETimer));
             }
-            
-            _menu.AddItem(new GUIContent("É¾³ı"), false,
+
+            _menu.AddItem(new GUIContent("åˆ é™¤"), false,
                 Remove);
         }
 
@@ -55,7 +53,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonTips()
         {
-            return "Group½ÚµãµÄ×Ó½Úµã ÊÇÔÚGroup±»µ÷ÓÃºóµÄÏÂÒ»Ö¡¿ªÊ¼Ö´ĞĞ";
+            return "GroupèŠ‚ç‚¹çš„å­èŠ‚ç‚¹ æ˜¯åœ¨Groupè¢«è°ƒç”¨åçš„ä¸‹ä¸€å¸§å¼€å§‹æ‰§è¡Œ";
         }
 
         protected override void OnBtnClicked(Rect btnRect)
@@ -63,7 +61,9 @@ namespace Editor.AbilityEditor.TreeItem
             AbilityViewDrawer.NodeBtnClick(_nodeData);
             SettingWindow = BaseNodeWindow<GroupNodeDataWindow, GroupNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                (nodeData) =>
+                {
+                    _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
                 });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
@@ -78,14 +78,14 @@ namespace Editor.AbilityEditor.TreeItem
 
         private void OnGUI()
         {
-            SirenixEditorGUI.BeginBox("ÉèÖÃGroup");
-            _nodeData.GroupId = SirenixEditorFields.IntField("½×¶ÎId", _nodeData.GroupId);
+            SirenixEditorGUI.BeginBox("è®¾ç½®Group");
+            _nodeData.GroupId = SirenixEditorFields.IntField("é˜¶æ®µId", _nodeData.GroupId);
             var boolStr =
-                SirenixEditorFields.Dropdown(new GUIContent("ÊÇ·ñÎªÄ¬ÈÏ½×¶Î:"), _nodeData.IsDefaultStart.ToString(),
+                SirenixEditorFields.Dropdown(new GUIContent("æ˜¯å¦ä¸ºé»˜è®¤é˜¶æ®µ:"), _nodeData.IsDefaultStart.ToString(),
                     new[] { "true", "false" });
             _nodeData.IsDefaultStart = bool.Parse(boolStr);
 
-            if (SirenixEditorGUI.Button("±£   ´æ", ButtonSizes.Large))
+            if (SirenixEditorGUI.Button("ä¿   å­˜", ButtonSizes.Large))
             {
                 Save();
             }

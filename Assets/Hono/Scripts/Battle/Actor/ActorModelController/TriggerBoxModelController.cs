@@ -1,31 +1,19 @@
-﻿using Hono.Scripts.Battle.Event;
-using UnityEngine;
+﻿#region
+
+using Hono.Scripts.Battle.Event;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
-    public class TriggerBoxModelController : ActorModelController, IPoolObject
+    public class TriggerBoxModelController : SimpleSceneModelController
     {
-        private readonly TriggerBoxEventInfo _eventInfo = new();
-
-        private readonly SceneModelSetup _sceneModelSetup = new();
-
+        private readonly TriggerBoxEventInfo _eventInfo;
         private bool _isActive;
 
-        public void Init(Actor actor, SceneActorModel sceneActorModel)
+        public TriggerBoxModelController(Actor actor, SceneActorModel sceneActorModel) : base(actor, sceneActorModel)
         {
-            base.Init(actor);
-            _sceneModelSetup.Init(sceneActorModel);
-        }
-
-        protected override void onModelLoadComplete()
-        {
-            if (Model.TryGetComponent<TriggerBoxModel>(out var triggerBoxModel))
-            {
-                foreach (var abilityId in triggerBoxModel.AbilityIds)
-                {
-                    Actor.AwardAbility(abilityId, true);
-                }
-            }
+            _eventInfo = new TriggerBoxEventInfo();
         }
 
         public void SetActive(bool isActive)
@@ -53,17 +41,5 @@ namespace Hono.Scripts.Battle
             _eventInfo.TargetUid = uid;
             Actor.TriggerEvent(EBattleEventType.OnTriggerBoxExit, _eventInfo);
         }
-
-        protected override ModelSetup getModelSetup()
-        {
-            return _sceneModelSetup;
-        }
-
-        protected override void RecycleSelf()
-        {
-            AObjectPool<TriggerBoxModelController>.Pool.Recycle(this);
-        }
-
-        public void OnRecycle() { }
     }
 }

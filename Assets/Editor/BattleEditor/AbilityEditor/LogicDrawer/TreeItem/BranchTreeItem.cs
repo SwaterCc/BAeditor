@@ -1,6 +1,5 @@
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -30,11 +29,11 @@ namespace Editor.AbilityEditor.TreeItem
                 AddChild, (EAbilityNodeType.EAttrSetter));
             _menu.AddItem(new GUIContent("创建节点/创建Event节点"), false,
                 AddChild, (EAbilityNodeType.EEvent));
-           
+
             _menu.AddItem(new GUIContent("删除"), false,
                 Remove);
         }
-        
+
         private void AddElseIfNode(object obj)
         {
             var node = (BranchNodeData)_tree.TreeData.GetNodeData(EAbilityNodeType.EBranchControl);
@@ -46,7 +45,7 @@ namespace Editor.AbilityEditor.TreeItem
             var index = parentNode.ChildrenIds.IndexOf(_nodeData.NodeId);
             parentNode.ChildrenIds.Insert(index + 1, node.NodeId);
             _tree.TreeData.NodeDict.Add(node.NodeId, node);
-            
+
             EditorUtility.SetDirty(_tree.TreeData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -64,7 +63,7 @@ namespace Editor.AbilityEditor.TreeItem
                 ? "If"
                 : _nodeData.Desc;
 
-            return label +" : "+ _nodeData.CompareFunc;
+            return label + " : " + _nodeData.CompareFunc;
         }
 
         protected override string getButtonTips()
@@ -77,7 +76,9 @@ namespace Editor.AbilityEditor.TreeItem
             AbilityViewDrawer.NodeBtnClick(_nodeData);
             SettingWindow = BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                (nodeData) =>
+                {
+                    _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
                 });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
@@ -85,7 +86,8 @@ namespace Editor.AbilityEditor.TreeItem
         }
     }
 
-    public class BranchNodeDataWindow : BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>, IAbilityNodeWindow<BranchNodeData>
+    public class BranchNodeDataWindow : BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>,
+        IAbilityNodeWindow<BranchNodeData>
     {
         private ParameterField _compareFunc;
 

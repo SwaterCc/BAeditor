@@ -22,9 +22,9 @@ namespace Editor.AbilityEditor
             foreach (var pair in _abilityData.NodeDict)
             {
                 var nodeData = pair.Value;
-                if(nodeData == null)
+                if (nodeData == null)
                     continue;
-                
+
                 if (nodeData.NodeType != EAbilityNodeType.EVariableSetter)
                     continue;
 
@@ -32,20 +32,19 @@ namespace Editor.AbilityEditor
                 if (string.IsNullOrEmpty(variableNodeData.Name))
                     continue;
                 var type = AbilityFunctionHelper.GetVariableType(variableNodeData.typeString);
-                if(type == null) 
+                if (type == null)
                     continue;
                 if (!_variables.TryGetValue(type, out var list))
                 {
                     list = new List<string>();
-                    _variables.Add(type,list);
+                    _variables.Add(type, list);
                 }
 
                 if (list.Contains(variableNodeData.Name))
                 {
                     Debug.LogError($"配置AbilityId {_abilityData.ConfigId} 中存在重复的变量命名 name {variableNodeData.Name} ！！！");
-                    
                 }
-                
+
                 list.Add(variableNodeData.Name);
             }
         }

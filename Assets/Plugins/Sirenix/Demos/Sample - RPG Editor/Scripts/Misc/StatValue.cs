@@ -1,9 +1,9 @@
+using System;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
-    using System;
-    using UnityEngine;
-
     // 
     // These StatValues are used by StatLists, and are setup so the StatType cannot be changed after it has been added to the list.
     // This is done by giving the Type a HideInInspector attribute, and we then rename the Value label to be the name of the type,
@@ -13,12 +13,9 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
     [Serializable]
     public struct StatValue : IEquatable<StatValue>
     {
-        [HideInInspector]
-        public StatType Type;
+        [HideInInspector] public StatType Type;
 
-        [Range(-100, 100)]
-        [LabelWidth(70)]
-        [LabelText("$Type")]
+        [Range(-100, 100)] [LabelWidth(70)] [LabelText("$Type")]
         public float Value;
 
         public StatValue(StatType type, float value)

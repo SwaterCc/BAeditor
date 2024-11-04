@@ -1,31 +1,20 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
 using UnityEngine;
 using XLua;
 
 namespace XLuaTest
 {
+    [LuaCallCSharp]
+    public class Foo1Parent { }
 
     [LuaCallCSharp]
-    public class Foo1Parent
-    {
-    }
+    public class Foo2Parent { }
 
     [LuaCallCSharp]
-    public class Foo2Parent
-    {
-    }
+    public class Foo1Child : Foo1Parent { }
 
     [LuaCallCSharp]
-    public class Foo1Child : Foo1Parent
-    {
-    }
-
-    [LuaCallCSharp]
-    public class Foo2Child : Foo2Parent
-    {
-    }
+    public class Foo2Child : Foo2Parent { }
 
     [LuaCallCSharp]
     public class Foo
@@ -48,7 +37,7 @@ namespace XLuaTest
         #region Unsupported methods
 
         /// <summary>
-        /// 不支持生成lua的泛型方法（没有泛型约束）
+        ///     不支持生成lua的泛型方法（没有泛型约束）
         /// </summary>
         public void UnsupportedMethod1<T>(T a)
         {
@@ -56,7 +45,7 @@ namespace XLuaTest
         }
 
         /// <summary>
-        /// 不支持生成lua的泛型方法（缺少带约束的泛型参数）
+        ///     不支持生成lua的泛型方法（缺少带约束的泛型参数）
         /// </summary>
         public void UnsupportedMethod2<T>() where T : Foo1Parent
         {
@@ -64,7 +53,7 @@ namespace XLuaTest
         }
 
         /// <summary>
-        /// 不支持生成lua的泛型方法（泛型约束必须为class）
+        ///     不支持生成lua的泛型方法（泛型约束必须为class）
         /// </summary>
         public void UnsupportedMethod3<T>(T a) where T : IDisposable
         {

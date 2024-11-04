@@ -1,12 +1,11 @@
+using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using UnityEditor;
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.OdinInspector;
-    using Sirenix.Utilities.Editor;
-    using Sirenix.Utilities;
-
     public class BasicOdinEditorExampleWindow : OdinEditorWindow
     {
         [MenuItem("Tools/Odin/Demos/Odin Editor Window Demos/Basic Odin Editor Window")]
@@ -19,7 +18,8 @@ namespace Sirenix.OdinInspector.Demos
         }
 
         [EnumToggleButtons]
-        [InfoBox("Inherit from OdinEditorWindow instead of EditorWindow in order to create editor windows like you would inspectors - by exposing members and using attributes.")]
+        [InfoBox(
+            "Inherit from OdinEditorWindow instead of EditorWindow in order to create editor windows like you would inspectors - by exposing members and using attributes.")]
         public ViewTool SomeField;
     }
 }

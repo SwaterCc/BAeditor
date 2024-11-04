@@ -1,9 +1,9 @@
+using System;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
-    using System;
-    using UnityEngine;
-
     // 
     // CharacterStats is simply a StatList, that expose the relevant stats for a character.
     // Also note that the StatList might look like a dictionary, in how it's used, 
@@ -13,8 +13,7 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
     [Serializable]
     public class CharacterStats
     {
-        [HideInInspector]
-        public StatList Stats = new StatList();
+        [HideInInspector] public StatList Stats = new StatList();
 
         [ProgressBar(0, 100), ShowInInspector]
         public float Shooting

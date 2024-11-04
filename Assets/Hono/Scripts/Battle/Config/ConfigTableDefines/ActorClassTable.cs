@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
         {
             try
             {
-                using (StringReader  reader = new StringReader (csvFile))
+                using (StringReader reader = new StringReader(csvFile))
                 {
                     int lineCount = 0;
                     while (reader.ReadLine() is { } line)
@@ -22,6 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
+
                         var row = Activator.CreateInstance<ActorClassRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
@@ -65,44 +66,46 @@ namespace Hono.Scripts.Battle
             return _tableData.TryGetValue(id, out data);
         }
 
-       
+        public Dictionary<int, ActorClassRow> GetTable()
+        {
+            return _tableData;
+        }
     }
 
     public partial class ActorClassTable
     {
         public class ActorClassRow : TableRow
         {
-           
             /// <summary>
-            /// 职业名字
+            ///     职业名字
             /// </summary>
             public string ClassName { get; private set; }
-            
+
             /// <summary>
-            /// 职业描述
+            ///     职业描述
             /// </summary>
             public string Desc { get; private set; }
-            
+
             /// <summary>
-            /// 职业类型
+            ///     职业类型
             /// </summary>
             public int ActorClassType { get; private set; }
-            
+
             /// <summary>
-            /// 职业技能
+            ///     职业技能
             /// </summary>
             public IntTable Skills { get; private set; }
-            
+
             /// <summary>
-            /// 副职业技能
+            ///     副职业技能
             /// </summary>
             public IntTable SubClassSkill { get; private set; }
-            
+
             /// <summary>
-            /// 职业Buff
+            ///     职业Buff
             /// </summary>
             public IntArray Buffs { get; private set; }
-            
+
 
             public ActorClassRow()
             {
@@ -120,19 +123,17 @@ namespace Hono.Scripts.Battle
 
                 protected override void onParse(string[] line)
                 {
-                    
                     _row.ClassName = parseString(line[1]);
-            
+
                     _row.Desc = parseString(line[2]);
-            
+
                     _row.ActorClassType = parseInt(line[3]);
-            
+
                     _row.Skills = parseIntTable(line[4]);
-            
+
                     _row.SubClassSkill = parseIntTable(line[5]);
-            
+
                     _row.Buffs = parseIntArray(line[6]);
-            
                 }
             }
         }

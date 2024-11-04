@@ -1,12 +1,19 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Define;
 using Hono.Scripts.Battle.Event;
-using Hono.Scripts.Battle.Scene;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+#else
+using UnityEngine.AddressableAssets;
+#endif
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -20,9 +27,7 @@ namespace Hono.Scripts.Battle
         LoadFailed,
     }
 
-    public interface IBattleFramework
-    {
-    }
+    public interface IBattleFramework { }
 
     public interface IBattleFrameworkEnterExit : IBattleFramework
     {
@@ -44,32 +49,33 @@ namespace Hono.Scripts.Battle
     {
         public void Tick(float dt);
     }
+
     #endregion
 
     public class BattleManager : MonoSingleton<BattleManager>
     {
         private EBattleDataLoadState _battleDataLoadState;
-        
+
         private readonly List<IBattleFramework> _frameworks = new(32);
         private readonly List<IBattleFrameworkInit> _frameworkInits = new(16);
         private readonly List<IBattleFrameworkEnterExit> _frameworkEnterExits = new(16);
         private readonly List<IBattleFrameworkAsyncInit> _frameworkAsyncLoads = new(16);
         private readonly List<IBattleFrameworkTick> _frameworkTicks = new(16);
+        private Paths _resPaths;
 
         private string _formScene;
-        private BattleController _battleController;
         private BattleGround _waitEnterGround;
         private bool _popTopGround;
         private readonly Stack<BattleGround> _groundStack = new(4);
-        
-        
-        public static BattleController BattleController => Instance._battleController;
-        public static BattleGround CurrentBattleGround => Instance._groundStack.Count > 0 ? Instance._groundStack.Peek() : null;
 
+        public static BattleController BattleController => CurBattle.BattleController;
+        public static BattleGround CurBattle => Instance._groundStack.Count > 0 ? Instance._groundStack.Peek() : null;
+        public static Paths ResPaths => Instance._resPaths;
+        public Action<bool> ExitBattleCallBack { get; set; }
 
         protected void Start()
         {
-           SetupBattleFramework();
+            SetupBattleFramework();
         }
 
         #region 框架初始化
@@ -84,7 +90,7 @@ namespace Hono.Scripts.Battle
             {
                 return;
             }
-            
+
             if (framework is IBattleFrameworkInit frameworkInit)
             {
                 _frameworkInits.Add(frameworkInit);
@@ -108,25 +114,35 @@ namespace Hono.Scripts.Battle
 
         private void registerAllFrameworks()
         {
+            register(LuaInterface.Instance);
             register(ConfigManager.Instance);
             register(AssetManager.Instance);
-            register(ObjectPoolManager.Instance);
             register(BattleEventManager.Instance);
             register(MessageCenter.Instance);
             register(GameObjectPreLoadMgr.Instance);
         }
 
         /// <summary>
-        /// 装载战斗框架
+        ///     装载战斗框架
         /// </summary>
-        public void SetupBattleFramework()
+        public async void SetupBattleFramework()
         {
-            //初始化Lua环境
-            LuaInterface.Init();
-            
             //反射缓存
             AbilityFuncPreLoader.InitAbilityFuncCache();
 
+#if UNITY_EDITOR
+#else
+			 //加载路径资源文件
+            try
+            {
+	            _paths = await Addressables.LoadAssetAsync<Paths>(BattleConstValue.PathFile);
+            }
+            catch (Exception e)
+            {
+	            Debug.LogError("path文件加载失败！战斗环境初始化失败！");
+	            throw;
+            }
+#endif
             //注册所有的框架
             registerAllFrameworks();
 
@@ -175,71 +191,73 @@ namespace Hono.Scripts.Battle
 
         #region 战斗玩法流程
 
-        public void EnterBattle(string fromScene, int battleGroundId)
+        public void EnterBattle(string fromScene, int battleGroundId, War saveData = null)
         {
             _formScene = fromScene;
-            PushBattleGround(battleGroundId);
+            PushBattleGround(battleGroundId, saveData);
         }
-        
+
         /// <summary>
-        /// 开始战斗玩法
+        ///     开始战斗玩法
         /// </summary>
-        public void PushBattleGround(int battleGroundId, bool useSave = false)
+        public void PushBattleGround(int battleGroundId, War saveDatas)
         {
-            Debug.Log($"[BattleManager] PushBattleGround");
-            var row = ConfigManager.Table<BattleSceneTable>().Get(battleGroundId);
-            _waitEnterGround = new BattleGround(row.ScenePath);
+            _waitEnterGround = new BattleGround(battleGroundId, saveDatas);
             _waitEnterGround.OnCreate();
         }
 
         public void PopBattleGround()
         {
             _popTopGround = _groundStack.Count != 0;
-            Debug.Log("[BattleManager] PopBattleGround");
         }
 
-        private void onSwitchBattleGround()
-        {
-            
-        }
-        
+        private void onSwitchBattleGround() { }
+
         /// <summary>
-        /// 退出战斗玩法返回主界面
+        ///     退出战斗玩法返回主界面
         /// </summary>
         public void ExitBattle()
         {
             Debug.Log("[BattleManager] ExitBattle");
-            
+
             foreach (var framework in _frameworkEnterExits)
             {
                 framework.OnExitBattle();
             }
 
+            var result = _groundStack.Peek().Result;
+
             foreach (var ground in _groundStack)
             {
                 ground.OnDestroy();
             }
+
             _groundStack.Clear();
-            
-            //返回进入时的场景
-            SceneManager.LoadScene(_formScene);
+
+            /*if (LoadingPanel.Exists)
+            {
+                LoadingPanel.Instance.Show(() =>
+                {
+                    //返回进入时的场景
+                    SceneManager.LoadScene(_formScene);
+                    ExitBattleCallBack?.Invoke(result);
+                });
+            }*/
         }
 
         private void Tick(float dt)
         {
             if (_battleDataLoadState != EBattleDataLoadState.LoadFinish)
             {
-                //Debug.LogError($"战斗数据未准备完成 当前状态{_battleDataLoadState}");
+                Debug.Log($"战斗数据未准备完成 当前状态 {_battleDataLoadState}");
                 return;
             }
 
-            _battleController ??= ActorManager.Instance.GetBattleControl();
-            
             foreach (var frameworkTick in _frameworkTicks)
             {
                 frameworkTick.Tick(dt);
             }
-            
+
             if (_waitEnterGround != null)
             {
                 _groundStack.Push(_waitEnterGround);
@@ -247,12 +265,12 @@ namespace Hono.Scripts.Battle
                 _waitEnterGround = null;
                 onSwitchBattleGround();
             }
-            
+
             if (_groundStack.Count == 0) return;
-                        
+
             var curGround = _groundStack.Peek();
             curGround.Tick(dt);
-            
+
             if (_popTopGround)
             {
                 var pop = _groundStack.Pop();
@@ -269,11 +287,10 @@ namespace Hono.Scripts.Battle
                 _popTopGround = false;
             }
         }
-        
+
         private void Update()
         {
             Tick(Time.deltaTime);
-            
         }
 
         #endregion

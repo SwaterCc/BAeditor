@@ -17,7 +17,7 @@ MonoBehaviour:
   SkillTargetType: 1
   SkillRange: 15
   EcdMode: 0
-  SkillCD: 8
+  SkillCD: 10
   SkillResCheck: []
   CostType: 0
   SkillResCost: []
@@ -42,7 +42,7 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 10
+      Radius: 11
       Angle: 0
     MaxTargetCount: 1
     HasSelf: 1
@@ -54,6 +54,6 @@ MonoBehaviour:
     FilterFunctionType: 11
   MaxTargetCount: 1
   SelectSelf: 0
-  SkillName: 
-  SkillDesc: 
-  SkillIconPath: 
+  SkillName: "\u7597\u6108"
+  SkillDesc: "<color=#00ff00ff>120%<u>\u6CBB\u7597</u></color>\u751F\u547D\u503C\u6700\u4F4E\u7684\u53CB\u65B9\u3002<br><br>\u5929\u8D4B\uFF1A\u6BCF2\u6B21\u7597\u6108\u53EF\u4F7F\u4E0B\u4E00\u6B21\u7597\u6108\u989D\u5916\u6CBB\u75971\u540D\u53CB\u65B9\u3002<br>\u5929\u8D4B\uFF1A\u63D0\u9AD8\u6CBB\u7597\u76EE\u6807<color=#008080ff>10%<u>\u5143\u7D20\u6297\u6027</u></color>\uFF0C\u6301\u7EED5\u79D2\u3002"
+  SkillIconPath: Sprites/Battle/204002

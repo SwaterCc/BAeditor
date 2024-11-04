@@ -1,7 +1,9 @@
-using Hono.Scripts.Battle.Tools;
-using System;
+#region
+
 using System.Collections.Generic;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -9,10 +11,12 @@ namespace Hono.Scripts.Battle
     {
         public class AbilityController
         {
+            private readonly Dictionary<int, Ability> _abilities = new();
+
             private readonly Actor _actor;
-            private readonly Dictionary<int, Ability> _abilities = new(64);
-            private readonly List<Ability> _addUidCache = new(32);
-            private readonly List<int> _removeUids = new(16);
+            private readonly List<Ability> _addUidCache = new List<Ability>();
+            private readonly List<int> _removeUid = new List<int>();
+            private readonly Dictionary<int, int> _tagDict = new(256);
 
             public AbilityController(Actor actor)
             {
@@ -28,6 +32,11 @@ namespace Hono.Scripts.Battle
                 }
 
                 return false;
+            }
+
+            public bool HasTag(int tag)
+            {
+                return _tagDict.GetValueOrDefault(tag) > 0;
             }
 
             public bool TryGetAbility(int uid, out Ability ability)
@@ -60,7 +69,7 @@ namespace Hono.Scripts.Battle
             }
 
             /// <summary>
-            /// 赋予能力
+            ///     赋予能力
             /// </summary>
             /// <param name="configId"></param>
             /// <param name="isRunNow"></param>
@@ -80,7 +89,7 @@ namespace Hono.Scripts.Battle
             }
 
             /// <summary>
-            /// 执行指定能力，会从资源检测开始，未Init的会主动调用一次Init
+            ///     执行指定能力，会从资源检测开始，未Init的会主动调用一次Init
             /// </summary>
             public void ExecutingAbility(int configId)
             {
@@ -99,30 +108,51 @@ namespace Hono.Scripts.Battle
                 }
             }
 
+            public void ForceStopAbility(int configId)
+            {
+                if (_abilities.TryGetValue(configId, out var ability))
+                {
+                    ability.Stop();
+                }
+            }
+
             public void RemoveAbility(int configId)
             {
                 if (_abilities.ContainsKey(configId))
                 {
-                    _removeUids.Add(configId);
+                    _removeUid.Add(configId);
                 }
             }
 
             public void Tick(float dt)
             {
-                foreach (var uid in _removeUids)
+                foreach (var uid in _removeUid)
                 {
                     if (_abilities.TryGetValue(uid, out var ability))
                     {
+                        foreach (var tag in ability.Tags.GetAllTag())
+                        {
+                            _tagDict[tag] -= 1;
+                        }
+
                         ability.OnDestroy();
                         _abilities.Remove(uid);
                     }
                 }
 
-                _removeUids.Clear();
+                _removeUid.Clear();
 
                 foreach (var ability in _addUidCache)
                 {
-                    if (!_abilities.TryAdd(ability.Uid, ability))
+                    if (_abilities.TryAdd(ability.Uid, ability))
+                    {
+                        foreach (var tag in ability.Tags.GetAllTag())
+                        {
+                            var count = _tagDict.GetValueOrDefault(tag);
+                            _tagDict[tag] = count + 1;
+                        }
+                    }
+                    else
                     {
                         Debug.Log($"AbilityUid {ability.Uid} 重复添加");
                     }
@@ -132,19 +162,9 @@ namespace Hono.Scripts.Battle
 
                 foreach (var abilityPair in _abilities)
                 {
-                    abilityPair.Value.OnTick(dt);
+                    var ability = abilityPair.Value;
+                    ability.OnTick(dt);
                 }
-            }
-
-            public void Clear()
-            {
-                _addUidCache.Clear();
-                _removeUids.Clear();
-                foreach (var ability in _abilities)
-                {
-                    ability.Value.OnDestroy();
-                }
-                _abilities.Clear();
             }
         }
     }

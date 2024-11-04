@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d38054bcf4df42db862c858a9f8be945, type: 3}
+  m_Name: 999005
+  m_EditorClassIdentifier: 
+  SkillId: 999005
+  SkillType: 0
+  SkillTargetType: 0
+  SkillRange: 0
+  EcdMode: 0
+  SkillCD: 0
+  SkillResCheck: []
+  CostType: 0
+  SkillResCost: []
+  PriorityATK: 0
+  PriorityDEF: 0
+  ForceFaceTarget: 0
+  SkillDamageBasePer: 0
+  UseCustomFilter: 1
+  CustomFilter:
+    _isOnlyCondition: 0
+    OpenBoxCheck: 0
+    BoxData:
+      ShapeType: 0
+      Rot:
+        x: 0
+        y: 0
+        z: 0
+      Offset:
+        x: 0
+        y: 0
+        z: 0
+      Length: 0
+      Width: 0
+      Height: 0
+      Radius: 0
+      Angle: 0
+    MaxTargetCount: 0
+    HasSelf: 0
+    Ranges: []
+    Compares: []
+    FilterFunctionType: 0
+  MaxTargetCount: 0
+  SelectSelf: 0
+  SkillName: "Rogue\u6280\u80FD"
+  SkillDesc: "Rogue\u6280\u80FD\uFF0C\u968F\u6E38\u620F\u8FDB\u7A0B\u63D0\u5347\u548C\u53D8\u5316"
+  SkillIconPath: Sprites/BrownDust2/Resource/icon_resource90020_202

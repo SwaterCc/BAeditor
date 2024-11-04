@@ -13,5 +13,4 @@ namespace Hono.Scripts.Battle
             public override EAbilityState GetNextState() => EAbilityState.Executing;
         }
     }
-   
 }

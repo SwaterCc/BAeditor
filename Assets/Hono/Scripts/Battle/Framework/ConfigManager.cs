@@ -1,17 +1,21 @@
-using Hono.Scripts.Battle.Tools;
+#region
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+#endregion
+
 namespace Hono.Scripts.Battle
 {
-    /// <summary>
-    /// 配置管理
-    /// </summary>
-    public class ConfigManager : Singleton<ConfigManager>, IBattleFrameworkAsyncInit
+	/// <summary>
+	///     配置管理
+	/// </summary>
+	public class ConfigManager : Singleton<ConfigManager>, IBattleFrameworkAsyncInit
     {
         public static T Table<T>() where T : class, ITableHelper
         {
@@ -23,6 +27,15 @@ namespace Hono.Scripts.Battle
         public bool IsLoadFinish { get; private set; }
 
         public async UniTask AsyncInit()
+        {
+#if UNITY_EDITOR
+            await EditorLoad();
+#else
+			await ReleaseLoad();
+#endif
+        }
+
+        private async UniTask EditorLoad()
         {
             string folderPath = BattleConstValue.CSVRoot;
 
@@ -56,6 +69,36 @@ namespace Hono.Scripts.Battle
             {
                 throw new Exception("指定的文件夹不存在: " + folderPath);
             }
+        }
+
+        private async UniTask ReleaseLoad()
+        {
+            if (!BattleManager.ResPaths.paths.TryGetValue(EPathType.CSV, out var paths))
+            {
+                Debug.LogError("获取CSV路径失败");
+                return;
+            }
+
+            List<UniTask> tasks = new();
+            foreach (var path in paths)
+            {
+                string fileNameWithExtension = Path.GetFileName(path);
+                string className = Path.GetFileNameWithoutExtension(fileNameWithExtension);
+                className = $"{typeof(ITableHelper).Namespace}.{className}";
+                tasks.Add(loadConfigAsset(className, path));
+            }
+
+            try
+            {
+                await UniTask.WhenAll(tasks);
+                Debug.Log("ConfigManager Init Finish！");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+
+            IsLoadFinish = true;
         }
 
         public async void ReloadAll()

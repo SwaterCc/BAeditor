@@ -7,18 +7,17 @@
             public RoundSuccessScoringState(RoundController roundController) : base(roundController) { }
             public override ERoundState GetRoundState() => ERoundState.SuccessScoring;
 
-            protected override void onEnter() {
-	            Round.GameRunningState.BattleGroundHandle.RuntimeInfo.RPCount += CurrentRoundData.RPCount;
+            protected override void onEnter()
+            {
+                Round.GameRunningState.BattleGroundHandle.RtInfo.RPCount += CurrentRoundData.RPCount;
             }
 
             protected override void onTick(float dt)
             {
                 if (!(Duration > CurrentRoundData.SucessScoringStageTime)) return;
-                
-                Round.GameRunningState.BattleGroundHandle.RuntimeInfo.CurRoundLastTime = CurrentRoundData.SucessScoringStageTime - Duration;
-                
+
                 Round.RoundCountAdd();
-                
+
                 if (Round.IsFinalRound)
                 {
                     Round.SwitchState(ERoundState.NoRunning);
@@ -32,7 +31,16 @@
                 }
             }
 
-            protected override void onExit() { }
+            protected override void onExit()
+            {
+                var battleGround = Round.GameRunningState.BattleGroundHandle;
+                if (!battleGround._levelData.ReadyRoundStateSpik)
+                {
+                    battleGround._pawnTeamController.RemoveTeam();
+                }
+
+                Round.SaveRound();
+            }
         }
     }
 }

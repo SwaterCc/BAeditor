@@ -3,7 +3,6 @@ using XLua;
 
 namespace XLuaTest
 {
-
     public class GenericMethodExample : MonoBehaviour
     {
         private const string script = @"
@@ -20,6 +19,7 @@ namespace XLuaTest
         foo:Test1(foo1)
         foo:Test2(foo1,foo2,obj)
 ";
+
         private LuaEnv env;
 
         private void Start()

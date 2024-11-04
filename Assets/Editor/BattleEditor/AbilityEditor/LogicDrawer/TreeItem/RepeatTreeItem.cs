@@ -1,9 +1,6 @@
-
-using System;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
@@ -27,12 +24,13 @@ namespace Editor.AbilityEditor.TreeItem
                 AddChild, (EAbilityNodeType.EVariableSetter));
             _menu.AddItem(new GUIContent("创建节点/SetAttr"), false,
                 AddChild, (EAbilityNodeType.EAttrSetter));
-            
+
             if (checkHasParent(EAbilityNodeType.ETimer))
             {
                 _menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
                     AddChild, (EAbilityNodeType.ETimer));
             }
+
             _menu.AddItem(new GUIContent("删除"), false,
                 Remove);
         }
@@ -57,7 +55,9 @@ namespace Editor.AbilityEditor.TreeItem
             AbilityViewDrawer.NodeBtnClick(_nodeData);
             SettingWindow = BaseNodeWindow<RepeatNodeDataWindow, RepeatNodeData>.GetSettingWindow(_tree.TreeData,
                 _nodeData,
-                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                (nodeData) =>
+                {
+                    _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
                 });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
@@ -65,10 +65,11 @@ namespace Editor.AbilityEditor.TreeItem
         }
     }
 
-    public class RepeatNodeDataWindow : BaseNodeWindow<RepeatNodeDataWindow,RepeatNodeData>, IAbilityNodeWindow<RepeatNodeData>
+    public class RepeatNodeDataWindow : BaseNodeWindow<RepeatNodeDataWindow, RepeatNodeData>,
+        IAbilityNodeWindow<RepeatNodeData>
     {
-
         private ParameterField _maxCount;
+
         protected override void onInit()
         {
             _maxCount = new ParameterField(_nodeData.MaxRepeatCount, "循环次数", typeof(int));
@@ -77,13 +78,14 @@ namespace Editor.AbilityEditor.TreeItem
         private void OnGUI()
         {
             SirenixEditorGUI.BeginBox("设置循环次数");
-            
+
             _maxCount.Draw();
-            
+
             if (SirenixEditorGUI.Button("保  存", ButtonSizes.Medium))
             {
                 Save();
             }
+
             SirenixEditorGUI.EndBox();
         }
     }

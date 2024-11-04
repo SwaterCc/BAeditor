@@ -14,7 +14,7 @@ using UnityEngine;
 namespace Editor.AbilityEditor
 {
     /// <summary>
-    /// 战斗编辑器主窗口
+    ///     战斗编辑器主窗口
     /// </summary>
     public class AbilityEditorMainWindow : OdinMenuEditorWindow
     {
@@ -26,7 +26,7 @@ namespace Editor.AbilityEditor
             window.titleContent = new GUIContent("Ability编辑器");
 
             AbilityFunctionHelper.Init();
-            
+
             foreach (var eType in Enum.GetValues(typeof(EAbilityType)))
             {
                 window.Reload((EAbilityType)eType);
@@ -52,7 +52,7 @@ namespace Editor.AbilityEditor
         };
 
         public Dictionary<EAbilityType, string> AbilityFolders => _abilityFolders;
-        
+
 
         private readonly Dictionary<EAbilityType, Dictionary<string, AbilityData>> _abilityPathWithDatas = new()
         {
@@ -98,13 +98,12 @@ namespace Editor.AbilityEditor
                 var data = AssetDatabase.LoadAssetAtPath<AbilityData>(fullPath);
                 _abilityPathWithDatas[abilityType].Add(fullPath, data);
             }
-            
         }
 
         protected override OdinMenuTree BuildMenuTree()
         {
             var treeInstance = new OdinMenuTree(false);
-           
+
             foreach (var pMenuName in _menuNames)
             {
                 treeInstance.Add(pMenuName.Value,
@@ -141,11 +140,11 @@ namespace Editor.AbilityEditor
                 abilityView.Save();
             }
             */
-            
+
             base.OnDestroy();
             AbilityViewDrawer.CopyDataList = null;
         }
-        
+
         protected override void OnBeginDrawEditors()
         {
             //绘制顶部创建按钮
@@ -154,6 +153,7 @@ namespace Editor.AbilityEditor
             {
                 return;
             }
+
             var toolbarHeight = this.MenuTree.Config.SearchToolbarHeight;
             MenuTree.DrawSearchToolbar();
             SirenixEditorGUI.BeginHorizontalToolbar(toolbarHeight);
@@ -170,11 +170,6 @@ namespace Editor.AbilityEditor
 
                 if (selected.Value is AbilityView abilityView)
                 {
-                    if (SirenixEditorGUI.ToolbarButton(new GUIContent("打开变量窗口")))
-                    {
-                        ShowVariableWindow.OpenWindow(this, abilityView.AbilityData);
-                    }
-
                     if (SirenixEditorGUI.ToolbarButton(new GUIContent("保存")))
                     {
                         abilityView.Save();

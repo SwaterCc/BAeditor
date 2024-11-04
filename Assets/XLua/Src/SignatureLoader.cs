@@ -1,10 +1,10 @@
-﻿#if !UNITY_WSA || UNITY_EDITOR
+﻿using System;
+#if !UNITY_WSA || UNITY_EDITOR
 using System.Security.Cryptography;
 #else
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 #endif
-using System;
 
 namespace XLua
 {
@@ -27,7 +27,8 @@ namespace XLua
             sha = new SHA1CryptoServiceProvider();
 #else
             rsa = AsymmetricKeyAlgorithmProvider.OpenAlgorithm(AsymmetricAlgorithmNames.RsaSignPkcs1Sha1);
-            key = rsa.ImportPublicKey(CryptographicBuffer.DecodeFromBase64String(publicKey), CryptographicPublicKeyBlobType.Capi1PublicKey);
+            key =
+ rsa.ImportPublicKey(CryptographicBuffer.DecodeFromBase64String(publicKey), CryptographicPublicKeyBlobType.Capi1PublicKey);
 #endif
             userLoader = loader;
         }
@@ -40,6 +41,7 @@ namespace XLua
             {
                 return null;
             }
+
             if (data.Length < 128)
             {
                 throw new InvalidProgramException(filepath + " length less than 128!");

@@ -1,7 +1,4 @@
-﻿
-using UnityEngine;
-
-namespace Hono.Scripts.Battle
+﻿namespace Hono.Scripts.Battle
 {
     public partial class BattleGround
     {

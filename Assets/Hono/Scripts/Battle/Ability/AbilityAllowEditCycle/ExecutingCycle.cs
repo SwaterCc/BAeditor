@@ -1,5 +1,9 @@
+#region
+
 using System.Collections.Generic;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -14,7 +18,7 @@ namespace Hono.Scripts.Battle
             public int NextGroupId = -1;
 
             /// <summary>
-            /// 存储当前组对象的timer
+            ///     存储当前组对象的timer
             /// </summary>
             private HashSet<ITimer> _groupTimer = new();
 
@@ -27,7 +31,7 @@ namespace Hono.Scripts.Battle
             public bool ForceStop = false;
 
             /// <summary>
-            /// 执行期最大时长
+            ///     执行期最大时长
             /// </summary>
             private float _maxTime = 30f;
 
@@ -53,9 +57,9 @@ namespace Hono.Scripts.Battle
                 NextGroupId = _executor.AbilityData.DefaultStartGroupId;
                 CurProxy = null;
                 _groupTimer.Clear();
-				AllStageFinish = _stageNodeProxies.Count == 0;
-				ForceStop = false;
-			}
+                AllStageFinish = _stageNodeProxies.Count == 0;
+                ForceStop = false;
+            }
 
             public void AddStageProxy(IGroupNodeProxy proxy)
             {
@@ -63,8 +67,9 @@ namespace Hono.Scripts.Battle
                 AllStageFinish = _stageNodeProxies.Count == 0;
             }
 
-            public override void OnReset() {
-	            _stageNodeProxies.Clear();
+            public override void OnReset()
+            {
+                _stageNodeProxies.Clear();
             }
 
             public override void TimerStart(ITimer callBack)
@@ -82,8 +87,8 @@ namespace Hono.Scripts.Battle
 
             public void CurrentGroupStop()
             {
-	            if(CurProxy == null) return;
-	            
+                if (CurProxy == null) return;
+
                 //清理当前阶段计时器
                 _clearTimer = true;
 
@@ -116,12 +121,13 @@ namespace Hono.Scripts.Battle
 
                 if (NextGroupId >= 0 && CurProxy == null)
                 {
-					Debug.Log($"ability GroupBegin actor {_ability.Actor.Uid} , abilityId {_ability.ConfigId} goNextGroup {NextGroupId}");
+                    Debug.Log(
+                        $"ability GroupBegin actor {_ability.Actor.Uid} , abilityId {_ability.ConfigId} goNextGroup {NextGroupId}");
 
-					if(_stageNodeProxies.TryGetValue(NextGroupId,out CurProxy)) {
-						
-						CurProxy.GroupBegin();
-					}
+                    if (_stageNodeProxies.TryGetValue(NextGroupId, out CurProxy))
+                    {
+                        CurProxy.GroupBegin();
+                    }
                 }
 
                 //阶段定时器自己管理
@@ -149,13 +155,13 @@ namespace Hono.Scripts.Battle
 
             public override bool CanExit()
             {
-                bool timeOut = _maxTime < Time.realtimeSinceStartup - _startTime && _ability._executor.AbilityData.Type != EAbilityType.Buff;
+                /*bool timeOut = _maxTime < Time.realtimeSinceStartup - _startTime && _ability._executor.AbilityData.Type != EAbilityType.Buff;
                 if (timeOut)
                 {
                     Debug.LogWarning($"Ability {_ability.Uid} Cid {_executor.AbilityData.ConfigId} TimeOut");
-                }
+                }*/
 
-                return (base.CanExit() && AllStageFinish) || timeOut || ForceStop;
+                return (base.CanExit() && AllStageFinish) || ForceStop;
             }
         }
     }

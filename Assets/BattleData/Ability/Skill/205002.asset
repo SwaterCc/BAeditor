@@ -612,7 +612,7 @@ MonoBehaviour:
       Data: 24|System.Single, mscorlib
     - Name: 
       Entry: 4
-      Data: 4
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -1911,7 +1911,7 @@ MonoBehaviour:
       Data: 93|System.Int32, mscorlib
     - Name: 
       Entry: 3
-      Data: 205202
+      Data: 205206
     - Name: 
       Entry: 8
       Data: 
@@ -2953,7 +2953,7 @@ MonoBehaviour:
       Data: 4
     - Name: Radius
       Entry: 4
-      Data: 4
+      Data: 5
     - Name: Angle
       Entry: 4
       Data: 0

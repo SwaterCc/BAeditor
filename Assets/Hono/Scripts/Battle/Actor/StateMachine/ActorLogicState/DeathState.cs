@@ -1,21 +1,28 @@
-﻿using Hono.Scripts.Battle.Event;
+﻿#region
 
-namespace Hono.Scripts.Battle {
-	public partial class ActorLogic {
-		public class DeathState : ActorLogicState {
-			public DeathState(ActorStateMachine machine, EActorLogicStateType stateType) : base(machine, stateType) { }
+using Hono.Scripts.Battle.Event;
 
-			protected override void onEnter()
-			{
-				_actorLogic.Actor.TriggerEvent(EBattleEventType.OnActorDead, null);
-				ActorManager.Instance.RemoveActor(_actorLogic.Uid);
-			}
+#endregion
 
-			public override bool TryGetAutoSwitchState(out EActorLogicStateType next)
-			{
-				next = StateType;
-				return false;
-			}
-		}
-	}
+namespace Hono.Scripts.Battle
+{
+    public partial class ActorLogic
+    {
+        public class DeathState : ActorLogicState
+        {
+            public DeathState(ActorStateMachine machine, EActorLogicStateType stateType) : base(machine, stateType) { }
+
+            protected override void onEnter()
+            {
+                _actorLogic.Actor.TriggerEvent(EBattleEventType.OnActorDead, null);
+                ActorManager.Instance.RemoveActor(_actorLogic.Uid);
+            }
+
+            public override bool TryGetAutoSwitchState(out EActorLogicStateType next)
+            {
+                next = StateType;
+                return false;
+            }
+        }
+    }
 }

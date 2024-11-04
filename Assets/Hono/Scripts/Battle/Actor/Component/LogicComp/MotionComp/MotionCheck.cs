@@ -1,11 +1,10 @@
-using Hono.Scripts.Battle.Tools;
-using System;
+#region
+
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Hono.Scripts.Battle {
-	public class MotionCheck : MonoBehaviour {
+#endregion
 
-	
-	}
+namespace Hono.Scripts.Battle
+{
+    public class MotionCheck : MonoBehaviour { }
 }

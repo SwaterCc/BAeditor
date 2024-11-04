@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Hono.Scripts.Battle;
+﻿using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
-using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
@@ -23,7 +21,7 @@ namespace Editor.AbilityEditor
         private TreeViewState _logicState;
 
         private bool _isFirst = true;
-        
+
         public AbilityCycleDrawBase(EAbilityAllowEditCycle allowEditCycle, AbilityData data)
         {
             AllowEditCycle = allowEditCycle;
@@ -60,16 +58,17 @@ namespace Editor.AbilityEditor
                 Foldout = getDefaultFoldout();
                 _isFirst = false;
             }
-            
+
             SirenixEditorGUI.BeginBox();
             var mainRect = GUIHelper.GetCurrentLayoutRect();
             SirenixEditorGUI.BeginBoxHeader();
             var headHeight = GUIHelper.GetCurrentLayoutRect().height;
             Foldout = SirenixEditorGUI.Foldout(Foldout, AllowEditCycle.ToString());
-            if(SirenixEditorGUI.Button("展开",ButtonSizes.Medium))
+            if (SirenixEditorGUI.Button("展开", ButtonSizes.Medium))
             {
-	            _logicTree?.ExpandAll();
+                _logicTree?.ExpandAll();
             }
+
             SirenixEditorGUI.EndBoxHeader();
             if (Foldout)
             {

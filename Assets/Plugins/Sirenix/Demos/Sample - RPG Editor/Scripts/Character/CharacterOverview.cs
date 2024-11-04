@@ -1,9 +1,9 @@
+using System.Linq;
+using Sirenix.Utilities;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
-    using Sirenix.Utilities;
-    using System.Linq;
-
 #if UNITY_EDITOR
     using UnityEditor;
 #endif
@@ -23,10 +23,9 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
     // 
 
     [GlobalConfig("Plugins/Sirenix/Demos/RPG Editor/Characters")]
-    public class CharacterOverview : GlobalConfig<CharacterOverview> 
+    public class CharacterOverview : GlobalConfig<CharacterOverview>
     {
-        [ReadOnly]
-        [ListDrawerSettings(ShowFoldout = true)]
+        [ReadOnly] [ListDrawerSettings(ShowFoldout = true)]
         public Character[] AllCharacters;
 
 #if UNITY_EDITOR

@@ -1,47 +1,126 @@
+#region
+
 using System.Collections.Generic;
 using System.Linq;
+using Pathfinding;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
-    /// <summary>
-    /// 自动输入
-    /// </summary>
-    public class AutoInput : ActorInput
+	/// <summary>
+	///     自动输入
+	///     遍历主动技能
+	///     如果有可以释放的则释放技能
+	///     如果没有则向仇恨目标移动
+	/// </summary>
+	public class AutoInput : ActorInput
     {
         public AutoInput(ActorLogic logic) : base(logic) { }
-        
-        private ActorLogic.SkillComp _skillComp;
-        
+
+        protected ActorLogic.SkillComp _skillComp;
+
         private float _useSkillDt;
+        private Vector3 _beforeTargetPos;
+        private Path _path;
+        private bool _hasPath;
+        private bool _pathBuildFinish;
+        private float _pathUpdateDuration;
+        private int _pathIdx;
+        private float _hateFollowRange;
+        private List<Vector3> _wayPoint = new(16);
 
         protected override void onInit()
         {
+            _beforeTargetPos = Vector3.zero;
             Logic.TryGetComponent(out _skillComp);
+            var wayPoint = (List<Vector3>)Logic.Actor.Variables.Get("WayPoints");
+            if (wayPoint is { Count: > 0 })
+            {
+                _wayPoint.AddRange(wayPoint);
+            }
+
+            if (Logic is MonsterLogic monsterLogic)
+            {
+                _hateFollowRange = monsterLogic.MonsterConfig.SearchRadiu;
+            }
         }
 
-        //遍历主动技能
-        //如果有可以释放的则释放技能
-        //如果没有则向仇恨目标移动
+
+        protected override void onTick(float dt)
+        {
+            AutoMove();
+
+            _pathUpdateDuration += dt;
+            _useSkillDt += dt;
+            if (!(_useSkillDt > 0.2f)) return;
+
+            AutoUseSkill();
+            _useSkillDt = 0;
+        }
+
 
         protected virtual void AutoMove()
         {
-            //优先向路点移动
-            //其次移动向仇恨目标
-            //技能期间不会移动
-            //玩家角色除了手操角色以外
             if (Logic.CurState() == EActorLogicStateType.Skill) return;
 
-            bool hasMove = false;
 
+            if (!TryGetTargetPos(out var targetPos))
+            {
+                MoveInputValue = Vector3.zero;
+                return;
+            }
+
+            if (_pathUpdateDuration > 1f)
+            {
+                //如果目标改变了，则立刻重新生成路径
+                _pathUpdateDuration = 0;
+                if (Logic.Actor.ModelController.Model.TryGetComponent<Seeker>(out var seeker))
+                {
+                    seeker.StartPath(Logic.Actor.Pos, targetPos, FindPathFinish);
+                }
+
+                _beforeTargetPos = targetPos;
+            }
+
+            if (_hasPath)
+            {
+                PathMove();
+            }
+        }
+
+        private void FindPathFinish(Path path)
+        {
+            _hasPath = !path.error && path.vectorPath.Count > 0;
+            if (_hasPath)
+            {
+                Debug.Log($"[FindPathFinish] Actor {Logic.Uid} FindNewPath to NewPoint {path.vectorPath[0]}");
+                _pathIdx = 0;
+                _path = path;
+            }
+            else
+            {
+                Debug.Log($"[FindPathFinish] Actor {Logic.Uid} Not FindNewPath !");
+                MoveInputValue = Vector3.zero;
+            }
+        }
+
+        //优先向仇恨目标
+        //其次向路点移动
+        //技能期间不会移动
+        //玩家角色除了手操角色以外
+        protected bool TryGetTargetPos(out Vector3 targetPos)
+        {
             var curPos = Logic.Actor.GetAttr<Vector3>(ELogicAttr.AttrPosition);
             var disPrecision = 0.1f;
+            bool hasMove = false;
             if (TryGetHateTarget(out var moveTargetPos))
             {
-                disPrecision = 3f;
+                disPrecision = _hateFollowRange > 0 ? _hateFollowRange : 2;
                 hasMove = true;
             }
-            else if (TryGetWayPoint(curPos, out  moveTargetPos))
+            else if (TryGetWayPoint(curPos, out moveTargetPos))
             {
                 hasMove = true;
             }
@@ -51,39 +130,66 @@ namespace Hono.Scripts.Battle
                 hasMove = true;
             }
 
-            if (hasMove)
+            if (hasMove && Vector3.Distance(moveTargetPos, curPos) > disPrecision)
             {
-                MoveInputValue = Vector3.Distance(moveTargetPos, curPos) > disPrecision ? (moveTargetPos - curPos).normalized : Vector3.zero;
-                return;
+                targetPos = moveTargetPos;
+                return true;
             }
 
-            MoveInputValue = Vector3.zero;
+            targetPos = Vector3.zero;
+            return false;
         }
 
+        private void PathMove()
+        {
+            if (_path.vectorPath.Count == 0 || _pathIdx >= _path.vectorPath.Count) return;
+
+            var targetPos = _path.vectorPath[_pathIdx];
+            var curPos = Logic.Actor.Pos;
+
+            if (Vector3.Distance(curPos, targetPos) <= 2f)
+            {
+                //到达寻路点0.1米左右就算到达
+                ++_pathIdx;
+                if (_pathIdx == _path.vectorPath.Count)
+                {
+                    MoveInputValue = Vector3.zero;
+                    _hasPath = false;
+                    return;
+                }
+            }
+
+            var inputDir = (targetPos - curPos).normalized;
+            inputDir.y = 0;
+            MoveInputValue = inputDir;
+        }
+
+
+        #region 移动方法
+
         /// <summary>
-        /// 路点移动
+        ///     路点移动
         /// </summary>
         /// <param name="curPos"></param>
         /// <param name="targetPos"></param>
         /// <returns></returns>
-        private bool TryGetWayPoint(Vector3 curPos, out Vector3 targetPos)
+        protected bool TryGetWayPoint(Vector3 curPos, out Vector3 targetPos)
         {
             targetPos = Vector3.zero;
-            List<Vector3> wayPoints = (List<Vector3>)Logic.Actor.Variables.Get("WayPoints");
 
-            if (wayPoints is { Count: > 0 })
+            if (_wayPoint is { Count: > 0 })
             {
-                targetPos = wayPoints.First();
-                if (Vector3.Distance(curPos, targetPos) < 0.1f)
+                targetPos = _wayPoint.First();
+                if (Vector3.Distance(curPos, targetPos) < 2f)
                 {
-	                Logic.Actor.SetAttr(ELogicAttr.AttrOriginPos, targetPos, false);
-                    wayPoints.RemoveAt(0);
-                    if (wayPoints.Count == 0)
+                    Logic.Actor.SetAttr(ELogicAttr.AttrOriginPos, targetPos, false);
+                    _wayPoint.RemoveAt(0);
+                    if (_wayPoint.Count == 0)
                     {
                         return false;
                     }
 
-                    targetPos = wayPoints[0];
+                    targetPos = _wayPoint[0];
                     return true;
                 }
 
@@ -94,14 +200,14 @@ namespace Hono.Scripts.Battle
         }
 
         /// <summary>
-        /// 向仇恨目标移动
+        ///     向仇恨目标移动
         /// </summary>
         /// <param name="targetPos"></param>
         /// <returns></returns>
-        private bool TryGetHateTarget(out Vector3 targetPos)
+        protected bool TryGetHateTarget(out Vector3 targetPos)
         {
             targetPos = Vector3.zero;
-            
+
             var hateTargetUid = Logic.Actor.GetAttr<int>(ELogicAttr.AttrHateTargetUid);
 
             if (hateTargetUid <= 0)
@@ -117,18 +223,24 @@ namespace Hono.Scripts.Battle
         }
 
         /// <summary>
-        /// 尝试回归原点
+        ///     尝试回归原点
         /// </summary>
         /// <returns></returns>
-        private bool TryGetOriginPos(out Vector3 targetPos)
+        protected bool TryGetOriginPos(out Vector3 targetPos)
         {
             targetPos = Logic.Actor.GetAttr<Vector3>(ELogicAttr.AttrOriginPos);
             return true;
         }
 
+        #endregion
+
+        #region 自动释放技能
+
         protected virtual void AutoUseSkill()
         {
             if (_skillComp == null) return;
+
+            if (Logic.CurState() == EActorLogicStateType.Skill) return;
 
             foreach (var pSkill in _skillComp.Skills)
             {
@@ -137,7 +249,8 @@ namespace Hono.Scripts.Battle
                     continue;
                 if (skill.Data.SkillType == ESkillType.PassiveSkill)
                     continue;
-                if (skill.Data.SkillType == ESkillType.UltimateSkill)
+                if (skill.Data.SkillType == ESkillType.UltimateSkill &&
+                    !BattleManager.CurBattle.RtInfo.OpenAutoUlt)
                     continue;
                 if (_skillComp.TryUseSkill(skill.Id))
                 {
@@ -146,15 +259,6 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        protected override void onTick(float dt)
-        {
-            AutoMove();
-
-            _useSkillDt += dt;
-            if (!(_useSkillDt > 1.5f)) return;
-
-            AutoUseSkill();
-            _useSkillDt = 0;
-        }
+        #endregion
     }
 }

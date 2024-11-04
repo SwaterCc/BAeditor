@@ -1,15 +1,14 @@
+using System;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using UnityEngine;
-
 #if UNITY_EDITOR
-
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using UnityEditor;
-    using Sirenix.Utilities.Editor;
-    using Sirenix.Utilities;
+    using Utilities.Editor;
+    using Utilities;
 
 #endif
 
@@ -17,8 +16,7 @@ namespace Sirenix.OdinInspector.Demos
     [TypeInfoBox("Here a visualization of a health bar being drawn with with a custom attribute drawer.")]
     public class HealthBarExample : MonoBehaviour
     {
-        [HealthBar(100)]
-        public float Health;
+        [HealthBar(100)] public float Health;
     }
 
     // Attribute used by HealthBarAttributeDrawer.

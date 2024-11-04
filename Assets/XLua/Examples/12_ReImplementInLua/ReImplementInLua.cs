@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using XLua;
 
 namespace XLuaTest
 {
-
     [GCOptimize(OptimizeFlag.PackAsTable)]
     public struct PushAsTableStruct
     {
@@ -14,7 +12,6 @@ namespace XLuaTest
 
     public class ReImplementInLua : MonoBehaviour
     {
-
         // Use this for initialization
         void Start()
         {
@@ -140,9 +137,6 @@ namespace XLuaTest
         }
 
         // Update is called once per frame
-        void Update()
-        {
-
-        }
+        void Update() { }
     }
 }

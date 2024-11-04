@@ -1,29 +1,33 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
+#endregion
+
 namespace Hono.Scripts.Battle.Tools
 {
-    /// <summary>
-    /// ActorUid分段类型
-    /// </summary>
-    public enum EActorUidRangeType
+	/// <summary>
+	///     ActorUid分段类型
+	/// </summary>
+	public enum EActorUidRangeType
     {
-        /// <summary>
-        /// 低活跃段，但也不是经常存在，如怪物，建筑，集结点
-        /// </summary>
-        NormalActor,
+	    /// <summary>
+	    ///     低活跃段，但也不是经常存在，如怪物，建筑，集结点
+	    /// </summary>
+	    NormalActor,
 
-        /// <summary>
-        /// 活跃段（即经常创建，经常销毁的Actor 如：子弹，短期召唤物，打击盒子等）
-        /// </summary>
-        DynamicActor,
+	    /// <summary>
+	    ///     活跃段（即经常创建，经常销毁的Actor 如：子弹，短期召唤物，打击盒子等）
+	    /// </summary>
+	    DynamicActor,
     }
 
-    /// <summary>
-    /// ActorUid生成器
-    /// </summary>
-    public static class ActorUidGenerator
+	/// <summary>
+	///     ActorUid生成器
+	/// </summary>
+	public static class ActorUidGenerator
     {
         ///UidRange(start,end)
         private class UidRange
@@ -41,13 +45,14 @@ namespace Hono.Scripts.Battle.Tools
 
             public int GetUid()
             {
-	            int newId = Interlocked.Increment(ref _idx);
+                int newId = Interlocked.Increment(ref _idx);
 
-	            if (newId > _end) {
-		            _idx = _start;
-		            newId = Interlocked.Increment(ref _idx);
-	            }
-	            
+                if (newId > _end)
+                {
+                    _idx = _start;
+                    newId = Interlocked.Increment(ref _idx);
+                }
+
                 return newId;
             }
 

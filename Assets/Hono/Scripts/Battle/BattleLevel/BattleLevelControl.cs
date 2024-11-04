@@ -1,6 +1,3 @@
-using Hono.Scripts.Battle.Scene;
-using UnityEngine;
-
 namespace Hono.Scripts.Battle
 {
     public class BattleController : ActorLogic
@@ -9,16 +6,14 @@ namespace Hono.Scripts.Battle
         public VFXComp VFXComp => _vfxComp;
 
         public BattleControllerModel ModelController => (BattleControllerModel)Actor.ModelController;
-        
-        protected override void OnInit() { }
 
-        protected override void constructComponents()
+        public BattleController(Actor actor) : base(actor) { }
+
+        protected override void setupComponents()
         {
             _vfxComp = new VFXComp(this);
             addComponent(_vfxComp);
         }
-
-        protected override void RecycleSelf() { }
 
         public void RunAbility(int abilityConfigId)
         {

@@ -1,6 +1,4 @@
-﻿using Hono.Scripts.Battle.Tools;
-
-namespace Hono.Scripts.Battle
+﻿namespace Hono.Scripts.Battle
 {
     public partial class BattleGround
     {
@@ -12,13 +10,11 @@ namespace Hono.Scripts.Battle
             protected override void onEnter()
             {
                 //发消息打开编队UI
-                UIInterface.CallUI<BuildTeamsUIRoot>(null, setTeams);
-                //BuildTeamsUIRoot.Instance.Show();
+                //BattleUIInterface.CallUI<BuildTeamsUIRoot>();
             }
 
-            private void setTeams(IUIPassData teamInfos)
+            private void setTeams()
             {
-                BattleGroundHandle._pawnTeamController.BuildTeam((PawnTeamAllData)teamInfos);
                 BattleGroundHandle.switchState(EBattleStateType.LoadBattleGround);
             }
 

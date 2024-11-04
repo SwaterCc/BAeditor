@@ -44,14 +44,9 @@ namespace XLuaTest
             return 0;
         }
 
-        public static void Test4<T>(T a)
-        {
-        }
+        public static void Test4<T>(T a) { }
 
-        public void Test5<T>(int a, params T[] arg)
-        {
-
-        }
+        public void Test5<T>(int a, params T[] arg) { }
     }
 
     public class NoHotfixCalc
@@ -104,10 +99,7 @@ namespace XLuaTest
         }
     }
 
-    public class BaseTestHelper
-    {
-
-    }
+    public class BaseTestHelper { }
 
     public class BaseTestBase<T> : BaseTestHelper
     {
@@ -141,6 +133,7 @@ namespace XLuaTest
     public struct StructTest
     {
         GameObject go;
+
         public StructTest(GameObject go)
         {
             this.go = go;
@@ -180,7 +173,6 @@ namespace XLuaTest
 
     public class HotfixTest2 : MonoBehaviour
     {
-
         // Use this for initialization
         void Start()
         {
@@ -194,6 +186,7 @@ namespace XLuaTest
             {
                 calc.Add(2, 1);
             }
+
             var d1 = (System.DateTime.Now - start).TotalMilliseconds;
             Debug.Log("Hotfix using:" + d1);
 
@@ -202,20 +195,23 @@ namespace XLuaTest
             {
                 ordinaryCalc.Add(2, 1);
             }
+
             var d2 = (System.DateTime.Now - start).TotalMilliseconds;
             Debug.Log("No Hotfix using:" + d2);
 
             Debug.Log("drop:" + ((d1 - d2) / d1));
 
             Debug.Log("Before Fix: 2 + 1 = " + calc.Add(2, 1));
-            Debug.Log("Before Fix: Vector3(2, 3, 4) + Vector3(1, 2, 3) = " + calc.Add(new Vector3(2, 3, 4), new Vector3(1, 2, 3)));
+            Debug.Log("Before Fix: Vector3(2, 3, 4) + Vector3(1, 2, 3) = " +
+                      calc.Add(new Vector3(2, 3, 4), new Vector3(1, 2, 3)));
             luaenv.DoString(@"
             xlua.hotfix(CS.XLuaTest.HotfixCalc, 'Add', function(self, a, b)
                 return a + b
             end)
         ");
             Debug.Log("After Fix: 2 + 1 = " + calc.Add(2, 1));
-            Debug.Log("After Fix: Vector3(2, 3, 4) + Vector3(1, 2, 3) = " + calc.Add(new Vector3(2, 3, 4), new Vector3(1, 2, 3)));
+            Debug.Log("After Fix: Vector3(2, 3, 4) + Vector3(1, 2, 3) = " +
+                      calc.Add(new Vector3(2, 3, 4), new Vector3(1, 2, 3)));
 
             double num;
             string str = "hehe";
@@ -419,10 +415,7 @@ namespace XLuaTest
             Debug.Log("sft.AProp:" + sft.AProp);
             sft["1"] = 1;
             Debug.Log("sft['1']:" + sft["1"]);
-            System.Action<int, double> cb = (a, b) =>
-            {
-                Debug.Log("a:" + a + ",b:" + b);
-            };
+            System.Action<int, double> cb = (a, b) => { Debug.Log("a:" + a + ",b:" + b); };
             sft.AEvent += cb;
             sft.Start();
             sft.Start();
@@ -435,10 +428,6 @@ namespace XLuaTest
         }
 
         // Update is called once per frame
-        void Update()
-        {
-
-        }
+        void Update() { }
     }
 }
-

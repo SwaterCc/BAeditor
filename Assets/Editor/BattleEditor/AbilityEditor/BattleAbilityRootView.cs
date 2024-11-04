@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Hono.Scripts.Battle;
-using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -13,8 +12,9 @@ namespace Editor.AbilityEditor
         public Dictionary<string, AbilityData> Data;
         public AbilityEditorMainWindow MainWindow;
         public EAbilityType AbilityType;
-        
-        public BattleAbilityRootView(AbilityEditorMainWindow mainWindow,EAbilityType abilityType ,Dictionary<string, AbilityData> data)
+
+        public BattleAbilityRootView(AbilityEditorMainWindow mainWindow, EAbilityType abilityType,
+            Dictionary<string, AbilityData> data)
         {
             AbilityType = abilityType;
             Data = data;
@@ -23,19 +23,20 @@ namespace Editor.AbilityEditor
     }
 
     /// <summary>
-    /// Root 节点列出全部能力，然后管理批量删除之类的
+    ///     Root 节点列出全部能力，然后管理批量删除之类的
     /// </summary>
     public class BattleAbilityRootViewDrawer : OdinValueDrawer<BattleAbilityRootView>
     {
         private List<int> _removeList = new List<int>();
         private bool _isUsedMulitRemove;
-        
+
         private readonly Dictionary<EAbilityType, string> _abilityExFolders = new()
         {
-	        { EAbilityType.Skill, AbilityEditorPath.SkillPath },
-	        { EAbilityType.Buff, AbilityEditorPath.BuffPath },
-	        { EAbilityType.Bullet, AbilityEditorPath.BuffPath },
+            { EAbilityType.Skill, AbilityEditorPath.SkillPath },
+            { EAbilityType.Buff, AbilityEditorPath.BuffPath },
+            { EAbilityType.Bullet, AbilityEditorPath.BuffPath },
         };
+
         protected override void DrawPropertyLayout(GUIContent label)
         {
             var datas = this.ValueEntry.SmartValue.Data;
@@ -55,7 +56,7 @@ namespace Editor.AbilityEditor
                     _removeList.Clear();
                 }
             }*/
-            
+
             SirenixEditorGUI.BeginVerticalList();
 
 
@@ -92,11 +93,12 @@ namespace Editor.AbilityEditor
             {
                 AssetDatabase.DeleteAsset(removePath);
 
-                if (_abilityExFolders.ContainsKey(ValueEntry.SmartValue.AbilityType)) {
-	                var exPath = _abilityExFolders[ValueEntry.SmartValue.AbilityType] + "/" + removeId + ".asset";
-	                AssetDatabase.DeleteAsset(exPath);
+                if (_abilityExFolders.ContainsKey(ValueEntry.SmartValue.AbilityType))
+                {
+                    var exPath = _abilityExFolders[ValueEntry.SmartValue.AbilityType] + "/" + removeId + ".asset";
+                    AssetDatabase.DeleteAsset(exPath);
                 }
-                
+
                 ValueEntry.SmartValue.MainWindow.Reload(ValueEntry.SmartValue.AbilityType);
                 ValueEntry.SmartValue.MainWindow.ForceMenuTreeRebuild();
             }

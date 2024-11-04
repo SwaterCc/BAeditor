@@ -1,18 +1,24 @@
+#region
+
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Event;
+using Hono.Scripts.Battle.RefValue;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
     public static partial class AbilityFunction
     {
-        /// <summary>
-        /// 编辑器默认显示函数
-        /// 不允许重载函数
-        /// 尽量不要在get函数里直接获取对象
-        /// 不要随便改函数名
-        /// </summary>
-        [AbilityMethod]
+	    /// <summary>
+	    ///     编辑器默认显示函数
+	    ///     不允许重载函数
+	    ///     尽量不要在get函数里直接获取对象
+	    ///     不要随便改函数名
+	    /// </summary>
+	    [AbilityMethod]
         public static void SetNextStageId(int id)
         {
             Ability.Context.Invoker.SetNextGroupId(id);
@@ -36,6 +42,18 @@ namespace Hono.Scripts.Battle
             }
 
             return -1;
+        }
+
+        [AbilityMethod]
+        public static int GetSkillLevel(int skillId)
+        {
+            return Ability.Context.SourceActor.Logic.GetSkillLevel(skillId);
+        }
+
+        [AbilityMethod]
+        public static void ChangeSkillLevel(int skillId, int level)
+        {
+            Ability.Context.SourceActor.Logic.ChangeSkillLevel(skillId, level);
         }
 
         [AbilityMethod]
@@ -85,17 +103,19 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static void CreateHitBoxes(int attackUid,List<int> targetUids, HitBoxData hitData, bool fromTopSummer = false)
+        public static void CreateHitBoxes(int attackUid, List<int> targetUids, HitBoxData hitData,
+            bool fromTopSummer = false)
         {
             //返回打击点的Uid
             if (targetUids is not { Count: > 0 }) return;
 
-			if (!tryGetActor(attackUid, out var attack)) {
-				return;
-			}
+            if (!tryGetActor(attackUid, out var attack))
+            {
+                return;
+            }
 
-			//返回打击点的Uid
-			if (targetUids is not { Count: > 0 }) return;
+            //返回打击点的Uid
+            if (targetUids is not { Count: > 0 }) return;
 
             foreach (var targetUid in targetUids)
             {
@@ -125,9 +145,9 @@ namespace Hono.Scripts.Battle
 
             foreach (var targetUid in targetUids)
             {
-	            if(!ActorManager.Instance.TryGetActor(targetUid, out var target))
+                if (!ActorManager.Instance.TryGetActor(targetUid, out var target))
                 {
-	                continue;
+                    continue;
                 }
 
                 ActorManager.Instance.SummonActor(Ability.Context.SourceActor, EActorType.HitBox,
@@ -136,7 +156,7 @@ namespace Hono.Scripts.Battle
                         hitBox.SetAttr(ELogicAttr.AttrSourceAbilityConfigId, Ability.Context.Invoker.ConfigId, false);
                         hitBox.Variables.Set("hitBoxData", hitData);
                         hitBox.Variables.Set("targetUid", targetUid);
-                        hitBox.Variables.Set("targetPos",target.Pos);
+                        hitBox.Variables.Set("targetPos", target.Pos);
                         hitBox.Variables.Set("abilityTags", Ability.Context.Invoker.Tags.GetAllTag());
                     });
             }
@@ -172,11 +192,12 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static int AddVFX(VFXSetting setting,int vfxTargetUid = 0)
+        public static int AddVFX(VFXSetting setting, int vfxTargetUid = 0)
         {
-			if(!tryGetActor(vfxTargetUid,out var target)) {
-				return -1;
-			}
+            if (!tryGetActor(vfxTargetUid, out var target))
+            {
+                return -1;
+            }
 
             if (target.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
             {
@@ -188,12 +209,35 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
+        public static void AddVFXToTargets(VFXSetting setting, List<int> vfxTargetUids)
+        {
+            if (vfxTargetUids is not { Count: > 0 })
+            {
+                return;
+            }
+
+            foreach (var actorUid in vfxTargetUids)
+            {
+                if (tryGetActor(actorUid, out var target))
+                {
+                    if (target.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
+                    {
+                        vfxComp.AddVFXObject(setting);
+                    }
+                }
+            }
+
+            return;
+        }
+
+        [AbilityMethod]
         public static void RemoveVFX(int vfxUid, int vfxTargetUid = 0)
         {
-			if (!tryGetActor(vfxTargetUid, out var target)) {
-				return;
-			}
-			
+            if (!tryGetActor(vfxTargetUid, out var target))
+            {
+                return;
+            }
+
             if (target.Logic.TryGetComponent<ActorLogic.VFXComp>(out var vfxComp))
             {
                 vfxComp.RemoveVFX(vfxUid);
@@ -244,7 +288,7 @@ namespace Hono.Scripts.Battle
             List<int> actorUids = new();
             if (tryGetActor(centerActorUid, out var actor))
             {
-                actorUids = ActorManager.Instance.UseFilter(actor, setting);
+                actorUids.AddRange(ActorManager.Instance.UseFilter(actor, setting));
             }
 
             return actorUids;
@@ -253,9 +297,10 @@ namespace Hono.Scripts.Battle
         [AbilityMethod]
         public static void ResetActorTargets(int centerActorUid, FilterSetting setting)
         {
+            List<int> actorUids = new();
             if (tryGetActor(centerActorUid, out var actor))
             {
-                var actorUids = ActorManager.Instance.UseFilter(actor, setting);
+                actorUids.AddRange(ActorManager.Instance.UseFilter(actor, setting));
                 Ability.Context.SourceActor.SetAttr(ELogicAttr.AttrAttackTargetUids, actorUids, false);
             }
         }
@@ -267,6 +312,17 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
+        public static bool CheckActorTag(int uid, int tagID, bool reverse)
+        {
+            if (tryGetActor(uid, out var actor))
+            {
+                return reverse ? !actor.HasTag(tagID) : actor.HasTag(tagID);
+            }
+
+            return false;
+        }
+
+        [AbilityMethod]
         public static bool CheckAbilityTag(int abilityConfigId, int tagID)
         {
             if (Ability.Context.SourceActor.TryGetAbility(abilityConfigId, out var ability))
@@ -275,6 +331,12 @@ namespace Hono.Scripts.Battle
             }
 
             return false;
+        }
+
+        [AbilityMethod]
+        public static bool CheckSelfTag(int tagID, bool reverse)
+        {
+            return reverse ? !Ability.Context.SourceActor.HasTag(tagID) : Ability.Context.SourceActor.HasTag(tagID);
         }
 
         [AbilityMethod]
@@ -327,7 +389,26 @@ namespace Hono.Scripts.Battle
             damageInfo.HitCount = 1;
             damageInfo.HitNumberCount = 1;
             var res = LuaInterface.GetDamageResults(attack, target, damageInfo, damageConfig);
+            if (!target.Logic.TryGetComponent<ActorLogic.BeHurtComp>(out var beHurtComp)) return 0;
 
+            var hitInfo = new HitInfo();
+            hitInfo.SourceActorId = Ability.Context.Invoker.ConfigId;
+            hitInfo.SourceAbilityConfigId = Ability.Context.Invoker.ConfigId;
+            hitInfo.SourceAbilityType = (int)EAbilityType.Skill;
+            hitInfo.SourceAbilityUId = Ability.Context.SourceActor.Uid;
+            hitInfo.DamageConfigId = damageConfigId;
+            BattleEventManager.Instance.TriggerActorEvent(Ability.Context.SourceActor.Uid, EBattleEventType.OnHit,
+                hitInfo);
+
+            var hitDamageInfo = new HitDamageInfo(hitInfo);
+            hitDamageInfo.ParseDamageResult(res);
+            hitDamageInfo.HitTargetUid = targetUid;
+            hitInfo.HitBoxHitCount = 1;
+            hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
+            BattleEventManager.Instance.TriggerActorEvent(Ability.Context.SourceActor.Uid, EBattleEventType.OnHitDamage,
+                hitDamageInfo);
+
+            beHurtComp.OnBeHurt(hitDamageInfo);
             return res.DamageValue;
         }
 
@@ -500,7 +581,7 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static int GetIntListItem(List<int> list, int index)
+        public static int GetIntListItem(List<int> list, int index, string name)
         {
             if (list == null)
             {
@@ -510,11 +591,23 @@ namespace Hono.Scripts.Battle
 
             if (index >= list.Count)
             {
-                Debug.LogError("索引长度超过列表长度！");
+                Debug.LogError($"  {Ability.Context.Invoker.Uid}  索引长度超过列表长度！");
                 return 0;
             }
 
             return list[index];
+        }
+
+        [AbilityMethod]
+        public static List<int> GetListRange(List<int> list, int right)
+        {
+            if (list == null)
+            {
+                Debug.LogWarning("参数为空！");
+            }
+
+            Debug.LogWarning(list.Count.ToString());
+            return list.GetRange(0, Mathf.Min(list.Count, right));
         }
 
         [AbilityMethod]
@@ -536,19 +629,23 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityMethod]
-        public static void AddBattleResource(int resourceValue, bool isPer) {
-	        //resourceValue -> 万分比
-	        var maxMp = Ability.Context.SourceActor.GetAttr<int>(ELogicAttr.AttrMaxMp);
-	        var curMp = Ability.Context.SourceActor.GetAttr<int>(ELogicAttr.AttrMp);
-	        var value = resourceValue / 10000f;
-	        if (isPer) {
-		        curMp = (int)(curMp * (1 * value));
-	        }
-	        else {
-		        curMp += (int)value;
-	        }
-	        curMp = Mathf.Clamp(curMp, 0, maxMp);
-	        Ability.Context.SourceActor.SetAttr<int>(ELogicAttr.AttrMp,curMp,false);
+        public static void AddBattleResource(int resourceValue, bool isPer)
+        {
+            //resourceValue -> 万分比
+            var maxMp = Ability.Context.SourceActor.GetAttr<int>(ELogicAttr.AttrMaxMp);
+            var curMp = Ability.Context.SourceActor.GetAttr<int>(ELogicAttr.AttrMp);
+            var value = resourceValue;
+            if (isPer)
+            {
+                curMp = (int)(curMp * ((10000f + value) / 10000f));
+            }
+            else
+            {
+                curMp += (int)value;
+            }
+
+            curMp = Mathf.Clamp(curMp, 0, maxMp);
+            Ability.Context.SourceActor.SetAttr<int>(ELogicAttr.AttrMp, curMp, false);
         }
 
         [AbilityMethod]
@@ -604,11 +701,67 @@ namespace Hono.Scripts.Battle
         public static float FloatSelfSubtracting(float self) => --self;
 
         #endregion
+
+
+        #region 场景流程
+
+        [AbilityMethod]
+        public static void ChangeSoliderType(int soliderConfigId)
+        {
+            if (Ability.Context.SourceActor.ActorType != EActorType.Building)
+            {
+                return;
+            }
+
+            if (Ability.Context.SourceActor.Logic is not BarrackLogic barrackLogic)
+            {
+                return;
+            }
+
+            barrackLogic.ChangeSoliderConfigId(soliderConfigId);
+        }
+
+        [AbilityMethod]
+        public static void SetLootList(LootList lootList)
+        {
+            BattleManager.CurBattle.LootController.SetLootList(ref lootList);
+        }
+
+        [AbilityMethod]
+        public static void ChangeLootRule(ELootDropRule dropRule, int killNumOrTag)
+        {
+            BattleManager.CurBattle.LootController.SwitchRule(dropRule, killNumOrTag);
+        }
+
+        [AbilityMethod]
+        public static void CreateLoot(RefVector3 lootPos)
+        {
+            BattleManager.CurBattle.LootController.CreateLoot(lootPos);
+        }
+
+        [AbilityMethod]
+        public static int CurRoundCount()
+        {
+            return BattleManager.CurBattle.RtInfo.CurRoundCount;
+        }
+
+        [AbilityMethod]
+        public static void CallMonsterGeneratorRun(int uid, int configId)
+        {
+            var monsterGenEventInfo = new MonsterGenEventInfo
+            {
+                MonsterConfigId = configId, SingleUid = uid, Behave = EMonsterGenBehave.Summon
+            };
+            BattleEventManager.Instance.TriggerActorEvent(uid, EBattleEventType.OnCallMonsterGenerator,
+                monsterGenEventInfo);
+        }
+
+        #endregion
     }
 
 
     /// <summary>
-    /// 私有函数
+    ///     私有函数
     /// </summary>
     public partial class AbilityFunction
     {

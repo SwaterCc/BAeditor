@@ -1,5 +1,4 @@
-﻿namespace Hono.Scripts.Battle {
-	public class TagsManager {
-		
-	}
+﻿namespace Hono.Scripts.Battle
+{
+    public class TagsManager { }
 }

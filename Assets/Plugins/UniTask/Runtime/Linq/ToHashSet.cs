@@ -1,19 +1,22 @@
-﻿using Cysharp.Threading.Tasks.Internal;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
+using Cysharp.Threading.Tasks.Internal;
 
 namespace Cysharp.Threading.Tasks.Linq
 {
     public static partial class UniTaskAsyncEnumerable
     {
-        public static UniTask<HashSet<TSource>> ToHashSetAsync<TSource>(this IUniTaskAsyncEnumerable<TSource> source, CancellationToken cancellationToken = default)
+        public static UniTask<HashSet<TSource>> ToHashSetAsync<TSource>(this IUniTaskAsyncEnumerable<TSource> source,
+            CancellationToken cancellationToken = default)
         {
             Error.ThrowArgumentNullException(source, nameof(source));
 
-            return Cysharp.Threading.Tasks.Linq.ToHashSet.ToHashSetAsync(source, EqualityComparer<TSource>.Default, cancellationToken);
+            return Cysharp.Threading.Tasks.Linq.ToHashSet.ToHashSetAsync(source, EqualityComparer<TSource>.Default,
+                cancellationToken);
         }
 
-        public static UniTask<HashSet<TSource>> ToHashSetAsync<TSource>(this IUniTaskAsyncEnumerable<TSource> source, IEqualityComparer<TSource> comparer, CancellationToken cancellationToken = default)
+        public static UniTask<HashSet<TSource>> ToHashSetAsync<TSource>(this IUniTaskAsyncEnumerable<TSource> source,
+            IEqualityComparer<TSource> comparer, CancellationToken cancellationToken = default)
         {
             Error.ThrowArgumentNullException(source, nameof(source));
             Error.ThrowArgumentNullException(comparer, nameof(comparer));
@@ -24,7 +27,8 @@ namespace Cysharp.Threading.Tasks.Linq
 
     internal static class ToHashSet
     {
-        internal static async UniTask<HashSet<TSource>> ToHashSetAsync<TSource>(IUniTaskAsyncEnumerable<TSource> source, IEqualityComparer<TSource> comparer, CancellationToken cancellationToken)
+        internal static async UniTask<HashSet<TSource>> ToHashSetAsync<TSource>(IUniTaskAsyncEnumerable<TSource> source,
+            IEqualityComparer<TSource> comparer, CancellationToken cancellationToken)
         {
             var set = new HashSet<TSource>(comparer);
 

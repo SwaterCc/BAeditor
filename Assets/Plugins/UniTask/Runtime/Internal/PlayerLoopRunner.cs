@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace Cysharp.Threading.Tasks.Internal
@@ -17,7 +16,6 @@ namespace Cysharp.Threading.Tasks.Internal
         bool running = false;
         IPlayerLoopItem[] loopItems = new IPlayerLoopItem[InitialSize];
         MinimumQueue<IPlayerLoopItem> waitQueue = new MinimumQueue<IPlayerLoopItem>(InitialSize);
-
 
 
         public PlayerLoopRunner(PlayerLoopTiming timing)
@@ -44,6 +42,7 @@ namespace Cysharp.Threading.Tasks.Internal
                 {
                     Array.Resize(ref loopItems, checked(tail * 2));
                 }
+
                 loopItems[tail++] = item;
             }
         }
@@ -224,6 +223,7 @@ namespace Cysharp.Threading.Tasks.Internal
                                     unhandledExceptionCallback(ex);
                                 }
                                 catch { }
+
                                 continue; // next j
                             }
                         }
@@ -250,6 +250,7 @@ namespace Cysharp.Threading.Tasks.Internal
                         {
                             Array.Resize(ref loopItems, checked(tail * 2));
                         }
+
                         loopItems[tail++] = waitQueue.Dequeue();
                     }
                 }
@@ -257,4 +258,3 @@ namespace Cysharp.Threading.Tasks.Internal
         }
     }
 }
-

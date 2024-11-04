@@ -1,36 +1,18 @@
-using System;
-
 namespace Hono.Scripts.Battle
 {
-    public class MonsterLogic : ActorLogic, IPoolObject
+    public class MonsterLogic : ActorLogic
     {
-        private SkillComp _skillComp;
-        private BuffComp _buffComp;
+        public MonsterLogic(Actor actor) : base(actor)
+        {
+            MonsterConfig = ConfigManager.Table<MonsterLogicTable>().Get(actor.ConfigId);
+        }
 
         private float _baseSpeed;
+        private float _maxHpGrowUpFactor = 0.1f;
+        private float _maxAtkGrowUpFactor = 0.15f;
+        private float _maxDefGrowUpFactor = 0.05f;
 
-        protected override void constructStateMachine()
-        {
-            _stateMachine = new ActorStateMachine(this);
-        }
-
-        protected override void constructInput()
-        {
-            _actorInput = new AutoInput(this);
-        }
-
-        protected override void constructComponents()
-        {
-            _buffComp = addComponent(new BuffComp(this));
-            _skillComp = addComponent(new SkillComp(this));
-            addComponent(new AttrSimpleProgress(this));
-            addComponent(new BeHurtComp(this));
-            addComponent(new VFXComp(this));
-            addComponent(new MotionComp(this));
-            addComponent(new HateComp(this));
-        }
-
-        public MonsterLogicTable.MonsterLogicRow MonsterConfig { get; private set; }
+        public MonsterLogicTable.MonsterLogicRow MonsterConfig { get; }
 
         protected override void setupAttrs()
         {
@@ -38,18 +20,21 @@ namespace Hono.Scripts.Battle
             SetAttr(ELogicAttr.AttrFaction, MonsterConfig.Faction, false);
 
             var attrRow = ConfigManager.Table<EntityAttrBaseTable>().Get(MonsterConfig.AttrTemplateId);
+            SetAttr(ELogicAttr.AttrEntityLevel, attrRow.AttrEntityLevel, false);
             _baseSpeed = attrRow.AttrBaseSpeed;
             SetAttr(ELogicAttr.AttrBaseSpeed, attrRow.AttrBaseSpeed, false);
             SetAttr(ELogicAttr.AttrMoveSpeedPCTAdd, attrRow.AttrMoveSpeedPCTAdd, false);
-            SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
-            SetAttr(ELogicAttr.AttrMaxHpAdd, attrRow.AttrMaxHpAdd, false);
-            SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
+            var _baseMaxHp = GetAttrWithFactor(attrRow.AttrMaxHpAdd, attrRow.AttrEntityLevel, _maxHpGrowUpFactor);
+            SetAttr(ELogicAttr.AttrHp, _baseMaxHp, false);
+            SetAttr(ELogicAttr.AttrMaxHpAdd, _baseMaxHp, false);
+            //SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
             SetAttr(ELogicAttr.AttrMaxMpAdd, attrRow.AttrMaxMpAdd, false);
-            SetAttr(ELogicAttr.AttrAttackAdd, attrRow.AttrAttackAdd, false);
+            var _baseAttack = GetAttrWithFactor(attrRow.AttrAttackAdd, attrRow.AttrEntityLevel, _maxAtkGrowUpFactor);
+            SetAttr(ELogicAttr.AttrAttackAdd, _baseAttack, false);
             SetAttr(ELogicAttr.AttrCritAdd, attrRow.AttrCritAdd, false);
-            SetAttr(ELogicAttr.AttrDefenseAdd, attrRow.AttrDefenseAdd, false);
+            var _baseDefense = (attrRow.AttrEntityLevel * 5) + attrRow.AttrDefenseAdd;
+            SetAttr(ELogicAttr.AttrDefenseAdd, _baseDefense, false);
             SetAttr(ELogicAttr.AttrHealAdd, attrRow.AttrHealAdd, false);
-            SetAttr(ELogicAttr.AttrEntityLevel, attrRow.AttrEntityLevel, false);
             SetAttr(ELogicAttr.AttrHealedAdd, attrRow.AttrHealedAdd, false);
             SetAttr(ELogicAttr.AttrCritDamageAdd, attrRow.AttrCritDamageAdd, false);
             SetAttr(ELogicAttr.AttrDmgAAdd, attrRow.AttrDmgAAdd, false);
@@ -61,22 +46,28 @@ namespace Hono.Scripts.Battle
             SetAttr(ELogicAttr.AttrElementMagicRedPCTAdd, attrRow.AttrElementMagicRedPCTAdd, false);
             SetAttr(ELogicAttr.AttrElementPhysicalPenPCTAdd, attrRow.AttrElementPhysicalPenPCTAdd, false);
             SetAttr(ELogicAttr.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd, false);
+            SetAttr(ELogicAttr.AttrMpRecAllAdd, attrRow.AttrMpRecAllAdd, false);
+            SetAttr(ELogicAttr.AttrMpRecAllPer, attrRow.AttrMpRecAllPer, false);
         }
 
-        protected override void OnInit()
+        protected override void onInit()
         {
-            MonsterConfig = ConfigManager.Table<MonsterLogicTable>().Get(Actor.ConfigId);
-            //学技能
-            foreach (var skillInfo in MonsterConfig.OwnerSkills)
+            foreach (var tag in MonsterConfig.TagList)
             {
-                _skillComp.LearnSkill(skillInfo[0], skillInfo[1]);
+                Actor.AddTag(tag);
             }
+        }
 
-            //初始buff
-            foreach (var buff in MonsterConfig.OwnerBuffs)
-            {
-                _buffComp.AddBuff(Uid, buff, 1);
-            }
+        protected override void setupComponents()
+        {
+            addComponent(new AttrSimpleProgress(this));
+            addComponent(new BeHurtComp(this));
+            addComponent(new BuffComp(this, () => MonsterConfig.OwnerBuffs));
+            addComponent(new SkillComp(this, () => MonsterConfig.OwnerSkills));
+            addComponent(new VFXComp(this));
+            addComponent(new MotionComp(this));
+            addComponent(new HateComp(this));
+            addComponent(new MpComp(this));
         }
 
         protected override void onTick(float dt)
@@ -85,11 +76,25 @@ namespace Hono.Scripts.Battle
             Actor.SetAttr<float>(ELogicAttr.AttrBaseSpeed, finalMoveSpeed, false);
         }
 
-        protected override void RecycleSelf()
+        static int GetAttrWithFactor(int startValue, int level, float factor)
         {
-            AObjectPool<MonsterLogic>.Pool.Recycle(this);
+            int currentValue = startValue;
+            for (int i = 1; i <= level - 1; i++)
+            {
+                currentValue += (int)(currentValue * factor);
+            }
+
+            return currentValue;
         }
 
-        public void OnRecycle() { }
+        protected override void setupStateMachine()
+        {
+            _stateMachine = new ActorStateMachine(this);
+        }
+
+        protected override void setupInput()
+        {
+            _actorInput = new AutoInput(this);
+        }
     }
 }

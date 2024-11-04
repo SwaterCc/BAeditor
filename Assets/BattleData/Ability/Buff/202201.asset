@@ -120,7 +120,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 8
+      Data: 9
     - Name: 
       Entry: 7
       Data: 
@@ -294,13 +294,16 @@ MonoBehaviour:
       Data: 11|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 3
       Data: 1040742911
     - Name: 
       Entry: 3
       Data: 26888371
+    - Name: 
+      Entry: 3
+      Data: 746210594
     - Name: 
       Entry: 13
       Data: 
@@ -749,6 +752,87 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 746210594
+    - Name: $v
+      Entry: 7
+      Data: 36|Hono.Scripts.Battle.AttrSetterNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 746210594
+    - Name: NodeType
+      Entry: 3
+      Data: 4
+    - Name: ParentId
+      Entry: 3
+      Data: 1414910492
+    - Name: Depth
+      Entry: 3
+      Data: 1
+    - Name: BelongGroupId
+      Entry: 3
+      Data: -1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 37|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: LogicAttr
+      Entry: 3
+      Data: 13022
+    - Name: Value
+      Entry: 7
+      Data: 38|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParameterType
+      Entry: 3
+      Data: 0
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: FuncParams
+      Entry: 6
+      Data: 
+    - Name: Value
+      Entry: 7
+      Data: 39|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: -9000
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VairableName
+      Entry: 6
+      Data: 
+    - Name: AttrType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: IsTempAttr
+      Entry: 5
+      Data: true
     - Name: 
       Entry: 8
       Data: 

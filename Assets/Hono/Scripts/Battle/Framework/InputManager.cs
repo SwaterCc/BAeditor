@@ -1,22 +1,29 @@
+#region
+
 using System;
-using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
     public class InputManager : MonoBehaviour
     {
         private static InputManager _instance;
-        public static InputManager Instance {
-            get {
-                if (_instance == null) {
+
+        public static InputManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
                     // 尝试查找现有实例
                     _instance = FindObjectOfType<InputManager>();
 
                     // 如果没有找到，则创建新的 GameObject 并添加该组件
-                    if (_instance == null) {
+                    if (_instance == null)
+                    {
                         GameObject singletonObject = new GameObject(nameof(InputManager));
                         _instance = singletonObject.AddComponent<InputManager>();
                     }
@@ -25,33 +32,37 @@ namespace Hono.Scripts.Battle
                 return _instance;
             }
         }
-        
+
         private PawnInput _pawnInput;
-        
+
         /// <summary>
-        /// X左右，Y前后
+        ///     X左右，Y前后
         /// </summary>
         public Vector2 InputValue;
 
         public Vector3 InputDirection;
 
         public bool HasMoveInput;
+
         public void Awake()
         {
             DontDestroyOnLoad(this.gameObject);
 
             // 检查是否已经存在另一个实例
-            if (_instance != null && _instance != this) {
+            if (_instance != null && _instance != this)
+            {
                 Destroy(this.gameObject);
             }
-            else {
+            else
+            {
                 _instance = this;
             }
+
             _pawnInput = new PawnInput();
             _pawnInput.Pawn.Move.performed += onMove;
             _pawnInput.Pawn.Move.canceled += onMoveEnd;
         }
-        
+
         public void OnEnable()
         {
             _pawnInput.Pawn.Enable();
@@ -65,9 +76,8 @@ namespace Hono.Scripts.Battle
         public void AddMoveCallBack(Action<InputAction.CallbackContext> onMove)
         {
             _pawnInput.Pawn.Move.performed += onMove;
-           
         }
-        
+
         public void AddMoveEndCallBack(Action<InputAction.CallbackContext> onMoveEnd)
         {
             _pawnInput.Pawn.Move.canceled += onMoveEnd;
@@ -77,12 +87,12 @@ namespace Hono.Scripts.Battle
         {
             _pawnInput.Pawn.Skill1.performed += onPress;
         }
-        
+
         public void AddPressNum2(Action<InputAction.CallbackContext> onPress)
         {
             _pawnInput.Pawn.Skill2.performed += onPress;
         }
-        
+
         private void onMove(InputAction.CallbackContext context)
         {
             InputValue = context.ReadValue<Vector2>();

@@ -1,44 +1,64 @@
+#region
+
+using System;
 using System.IO;
+using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Tools;
 using UnityEngine;
-using UnityEngine.Profiling;
+using UnityEngine.AddressableAssets;
 using XLua;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
-    public static class LuaInterface
+    public class LuaInterface : Singleton<LuaInterface>, IBattleFrameworkAsyncInit
     {
         private static LuaEnv _luaEnv;
         private static LuaFunction _damageProcessMain;
         private static LuaFunction _factionMain;
-        public static void Init() {
-            _luaEnv = new LuaEnv();
-            //调用lua
-            string luaScriptsPath = Application.dataPath + "/Hono/Scripts/Battle/LuaScript";
-            // 获取 LuaScripts 目录下的所有 Lua 脚本文件 TODO:临时做法，后续要改
-            string[] luaFiles = Directory.GetFiles(luaScriptsPath, "*.lua");
 
-            foreach (string luaFile in luaFiles) {
-                string luaScript = File.ReadAllText(luaFile);
-                _luaEnv.DoString(luaScript);
+        public async UniTask AsyncInit()
+        {
+            _luaEnv = new LuaEnv();
+
+            try
+            {
+                var luaScripts = await Addressables.LoadAssetsAsync<TextAsset>("luaScript", null).ToUniTask();
+
+                foreach (var luaFile in luaScripts)
+                {
+                    Debug.Log($"load lua {luaFile.name}");
+                    _luaEnv.DoString(luaFile.text);
+                }
+
+                loadDamageFunc();
+                loadFactionFunc();
+
+                Debug.Log("LuaInterface Init Finish！");
             }
-            loadDamageFunc();
-            loadFactionFunc();
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
 
-        private static void Reload()
+        private void Reload()
         {
             string luaScriptsPath = Application.dataPath + "/Hono/Scripts/Battle/LuaScript";
             // 获取 LuaScripts 目录下的所有 Lua 脚本文件 TODO:临时做法，后续要改
             string[] luaFiles = Directory.GetFiles(luaScriptsPath, "*.lua");
 
-            foreach (string luaFile in luaFiles) {
+            foreach (string luaFile in luaFiles)
+            {
                 string luaScript = File.ReadAllText(luaFile);
                 _luaEnv.DoString(luaScript);
             }
+
             loadDamageFunc();
             loadFactionFunc();
         }
-        
+
         private static void loadDamageFunc()
         {
             _damageProcessMain = _luaEnv.Global.GetInPath<LuaFunction>("DamageProcess.DamageProcessMain");
@@ -48,33 +68,52 @@ namespace Hono.Scripts.Battle
         {
             _factionMain = _luaEnv.Global.GetInPath<LuaFunction>("Faction.GetFaction");
         }
-        
+
         public static DamageResults GetDamageResults(Actor attacker, Actor target, DamageInfo damageInfo,
-            DamageConfig config) {
+            DamageConfig config)
+        {
+            return Instance.getDamageResults(attacker, target, damageInfo, config);
+        }
+
+        private DamageResults getDamageResults(Actor attacker, Actor target, DamageInfo damageInfo,
+            DamageConfig config)
+        {
             //TODO：临时做法，会有性能开销，后续导出
             var rets = _damageProcessMain.Call(attacker, target, damageInfo, config, typeof(DamageResults));
-            if (rets is { Length: > 0 } && rets[0] is DamageResults results) {
+            if (rets is { Length: > 0 } && rets[0] is DamageResults results)
+            {
                 return results;
             }
-            else {
+            else
+            {
                 Debug.LogError("lua函数返回失败");
             }
+
             return null;
         }
 
-        public static int GetFaction(int factionId1,int factionId2)
+        public static int GetFaction(int factionId1, int factionId2)
+        {
+            return Instance.getFaction(factionId1, factionId2);
+        }
+
+        private int getFaction(int factionId1, int factionId2)
         {
             var rets = _factionMain.Call(factionId1, factionId2);
-            if (rets is { Length: > 0 }) {
+            if (rets is { Length: > 0 })
+            {
                 return (int)((long)rets[0]);
             }
-            else {
+            else
+            {
                 Debug.LogError("lua函数返回失败");
             }
+
             return 0;
         }
-        
-        public static void Dispose() {
+
+        public void Dispose()
+        {
             _luaEnv.Dispose();
         }
     }

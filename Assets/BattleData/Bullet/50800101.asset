@@ -42,6 +42,9 @@ MonoBehaviour:
       Angle: 0
     MaxTargetCount: -1
     HasSelf: 0
-    Ranges: []
+    Ranges:
+    - RangeType: 3
+      IsReverse: 0
+      Value: 2
     Compares: []
     FilterFunctionType: 0

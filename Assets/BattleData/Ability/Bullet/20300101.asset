@@ -439,8 +439,8 @@ MonoBehaviour:
       Data: 19|Hono.Scripts.Battle.VFXSetting, Assembly-CSharp
     - Name: VFXPath
       Entry: 1
-      Data: Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Fire/CFXR2
-        Fireball.prefab
+      Data: Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Fire/CFXR3
+        Fireball B + Fire Trail.prefab
     - Name: Offset
       Entry: 7
       Data: Hono.Scripts.Battle.SVector3, Assembly-CSharp
@@ -482,7 +482,7 @@ MonoBehaviour:
       Data: effect_point
     - Name: Duration
       Entry: 4
-      Data: 2
+      Data: 4
     - Name: 
       Entry: 8
       Data: 

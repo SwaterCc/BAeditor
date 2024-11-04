@@ -1,19 +1,17 @@
+using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using Sirenix.OdinInspector;
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.Utilities;
-    using Sirenix.Utilities.Editor;
-    using UnityEngine;
-
     public class SomeClass2
     {
         [HideLabel, Title("Title", horizontalLine: false, bold: false)]
         public string Title = "Some Title";
 
-        [TextArea(10, 20)]
-        public string Description = "Some description.";
+        [TextArea(10, 20)] public string Description = "Some description.";
     }
 
     public class QuicklyInspectObjects

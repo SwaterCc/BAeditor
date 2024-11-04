@@ -42,7 +42,7 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 2
+      Radius: 3
       Angle: 0
     MaxTargetCount: 1
     HasSelf: 0

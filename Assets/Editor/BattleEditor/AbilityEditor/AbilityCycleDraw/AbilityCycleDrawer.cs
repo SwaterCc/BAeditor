@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Hono.Scripts.Battle;
-using Sirenix.Utilities;
-using Sirenix.Utilities.Editor;
-using UnityEditor;
-
 
 namespace Editor.AbilityEditor
 {

@@ -1,9 +1,6 @@
 ﻿using System;
 using Hono.Scripts.Battle;
-using Sirenix.Utilities;
-using Sirenix.Utilities.Editor;
 using UnityEditor;
-using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
@@ -12,7 +9,8 @@ namespace Editor.AbilityEditor
         public void Init(AbilityNodeData nodeData, Action<TNodeData> onSave);
     }
 
-    public abstract class BaseNodeWindow<T,TNodeData> : EditorWindow where T : EditorWindow, IAbilityNodeWindow<TNodeData> where TNodeData : AbilityNodeData
+    public abstract class BaseNodeWindow<T, TNodeData> : EditorWindow
+        where T : EditorWindow, IAbilityNodeWindow<TNodeData> where TNodeData : AbilityNodeData
     {
         public static EditorWindow GetSettingWindow(AbilityData treeData, TNodeData nodeData,
             Action<TNodeData> onSave)
@@ -34,7 +32,7 @@ namespace Editor.AbilityEditor
         }
 
         protected abstract void onInit();
-        
+
         protected void Save()
         {
             _onSave.Invoke(_nodeData);

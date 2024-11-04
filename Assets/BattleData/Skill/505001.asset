@@ -42,9 +42,9 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 15
+      Radius: 20
       Angle: 0
-    MaxTargetCount: 1
+    MaxTargetCount: 2
     HasSelf: 0
     Ranges:
     - RangeType: 3
@@ -55,7 +55,7 @@ MonoBehaviour:
       Value: 3
     Compares: []
     FilterFunctionType: 11
-  MaxTargetCount: 1
+  MaxTargetCount: 2
   SelectSelf: 0
   SkillName: "\u56DE\u590D\u5854-\u56DE\u8840"
   SkillDesc: 

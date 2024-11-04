@@ -1,6 +1,8 @@
+#region
+
 using System;
-using Cysharp.Threading.Tasks;
-using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -8,24 +10,21 @@ namespace Hono.Scripts.Battle
     {
         public class SceneModelSetup : ModelSetup
         {
-            private SceneActorModel _sceneActorModel;
+            private readonly SceneActorModel _sceneActorModel;
 
-            public void Init(SceneActorModel sceneActorModel)
+            public SceneModelSetup(SceneActorModel sceneActorModel)
             {
                 _sceneActorModel = sceneActorModel;
             }
 
-            protected override void OnLoadModel()
+            public override void SetupModel(ActorModelController modelController, Action loadComplete = null)
             {
-                _gameObject = _sceneActorModel.gameObject;
-                _sceneActorModel.OnModelSetupFinish(_modelController.Actor);
-                _modelController.Actor.SetAttr(ELogicAttr.AttrPosition, _sceneActorModel.transform.position, false);
-                _modelController.Actor.SetAttr(ELogicAttr.AttrRot, _sceneActorModel.transform.rotation, false);
-            }
-
-            protected override void OnUnInit()
-            {
-                _sceneActorModel = null;
+                modelController._model = _sceneActorModel.gameObject;
+                modelController.IsModelLoadFinish = true;
+                modelController.IsSceneModel = true;
+                modelController.Actor.SetAttr(ELogicAttr.AttrPosition, _sceneActorModel.transform.position, false);
+                modelController.Actor.SetAttr(ELogicAttr.AttrRot, _sceneActorModel.transform.rotation, false);
+                _sceneActorModel.OnModelSetupFinish(modelController.Actor);
             }
         }
     }

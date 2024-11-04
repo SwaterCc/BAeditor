@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Hono.Scripts.Battle
+﻿namespace Hono.Scripts.Battle
 {
     public partial class ActorLogic
     {
@@ -13,6 +9,7 @@ namespace Hono.Scripts.Battle
             private float _duration;
             public EActorLogicStateType StateType { get; }
             public float StateDuration => _duration;
+
             protected ActorLogicState(ActorStateMachine machine, EActorLogicStateType stateType)
             {
                 StateType = stateType;

@@ -1,12 +1,11 @@
+using System;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using UnityEngine;
-
 #if UNITY_EDITOR
-
-    using Sirenix.OdinInspector.Editor;
+    using Editor;
     using UnityEditor;
 
 #endif
@@ -17,15 +16,12 @@ namespace Sirenix.OdinInspector.Demos
         "In this case, we're adding options to select a color.")]
     public class GenericMenuExample : MonoBehaviour
     {
-        [ColorPicker]
-        public Color Color;
+        [ColorPicker] public Color Color;
     }
 
     // The Color picker attribute.
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public class ColorPickerAttribute : Attribute
-    {
-    }
+    public class ColorPickerAttribute : Attribute { }
 
 #if UNITY_EDITOR
 
@@ -61,7 +57,8 @@ namespace Sirenix.OdinInspector.Demos
         private void SetColor(Color color)
         {
             this.ValueEntry.SmartValue = color;
-            this.ValueEntry.ApplyChanges(); // ApplyChanges will be called automatically from the DrawPropertyLayout method, but anywhere else you need to call it manually.
+            this.ValueEntry
+                .ApplyChanges(); // ApplyChanges will be called automatically from the DrawPropertyLayout method, but anywhere else you need to call it manually.
         }
     }
 

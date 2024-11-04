@@ -1,19 +1,21 @@
-using System;
+#region
+
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
 
+#endregion
 
 namespace Hono.Scripts.Battle.Event
 {
-    /// <summary>
-    /// 管理战斗逻辑中事件节点的注册和监听
-    /// </summary>
-    public class BattleEventManager : Singleton<BattleEventManager>, IBattleFrameworkEnterExit
+	/// <summary>
+	///     管理战斗逻辑中事件节点的注册和监听
+	/// </summary>
+	public class BattleEventManager : Singleton<BattleEventManager>, IBattleFrameworkEnterExit
     {
-        /// <summary>
-        /// 事件注册列表
-        /// </summary>
-        private readonly Dictionary<EBattleEventType, List<IEventChecker>> _eventDict = new(128);
+	    /// <summary>
+	    ///     事件注册列表
+	    /// </summary>
+	    private readonly Dictionary<EBattleEventType, List<IEventChecker>> _eventDict = new(128);
 
         public void OnEnterBattle()
         {
@@ -41,6 +43,7 @@ namespace Hono.Scripts.Battle.Event
 
         public void UnRegister(IEventChecker checker)
         {
+            if (checker == null || _eventDict == null) return;
             if (!_eventDict.TryGetValue(checker.EventType, out var handles)) return;
             if (handles.Contains(checker))
             {
@@ -49,7 +52,7 @@ namespace Hono.Scripts.Battle.Event
         }
 
         /// <summary>
-        /// 触发事件
+        ///     触发事件
         /// </summary>
         public void TriggerActorEvent(int actorUid, EBattleEventType eventType, IEventInfo eventInfo = null)
         {
@@ -62,9 +65,9 @@ namespace Hono.Scripts.Battle.Event
                 }
             }
         }
-        
+
         /// <summary>
-        /// 触发全局事件
+        ///     触发全局事件
         /// </summary>
         public void TriggerGlobalEvent(EBattleEventType eventType, IEventInfo eventInfo = null)
         {
@@ -77,6 +80,5 @@ namespace Hono.Scripts.Battle.Event
                 }
             }
         }
-        
     }
 }

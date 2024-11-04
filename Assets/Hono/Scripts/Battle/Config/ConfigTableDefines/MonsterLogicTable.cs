@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
         {
             try
             {
-                using (StringReader  reader = new StringReader (csvFile))
+                using (StringReader reader = new StringReader(csvFile))
                 {
                     int lineCount = 0;
                     while (reader.ReadLine() is { } line)
@@ -22,6 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
+
                         var row = Activator.CreateInstance<MonsterLogicRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
@@ -65,69 +66,76 @@ namespace Hono.Scripts.Battle
             return _tableData.TryGetValue(id, out data);
         }
 
-       
+        public Dictionary<int, MonsterLogicRow> GetTable()
+        {
+            return _tableData;
+        }
     }
 
     public partial class MonsterLogicTable
     {
         public class MonsterLogicRow : TableRow
         {
-           
             /// <summary>
-            /// 名字
+            ///     名字
             /// </summary>
             public string Name { get; private set; }
-            
+
             /// <summary>
-            /// 描述
+            ///     描述
             /// </summary>
             public string Desc { get; private set; }
-            
+
             /// <summary>
-            /// 职业ID
+            ///     职业ID
             /// </summary>
             public int ActorClassId { get; private set; }
-            
+
             /// <summary>
-            /// 初始阵营
+            ///     索敌半径
+            /// </summary>
+            public float SearchRadiu { get; private set; }
+
+            /// <summary>
+            ///     初始阵营
             /// </summary>
             public int Faction { get; private set; }
-            
+
             /// <summary>
-            /// 初始标签
+            ///     初始标签
             /// </summary>
             public IntArray TagList { get; private set; }
-            
+
             /// <summary>
-            /// 模型表Id
+            ///     模型表Id
             /// </summary>
             public int ModelId { get; private set; }
-            
+
             /// <summary>
-            /// 初始化属性模板Id
+            ///     初始化属性模板Id
             /// </summary>
             public int AttrTemplateId { get; private set; }
-            
+
             /// <summary>
-            /// 拥有技能
+            ///     拥有技能
             /// </summary>
             public IntTable OwnerSkills { get; private set; }
-            
+
             /// <summary>
-            /// 拥有Buff
+            ///     拥有Buff
             /// </summary>
             public IntArray OwnerBuffs { get; private set; }
-            
+
             /// <summary>
-            /// 拥有的其他Ability
+            ///     拥有的其他Ability
             /// </summary>
             public IntTable ownerOtherAbility { get; private set; }
-            
+
             /// <summary>
-            /// 不吃位移控制
+            ///     不吃位移控制
             /// </summary>
             public int IgnoreOtherMotion { get; private set; }
-            
+
 
             public MonsterLogicRow()
             {
@@ -145,29 +153,29 @@ namespace Hono.Scripts.Battle
 
                 protected override void onParse(string[] line)
                 {
-                    
                     _row.Name = parseString(line[1]);
-            
+
                     _row.Desc = parseString(line[2]);
-            
+
                     _row.ActorClassId = parseInt(line[3]);
-            
-                    _row.Faction = parseInt(line[4]);
-            
-                    _row.TagList = parseIntArray(line[5]);
-            
-                    _row.ModelId = parseInt(line[6]);
-            
-                    _row.AttrTemplateId = parseInt(line[7]);
-            
-                    _row.OwnerSkills = parseIntTable(line[8]);
-            
-                    _row.OwnerBuffs = parseIntArray(line[9]);
-            
-                    _row.ownerOtherAbility = parseIntTable(line[10]);
-            
-                    _row.IgnoreOtherMotion = parseInt(line[11]);
-            
+
+                    _row.SearchRadiu = parseNumber(line[4]);
+
+                    _row.Faction = parseInt(line[5]);
+
+                    _row.TagList = parseIntArray(line[6]);
+
+                    _row.ModelId = parseInt(line[7]);
+
+                    _row.AttrTemplateId = parseInt(line[8]);
+
+                    _row.OwnerSkills = parseIntTable(line[9]);
+
+                    _row.OwnerBuffs = parseIntArray(line[10]);
+
+                    _row.ownerOtherAbility = parseIntTable(line[11]);
+
+                    _row.IgnoreOtherMotion = parseInt(line[12]);
                 }
             }
         }

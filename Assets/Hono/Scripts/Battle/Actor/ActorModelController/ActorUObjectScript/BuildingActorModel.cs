@@ -1,53 +1,68 @@
+#region
+
+using System;
 using Hono.Scripts.Battle.Tools;
 using Hono.Scripts.Battle.Tools.DebugTools;
-using System;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle {
-	public class BuildingActorModel : ActorModel {
-		private bool _isPreShow;
-		
-		private bool _canBuilding;
+#endregion
 
-		private ActorModelFollowMouse _followMouse;
-		public int BuildTableRowId;
-		public int CostRPCount;
-		public string Path;
-		
-		private void Start() {
-			_isPreShow = true;
-			
-			if (_followMouse != null) {
-				return;
-			}
+namespace Hono.Scripts.Battle
+{
+    public class BuildingActorModel : ActorModel
+    {
+        [NonSerialized] public bool IsBuildingModel;
+        [NonSerialized] public EBuildingType BuildingType;
+        private bool _canBuilding;
+        private ActorModelFollowMouse _followMouse;
+        [NonSerialized] public int BuildTableRowId;
+        [NonSerialized] public int CostRPCount;
 
-			if (!TryGetComponent(out _followMouse)) {
-				_followMouse = gameObject.AddComponent<ActorModelFollowMouse>();
-			}
+        private void Awake()
+        {
+            ActorUid = ActorUidGenerator.GenerateUid(EActorUidRangeType.NormalActor);
+            ActorType = EActorType.Building;
+        }
 
-			_followMouse.enabled = true;
-		}
+        private void Start()
+        {
+            if (_followMouse != null)
+            {
+                return;
+            }
 
-		public void ChangeBuildState(bool canBuild) {
-			_canBuilding = canBuild;
-		}
+            if (!TryGetComponent(out _followMouse))
+            {
+                _followMouse = gameObject.AddComponent<ActorModelFollowMouse>();
+            }
 
-		public void Update() {
-			if (!_isPreShow) return;
-			
-			if (Input.GetMouseButtonDown(0) && _canBuilding) {
-				//左键
-				_isPreShow = false;
-				_followMouse.enabled = false;
-				ActorManager.Instance.CreateBuilding(this, BuildTableRowId, (build) => {
-					build.SetAttr(ELogicAttr.AttrPosition, transform.position, false);
-				});
-			}
+            _followMouse.enabled = IsBuildingModel;
+        }
 
-			if (Input.GetMouseButtonDown(1)) {
-				_followMouse.enabled = false;
-				Destroy(gameObject);
-			}
-		}
-	}
+        public void ChangeBuildState(bool canBuild)
+        {
+            _canBuilding = canBuild;
+        }
+
+        public void Update()
+        {
+            if (!IsBuildingModel) return;
+
+            if (Input.GetMouseButtonDown(0) && _canBuilding)
+            {
+                //左键
+                IsBuildingModel = false;
+                _followMouse.enabled = false;
+                BattleManager.CurBattle.RtInfo.RPCount -= CostRPCount;
+                ActorManager.Instance.CreateBuilding(this, BuildTableRowId,
+                    (build) => { build.SetAttr(ELogicAttr.AttrPosition, transform.position, false); });
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                _followMouse.enabled = false;
+                Destroy(gameObject);
+            }
+        }
+    }
 }

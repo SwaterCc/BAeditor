@@ -1,11 +1,15 @@
+#region
+
 using System.Collections.Generic;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
-    /// <summary>
-    /// msg要能存储，要能当帧执行
-    /// </summary>
-    public class MessageCollection
+	/// <summary>
+	///     msg要能存储，要能当帧执行
+	/// </summary>
+	public class MessageCollection
     {
         private readonly Dictionary<string, List<MessageListener>> _msgHandlers;
 
@@ -23,7 +27,7 @@ namespace Hono.Scripts.Battle
         }
 
         /// <summary>
-        /// 直接调用msg，该消息将不会进入缓存
+        ///     直接调用msg，该消息将不会进入缓存
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="p1"></param>
@@ -55,7 +59,7 @@ namespace Hono.Scripts.Battle
             if (!_msgHandlers.TryGetValue(msgKey, out var listeners)) return false;
             return listeners.Count > 0;
         }
-        
+
         public void AddListener(MessageListener listener)
         {
             if (!_msgHandlers.TryGetValue(listener.MsgKey, out var handlers))
@@ -75,7 +79,7 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        public void Clear()
+        public void UnInit()
         {
             _msgHandlers.Clear();
             MessageCenter.Instance.Unregister(Uid);

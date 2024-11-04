@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -9,9 +13,9 @@ namespace Hono.Scripts.Battle
         {
             public abstract int GetHateTargetUid();
         }
-        
+
         /// <summary>
-        /// 仇恨对象选择器，选不到默认返回-1
+        ///     仇恨对象选择器，选不到默认返回-1
         /// </summary>
         public class HateComp : ALogicComponent
         {
@@ -20,29 +24,26 @@ namespace Hono.Scripts.Battle
             private FilterSetting _setting;
             private int _hateUid;
             private bool _isReturnTeam;
-            
-            public HateComp(ActorLogic logic) : base(logic)
-            {
-               
-            }
-            
+
+            public HateComp(ActorLogic logic) : base(logic) { }
+
             public override void Init()
             {
                 _setting = new FilterSetting()
                 {
                     OpenBoxCheck = true,
-                    BoxData = new CheckBoxData()
-                    {
-                        ShapeType = ECheckBoxShapeType.Sphere,
-                        Radius = 10,
-                    },
-                    Ranges = new List<FilterRange>()
-                    {
-                        new() { RangeType = EFilterRangeType.Faction, Value = 2 },
-                    },
+                    BoxData = new CheckBoxData() { ShapeType = ECheckBoxShapeType.Sphere, Radius = 10, },
+                    Ranges = new List<FilterRange>() { new() { RangeType = EFilterRangeType.Faction, Value = 2 }, },
                     FilterFunctionType = EFilterFunctionType.Near,
                     MaxTargetCount = 1,
                 };
+            }
+
+            public void OnTeamAssembly()
+            {
+                _hateUid = -1;
+                _isReturnTeam = true;
+                Actor.SetAttr(ELogicAttr.AttrHateTargetUid, _hateUid, false);
             }
 
             protected override void onTick(float dt)
@@ -60,19 +61,19 @@ namespace Hono.Scripts.Battle
                     {
                         _hateUid = -1;
                     }
-                    
+
                     if (Actor.ActorType == EActorType.Pawn)
                     {
                         var origin = Actor.GetAttr<Vector3>(ELogicAttr.AttrOriginPos);
                         var dis = Vector3.Distance(origin, Actor.Pos);
-                        if (dis > 10.5)
+                        if (dis > 20.5)
                         {
                             _hateUid = -1;
                             _isReturnTeam = true;
                         }
                     }
                 }
-                
+
                 if (_hateUid <= 0)
                 {
                     if (_isReturnTeam)
@@ -90,14 +91,15 @@ namespace Hono.Scripts.Battle
                         UpdateHateTarget();
                     }
                 }
-                
+
                 Actor.SetAttr(ELogicAttr.AttrHateTargetUid, _hateUid, false);
                 _duration = 0;
             }
 
             public void UpdateHateTarget()
             {
-                var hateUids = ActorManager.Instance.UseFilter(Actor, _setting);
+                List<int> hateUids = new();
+                hateUids.AddRange(ActorManager.Instance.UseFilter(Actor, _setting));
                 if (hateUids.Count == 0)
                 {
                     _hateUid = -1;

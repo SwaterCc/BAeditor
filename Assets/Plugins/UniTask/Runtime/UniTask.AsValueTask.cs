@@ -6,9 +6,7 @@
 
 #if SUPPORT_VALUETASK
 
-using System;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Sources;
 
 namespace Cysharp.Threading.Tasks
 {
@@ -43,7 +41,6 @@ namespace Cysharp.Threading.Tasks
         }
 
 #if (UNITASK_NETCORE && NETSTANDARD2_0)
-
         class UniTaskValueTaskSource : IValueTaskSource
         {
             readonly UniTask task;

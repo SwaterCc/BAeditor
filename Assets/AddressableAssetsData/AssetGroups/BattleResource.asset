@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: BattleResource
   m_EditorClassIdentifier: 
   m_GroupName: BattleResource
-  m_Data:
-    m_SerializedData: []
   m_GUID: 1c60dece5e34e1444968e8c507b4613e
   m_SerializeEntries:
   - m_GUID: 107be36a9dc5a9f49a68e3b94726f644

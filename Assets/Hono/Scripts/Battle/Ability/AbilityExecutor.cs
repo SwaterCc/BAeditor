@@ -1,173 +1,206 @@
-using Hono.Scripts.Battle.Tools;
-using System;
+#region
+
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle {
-	public partial class Ability {
-		/// <summary>
-		/// 用于执行能力节点序列
-		/// </summary>
-		private class AbilityExecutor {
-			private readonly Ability _ability;
+#endregion
 
-			private AbilityNode _curNode;
+namespace Hono.Scripts.Battle
+{
+    public partial class Ability
+    {
+	    /// <summary>
+	    ///     用于执行能力节点序列
+	    /// </summary>
+	    private class AbilityExecutor
+        {
+            private readonly Ability _ability;
 
-			private readonly Dictionary<int, AbilityNode> _nodes;
+            private AbilityNode _curNode;
 
-			private readonly Dictionary<EAbilityAllowEditCycle, AbilityNode> _cycleHeads;
+            private readonly Dictionary<int, AbilityNode> _nodes;
 
-			private readonly List<AbilityEventNode> _eventNodes;
+            private readonly Dictionary<EAbilityAllowEditCycle, AbilityNode> _cycleHeads;
 
-			private bool _hasError;
+            private readonly List<AbilityEventNode> _eventNodes;
 
-			public Ability Ability => _ability;
-			public AbilityState State => _ability._state;
-			public AbilityData AbilityData { get; private set; }
-			public VarCollection Variables { get; private set; }
+            private bool _hasError;
 
-			public AbilityExecutor(Ability ability) {
-				_ability = ability;
-				Variables = ability.Variables;
-				_nodes = new Dictionary<int, AbilityNode>();
-				_cycleHeads = new Dictionary<EAbilityAllowEditCycle, AbilityNode>();
-				_eventNodes = new List<AbilityEventNode>();
-			}
+            public Ability Ability => _ability;
+            public AbilityState State => _ability._state;
+            public AbilityData AbilityData { get; private set; }
+            public VarCollection Variables { get; private set; }
 
-			private void setError() {
-				_hasError = true;
-				Debug.LogError($"Ability {_ability.ConfigId} SetupFailed,this Ability Can not Running");
-			}
+            public AbilityExecutor(Ability ability)
+            {
+                _ability = ability;
+                Variables = ability.Variables;
+                _nodes = new Dictionary<int, AbilityNode>();
+                _cycleHeads = new Dictionary<EAbilityAllowEditCycle, AbilityNode>();
+                _eventNodes = new List<AbilityEventNode>();
+            }
 
-			private AbilityNode createNode(AbilityExecutor executor, AbilityNodeData data) {
-				switch (data.NodeType) {
-					case EAbilityNodeType.EAbilityCycle:
-						return new AbilityCycleNode(executor, data);
-					case EAbilityNodeType.ETimer:
-						return new AbilityTimerNode(executor, data);
-					case EAbilityNodeType.EBranchControl:
-						return new AbilityBranchNode(executor, data);
-					case EAbilityNodeType.EVariableSetter:
-						return new AbilityVariableNode(executor, data);
-					case EAbilityNodeType.ERepeat:
-						return new AbilityRepeatNode(executor, data);
-					case EAbilityNodeType.EAction:
-						return new AbilityActionNode(executor, data);
-					case EAbilityNodeType.EGroup:
-						return new AbilityGroupNode(executor, data);
-					case EAbilityNodeType.EAttrSetter:
-						return new AbilityAttrSetterNode(executor, data);
-					case EAbilityNodeType.EEvent:
-						return new AbilityEventNode(executor, data);
-				}
+            private void setError()
+            {
+                _hasError = true;
+                Debug.LogError($"Ability {_ability.ConfigId} SetupFailed,this Ability Can not Running");
+            }
 
-				Debug.LogError($"创建节点失败，节点ID{data.NodeId} 类型 {data.NodeType}");
-				return null;
-			}
+            private AbilityNode createNode(AbilityExecutor executor, AbilityNodeData data)
+            {
+                switch (data.NodeType)
+                {
+                    case EAbilityNodeType.EAbilityCycle:
+                        return new AbilityCycleNode(executor, data);
+                    case EAbilityNodeType.ETimer:
+                        return new AbilityTimerNode(executor, data);
+                    case EAbilityNodeType.EBranchControl:
+                        return new AbilityBranchNode(executor, data);
+                    case EAbilityNodeType.EVariableSetter:
+                        return new AbilityVariableNode(executor, data);
+                    case EAbilityNodeType.ERepeat:
+                        return new AbilityRepeatNode(executor, data);
+                    case EAbilityNodeType.EAction:
+                        return new AbilityActionNode(executor, data);
+                    case EAbilityNodeType.EGroup:
+                        return new AbilityGroupNode(executor, data);
+                    case EAbilityNodeType.EAttrSetter:
+                        return new AbilityAttrSetterNode(executor, data);
+                    case EAbilityNodeType.EEvent:
+                        return new AbilityEventNode(executor, data);
+                }
 
-			/// <summary>
-			/// 初始化所有节点
-			/// </summary>
-			public void Setup() {
-				if (!AssetManager.Instance.TryGetData<AbilityData>(_ability.ConfigId, out var abilityData)) {
-					setError();
-					return;
-				}
+                Debug.LogError($"创建节点失败，节点ID{data.NodeId} 类型 {data.NodeType}");
+                return null;
+            }
 
-				AbilityData = abilityData;
-				foreach (var tag in abilityData.Tags) {
-					Ability.Tags.Add(tag);
-				}
+            /// <summary>
+            ///     初始化所有节点
+            /// </summary>
+            public void Setup()
+            {
+                if (!AssetManager.Instance.TryGetData<AbilityData>(_ability.ConfigId, out var abilityData))
+                {
+                    setError();
+                    return;
+                }
 
-				var nodeDict = AbilityData.NodeDict;
-				if (nodeDict is { Count: > 0 }) {
-					//数据转化为实际逻辑节点
-					foreach (var pair in nodeDict) {
-						var node = createNode(this, pair.Value);
-						if (node == null) {
-							setError();
-							return;
-						}
+                AbilityData = abilityData;
+                foreach (var tag in abilityData.Tags)
+                {
+                    Ability.Tags.Add(tag);
+                }
 
-						_nodes.Add(node.NodeId, node);
+                var nodeDict = AbilityData.NodeDict;
+                if (nodeDict is { Count: > 0 })
+                {
+                    //数据转化为实际逻辑节点
+                    foreach (var pair in nodeDict)
+                    {
+                        var node = createNode(this, pair.Value);
+                        if (node == null)
+                        {
+                            setError();
+                            return;
+                        }
 
-						if (pair.Value.NodeType == EAbilityNodeType.EEvent) {
-							_eventNodes.Add((AbilityEventNode)node);
-						}
+                        _nodes.Add(node.NodeId, node);
 
-						if (pair.Value.NodeType == EAbilityNodeType.EGroup) {
-							var executing = (ExecutingCycle)State.GetState(EAbilityState.Executing);
-							var stageNode = (AbilityGroupNode)node;
-							executing.AddStageProxy(stageNode);
-							executing.NextGroupId = AbilityData.DefaultStartGroupId;
-						}
-					}
+                        if (pair.Value.NodeType == EAbilityNodeType.EEvent)
+                        {
+                            _eventNodes.Add((AbilityEventNode)node);
+                        }
 
-					//保存周期头节点
-					foreach (var headPair in AbilityData.HeadNodeDict) {
-						if (!_nodes.TryGetValue(headPair.Value, out var cycleNode)) {
-							setError();
-							return;
-						}
+                        if (pair.Value.NodeType == EAbilityNodeType.EGroup)
+                        {
+                            var executing = (ExecutingCycle)State.GetState(EAbilityState.Executing);
+                            var stageNode = (AbilityGroupNode)node;
+                            executing.AddStageProxy(stageNode);
+                            executing.NextGroupId = AbilityData.DefaultStartGroupId;
+                        }
+                    }
 
-						_cycleHeads.Add(headPair.Key, cycleNode);
-						//构建树结构
-						cycleNode.Build(null);
-					}
-				}
-			}
+                    //保存周期头节点
+                    foreach (var headPair in AbilityData.HeadNodeDict)
+                    {
+                        if (!_nodes.TryGetValue(headPair.Value, out var cycleNode))
+                        {
+                            setError();
+                            return;
+                        }
 
-			public void Reset() {
-				_hasError = false;
-			}
+                        _cycleHeads.Add(headPair.Key, cycleNode);
+                        //构建树结构
+                        cycleNode.Build(null);
+                    }
+                }
+            }
 
-			public void UnInstall() {
-				foreach (var eventNode in _eventNodes) {
-					eventNode.UnRegisterEvent();
-				}
+            public void Reset()
+            {
+                _hasError = false;
+            }
 
-				_eventNodes.Clear();
-				_cycleHeads.Clear();
-				_nodes.Clear();
-			}
+            public void UnInstall()
+            {
+                foreach (var eventNode in _eventNodes)
+                {
+                    eventNode.UnRegisterEvent();
+                }
 
-			public void OnDestroy() {
-				UnInstall();
-			}
+                _eventNodes.Clear();
+                _cycleHeads.Clear();
+                _nodes.Clear();
+            }
 
-			public void RegisterEventNode() {
-				foreach (var eventNode in _eventNodes) {
-					eventNode.RegisterEvent();
-				}
-			}
+            public void OnDestroy()
+            {
+                UnInstall();
+            }
 
-			public AbilityNode GetNode(int id) {
-				return _nodes[id];
-			}
+            public void RegisterEventNode()
+            {
+                foreach (var eventNode in _eventNodes)
+                {
+                    eventNode.RegisterEvent();
+                }
+            }
 
-			public bool HeadNodeHasChildren(EAbilityAllowEditCycle allowEditCycle) {
-				return _cycleHeads[allowEditCycle].Children.Count > 0;
-			}
+            public AbilityNode GetNode(int id)
+            {
+                return _nodes[id];
+            }
+
+            public bool HeadNodeHasChildren(EAbilityAllowEditCycle allowEditCycle)
+            {
+                return _cycleHeads[allowEditCycle].Children.Count > 0;
+            }
 
 
-			public void ExecuteNode(int nodeId) {
-				if (_hasError) return;
+            public void ExecuteNode(int nodeId)
+            {
+                if (_hasError) return;
 
-				if (_nodes.TryGetValue(nodeId, out var node)) {
-					node.DoJob();
-				}
-			}
+                if (_nodes.TryGetValue(nodeId, out var node))
+                {
+                    node.DoJob();
+                }
+            }
 
-			public void ExecuteCycleNode(EAbilityAllowEditCycle allowEditCycle) {
-				if (_hasError) return;
+            public void ExecuteCycleNode(EAbilityAllowEditCycle allowEditCycle)
+            {
+                if (_hasError) return;
 
-				if (_cycleHeads.TryGetValue(allowEditCycle, out var cycleNode)) {
-					cycleNode.DoJob();
-				}
-				else {
-					Debug.Log($"{allowEditCycle} is empty！");
-				}
-			}
-		}
-	}
+                if (_cycleHeads.TryGetValue(allowEditCycle, out var cycleNode))
+                {
+                    cycleNode.DoJob();
+                }
+                else
+                {
+                    Debug.Log($"{allowEditCycle} is empty！");
+                }
+            }
+        }
+    }
 }

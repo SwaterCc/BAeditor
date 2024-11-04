@@ -1,12 +1,13 @@
-﻿using Cysharp.Threading.Tasks.Internal;
-using System;
+﻿using System;
 using System.Threading;
+using Cysharp.Threading.Tasks.Internal;
 
 namespace Cysharp.Threading.Tasks.Linq
 {
     public static partial class UniTaskAsyncEnumerable
     {
-        public static IUniTaskAsyncEnumerable<TSource> Take<TSource>(this IUniTaskAsyncEnumerable<TSource> source, Int32 count)
+        public static IUniTaskAsyncEnumerable<TSource> Take<TSource>(this IUniTaskAsyncEnumerable<TSource> source,
+            Int32 count)
         {
             Error.ThrowArgumentNullException(source, nameof(source));
 
@@ -117,6 +118,7 @@ namespace Cysharp.Threading.Tasks.Linq
                 {
                     return enumerator.DisposeAsync();
                 }
+
                 return default;
             }
         }

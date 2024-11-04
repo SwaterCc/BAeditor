@@ -1,5 +1,9 @@
+#region
+
 using System.Collections.Generic;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -21,10 +25,10 @@ namespace Hono.Scripts.Battle
         public int SkillDamageBasePer; //基础倍率，万分比
         public bool UseCustomFilter = true;
         public FilterSetting CustomFilter;
-        public int MaxTargetCount = 1;//目标选择最大数量
+        public int MaxTargetCount = 1; //目标选择最大数量
         public bool SelectSelf = false;
-		public string SkillName;
-		public string SkillDesc;
-		public string SkillIconPath;
-	}
+        public string SkillName;
+        public string SkillDesc;
+        public string SkillIconPath;
+    }
 }

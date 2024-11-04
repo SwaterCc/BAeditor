@@ -5,12 +5,12 @@
 #define SUPPORT_VALUETASK
 #endif
 
-using Cysharp.Threading.Tasks.CompilerServices;
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using Cysharp.Threading.Tasks.CompilerServices;
 
 namespace Cysharp.Threading.Tasks
 {
@@ -27,7 +27,7 @@ namespace Cysharp.Threading.Tasks
     }
 
     /// <summary>
-    /// Lightweight unity specified task-like object.
+    ///     Lightweight unity specified task-like object.
     /// </summary>
     [AsyncMethodBuilder(typeof(AsyncUniTaskMethodBuilder))]
     [StructLayout(LayoutKind.Auto)]
@@ -63,7 +63,7 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// returns (bool IsCanceled) instead of throws OperationCanceledException.
+        ///     returns (bool IsCanceled) instead of throws OperationCanceledException.
         /// </summary>
         public UniTask<bool> SuppressCancellationThrow()
         {
@@ -98,7 +98,7 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// Memoizing inner IValueTaskSource. The result UniTask can await multiple.
+        ///     Memoizing inner IValueTaskSource. The result UniTask can await multiple.
         /// </summary>
         public UniTask Preserve()
         {
@@ -245,6 +245,7 @@ namespace Cysharp.Threading.Tasks
                         {
                             status = UniTaskStatus.Faulted;
                         }
+
                         throw;
                     }
                     finally
@@ -302,10 +303,7 @@ namespace Cysharp.Threading.Tasks
             {
                 [DebuggerHidden]
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get
-                {
-                    return task.Status.IsCompleted();
-                }
+                get { return task.Status.IsCompleted(); }
             }
 
             [DebuggerHidden]
@@ -345,7 +343,7 @@ namespace Cysharp.Threading.Tasks
             }
 
             /// <summary>
-            /// If register manually continuation, you can use it instead of for compiler OnCompleted methods.
+            ///     If register manually continuation, you can use it instead of for compiler OnCompleted methods.
             /// </summary>
             [DebuggerHidden]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -364,7 +362,7 @@ namespace Cysharp.Threading.Tasks
     }
 
     /// <summary>
-    /// Lightweight unity specified task-like object.
+    ///     Lightweight unity specified task-like object.
     /// </summary>
     [AsyncMethodBuilder(typeof(AsyncUniTaskMethodBuilder<>))]
     [StructLayout(LayoutKind.Auto)]
@@ -396,10 +394,7 @@ namespace Cysharp.Threading.Tasks
         {
             [DebuggerHidden]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                return (source == null) ? UniTaskStatus.Succeeded : source.GetStatus(token);
-            }
+            get { return (source == null) ? UniTaskStatus.Succeeded : source.GetStatus(token); }
         }
 
         [DebuggerHidden]
@@ -410,7 +405,7 @@ namespace Cysharp.Threading.Tasks
         }
 
         /// <summary>
-        /// Memoizing inner IValueTaskSource. The result UniTask can await multiple.
+        ///     Memoizing inner IValueTaskSource. The result UniTask can await multiple.
         /// </summary>
         public UniTask<T> Preserve()
         {
@@ -463,7 +458,7 @@ namespace Cysharp.Threading.Tasks
 #endif
 
         /// <summary>
-        /// returns (bool IsCanceled, T Result) instead of throws OperationCanceledException.
+        ///     returns (bool IsCanceled, T Result) instead of throws OperationCanceledException.
         /// </summary>
         public UniTask<(bool IsCanceled, T Result)> SuppressCancellationThrow()
         {
@@ -477,8 +472,9 @@ namespace Cysharp.Threading.Tasks
 
         public override string ToString()
         {
-            return (this.source == null) ? result?.ToString()
-                 : "(" + this.source.UnsafeGetStatus() + ")";
+            return (this.source == null)
+                ? result?.ToString()
+                : "(" + this.source.UnsafeGetStatus() + ")";
         }
 
         sealed class IsCanceledSource : IUniTaskSource<(bool, T)>
@@ -554,6 +550,7 @@ namespace Cysharp.Threading.Tasks
                     {
                         exception.Throw();
                     }
+
                     return result;
                 }
                 else
@@ -575,6 +572,7 @@ namespace Cysharp.Threading.Tasks
                         {
                             status = UniTaskStatus.Faulted;
                         }
+
                         throw;
                     }
                     finally
@@ -637,10 +635,7 @@ namespace Cysharp.Threading.Tasks
             {
                 [DebuggerHidden]
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get
-                {
-                    return task.Status.IsCompleted();
-                }
+                get { return task.Status.IsCompleted(); }
             }
 
             [DebuggerHidden]
@@ -689,7 +684,7 @@ namespace Cysharp.Threading.Tasks
             }
 
             /// <summary>
-            /// If register manually continuation, you can use it instead of for compiler OnCompleted methods.
+            ///     If register manually continuation, you can use it instead of for compiler OnCompleted methods.
             /// </summary>
             [DebuggerHidden]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -708,4 +703,3 @@ namespace Cysharp.Threading.Tasks
         }
     }
 }
-

@@ -1,7 +1,11 @@
-using Hono.Scripts.Battle.Tools;
+#region
+
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Tools;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -12,8 +16,8 @@ namespace Hono.Scripts.Battle
             private CommonUtility.IdGenerator _idGenerator = CommonUtility.GetIdGenerator();
             private Dictionary<int, Motion> _motionDict = new();
             private List<int> _removeList = new();
-            
-            
+
+
             public Action<Motion> MotionAdd;
             public Action<Motion> MotionRemove;
 
@@ -59,7 +63,7 @@ namespace Hono.Scripts.Battle
             }
 
             /// <summary>
-            /// 触发器直接调用
+            ///     触发器直接调用
             /// </summary>
             public void OnCollision(int otherUid)
             {
@@ -99,14 +103,17 @@ namespace Hono.Scripts.Battle
                     {
                         Debug.LogWarning("存在复数个强制面向目标的Motion");
                     }
+
                     ForceFaceMoveTarget = motion.Setting.MovingFaceToTarget;
                 }
 
                 Actor.SetAttr<Vector3>(ELogicAttr.AttrPosition, curPos + finalOffset, false);
 
-				if (ForceFaceMoveTarget) {
-					Actor.SetAttr<Quaternion>(ELogicAttr.AttrRot, Quaternion.FromToRotation(Vector3.forward, finalOffset.normalized), false);
-				}
+                if (ForceFaceMoveTarget)
+                {
+                    Actor.SetAttr<Quaternion>(ELogicAttr.AttrRot,
+                        Quaternion.FromToRotation(Vector3.forward, finalOffset.normalized), false);
+                }
 
                 foreach (var motionUid in _removeList)
                 {

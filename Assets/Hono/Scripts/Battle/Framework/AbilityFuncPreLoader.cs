@@ -1,11 +1,12 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Cysharp.Threading.Tasks;
-using Hono.Scripts.Battle.Tools;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -23,7 +24,6 @@ namespace Hono.Scripts.Battle
 
         public object Invoke(object caller, object[] param)
         {
-		
             if (param != null && param.Length != ParamCount)
             {
                 Debug.LogError("参数数量不对");
@@ -33,14 +33,14 @@ namespace Hono.Scripts.Battle
             return MethodInfo.Invoke(caller, param);
         }
     }
-    
+
     public static class AbilityFuncPreLoader
     {
-        /// <summary>
-        /// 函数信息缓存
-        /// </summary>
-        private static readonly Dictionary<string, FuncInfo> CacheMethodInfos = new(128);
-        
+	    /// <summary>
+	    ///     函数信息缓存
+	    /// </summary>
+	    private static readonly Dictionary<string, FuncInfo> CacheMethodInfos = new(128);
+
         public static void InitAbilityFuncCache()
         {
             CacheMethodInfos.Clear();
@@ -75,9 +75,9 @@ namespace Hono.Scripts.Battle
                 }
             }
         }
-        
+
         /// <summary>
-        /// 获取函数缓存
+        ///     获取函数缓存
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
@@ -87,7 +87,7 @@ namespace Hono.Scripts.Battle
             {
                 return info;
             }
-            
+
             Debug.LogError($"GetAbilityFuncCache {func} is null");
             return null;
         }

@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
         {
             try
             {
-                using (StringReader  reader = new StringReader (csvFile))
+                using (StringReader reader = new StringReader(csvFile))
                 {
                     int lineCount = 0;
                     while (reader.ReadLine() is { } line)
@@ -22,6 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
+
                         var row = Activator.CreateInstance<ModelRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
@@ -65,34 +66,36 @@ namespace Hono.Scripts.Battle
             return _tableData.TryGetValue(id, out data);
         }
 
-       
+        public Dictionary<int, ModelRow> GetTable()
+        {
+            return _tableData;
+        }
     }
 
     public partial class ModelTable
     {
         public class ModelRow : TableRow
         {
-           
             /// <summary>
-            /// 描述
+            ///     描述
             /// </summary>
             public string Desc { get; private set; }
-            
+
             /// <summary>
-            /// 模型半径
+            ///     模型半径
             /// </summary>
             public float ModelRadius { get; private set; }
-            
+
             /// <summary>
-            /// 模型路径
+            ///     模型路径
             /// </summary>
             public string ModelPath { get; private set; }
-            
+
             /// <summary>
-            /// 动画模板
+            ///     动画模板
             /// </summary>
             public string AnimTemplateId { get; private set; }
-            
+
 
             public ModelRow()
             {
@@ -110,15 +113,13 @@ namespace Hono.Scripts.Battle
 
                 protected override void onParse(string[] line)
                 {
-                    
                     _row.Desc = parseString(line[1]);
-            
+
                     _row.ModelRadius = parseNumber(line[2]);
-            
+
                     _row.ModelPath = parseString(line[3]);
-            
+
                     _row.AnimTemplateId = parseString(line[4]);
-            
                 }
             }
         }

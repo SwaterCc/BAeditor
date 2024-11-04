@@ -1,15 +1,13 @@
+using System.Collections.Generic;
+using Sirenix.Serialization;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using UnityEngine;
-    using Sirenix.OdinInspector;
-    using Sirenix.Serialization;
-    using System.Collections.Generic;
-
 #if UNITY_EDITOR
-
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.Utilities.Editor;
+    using Editor;
+    using Utilities.Editor;
     using UnityEditor;
 
 #endif
@@ -20,20 +18,23 @@ namespace Sirenix.OdinInspector.Demos
         "\nThis allows a single drawer implementation, to deal with a wide array of values.")]
     public class GenericDrawerExample : SerializedMonoBehaviour
     {
-        [OdinSerialize]
-        public MyGenericClass<int, int> A = new MyGenericClass<int, int>(); // Drawn with struct drawer
+        [OdinSerialize] public MyGenericClass<int, int> A = new MyGenericClass<int, int>(); // Drawn with struct drawer
 
         [OdinSerialize]
-        public MyGenericClass<Vector3, Quaternion> B = new MyGenericClass<Vector3, Quaternion>(); // Drawn with struct drawer
+        public MyGenericClass<Vector3, Quaternion>
+            B = new MyGenericClass<Vector3, Quaternion>(); // Drawn with struct drawer
 
         [OdinSerialize]
-        public MyGenericClass<int, GameObject> C = new MyGenericClass<int, GameObject>(); // Drawn with generic parameter extraction drawer
+        public MyGenericClass<int, GameObject>
+            C = new MyGenericClass<int, GameObject>(); // Drawn with generic parameter extraction drawer
 
         [OdinSerialize]
-        public MyGenericClass<string, List<string>> D = new MyGenericClass<string, List<string>>(); // Drawn with strong list drawer
+        public MyGenericClass<string, List<string>>
+            D = new MyGenericClass<string, List<string>>(); // Drawn with strong list drawer
 
         [OdinSerialize]
-        public MyGenericClass<string, string> E = new MyGenericClass<string, string>(); // Drawn with default drawers, as none of the generic drawers beneath apply
+        public MyGenericClass<string, string>
+            E = new MyGenericClass<string, string>(); // Drawn with default drawers, as none of the generic drawers beneath apply
 
         public List<MyClass> F = new List<MyClass>(); // Drawn with the custom list drawer
     }

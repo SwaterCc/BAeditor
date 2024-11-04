@@ -2835,7 +2835,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 3
-      Data: 1126338531
+      Data: 818039562
     - Name: 
       Entry: 13
       Data: 
@@ -2958,22 +2958,22 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 1126338531
+      Data: 15993750
     - Name: $v
       Entry: 7
       Data: 146|Hono.Scripts.Battle.ActionNodeData, Assembly-CSharp
     - Name: NodeId
       Entry: 3
-      Data: 1126338531
+      Data: 15993750
     - Name: NodeType
       Entry: 3
       Data: 6
     - Name: ParentId
       Entry: 3
-      Data: 1203145203
+      Data: 1248053154
     - Name: Depth
       Entry: 3
-      Data: 3
+      Data: 2
     - Name: BelongGroupId
       Entry: 3
       Data: -1
@@ -3000,7 +3000,7 @@ MonoBehaviour:
       Data: 1
     - Name: FuncName
       Entry: 1
-      Data: MakeDamage
+      Data: CreateHitBox
     - Name: FuncParams
       Entry: 7
       Data: 149|System.Collections.Generic.List`1[[Hono.Scripts.Battle.Parameter,
@@ -3055,7 +3055,7 @@ MonoBehaviour:
       Data: 153|System.Int32, mscorlib
     - Name: 
       Entry: 3
-      Data: 20500103
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -3082,206 +3082,7 @@ MonoBehaviour:
       Data: 
     - Name: Value
       Entry: 7
-      Data: 155|System.Int32, mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1500
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: VairableName
-      Entry: 6
-      Data: 
-    - Name: AttrType
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 156|Hono.Scripts.Battle.Parameter, Assembly-CSharp
-    - Name: ParameterType
-      Entry: 3
-      Data: 0
-    - Name: FuncName
-      Entry: 6
-      Data: 
-    - Name: FuncParams
-      Entry: 6
-      Data: 
-    - Name: Value
-      Entry: 7
-      Data: 157|System.Boolean, mscorlib
-    - Name: 
-      Entry: 5
-      Data: false
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: VairableName
-      Entry: 6
-      Data: 
-    - Name: AttrType
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: Value
-      Entry: 6
-      Data: 
-    - Name: VairableName
-      Entry: 6
-      Data: 
-    - Name: AttrType
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 15993750
-    - Name: $v
-      Entry: 7
-      Data: 158|Hono.Scripts.Battle.ActionNodeData, Assembly-CSharp
-    - Name: NodeId
-      Entry: 3
-      Data: 15993750
-    - Name: NodeType
-      Entry: 3
-      Data: 6
-    - Name: ParentId
-      Entry: 3
-      Data: 1248053154
-    - Name: Depth
-      Entry: 3
-      Data: 2
-    - Name: BelongGroupId
-      Entry: 3
-      Data: -1
-    - Name: ChildrenIds
-      Entry: 7
-      Data: 159|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: Desc
-      Entry: 6
-      Data: 
-    - Name: Function
-      Entry: 7
-      Data: 160|Hono.Scripts.Battle.Parameter, Assembly-CSharp
-    - Name: ParameterType
-      Entry: 3
-      Data: 1
-    - Name: FuncName
-      Entry: 1
-      Data: CreateHitBox
-    - Name: FuncParams
-      Entry: 7
-      Data: 161|System.Collections.Generic.List`1[[Hono.Scripts.Battle.Parameter,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 4
-    - Name: 
-      Entry: 7
-      Data: 162|Hono.Scripts.Battle.Parameter, Assembly-CSharp
-    - Name: ParameterType
-      Entry: 3
-      Data: 0
-    - Name: FuncName
-      Entry: 6
-      Data: 
-    - Name: FuncParams
-      Entry: 6
-      Data: 
-    - Name: Value
-      Entry: 7
-      Data: 163|System.Int32, mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: VairableName
-      Entry: 6
-      Data: 
-    - Name: AttrType
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 164|Hono.Scripts.Battle.Parameter, Assembly-CSharp
-    - Name: ParameterType
-      Entry: 3
-      Data: 0
-    - Name: FuncName
-      Entry: 6
-      Data: 
-    - Name: FuncParams
-      Entry: 6
-      Data: 
-    - Name: Value
-      Entry: 7
-      Data: 165|System.Int32, mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: VairableName
-      Entry: 6
-      Data: 
-    - Name: AttrType
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 166|Hono.Scripts.Battle.Parameter, Assembly-CSharp
-    - Name: ParameterType
-      Entry: 3
-      Data: 0
-    - Name: FuncName
-      Entry: 6
-      Data: 
-    - Name: FuncParams
-      Entry: 6
-      Data: 
-    - Name: Value
-      Entry: 7
-      Data: 167|Hono.Scripts.Battle.HitBoxData, Assembly-CSharp
+      Data: 155|Hono.Scripts.Battle.HitBoxData, Assembly-CSharp
     - Name: HitType
       Entry: 3
       Data: 0
@@ -3311,7 +3112,7 @@ MonoBehaviour:
       Data: true
     - Name: FilterSetting
       Entry: 7
-      Data: 168|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+      Data: 156|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
     - Name: _isOnlyCondition
       Entry: 5
       Data: false
@@ -3320,7 +3121,7 @@ MonoBehaviour:
       Data: true
     - Name: BoxData
       Entry: 7
-      Data: 169|Hono.Scripts.Battle.CheckBoxData, Assembly-CSharp
+      Data: 157|Hono.Scripts.Battle.CheckBoxData, Assembly-CSharp
     - Name: ShapeType
       Entry: 3
       Data: 1
@@ -3380,7 +3181,7 @@ MonoBehaviour:
       Data: false
     - Name: Ranges
       Entry: 7
-      Data: 170|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
+      Data: 158|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -3408,7 +3209,7 @@ MonoBehaviour:
       Data: 
     - Name: Compares
       Entry: 7
-      Data: 171|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterAttrCompare,
+      Data: 159|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterAttrCompare,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -3442,7 +3243,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 172|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+      Data: 160|Hono.Scripts.Battle.Parameter, Assembly-CSharp
     - Name: ParameterType
       Entry: 3
       Data: 0
@@ -3454,7 +3255,334 @@ MonoBehaviour:
       Data: 
     - Name: Value
       Entry: 7
-      Data: 173|System.Boolean, mscorlib
+      Data: 161|System.Boolean, mscorlib
+    - Name: 
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VairableName
+      Entry: 6
+      Data: 
+    - Name: AttrType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: VairableName
+      Entry: 6
+      Data: 
+    - Name: AttrType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 818039562
+    - Name: $v
+      Entry: 7
+      Data: 162|Hono.Scripts.Battle.ActionNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 818039562
+    - Name: NodeType
+      Entry: 3
+      Data: 6
+    - Name: ParentId
+      Entry: 3
+      Data: 1203145203
+    - Name: Depth
+      Entry: 3
+      Data: 3
+    - Name: BelongGroupId
+      Entry: 3
+      Data: -1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 163|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: Function
+      Entry: 7
+      Data: 164|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParameterType
+      Entry: 3
+      Data: 1
+    - Name: FuncName
+      Entry: 1
+      Data: CreateHitBox
+    - Name: FuncParams
+      Entry: 7
+      Data: 165|System.Collections.Generic.List`1[[Hono.Scripts.Battle.Parameter,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 166|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParameterType
+      Entry: 3
+      Data: 0
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: FuncParams
+      Entry: 6
+      Data: 
+    - Name: Value
+      Entry: 7
+      Data: 167|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VairableName
+      Entry: 6
+      Data: 
+    - Name: AttrType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 168|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParameterType
+      Entry: 3
+      Data: 0
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: FuncParams
+      Entry: 6
+      Data: 
+    - Name: Value
+      Entry: 7
+      Data: 169|System.Int32, mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VairableName
+      Entry: 6
+      Data: 
+    - Name: AttrType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 170|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParameterType
+      Entry: 3
+      Data: 0
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: FuncParams
+      Entry: 6
+      Data: 
+    - Name: Value
+      Entry: 7
+      Data: 171|Hono.Scripts.Battle.HitBoxData, Assembly-CSharp
+    - Name: HitType
+      Entry: 3
+      Data: 1
+    - Name: MaxCount
+      Entry: 3
+      Data: 1
+    - Name: ValidCount
+      Entry: 3
+      Data: 1
+    - Name: FirstInterval
+      Entry: 4
+      Data: 0
+    - Name: Interval
+      Entry: 4
+      Data: 0
+    - Name: OnceHitDamageCount
+      Entry: 3
+      Data: 1
+    - Name: DamageConfigId
+      Entry: 3
+      Data: 20500103
+    - Name: AoeData
+      Entry: 6
+      Data: 
+    - Name: UseCustomFilter
+      Entry: 5
+      Data: false
+    - Name: FilterSetting
+      Entry: 7
+      Data: 172|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
+    - Name: _isOnlyCondition
+      Entry: 5
+      Data: false
+    - Name: OpenBoxCheck
+      Entry: 5
+      Data: true
+    - Name: BoxData
+      Entry: 7
+      Data: 173|Hono.Scripts.Battle.CheckBoxData, Assembly-CSharp
+    - Name: ShapeType
+      Entry: 3
+      Data: 0
+    - Name: Rot
+      Entry: 7
+      Data: Hono.Scripts.Battle.SVector3, Assembly-CSharp
+    - Name: x
+      Entry: 4
+      Data: 0
+    - Name: y
+      Entry: 4
+      Data: 0
+    - Name: z
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Offset
+      Entry: 7
+      Data: Hono.Scripts.Battle.SVector3, Assembly-CSharp
+    - Name: x
+      Entry: 4
+      Data: 0
+    - Name: y
+      Entry: 4
+      Data: 0
+    - Name: z
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Length
+      Entry: 4
+      Data: 0
+    - Name: Width
+      Entry: 4
+      Data: 0
+    - Name: Height
+      Entry: 4
+      Data: 0
+    - Name: Radius
+      Entry: 4
+      Data: 0
+    - Name: Angle
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MaxTargetCount
+      Entry: 3
+      Data: -1
+    - Name: HasSelf
+      Entry: 5
+      Data: false
+    - Name: Ranges
+      Entry: 7
+      Data: 174|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterRange,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Compares
+      Entry: 7
+      Data: 175|System.Collections.Generic.List`1[[Hono.Scripts.Battle.FilterAttrCompare,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: FilterFunctionType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: IsFollowTarget
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VairableName
+      Entry: 6
+      Data: 
+    - Name: AttrType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 176|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParameterType
+      Entry: 3
+      Data: 0
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: FuncParams
+      Entry: 6
+      Data: 
+    - Name: Value
+      Entry: 7
+      Data: 177|System.Boolean, mscorlib
     - Name: 
       Entry: 5
       Data: false

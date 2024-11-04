@@ -1,13 +1,12 @@
+using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using UnityEngine;
-    using UnityEditor;
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.OdinInspector;
-    using Sirenix.Utilities.Editor;
-    using Sirenix.Utilities;
-
     public class SomeTextureToolWindow : OdinEditorWindow
     {
         [MenuItem("Tools/Odin/Demos/Odin Editor Window Demos/Some Texture Tool")]
@@ -27,22 +26,17 @@ namespace Sirenix.OdinInspector.Demos
             set { EditorPrefs.SetString("SomeTextureToolWindow.OutputPath", value); }
         }
 
-        [EnumToggleButtons]
-        [BoxGroup("Settings")]
+        [EnumToggleButtons] [BoxGroup("Settings")]
         public ScaleMode ScaleMode;
 
         [HorizontalGroup(0.5f, PaddingRight = 5, LabelWidth = 70)]
         public Texture[] Textures = new Texture[8];
 
-        [ReadOnly]
-        [HorizontalGroup]
-        [InlineEditor(InlineEditorModes.LargePreview)]
+        [ReadOnly] [HorizontalGroup] [InlineEditor(InlineEditorModes.LargePreview)]
         public Texture Preview;
 
         [Button(ButtonSizes.Gigantic), GUIColor(0, 1, 0)]
-        public void PerformSomeAction()
-        {
-        }
+        public void PerformSomeAction() { }
     }
 }
 #endif

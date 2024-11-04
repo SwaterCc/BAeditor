@@ -1,4 +1,3 @@
-using System;
 using Hono.Scripts.Battle;
 using UnityEngine;
 
@@ -7,6 +6,7 @@ namespace Editor.AbilityEditor.TreeItem
     public class CycleTreeItem : AbilityLogicTreeItem
     {
         private CycleNodeData _cycleNode;
+
         public CycleTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
         {
             base.depth = 0;
@@ -16,21 +16,21 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void buildMenu()
         {
-            _menu.AddItem(new GUIContent("Ìí¼ÓAction"), false,
+            _menu.AddItem(new GUIContent("æ·»åŠ Action"), false,
                 AddChild, (EAbilityNodeType.EAction));
-            _menu.AddItem(new GUIContent("Ìí¼ÓIf"), false,
+            _menu.AddItem(new GUIContent("æ·»åŠ If"), false,
                 AddChild, (EAbilityNodeType.EBranchControl));
-            _menu.AddItem(new GUIContent("Set±äÁ¿"), false,
+            _menu.AddItem(new GUIContent("Setå˜é‡"), false,
                 AddChild, (EAbilityNodeType.EVariableSetter));
             _menu.AddItem(new GUIContent("SetAttr"), false,
                 AddChild, (EAbilityNodeType.EAttrSetter));
-            _menu.AddItem(new GUIContent("´´½¨Event½Úµã"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºEventèŠ‚ç‚¹"), false,
                 AddChild, (EAbilityNodeType.EEvent));
-            _menu.AddItem(new GUIContent("´´½¨Repeat½Úµã"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºRepeatèŠ‚ç‚¹"), false,
                 AddChild, (EAbilityNodeType.ERepeat));
-            _menu.AddItem(new GUIContent("´´½¨Group½Úµã"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºGroupèŠ‚ç‚¹"), false,
                 AddChild, (EAbilityNodeType.EGroup));
-            _menu.AddItem(new GUIContent("´´½¨Timer½Úµã"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºTimerèŠ‚ç‚¹"), false,
                 AddChild, (EAbilityNodeType.ETimer));
         }
 
@@ -45,24 +45,24 @@ namespace Editor.AbilityEditor.TreeItem
             switch (_cycleNode.AllowEditCycleNodeData)
             {
                 case EAbilityAllowEditCycle.OnInit:
-                    desc = "Init(³õÊ¼»¯½×¶Î)";
+                    desc = "Init(åˆå§‹åŒ–é˜¶æ®µ)";
                     break;
                 case EAbilityAllowEditCycle.OnReady:
                     break;
                 case EAbilityAllowEditCycle.OnPreExecuteCheck:
-                    desc = "PreExecuteCheck(ÔËĞĞÇ°¼ì²â)";
+                    desc = "PreExecuteCheck(è¿è¡Œå‰æ£€æµ‹)";
                     break;
                 case EAbilityAllowEditCycle.OnPreExecute:
-                    desc = "PreExecute(Ô¤Æô¶¯½×¶Î)";
+                    desc = "PreExecute(é¢„å¯åŠ¨é˜¶æ®µ)";
                     break;
                 case EAbilityAllowEditCycle.OnExecuting:
-                    desc = "Executing(Ö´ĞĞ½×¶Î)";
+                    desc = "Executing(æ‰§è¡Œé˜¶æ®µ)";
                     break;
                 case EAbilityAllowEditCycle.OnEndExecute:
-                    desc = "EndExecute(Ö´ĞĞ½áÊø½×¶Î)";
+                    desc = "EndExecute(æ‰§è¡Œç»“æŸé˜¶æ®µ)";
                     break;
             }
-            
+
             return desc;
         }
 
@@ -86,23 +86,24 @@ namespace Editor.AbilityEditor.TreeItem
             switch (_cycleNode.AllowEditCycleNodeData)
             {
                 case EAbilityAllowEditCycle.OnInit:
-                    desc = "Ability±»ÊÚÓèºóÏÂÒ»Ö¡Ö´ĞĞ¸ÃÖÜÆÚ£¬Ö´ĞĞºó»á½øÈëReady×´Ì¬";
+                    desc = "Abilityè¢«æˆäºˆåä¸‹ä¸€å¸§æ‰§è¡Œè¯¥å‘¨æœŸï¼Œæ‰§è¡Œåä¼šè¿›å…¥ReadyçŠ¶æ€";
                     break;
                 case EAbilityAllowEditCycle.OnReady:
                     break;
                 case EAbilityAllowEditCycle.OnPreExecuteCheck:
-                    desc = "ÔÚÊÕµ½Ö´ĞĞÖ¸Áîºó£¬»á´ÓReady×´Ì¬¼ì²âÊÇ·ñÂú×ãÖ´ĞĞÌõ¼ş£¬Âú×ãºó½øÈëÔ¤Æô¶¯½×¶Î";
+                    desc = "åœ¨æ”¶åˆ°æ‰§è¡ŒæŒ‡ä»¤åï¼Œä¼šä»ReadyçŠ¶æ€æ£€æµ‹æ˜¯å¦æ»¡è¶³æ‰§è¡Œæ¡ä»¶ï¼Œæ»¡è¶³åè¿›å…¥é¢„å¯åŠ¨é˜¶æ®µ";
                     break;
                 case EAbilityAllowEditCycle.OnPreExecute:
-                    desc = "Æô¶¯Ç°µÄ½×¶Î£¬ÏÂÒ»½×¶Î½øÈëÖ´ĞĞ½×¶Î";
+                    desc = "å¯åŠ¨å‰çš„é˜¶æ®µï¼Œä¸‹ä¸€é˜¶æ®µè¿›å…¥æ‰§è¡Œé˜¶æ®µ";
                     break;
                 case EAbilityAllowEditCycle.OnExecuting:
-                    desc = "Ö´ĞĞ½×¶Î";
+                    desc = "æ‰§è¡Œé˜¶æ®µ";
                     break;
                 case EAbilityAllowEditCycle.OnEndExecute:
-                    desc = "Ö´ĞĞ½×¶Î½áÊøºó»á½øÈë¸Ã½×¶Î£¬´ËÊ±Êı¾İ»¹Î´ÇåÀí£¬¿ÉÒÔ×öÒ»Ğ©×Ô¶¨ÒåÂß¼­£¬Ö®ºó»áÖØÖÃÊı¾İ";
+                    desc = "æ‰§è¡Œé˜¶æ®µç»“æŸåä¼šè¿›å…¥è¯¥é˜¶æ®µï¼Œæ­¤æ—¶æ•°æ®è¿˜æœªæ¸…ç†ï¼Œå¯ä»¥åšä¸€äº›è‡ªå®šä¹‰é€»è¾‘ï¼Œä¹‹åä¼šé‡ç½®æ•°æ®";
                     break;
             }
+
             return desc;
         }
     }

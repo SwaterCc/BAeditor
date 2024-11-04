@@ -1,15 +1,17 @@
+#region
 
-using Hono.Scripts.Battle.Tools;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
     public partial class Ability
     {
-        /// <summary>
-        /// 时间节点的子节点不可以有时间节点
-        /// </summary>
-        private class AbilityTimerNode : AbilityNode, ITimer
+	    /// <summary>
+	    ///     时间节点的子节点不可以有时间节点
+	    /// </summary>
+	    private class AbilityTimerNode : AbilityNode, ITimer
         {
             private readonly TimerNodeData _timerData;
             private float _duration;
@@ -30,20 +32,20 @@ namespace Hono.Scripts.Battle
                 _duration = 0;
                 _count = 0;
                 _isFirst = true;
-                
-                if (!_timerData.FirstInterval.Parse(_executor.Ability,out _firstInterval))
+
+                if (!_timerData.FirstInterval.Parse(_executor.Ability, out _firstInterval))
                 {
                     Debug.LogError("Timer节点解析FirstInterval错误");
                     return;
                 }
-                
-                if (!_timerData.MaxCount.Parse(_executor.Ability,out _maxCount))
+
+                if (!_timerData.MaxCount.Parse(_executor.Ability, out _maxCount))
                 {
                     Debug.LogError("Timer节点解析MaxCount错误");
                     return;
                 }
-                
-                if (!_timerData.Interval.Parse(_executor.Ability,out _interval))
+
+                if (!_timerData.Interval.Parse(_executor.Ability, out _interval))
                 {
                     Debug.LogError("Timer节点解析Interval错误");
                     return;

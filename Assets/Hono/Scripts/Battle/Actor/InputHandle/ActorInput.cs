@@ -1,11 +1,15 @@
+#region
+
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
     public abstract class ActorInput
     {
         protected ActorLogic Logic { get; }
-        
+
         public Vector3 MoveInputValue { get; protected set; }
 
         protected ActorInput(ActorLogic logic)

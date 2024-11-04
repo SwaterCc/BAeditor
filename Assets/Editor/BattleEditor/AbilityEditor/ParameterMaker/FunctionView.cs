@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Editor.BattleEditor.AbilityEditor;
 using UnityEditor.IMGUI.Controls;
-using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
@@ -21,8 +20,8 @@ namespace Editor.AbilityEditor
             showAlternatingRowBackgrounds = true;
             showBorder = true;
             Reload();
-            
-            if(string.IsNullOrEmpty(CurSelect))
+
+            if (string.IsNullOrEmpty(CurSelect))
                 return;
             foreach (var item in rootItem.children)
             {
@@ -32,7 +31,7 @@ namespace Editor.AbilityEditor
                 }
             }
         }
-        
+
         protected override TreeViewItem BuildRoot()
         {
             var root = new TreeViewItem { id = 0, depth = -1, displayName = "Root" };
@@ -41,8 +40,8 @@ namespace Editor.AbilityEditor
 
             foreach (var funcInfo in _funcInfos)
             {
-                if(!funcInfo.ShowInEditorView) continue;
-                
+                if (!funcInfo.ShowInEditorView) continue;
+
                 var func = new TreeViewItem() { id = ++idx, depth = 0, displayName = funcInfo.FuncName };
                 root.AddChild(func);
             }

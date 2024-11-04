@@ -4,7 +4,7 @@ namespace Hono.Scripts.Battle.Tools
     {
         // 用于锁定对象，确保线程安全
         private static readonly object _lock = new object();
-    
+
         // 泛型类型的单例实例
         private static T _instance;
 
@@ -26,6 +26,7 @@ namespace Hono.Scripts.Battle.Tools
                         }
                     }
                 }
+
                 return _instance;
             }
         }

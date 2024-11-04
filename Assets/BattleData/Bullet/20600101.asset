@@ -17,7 +17,7 @@ MonoBehaviour:
   MotionType: 0
   Offset: {x: 0, y: 1, z: 0.5}
   CloseFollowTarget: 0
-  BulletSpeed: 16
+  BulletSpeed: 18
   IsHitPathActor: 0
   DamageConfigId: 20600101
   BulletLifeTime: 2

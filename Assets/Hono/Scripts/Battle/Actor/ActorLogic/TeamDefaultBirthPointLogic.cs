@@ -1,12 +1,7 @@
 namespace Hono.Scripts.Battle
 {
-    public class TeamDefaultBirthPointLogic : ActorLogic, IPoolObject
+    public class TeamDefaultBirthPointLogic : ActorLogic
     {
-        protected override void RecycleSelf()
-        {
-            AObjectPool<TeamDefaultBirthPointLogic>.Pool.Recycle(this);
-        }
-
-        public void OnRecycle() { }
+        public TeamDefaultBirthPointLogic(Actor actor) : base(actor) { }
     }
 }

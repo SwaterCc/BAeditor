@@ -1,22 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Sirenix.OdinInspector.Editor;
-    using UnityEngine;
-    using UnityEditor;
-    using Sirenix.Utilities.Editor;
-    using Sirenix.Utilities;
-
-    [TypeInfoBox("This example demonstrate how it possible to create a custom AttributeProcessorLocator to complete change how an entire PropertyTree resolves attributes, and therefore how all objects in the tree are displayed.")]
+    [TypeInfoBox(
+        "This example demonstrate how it possible to create a custom AttributeProcessorLocator to complete change how an entire PropertyTree resolves attributes, and therefore how all objects in the tree are displayed.")]
     public class CustomAttributeProcessorLocatorExample : MonoBehaviour
     {
         [Button(ButtonSizes.Large)]
         private void OpenEditorWindow()
         {
-            var window = Editor.CreateInstance<SomeCustomEditorWindow>();
+            var window = UnityEditor.Editor.CreateInstance<SomeCustomEditorWindow>();
             window.Show();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(500, 300);
         }
@@ -73,8 +73,7 @@ namespace Sirenix.OdinInspector.Demos
         [BoxGroup("Split/$Name/NameId", showLabel: false)]
         public string Name, Id;
 
-        [HideLabel, PropertyOrder(5)]
-        [PreviewField(Height = 105), HorizontalGroup("Split", width: 105)]
+        [HideLabel, PropertyOrder(5)] [PreviewField(Height = 105), HorizontalGroup("Split", width: 105)]
         public Texture2D Icon;
 
         [BoxGroup("Split/$Name/Properties", showLabel: false)]
@@ -84,7 +83,8 @@ namespace Sirenix.OdinInspector.Demos
     [OdinDontRegister] // This attributes prevents Odin from using this AttributeProcessor in the default attribute resolver locator.
     public class CustomMinionAttributeProcessor : OdinAttributeProcessor<SomeClass>
     {
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member,
+            List<Attribute> attributes)
         {
             attributes.Clear(); // Get rid of all other attributes.
 
@@ -117,7 +117,8 @@ namespace Sirenix.OdinInspector.Demos
     {
         private static readonly CustomMinionAttributeProcessor Processor = new CustomMinionAttributeProcessor();
 
-        public override List<OdinAttributeProcessor> GetChildProcessors(InspectorProperty parentProperty, MemberInfo member)
+        public override List<OdinAttributeProcessor> GetChildProcessors(InspectorProperty parentProperty,
+            MemberInfo member)
         {
             return new List<OdinAttributeProcessor>() { Processor };
         }

@@ -3,8 +3,7 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
     public class ConsumableItem : Item
     {
-        [SuffixLabel("seconds ", true)]
-        [BoxGroup(STATS_BOX_GROUP)]
+        [SuffixLabel("seconds ", true)] [BoxGroup(STATS_BOX_GROUP)]
         public float Cooldown;
 
         [HorizontalGroup(STATS_BOX_GROUP + "/Dur", DisableAutomaticLabelWidth = true)]
@@ -16,8 +15,7 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
         [LabelWidth(20)]
         public float Duration;
 
-        [VerticalGroup(LEFT_VERTICAL_GROUP)]
-        public StatList Modifiers;
+        [VerticalGroup(LEFT_VERTICAL_GROUP)] public StatList Modifiers;
 
         public override ItemTypes[] SupportedItemTypes
         {

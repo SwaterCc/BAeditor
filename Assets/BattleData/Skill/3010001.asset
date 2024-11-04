@@ -17,7 +17,7 @@ MonoBehaviour:
   SkillTargetType: 0
   SkillRange: 10
   EcdMode: 0
-  SkillCD: 3.5
+  SkillCD: 3
   SkillResCheck: []
   CostType: 0
   SkillResCost: []
@@ -42,7 +42,7 @@ MonoBehaviour:
       Length: 0
       Width: 0
       Height: 0
-      Radius: 2
+      Radius: 3.5
       Angle: 0
     MaxTargetCount: 1
     HasSelf: 0

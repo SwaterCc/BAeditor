@@ -1,8 +1,11 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -10,9 +13,6 @@ namespace Hono.Scripts.Battle
     {
         public int id;
         public string desc;
-        [NonSerialized]
-        [OdinSerialize]
-        
-        public List<AttrDefineItem> AttrDefineItems = new List<AttrDefineItem>();
+        [NonSerialized] [OdinSerialize] public List<AttrDefineItem> AttrDefineItems = new List<AttrDefineItem>();
     }
 }

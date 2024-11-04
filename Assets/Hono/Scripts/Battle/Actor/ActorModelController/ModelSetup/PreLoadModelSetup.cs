@@ -1,8 +1,8 @@
-using Cysharp.Threading.Tasks;
+#region
+
 using System;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
-using Object = UnityEngine.Object;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -10,27 +10,20 @@ namespace Hono.Scripts.Battle
     {
         public class PreLoadModelSetup : ModelSetup
         {
-            private EPreLoadGameObjectType _objectType;
+            private readonly EPreLoadGameObjectType _objectType;
 
-            public void Init(EPreLoadGameObjectType objectType)
+            public PreLoadModelSetup(EPreLoadGameObjectType objectType)
             {
                 _objectType = objectType;
-                _path = GameObjectPreLoadMgr.Instance.GetObjectPath(objectType);
             }
 
-            protected override void OnLoadModel()
+            public override void SetupModel(ActorModelController modelController, Action loadComplete = null)
             {
-                if (!GameObjectPool.Instance.TryGet(_path, out _gameObject))
-                {
-                    _gameObject = Object.Instantiate(GameObjectPreLoadMgr.Instance[_objectType]);
-                }
+                modelController._model = GameObjectPreLoadMgr.Instance[_objectType];
 
-                _loadComplete.Invoke(_gameObject);
-            }
+                modelController.IsModelLoadFinish = true;
 
-            protected override void OnUnInit()
-            {
-                _objectType = default;
+                loadComplete?.Invoke();
             }
         }
     }

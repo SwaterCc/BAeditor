@@ -1,8 +1,6 @@
-﻿using System;
-using Hono.Scripts.Battle;
+﻿using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
-using Sirenix.Serialization;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEngine;
@@ -24,9 +22,8 @@ namespace Editor.AbilityEditor.SimpleWindow
             filterSetting ??= new FilterSetting();
             Setting = filterSetting;
         }
-        
-        [VerticalGroup("setting")]
-        public FilterSetting Setting;
+
+        [VerticalGroup("setting")] public FilterSetting Setting;
 
         [VerticalGroup("clear")]
         [Button("重置")]

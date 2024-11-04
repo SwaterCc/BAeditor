@@ -1,3 +1,5 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,17 +9,19 @@ using Hono.Scripts.Battle.Tools;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
+#endregion
+
 namespace Hono.Scripts.Battle
 {
-    /// <summary>
-    /// Ability的配置
-    /// ID分段 1-9999 其他逻辑
-    /// ID分段 10001-19999 技能
-    /// ID分段 20001-29999 buff
-    /// ID分段 30001-39999 子弹
-    /// ID分段 40001-49999 GameMode
-    /// </summary>
-    public class AbilityData : SerializedScriptableObject, IAllowedIndexing
+	/// <summary>
+	///     Ability的配置
+	///     ID分段 1-9999 其他逻辑
+	///     ID分段 10001-19999 技能
+	///     ID分段 20001-29999 buff
+	///     ID分段 30001-39999 子弹
+	///     ID分段 40001-49999 GameMode
+	/// </summary>
+	public class AbilityData : SerializedScriptableObject, IAllowedIndexing
     {
         public int ID => ConfigId;
 
@@ -38,14 +42,14 @@ namespace Hono.Scripts.Battle
         public string PreCheckerVarName = "CHECKER";
 
         /// <summary>
-        /// 头节点字典
+        ///     头节点字典
         /// </summary>
         [OdinSerialize] public Dictionary<EAbilityAllowEditCycle, int> HeadNodeDict = new();
 
         /// <summary>
-        /// 存储所有数据
+        ///     存储所有数据
         /// </summary>
-        [Searchable][OdinSerialize] public Dictionary<int, AbilityNodeData> NodeDict = new();
+        [Searchable] [OdinSerialize] public Dictionary<int, AbilityNodeData> NodeDict = new();
 
         public AbilityNodeData GetNodeData(EAbilityNodeType type)
         {
@@ -105,8 +109,8 @@ namespace Hono.Scripts.Battle
 
             return id;
         }
-        
-        public  TNodeType DeepCopyNodeData<TNodeType>(TNodeType nodeData) where TNodeType : AbilityNodeData
+
+        public TNodeType DeepCopyNodeData<TNodeType>(TNodeType nodeData) where TNodeType : AbilityNodeData
         {
             using (var ms = new MemoryStream())
             {
@@ -133,9 +137,9 @@ namespace Hono.Scripts.Battle
         public int BelongGroupId = -1;
 
         public List<int> ChildrenIds = new();
-        
+
         public string Desc;
-        
+
         public void RemoveSelf(AbilityData data)
         {
             data.NodeDict.Remove(NodeId);
@@ -154,7 +158,7 @@ namespace Hono.Scripts.Battle
             Desc = copy.Desc;
             Depth = copy.Depth;
         }
-        
+
         public bool IsHead()
         {
             return ParentId == -1;
@@ -184,10 +188,11 @@ namespace Hono.Scripts.Battle
     {
         public Parameter CompareFunc = new();
         public int BranchGroup;
+
         public override void CopyTo(AbilityNodeData copy)
         {
             base.CopyTo(copy);
-            var branch =(BranchNodeData)copy;
+            var branch = (BranchNodeData)copy;
             CompareFunc = new Parameter(branch.CompareFunc);
             BranchGroup = branch.BranchGroup + 100;
         }
@@ -200,10 +205,11 @@ namespace Hono.Scripts.Battle
         public EBattleEventType EventType;
         public Parameter CreateChecker = new();
         public string MsgName;
+
         public override void CopyTo(AbilityNodeData copy)
         {
             base.CopyTo(copy);
-            var eventNode =(EventNodeData)copy;
+            var eventNode = (EventNodeData)copy;
             IsEvent = eventNode.IsEvent;
             EventType = eventNode.EventType;
             CreateChecker = new Parameter(eventNode.CreateChecker);
@@ -217,14 +223,14 @@ namespace Hono.Scripts.Battle
         public int GroupId;
 
         /// <summary>
-        /// 是否为默认开启阶段
+        ///     是否为默认开启阶段
         /// </summary>
         public bool IsDefaultStart;
-        
+
         public override void CopyTo(AbilityNodeData copy)
         {
             base.CopyTo(copy);
-            var groupNode =(GroupNodeData)copy;
+            var groupNode = (GroupNodeData)copy;
             GroupId = groupNode.GroupId + 100;
             IsDefaultStart = false;
         }
@@ -236,11 +242,11 @@ namespace Hono.Scripts.Battle
         public Parameter FirstInterval = new();
         public Parameter Interval = new();
         public Parameter MaxCount = new();
-        
+
         public override void CopyTo(AbilityNodeData copy)
         {
             base.CopyTo(copy);
-            var timerNode =(TimerNodeData)copy;
+            var timerNode = (TimerNodeData)copy;
             FirstInterval = new Parameter(timerNode.FirstInterval);
             Interval = new Parameter(timerNode.Interval);
             MaxCount = new Parameter(timerNode.MaxCount);
@@ -251,10 +257,11 @@ namespace Hono.Scripts.Battle
     public class RepeatNodeData : AbilityNodeData
     {
         public Parameter MaxRepeatCount = new();
+
         public override void CopyTo(AbilityNodeData copy)
         {
             base.CopyTo(copy);
-            var repeatNode =(RepeatNodeData)copy;
+            var repeatNode = (RepeatNodeData)copy;
             MaxRepeatCount = new Parameter(repeatNode.MaxRepeatCount);
         }
     }
@@ -265,10 +272,11 @@ namespace Hono.Scripts.Battle
         public string Name;
         public string typeString = "int";
         public Parameter Value = new();
+
         public override void CopyTo(AbilityNodeData copy)
         {
             base.CopyTo(copy);
-            var varSetter =(VarSetterNodeData)copy;
+            var varSetter = (VarSetterNodeData)copy;
             Value = new Parameter(varSetter.Value);
             Name = varSetter.Name;
             typeString = varSetter.typeString;
@@ -281,10 +289,11 @@ namespace Hono.Scripts.Battle
         public ELogicAttr LogicAttr;
         public Parameter Value = new();
         public bool IsTempAttr;
+
         public override void CopyTo(AbilityNodeData copy)
         {
             base.CopyTo(copy);
-            var attrSetter =(AttrSetterNodeData)copy;
+            var attrSetter = (AttrSetterNodeData)copy;
             Value = new Parameter(attrSetter.Value);
             LogicAttr = attrSetter.LogicAttr;
             IsTempAttr = attrSetter.IsTempAttr;

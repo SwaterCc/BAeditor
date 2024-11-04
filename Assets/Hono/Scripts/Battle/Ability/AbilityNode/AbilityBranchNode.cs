@@ -1,6 +1,8 @@
-using Hono.Scripts.Battle.Tools;
-using System;
+#region
+
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -10,7 +12,7 @@ namespace Hono.Scripts.Battle
         {
             private bool _conditionRes;
             public bool Result => _conditionRes;
-            
+
             private BranchNodeData _branchNode;
 
             public AbilityBranchNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
@@ -31,10 +33,10 @@ namespace Hono.Scripts.Battle
                     Debug.LogError("Branch节点执行错误");
                     return;
                 }
-                
+
                 if (_conditionRes)
                 {
-	                DoChildrenJob();
+                    DoChildrenJob();
                 }
 
                 Parent.IfInfos[_branchNode.BranchGroup] = _conditionRes;

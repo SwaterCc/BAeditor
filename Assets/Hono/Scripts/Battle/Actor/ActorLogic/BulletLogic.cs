@@ -1,36 +1,40 @@
+#region
+
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
+#endregion
+
 namespace Hono.Scripts.Battle
 {
     //当前游戏模式
-    public class BulletLogic : ActorLogic, IPoolObject
+    public class BulletLogic : ActorLogic
     {
         private BulletData _bulletData;
         private int _targetUid;
+        private Vector3 _targetPos;
 
         private int _sourceActorId;
 
         private MotionComp _motionComp;
-        private readonly MotionSetting _motionSetting = new();
         private VFXComp _vfxComp;
 
         private int _hitCount;
         private float _duration;
 
-        
+        public BulletLogic(Actor actor) : base(actor) { }
+
         protected override void setupAttrs()
         {
             SetAttr(ELogicAttr.AttrUnselectable, 1, false);
         }
 
-        protected override void onEnterScene()
+        protected override void onInit()
         {
             _sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
             if (!ActorManager.Instance.TryGetActor(_sourceActorId, out var summoner))
             {
-                //进入场景时召唤者死亡
                 dead();
                 return;
             }
@@ -45,33 +49,31 @@ namespace Hono.Scripts.Battle
 
             SetAttr(ELogicAttr.AttrPosition, startPos, false);
 
-            _motionSetting.MoveType = _bulletData.MotionType;
-            _motionSetting.Speed = _bulletData.BulletSpeed;
-            _motionSetting.Duration = _bulletData.BulletLifeTime;
-            _motionSetting.MovingFaceToTarget = true;
-            _motionSetting.TriggerEventClose = true;
+            var motionSetting = new MotionSetting()
+            {
+                MoveType = _bulletData.MotionType,
+                Speed = _bulletData.BulletSpeed,
+                Duration = _bulletData.BulletLifeTime,
+                MovingFaceToTarget = true,
+                TriggerEventClose = true
+            };
 
-            _motionComp.AddMotion(_targetUid, _motionSetting, onBulletCollision);
+            _motionComp.AddMotion(_targetUid, motionSetting, onBulletCollision);
 
             AbilityController.AwardAbility(_bulletData.Id, true);
         }
 
-        protected override void constructComponents()
+        protected override void setupComponents()
         {
-            _motionComp = addComponent(_motionComp);
-            _vfxComp = addComponent(_vfxComp);
+            _motionComp = new MotionComp(this);
+            _vfxComp = new VFXComp(this);
+            addComponent(_motionComp);
+            addComponent(_vfxComp);
         }
 
         private void dead()
         {
             ActorManager.Instance.RemoveActor(Actor.Uid);
-        }
-
-        public void OnRecycle()
-        {
-            _hitCount = 0;
-            _duration = 0;
-            _targetUid = 0;
         }
 
         protected override void onTick(float dt)
@@ -81,11 +83,6 @@ namespace Hono.Scripts.Battle
             {
                 dead();
             }
-        }
-
-        protected override void RecycleSelf()
-        {
-            AObjectPool<BulletLogic>.Pool.Recycle(this);
         }
 
         private HitInfo makeHitInfo()
@@ -139,7 +136,6 @@ namespace Hono.Scripts.Battle
             if (attacker == null)
             {
                 //命中时攻击者已经死了
-                dead();
                 return;
             }
 
@@ -169,9 +165,18 @@ namespace Hono.Scripts.Battle
             hitDamageInfo.HitTargetUid = _targetUid;
             hitInfo.HitBoxHitCount = 1;
             hitDamageInfo.ParseDamageResult(res);
-            UIInterface.ShowDamage(Actor.Pos, res);
             hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
             BattleEventManager.Instance.TriggerActorEvent(Actor.Uid, EBattleEventType.OnHitDamage, hitDamageInfo);
+            if (hitDamageInfo.IsKillTarget)
+            {
+                if (ActorManager.Instance.TryGetActor(GetAttr<int>(ELogicAttr.AttrTopSourceActorUid), out var attack))
+                {
+                    if (attack.Logic.TryGetComponent<MpComp>(out var mpComp))
+                    {
+                        mpComp.KillChangeMp(hitDamageInfo);
+                    }
+                }
+            }
 
             beHurtComp.OnBeHurt(hitDamageInfo);
         }

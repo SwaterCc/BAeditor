@@ -65,7 +65,10 @@ namespace @nameSpace
             return _tableData.TryGetValue(id, out data);
         }
 
-       
+         public Dictionary<int, @tableRowName> GetTable()
+         {
+             return _tableData;
+         }
     }
 
     public partial class @tableName

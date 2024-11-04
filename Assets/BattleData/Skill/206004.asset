@@ -52,5 +52,5 @@ MonoBehaviour:
   MaxTargetCount: -1
   SelectSelf: 0
   SkillName: "\u4E13\u6CE8\u5C04\u51FB"
-  SkillDesc: "\u4E13\u6CE8\u5C04\u51FB"
-  SkillIconPath: 
+  SkillDesc: "\u6218\u6597\u4E2D\u6BCF\u6B21\u91CA\u653E\u6280\u80FD\u589E\u52A0\u653B\u51FB\u901F\u5EA610%\uFF0C\u6700\u591A\u589E\u52A0100%\u3002"
+  SkillIconPath: Sprites/Battle/206004

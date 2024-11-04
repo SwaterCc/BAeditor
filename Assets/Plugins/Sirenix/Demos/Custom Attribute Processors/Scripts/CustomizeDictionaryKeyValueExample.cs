@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Sirenix.OdinInspector.Editor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using UnityEngine;
-    using System.Collections.Generic;
-    using Sirenix.OdinInspector.Editor;
-    using System;
-    using System.Reflection;
-
     public class CustomizeDictionaryKeyValueExample : SerializedMonoBehaviour
     {
         public Dictionary<MyKey, int> MyDictionary = new Dictionary<MyKey, int>();
@@ -21,7 +21,8 @@ namespace Sirenix.OdinInspector.Demos
 
     public class AddKeyValueResolver : OdinAttributeProcessor<TempKeyValuePair<MyKey, int>>
     {
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member,
+            List<Attribute> attributes)
         {
             if (member.Name == "Key")
             {
@@ -36,7 +37,8 @@ namespace Sirenix.OdinInspector.Demos
 
     public class EditKeyValueResolver : OdinAttributeProcessor<EditableKeyValuePair<MyKey, int>>
     {
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member,
+            List<Attribute> attributes)
         {
             if (member.Name == "Key")
             {

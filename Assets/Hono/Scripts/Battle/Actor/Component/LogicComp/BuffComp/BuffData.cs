@@ -1,7 +1,9 @@
+#region
+
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {

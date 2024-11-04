@@ -806,7 +806,7 @@ MonoBehaviour:
       Data: 
     - Name: MaxTargetCount
       Entry: 3
-      Data: 5
+      Data: 6
     - Name: HasSelf
       Entry: 5
       Data: false

@@ -1,228 +1,289 @@
-﻿using System;
+﻿#region
+
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Hono.Scripts.Battle {
-	public class IntArray : IEnumerable<int> {
-		private readonly List<int> _array;
+#endregion
 
-		public IntArray(string csv) {
-			_array = new List<int>();
-			if (string.IsNullOrEmpty(csv)) return;
-			var intStr = csv.Split("=");
-			foreach (var intValue in intStr) {
-				_array.Add(int.Parse(intValue));
-			}
-		}
+namespace Hono.Scripts.Battle
+{
+    public class IntArray : IEnumerable<int>
+    {
+        private readonly List<int> _array;
 
-		public static implicit operator List<int>(IntArray array) {
-			List<int> list = new();
-			list.AddRange(array._array);
-			return list;
-		}
+        public IntArray(string csv)
+        {
+            _array = new List<int>();
+            if (string.IsNullOrEmpty(csv)) return;
+            var intStr = csv.Split("=");
+            foreach (var intValue in intStr)
+            {
+                _array.Add(int.Parse(intValue));
+            }
+        }
 
-		public int this[int idx] => _array[idx];
+        public static implicit operator List<int>(IntArray array)
+        {
+            List<int> list = new();
+            list.AddRange(array._array);
+            return list;
+        }
 
-		public IEnumerator<int> GetEnumerator() {
-			foreach (var num in _array) {
-				yield return num;
-			}
-		}
+        public int this[int idx] => _array[idx];
+        public int Count => _array.Count;
 
-		IEnumerator IEnumerable.GetEnumerator() {
-			return GetEnumerator();
-		}
-	}
+        public IEnumerator<int> GetEnumerator()
+        {
+            foreach (var num in _array)
+            {
+                yield return num;
+            }
+        }
 
-	public class NumberArray : IEnumerable<float> {
-		private readonly List<float> _array;
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 
-		public NumberArray(string csv) {
-			_array = new List<float>();
-			var intStr = csv.Split("=");
-			if (string.IsNullOrEmpty(csv)) return;
-			foreach (var floatValue in intStr) {
-				_array.Add(float.Parse(floatValue));
-			}
-		}
+    public class NumberArray : IEnumerable<float>
+    {
+        private readonly List<float> _array;
 
-		public static implicit operator List<float>(NumberArray array) {
-			List<float> list = new();
-			list.AddRange(array._array);
-			return list;
-		}
+        public NumberArray(string csv)
+        {
+            _array = new List<float>();
+            var intStr = csv.Split("=");
+            if (string.IsNullOrEmpty(csv)) return;
+            foreach (var floatValue in intStr)
+            {
+                _array.Add(float.Parse(floatValue));
+            }
+        }
 
-		public float this[int idx] => _array[idx];
+        public static implicit operator List<float>(NumberArray array)
+        {
+            List<float> list = new();
+            list.AddRange(array._array);
+            return list;
+        }
 
-		public IEnumerator<float> GetEnumerator() {
-			foreach (var num in _array) {
-				yield return num;
-			}
-		}
+        public float this[int idx] => _array[idx];
+        public int Count => _array.Count;
 
-		IEnumerator IEnumerable.GetEnumerator() {
-			return GetEnumerator();
-		}
-	}
+        public IEnumerator<float> GetEnumerator()
+        {
+            foreach (var num in _array)
+            {
+                yield return num;
+            }
+        }
 
-	public class StringArray : IEnumerable<string> {
-		private readonly List<string> _array;
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 
-		public StringArray(string csv) {
-			_array = new List<string>();
-			var intStr = csv.Split("=");
-			if (string.IsNullOrEmpty(csv)) return;
-			foreach (var value in intStr) {
-				_array.Add(value);
-			}
-		}
+    public class StringArray : IEnumerable<string>
+    {
+        private readonly List<string> _array;
 
-		public string this[int idx] => _array[idx];
+        public StringArray(string csv)
+        {
+            _array = new List<string>();
+            var intStr = csv.Split("=");
+            if (string.IsNullOrEmpty(csv)) return;
+            foreach (var value in intStr)
+            {
+                _array.Add(value);
+            }
+        }
 
-		public static implicit operator List<string>(StringArray array) {
-			List<string> list = new();
-			list.AddRange(array._array);
-			return list;
-		}
+        public string this[int idx] => _array[idx];
+        public int Count => _array.Count;
 
-		public IEnumerator<string> GetEnumerator() {
-			foreach (var str in _array) {
-				yield return str;
-			}
-		}
+        public static implicit operator List<string>(StringArray array)
+        {
+            List<string> list = new();
+            list.AddRange(array._array);
+            return list;
+        }
 
-		IEnumerator IEnumerable.GetEnumerator() {
-			return GetEnumerator();
-		}
-	}
+        public IEnumerator<string> GetEnumerator()
+        {
+            foreach (var str in _array)
+            {
+                yield return str;
+            }
+        }
 
-	public class IntTable : IEnumerable<IntArray> {
-		private List<IntArray> _tables;
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 
-		public IntTable(string csv) {
-			_tables = new List<IntArray>();
-			if (string.IsNullOrEmpty(csv)) return;
-			foreach (var arrayStr in csv.Split("|")) {
-				_tables.Add(new IntArray(arrayStr));
-			}
-		}
+    public class IntTable : IEnumerable<IntArray>
+    {
+        private List<IntArray> _tables;
 
-		public IntArray this[int idx] => _tables[idx];
+        public IntTable(string csv)
+        {
+            _tables = new List<IntArray>();
+            if (string.IsNullOrEmpty(csv)) return;
+            foreach (var arrayStr in csv.Split("|"))
+            {
+                _tables.Add(new IntArray(arrayStr));
+            }
+        }
 
-		public static implicit operator List<List<int>>(IntTable intTable) {
-			List<List<int>> table = new();
-			foreach (var array in intTable) {
-				table.Add(array);
-			}
+        public IntArray this[int idx] => _tables[idx];
 
-			return table;
-		}
+        public int Count => _tables.Count;
 
-		public IEnumerator<IntArray> GetEnumerator() {
-			foreach (var item in _tables) {
-				yield return item;
-			}
-		}
+        public static implicit operator List<List<int>>(IntTable intTable)
+        {
+            List<List<int>> table = new();
+            foreach (var array in intTable)
+            {
+                table.Add(array);
+            }
 
-		IEnumerator IEnumerable.GetEnumerator() {
-			return GetEnumerator();
-		}
-	}
+            return table;
+        }
 
-	public class NumberTable : IEnumerable<NumberArray> {
-		private List<NumberArray> _tables;
+        public IEnumerator<IntArray> GetEnumerator()
+        {
+            foreach (var item in _tables)
+            {
+                yield return item;
+            }
+        }
 
-		public NumberTable(string csv) {
-			_tables = new List<NumberArray>();
-			if (string.IsNullOrEmpty(csv)) return;
-			foreach (var arrayStr in csv.Split("|")) {
-				_tables.Add(new NumberArray(arrayStr));
-			}
-		}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 
-		public NumberArray this[int idx] => _tables[idx];
+    public class NumberTable : IEnumerable<NumberArray>
+    {
+        private List<NumberArray> _tables;
 
-		public static implicit operator List<List<float>>(NumberTable numTable) {
-			List<List<float>> table = new();
-			foreach (var array in numTable) {
-				table.Add(array);
-			}
+        public NumberTable(string csv)
+        {
+            _tables = new List<NumberArray>();
+            if (string.IsNullOrEmpty(csv)) return;
+            foreach (var arrayStr in csv.Split("|"))
+            {
+                _tables.Add(new NumberArray(arrayStr));
+            }
+        }
 
-			return table;
-		}
+        public NumberArray this[int idx] => _tables[idx];
+        public int Count => _tables.Count;
 
-		public IEnumerator<NumberArray> GetEnumerator() {
-			foreach (var iNumberArray in _tables) {
-				yield return iNumberArray;
-			}
-		}
+        public static implicit operator List<List<float>>(NumberTable numTable)
+        {
+            List<List<float>> table = new();
+            foreach (var array in numTable)
+            {
+                table.Add(array);
+            }
 
-		IEnumerator IEnumerable.GetEnumerator() {
-			return GetEnumerator();
-		}
-	}
+            return table;
+        }
 
-	public abstract class TableRow {
-		public int Id => _id;
-		private int _id;
-		private readonly Dictionary<string, object> _rowKeyValue = new();
+        public IEnumerator<NumberArray> GetEnumerator()
+        {
+            foreach (var iNumberArray in _tables)
+            {
+                yield return iNumberArray;
+            }
+        }
 
-		public object TryGet(string filedName, out object value) {
-			return _rowKeyValue.TryGetValue(filedName, out value);
-		}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 
-		public CSVParser Parser { get; protected set; }
+    public abstract class TableRow
+    {
+        public int Id => _id;
+        private int _id;
+        private readonly Dictionary<string, object> _rowKeyValue = new();
 
-		public abstract class CSVParser {
-			protected TableRow _row;
+        public object TryGet(string filedName, out object value)
+        {
+            return _rowKeyValue.TryGetValue(filedName, out value);
+        }
 
-			protected CSVParser(TableRow row) {
-				_row = row;
-			}
+        public CSVParser Parser { get; protected set; }
 
-			public void Parse(string line) {
-				var datas = line.Split(",");
-				_row._id = int.Parse(datas[0]);
-				onParse(datas);
-			}
+        public abstract class CSVParser
+        {
+            protected TableRow _row;
 
-			protected abstract void onParse(string[] line);
+            protected CSVParser(TableRow row)
+            {
+                _row = row;
+            }
 
-			protected int parseInt(string csvElement) {
-				return string.IsNullOrEmpty(csvElement) ? 0 : int.Parse(csvElement);
-			}
+            public void Parse(string line)
+            {
+                var datas = line.Split(",");
+                _row._id = int.Parse(datas[0]);
+                onParse(datas);
+            }
 
-			protected float parseNumber(string csvElement) {
-				return string.IsNullOrEmpty(csvElement) ? 0 : float.Parse(csvElement);
-			}
+            protected abstract void onParse(string[] line);
 
-			protected string parseString(string csvElement) {
-				return csvElement;
-			}
+            protected int parseInt(string csvElement)
+            {
+                return string.IsNullOrEmpty(csvElement) ? 0 : int.Parse(csvElement);
+            }
 
-			protected bool parseBool(string csvElement) {
-				return !string.IsNullOrEmpty(csvElement) && bool.Parse(csvElement);
-			}
+            protected float parseNumber(string csvElement)
+            {
+                return string.IsNullOrEmpty(csvElement) ? 0 : float.Parse(csvElement);
+            }
 
-			protected IntArray parseIntArray(string csvElement) {
-				return new IntArray(csvElement);
-			}
+            protected string parseString(string csvElement)
+            {
+                return csvElement;
+            }
 
-			protected NumberArray parseNumberArray(string csvElement) {
-				return new NumberArray(csvElement);
-			}
+            protected bool parseBool(string csvElement)
+            {
+                return !string.IsNullOrEmpty(csvElement) && bool.Parse(csvElement);
+            }
 
-			protected StringArray parseStringArray(string csvElement) {
-				return new StringArray(csvElement);
-			}
+            protected IntArray parseIntArray(string csvElement)
+            {
+                return new IntArray(csvElement);
+            }
 
-			protected IntTable parseIntTable(string csvElement) {
-				return new IntTable(csvElement);
-			}
+            protected NumberArray parseNumberArray(string csvElement)
+            {
+                return new NumberArray(csvElement);
+            }
 
-			protected NumberTable parseNumberTable(string csvElement) {
-				return new NumberTable(csvElement);
-			}
-		}
-	}
+            protected StringArray parseStringArray(string csvElement)
+            {
+                return new StringArray(csvElement);
+            }
+
+            protected IntTable parseIntTable(string csvElement)
+            {
+                return new IntTable(csvElement);
+            }
+
+            protected NumberTable parseNumberTable(string csvElement)
+            {
+                return new NumberTable(csvElement);
+            }
+        }
+    }
 }

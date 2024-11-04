@@ -1,13 +1,12 @@
+using Sirenix.OdinInspector.Editor.Drawers;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
-    using UnityEngine;
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.OdinInspector.Editor.Drawers;
-    using Sirenix.Utilities.Editor;
-    using Sirenix.Utilities;
-    using UnityEditor;
-
     // 
     // In Character.cs we have a two dimention array of ItemSlots which is our inventory.
     // And instead of using the the TableMatrix attribute to customize it there, we in this case 
@@ -32,7 +31,8 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
         protected override ItemSlot DrawElement(Rect rect, ItemSlot value)
         {
             var id = DragAndDropUtilities.GetDragAndDropId(rect);
-            DragAndDropUtilities.DrawDropZone(rect, value.Item ? value.Item.Icon : null, null, id); // Draws the drop-zone using the items icon.
+            DragAndDropUtilities.DrawDropZone(rect, value.Item ? value.Item.Icon : null, null,
+                id); // Draws the drop-zone using the items icon.
 
             if (value.Item != null)
             {
@@ -42,9 +42,9 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
                 GUI.Label(countRect, "/ " + value.Item.ItemStackSize, SirenixGUIStyles.RightAlignedGreyMiniLabel);
             }
 
-            value = DragAndDropUtilities.DropZone(rect, value);                                     // Drop zone for ItemSlot structs.
-            value.Item = DragAndDropUtilities.DropZone<Item>(rect, value.Item);                     // Drop zone for Item types.
-            value = DragAndDropUtilities.DragZone(rect, value, true, true);                         // Enables dragging of the ItemSlot
+            value = DragAndDropUtilities.DropZone(rect, value); // Drop zone for ItemSlot structs.
+            value.Item = DragAndDropUtilities.DropZone<Item>(rect, value.Item); // Drop zone for Item types.
+            value = DragAndDropUtilities.DragZone(rect, value, true, true); // Enables dragging of the ItemSlot
 
             return value;
         }
@@ -60,6 +60,5 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
             DragAndDropUtilities.DropZone<ItemSlot>(rect, new ItemSlot(), false, id);
         }
     }
-
 }
 #endif

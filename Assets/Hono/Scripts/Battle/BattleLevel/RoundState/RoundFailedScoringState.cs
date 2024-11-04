@@ -14,11 +14,9 @@
             {
                 if (!(Duration > CurrentRoundData.FailedScoringStageTime)) return;
 
-                Round.GameRunningState.BattleGroundHandle.RuntimeInfo.CurRoundLastTime = CurrentRoundData.FailedScoringStageTime - Duration;
-                
                 if (Round.CanRepeat)
                 {
-                    Round.GameRunningState.BattleGroundHandle.RuntimeInfo.RepeatRound();
+                    Round.GameRunningState.BattleGroundHandle.RtInfo.RepeatRound();
                     Round.SwitchState(ERoundState.Ready);
                 }
                 else
@@ -29,7 +27,13 @@
                 }
             }
 
-            protected override void onExit() { }
+            protected override void onExit()
+            {
+                if (!Round.GameRunningState.BattleGroundHandle._levelData.ReadyRoundStateSpik)
+                {
+                    Round.GameRunningState.BattleGroundHandle._pawnTeamController.RemoveTeam();
+                }
+            }
         }
     }
 }

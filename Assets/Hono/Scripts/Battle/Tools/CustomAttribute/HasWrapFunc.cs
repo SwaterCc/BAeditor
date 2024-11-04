@@ -1,9 +1,13 @@
+#region
+
 using System;
+
+#endregion
 
 namespace Hono.Scripts.Battle.Tools.CustomAttribute
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class HasWrapFunc: Attribute
+    public class HasWrapFunc : Attribute
     {
         public string WrapFuncName;
 

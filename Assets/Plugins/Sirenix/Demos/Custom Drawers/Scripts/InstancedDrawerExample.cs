@@ -1,28 +1,26 @@
+using System;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using UnityEngine;
-
 #if UNITY_EDITOR
-
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.Utilities.Editor;
+    using Editor;
+    using Utilities.Editor;
 
 #endif
 
     // Example demonstrating how use context objects in custom drawers.
-    [InfoBox("As of Odin 2.0, all drawers are now instanced per property. This means that the previous context system is now unnecessary as you can just make fields directly in the drawer.")]
+    [InfoBox(
+        "As of Odin 2.0, all drawers are now instanced per property. This means that the previous context system is now unnecessary as you can just make fields directly in the drawer.")]
     public class InstancedDrawerExample : MonoBehaviour
     {
-        [InstancedDrawerExample]
-        public int Field;
+        [InstancedDrawerExample] public int Field;
     }
 
     // The attribute used by the InstancedDrawerExampleAttributeDrawer.
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public class InstancedDrawerExampleAttribute : Attribute
-    { }
+    public class InstancedDrawerExampleAttribute : Attribute { }
 
 #if UNITY_EDITOR
 

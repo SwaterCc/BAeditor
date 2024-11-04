@@ -4,7 +4,7 @@
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-*/
+ */
 
 using System;
 using UnityEngine;
@@ -85,11 +85,12 @@ namespace XLuaTest
                     end
                 }
 	        ";
+
         // Use this for initialization
         void Start()
         {
             LuaEnv luaenv = new LuaEnv();
-            Test(luaenv);//调用了带可变参数的delegate，函数结束都不会释放delegate，即使置空并调用GC
+            Test(luaenv); //调用了带可变参数的delegate，函数结束都不会释放delegate，即使置空并调用GC
             luaenv.Dispose();
         }
 
@@ -121,9 +122,6 @@ namespace XLuaTest
         }
 
         // Update is called once per frame
-        void Update()
-        {
-
-        }
+        void Update() { }
     }
 }

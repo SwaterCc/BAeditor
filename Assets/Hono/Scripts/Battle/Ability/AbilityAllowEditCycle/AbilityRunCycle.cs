@@ -1,6 +1,8 @@
+#region
 
 using System.Collections.Generic;
-using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -69,7 +71,7 @@ namespace Hono.Scripts.Battle
 
                 onTick(dt);
                 _state.GetCycleCallback(getCycleType()).OnTick?.Invoke();
-                
+
                 foreach (var timer in _removes)
                 {
                     _timerNodes.Remove(timer);
@@ -97,10 +99,8 @@ namespace Hono.Scripts.Battle
                 return _timerNodes.Count == 0;
             }
 
-            public virtual void OnReset() {
-	            
-            }
-            
+            public virtual void OnReset() { }
+
             public virtual void OnReload() { }
         }
     }

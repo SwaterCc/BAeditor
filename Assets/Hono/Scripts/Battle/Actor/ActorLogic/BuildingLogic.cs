@@ -1,55 +1,19 @@
-using UnityEngine;
-
 namespace Hono.Scripts.Battle
 {
-    public class BuildingLogic : ActorLogic, IPoolObject
+    public class BuildingLogic : ActorLogic
     {
-        private SkillComp _skillComp;
-        private BuffComp _buffComp;
-        
-        protected override void constructInput()
+        public BuildingLogic(Actor actor) : base(actor)
+        {
+            BuildingConfig = ConfigManager.Table<BuildingLogicTable>().Get(Actor.ConfigId);
+        }
+
+        public BuildingLogicTable.BuildingLogicRow BuildingConfig { get; private set; }
+
+        protected override void setupInput()
         {
             _actorInput = new BuildingControlInput(this);
         }
-        
-        protected override void constructComponents()
-        {
-            _buffComp = addComponent(new BuffComp(this));
-            _skillComp = addComponent(new SkillComp(this));
-            addComponent(new VFXComp(this));
-            addComponent(new AttrSimpleProgress(this));
-            addComponent(new BeHurtComp(this));
-        }
-        
-        protected override void constructStateMachine()
-        {
-            _stateMachine = new ActorStateMachine(this);
-        }
-        
-        protected override void OnInit()
-        {
-            BuildingConfig = ConfigManager.Table<BuildingLogicTable>().Get(Actor.ConfigId);
-            //学技能
-            foreach (var skillInfo in BuildingConfig.ownerSkills)
-            {
-                _skillComp.LearnSkill(skillInfo[0],skillInfo[1]);
-            }
-            //初始buff
-            foreach (var buff in BuildingConfig.OwnerBuffs)
-            {
-                _buffComp.AddBuff(Uid, buff, 1);
-            }
-        }
 
-        private BuildingLogicTable.BuildingLogicRow BuildingConfig { get; set; }
-
-        public void OnRent() { }
-
-        public void OnRecycle()
-        {
-            BuildingConfig = null;
-        }
-        
         protected override void setupAttrs()
         {
             if (BuildingConfig == null) return;
@@ -63,7 +27,7 @@ namespace Hono.Scripts.Battle
             SetAttr(ELogicAttr.AttrMoveSpeedPCTAdd, attrRow.AttrMoveSpeedPCTAdd, false);
             SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
             SetAttr(ELogicAttr.AttrMaxHpAdd, attrRow.AttrMaxHpAdd, false);
-            SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
+            //SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
             SetAttr(ELogicAttr.AttrMaxMpAdd, attrRow.AttrMaxMpAdd, false);
             SetAttr(ELogicAttr.AttrAttackAdd, attrRow.AttrAttackAdd, false);
             SetAttr(ELogicAttr.AttrCritAdd, attrRow.AttrCritAdd, false);
@@ -82,10 +46,28 @@ namespace Hono.Scripts.Battle
             SetAttr(ELogicAttr.AttrElementPhysicalPenPCTAdd, attrRow.AttrElementPhysicalPenPCTAdd, false);
             SetAttr(ELogicAttr.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd, false);
         }
-      
-        protected override void RecycleSelf()
+
+        protected override void onInit()
         {
-            AObjectPool<BuildingLogic>.Pool.Recycle(this);
+            foreach (var tag in BuildingConfig.TagList)
+            {
+                Actor.AddTag(tag);
+            }
+        }
+
+        protected override void setupStateMachine()
+        {
+            _stateMachine = new ActorStateMachine(this);
+        }
+
+        protected override void setupComponents()
+        {
+            addComponent(new BuffComp(this, () => BuildingConfig.OwnerBuffs));
+            addComponent(new SkillComp(this, () => BuildingConfig.ownerSkills));
+            addComponent(new VFXComp(this));
+            addComponent(new AttrSimpleProgress(this));
+            addComponent(new BeHurtComp(this));
+            addComponent(new MpComp(this));
         }
     }
 }

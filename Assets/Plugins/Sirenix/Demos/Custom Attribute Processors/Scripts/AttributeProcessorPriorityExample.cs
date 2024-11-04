@@ -1,13 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Sirenix.OdinInspector.Editor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Sirenix.OdinInspector.Editor;
-    using UnityEngine;
-
     [TypeInfoBox("This example demonstrates how AttributeProcessors are ordered by priority.")]
     public class AttributeProcessorPriorityExample : MonoBehaviour
     {
@@ -26,7 +26,8 @@ namespace Sirenix.OdinInspector.Demos
     [ResolverPriority(100)]
     public class FirstAttributeProcessor : OdinAttributeProcessor<PrioritizedProcessed>
     {
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member,
+            List<Attribute> attributes)
         {
             attributes.Add(new BoxGroupAttribute("First"));
             attributes.Add(new RangeAttribute(0, 10));
@@ -37,7 +38,8 @@ namespace Sirenix.OdinInspector.Demos
     // It clears the attributes list and therefore removes all attributes from the members of the PrioritizedResolved class.
     public class SecondAttributeProcessor : OdinAttributeProcessor<PrioritizedProcessed>
     {
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member,
+            List<Attribute> attributes)
         {
             attributes.RemoveAttributeOfType<RangeAttribute>();
 
@@ -52,7 +54,8 @@ namespace Sirenix.OdinInspector.Demos
     [ResolverPriority(-100)]
     public class ThirdAttributeProcessor : OdinAttributeProcessor<PrioritizedProcessed>
     {
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member,
+            List<Attribute> attributes)
         {
             var boxGroup = attributes.OfType<BoxGroupAttribute>().FirstOrDefault();
             boxGroup.GroupName = boxGroup.GroupName + " - Third";

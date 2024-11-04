@@ -1,21 +1,24 @@
-using System;
+#region
+
 using Hono.Scripts.Battle.Scene;
-using Sirenix.OdinInspector;
 using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {
     [ExecuteAlways]
-    public class SceneActorModel : ActorModel {
+    public class SceneActorModel : ActorModel
+    {
         private BattleLevelData _levelData;
-		
+
         private void Awake()
         {
             if (ActorUid > 0) return;
             _levelData = FindObjectOfType<BattleLevelData>();
             if (_levelData == null)
             {
-                Debug.LogError("初始化SceneActorModel的Uid失败！请确定场景中仅存在一个BattleLevelData实例");
+                Debug.LogError("鍒濆鍖朣ceneActorModel鐨刄id澶辫触锛佽纭畾鍦烘櫙涓粎瀛樺湪涓�涓狟attleLevelData瀹炰緥");
                 return;
             }
 

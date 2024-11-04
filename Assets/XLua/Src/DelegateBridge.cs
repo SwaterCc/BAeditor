@@ -4,7 +4,7 @@
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
  * http://opensource.org/licenses/MIT
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-*/
+ */
 
 #if USE_UNI_LUA
 using LuaAPI = UniLua.Lua;
@@ -12,13 +12,9 @@ using RealStatePtr = UniLua.ILuaState;
 using LuaCSFunction = UniLua.CSharpFunctionDelegate;
 #else
 using LuaAPI = XLua.LuaDLL.Lua;
-using RealStatePtr = System.IntPtr;
-using LuaCSFunction = XLua.LuaDLL.lua_CSFunction;
 #endif
-
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace XLua
 {
@@ -39,15 +35,17 @@ namespace XLua
 
         public bool TryGetDelegate(Type key, out Delegate value)
         {
-            if(key == firstKey)
+            if (key == firstKey)
             {
                 value = firstValue;
                 return true;
             }
+
             if (bindTo != null)
             {
                 return bindTo.TryGetValue(key, out value);
             }
+
             value = null;
             return false;
         }
@@ -114,8 +112,10 @@ namespace XLua
                 {
                     newList[i] = DelegateBridge.DelegateBridgeList[i];
                 }
+
                 DelegateBridge.DelegateBridgeList = newList;
             }
+
             DelegateBridge.DelegateBridgeList[idx] = val;
 #if (UNITY_IPHONE || UNITY_TVOS) && !UNITY_EDITOR
             xlua_set_hotfix_flag(idx, val != null);
@@ -129,9 +129,7 @@ namespace XLua
 
         public static bool Gen_Flag = false;
 
-        public DelegateBridge(int reference, LuaEnv luaenv) : base(reference, luaenv)
-        {
-        }
+        public DelegateBridge(int reference, LuaEnv luaenv) : base(reference, luaenv) { }
 
         public void PCall(IntPtr L, int nArgs, int nResults, int errFunc)
         {
@@ -140,7 +138,6 @@ namespace XLua
         }
 
 #if HOTFIX_ENABLE
-
         private int _oldTop = 0;
         private Stack<int> _stack = new Stack<int>();
 

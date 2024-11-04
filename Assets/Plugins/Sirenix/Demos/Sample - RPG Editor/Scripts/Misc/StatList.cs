@@ -1,14 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos.RPGEditor
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using UnityEngine;
-
 #if UNITY_EDITOR
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.Utilities;
+    using Editor;
+    using Utilities;
     using System.Collections;
 #endif
 
@@ -31,7 +31,8 @@ namespace Sirenix.OdinInspector.Demos.RPGEditor
     public class StatList
     {
         [SerializeField]
-        [ValueDropdown("CustomAddStatsButton", IsUniqueList = true, DrawDropdownForListElements = false, DropdownTitle = "Modify Stats")]
+        [ValueDropdown("CustomAddStatsButton", IsUniqueList = true, DrawDropdownForListElements = false,
+            DropdownTitle = "Modify Stats")]
         [ListDrawerSettings(DraggableItems = false, ShowFoldout = true)]
         private List<StatValue> stats = new List<StatValue>();
 

@@ -1,20 +1,19 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using Sirenix.OdinInspector.Editor;
+using UnityEngine;
+
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Demos
 {
-    using Sirenix.OdinInspector.Editor;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using UnityEngine;
-
     [TypeInfoBox(
         "This examples demonstrate a similar use-case to that of the Custom Locator example.\n" +
         "But this time we showcase an AttributeProcessor that will only be applied to list items.")]
     public class AttributeProcessorForListItemsExample : MonoBehaviour
     {
-        [HideLabel]
-        public ListedMinion NonListed;
+        [HideLabel] public ListedMinion NonListed;
 
         [ListDrawerSettings(ListElementLabelName = "Name")]
         public List<ListedMinion> ListedMinions;
@@ -29,8 +28,7 @@ namespace Sirenix.OdinInspector.Demos
         [BoxGroup("Non-Listed/Split/Name/NameId", showLabel: false)]
         public string Name, Id;
 
-        [HideLabel, PropertyOrder(5)]
-        [PreviewField(Height = 105), HorizontalGroup("Non-Listed/Split", width: 105)]
+        [HideLabel, PropertyOrder(5)] [PreviewField(Height = 105), HorizontalGroup("Non-Listed/Split", width: 105)]
         public Texture2D Icon;
 
         [BoxGroup("Non-Listed/Split/Name/Properties", showLabel: false)]
@@ -44,7 +42,8 @@ namespace Sirenix.OdinInspector.Demos
             return typeof(IList).IsAssignableFrom(parentProperty.ParentType);
         }
 
-        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member, List<Attribute> attributes)
+        public override void ProcessChildMemberAttributes(InspectorProperty parentProperty, MemberInfo member,
+            List<Attribute> attributes)
         {
             attributes.Clear();
 

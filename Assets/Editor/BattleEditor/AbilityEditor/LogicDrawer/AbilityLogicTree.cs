@@ -113,7 +113,7 @@ namespace Editor.AbilityEditor
 
             item.DrawItem(rowRect);
         }
-        
+
         protected override void ContextClickedItem(int id)
         {
             if (FindItem(id, rootItem) is AbilityLogicTreeItem select)
@@ -123,7 +123,7 @@ namespace Editor.AbilityEditor
         }
 
         /// <summary>
-        /// 设置拖拽规则
+        ///     设置拖拽规则
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
@@ -133,7 +133,7 @@ namespace Editor.AbilityEditor
         }
 
         /// <summary>
-        /// 实现拖拽操作
+        ///     实现拖拽操作
         /// </summary>
         /// <param name="args"></param>
         protected override void SetupDragAndDrop(SetupDragAndDropArgs args)

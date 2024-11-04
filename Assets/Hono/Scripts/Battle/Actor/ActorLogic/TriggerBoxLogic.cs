@@ -1,12 +1,18 @@
 namespace Hono.Scripts.Battle
 {
-    public class TriggerBoxLogic : ActorLogic, IPoolObject
+    public class TriggerBoxLogic : ActorLogic
     {
-        protected override void RecycleSelf()
-        {
-            AObjectPool<TriggerBoxLogic>.Pool.Recycle(this);
-        }
+        public TriggerBoxLogic(Actor actor) : base(actor) { }
 
-        public void OnRecycle() { }
+        protected override void onInit()
+        {
+            if (Actor.ModelController.Model.TryGetComponent<TriggerBoxModel>(out var triggerBoxModel))
+            {
+                foreach (var abilityId in triggerBoxModel.AbilityIds)
+                {
+                    Actor.AwardAbility(abilityId, true);
+                }
+            }
+        }
     }
 }

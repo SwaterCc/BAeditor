@@ -1,41 +1,56 @@
+#region
+
 using UnityEngine;
 
-namespace Hono.Scripts.Battle.Tools {
-	public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour {
-		private static T _instance;
-		private static readonly object _lock = new object();
+#endregion
 
-		public static T Instance {
-			get {
-				if (_instance == null) {
-					lock (_lock) {
-						if (_instance == null) {
-							_instance = FindObjectOfType<T>();
+namespace Hono.Scripts.Battle.Tools
+{
+    public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
+    {
+        private static T _instance;
+        private static readonly object _lock = new object();
 
-							if (_instance == null) {
-								GameObject singletonObject = new GameObject();
-								_instance = singletonObject.AddComponent<T>();
-								singletonObject.name = typeof(T).ToString() + " (Singleton)";
+        public static T Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = FindObjectOfType<T>();
 
-								// 保持单例对象在场景切换时不被销毁
-								DontDestroyOnLoad(singletonObject);
-							}
-						}
-					}
-				}
+                            if (_instance == null)
+                            {
+                                GameObject singletonObject = new GameObject();
+                                _instance = singletonObject.AddComponent<T>();
+                                singletonObject.name = typeof(T).ToString() + " (Singleton)";
 
-				return _instance;
-			}
-		}
+                                // 保持单例对象在场景切换时不被销毁
+                                DontDestroyOnLoad(singletonObject);
+                            }
+                        }
+                    }
+                }
 
-		protected virtual void Awake() {
-			if (_instance == null) {
-				_instance = this as T;
-				DontDestroyOnLoad(gameObject);
-			}
-			else if (_instance != this) {
-				Destroy(gameObject);
-			}
-		}
-	}
+                return _instance;
+            }
+        }
+
+        protected virtual void Awake()
+        {
+            if (_instance == null)
+            {
+                _instance = this as T;
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (_instance != this)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
 }

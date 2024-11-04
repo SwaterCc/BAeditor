@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -20,7 +19,7 @@ namespace Editor.AbilityEditor
             window.Show();
             return window;
         }
-        
+
         private Parameter _function;
         private EParameterValueType _valueType;
         private Action<Parameter> _onSave;
@@ -44,10 +43,11 @@ namespace Editor.AbilityEditor
                     _parameterFields.Add(new ParameterField(funcParam, paramInfo.ParamName, paramInfo.ParamType));
                 }
             }
-            
-            _funcTree = new FunctionView(new TreeViewState(), this, _function.FuncName, AbilityFunctionHelper.GetFuncInfosByType(_valueType));
+
+            _funcTree = new FunctionView(new TreeViewState(), this, _function.FuncName,
+                AbilityFunctionHelper.GetFuncInfosByType(_valueType));
         }
-        
+
         public void OnDoubleClick(string funcName)
         {
             var funcInfo = AbilityFunctionHelper.GetFuncInfo(funcName);
@@ -80,7 +80,7 @@ namespace Editor.AbilityEditor
             //函数预览界面
             SirenixEditorGUI.BeginBox();
             SirenixEditorGUI.BeginVerticalList();
-            
+
             if (AbilityFunctionHelper.TryGetFuncInfo(_funcTree.CurSelect, out var funcInfo) && funcInfo.ParamCount > 0)
             {
                 foreach (var param in funcInfo.ParamInfos)
@@ -133,14 +133,15 @@ namespace Editor.AbilityEditor
                     }
                 }
 
-                if (SirenixEditorGUI.Button("确认修改",ButtonSizes.Gigantic))
+                if (SirenixEditorGUI.Button("确认修改", ButtonSizes.Gigantic))
                 {
                     _onSave.Invoke(_function);
                     Close();
                 }
+
                 SirenixEditorGUI.EndBox();
             }
-            
+
             EditorGUILayout.EndVertical();
         }
     }

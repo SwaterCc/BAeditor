@@ -595,7 +595,7 @@ MonoBehaviour:
       Data: 27|System.Single, mscorlib
     - Name: 
       Entry: 4
-      Data: 1
+      Data: 0.5
     - Name: 
       Entry: 8
       Data: 

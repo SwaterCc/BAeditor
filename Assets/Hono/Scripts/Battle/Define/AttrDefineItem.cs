@@ -1,7 +1,10 @@
+#region
+
 using System;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine;
+
+#endregion
 
 namespace Hono.Scripts.Battle
 {

@@ -1,28 +1,38 @@
-﻿using UnityEngine;
+﻿#region
 
-namespace Hono.Scripts.Battle {
-	public partial class Ability {
-		private class AbilityAttrSetterNode : AbilityNode {
-			private AttrSetterNodeData _attrNodeData;
+using UnityEngine;
 
-			public AbilityAttrSetterNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data) {
-				_attrNodeData = (AttrSetterNodeData)_data;
-			}
+#endregion
 
-			public override void DoJob() {
-				if (!_attrNodeData.Value.Parse(_executor.Ability, out object value)) {
-					Debug.LogError($"设置属性失败 {_attrNodeData.LogicAttr}");
-					return;
-				}
+namespace Hono.Scripts.Battle
+{
+    public partial class Ability
+    {
+        private class AbilityAttrSetterNode : AbilityNode
+        {
+            private AttrSetterNodeData _attrNodeData;
 
-				var command =
-					_executor.Ability.Actor.SetAttrBox(_attrNodeData.LogicAttr, value, _attrNodeData.IsTempAttr);
+            public AbilityAttrSetterNode(AbilityExecutor executor, AbilityNodeData data) : base(executor, data)
+            {
+                _attrNodeData = (AttrSetterNodeData)_data;
+            }
 
-				if (command != null)
-					_executor.Ability.AddCommand(command);
+            public override void DoJob()
+            {
+                if (!_attrNodeData.Value.Parse(_executor.Ability, out object value))
+                {
+                    Debug.LogError($"设置属性失败 {_attrNodeData.LogicAttr}");
+                    return;
+                }
 
-				DoChildrenJob();
-			}
-		}
-	}
+                var command =
+                    _executor.Ability.Actor.SetAttrBox(_attrNodeData.LogicAttr, value, _attrNodeData.IsTempAttr);
+
+                if (command != null)
+                    _executor.Ability.AddCommand(command);
+
+                DoChildrenJob();
+            }
+        }
+    }
 }
