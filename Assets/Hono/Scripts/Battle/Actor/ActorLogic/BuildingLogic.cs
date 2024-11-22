@@ -1,73 +1,68 @@
-namespace Hono.Scripts.Battle
-{
-    public class BuildingLogic : ActorLogic
-    {
-        public BuildingLogic(Actor actor) : base(actor)
-        {
-            BuildingConfig = ConfigManager.Table<BuildingLogicTable>().Get(Actor.ConfigId);
-        }
+namespace Hono.Scripts.Battle {
+	public class BuildingLogic : ActorLogic, IAPoolObject {
+		public BuildingLogicTable.BuildingLogicRow BuildingConfig { get; set; }
 
-        public BuildingLogicTable.BuildingLogicRow BuildingConfig { get; private set; }
+		public BuildingLogic() {
+			resetInput(new BuildingControlInput(this));
+			resetStateMachine(new ActorStateMachine(this));
 
-        protected override void setupInput()
-        {
-            _actorInput = new BuildingControlInput(this);
-        }
+			addComponent(new BuffComp(this));
+			addComponent(new SkillComp(this));
+			addComponent(new VFXComp(this));
+			addComponent(new BeHurtComp(this));
+			addComponent(new MpComp(this));
+		}
+		
+		protected override void setupAttrs() {
+			if (BuildingConfig == null) return;
 
-        protected override void setupAttrs()
-        {
-            if (BuildingConfig == null) return;
+			SetAttr(EAttrType.AttrModelId, BuildingConfig.Model, false);
+			SetAttr(EAttrType.AttrFaction, BuildingConfig.Faction, false);
 
-            SetAttr(ELogicAttr.AttrModelId, BuildingConfig.Model, false);
-            SetAttr(ELogicAttr.AttrFaction, BuildingConfig.Faction, false);
+			var attrRow = ConfigManager.Table<EntityAttrBaseTable>().Get(BuildingConfig.AttrTemplateId);
 
-            var attrRow = ConfigManager.Table<EntityAttrBaseTable>().Get(BuildingConfig.AttrTemplateId);
+			SetAttr(EAttrType.AttrBaseSpeed, (int)attrRow.AttrBaseSpeed, false);
+			SetAttr(EAttrType.AttrMoveSpeedPCTAdd, attrRow.AttrMoveSpeedPCTAdd, false);
+			SetAttr(EAttrType.AttrHp, attrRow.AttrMaxHpAdd, false);
+			SetAttr(EAttrType.AttrMaxHpAdd, attrRow.AttrMaxHpAdd, false);
+			//SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
+			SetAttr(EAttrType.AttrMaxMpAdd, attrRow.AttrMaxMpAdd, false);
+			SetAttr(EAttrType.AttrAttackAdd, attrRow.AttrAttackAdd, false);
+			SetAttr(EAttrType.AttrCritAdd, attrRow.AttrCritAdd, false);
+			SetAttr(EAttrType.AttrDefenseAdd, attrRow.AttrDefenseAdd, false);
+			SetAttr(EAttrType.AttrHealAdd, attrRow.AttrHealAdd, false);
+			SetAttr(EAttrType.AttrEntityLevel, attrRow.AttrEntityLevel, false);
+			SetAttr(EAttrType.AttrHealedAdd, attrRow.AttrHealedAdd, false);
+			SetAttr(EAttrType.AttrCritDamageAdd, attrRow.AttrCritDamageAdd, false);
+			SetAttr(EAttrType.AttrDmgAAdd, attrRow.AttrDmgAAdd, false);
+			SetAttr(EAttrType.AttrDmgRedAdd, attrRow.AttrDmgRedAdd, false);
+			SetAttr(EAttrType.AttrHealIntensityAdd, attrRow.AttrHealIntensityAdd, false);
+			SetAttr(EAttrType.AttrIgnoreDefenseAdd, attrRow.AttrIgnoreDefenseAdd, false);
+			SetAttr(EAttrType.AttrAttackSpeedPCTAdd, attrRow.AttrAttackSpeedPCTAdd, false);
+			SetAttr(EAttrType.AttrElementPenPCTAdd, attrRow.AttrElementPenPCTAdd, false);
+			SetAttr(EAttrType.AttrElementMagicRedPCTAdd, attrRow.AttrElementMagicRedPCTAdd, false);
+			SetAttr(EAttrType.AttrElementPhysicalPenPCTAdd, attrRow.AttrElementPhysicalPenPCTAdd, false);
+			SetAttr(EAttrType.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd, false);
+		}
 
-            SetAttr(ELogicAttr.AttrBaseSpeed, attrRow.AttrBaseSpeed, false);
-            SetAttr(ELogicAttr.AttrMoveSpeedPCTAdd, attrRow.AttrMoveSpeedPCTAdd, false);
-            SetAttr(ELogicAttr.AttrHp, attrRow.AttrMaxHpAdd, false);
-            SetAttr(ELogicAttr.AttrMaxHpAdd, attrRow.AttrMaxHpAdd, false);
-            //SetAttr(ELogicAttr.AttrMp, attrRow.AttrMaxMpAdd, false);
-            SetAttr(ELogicAttr.AttrMaxMpAdd, attrRow.AttrMaxMpAdd, false);
-            SetAttr(ELogicAttr.AttrAttackAdd, attrRow.AttrAttackAdd, false);
-            SetAttr(ELogicAttr.AttrCritAdd, attrRow.AttrCritAdd, false);
-            SetAttr(ELogicAttr.AttrDefenseAdd, attrRow.AttrDefenseAdd, false);
-            SetAttr(ELogicAttr.AttrHealAdd, attrRow.AttrHealAdd, false);
-            SetAttr(ELogicAttr.AttrEntityLevel, attrRow.AttrEntityLevel, false);
-            SetAttr(ELogicAttr.AttrHealedAdd, attrRow.AttrHealedAdd, false);
-            SetAttr(ELogicAttr.AttrCritDamageAdd, attrRow.AttrCritDamageAdd, false);
-            SetAttr(ELogicAttr.AttrDmgAAdd, attrRow.AttrDmgAAdd, false);
-            SetAttr(ELogicAttr.AttrDmgRedAdd, attrRow.AttrDmgRedAdd, false);
-            SetAttr(ELogicAttr.AttrHealIntensityAdd, attrRow.AttrHealIntensityAdd, false);
-            SetAttr(ELogicAttr.AttrIgnoreDefenseAdd, attrRow.AttrIgnoreDefenseAdd, false);
-            SetAttr(ELogicAttr.AttrAttackSpeedPCTAdd, attrRow.AttrAttackSpeedPCTAdd, false);
-            SetAttr(ELogicAttr.AttrElementPenPCTAdd, attrRow.AttrElementPenPCTAdd, false);
-            SetAttr(ELogicAttr.AttrElementMagicRedPCTAdd, attrRow.AttrElementMagicRedPCTAdd, false);
-            SetAttr(ELogicAttr.AttrElementPhysicalPenPCTAdd, attrRow.AttrElementPhysicalPenPCTAdd, false);
-            SetAttr(ELogicAttr.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd, false);
-        }
+		protected override void onInit() {
+			foreach (var tag in BuildingConfig.TagList) {
+				Self.TagCollection.Add(tag);
+			}
 
-        protected override void onInit()
-        {
-            foreach (var tag in BuildingConfig.TagList)
-            {
-                Actor.AddTag(tag);
-            }
-        }
+			var skillComp = GetComponent<SkillComp>();
+			foreach (var skillInfo in BuildingConfig.ownerSkills) {
+				skillComp.LearnSkill(skillInfo[0], skillInfo[1]);
+			}
 
-        protected override void setupStateMachine()
-        {
-            _stateMachine = new ActorStateMachine(this);
-        }
+			var buffComp = GetComponent<BuffComp>();
+			foreach (var buffId in BuildingConfig.OwnerBuffs) {
+				buffComp.AddBuff(buffId, 1);
+			}
+		}
 
-        protected override void setupComponents()
-        {
-            addComponent(new BuffComp(this, () => BuildingConfig.OwnerBuffs));
-            addComponent(new SkillComp(this, () => BuildingConfig.ownerSkills));
-            addComponent(new VFXComp(this));
-            addComponent(new AttrSimpleProgress(this));
-            addComponent(new BeHurtComp(this));
-            addComponent(new MpComp(this));
-        }
-    }
+		public override void RecycleLogicObject() {
+			AObjectPool<BuildingLogic>.Pool.Recycle(this);
+		}
+	}
 }

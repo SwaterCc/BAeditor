@@ -4,85 +4,63 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace Hono.Scripts.Battle
-{
-    public partial class ActorLogic
-    {
-	    /// <summary>
-	    ///     基础状态机基类
-	    ///     目前定义的状态：闲置，移动，战斗，硬直，死亡
-	    /// </summary>
-	    public class ActorStateMachine
-        {
-            public Actor Actor { get; }
-            public ActorLogic Logic { get; }
-            public EActorLogicStateType CurStateType => _curStateType;
+namespace Hono.Scripts.Battle {
+	/// <summary>
+	/// 逻辑状态机
+	/// 目前定义的状态：闲置，移动，攻击，硬直，死亡
+	/// 状态切换逻辑，和拥有的状态机由具体的logic定义
+	/// </summary>
+	public class ActorStateMachine {
+		public Actor Actor { get; }
+		public ActorLogic Logic { get; }
+		public EActorStateType CurStateType => _curStateType;
 
-            private ActorLogicState _current;
+		private ActorState _current;
 
-            private EActorLogicStateType _curStateType;
+		private EActorStateType _curStateType;
 
-            private EActorLogicStateType _nextStateType;
+		private EActorStateType _nextStateType;
 
-            private readonly Dictionary<EActorLogicStateType, ActorLogicState> _states;
-            private readonly Dictionary<EActorLogicStateType, StateAutoSwitchCheck> _stateTransforms;
+		private readonly Dictionary<EActorStateType, ActorState> _states;
+		private readonly Dictionary<EActorStateType, StateTransform> _stateTransforms;
 
-            public ActorStateMachine(ActorLogic logic)
-            {
-                Logic = logic;
-                Actor = logic.Actor;
+		public ActorStateMachine(ActorLogic logic) {
+			Logic = logic;
+			Actor = logic.Self;
+		}
 
-                _states = new Dictionary<EActorLogicStateType, ActorLogicState>()
-                {
-                    { EActorLogicStateType.Idle, new IdleState(this, EActorLogicStateType.Idle) },
-                    { EActorLogicStateType.Skill, new SkillState(this, EActorLogicStateType.Skill) },
-                    { EActorLogicStateType.Move, new MoveState(this, EActorLogicStateType.Move) },
-                    { EActorLogicStateType.Death, new DeathState(this, EActorLogicStateType.Death) },
-                    { EActorLogicStateType.Stiff, new StiffState(this, EActorLogicStateType.Stiff) },
-                };
+		public void AddState() {
+			
+		}
 
-                _stateTransforms = null;
+		public void AddTransform() {
+			
+		}
+		
+		public void InitWhenEnterScene() {
+			foreach (var state in _states) {
+				state.Value.Init();
+			}
+		}
 
-                _nextStateType = EActorLogicStateType.Idle;
-                _curStateType = _nextStateType;
-                _current = _states[_curStateType];
-            }
+		public void SwitchState(EActorStateType nextStateType) {
+			_nextStateType = nextStateType;
+		}
 
-            public void Setup() { }
+		public void Tick(float dt) {
+			_current.Tick(dt);
 
+			var hasAutoSwitch = _current.TryGetAutoSwitchState(out var autoNext);
 
-            public void Init()
-            {
-                foreach (var state in _states)
-                {
-                    state.Value.Init();
-                }
+			var realNext = CurStateType != _nextStateType ? _nextStateType : autoNext;
 
-                _current.Enter();
-            }
-
-            public void SwitchState(EActorLogicStateType nextLogicStateType)
-            {
-                _nextStateType = nextLogicStateType;
-            }
-
-            public void Tick(float dt)
-            {
-                _current.Tick(dt);
-
-                var hasAutoSwitch = _current.TryGetAutoSwitchState(out var autoNext);
-
-                var realNext = CurStateType != _nextStateType ? _nextStateType : autoNext;
-
-                if (CurStateType != _nextStateType || hasAutoSwitch)
-                {
-                    _current.Exit();
-                    _current = _states[realNext];
-                    _curStateType = realNext;
-                    _nextStateType = _curStateType;
-                    _current.Enter();
-                }
-            }
-        }
-    }
+			if (CurStateType != _nextStateType || hasAutoSwitch) {
+				_current.Exit();
+				_current = _states[realNext];
+				_curStateType = realNext;
+				_nextStateType = _curStateType;
+				_current.Enter();
+			}
+		}
+	}
 }

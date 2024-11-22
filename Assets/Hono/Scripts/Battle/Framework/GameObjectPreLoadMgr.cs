@@ -1,103 +1,63 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Tools;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 #endregion
 
-namespace Hono.Scripts.Battle
-{
-    public class GameObjectPreLoadMgr : Singleton<GameObjectPreLoadMgr>, IBattleFrameworkAsyncInit
-    {
-        private readonly Dictionary<EPreLoadGameObjectType, GameObject> _objectCaches = new();
-        private readonly Dictionary<string, GameObject> _buildingCaches = new();
+namespace Hono.Scripts.Battle {
+	public class GameObjectPreLoadMgr : Singleton<GameObjectPreLoadMgr>, IBattleFrameworkAsyncInit {
+		private Dictionary<string, GameObject> _objectCaches;
+		
+		private readonly string[] _path = {
+			"Assets/BattleRes/Model/BattleBuild/Archery_Demo2.prefab",
+			"Assets/BattleRes/Model/BattleBuild/Tower_AttackUp_Demo2.prefab",
+			"Assets/BattleRes/Model/BattleBuild/Tower_Heal_Demo2.prefab",
+			"Assets/BattleRes/Model/BattleBuild/Tower_BigBow_Demo2.prefab",
+			"Assets/BattleRes/Model/BattleBuild/Tower_MagicIce_Demo2.prefab",
+			"Assets/BattleRes/Model/BattleBuild/Tower_MagicFire_Demo2.prefab",
+			"Assets/BattleRes/Model/BattleBuild/Tower_Magic_Demo2.prefab",
+			"Assets/BattleRes/Model/BattleBuild/Tower_CrossBow_Demo2.prefab",
+			"Assets/BattleRes/Model/BattleBuild/Tower_Cannon_Demo2.prefab",
+			"Assets/BattleRes/Characters/Character_MagicGirl_Build.prefab",
+			BattleConstValue.BattleRootModel,
+			BattleConstValue.BulletModel,
+			BattleConstValue.HitBoxModel,
+			BattleConstValue.TeamRefreshPoint,
+			BattleConstValue.LootModel,
+		};
+		
+		public async UniTask AsyncInit() {
 
-        private string[] buildingPath =
-        {
-            "Assets/BattleRes/Model/BattleBuild/Archery_Demo2.prefab",
-            "Assets/BattleRes/Model/BattleBuild/Tower_AttackUp_Demo2.prefab",
-            "Assets/BattleRes/Model/BattleBuild/Tower_Heal_Demo2.prefab",
-            "Assets/BattleRes/Model/BattleBuild/Tower_BigBow_Demo2.prefab",
-            "Assets/BattleRes/Model/BattleBuild/Tower_MagicIce_Demo2.prefab",
-            "Assets/BattleRes/Model/BattleBuild/Tower_MagicFire_Demo2.prefab",
-            "Assets/BattleRes/Model/BattleBuild/Tower_Magic_Demo2.prefab",
-            "Assets/BattleRes/Model/BattleBuild/Tower_CrossBow_Demo2.prefab",
-            "Assets/BattleRes/Model/BattleBuild/Tower_Cannon_Demo2.prefab",
-            "Assets/BattleRes/Characters/Character_MagicGirl_Build.prefab"
-        };
+			_objectCaches = new Dictionary<string, GameObject>(_path.Length);
+			List<UniTask> loadTasks = new(_path.Length);
+			
+			foreach (var path in _path) {
+				loadTasks.Add(loadGameObject(path));
+			}
 
-        public async UniTask AsyncInit()
-        {
-            List<UniTask> loadTasks = new List<UniTask>();
+			await UniTask.WhenAll(loadTasks);
+			
+			Debug.Log("GameObjectPreLoadMgr Init Finish！");
+		}
+		
+		public GameObject this[string path] => _objectCaches[path];
+		public GameObject GetBuildingCache(string path) {
+			return _objectCaches[path];
+		}
 
-            foreach (EPreLoadGameObjectType element in Enum.GetValues(typeof(EPreLoadGameObjectType)))
-            {
-                loadTasks.Add(loadGameObject(element));
-            }
+		private async UniTask loadGameObject(string path) {
+			if (string.IsNullOrEmpty(path)) {
+				Debug.LogError($"{path} 路径为空");
+				return;
+			}
 
-            foreach (var path in buildingPath)
-            {
-                loadTasks.Add(loadBuilding(path));
-            }
-
-            await UniTask.WhenAll(loadTasks);
-
-            Debug.Log("GameObjectPreLoadMgr Init Finish！");
-        }
-
-        public GameObject this[EPreLoadGameObjectType objectType] => _objectCaches[objectType];
-
-        public GameObject GetBuildingCache(string path)
-        {
-            return _buildingCaches[path];
-        }
-
-        private string getObjectPath(EPreLoadGameObjectType objectType)
-        {
-            switch (objectType)
-            {
-                case EPreLoadGameObjectType.BattleRootModel:
-                    return BattleConstValue.BattleRootModel;
-                case EPreLoadGameObjectType.BulletModel:
-                    return BattleConstValue.BulletModel;
-                case EPreLoadGameObjectType.HitBoxModel:
-                    return BattleConstValue.HitBoxModel;
-                case EPreLoadGameObjectType.TeamRefreshPoint:
-                    return BattleConstValue.TeamRefreshPoint;
-                case EPreLoadGameObjectType.LootModel:
-                    return BattleConstValue.LootModel;
-            }
-
-            return null;
-        }
-
-        private async UniTask loadGameObject(EPreLoadGameObjectType element)
-        {
-            string path = getObjectPath(element);
-            if (string.IsNullOrEmpty(path))
-            {
-                Debug.LogError($"{element} 路径为空");
-                return;
-            }
-
-            var uObj = await Addressables.LoadAssetAsync<GameObject>(getObjectPath(element)).ToUniTask();
-            _objectCaches.Add(element, uObj);
-        }
-
-        private async UniTask loadBuilding(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-            {
-                Debug.LogError($"{path} 路径为空");
-                return;
-            }
-
-            var uObj = await Addressables.LoadAssetAsync<GameObject>(path).ToUniTask();
-            _buildingCaches.Add(path, uObj);
-        }
-    }
+			var uObj = await Addressables.LoadAssetAsync<GameObject>(path).ToUniTask();
+			_objectCaches.Add(path, uObj);
+		}
+	}
 }

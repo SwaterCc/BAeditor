@@ -1,193 +1,172 @@
 ﻿#region
 
+using Hono.Scripts.Battle.Event;
 using System;
 using System.Collections.Generic;
-using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle
-{
-    public partial class ActorLogic
-    {
-        public class SkillComp : ALogicComponent, IReloadHandle
-        {
-            //管理技能cd
-            //管理技能释放前消耗检测
-            //管理技能消耗资源
-            //管理技能释放打断优先级(有问题需要讨论)
-            //管理技能升级养成数据
-            //技能的内核逻辑依靠Ability
-            //Ability可通过该组件获取技能数据
-            private Dictionary<int, Skill> _skills = new();
-            public Dictionary<int, Skill> Skills => _skills;
+namespace Hono.Scripts.Battle {
+	public partial class ActorLogic {
+		public class SkillComp : AComponent, IReloadHandle {
+			/// <summary>
+			/// 技能列表
+			/// </summary>
+			public Dictionary<int, Skill> Skills { get; }
 
-            private readonly UseSkillChecker _eventChecker;
+			/// <summary>
+			/// 技能使用事件回调
+			/// </summary>
+			private readonly UseSkillChecker _eventChecker;
+			
+			/// <summary>
+			/// 当前运行的技能
+			/// </summary>
+			private Skill _curSkill;
 
-            private Func<IntTable> _getSkills;
+			public SkillComp(ActorLogic logic) : base(logic) {
+				Skills = new Dictionary<int, Skill>(6);
+				_eventChecker = new UseSkillChecker(EBattleEventType.UseSkill, ActorLogic.Self, -1, UseSkillByEvent);
+			}
+			
+			public override void Init() {
+				_eventChecker.Register();
+				AssetManager.Instance.AddReloadHandle(this);
+			}
 
-            private Skill _curSkill;
+			/// <summary>
+			/// Debug模式下的函数，不用考虑GC问题
+			/// </summary>
+			public void Reload() {
+				Debug.Log($"Actor {ActorLogic.Uid} Reload SkillComp");
 
-            public SkillComp(ActorLogic logic, Func<IntTable> getSkills) : base(logic)
-            {
-                _eventChecker = new UseSkillChecker(EBattleEventType.UseSkill, ActorLogic.Actor, -1, UseSkillByEvent);
-                _getSkills = getSkills;
-            }
+				List<(int, int)> skillList = new(Skills.Count);
+				
+				foreach (KeyValuePair<int, Skill> pSkill in Skills) {
+					skillList.Add((pSkill.Value.Id, pSkill.Value.Level));
+				}
+				
+				foreach (KeyValuePair<int, Skill> skill in Skills) {
+					AObjectPool<Skill>.Pool.Recycle(skill.Value);
+				}
+				Skills.Clear();
 
-            public override void Init()
-            {
-                if (_getSkills == null)
-                {
-                    Debug.LogWarning($"Actor{Actor.Uid} 获取技能失败");
-                    return;
-                }
+				foreach ((int, int) skillInfo in skillList) {
+					LearnSkill(skillInfo.Item1, skillInfo.Item2);
+				}
+			}
+			
+			public override void Clear() {
+				_eventChecker.UnRegister();
+				AssetManager.Instance.RemoveReloadHandle(this);
+				
+				foreach (KeyValuePair<int, Skill> skill in Skills) {
+					AObjectPool<Skill>.Pool.Recycle(skill.Value);
+				}
+				Skills.Clear();
+			}
 
-                foreach (IntArray skillInfo in _getSkills.Invoke())
-                {
-                    Skill skill = new(ActorLogic, skillInfo[0], skillInfo[1]);
-                    _skills.Add(skill.Id, skill);
-                }
+			/// <summary>
+			/// 尝试获取技能
+			/// </summary>
+			/// <param name="skillId"></param>
+			/// <param name="skill"></param>
+			/// <returns></returns>
+			public bool TryGetSkill(int skillId, out Skill skill) {
+				return Skills.TryGetValue(skillId, out skill);
+			}
 
-                BattleEventManager.Instance.Register(_eventChecker);
-                AssetManager.Instance.AddReloadHandle(this);
-            }
+			protected override void onTick(float dt) {
+				foreach (var pSKill in Skills) {
+					pSKill.Value.OnTick(dt);
+				}
+			}
 
-            public void Reload()
-            {
-                Debug.Log($"Actor {ActorLogic.Uid} Reload SkillComp");
-                Clear();
+			/// <summary>
+			/// 学习技能
+			/// </summary>
+			/// <param name="skillId"></param>
+			/// <param name="level"></param>
+			public void LearnSkill(int skillId, int level) {
+				Skill skill = AObjectPool<Skill>.Pool.Rent();
+				skill.OnRent(ActorLogic, skillId, level);
+				if (!Skills.TryAdd(skillId, skill)) {
+					Debug.LogWarning($"重复学习技能 {skillId}");
+				}
+			}
 
-                if (_getSkills == null)
-                {
-                    Debug.LogWarning($"Actor{Actor.Uid} 获取技能失败");
-                    return;
-                }
+			/// <summary>
+			/// 忘记技能
+			/// </summary>
+			/// <param name="skillId"></param>
+			public void ForgetSkill(int skillId) {
+				if (Skills.Remove(skillId,out Skill skill)) {
+					AObjectPool<Skill>.Pool.Recycle(skill);
+				}
+			}
 
-                foreach (IntArray skillInfo in _getSkills.Invoke())
-                {
-                    Skill skill = new(ActorLogic, skillInfo[0], skillInfo[1]);
-                    _skills.Add(skill.Id, skill);
-                }
-            }
+			private void UseSkillByEvent(IEventInfo eventInfo) {
+				UsedSkillEventInfo skillInfo = (UsedSkillEventInfo)eventInfo;
 
-            public void Clear()
-            {
-                foreach (var skill in _skills)
-                {
-                    skill.Value.Destroy();
-                }
+				if (skillInfo.IsPlayerControl) {
+					if (_curSkill is { IsExecuting: true }) {
+						_curSkill.Ability.Stop();
+					}
 
-                _skills.Clear();
-            }
+					PlayerUseSkill(skillInfo.SkillId);
+				}
+				else {
+					TryUseSkill(skillInfo.SkillId);
+				}
+			}
+			
+			/// <summary>
+			/// skillComp需要拆分，怪物释放技能，玩家释放技能两者可能会有差异
+			/// </summary>
+			/// <param name="skillId"></param>
+			/// <returns></returns>
+			public bool PlayerUseSkill(int skillId) {
+				if (!Skills.TryGetValue(skillId, out var skill)) {
+					return false;
+				}
 
-            public override void UnInit()
-            {
-                Clear();
-                BattleEventManager.Instance.UnRegister(_eventChecker);
-                AssetManager.Instance.RemoveReloadHandle(this);
-            }
+				if (Self.GetAttr(EAttrType.AttrStunned) > 0) {
+					return false;
+				}
 
-            public bool TryGetSkill(int skillId, out Skill skill)
-            {
-                return _skills.TryGetValue(skillId, out skill);
-            }
+				if (skill.TryUseSkill()) {
+					_curSkill = skill;
+					return true;
+				}
 
-            protected override void onTick(float dt)
-            {
-                foreach (var pSKill in _skills)
-                {
-                    pSKill.Value.OnTick(dt);
-                }
-            }
+				return false;
+			}
 
-            public void LearnSkill(int skillId, int level)
-            {
-                var skillCtrl = new Skill(ActorLogic, skillId, level);
-                if (!_skills.TryAdd(skillCtrl.Id, skillCtrl))
-                {
-                    Debug.LogWarning($"重复学习技能 {skillId}");
-                }
-            }
+			public bool TryUseSkill(int skillId) {
+				//Debug.Log($"[UseSkill] Actor{Actor.Uid} -->尝试执行技能 {skillId}");
 
-            public void ForgetSkill(int skillId)
-            {
-                if (_skills.ContainsKey(skillId))
-                {
-                    _skills[skillId].Destroy();
-                    _skills.Remove(skillId);
-                }
-            }
+				if (!Skills.TryGetValue(skillId, out var skill)) {
+					return false;
+				}
 
-            private void UseSkillByEvent(IEventInfo eventInfo)
-            {
-                var skillInfo = (UsedSkillEventInfo)eventInfo;
+				if (Self.Logic.CurState() != EActorStateType.Idle &&
+				    Self.Logic.CurState() != EActorStateType.Move) {
+					return false;
+				}
 
-                if (skillInfo.IsPlayerControl)
-                {
-                    if (_curSkill is { IsExecuting: true })
-                    {
-                        _curSkill.ForceStop();
-                    }
+				if (Self.GetAttr(EAttrType.AttrStunned) > 0) {
+					return false;
+				}
 
-                    PlayerUseSkill(skillInfo.SkillId);
-                }
-                else
-                {
-                    TryUseSkill(skillInfo.SkillId);
-                }
-            }
+				if (skill.TryUseSkill()) {
+					_curSkill = skill;
+					return true;
+				}
 
-            public bool PlayerUseSkill(int skillId)
-            {
-                if (!_skills.TryGetValue(skillId, out var skill))
-                {
-                    return false;
-                }
-
-                if (Actor.GetAttr<int>(ELogicAttr.AttrStunned) > 0)
-                {
-                    return false;
-                }
-
-                if (skill.TryUseSkill())
-                {
-                    _curSkill = skill;
-                    return true;
-                }
-
-                return false;
-            }
-
-            public bool TryUseSkill(int skillId)
-            {
-                //Debug.Log($"[UseSkill] Actor{Actor.Uid} -->尝试执行技能 {skillId}");
-
-                if (!_skills.TryGetValue(skillId, out var skill))
-                {
-                    return false;
-                }
-
-                if (Actor.Logic.CurState() != EActorLogicStateType.Idle &&
-                    Actor.Logic.CurState() != EActorLogicStateType.Move)
-                {
-                    return false;
-                }
-
-                if (Actor.GetAttr<int>(ELogicAttr.AttrStunned) > 0)
-                {
-                    return false;
-                }
-
-                if (skill.TryUseSkill())
-                {
-                    _curSkill = skill;
-                    return true;
-                }
-
-                //skill.SendFailedMsg();
-                return false;
-            }
-        }
-    }
+				//skill.SendFailedMsg();
+				return false;
+			}
+		}
+	}
 }

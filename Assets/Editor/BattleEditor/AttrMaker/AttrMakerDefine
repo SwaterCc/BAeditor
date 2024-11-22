@@ -1,5 +1,5 @@
- #Base
-int AttrUid 1 
+#Base
+simple AttrUid 1 
 int AttrConfigId 2
 int AttrModelId 3
 int AttrIsSummoned 4
@@ -8,10 +8,7 @@ int AttrTopSourceActorUid 10
 int AttrSourceActorUid 11
 int AttrSourceAbilityConfigId 12
 int SourceAbilityType 13
-Quaternion AttrRot 14
-Vector3 AttrPosition 15
-float AttrBaseSpeed 16
-IntArray AttrAttackTargetUids 17
+int AttrBaseSpeed 16
 int AttrMoveTargetUid 18
 int AttrFaction  19
 int AttrUnselectable 20  //不可选中
@@ -23,42 +20,46 @@ int AttrCantMove 49  //禁足，不可移动
 int AttrStunned 50   //眩晕，生效关系：眩晕＜霸体=无敌；同一时间只允许存在一种眩晕效果
 int AttrSA 51  //superArmor直接霸体，无敌时也会自动拥有直接霸体
 int AttrIgnoreOtherMotion 52   //1=不吃其他人的位移控制
-Vector3 AttrOriginPos 53
- #HP
 int AttrHp   10000  //当前HP
 int AttrHpPer   10001 
-int AttrMaxHp   10010 
-int AttrMaxHpTotal   10011 
-int AttrMaxHpAdd   10012 
-int AttrMaxHpExAdd   10013 
-int AttrMaxHpPer   10014 
-int AttrMaxHpExPer   10015 
- #MP
 int AttrMp   10020  //当前MP
 int AttrMpPer   10021 
+int AttrShield   10040  //护盾
+int AttrShieldPer   10041  //护盾Per 
+int AttrEntityLevel  60010 
+
+#HP  
+AttrMaxHp   10010 
+AttrMaxHpTotal   10011 
+AttrMaxHpAdd   10012 
+AttrMaxHpExAdd   10013 
+AttrMaxHpPer   10014 
+AttrMaxHpExPer   10015 
+
+#MP
 int AttrMaxMp   10030 
 int AttrMaxMpTotal   10031 
 int AttrMaxMpAdd   10032 
 int AttrMaxMpExAdd   10033 
 int AttrMaxMpPer   10034 
 int AttrMaxMpExPer   10035 
- #护盾
-int AttrShield   10040 
-int AttrShieldPer   10041 
- #移动速度加成万分比
-int AttrMoveSpeedPCT   10100 
-int AttrMoveSpeedPCTTotal   10101 
-int AttrMoveSpeedPCTAdd   10102 
-int AttrMoveSpeedPCTExAdd   10103 
-int AttrMoveSpeedPCTPer   10104 
-int AttrMoveSpeedPCTExPer   10105 
- #全局回能效率万分比
+
+#移动速度加成万分比
+int AttrMoveSpeedPCT 10100  
+int AttrMoveSpeedPCTTotal  10101 
+int AttrMoveSpeedPCTAdd  10102 
+int AttrMoveSpeedPCTExAdd  10103 
+int AttrMoveSpeedPCTPer  10104 
+int AttrMoveSpeedPCTExPer  10105 
+
+#全局回能效率万分比
 int AttrMpRecAll  10110 
 int AttrMpRecAllTotal   10111 
 int AttrMpRecAllAdd   10112 
 int AttrMpRecAllExAdd   10113 
 int AttrMpRecAllPer   10114 
 int AttrMpRecAllExPer   10115 
+
  #释放非奥义技能，角色回能万分比
 int AttrMpRecCast   10120 
 int AttrMpRecCastTotal   10121 
@@ -201,12 +202,12 @@ int AttrElementMagicRedPCTPer   14054
 int AttrElementMagicRedPCTExPer   14055 
 
  #伤害增加 %[x]
-int   AttrDmgA  15000
-int   AttrDmgATotal  15001
-int   AttrDmgAAdd  15002
-int   AttrDmgAExAdd  15003
-int   AttrDmgAPer  15004
-int   AttrDmgAExPer  15005
+int AttrDmgA  15000
+int AttrDmgATotal  15001
+int AttrDmgAAdd  15002
+int AttrDmgAExAdd  15003
+int AttrDmgAPer  15004
+int AttrDmgAExPer  15005
 
  #直接减伤
 int AttrDmgRed   15300 
@@ -237,12 +238,12 @@ int AttrDmgFarExAdd   16103
 int AttrDmgFarPer   16104 
 int AttrDmgFarExPer   16105 
  #远距离减伤
-int AttrDmgRedFar   16120 
-int AttrDmgRedFarTotal   16121 
-int AttrDmgRedFarAdd   16122 
-int AttrDmgRedFarExAdd   16123 
-int AttrDmgRedFarPer   16124 
-int AttrDmgRedFarExPer   16125 
+int AttrDmgRedFar       16120 
+int AttrDmgRedFarTotal  16121 
+int AttrDmgRedFarAdd    16122   
+int AttrDmgRedFarExAdd  16123 
+int AttrDmgRedFarPer    16124   
+int AttrDmgRedFarExPer  16125 
  #子弹类型减伤
 int AttrDmgRedBullet   16220 
 int AttrDmgRedBulletTotal   16221 
@@ -292,4 +293,3 @@ int AttrDmgRedNonHealthyAdd   17122
 int AttrDmgRedNonHealthyExAdd   17123 
 int AttrDmgRedNonHealthyPer   17124 
 int AttrDmgRedNonHealthyExPer   17125 
-int AttrEntityLevel  60010 

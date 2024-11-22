@@ -1,251 +1,225 @@
 #region
 
+using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Tools;
 using System;
 using System.Collections.Generic;
-using Hono.Scripts.Battle.Tools;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 #endregion
 
-namespace Hono.Scripts.Battle
-{
+namespace Hono.Scripts.Battle {
 	/// <summary>
-	///     Actor的逻辑，包含逻辑层自身的逻辑和关联组件，状态机，最终决定出当前Actor逻辑层的属性,逻辑层必然存在
-	///     ,逻辑层从设计理念上来讲是不知晓表现层的存在的，所以不要用逻辑层调用表现层
+	/// Actor的逻辑，包含逻辑层自身的逻辑和关联组件，状态机，最终决定出当前Actor逻辑层的属性
 	/// </summary>
-	public abstract partial class ActorLogic
-    {
-	    /// <summary>
-	    ///     Actor的UID
-	    /// </summary>
-	    public int Uid;
+	public abstract partial class ActorLogic {
+		public Actor Self { get; private set; }
 
-	    /// <summary>
-	    ///     模型Id，没有则为-1
-	    /// </summary>
-	    public int ModelId;
+		/// <summary>
+		/// Actor的UID
+		/// </summary>
+		public int Uid => Self.Uid;
 
-	    /// <summary>
-	    ///     Actor
-	    /// </summary>
-	    public Actor Actor { get; }
+		/// <summary>
+		/// Actor的黑板数据
+		/// </summary>
+		protected VarCollection Variables => Self.Variables;
 
-	    /// <summary>
-	    ///     状态机
-	    /// </summary>
-	    protected ActorStateMachine _stateMachine;
+		/// <summary>
+		/// 状态机
+		/// </summary>
+		private ActorStateMachine _stateMachine;
 
-	    /// <summary>
-	    ///     逻辑组件
-	    /// </summary>
-	    private readonly Dictionary<Type, ALogicComponent> _components;
+		/// <summary>
+		/// 输入来源
+		/// </summary>
+		private ActorInput _actorInput;
 
-	    /// <summary>
-	    ///     Actor的Ability控制器
-	    /// </summary>
-	    private Actor.AbilityController _abilityController;
+		/// <summary>
+		/// 逻辑组件
+		/// </summary>
+		private readonly Dictionary<Type, AComponent> _components;
 
-        protected Actor.AbilityController AbilityController => _abilityController;
+		protected ActorLogic() {
+			_actorInput = new NoInput(this);
+			_components = new Dictionary<Type, AComponent>(10);
+		}
 
-        /// <summary>
-        ///     Actor的属性
-        /// </summary>
-        private AttrCollection _attrs;
+		public void OnSetup(Actor actor) {
+			Self = actor;
+			setupAttrs();
+			foreach (var component in _components) {
+				component.Value.Init();
+			}
 
-        protected AttrCollection Attrs => _attrs;
+			onInit();
+		}
 
-        /// <summary>
-        ///     Actor的Tags
-        /// </summary>
-        private Tags _tags;
+		/// <summary>
+		/// 重设Input
+		/// </summary>
+		/// <param name="input"></param>
+		protected void resetInput(ActorInput input) {
+			_actorInput = input;
+		}
 
-        protected Tags Tags => _tags;
+		/// <summary>
+		/// 设置状态机,仅当状态机为空时有效果
+		/// </summary>
+		/// <param name="stateMachine"></param>
+		protected void resetStateMachine(ActorStateMachine stateMachine) {
+			_stateMachine ??= stateMachine;
+		}
+		
+		/// <summary>
+		/// 装载属性，先于OnInit
+		/// </summary>
+		protected virtual void setupAttrs() { }
+		
+		/// <summary>
+		/// 在属性，状态机，组件初始化完成后调用
+		/// </summary>
+		protected virtual void onInit() { }
 
-        /// <summary>
-        ///     Actor的黑板数据
-        /// </summary>
-        private VarCollection _variables;
+		/// <summary>
+		/// 进入场景时调用
+		/// </summary>
+		public void EnterScene() {
+			foreach (var component in _components) {
+				component.Value.EnterScene();
+			}
 
-        protected VarCollection Variables => _variables;
+			onEnterScene();
+		}
 
-        /// <summary>
-        ///     输入来源
-        /// </summary>
-        protected ActorInput _actorInput;
+		/// <summary>
+		/// 初始化完成后进入场景时执行
+		/// </summary>
+		protected virtual void onEnterScene() { }
 
-        public ActorLogic(Actor actor)
-        {
-            Actor = actor;
-            Uid = actor.Uid;
-            _components = new Dictionary<Type, ALogicComponent>();
-        }
+		/// <summary>
+		/// 添加组件
+		/// </summary>
+		/// <param name="component"></param>
+		protected T addComponent<T>(T component) where T : AComponent  {
+			if (!_components.TryAdd(component.GetType(), component)) {
+				Debug.Log($"{GetType()} 添加组件 {component.GetType()} Failed!");
+			}
 
-        public void Setup(Actor.AbilityController controller, AttrCollection attrs, Tags tags,
-            VarCollection varCollection)
-        {
-            _attrs = attrs;
-            _abilityController = controller;
-            _tags = tags;
-            _variables = varCollection;
+			return component;
+		}
 
-            setupAttrs();
-            setupInput();
-            setupComponents();
-            setupStateMachine();
-        }
+		/// <summary>
+		/// 获取组件
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns>会返回空</returns>
+		public T GetComponent<T>() where T : AComponent {
+			if (!_components.TryGetValue(typeof(T), out var component)) {
+				Debug.Log($"{this.GetType()} 获取组件 {typeof(T)} 失败!");
+			}
 
-        public void Init()
-        {
-            onInit();
+			return (T)component;
+		}
 
-            foreach (var component in _components)
-            {
-                component.Value.Init();
-            }
+		/// <summary>
+		/// 尝试获取组件
+		/// </summary>
+		/// <param name="comp"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public bool TryGetComponent<T>(out T comp) where T : AComponent {
+			comp = null;
+			if (_components.TryGetValue(typeof(T), out var component)) {
+				comp = (T)component;
+				return true;
+			}
 
-            _actorInput?.Init();
-            _stateMachine?.Init();
-        }
+			return false;
+		}
 
-        protected virtual void setupAttrs() { }
+		protected virtual void onTick(float dt) { }
 
-        protected virtual void setupInput()
-        {
-            _actorInput = new NoInput(this);
-        }
+		public void Tick(float dt) {
+			_actorInput.Tick(dt);
 
-        protected virtual void setupStateMachine() { }
-        protected virtual void onInit() { }
-        protected virtual void setupComponents() { }
+			foreach (var component in _components) {
+				component.Value.Tick(dt);
+			}
 
-        protected void addComponent(ALogicComponent component)
-        {
-            if (!_components.TryAdd(component.GetType(), component))
-            {
-                Debug.Log($"{this.GetType()}  添加组件 {component.GetType()} Failed!");
-            }
-        }
+			_stateMachine?.Tick(dt);
+			onTick(dt);
+		}
 
-        public T GetComponent<T>() where T : ALogicComponent
-        {
-            if (!_components.TryGetValue(typeof(T), out var component))
-            {
-                Debug.Log($"{this.GetType()} 获取组件 {typeof(T)} 失败!");
-            }
+		public abstract void RecycleLogicObject();
 
-            return (T)component;
-        }
+		public void OnRecycle() {
+			OnChildRecycle();
+			foreach (var component in _components) {
+				component.Value.Clear();
+			}
+		}
 
-        public bool TryGetComponent<T>(out T comp) where T : ALogicComponent
-        {
-            comp = null;
-            if (_components.TryGetValue(typeof(T), out var component))
-            {
-                comp = (T)component;
-                return true;
-            }
+		protected virtual void OnChildRecycle() {
+			
+		}
 
-            return false;
-        }
+		#region 对外接口
 
-        protected virtual void onTick(float dt) { }
+		public EActorStateType CurState() {
+			return _stateMachine?.CurStateType ?? EActorStateType.Empty;
+		}
 
-        public void Tick(float dt)
-        {
-            Profiler.BeginSample("ActorLogicComponentTick");
-            foreach (var component in _components)
-            {
-                component.Value.Tick(dt);
-            }
+		public int GetAttr(EAttrType attrType) {
+			return Self.GetAttr(attrType);
+		}
 
-            Profiler.EndSample();
-            Profiler.BeginSample("ActorLogicInput");
-            _actorInput.Tick(dt);
-            Profiler.EndSample();
-            _stateMachine?.Tick(dt);
-            Profiler.BeginSample("ActorLogicTick");
-            onTick(dt);
-            Profiler.EndSample();
-        }
+		public void SetAttr(EAttrType attrType, int value, bool temp) {
+			Self.SetAttr(attrType, value, temp);
+		}
 
-        public void Destroy()
-        {
-            onDestroy();
+		#endregion
+	}
 
-            foreach (var component in _components)
-            {
-                component.Value.UnInit();
-            }
-        }
+	public static class ActorLogicEx {
+		public static int GetBuffLayer(this ActorLogic logic, int buffId) {
+			if (logic.TryGetComponent<ActorLogic.BuffComp>(out var buffComp)) {
+				return buffComp.GetBuffLayer(buffId);
+			}
 
-        protected virtual void onDestroy() { }
+			return -1;
+		}
 
-        public EActorLogicStateType CurState()
-        {
-            return _stateMachine.CurStateType;
-        }
+		public static int GetSkillLevel(this ActorLogic logic, int skillId) {
+			if (logic.TryGetComponent<ActorLogic.SkillComp>(out var skillComp)) {
+				if (skillComp.Skills.TryGetValue(skillId, out var skill)) {
+					return skill.Level;
+				}
+			}
 
+			return -1;
+		}
 
-        public T GetAttr<T>(ELogicAttr logicAttr)
-        {
-            return Actor.GetAttr<T>(logicAttr);
-        }
+		public static void SetSkillLevel(this ActorLogic logic, int skillId, int value) {
+			if (logic.TryGetComponent<ActorLogic.SkillComp>(out var skillComp)) {
+				if (skillComp.Skills.TryGetValue(skillId, out var skill)) {
+					skill.Level = value;
+					return;
+				}
+			}
 
-        public object GetAttrBox(ELogicAttr logicAttr)
-        {
-            return Actor.GetAttrBox(logicAttr);
-        }
+			Debug.LogError($"[SetSkillLevel] 未找到技能 {skillId}");
+		}
 
-        public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData)
-        {
-            return Actor.SetAttr(logicAttr, value, isTempData);
-        }
+		public static void ChangeSkillLevel(this ActorLogic logic, int skillId, int value) {
+			if (logic.TryGetComponent<ActorLogic.SkillComp>(out var skillComp)) {
+				if (skillComp.Skills.TryGetValue(skillId, out var skill)) {
+					skill.Level += value;
+					return;
+				}
+			}
 
-        public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData)
-        {
-            return Actor.SetAttrBox(logicAttr, value, isTempData);
-        }
-
-        public int GetSkillLevel(int skillId)
-        {
-            if (TryGetComponent<SkillComp>(out var skillComp))
-            {
-                if (skillComp.Skills.TryGetValue(skillId, out var skill))
-                {
-                    return skill.Level;
-                }
-            }
-
-            return -1;
-        }
-
-        public void SetSkillLevel(int skillId, int value)
-        {
-            if (TryGetComponent<SkillComp>(out var skillComp))
-            {
-                if (skillComp.Skills.TryGetValue(skillId, out var skill))
-                {
-                    skill.Level = value;
-                    return;
-                }
-            }
-
-            Debug.LogError($"[SetSkillLevel] 未找到技能 {skillId}");
-        }
-
-        public void ChangeSkillLevel(int skillId, int value)
-        {
-            if (TryGetComponent<SkillComp>(out var skillComp))
-            {
-                if (skillComp.Skills.TryGetValue(skillId, out var skill))
-                {
-                    skill.Level += value;
-                    return;
-                }
-            }
-
-            Debug.LogError($"[SetSkillLevel] 未找到技能 {skillId}");
-        }
-    }
+			Debug.LogError($"[SetSkillLevel] 未找到技能 {skillId}");
+		}
+	}
 }

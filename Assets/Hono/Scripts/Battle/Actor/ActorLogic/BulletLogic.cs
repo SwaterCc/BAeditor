@@ -1,210 +1,129 @@
 #region
 
-using System.Collections.Generic;
 using Hono.Scripts.Battle.Event;
+using Hono.UI.Battle;
+using System.Collections.Generic;
 using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle
-{
-    //当前游戏模式
-    public class BulletLogic : ActorLogic
-    {
-        private BulletData _bulletData;
-        private int _targetUid;
-        private Vector3 _targetPos;
+namespace Hono.Scripts.Battle {
+	//当前游戏模式
+	public class BulletLogic : ActorLogic, IAPoolObject {
+		private BulletData _bulletData;
+		
+		private MotionComp _motionComp;
+		private VFXComp _vfxComp;
 
-        private int _sourceActorId;
+		private int _hitCount;
+		private float _duration;
+		
+		private Damage _damage;
+		private Actor _attacker;
+		private int _targetUid;
+		private Vector3 _targetPos;
+		private bool _isExpire;
+		private bool _hasError;
+		private BulletSetting _setting;
+		
+		public BulletLogic() {	
+			_motionComp = addComponent( new MotionComp(this));
+			_vfxComp = addComponent(new VFXComp(this));
+		}
+		
+		private void setBulletExpire(Actor actor) {
+			_isExpire = true;
+			ActorManager.Instance.RemoveActor(Uid);
+		}
+		
+		protected override void onInit() {
+			_bulletData = AssetManager.Instance.GetData<BulletData>(GetAttr(EAttrType.AttrConfigId));
+			_targetUid = (int)(Variables.Get("targetUid"));
+			_attacker = ActorManager.Instance.GetActor(GetAttr(EAttrType.AttrSourceActorUid));
+			_attacker.ExitSceneCallBack += setBulletExpire;
+			
+			Actor target = ActorManager.Instance.GetActor(_targetUid);
+			if (target == null) {
+				_hasError = true;
+				setBulletExpire(null);
+			}
+			else {
+				target.ExitSceneCallBack += setBulletExpire;
+				_targetPos = target.Pos;
+			}
+		}
 
-        private MotionComp _motionComp;
-        private VFXComp _vfxComp;
+		protected override void onEnterScene() {
+			
+			Self.Rot =  _attacker.Rot * Quaternion.AngleAxis(_setting.Angle, Vector3.up);
+			Self.Pos =  _attacker.Pos + Self.Rot * _setting.Offset;
+			
+			var motionSetting = new MotionSetting() {
+				MoveType = _bulletData.MotionType,
+				Speed = _setting.Speed,
+				Duration = _bulletData.BulletLifeTime,
+				MovingFaceToTarget = true,
+				TriggerEventClose = true
+			};
 
-        private int _hitCount;
-        private float _duration;
+			_motionComp.AddMotion(_targetUid, motionSetting, onBulletCollision);
+			var ability = Self.Abilities.AwardAbility(_bulletData.Id);
+			ability.Execute();
+		}
+		
+		private void onBulletCollision(int uid) {
+			if (_hasError || _isExpire) {
+				return;
+			}
+			
+			if (!ActorManager.Instance.CheckActorPassFilter(Self, uid, _bulletData.FilterSetting)) {
+				return;
+			}
 
-        public BulletLogic(Actor actor) : base(actor) { }
+			if (_bulletData.IsHitPathActor) {
+				++_hitCount;
+				onHit(uid);
 
-        protected override void setupAttrs()
-        {
-            SetAttr(ELogicAttr.AttrUnselectable, 1, false);
-        }
+				if (_hitCount >= _bulletData.MaxHitCount || uid == _targetUid) {
+					dead();
+				}
+			}
+			else {
+				if (uid != _targetUid) return;
 
-        protected override void onInit()
-        {
-            _sourceActorId = GetAttr<int>(ELogicAttr.AttrSourceActorUid);
-            if (!ActorManager.Instance.TryGetActor(_sourceActorId, out var summoner))
-            {
-                dead();
-                return;
-            }
+				onHit(_targetUid);
+				dead();
+			}
+		}
+		
+		protected override void onTick(float dt) {
+			if (_hasError || _isExpire) {
+				return;
+			}
+			
+			_duration += dt;
+			if (_duration > _bulletData.BulletLifeTime) {
+				dead();
+			}
+		}
 
-            _bulletData = AssetManager.Instance.GetData<BulletData>(GetAttr<int>(ELogicAttr.AttrConfigId));
-            _targetUid = (int)(Variables.Get("targetUid"));
+		private void onHit(int targetUid) {
+			var target = ActorManager.Instance.GetActor(targetUid);
+			if (target == null) return;
+			if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
 
-            var summonerPos = summoner.GetAttr<Vector3>(ELogicAttr.AttrPosition);
-            var summonerRot = summoner.GetAttr<Quaternion>(ELogicAttr.AttrRot);
-
-            var startPos = summonerPos + summonerRot * _bulletData.Offset;
-
-            SetAttr(ELogicAttr.AttrPosition, startPos, false);
-
-            var motionSetting = new MotionSetting()
-            {
-                MoveType = _bulletData.MotionType,
-                Speed = _bulletData.BulletSpeed,
-                Duration = _bulletData.BulletLifeTime,
-                MovingFaceToTarget = true,
-                TriggerEventClose = true
-            };
-
-            _motionComp.AddMotion(_targetUid, motionSetting, onBulletCollision);
-
-            AbilityController.AwardAbility(_bulletData.Id, true);
-        }
-
-        protected override void setupComponents()
-        {
-            _motionComp = new MotionComp(this);
-            _vfxComp = new VFXComp(this);
-            addComponent(_motionComp);
-            addComponent(_vfxComp);
-        }
-
-        private void dead()
-        {
-            ActorManager.Instance.RemoveActor(Actor.Uid);
-        }
-
-        protected override void onTick(float dt)
-        {
-            _duration += dt;
-            if (_duration > _bulletData.BulletLifeTime)
-            {
-                dead();
-            }
-        }
-
-        private HitInfo makeHitInfo()
-        {
-            var hitInfo = new HitInfo();
-            hitInfo.SourceActorId = _sourceActorId;
-            hitInfo.SourceAbilityConfigId = _bulletData.Id;
-            hitInfo.SourceAbilityType = (int)EAbilityType.Bullet;
-            hitInfo.SourceAbilityUId = _bulletData.Id;
-            hitInfo.DamageConfigId = _bulletData.DamageConfigId;
-            return hitInfo;
-        }
-
-        private DamageConfig makeDamageConfig()
-        {
-            var damageConfig = new DamageConfig();
-            var damage = ConfigManager.Table<DamageTable>().Get(_bulletData.DamageConfigId);
-            damageConfig.DamageType = (EDamageType)damage.DamageType;
-            damageConfig.ElementType = (EDamageElementType)damage.ElementType;
-            damageConfig.FormulaName = damage.FormulaName;
-            damageConfig.ImpactValue = damage.ImpactValue;
-            damageConfig.DamageRatio = damage.DamageRatio;
-            foreach (var addiId in damage.AdditiveId)
-            {
-                var damageAddi = ConfigManager.Table<DamageAdditiveTable>().Get(addiId);
-                var funcInfo = new DamageFuncInfo();
-                funcInfo.ValueFuncName = damageAddi.ApplyFuncName;
-                funcInfo.ConditionIds = damageAddi.ConditionIds;
-                funcInfo.ConditionParams = damageAddi.ConditionParams;
-                funcInfo.ValueParams.AddRange(damageAddi.DamageValue);
-                damageConfig.AddiTypes.Add(funcInfo);
-            }
-
-            foreach (var multiId in damage.MultiplyId)
-            {
-                var damageMultiply = ConfigManager.Table<DamageMultiplyTable>().Get(multiId);
-                var funcInfo = new DamageFuncInfo();
-                funcInfo.ValueFuncName = damageMultiply.ApplyFuncName;
-                funcInfo.ConditionIds = damageMultiply.ConditionIds;
-                funcInfo.ConditionParams = damageMultiply.ConditionParams;
-                funcInfo.ValueParams.AddRange(damageMultiply.DamageValue);
-                damageConfig.MultiTypes.Add(funcInfo);
-            }
-
-            return damageConfig;
-        }
-
-        private void onHit(int targetUid)
-        {
-            var attacker = ActorManager.Instance.GetActor(_sourceActorId);
-            if (attacker == null)
-            {
-                //命中时攻击者已经死了
-                return;
-            }
-
-            var damageInfo = new DamageInfo();
-            damageInfo.SourceAbilityConfigId = _bulletData.Id;
-            damageInfo.SourceAbilityType = EAbilityType.Bullet;
-            var tags = (List<int>)Variables.Get("abilityTags");
-            if (tags != null)
-            {
-                damageInfo.Tags.AddRange(tags);
-            }
-            else
-            {
-                Debug.Log("tag == null");
-            }
-
-            var target = ActorManager.Instance.GetActor(targetUid);
-            if (target == null) return;
-            if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
-
-            var damageItem = makeDamageConfig();
-            var res = LuaInterface.GetDamageResults(attacker, target, damageInfo, damageItem);
-            var hitInfo = makeHitInfo();
-            BattleEventManager.Instance.TriggerActorEvent(Actor.Uid, EBattleEventType.OnHit, hitInfo);
-
-            var hitDamageInfo = new HitDamageInfo(hitInfo);
-            hitDamageInfo.HitTargetUid = _targetUid;
-            hitInfo.HitBoxHitCount = 1;
-            hitDamageInfo.ParseDamageResult(res);
-            hitDamageInfo.IsKillTarget = (target.GetAttr<int>(ELogicAttr.AttrHp) - res.DamageValue) <= 0;
-            BattleEventManager.Instance.TriggerActorEvent(Actor.Uid, EBattleEventType.OnHitDamage, hitDamageInfo);
-            if (hitDamageInfo.IsKillTarget)
-            {
-                if (ActorManager.Instance.TryGetActor(GetAttr<int>(ELogicAttr.AttrTopSourceActorUid), out var attack))
-                {
-                    if (attack.Logic.TryGetComponent<MpComp>(out var mpComp))
-                    {
-                        mpComp.KillChangeMp(hitDamageInfo);
-                    }
-                }
-            }
-
-            beHurtComp.OnBeHurt(hitDamageInfo);
-        }
-
-        private void onBulletCollision(int uid)
-        {
-            if (!ActorManager.Instance.CheckActorPassFilter(Actor, uid, _bulletData.FilterSetting))
-            {
-                return;
-            }
-
-            if (_bulletData.IsHitPathActor)
-            {
-                ++_hitCount;
-                onHit(uid);
-
-                if (_hitCount >= _bulletData.MaxHitCount || uid == _targetUid)
-                {
-                    dead();
-                }
-            }
-            else
-            {
-                if (uid != _targetUid) return;
-
-                onHit(_targetUid);
-                dead();
-            }
-        }
-    }
+			var hitDamageInfo = _damage.MakeDamage(1, 1, false);
+			BattleEventManager.Instance.TriggerActorEvent(Self.Uid, EBattleEventType.OnHit, hitDamageInfo);
+			
+			beHurtComp.OnBeHurt(hitDamageInfo);
+		}
+		
+		private void dead() {
+			ActorManager.Instance.RemoveActor(Self.Uid);
+		}
+		
+		public override void RecycleLogicObject() {
+			AObjectPool<BulletLogic>.Pool.Recycle(this);
+		}
+	}
 }

@@ -2922,12 +2922,6 @@ MonoBehaviour:
     - Name: DamageConfigId
       Entry: 3
       Data: 20520301
-    - Name: AoeData
-      Entry: 6
-      Data: 
-    - Name: UseCustomFilter
-      Entry: 5
-      Data: true
     - Name: FilterSetting
       Entry: 7
       Data: 152|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
@@ -3044,7 +3038,10 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: IsFollowTarget
+    - Name: AbilityIds
+      Entry: 6
+      Data: 
+    - Name: CriticalFlag
       Entry: 5
       Data: false
     - Name: 

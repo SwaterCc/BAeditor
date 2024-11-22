@@ -1,340 +1,386 @@
 #region
 
+using Hono.Scripts.Battle.Event;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using Hono.Scripts.Battle.Event;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 #endregion
 
-namespace Hono.Scripts.Battle
-{
-    public partial class ActorLogic
-    {
-        public class Skill
-        {
-            public int Id => Data.ID;
-            public SkillData Data;
-            public bool IsEnable => (!_isDisable) && (_curCdPercent <= 0) && (!_isExecuting);
+namespace Hono.Scripts.Battle {
+	public partial class ActorLogic {
+		public class Skill : IAPoolObject {
+			/// <summary>
+			/// 技能Id
+			/// </summary>
+			public int Id { get; private set; }
 
-            public bool IsExecuting => _isExecuting;
+			/// <summary>
+			/// 技能配置
+			/// </summary>
+			public SkillData SkillData { get; private set; }
 
-            private int _level;
+			/// <summary>
+			/// logic
+			/// </summary>
+			public ActorLogic Logic { get; private set; }
 
-            public int Level
-            {
-                get => _level;
+			/// <summary>
+			/// 技能是否被禁用
+			/// </summary>
+			private bool _isDisable;
 
-                set
-                {
-                    _level = value;
-                    if (_level <= 0)
-                    {
-                        Debug.LogWarning($"Skill{Id} level被减到0 强行设置为1");
-                        _level = 1;
-                    }
+			/// <summary>
+			/// 技能是否在执行中
+			/// </summary>
+			private bool _isExecuting;
 
-                    if (_level > 10)
-                    {
-                        Debug.LogWarning($"Skill{Id} level超过10 强行设置为10");
-                        _level = 10;
-                    }
-                }
-            }
+			public bool IsExecuting => _isExecuting;
 
-            private float _curCdPercent;
-            private int _abilityUid;
-            private bool _isDisable;
-            private bool _resEnough;
-            private bool _isExecuting;
-            private float _maxCd;
-            private ActorLogic _logic;
-            private FilterSetting _skillTargetSetting;
-            private SkillCdEventInfo _cdEventInfo;
+			/// <summary>
+			/// 技能是否能够释放
+			/// </summary>
+			public bool IsEnable => (!_isDisable) && (_curCdPercent <= 0) && (!_isExecuting);
 
-            private Action<float> _cdTick;
+			/// <summary>
+			/// 技能等级
+			/// </summary>
+			private int _level;
 
-            public Skill(ActorLogic logic, int skillId, int level)
-            {
-                Data = AssetManager.Instance.GetData<SkillData>(skillId);
-                _curCdPercent = 0;
-                _logic = logic;
-                _isDisable = false;
-                _isExecuting = false;
+			public int Level {
+				get => _level;
 
-                _skillTargetSetting = Data.CustomFilter;
+				set {
+					_level = value;
+					if (_level <= 0) {
+						Debug.LogWarning($"Skill{Id} level被减到0 强行设置为1");
+						_level = 1;
+					}
 
-                var ability = _logic._abilityController.CreateAbility(Data.SkillId);
-                _abilityUid = ability.Uid;
+					if (_level > 10) {
+						Debug.LogWarning($"Skill{Id} level超过10 强行设置为10");
+						_level = 10;
+					}
+				}
+			}
 
-                ability.GetCycleCallback(EAbilityAllowEditCycle.OnPreExecute).OnEnter += onAbilityBegin;
-                ability.GetCycleCallback(EAbilityAllowEditCycle.OnEndExecute).OnExit += onAbilityEnd;
+			/// <summary>
+			/// 当前CD比例
+			/// </summary>
+			private float _curCdPercent;
 
-                _logic._abilityController.AwardAbility(ability, Data.SkillType == ESkillType.PassiveSkill);
+			/// <summary>
+			/// 战斗资源是否足够释放技能
+			/// </summary>
+			private bool _resEnough;
 
-                _cdEventInfo = new SkillCdEventInfo()
-                {
-                    SkillId = Id, SkillBelongActorUid = _logic.Uid, AddCdTickFunc = AddCdTick
-                };
+			/// <summary>
+			/// 真实CD，受技能等级，属性影响
+			/// </summary>
+			private float _realCd;
 
-                Level = level;
+			/// <summary>
+			/// cd回调
+			/// </summary>
+			private Action<float> _cdTick;
 
-                resourceCheck();
-            }
+			/// <summary>
+			/// 废弃，后续采用索敌组件
+			/// </summary>
+			private FilterSetting _skillTargetSetting;
 
-            private void onAbilityBegin()
-            {
-                _isExecuting = true;
-                if (Data.SkillType != ESkillType.PassiveSkill && Data.SkillType != ESkillType.RogueSkill)
-                {
-                    _logic._stateMachine.SwitchState(EActorLogicStateType.Skill);
-                }
+			/// <summary>
+			/// cd数据
+			/// </summary>
+			private readonly SkillCdEventInfo _cdEventInfo = new();
 
-                if (Data.CostType == EResCostType.BeforeExecute)
-                {
-                    resourceCost();
-                }
+			/// <summary>
+			/// 技能使用Info
+			/// </summary>
+			private readonly UsedSkillEventInfo _usedSkillEventInfo = new();
 
-                if (Data.EcdMode == ECDMode.BeforeExecute)
-                {
-                    CdBegin();
-                }
+			/// <summary>
+			/// 技能的Ability
+			/// </summary>
+			public Ability Ability { get; private set; }
 
-                BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillUseSuccess,
-                    new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
-            }
+			public void OnRent(ActorLogic logic, int skillId, int level) {
+				SkillData = AssetManager.Instance.GetData<SkillData>(skillId);
 
-            public void ForceStop()
-            {
-                _logic._abilityController.ForceStopAbility(_abilityUid);
-            }
+				//读技能等级信息没实现
 
-            private void onAbilityEnd()
-            {
-                _isExecuting = false;
+				Logic = logic;
+				_curCdPercent = 0;
+				_isDisable = false;
+				_isExecuting = false;
 
-                if (Data.CostType == EResCostType.AfterExecute)
-                {
-                    resourceCost();
-                }
+				_skillTargetSetting = SkillData.CustomFilter;
 
-                if (Data.EcdMode == ECDMode.AfterExecute)
-                {
-                    CdBegin();
-                }
+				Ability = Logic.Self.Abilities.AwardAbility(Id);
+				Ability.AddCycleCallback(EAbilityCycle.PreExecute,onAbilityBegin);
+				Ability.AddCycleCallback(EAbilityCycle.EndExecute, onAbilityEnd);
+				if (SkillData.SkillType != ESkillType.PassiveSkill) {
+					Ability.Execute();
+				}
 
-                if (Data.SkillType != ESkillType.PassiveSkill && Data.SkillType != ESkillType.RogueSkill)
-                {
-                    _logic._stateMachine.SwitchState(EActorLogicStateType.Idle);
-                }
+				_cdEventInfo.SkillId = Id;
+				_cdEventInfo.ActorUid = Logic.Uid;
+				_cdEventInfo.AddCdTickFunc = AddCdTick;
 
-                BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.OnSkillStop,
-                    new UsedSkillEventInfo() { SkillId = _abilityUid, CasterUid = _logic.Uid });
-            }
+				Level = level;
 
-            /// <summary>
-            ///     cd开始
-            /// </summary>
-            private void CdBegin()
-            {
-                calculateCd();
-                _curCdPercent = 1;
-                BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.SkillCDBegin, _cdEventInfo);
-            }
+				checkResource();
+			}
+			
+			private void onAbilityBegin() {
+				_isExecuting = true;
+				if (SkillData.SkillType != ESkillType.PassiveSkill && SkillData.SkillType != ESkillType.RogueSkill) {
+					Logic._stateMachine.SwitchState(EActorStateType.Attack);
+				}
 
-            private void AddCdTick(Action<float> tickCallBack)
-            {
-                _cdTick += tickCallBack;
-            }
+				if (SkillData.CostType == EResCostType.BeforeExecute) {
+					costResource();
+				}
 
-            private void CdEnd()
-            {
-                _curCdPercent = 0;
-                BattleEventManager.Instance.TriggerActorEvent(_logic.Uid, EBattleEventType.SkillCDEnd, _cdEventInfo);
-                _cdTick = null;
-            }
+				if (SkillData.EcdMode == ECDMode.BeforeExecute) {
+					CdBegin();
+				}
 
-            public void SendFailedMsg()
-            {
-                if (_isDisable)
-                {
-                    Debug.Log("被禁止使用");
-                }
+				_usedSkillEventInfo.SkillId = Ability.Id;
+				_usedSkillEventInfo.UserUid = Logic.Uid;
 
-                if (!_resEnough)
-                {
-                    Debug.Log("能量不足");
-                }
+				BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnSkillUseSuccess,
+					_usedSkillEventInfo);
+			}
 
-                if (_curCdPercent != 0)
-                {
-                    Debug.Log("Cd中！");
-                }
+			private void onAbilityEnd() {
+				_isExecuting = false;
 
-                if (_isExecuting)
-                {
-                    Debug.Log("技能释放中！");
-                }
-            }
+				if (SkillData.CostType == EResCostType.AfterExecute) {
+					costResource();
+				}
 
-            /// <summary>
-            ///     减少cd
-            /// </summary>
-            public void LessCd(float second)
-            {
-                var percent = second / _maxCd;
+				if (SkillData.EcdMode == ECDMode.AfterExecute) {
+					CdBegin();
+				}
 
-                _curCdPercent -= percent;
-                _curCdPercent = Math.Clamp(_curCdPercent, 0, 1);
-            }
+				if (SkillData.SkillType != ESkillType.PassiveSkill && SkillData.SkillType != ESkillType.RogueSkill) {
+					Logic._stateMachine.SwitchState(EActorStateType.Idle);
+				}
 
-            private void calculateCd()
-            {
-                _maxCd = Data.SkillCD;
-            }
+				BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnSkillStop,
+					_usedSkillEventInfo);
+			}
+			
+			/// <summary>
+			/// 后续改成UI跳字
+			/// </summary>
+			public void SendFailedMsg() {
+				if (_isDisable) {
+					Debug.Log("被禁止使用");
+				}
 
-            private void resourceCheck()
-            {
-                if (Data.SkillResCheck.Count == 0)
-                {
-                    _resEnough = true;
-                    return;
-                }
+				if (!_resEnough) {
+					Debug.Log("能量不足");
+				}
 
-                foreach (var resItems in Data.SkillResCheck)
-                {
-                    foreach (var resItem in resItems.Items)
-                    {
-                        switch (resItem.ResourceType)
-                        {
-                            case EBattleResourceType.Energy:
-                                var mp = _logic.GetAttr<int>((ELogicAttr)resItem.ResId);
-                                _resEnough = mp >= resItem.Value;
-                                break;
-                            case EBattleResourceType.Item:
-                                break;
-                            case EBattleResourceType.Buff:
-                                _resEnough = _logic.GetComponent<BuffComp>().GetBuffLayer(resItem.ResId) >=
-                                             resItem.Value;
-                                break;
-                        }
-                    }
-                }
-            }
+				if (_curCdPercent != 0) {
+					Debug.Log("Cd中！");
+				}
 
-            private void resourceCost()
-            {
-                if (Data.SkillResCheck.Count == 0)
-                {
-                    _resEnough = true;
-                    return;
-                }
+				if (_isExecuting) {
+					Debug.Log("技能释放中！");
+				}
+			}
 
-                foreach (var resItems in Data.SkillResCost)
-                {
-                    //组检测
-                    foreach (var resItem in resItems.Items)
-                    {
-                        //单项检测
-                        switch (resItem.ResourceType)
-                        {
-                            case EBattleResourceType.Energy:
-                                var mp = _logic.GetAttr<int>((ELogicAttr)resItem.ResId);
-                                _logic.SetAttr((ELogicAttr)resItem.ResId, mp - resItem.Value, false);
-                                break;
-                        }
-                    }
-                }
+			#region CD
 
-                resourceCheck();
-            }
+			/// <summary>
+			/// 计算真实CD
+			/// </summary>
+			private void calculateCd() {
+				_realCd = SkillData.SkillCD;
+			}
 
+			/// <summary>
+			/// cd开始
+			/// </summary>
+			private void CdBegin() {
+				calculateCd();
+				_curCdPercent = 1;
+				BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.SkillCDBegin, _cdEventInfo);
+			}
 
-            public void OnTick(float dt)
-            {
-                //CD
-                if (_curCdPercent > 0)
-                {
-                    var finalCDPct = (_logic.GetAttr<int>(ELogicAttr.AttrSkillCDPCT) / 10000f + 1);
-                    if (finalCDPct < 0) finalCDPct = 0;
-                    _curCdPercent -= ((dt / _maxCd) * finalCDPct);
-                    _cdTick?.Invoke(_curCdPercent);
-                    if (_curCdPercent <= 0)
-                    {
-                        CdEnd();
-                    }
-                }
+			/// <summary>
+			/// 添加CDTick回调
+			/// </summary>
+			/// <param name="tickCallBack"></param>
+			private void AddCdTick(Action<float> tickCallBack) {
+				_cdTick += tickCallBack;
+			}
 
-                //更新攻速
-                var attackSpeed = _logic.GetAttr<int>(ELogicAttr.AttrAttackSpeedPCT) / 10000f + 1;
-                attackSpeed = Mathf.Clamp(attackSpeed, 0.1f, 10);
-                if (_logic.AbilityController.TryGetAbility(_abilityUid, out var ability))
-                {
-                    ability.TimeScaleFactory = attackSpeed;
-                }
-            }
+			/// <summary>
+			/// CD结束时调用
+			/// </summary>
+			private void CdEnd() {
+				_curCdPercent = 0;
+				BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.SkillCDEnd, _cdEventInfo);
+				_cdTick = null;
+			}
 
-            public bool TryUseSkill()
-            {
-                resourceCheck();
+			/// <summary>
+			///  减少cd
+			/// </summary>
+			public void LessCd(float second) {
+				var percent = second / _realCd;
 
-                if (!_resEnough) return false;
+				_curCdPercent -= percent;
+				_curCdPercent = Math.Clamp(_curCdPercent, 0, 1);
+			}
 
-                if (!IsEnable) return false;
+			#endregion
+			
+			#region 资源检测与消耗
 
-                var targetUids = new List<int>();
+			/// <summary>
+			/// 资源检测
+			/// </summary>
+			private void checkResource() {
+				if (SkillData.SkillResCheck.Count == 0) {
+					_resEnough = true;
+					return;
+				}
 
-                //选敌
-                if (!Data.SelectSelf)
-                {
-                    targetUids.AddRange(ActorManager.Instance.UseFilter(_logic.Actor, _skillTargetSetting));
-                }
-                else
-                {
-                    targetUids.Add(_logic.Uid);
-                }
+				foreach (var resItems in SkillData.SkillResCheck) {
+					foreach (var resItem in resItems.Items) {
+						switch (resItem.ResourceType) {
+							case EBattleResourceType.Energy:
+								var mp = Logic.GetAttr((EAttrType)resItem.ResId);
+								_resEnough = mp >= resItem.Value;
+								break;
+							case EBattleResourceType.Item:
+								break;
+							case EBattleResourceType.Buff:
+								_resEnough = Logic.GetComponent<BuffComp>().GetBuffLayer(resItem.ResId) >=
+								             resItem.Value;
+								break;
+						}
+					}
+				}
+			}
 
-                if (targetUids.Count > 0)
-                {
-                    _logic.SetAttr(ELogicAttr.AttrAttackTargetUids, targetUids, false);
-                    Debug.Log($"[UseSkill] Actor{_logic.Uid} -->执行了技能 {_abilityUid}");
-                    _logic._abilityController.ExecutingAbility(_abilityUid);
+			/// <summary>
+			/// 资源消耗
+			/// </summary>
+			private void costResource() {
+				foreach (var resItems in SkillData.SkillResCost) {
+					//组检测
+					foreach (var resItem in resItems.Items) {
+						//单项检测
+						switch (resItem.ResourceType) {
+							case EBattleResourceType.Energy:
+								var mp = Logic.GetAttr((EAttrType)resItem.ResId);
+								Logic.SetAttr((EAttrType)resItem.ResId, mp - resItem.Value, false);
+								break;
+						}
+					}
+				}
 
-                    if (Data.ForceFaceTarget)
-                    {
-                        if (ActorManager.Instance.TryGetActor(targetUids[0], out var target))
-                        {
-                            var dir = (target.Pos - _logic.Actor.Pos).normalized;
-                            dir.y = 0;
-                            _logic.SetAttr(ELogicAttr.AttrRot, Quaternion.FromToRotation(Vector3.forward, dir), false);
-                        }
-                    }
+				checkResource();
+			}
 
-                    resourceCheck();
-                }
-                else
-                {
-                    //Debug.Log("技能没有找到目标！");
-                    return false;
-                }
+			#endregion
 
-                return true;
-            }
+			public void OnTick(float dt) {
+				//CD
+				if (_curCdPercent > 0) {
+					var finalCdPct = (Logic.GetAttr(EAttrType.AttrSkillCDPCT) / 10000f + 1);
+					if (finalCdPct < 0) finalCdPct = 0;
+					_curCdPercent -= ((dt / _realCd) * finalCdPct);
+					_cdTick?.Invoke(_curCdPercent);
+					if (_curCdPercent <= 0) {
+						CdEnd();
+					}
+				}
 
-            public static bool operator <(Skill control1, Skill control2)
-            {
-                return control1.Data.PriorityATK > control2.Data.PriorityDEF;
-            }
+				//更新攻速
+				var attackSpeed = Logic.GetAttr(EAttrType.AttrAttackSpeedPCT) / 10000f + 1;
+				attackSpeed = Mathf.Clamp(attackSpeed, 0.1f, 10);
+				Ability.TimeScaleFactory = attackSpeed;
+			}
 
-            public static bool operator >(Skill control1, Skill control2)
-            {
-                return control1.Data.PriorityDEF > control2.Data.PriorityATK;
-            }
+			public bool TryUseSkill() {
+				checkResource();
 
-            public void Destroy()
-            {
-                _logic._abilityController.RemoveAbility(_abilityUid);
-            }
-        }
-    }
+				if (!_resEnough) return false;
+
+				if (!IsEnable) return false;
+
+				var targetUids = new List<int>();
+
+				//选敌
+				if (!SkillData.SelectSelf) {
+					ActorManager.Instance.UseFilter(Logic.Self, _skillTargetSetting, ref targetUids);
+				}
+				else {
+					targetUids.Add(Logic.Uid);
+				}
+
+				if (targetUids.Count > 0) {
+					
+					Debug.Log($"[UseSkill] Actor{Logic.Uid} -->执行了技能 {Ability.Id}");
+					Ability.Execute();
+
+					if (SkillData.ForceFaceTarget) {
+						if (ActorManager.Instance.TryGetActor(targetUids[0], out var target)) {
+							var dir = (target.Pos - Logic.Self.Pos).normalized;
+							dir.y = 0;
+							Logic.Self.Rot = Quaternion.FromToRotation(Vector3.forward, dir);
+						}
+					}
+
+					checkResource();
+				}
+				else {
+					//Debug.Log("技能没有找到目标！");
+					return false;
+				}
+
+				return true;
+			}
+
+			public void SetDisable(bool value) {
+				_isDisable = value;
+			}
+
+			public static bool operator <(Skill control1, Skill control2) {
+				return control1.SkillData.PriorityATK > control2.SkillData.PriorityDEF;
+			}
+
+			public static bool operator >(Skill control1, Skill control2) {
+				return control1.SkillData.PriorityDEF > control2.SkillData.PriorityATK;
+			}
+			
+			public void OnRecycle() {
+				Id = 0;
+				SkillData = null;
+				Logic = null;
+				_isDisable = false;
+				_isExecuting = false;
+				_level = 0;
+				_curCdPercent = 0;
+				_resEnough = false;
+				_realCd = 0;
+				_cdTick = null;
+				_skillTargetSetting = null;
+				_cdEventInfo.Clear();
+				_usedSkillEventInfo.Clear();
+				
+				Ability.Stop();
+				Ability = null;
+			}
+		}
+	}
 }

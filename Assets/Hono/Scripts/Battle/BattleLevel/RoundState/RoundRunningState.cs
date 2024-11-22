@@ -1,246 +1,197 @@
 #region
 
-using System.Collections.Generic;
+using Hono.Scripts.Battle.BattleUI;
 using Hono.Scripts.Battle.Event;
+using System.Collections.Generic;
 using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle
-{
-    public partial class BattleGround
-    {
-        private class RoundRunningState : RoundState
-        {
-            private bool _isEnd;
-            private const float CheckInterval = 0.5f;
-            private float _checkDt;
-            private readonly List<RoundScoreCondition> _finalTimeCheck = new(8);
-            private readonly List<RoundScoreCondition> _frameCheck = new(8);
-            private bool _firstTick;
-            public RoundRunningState(RoundController roundController) : base(roundController) { }
-            private readonly MonsterGenEventInfo _monsterGenEventInfo = new();
-            public override ERoundState GetRoundState() => ERoundState.Running;
+namespace Hono.Scripts.Battle {
+	public partial class BattleGround {
+		private class RoundRunningState : RoundState {
+			private bool _isEnd;
+			private const float CheckInterval = 0.5f;
+			private float _checkDt;
+			private readonly List<RoundScoreCondition> _finalTimeCheck = new(8);
+			private readonly List<RoundScoreCondition> _frameCheck = new(8);
+			private bool _firstTick;
+			public RoundRunningState(RoundController roundController) : base(roundController) { }
+			private readonly MonsterGenEventInfo _monsterGenEventInfo = new();
+			public override ERoundState GetRoundState() => ERoundState.Running;
 
-            protected override void onEnter()
-            {
-                _firstTick = true;
-                foreach (var abilityId in CurrentRoundData.RunningAbilityIds)
-                {
-                    BattleManager.BattleController.RunAbility(abilityId);
-                }
+			protected override void onEnter() {
+				_firstTick = true;
+				foreach (var abilityId in CurrentRoundData.RunningAbilityIds) {
+					//BattleManager.BattleController.(abilityId);
+				}
 
-                foreach (var condition in CurrentRoundData.SuccessConditions)
-                {
-                    if (condition.ScoreNow || CurrentRoundData.RunningCheckTime <= 0)
-                    {
-                        _frameCheck.Add(condition);
-                    }
-                    else
-                    {
-                        _finalTimeCheck.Add(condition);
-                    }
-                }
+				foreach (var condition in CurrentRoundData.SuccessConditions) {
+					if (condition.ScoreNow || CurrentRoundData.RunningCheckTime <= 0) {
+						_frameCheck.Add(condition);
+					}
+					else {
+						_finalTimeCheck.Add(condition);
+					}
+				}
+				MonsterGeneratorLogic.CurMonsterCount = 0;
+				PlayerControlPanel.Instance.Show();
+			}
 
-                MonsterGeneratorLogic.CurMonsterCount = 0;
-            }
+			//½×¶Î×îÖÕ¼ì²âÊ±³¤
+			//Ê§°ÜÌõ¼þ-¼´¿Ì½áËã
+			//³É¹¦Ìõ¼þ-×îÖÕÊ±³¤µ½´ïºó¼ì²â
+			//µ±²»ÏÞÖÆÊ±¼äÊ±£¬ËùÓÐ³É¹¦Ìõ¼þ¶¼±ä³É¼´¿Ì½áËãÌõ¼þ
+			protected override void onTick(float dt) {
+				Round.GameRunningState.BattleGroundHandle.RtInfo.CurRoundDurationTime += dt;
+				if (_firstTick) {
+					firstTick();
+					return;
+				}
 
-            //é˜¶æ®µæœ€ç»ˆæ£€æµ‹æ—¶é•¿
-            //å¤±è´¥æ¡ä»¶-å³åˆ»ç»“ç®—
-            //æˆåŠŸæ¡ä»¶-æœ€ç»ˆæ—¶é•¿åˆ°è¾¾åŽæ£€æµ‹
-            //å½“ä¸é™åˆ¶æ—¶é—´æ—¶ï¼Œæ‰€æœ‰æˆåŠŸæ¡ä»¶éƒ½å˜æˆå³åˆ»ç»“ç®—æ¡ä»¶
-            protected override void onTick(float dt)
-            {
-                Round.GameRunningState.BattleGroundHandle.RtInfo.CurRoundDurationTime += dt;
-                if (_firstTick)
-                {
-                    firstTick();
-                    return;
-                }
+				if (_checkDt > CheckInterval) {
+					if (CurrentRoundData.SuccessConditions.Count <= 0) {
+						if (Round.GameRunningState.BattleGroundHandle.RtInfo.GetRoundLastMonster() <= 0) {
+							Round.SwitchState(ERoundState.SuccessScoring);
+						}
+					}
+					else {
+						int successCount = 0;
+						foreach (var successCondition in _frameCheck) {
+							if (checkCondition(successCondition)) {
+								++successCount;
+							}
+						}
 
-                if (_checkDt > CheckInterval)
-                {
-                    if (CurrentRoundData.SuccessConditions.Count <= 0)
-                    {
-                        if (Round.GameRunningState.BattleGroundHandle.RtInfo.GetRoundLastMonster() <= 0)
-                        {
-                            Round.SwitchState(ERoundState.SuccessScoring);
-                        }
-                    }
-                    else
-                    {
-                        int successCount = 0;
-                        foreach (var successCondition in _frameCheck)
-                        {
-                            if (checkCondition(successCondition))
-                            {
-                                ++successCount;
-                            }
-                        }
+						if (successCount == _frameCheck.Count && successCount != 0) {
+							Round.SwitchState(ERoundState.SuccessScoring);
+							return;
+						}
+					}
 
-                        if (successCount == _frameCheck.Count && successCount != 0)
-                        {
-                            Round.SwitchState(ERoundState.SuccessScoring);
-                            return;
-                        }
-                    }
+					if (CurrentRoundData.FailedConditions.Count > 0) {
+						foreach (var failedCondition in CurrentRoundData.FailedConditions) {
+							if (checkCondition(failedCondition)) {
+								Round.SwitchState(ERoundState.FailedScoring);
+								return;
+							}
+						}
+					}
+					else {
+						if (!Round.GameRunningState.BattleGroundHandle._pawnTeamController.CheckHasTeamAlive()) {
+							Round.SwitchState(ERoundState.FailedScoring);
+						}
+					}
 
-                    if (CurrentRoundData.FailedConditions.Count > 0)
-                    {
-                        foreach (var failedCondition in CurrentRoundData.FailedConditions)
-                        {
-                            if (checkCondition(failedCondition))
-                            {
-                                Round.SwitchState(ERoundState.FailedScoring);
-                                return;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (!Round.GameRunningState.BattleGroundHandle._pawnTeamController.CheckHasTeamAlive())
-                        {
-                            Round.SwitchState(ERoundState.FailedScoring);
-                        }
-                    }
+					_checkDt = 0;
+				}
 
-                    _checkDt = 0;
-                }
+				_checkDt += dt;
 
-                _checkDt += dt;
+				if (CurrentRoundData.RunningCheckTime <= 0 || CurrentRoundData.SuccessConditions.Count == 0) return;
 
-                if (CurrentRoundData.RunningCheckTime <= 0 || CurrentRoundData.SuccessConditions.Count == 0) return;
+				if (Duration <= CurrentRoundData.RunningCheckTime) return;
+				foreach (var condition in _finalTimeCheck) {
+					if (checkCondition(condition)) {
+						continue;
+					}
 
-                if (Duration <= CurrentRoundData.RunningCheckTime) return;
-                foreach (var condition in _finalTimeCheck)
-                {
-                    if (checkCondition(condition))
-                    {
-                        continue;
-                    }
+					Round.SwitchState(ERoundState.FailedScoring);
+					return;
+				}
 
-                    Round.SwitchState(ERoundState.FailedScoring);
-                    return;
-                }
+				Round.SwitchState(ERoundState.SuccessScoring);
+			}
 
-                Round.SwitchState(ERoundState.SuccessScoring);
-            }
+			private void firstTick() {
+				foreach (var info in CurrentRoundData.MonsterBuilderLinkInfos) {
+					_monsterGenEventInfo.MonsterConfigId = info.ConfigId;
+					_monsterGenEventInfo.SingleUid = info.MonsterBuilderUid;
+					_monsterGenEventInfo.Behave = EMonsterGenBehave.Summon;
+					BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.OnCallMonsterGenerator,
+						_monsterGenEventInfo);
+				}
+				
 
-            private void firstTick()
-            {
-                foreach (var info in CurrentRoundData.MonsterBuilderLinkInfos)
-                {
-                    _monsterGenEventInfo.MonsterConfigId = info.ConfigId;
-                    _monsterGenEventInfo.SingleUid = info.MonsterBuilderUid;
-                    _monsterGenEventInfo.Behave = EMonsterGenBehave.Summon;
-                    BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.OnCallMonsterGenerator,
-                        _monsterGenEventInfo);
-                }
+				_firstTick = false;
+			}
 
-                foreach (var triggerUid in CurrentRoundData.TriggerBoxLinkInfos)
-                {
-                    if (ActorManager.Instance.TryGetActor(triggerUid, out var actor))
-                    {
-                        ((TriggerBoxModelController)actor.ModelController).SetActive(true);
-                    }
-                }
+			private bool checkCondition(RoundScoreCondition condition) {
+				var rtInfo = Round.GameRunningState.BattleGroundHandle.RtInfo;
+				int flag = 0;
+				switch (condition.TargetType) {
+					case ERoundTargetType.FactionId:
+						switch (condition.ConditionType) {
+							case ERoundConditionType.Survival:
+								flag = rtInfo.GetRoundSurvivalFaction(condition.TargetParam)
+									.CompareTo(condition.ConditionCount);
+								return getCompareRes(condition.CompareResType, flag);
+							case ERoundConditionType.Death:
+								flag = rtInfo.GetRoundDeadFaction(condition.TargetParam)
+									.CompareTo(condition.ConditionCount);
+								return getCompareRes(condition.CompareResType, flag);
+						}
 
-                _firstTick = false;
-            }
+						break;
+					case ERoundTargetType.SpecialUid:
+						var hasActor = ActorManager.Instance.TryGetActor(condition.TargetParam, out _);
+						switch (condition.ConditionType) {
+							case ERoundConditionType.Survival:
+								return hasActor;
+							case ERoundConditionType.Death:
+								return !hasActor;
+						}
 
-            private bool checkCondition(RoundScoreCondition condition)
-            {
-                var rtInfo = Round.GameRunningState.BattleGroundHandle.RtInfo;
-                int flag = 0;
-                switch (condition.TargetType)
-                {
-                    case ERoundTargetType.FactionId:
-                        switch (condition.ConditionType)
-                        {
-                            case ERoundConditionType.Survival:
-                                flag = rtInfo.GetRoundSurvivalFaction(condition.TargetParam)
-                                    .CompareTo(condition.ConditionCount);
-                                return getCompareRes(condition.CompareResType, flag);
-                            case ERoundConditionType.Death:
-                                flag = rtInfo.GetRoundDeadFaction(condition.TargetParam)
-                                    .CompareTo(condition.ConditionCount);
-                                return getCompareRes(condition.CompareResType, flag);
-                        }
+						break;
+					case ERoundTargetType.Tag:
+						if (condition.ConditionType == ERoundConditionType.Death) {
+							flag = rtInfo.TagDeadCount(condition.TargetParam)
+								.CompareTo(condition.ConditionCount);
+							return getCompareRes(condition.CompareResType, flag);
+						}
 
-                        break;
-                    case ERoundTargetType.SpecialUid:
-                        var hasActor = ActorManager.Instance.TryGetActor(condition.TargetParam, out _);
-                        switch (condition.ConditionType)
-                        {
-                            case ERoundConditionType.Survival:
-                                return hasActor;
-                            case ERoundConditionType.Death:
-                                return !hasActor;
-                        }
+						Debug.Log("´æ»îTagÎ´ÊµÏÖ");
+						break;
+				}
 
-                        break;
-                    case ERoundTargetType.Tag:
-                        if (condition.ConditionType == ERoundConditionType.Death)
-                        {
-                            flag = rtInfo.TagDeadCount(condition.TargetParam)
-                                .CompareTo(condition.ConditionCount);
-                            return getCompareRes(condition.CompareResType, flag);
-                        }
+				return false;
+			}
 
-                        Debug.Log("å­˜æ´»Tagæœªå®žçŽ°");
-                        break;
-                }
+			private bool getCompareRes(ECompareResType compareResType, int flag) {
+				switch (compareResType) {
+					case ECompareResType.Less:
+						return flag < 0;
+					case ECompareResType.LessAndEqual:
+						return flag <= 0;
+					case ECompareResType.Equal:
+						return flag == 0;
+					case ECompareResType.More:
+						return flag > 0;
+					case ECompareResType.MoreAndEqual:
+						return flag >= 0;
+				}
 
-                return false;
-            }
+				return true;
+			}
 
-            private bool getCompareRes(ECompareResType compareResType, int flag)
-            {
-                switch (compareResType)
-                {
-                    case ECompareResType.Less:
-                        return flag < 0;
-                    case ECompareResType.LessAndEqual:
-                        return flag <= 0;
-                    case ECompareResType.Equal:
-                        return flag == 0;
-                    case ECompareResType.More:
-                        return flag > 0;
-                    case ECompareResType.MoreAndEqual:
-                        return flag >= 0;
-                }
+			protected override void onExit() {
+				foreach (var abilityId in CurrentRoundData.RunningAbilityIds) {
+					//BattleManager.BattleController.RemoveAbility(abilityId);
+				}
 
-                return true;
-            }
+				
 
-            protected override void onExit()
-            {
-                foreach (var abilityId in CurrentRoundData.RunningAbilityIds)
-                {
-                    BattleManager.BattleController.RemoveAbility(abilityId);
-                }
-
-                foreach (var triggerUid in CurrentRoundData.TriggerBoxLinkInfos)
-                {
-                    if (ActorManager.Instance.TryGetActor(triggerUid, out var actor))
-                    {
-                        ((TriggerBoxModelController)actor.ModelController).SetActive(false);
-                    }
-                }
-
-                foreach (var info in CurrentRoundData.MonsterBuilderLinkInfos)
-                {
-                    _monsterGenEventInfo.MonsterConfigId = info.ConfigId;
-                    _monsterGenEventInfo.SingleUid = info.MonsterBuilderUid;
-                    _monsterGenEventInfo.Behave = EMonsterGenBehave.Clear;
-                    BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.OnCallMonsterGenerator,
-                        _monsterGenEventInfo);
-                }
-
-                MonsterGeneratorLogic.CurMonsterCount = 0;
-                Round.GameRunningState.BattleGroundHandle.RtInfo.CurRoundDurationTime = 0;
-                //PlayerControlPanel.Instance.Hide();
-            }
-        }
-    }
+				foreach (var info in CurrentRoundData.MonsterBuilderLinkInfos) {
+					_monsterGenEventInfo.MonsterConfigId = info.ConfigId;
+					_monsterGenEventInfo.SingleUid = info.MonsterBuilderUid;
+					_monsterGenEventInfo.Behave = EMonsterGenBehave.Clear;
+					BattleEventManager.Instance.TriggerGlobalEvent(EBattleEventType.OnCallMonsterGenerator,
+						_monsterGenEventInfo);
+				}
+				MonsterGeneratorLogic.CurMonsterCount = 0;
+				Round.GameRunningState.BattleGroundHandle.RtInfo.CurRoundDurationTime = 0;
+				PlayerControlPanel.Instance.Hide();
+			}
+		}
+	}
 }

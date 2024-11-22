@@ -7,145 +7,109 @@ using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle
-{
-    public partial class ActorLogic
-    {
-	    /// <summary>
-	    ///     用ConfigId索引,每个buff只会有一个
-	    /// </summary>
-	    public class BuffComp : ALogicComponent
-        {
-            private readonly Dictionary<int, Buff> _buffs = new();
-            public Dictionary<int, Buff> Buffs => _buffs;
+namespace Hono.Scripts.Battle {
+	public partial class ActorLogic {
+		/// <summary>
+		///     用ConfigId索引,每个buff只会有一个
+		/// </summary>
+		public class BuffComp : AComponent {
+			public Dictionary<int, Buff> Buffs { get; } = new(30);
 
-            private Func<IntArray> _getBuffs;
+			public BuffComp(ActorLogic logic) : base(logic) { }
 
-            public BuffComp(ActorLogic logic, Func<IntArray> getBuffs) : base(logic)
-            {
-                _getBuffs = getBuffs;
-            }
+			public override void Init() { }
 
-            public override void Init()
-            {
-                if (_getBuffs == null) return;
-                foreach (var buff in _getBuffs.Invoke())
-                {
-                    AddBuff(Actor.Uid, buff);
-                }
-            }
+			public override void Clear() { }
 
-            public void AddBuff(int sourceActorId, int buffConfigId, int buffLayer = 1)
-            {
-                var buffData = AssetManager.Instance.GetData<BuffData>(buffConfigId);
+			public void AddBuff(int sourceActorId, int buffConfigId, int buffLayer = 1) {
+				var buffData = AssetManager.Instance.GetData<BuffData>(buffConfigId);
 
-                if (buffData == null)
-                {
-                    Debug.LogError($"Id {buffConfigId} BuffData is null");
-                    return;
-                }
+				if (buffData == null) {
+					Debug.LogError($"Id {buffConfigId} BuffData is null");
+					return;
+				}
 
-                if (buffData.FilterTags.Count > 0)
-                {
-                    switch (buffData.AddRule)
-                    {
-                        case EApplicationRequirement.HasTags:
-                            if (buffData.FilterTags.Any(tag => !ActorLogic._abilityController.HasTag(tag)))
-                            {
-                                return;
-                            }
+				if (buffData.FilterTags.Count > 0) {
+					switch (buffData.AddRule) {
+						case EApplicationRequirement.HasTags:
+							if (buffData.FilterTags.Any(tag => !Self.TagCollection.HasTag(tag,ETagSearchRange.All))) {
+								return;
+							}
 
-                            break;
-                        case EApplicationRequirement.NoTags:
-                            if (buffData.FilterTags.Any(tag => ActorLogic._abilityController.HasTag(tag)))
-                            {
-                                return;
-                            }
+							break;
+						case EApplicationRequirement.NoTags:
+							if (buffData.FilterTags.Any(tag => Self.TagCollection.HasTag(tag,ETagSearchRange.All))) {
+								return;
+							}
 
-                            break;
-                    }
-                }
+							break;
+					}
+				}
 
-                if (!_buffs.TryGetValue(buffConfigId, out var buff))
-                {
-                    buff = new Buff(ActorLogic, sourceActorId, buffData);
-                    buff.OnAdd();
-                    _buffs.Add(buff.ConfigId, buff);
-                }
-                else
-                {
-                    if (CheckReplace(buff, buffData, sourceActorId))
-                    {
-                        buff.OnRemove();
-                        buff = new Buff(ActorLogic, sourceActorId, buffData);
-                        buff.OnAdd();
-                        _buffs[buffConfigId] = buff;
-                    }
-                    else
-                    {
-                        buff.AddLayer(buffLayer);
-                    }
-                }
-            }
+				if (!Buffs.TryGetValue(buffConfigId, out var buff)) {
+					buff = AObjectPool<Buff>.Pool.Rent();
+					buff.OnRent(ActorLogic, sourceActorId, buffData);
+					Buffs.Add(buff.ConfigId, buff);
+				}
+				else {
+					if (CheckReplace(buff, buffData, sourceActorId)) {
+						AObjectPool<Buff>.Pool.Recycle(buff);
+						buff = AObjectPool<Buff>.Pool.Rent();
+						buff.OnRent(ActorLogic, sourceActorId, buffData);
+						Buffs[buffConfigId] = buff;
+					}
+					else {
+						buff.AddLayer(buffLayer);
+					}
+				}
+			}
 
-            private bool CheckReplace(Buff oldBuff, BuffData newBuffData, int sourceId)
-            {
-                switch (newBuffData.ReplaceRule)
-                {
-                    case EBuffReplaceRule.SameSourceReplace:
-                    {
-                        //同源替换
-                        return oldBuff.SourceId == sourceId;
-                    }
-                    case EBuffReplaceRule.SameSourceAdd:
-                    {
-                        //非同源替换
-                        return oldBuff.SourceId != sourceId;
-                    }
-                    case EBuffReplaceRule.Add:
-                    {
-                        //不替换
-                        return false;
-                    }
-                    case EBuffReplaceRule.OnlyOne:
-                    {
-                        //全替换
-                        return true;
-                    }
-                }
+			private bool CheckReplace(Buff oldBuff, BuffData newBuffData, int sourceId) {
+				switch (newBuffData.ReplaceRule) {
+					case EBuffReplaceRule.SameSourceReplace: {
+						//同源替换
+						return oldBuff.SourceActorUid == sourceId;
+					}
+					case EBuffReplaceRule.SameSourceAdd: {
+						//非同源替换
+						return oldBuff.SourceActorUid != sourceId;
+					}
+					case EBuffReplaceRule.Add: {
+						//不替换
+						return false;
+					}
+					case EBuffReplaceRule.OnlyOne: {
+						//全替换
+						return true;
+					}
+				}
 
-                Debug.LogError("不应该走到这里");
-                return false;
-            }
+				Debug.LogError("不应该走到这里");
+				return false;
+			}
 
-            public void RemoveBuff(int buffConfigId)
-            {
-                if (_buffs.TryGetValue(buffConfigId, out var buff))
-                {
-                    buff.OnRemove();
-                    _buffs.Remove(buffConfigId);
-                }
-            }
+			public void RemoveBuff(int buffConfigId) {
+				if (Buffs.TryGetValue(buffConfigId, out var buff)) {
+					Buffs.Remove(buffConfigId);
+					AObjectPool<Buff>.Pool.Recycle(buff);
+				}
+			}
 
-            public int GetBuffLayer(int configId)
-            {
-                if (!_buffs.TryGetValue(configId, out var buff))
-                {
-                    return -1;
-                }
+			public int GetBuffLayer(int configId) {
+				if (!Buffs.TryGetValue(configId, out var buff)) {
+					return -1;
+				}
 
-                return buff.LayerCount;
-            }
+				return buff.LayerCount;
+			}
 
-            public int GetBuffSource(int configId)
-            {
-                if (!_buffs.TryGetValue(configId, out var buff))
-                {
-                    return -1;
-                }
+			public int GetBuffSource(int configId) {
+				if (!Buffs.TryGetValue(configId, out var buff)) {
+					return -1;
+				}
 
-                return buff.SourceId;
-            }
-        }
-    }
+				return buff.SourceActorUid;
+			}
+		}
+	}
 }

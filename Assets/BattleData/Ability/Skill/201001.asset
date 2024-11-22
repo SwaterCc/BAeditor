@@ -120,7 +120,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 25
+      Data: 26
     - Name: 
       Entry: 7
       Data: 
@@ -474,10 +474,10 @@ MonoBehaviour:
       Data: 2
     - Name: 
       Entry: 3
-      Data: 1803816132
+      Data: 1468977793
     - Name: 
       Entry: 3
-      Data: 1468977793
+      Data: 1803816132
     - Name: 
       Entry: 13
       Data: 
@@ -597,13 +597,16 @@ MonoBehaviour:
       Data: 23|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 3
       Data: 904361967
     - Name: 
       Entry: 3
       Data: 324054448
+    - Name: 
+      Entry: 3
+      Data: 347757606
     - Name: 
       Entry: 13
       Data: 
@@ -2735,12 +2738,6 @@ MonoBehaviour:
     - Name: DamageConfigId
       Entry: 3
       Data: 20100101
-    - Name: AoeData
-      Entry: 6
-      Data: 
-    - Name: UseCustomFilter
-      Entry: 5
-      Data: false
     - Name: FilterSetting
       Entry: 7
       Data: 143|Hono.Scripts.Battle.FilterSetting, Assembly-CSharp
@@ -2842,7 +2839,10 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: IsFollowTarget
+    - Name: AbilityIds
+      Entry: 6
+      Data: 
+    - Name: CriticalFlag
       Entry: 5
       Data: false
     - Name: 
@@ -3178,6 +3178,75 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 8
+      Data: 
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: VairableName
+      Entry: 6
+      Data: 
+    - Name: AttrType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 347757606
+    - Name: $v
+      Entry: 7
+      Data: 164|Hono.Scripts.Battle.ActionNodeData, Assembly-CSharp
+    - Name: NodeId
+      Entry: 3
+      Data: 347757606
+    - Name: NodeType
+      Entry: 3
+      Data: 6
+    - Name: ParentId
+      Entry: 3
+      Data: 1678315018
+    - Name: Depth
+      Entry: 3
+      Data: 2
+    - Name: BelongGroupId
+      Entry: 3
+      Data: -1
+    - Name: ChildrenIds
+      Entry: 7
+      Data: 165|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Desc
+      Entry: 6
+      Data: 
+    - Name: Function
+      Entry: 7
+      Data: 166|Hono.Scripts.Battle.Parameter, Assembly-CSharp
+    - Name: ParameterType
+      Entry: 3
+      Data: 0
+    - Name: FuncName
+      Entry: 6
+      Data: 
+    - Name: FuncParams
+      Entry: 6
       Data: 
     - Name: Value
       Entry: 6

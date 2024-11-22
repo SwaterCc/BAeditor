@@ -703,7 +703,7 @@ MonoBehaviour:
       Data: 2ndlist
     - Name: typeString
       Entry: 1
-      Data: System.Collections.Generic.List`1[System.Int32]
+      Data: 'System.Collections.Generic.List`1[System.Int32]'
     - Name: Value
       Entry: 7
       Data: 30|Hono.Scripts.Battle.Parameter, Assembly-CSharp

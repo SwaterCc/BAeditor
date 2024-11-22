@@ -1,16 +1,12 @@
-﻿namespace Hono.Scripts.Battle
-{
-    public partial class ActorLogic
-    {
-        public class SkillState : ActorLogicState
-        {
-            public SkillState(ActorStateMachine machine, EActorLogicStateType stateType) : base(machine, stateType) { }
+﻿namespace Hono.Scripts.Battle {
+	public partial class ActorLogic {
+		public class SkillState : ActorState {
+			public SkillState(ActorStateMachine machine, EActorStateType stateType) : base(machine, stateType) { }
 
-            public override bool TryGetAutoSwitchState(out EActorLogicStateType next)
-            {
-                next = StateType;
-                return false;
-            }
-        }
-    }
+			public override bool TryGetAutoSwitchState(out EActorStateType next) {
+				next = StateType;
+				return false;
+			}
+		}
+	}
 }

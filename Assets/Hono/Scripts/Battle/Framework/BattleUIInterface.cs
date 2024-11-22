@@ -1,22 +1,23 @@
 ﻿#region
 
+using QTool.UI;
 using System;
 
 #endregion
 
-namespace Hono.Scripts.Battle
-{
-    public interface ISendToUIData { };
+namespace Hono.Scripts.Battle {
+	public interface ISendToUIData { };
 
-    public interface IUIPassToLogicData { };
+	public interface IUIPassToLogicData { };
 
-    public interface IBattleUIHandle
-    {
-        public void OnUIInterfaceCall(ISendToUIData sendData, Action<IUIPassToLogicData> onUICloseCallBack);
-    }
+	public interface IBattleUIHandle {
+		public void OnUIInterfaceCall(ISendToUIData sendData, Action<IUIPassToLogicData> onUICloseCallBack);
+	}
 
-    public static class BattleUIInterface
-    {
-        
-    }
+	public static class BattleUIInterface {
+		public static bool CallUI<T>(ISendToUIData sendData = null, Action<IUIPassToLogicData> onUICloseCallBack = null)
+			where T : QUI<T>, IBattleUIHandle {
+			return false;
+		}
+	}
 }

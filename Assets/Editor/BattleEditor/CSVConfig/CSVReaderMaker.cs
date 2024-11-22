@@ -17,14 +17,14 @@ namespace Editor.BattleEditor.CSVConfig
             maker.GenConfigReaders();
         }
 
-        [MenuItem("Tools/重新加载表")]
-        public static void ReLoad()
-        {
-            ConfigManager.Instance.ReloadAll();
-        }
-    }
-
-
+		[MenuItem("Tools/重新加载表")]
+		public static void ReLoad() {
+			ConfigManager.Instance.ReloadAll();
+		}
+	}
+    
+    
+   
     public class CSVReaderMaker
     {
         private string _classCodeTmp;
@@ -67,7 +67,7 @@ namespace Editor.BattleEditor.CSVConfig
             { "floattable", "NumberTable" },
             { "stringarray", "StringArray" },
         };
-
+        
         private readonly Dictionary<string, string> _parseFuncDict = new Dictionary<string, string>()
         {
             { "int", "parseInt" },
@@ -89,13 +89,12 @@ namespace Editor.BattleEditor.CSVConfig
         {
             //_classCodeTmp = File.ReadAllText("Assets/Editor/BattleEditor/CSVConfig/CSVReaderCodeTmp");
 
-            using (StreamReader reader = new StreamReader("Assets/Editor/BattleEditor/CSVConfig/CSVReaderCodeTmp",
-                       Encoding.Default))
+            using (StreamReader reader = new StreamReader("Assets/Editor/BattleEditor/CSVConfig/CSVReaderCodeTmp", Encoding.Default))
             {
                 _classCodeTmp = reader.ReadToEnd();
             }
-
-
+            
+            
             if (Directory.Exists(_configPathRoot))
             {
                 // 获取文件夹中所有 .csv 文件的路径
@@ -115,7 +114,7 @@ namespace Editor.BattleEditor.CSVConfig
                 var classCode = genClassCode(tableName, filePath);
                 if (string.IsNullOrEmpty(classCode))
                 {
-                    Debug.LogError("生成失败");
+	                Debug.LogError("生成失败");
                     return;
                 }
 
@@ -176,7 +175,7 @@ namespace Editor.BattleEditor.CSVConfig
 
             for (var index = 0; index < propertyNames.Length; index++)
             {
-                if (index == 0) continue;
+                if(index == 0) continue;
                 var propertyItemStr = string.Copy(_propertyTmp);
                 var propertyName = propertyNames[index];
                 var propertyType = propertyTypes[index];
@@ -195,7 +194,6 @@ namespace Editor.BattleEditor.CSVConfig
                 {
                     throw new Exception($"变量类型 {propertyType} 不存在");
                 }
-
                 propertyItemStr = propertyItemStr.Replace("@PropertyType", rightType);
                 propertyItemStr = propertyItemStr.Replace("@PropertyName", propertyName);
                 propertyItemStr = propertyItemStr.Replace("@PropertyDesc",
@@ -212,7 +210,7 @@ namespace Editor.BattleEditor.CSVConfig
 
             for (int i = 0; i < propertyNames.Length; i++)
             {
-                if (i == 0) continue;
+                if(i == 0) continue;
                 var propertyParseStr = string.Copy(_parseFuncTmp);
                 //这次不用检测了
                 var propertyName = propertyNames[i];
@@ -231,7 +229,7 @@ namespace Editor.BattleEditor.CSVConfig
 
             return parseStr;
         }
-
+        
         private void genCShapeFile(string tableName, string code)
         {
             string fileName = tableName + ".cs";
@@ -242,12 +240,11 @@ namespace Editor.BattleEditor.CSVConfig
             {
                 Directory.CreateDirectory(_genCShapePath);
             }
-
+            
             using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
             {
                 writer.Write(code);
             }
-
             Debug.Log("生成类完成");
         }
     }

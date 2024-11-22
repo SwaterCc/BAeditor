@@ -1,327 +1,233 @@
-#region
-
-using System;
-using Hono.Scripts.Battle.Event;
+using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Message;
 using Hono.Scripts.Battle.Tools;
+using System;
 using UnityEngine;
-using UnityEngine.Profiling;
 
-#endregion
-
-namespace Hono.Scripts.Battle
-{
+namespace Hono.Scripts.Battle {
 	/// <summary>
-	///     Actor 实际的行为由Logic+Show构成，用State去管理Logic和Show Actor提供对外的接口
+	/// Actor 战斗玩法中最基本的单位
 	/// </summary>
-	public sealed partial class Actor : IVarCollectionBind
-    {
-	    /// <summary>
-	    ///     运行时唯一ID
-	    /// </summary>
-	    public int Uid { get; }
+	public sealed class Actor : IAPoolObject {
+		/// <summary>
+		/// 运行时唯一ID
+		/// </summary>
+		public int Uid { get; private set; }
 
-	    /// <summary>
-	    ///     变量黑板
-	    /// </summary>
-	    public VarCollection Variables { get; }
+		/// <summary>
+		/// Actor基础类型
+		/// </summary>
+		public EActorType ActorType { get; private set; }
 
-	    /// <summary>
-	    ///     Actor基础类型
-	    /// </summary>
-	    public EActorType ActorType { get; }
+		/// <summary>
+		/// Unity交互层
+		/// </summary>
+		public ModelController ModelController { get; }
 
-	    /// <summary>
-	    ///     Actor逻辑
-	    /// </summary>
-	    public ActorLogic Logic { get; private set; }
+		/// <summary>
+		/// 变量黑板
+		/// </summary>
+		public VarCollection Variables { get; }
 
-	    /// <summary>
-	    ///     Unity交互层
-	    /// </summary>
-	    private ActorModelController _modelController;
+		/// <summary>
+		/// Tag
+		/// </summary>
+		public TagCollection TagCollection { get; }
 
-        public ActorModelController ModelController => _modelController;
+		/// <summary>
+		/// Actor逻辑
+		/// </summary>
+		public ActorLogic Logic { get; private set; }
 
-        /// <summary>
-        ///     ability控制器
-        /// </summary>
-        private readonly AbilityController _abilityController;
+		/// <summary>
+		/// ability控制器
+		/// </summary>
+		public AbilityController Abilities { get; }
 
-        /// <summary>
-        ///     Actor属性 (show真的需要属性吗，暂时定为不要)
-        /// </summary>
-        private readonly AttrCollection _attrs;
+		/// <summary>
+		/// 玩家位置信息
+		/// </summary>
+		private readonly ActorLocation _location;
 
-        /// <summary>
-        ///     消息容器
-        /// </summary>
-        private readonly MessageCollection _message;
+		/// <summary>
+		/// Actor属性
+		/// </summary>
+		private readonly AttrCollection _attrs;
 
-        /// <summary>
-        ///     tag
-        /// </summary>
-        private readonly Tags _tags;
+		/// <summary>
+		/// 消息容器
+		/// </summary>
+		private readonly MessageCollection _message;
 
-        public Tags Tags => _tags;
+		/// <summary>
+		/// 配置id
+		/// </summary>
+		public int ConfigId => GetAttr(EAttrType.AttrConfigId);
 
-        /// <summary>
-        ///     配置id
-        /// </summary>
-        public int ConfigId => GetAttr<int>(ELogicAttr.AttrConfigId);
+		/// <summary>
+		/// 当前坐标
+		/// </summary>
+		public Vector3 Pos {
+			get;
+			set;
+		}
 
-        /// <summary>
-        ///     当前坐标
-        /// </summary>
-        public Vector3 Pos => GetAttr<Vector3>(ELogicAttr.AttrPosition);
+		/// <summary>
+		/// 目标坐标
+		/// </summary>
+		public Vector3 TargetPos {
+			get;
+			set;
+		}
 
-        /// <summary>
-        ///     当前旋转
-        /// </summary>
-        public Quaternion Rot => GetAttr<Quaternion>(ELogicAttr.AttrRot);
+		/// <summary>
+		/// 当前旋转
+		/// </summary>
+		public Quaternion Rot {
+			get;
+			set;
+		}
 
-        /// <summary>
-        ///     actor是否加载完成
-        /// </summary>
-        public bool ActorSetupFinish => _modelController.IsModelLoadFinish;
+		/// <summary>
+		/// 是否为玩家操控单位
+		/// </summary>
+		public bool IsPlayerControl { get; set; }
 
-        /// <summary>
-        ///     是否为玩家操控单位
-        /// </summary>
-        public bool IsPlayerControl { get; set; }
+		#region 回调周期
 
-        /// <summary>
-        ///     是否为过期单位
-        /// </summary>
-        public bool IsExpired { get; set; }
+		/// <summary>
+		/// 模型加载完成后调用
+		/// </summary>
+		public Action<Actor> ModelLoadFinishCallback { get; set; }
 
-        public Action<Actor> OnModelLoadFinish { get; set; }
-        public Action<Actor> OnInitCallBack { get; set; }
-        public Action<Actor> OnTickCallBack { get; set; }
-        public Action<Actor> OnDestroyCallBack { get; set; }
+		/// <summary>
+		/// 进入场景后回调
+		/// </summary>
+		public Action<Actor> EnterSceneCallback { get; set; }
 
-        public Actor(int uid, EActorType actorType)
-        {
-            Uid = uid;
-            ActorType = actorType;
-            _tags = new Tags();
-            _attrs = new AttrCollection(this, AttrCreator.Create);
-            _abilityController = new AbilityController(this);
-            _message = new MessageCollection(this);
-            Variables = new VarCollection(this, 128);
-        }
+		/// <summary>
+		/// 帧更新前回调
+		/// </summary>
+		public Action<Actor,float> BeforeTickCallBack { get; set; }
+		
+		/// <summary>
+		/// 帧更新后回调
+		/// </summary>
+		public Action<Actor,float> AfterTickCallBack { get; set; }
+		
+		/// <summary>
+		/// 离开场景后回调
+		/// </summary>
+		public Action<Actor> ExitSceneCallBack { get; set; }
 
-        #region 生命周期
+		#endregion
+		
+		public Actor() {
+			_attrs = new AttrCollection(this);
+			_message = new MessageCollection(this);
+			
+			TagCollection = new TagCollection();
+			Abilities = new AbilityController(this);
+			Variables = new VarCollection(128);
+			ModelController = new ModelController(this);
+		}
 
-        /// <summary>
-        ///     Create时调用，同帧执行
-        /// </summary>
-        /// <param name="modelController"></param>
-        /// <param name="logic"></param>
-        public void Setup(ActorModelController modelController, ActorLogic logic)
-        {
-            Logic = logic;
-            Logic.Setup(_abilityController, _attrs, _tags, Variables);
-            _modelController = modelController;
-            _modelController.Setup(_tags, Variables, Logic);
-        }
+		#region 周期函数
 
-        /// <summary>
-        ///     加入Rt列表后执行，一般是创建后的第一帧先执行了Init 之后会同帧调用 Tick Update
-        /// </summary>
-        public void Init()
-        {
-            Logic.Init();
-            _modelController.OnEnterScene();
-            _message.Init();
-            OnInitCallBack?.Invoke(this);
-        }
+		/// <summary>
+		/// 初始化
+		/// </summary>
+		/// <param name="uid"></param>
+		/// <param name="actorType"></param>
+		public void Init(int uid, EActorType actorType) {
+			Uid = uid;
+			SetAttr(EAttrType.AttrUid, uid, false);
+			ActorType = actorType;
+			_message.Init();
+		}
 
-        /// <summary>
-        ///     逻辑帧
-        /// </summary>
-        /// <param name="dt"></param>
-        public void Tick(float dt)
-        {
-            if (ActorType == EActorType.Pawn)
-            {
-                Profiler.BeginSample("PawnActorTick");
-            }
-            else if (ActorType == EActorType.Monster)
-            {
-                Profiler.BeginSample("MonsterActorTick");
-            }
-            else
-            {
-                Profiler.BeginSample("OtherActorTick");
-            }
+		/// <summary>
+		/// 组合
+		/// </summary>
+		/// <param name="logic"></param>
+		public void Setup(in ActorLogic logic) {
+			Logic = logic;
+			Logic.OnSetup(this);
+			ModelController.Setup();
+		}
 
-            if (IsExpired) return;
-            Logic.Tick(dt);
-            _abilityController.Tick(dt);
-            OnTickCallBack?.Invoke(this);
-            Profiler.EndSample();
-        }
+		/// <summary>
+		/// 进入场景时调用
+		/// </summary>
+		public void EnterScene() {
+			Logic.EnterScene();
+			ModelController.EnterScene();
+			EnterSceneCallback?.Invoke(this);
+		}
 
-        /// <summary>
-        ///     表现帧
-        /// </summary>
-        /// <param name="dt"></param>
-        public void Update(float dt)
-        {
-            if (IsExpired) return;
-            if (_modelController == null) return;
-            if (!_modelController.IsModelLoadFinish) return;
-            _modelController.Update(dt);
-        }
+		/// <summary>
+		/// 逻辑帧
+		/// </summary>
+		/// <param name="dt"></param>
+		public void Tick(float dt) {
+			BeforeTickCallBack?.Invoke(this, dt);
+			Logic.Tick(dt);
+			ModelController.Tick(dt);
+			Abilities.Tick(dt);
+			AfterTickCallBack?.Invoke(this, dt);
+		}
 
-        /// <summary>
-        ///     删除前调用
-        /// </summary>
-        public void Destroy()
-        {
-            OnDestroyCallBack?.Invoke(this);
-            _modelController.Destroy();
-            Logic.Destroy();
-            _message.UnInit();
+		/// <summary>
+		/// 离开场景，此时会更改layer层级保证不会再被攻击打中，以及不会再被选为目标
+		/// </summary>
+		public void ExitScene() {
+			ModelController.ExitScene();
+			ExitSceneCallBack?.Invoke(this);
+		}
+		
+		/// <summary>
+		/// 删除前调用
+		/// </summary>
+		public void OnRecycle() {
+			ModelLoadFinishCallback = null;
+			EnterSceneCallback = null;
+			BeforeTickCallBack = null;
+			AfterTickCallBack = null;
+			ExitSceneCallBack = null;
+			
+			_message.Clear();
+			TagCollection.Clear();
+			Abilities.Clear();
+			Variables.Clear();
+			ModelController.Clear();
+			Logic.RecycleLogicObject();
+			Logic = null;
+		}
 
-            OnModelLoadFinish = null;
-            OnInitCallBack = null;
-            OnTickCallBack = null;
-            OnDestroyCallBack = null;
-        }
+		#endregion
 
-        #endregion
+		#region 对外接口
+		public void AddMsgListener(MessageListener listener) {
+			_message.AddListener(listener);
+		}
 
-        #region 对外接口
+		public void RemoveMsgListener(MessageListener listener) {
+			_message.RemoveListener(listener);
+		}
+		
+		public int GetAttr(EAttrType attrType) {
+			var value = _attrs.GetAttr(attrType);
+			return value;
+		}
+		
+		public Attr GetAttrNoParse(EAttrType attrType) {
+			var value = _attrs.GetAttr(attrType);
+			return value;
+		}
 
-        public void TriggerEvent(EBattleEventType eventType, IEventInfo eventInfo)
-        {
-            BattleEventManager.Instance.TriggerActorEvent(Uid, eventType, eventInfo);
-        }
-
-        public void AddMsgListener(MessageListener listener)
-        {
-            _message.AddListener(listener);
-        }
-
-        public void RemoveMsgListener(MessageListener listener)
-        {
-            _message.RemoveListener(listener);
-        }
-
-        public T GetAttr<T>(int logicAttr)
-        {
-            return _attrs.GetAttr<T>(logicAttr);
-        }
-
-        public T GetAttr<T>(ELogicAttr logicAttr)
-        {
-            Profiler.BeginSample("SetAttr");
-            var value = _attrs.GetAttr<T>(logicAttr.ToInt());
-            Profiler.EndSample();
-            return value;
-        }
-
-        public object GetAttrBox(ELogicAttr logicAttr)
-        {
-            return _attrs.GetAttrBox(logicAttr.ToInt());
-        }
-
-        public ICommand SetAttr<T>(int logicAttr, T value, bool isTempData)
-        {
-            Profiler.BeginSample("SetAttr");
-            var fvalue = _attrs.SetAttr(logicAttr, value, isTempData);
-            Profiler.EndSample();
-            return fvalue;
-        }
-
-        public ICommand SetAttr<T>(ELogicAttr logicAttr, T value, bool isTempData)
-        {
-            Profiler.BeginSample("SetAttrCommand");
-            var fvalue = _attrs.SetAttr(logicAttr.ToInt(), value, isTempData);
-            Profiler.EndSample();
-            return fvalue;
-        }
-
-        public ICommand SetAttrBox(ELogicAttr logicAttr, object value, bool isTempData)
-        {
-            return _attrs.SetAttrBox(logicAttr.ToInt(), value, isTempData);
-        }
-
-        public bool TryGetAbility(int uid, out Ability ability)
-        {
-            return _abilityController.TryGetAbility(uid, out ability);
-        }
-
-        public void AddTag(int tag)
-        {
-            _tags.Add(tag);
-        }
-
-        public bool HasTag(int tag)
-        {
-            return _tags.HasTag(tag);
-        }
-
-        public void RemoveTag(int tag)
-        {
-            _tags.Remove(tag);
-        }
-
-        public bool HasAttr(ELogicAttr attr)
-        {
-            return _attrs.HasAttr(attr.ToInt());
-        }
-
-        public bool HasAbility(int abilityConfigId)
-        {
-            return _abilityController.HasAbility(abilityConfigId);
-        }
-
-        public int GetBuffLayer(int buff)
-        {
-            if (Logic.TryGetComponent<ActorLogic.BuffComp>(out var buffComp))
-            {
-                return buffComp.GetBuffLayer(buff);
-            }
-
-            return -1;
-        }
-
-        public void AwardAbility(int abilityId, bool runNow)
-        {
-            _abilityController.AwardAbility(abilityId, runNow);
-        }
-
-        public void RemoveAbility(int abilityId)
-        {
-            _abilityController.RemoveAbility(abilityId);
-        }
-
-        #endregion
-
-        #region LUA_Attr
-
-        public int GetAttrLua(int attrType)
-        {
-            return _attrs.GetAttr<int>(attrType);
-        }
-
-        public void SetAttrLua(int attrType, int value)
-        {
-            _attrs.SetAttr<int>(attrType, value, false);
-        }
-
-        public void SetAttrLuaByType(ELogicAttr attrType, int value)
-        {
-            _attrs.SetAttr<int>(attrType.ToInt(), value, false);
-        }
-
-        public int GetAttrLuaByType(ELogicAttr attrType)
-        {
-            return _attrs.GetAttr<int>(attrType.ToInt());
-        }
-
-        #endregion
-    }
+		public void SetAttr(EAttrType attrType, int value, bool isCommand = false) {
+			_attrs.SetAttr(attrType, value, isCommand);
+		}
+		#endregion
+	}
 }

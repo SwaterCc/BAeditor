@@ -64,8 +64,8 @@
     <Compile Include="Packages\com.arongranberg.astar\Core\Misc\WindowsStoreCompatibility.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Graphs\Navmesh\Jobs\JobBuildTileMeshFromVoxels.cs" />
     <Compile Include="Packages\com.arongranberg.astar\TurnBased\SingleNodeBlocker.cs" />
-    <Compile Include="Packages\com.arongranberg.astar\Graphs\Utilities\GridLookup.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Utilities\GraphUpdateUtilities.cs" />
+    <Compile Include="Packages\com.arongranberg.astar\Graphs\Utilities\GridLookup.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Graphs\Grid\GridGraphScanData.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Core\ECS\Components\ManagedMovementOverride.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Utilities\PathUtilities.cs" />
@@ -243,8 +243,8 @@
     <Compile Include="Packages\com.arongranberg.astar\Core\ECS\Jobs\JobControl.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Graphs\Navmesh\Jobs\JobBuildNodes.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Core\ECS\Jobs\JobPrepareAgentRaycasts.cs" />
-    <Compile Include="Packages\com.arongranberg.astar\Graphs\Navmesh\Jobs\JobConnectTiles.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Core\Serialization\SimpleZipReplacement.cs" />
+    <Compile Include="Packages\com.arongranberg.astar\Graphs\Navmesh\Jobs\JobConnectTiles.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Core\AI\IAstarAI.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Graphs\Grid\Jobs\JobFilterDiagonalConnections.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Graphs\Grid\Rules\RuleElevationPenalty.cs" />

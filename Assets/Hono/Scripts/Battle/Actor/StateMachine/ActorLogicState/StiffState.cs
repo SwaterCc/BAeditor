@@ -1,23 +1,18 @@
-﻿namespace Hono.Scripts.Battle
-{
-    public partial class ActorLogic
-    {
-        public class StiffState : ActorLogicState
-        {
-            public StiffState(ActorStateMachine machine, EActorLogicStateType stateType) : base(machine, stateType) { }
+﻿namespace Hono.Scripts.Battle {
+	public partial class ActorLogic {
+		public class StiffState : ActorState {
+			public StiffState(ActorStateMachine machine, EActorStateType stateType) : base(machine, stateType) { }
 
-            public override bool TryGetAutoSwitchState(out EActorLogicStateType next)
-            {
-                next = StateType;
+			public override bool TryGetAutoSwitchState(out EActorStateType next) {
+				next = StateType;
 
-                if (StateDuration > 1f)
-                {
-                    next = EActorLogicStateType.Idle;
-                    return true;
-                }
+				if (StateDuration > 1f) {
+					next = EActorStateType.Idle;
+					return true;
+				}
 
-                return false;
-            }
-        }
-    }
+				return false;
+			}
+		}
+	}
 }

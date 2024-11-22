@@ -54,17 +54,16 @@ namespace Hono.Scripts.Battle
             private string _q4TypeStr = "     { ELogicAttr.@AttrName, typeof(Quaternion) }, \n";
             private string _iArrayTypeStr = "     { ELogicAttr.@AttrName, typeof(List<int>) }, \n";
             private string _fArrayTypeStr = "     { ELogicAttr.@AttrName, typeof(List<float>) }, \n";
-
+            
             private string _flagAttrEnum = "@EnumAttrDefine";
             private string _flagCase = "@Case";
             private string _flagDict = "@AttrDictItem";
-
             private string _defineTypeDesc = @"/// <summary>
 											   /// 属性类型 @AttrValueType
 											   /// </summary>
 ";
-
-
+            
+            
             string _attrEnumStr = "";
             string _attrCase = "";
             string _attrDictItem = "";
@@ -73,8 +72,7 @@ namespace Hono.Scripts.Battle
             public AttrFileProcess()
             {
                 using (StreamReader reader =
-                       new StreamReader($"{AbilityEditorPath.EditorRootPath}/AttrMaker/AttrCreatorTemplate",
-                           Encoding.Default))
+                       new StreamReader($"{AbilityAssetPath.EditorRootPath}/AttrMaker/AttrCreatorTemplate", Encoding.Default))
                 {
                     _classTempStr = reader.ReadToEnd();
                 }
@@ -82,8 +80,8 @@ namespace Hono.Scripts.Battle
 
             public void Process()
             {
-                using (StreamReader reader = new StreamReader(
-                           $"{AbilityEditorPath.EditorRootPath}/AttrMaker/AttrMakerDefine",
+                
+                using (StreamReader reader = new StreamReader($"{AbilityAssetPath.EditorRootPath}/AttrMaker/AttrMakerDefine",
                            Encoding.Default))
                 {
                     string line;
@@ -101,9 +99,9 @@ namespace Hono.Scripts.Battle
                             continue;
                         }
 
-                        var defineDesc = string.Copy(_defineTypeDesc);
-                        defineDesc = defineDesc.Replace("@AttrValueType", attrInfo[0]);
-                        var define = defineDesc + "      " + attrInfo[1] + " = " + attrInfo[2] + ",\n";
+						var defineDesc = string.Copy(_defineTypeDesc);
+						defineDesc = defineDesc.Replace("@AttrValueType", attrInfo[0]);
+                        var define = defineDesc + "      "+attrInfo[1] + " = " + attrInfo[2] +",\n";
                         _attrEnumStr += define;
 
                         if (attrInfo[0].ToLower() == "int")
@@ -122,7 +120,7 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_floatAttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
-
+                            
                             string dictItem = string.Copy(_floatTypeStr);
                             dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
                             _attrDictItem += dictItem;
@@ -133,7 +131,7 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_boolAttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
-
+                            
                             string dictItem = string.Copy(_boolTypeStr);
                             dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
                             _attrDictItem += dictItem;
@@ -144,7 +142,7 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_v3AttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
-
+                            
                             string dictItem = string.Copy(_v3TypeStr);
                             dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
                             _attrDictItem += dictItem;
@@ -155,7 +153,7 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_q4AttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
-
+                            
                             string dictItem = string.Copy(_q4TypeStr);
                             dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
                             _attrDictItem += dictItem;
@@ -166,7 +164,7 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_intArrayAttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
-
+                            
                             string dictItem = string.Copy(_iArrayTypeStr);
                             dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
                             _attrDictItem += dictItem;
@@ -177,7 +175,7 @@ namespace Hono.Scripts.Battle
                             string caseStr = string.Copy(_floatArrayAttrTemp);
                             caseStr = caseStr.Replace("@AttrName", attrInfo[1]);
                             _attrCase += caseStr;
-
+                            
                             string dictItem = string.Copy(_fArrayTypeStr);
                             dictItem = dictItem.Replace("@AttrName", attrInfo[1]);
                             _attrDictItem += dictItem;
@@ -209,7 +207,7 @@ namespace Hono.Scripts.Battle
                 {
                     writer.Write(classCode);
                 }
-
+                
                 Debug.Log("AttrCreator 生成完成");
             }
         }

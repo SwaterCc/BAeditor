@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
         {
             try
             {
-                using (StringReader reader = new StringReader(csvFile))
+                using (StringReader  reader = new StringReader (csvFile))
                 {
                     int lineCount = 0;
                     while (reader.ReadLine() is { } line)
@@ -22,7 +22,6 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
-
                         var row = Activator.CreateInstance<DamageMultiplyRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
@@ -66,41 +65,42 @@ namespace Hono.Scripts.Battle
             return _tableData.TryGetValue(id, out data);
         }
 
-        public Dictionary<int, DamageMultiplyRow> GetTable()
-        {
-            return _tableData;
-        }
+         public Dictionary<int, DamageMultiplyRow> GetTable()
+         {
+             return _tableData;
+         }
     }
 
     public partial class DamageMultiplyTable
     {
         public class DamageMultiplyRow : TableRow
         {
+           
             /// <summary>
-            ///     备注
+            /// 备注
             /// </summary>
             public string Desc { get; private set; }
-
+            
             /// <summary>
-            ///     Apply增伤数值万分比
+            /// Apply增伤数值万分比
             /// </summary>
             public IntArray DamageValue { get; private set; }
-
+            
             /// <summary>
-            ///     Apply数值的方法，可以在lua中自定义计算方法，通常保持默认即可
+            /// Apply数值的方法，可以在lua中自定义计算方法，通常保持默认即可
             /// </summary>
             public string ApplyFuncName { get; private set; }
-
+            
             /// <summary>
-            ///     增伤条件ID列表
+            /// 增伤条件ID列表
             /// </summary>
             public IntArray ConditionIds { get; private set; }
-
+            
             /// <summary>
-            ///     增伤条件参数表
+            /// 增伤条件参数表
             /// </summary>
             public IntTable ConditionParams { get; private set; }
-
+            
 
             public DamageMultiplyRow()
             {
@@ -118,15 +118,17 @@ namespace Hono.Scripts.Battle
 
                 protected override void onParse(string[] line)
                 {
+                    
                     _row.Desc = parseString(line[1]);
-
+            
                     _row.DamageValue = parseIntArray(line[2]);
-
+            
                     _row.ApplyFuncName = parseString(line[3]);
-
+            
                     _row.ConditionIds = parseIntArray(line[4]);
-
+            
                     _row.ConditionParams = parseIntTable(line[5]);
+            
                 }
             }
         }

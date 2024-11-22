@@ -46,8 +46,8 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.25f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Packages\com.arongranberg.astar\Editor\ModifierEditors\RaycastModifierEditor.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Editor\EditorHelpers.cs" />
+    <Compile Include="Packages\com.arongranberg.astar\Editor\ModifierEditors\RaycastModifierEditor.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Editor\GraphEditors\NavMeshGeneratorEditor.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Editor\RuleEditors\RuleElevationPenaltyEditor.cs" />
     <Compile Include="Packages\com.arongranberg.astar\Editor\RuleEditors\RulePerLayerModificationsEditor.cs" />

@@ -9,8 +9,8 @@
         public static readonly string AbilityBulletPath = $"{DataRootPath}/Ability/Bullet";
         public static readonly string AbilityGameModePath = $"{DataRootPath}/Ability/GameMode";
         public static readonly string AbilityOtherPath = $"{DataRootPath}/Ability/Other";
-
-
+        
+        
         public static readonly string SkillPath = $"{DataRootPath}/Skill";
         public static readonly string BuffPath = $"{DataRootPath}/Buff";
         public static readonly string BulletPath = $"{DataRootPath}/Bullet";

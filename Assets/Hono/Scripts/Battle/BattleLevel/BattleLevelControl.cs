@@ -1,38 +1,14 @@
-namespace Hono.Scripts.Battle
-{
-    public class BattleController : ActorLogic
-    {
-        private VFXComp _vfxComp;
-        public VFXComp VFXComp => _vfxComp;
+namespace Hono.Scripts.Battle {
+	public class BattleController : ActorLogic ,IAPoolObject{
+		private VFXComp _vfxComp;
+		public VFXComp VFXComp => _vfxComp;
 
-        public BattleControllerModel ModelController => (BattleControllerModel)Actor.ModelController;
-
-        public BattleController(Actor actor) : base(actor) { }
-
-        protected override void setupComponents()
-        {
-            _vfxComp = new VFXComp(this);
-            addComponent(_vfxComp);
-        }
-
-        public void RunAbility(int abilityConfigId)
-        {
-            if (abilityConfigId <= 0)
-            {
-                return;
-            }
-
-            AbilityController.AwardAbility(abilityConfigId, true);
-        }
-
-        public void RemoveAbility(int abilityConfigId)
-        {
-            if (abilityConfigId <= 0)
-            {
-                return;
-            }
-
-            AbilityController.RemoveAbility(abilityConfigId);
-        }
-    }
+		public BattleController() {
+			_vfxComp = addComponent(new VFXComp(this));
+		}
+		
+		public override void RecycleLogicObject() {
+			AObjectPool<BattleController>.Pool.Recycle(this);
+		}
+	}
 }
