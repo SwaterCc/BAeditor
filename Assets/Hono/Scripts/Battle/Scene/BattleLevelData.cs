@@ -1,53 +1,59 @@
 #region
 
-using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle.Scene {
-	public class BattleLevelData : MonoBehaviour {
-		#region 场景数据
+namespace Hono.Scripts.Battle.Scene
+{
+    public class BattleLevelData : MonoBehaviour
+    {
+        #region 场景数据
 
-		[LabelText("BattleController执行的Ability")]
-		public List<int> BattleControllerAbilitys = new();
+        [LabelText("BattleController执行的Ability")]
+        public List<int> BattleControllerAbilitys = new();
 
-		[LabelText("掉落物规则")] public ELootDropRule LootDropRule = ELootDropRule.NoDrop;
+        [LabelText("掉落物规则")] public ELootDropRule LootDropRule = ELootDropRule.NoDrop;
 
-		[LabelText("掉落物规则参数")] public int LootRuleParam = 0;
+        [LabelText("掉落物规则参数")] public int LootRuleParam = 0;
 
-		[LabelText("整备阶段关闭")] public bool ReadyRoundStateSpik;
+        [LabelText("整备阶段关闭")] public bool ReadyRoundStateSpik;
 
-		[LabelText("初始战斗资源")] public int InitRPCount;
+        [LabelText("初始战斗资源")] public int InitRPCount;
 
-		[LabelText("失败后可重复挑战")] public bool CanRepeatRound;
+        [LabelText("失败后可重复挑战")] public bool CanRepeatRound;
 
-		[LabelText("波次信息")] [ListDrawerSettings(ShowFoldout = true, NumberOfItemsPerPage = 1)]
-		public List<RoundData> RoundDatas = new();
+        [LabelText("波次信息")] [ListDrawerSettings(ShowFoldout = true, NumberOfItemsPerPage = 1)]
+        public List<RoundData> RoundDatas = new();
 
-		#endregion
+        #endregion
 
 
-		[SerializeField] [ShowInInspector] [ReadOnly] [LabelText("下一个Uid")]
-		private int _sceneUidCounter;
+        [SerializeField] [ShowInInspector] [ReadOnly] [LabelText("下一个Uid")]
+        private int _sceneUidCounter;
 
-		public int GetSceneActorUid() {
-			if (_sceneUidCounter is < 1000 or > 5000) {
-				//超出了Id范围,重置
-				_sceneUidCounter = 1000;
-			}
+        public int GetSceneActorUid()
+        {
+            if (_sceneUidCounter is < 1000 or > 5000)
+            {
+                //超出了Id范围,重置
+                _sceneUidCounter = 1000;
+            }
 
-			++_sceneUidCounter;
-			return _sceneUidCounter;
-		}
+            ++_sceneUidCounter;
+            return _sceneUidCounter;
+        }
 
-		public void Awake() {
-			var dataObjects = FindObjectsOfType<BattleLevelData>();
-			if (dataObjects.Length > 1) {
-				Debug.LogError("场景中仅能存在一个BattleLevelData对象！已删除自身");
-				Destroy(this);
-			}
-		}
-	}
+        public void Awake()
+        {
+            var dataObjects = FindObjectsOfType<BattleLevelData>();
+            if (dataObjects.Length > 1)
+            {
+                Debug.LogError("场景中仅能存在一个BattleLevelData对象！已删除自身");
+                Destroy(this);
+            }
+        }
+    }
 }

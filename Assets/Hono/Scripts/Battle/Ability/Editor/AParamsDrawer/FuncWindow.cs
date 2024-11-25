@@ -14,7 +14,7 @@ namespace Editor.AbilityEditor
 {
     public class FuncWindow : EditorWindow
     {
-        public static FuncWindow Open(AParams aParameter, EParameterValueType valueType, Action<AParams> onSave)
+        public static FuncWindow Open(AParams aParameter, EParamValueType valueType, Action<AParams> onSave)
         {
             var window = CreateInstance<FuncWindow>();
             window.Init(aParameter, valueType, onSave);
@@ -23,12 +23,12 @@ namespace Editor.AbilityEditor
         }
         
         private AParams _function;
-        private EParameterValueType _valueType;
+        private EParamValueType _valueType;
         private Action<AParams> _onSave;
         private FunctionView _funcTree;
         private List<ParameterField> _parameterFields;
 
-        public void Init(AParams aParameter, EParameterValueType valueType, Action<AParams> onSave)
+        public void Init(AParams aParameter, EParamValueType valueType, Action<AParams> onSave)
         {
             _function = new AParams(aParameter);
             _valueType = valueType;

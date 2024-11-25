@@ -4,73 +4,76 @@ using Hono.Scripts.Battle.Tools.CustomAttribute;
 
 #endregion
 
-namespace Hono.Scripts.Battle.Event {
-	public enum EBattleEventType {
-		//空占位，说明没有初始化,千万不要改顺序！！
-		NoInit = 0,
-		
-		[EventCheckerBinder("GetHitOnceChecker", typeof(HitDamageInfo))]
-		OnHit,
+namespace Hono.Scripts.Battle.Event
+{
+    public enum EBattleEventType
+    {
+        //空占位，说明没有初始化,千万不要改顺序！！
+        NoInit = 0,
 
-		[EventCheckerBinder("GetBeHitChecker", typeof(HitDamageInfo))]
-		OnBeHit,
+        [EventCheckerBinder("GetHitOnceChecker", typeof(HitDamageInfo))]
+        OnHit,
 
-		[EventCheckerBinder("GetMotionBeginChecker", typeof(MotionEventInfo))]
-		OnMotionBegin = 10,
+        [EventCheckerBinder("GetBeHitChecker", typeof(HitDamageInfo))]
+        OnBeHit,
 
-		[EventCheckerBinder("GetMotionCollisionChecker", typeof(MotionEventInfo))]
-		OnMoveCollision,
+        [EventCheckerBinder("GetMotionBeginChecker", typeof(MotionEventInfo))]
+        OnMotionBegin = 10,
 
-		[EventCheckerBinder("GetMotionEndChecker", typeof(MotionEventInfo))]
-		OnMotionEnd,
+        [EventCheckerBinder("GetMotionCollisionChecker", typeof(MotionEventInfo))]
+        OnMoveCollision,
 
-		UseSkill = 20,
+        [EventCheckerBinder("GetMotionEndChecker", typeof(MotionEventInfo))]
+        OnMotionEnd,
 
-		[EventCheckerBinder("GetUseSkillSuccessChecker", typeof(UsedSkillEventInfo))]
-		OnSkillUseSuccess,
+        UseSkill = 20,
 
-		[EventCheckerBinder("GetSkillEndChecker", typeof(UsedSkillEventInfo))]
-		OnSkillStop,
+        [EventCheckerBinder("GetUseSkillSuccessChecker", typeof(UsedSkillEventInfo))]
+        OnSkillUseSuccess,
 
-		OnActorEnterScene = 30,
-		OnActorDead,
+        [EventCheckerBinder("GetSkillEndChecker", typeof(UsedSkillEventInfo))]
+        OnSkillStop,
 
-		[EventCheckerBinder("GetTriggerBoxEnterChecker", typeof(TriggerBoxEventInfo))]
-		OnTriggerBoxEnter = 50,
+        OnActorEnterScene = 30,
+        OnActorDead,
 
-		[EventCheckerBinder("GetTriggerBoxStayChecker", typeof(TriggerBoxEventInfo))]
-		OnTriggerBoxStay = 51,
+        [EventCheckerBinder("GetTriggerBoxEnterChecker", typeof(TriggerBoxEventInfo))]
+        OnTriggerBoxEnter = 50,
 
-		[EventCheckerBinder("GetTriggerBoxExitChecker", typeof(TriggerBoxEventInfo))]
-		OnTriggerBoxExit = 52,
+        [EventCheckerBinder("GetTriggerBoxStayChecker", typeof(TriggerBoxEventInfo))]
+        OnTriggerBoxStay = 51,
 
-		SkillCDBegin = 70,
-		SkillCDEnd,
+        [EventCheckerBinder("GetTriggerBoxExitChecker", typeof(TriggerBoxEventInfo))]
+        OnTriggerBoxExit = 52,
 
-		OnCallMonsterGenerator = 1000,
-		[EventCheckerBinder("GetMonsterAllDeadChecker", typeof(MonsterGenRtEventInfo))]
-		OnMonsterGeneratorAllDead = 1001,
+        SkillCDBegin = 70,
+        SkillCDEnd,
 
-		//游戏流程事件
-		[EventCheckerBinder("GetRoundReadyEnterChecker", typeof(RoundStateEventInfo))]
-		RoundReadyEnter = 500001,
+        OnCallMonsterGenerator = 1000,
 
-		[EventCheckerBinder("GetRoundReadyExitChecker", typeof(RoundStateEventInfo))]
-		RoundReadyExit,
+        [EventCheckerBinder("GetMonsterAllDeadChecker", typeof(MonsterGenRtEventInfo))]
+        OnMonsterGeneratorAllDead = 1001,
 
-		[EventCheckerBinder("GetRoundRunningEnterChecker", typeof(RoundStateEventInfo))]
-		RoundRunningEnter = 500011,
+        //游戏流程事件
+        [EventCheckerBinder("GetRoundReadyEnterChecker", typeof(RoundStateEventInfo))]
+        RoundReadyEnter = 500001,
 
-		[EventCheckerBinder("GetRoundRunningExitChecker", typeof(RoundStateEventInfo))]
-		RoundRunningExit,
+        [EventCheckerBinder("GetRoundReadyExitChecker", typeof(RoundStateEventInfo))]
+        RoundReadyExit,
 
-		[EventCheckerBinder("GetRoundScoreEnterChecker", typeof(RoundStateEventInfo))]
-		RoundScoreEnter = 500021,
+        [EventCheckerBinder("GetRoundRunningEnterChecker", typeof(RoundStateEventInfo))]
+        RoundRunningEnter = 500011,
 
-		[EventCheckerBinder("GetRoundScoreExitChecker", typeof(RoundStateEventInfo))]
-		RoundScoreExit,
+        [EventCheckerBinder("GetRoundRunningExitChecker", typeof(RoundStateEventInfo))]
+        RoundRunningExit,
 
-		[EventCheckerBinder("GetLootChecker", typeof(LootEventInfo))]
-		LootDrop = 500031
-	}
+        [EventCheckerBinder("GetRoundScoreEnterChecker", typeof(RoundStateEventInfo))]
+        RoundScoreEnter = 500021,
+
+        [EventCheckerBinder("GetRoundScoreExitChecker", typeof(RoundStateEventInfo))]
+        RoundScoreExit,
+
+        [EventCheckerBinder("GetLootChecker", typeof(LootEventInfo))]
+        LootDrop = 500031
+    }
 }

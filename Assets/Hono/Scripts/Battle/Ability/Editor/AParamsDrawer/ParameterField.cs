@@ -142,27 +142,27 @@ namespace Editor.AbilityEditor
 		          //变量名加按钮
             switch (_type.GetParameterValueType())
             {
-                case EParameterValueType.Int:
-                case EParameterValueType.Enum:
+                case EParamValueType.Int:
+                case EParamValueType.Enum:
                     _aParameter.value ??= new RefInt();
                     ((RefInt)_aParameter.value).Value = SirenixEditorFields.IntField((RefInt)_aParameter.value);
                     break;
-                case EParameterValueType.Float:
+                case EParamValueType.Float:
                     _aParameter.value ??= new RefFloat();
                     ((RefFloat)_aParameter.value).Value = SirenixEditorFields.FloatField((RefFloat)_aParameter.value);
                     break;
-                case EParameterValueType.Bool:
+                case EParamValueType.Bool:
                     _aParameter.value ??= new RefBool();
                     string select = ((RefBool)_aParameter.value).ToString();
                     select =
                         SirenixEditorFields.Dropdown(new GUIContent(""), select, new[] { "true", "false" });
                     ((RefBool)_aParameter.value).Value = bool.Parse(select);
                     break;
-                case EParameterValueType.Vector3:
+                case EParamValueType.Vector3:
 	                _aParameter.value ??= new RefVector3();
 	                ((RefVector3)_aParameter.value).FromVector3(SirenixEditorFields.Vector3Field((RefVector3)_aParameter.value));
 	                break;
-                case EParameterValueType.Object:
+                case EParamValueType.Object:
 	                if (_aParameter.value == null) {
 		                EditorGUILayout.LabelField("←----请选择类型！");
 	                }

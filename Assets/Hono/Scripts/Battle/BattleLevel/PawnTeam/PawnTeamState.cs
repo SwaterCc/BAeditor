@@ -6,124 +6,154 @@ using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle {
-	public class PawnTeamState {
-		private readonly List<PawnTeamMemberState> _memberStates;
-		private int _curLeaderIndex;
-		private PawnTeamMemberState _leader;
-		private bool _isCreate;
-		private float _duration;
-		private const float CenterPosUpdateInterval = 0.5f;
-		private const float TeamRadius = 1.618f;
-		private readonly int _teamMemberCount;
+namespace Hono.Scripts.Battle
+{
+    public class PawnTeamState
+    {
+        private readonly List<PawnTeamMemberState> _memberStates;
+        private int _curLeaderIndex;
+        private PawnTeamMemberState _leader;
+        private bool _isCreate;
+        private float _duration;
+        private const float CenterPosUpdateInterval = 0.5f;
+        private const float TeamRadius = 1.618f;
+        private readonly int _teamMemberCount;
 
-		private readonly List<Vector3> MemberDirection;
+        private readonly List<Vector3> MemberDirection;
 
-		public int TeamIndex { get; }
-		public Vector3 CenterPos { get; private set; }
-		public Quaternion CenterRot { get; private set; }
-		public int LeaderUid { get => _leader?.ActorUid ?? -1; }
-		public List<PawnTeamMemberState> MemberStates => _memberStates;
-		public bool IsControl { get; private set; }
+        public int TeamIndex { get; }
+        public Vector3 CenterPos { get; private set; }
+        public Quaternion CenterRot { get; private set; }
 
-		public PawnTeamState(PawnTeamController teamController, int teamIndex, int teamMemberCount,
-			List<int> memberConfigIds) {
-			_teamMemberCount = teamMemberCount;
+        public int LeaderUid
+        {
+            get => _leader?.ActorUid ?? -1;
+        }
 
-			MemberDirection = new() {
-				Vector3.forward, Vector3.right, Vector3.back, Vector3.left,
-			};
+        public List<PawnTeamMemberState> MemberStates => _memberStates;
+        public bool IsControl { get; private set; }
 
-			TeamIndex = teamIndex;
+        public PawnTeamState(PawnTeamController teamController, int teamIndex, int teamMemberCount,
+            List<int> memberConfigIds)
+        {
+            _teamMemberCount = teamMemberCount;
 
-			_memberStates = new List<PawnTeamMemberState>() {
-				new(this, 0, memberConfigIds[0]),
-				new(this, 1, memberConfigIds[1]),
-				new(this, 2, memberConfigIds[2]),
-				new(this, 3, memberConfigIds[3]),
-			};
-			_isCreate = false;
-		}
+            MemberDirection = new()
+            {
+                Vector3.forward, Vector3.right, Vector3.back, Vector3.left,
+            };
 
-		/// <summary>
-		///     自动传位
-		/// </summary>
-		public void PassingLeader() {
-			_leader = null;
-			//顺位寻找下一个队长
-			for (; _curLeaderIndex < BattleConstValue.TeamMemberMaxCount; ++_curLeaderIndex) {
-				if (_memberStates[_curLeaderIndex].CurStateType != EPawnTeamMemberStateType.Normal) continue;
-				_memberStates[_curLeaderIndex].IsLeader = true;
-				_leader = _memberStates[_curLeaderIndex];
-				if (IsControl) {
-					_leader.SetPlayerControlFlag(true);
-				}
-				return;
-			}
-			//执行到这里说明全灭了
-		}
+            TeamIndex = teamIndex;
 
-		public void CreateTeam(Vector3 teamCenter, Quaternion teamRot) {
-			CenterPos = teamCenter;
-			_curLeaderIndex = 0;
-			foreach (var state in _memberStates) {
-				state.CreateMember();
-			}
+            _memberStates = new List<PawnTeamMemberState>()
+            {
+                new(this, 0, memberConfigIds[0]),
+                new(this, 1, memberConfigIds[1]),
+                new(this, 2, memberConfigIds[2]),
+                new(this, 3, memberConfigIds[3]),
+            };
+            _isCreate = false;
+        }
 
-			PassingLeader();
-			_isCreate = true;
-		}
+        /// <summary>
+        ///     自动传位
+        /// </summary>
+        public void PassingLeader()
+        {
+            _leader = null;
+            //顺位寻找下一个队长
+            for (; _curLeaderIndex < BattleConstValue.TeamMemberMaxCount; ++_curLeaderIndex)
+            {
+                if (_memberStates[_curLeaderIndex].CurStateType != EPawnTeamMemberStateType.Normal) continue;
+                _memberStates[_curLeaderIndex].IsLeader = true;
+                _leader = _memberStates[_curLeaderIndex];
+                if (IsControl)
+                {
+                    _leader.SetPlayerControlFlag(true);
+                }
 
-		public void RemoveTeam() {
-			foreach (var state in _memberStates) {
-				if (state.CurStateType == EPawnTeamMemberStateType.Normal) {
-					ActorManager.Instance.RemoveActor(state.ActorUid);
-				}
-			}
-		}
+                return;
+            }
+            //执行到这里说明全灭了
+        }
 
-		public void OnTick(float dt) {
-			if (!_isCreate) return;
+        public void CreateTeam(Vector3 teamCenter, Quaternion teamRot)
+        {
+            CenterPos = teamCenter;
+            _curLeaderIndex = 0;
+            foreach (var state in _memberStates)
+            {
+                state.CreateMember();
+            }
 
-			updateCenterPos();
-			if (_duration > CenterPosUpdateInterval) {
-				_duration = 0;
-			}
+            PassingLeader();
+            _isCreate = true;
+        }
 
-			_duration += dt;
-		}
+        public void RemoveTeam()
+        {
+            foreach (var state in _memberStates)
+            {
+                if (state.CurStateType == EPawnTeamMemberStateType.Normal)
+                {
+                    ActorManager.Instance.RemoveActor(state.ActorUid);
+                }
+            }
+        }
 
-		public void OnPlayerControlChange(bool isControl) {
-			IsControl = isControl;
-			_leader?.SetPlayerControlFlag(isControl);
-		}
+        public void OnTick(float dt)
+        {
+            if (!_isCreate) return;
 
-		private void updateCenterPos() {
-			if (_leader == null) return;
-			CenterPos = _leader.Pos + _leader.Rot * (-MemberDirection[_curLeaderIndex] * TeamRadius);
-			CenterRot = _leader.Rot;
-		}
+            updateCenterPos();
+            if (_duration > CenterPosUpdateInterval)
+            {
+                _duration = 0;
+            }
 
-		public Vector3 GetMemberTeamPos(int memberIndex) {
-			return CenterPos + CenterRot * (MemberDirection[memberIndex] * TeamRadius);
-		}
+            _duration += dt;
+        }
 
-		public bool HasAlive() {
-			return _memberStates.Any(state => state.CurStateType == EPawnTeamMemberStateType.Normal);
-		}
+        public void OnPlayerControlChange(bool isControl)
+        {
+            IsControl = isControl;
+            _leader?.SetPlayerControlFlag(isControl);
+        }
 
-		public void TeamAssembly() {
-			foreach (var state in _memberStates) {
-				if (state.CurStateType != EPawnTeamMemberStateType.Normal) {
-					continue;
-				}
+        private void updateCenterPos()
+        {
+            if (_leader == null) return;
+            CenterPos = _leader.Pos + _leader.Rot * (-MemberDirection[_curLeaderIndex] * TeamRadius);
+            CenterRot = _leader.Rot;
+        }
 
-				if (state.IsLeader) {
-					continue;
-				}
-				var actor = ActorManager.Instance.GetActor(state.ActorUid);
-				actor.Pos= GetMemberTeamPos(state.MemberIndex);
-			}
-		}
-	}
+        public Vector3 GetMemberTeamPos(int memberIndex)
+        {
+            return CenterPos + CenterRot * (MemberDirection[memberIndex] * TeamRadius);
+        }
+
+        public bool HasAlive()
+        {
+            return _memberStates.Any(state => state.CurStateType == EPawnTeamMemberStateType.Normal);
+        }
+
+        public void TeamAssembly()
+        {
+            foreach (var state in _memberStates)
+            {
+                if (state.CurStateType != EPawnTeamMemberStateType.Normal)
+                {
+                    continue;
+                }
+
+                if (state.IsLeader)
+                {
+                    continue;
+                }
+
+                var actor = ActorManager.Instance.GetActor(state.ActorUid);
+                actor.Pos = GetMemberTeamPos(state.MemberIndex);
+            }
+        }
+    }
 }

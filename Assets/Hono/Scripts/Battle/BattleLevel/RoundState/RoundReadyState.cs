@@ -1,53 +1,58 @@
-#region
 
-using Hono.Scripts.Battle.BattleUI;
+namespace Hono.Scripts.Battle
+{
+    public partial class BattleGround
+    {
+        private class RoundReadyState : RoundState
+        {
+            private bool _firstEnter;
+            private bool _createTeamFlag;
 
-#endregion
+            public RoundReadyState(RoundController roundController) : base(roundController)
+            {
+                _firstEnter = true;
+            }
 
-namespace Hono.Scripts.Battle {
-	public partial class BattleGround {
-		private class RoundReadyState : RoundState {
-			private bool _firstEnter;
-			private bool _createTeamFlag;
-
-			public RoundReadyState(RoundController roundController) : base(roundController) {
-				_firstEnter = true;
-			}
-
-			public override ERoundState GetRoundState() => ERoundState.Ready;
+            public override ERoundState GetRoundState() => ERoundState.Ready;
 
 
-			protected override void onEnter() {
-				Round.GameRunningState.BattleGroundHandle.RtInfo.ClearRound();
-			
-				//创建队伍
-				if (_firstEnter) {
-					TeamSelectPanel.Instance.FirstOpen();
-				}
+            protected override void onEnter()
+            {
+                Round.GameRunningState.BattleGroundHandle.RtInfo.ClearRound();
 
-				if (Round.GameRunningState.BattleGroundHandle._levelData.ReadyRoundStateSpik && !_firstEnter) {
-					Round.SwitchState(ERoundState.Running);
-				}
+                //创建队伍
+                if (_firstEnter)
+                {
+                    //TeamSelectPanel.Instance.FirstOpen();
+                }
 
-				if (!Round.GameRunningState.BattleGroundHandle._levelData.ReadyRoundStateSpik) {
-					WarDeployPanel.Instance.Show();
-				}
-			}
+                if (Round.GameRunningState.BattleGroundHandle._levelData.ReadyRoundStateSpik && !_firstEnter)
+                {
+                    Round.SwitchState(ERoundState.Running);
+                }
 
-			protected override void onTick(float dt) { }
+                if (!Round.GameRunningState.BattleGroundHandle._levelData.ReadyRoundStateSpik)
+                {
+                    //WarDeployPanel.Instance.Show();
+                }
+            }
 
-			protected override void onExit() {
-				
-				if (!Round.GameRunningState.BattleGroundHandle._levelData.ReadyRoundStateSpik || _firstEnter) {
-					Round.GameRunningState.BattleGroundHandle._pawnTeamController.CreatePawnTeams();
-				}
+            protected override void onTick(float dt) { }
 
-				if (!Round.GameRunningState.BattleGroundHandle._levelData.ReadyRoundStateSpik) {
-					WarDeployPanel.Instance.Hide();
-				}
+            protected override void onExit()
+            {
+                if (!Round.GameRunningState.BattleGroundHandle._levelData.ReadyRoundStateSpik || _firstEnter)
+                {
+                    Round.GameRunningState.BattleGroundHandle._pawnTeamController.CreatePawnTeams();
+                }
 
-				_firstEnter = false;
-			}
-		}
-	}
+                if (!Round.GameRunningState.BattleGroundHandle._levelData.ReadyRoundStateSpik)
+                {
+                    //WarDeployPanel.Instance.Hide();
+                }
+
+                _firstEnter = false;
+            }
+        }
+    }
 }

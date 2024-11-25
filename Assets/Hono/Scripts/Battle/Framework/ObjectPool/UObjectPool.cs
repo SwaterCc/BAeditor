@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle
     public class UObjectPool : MonoSingleton<UObjectPool>
     {
         private readonly Dictionary<string, Queue<GameObject>> _gameObjectCache = new();
-        
+
         public bool TryGet(in string path, out GameObject obj)
         {
             obj = null;
@@ -40,6 +40,5 @@ namespace Hono.Scripts.Battle
 
             objects.Enqueue(obj);
         }
-        
     }
 }

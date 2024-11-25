@@ -4,16 +4,19 @@ using Sirenix.OdinInspector;
 
 #endregion
 
-namespace Hono.Scripts.Battle {
-	public class ActorRefreshPoint : ActorModel {
-		public EActorType CreateActorType;
-		public int ConfigId;
+namespace Hono.Scripts.Battle
+{
+    public class ActorRefreshPoint : ActorModel
+    {
+        public EActorType CreateActorType;
+        public int ConfigId;
 
-		[InfoBox("目前只支持 Pawn Monster Building 三种类型")]
-		[Button("设置运行时创建对象的信息")]
-		public void SetActorInfo(EActorType actorType, int configId = 0) {
-			CreateActorType = actorType;
-			ConfigId = configId;
-		}
-	}
+        [InfoBox("目前只支持 Pawn Monster Building 三种类型")]
+        [Button("设置运行时创建对象的信息")]
+        public void SetActorInfo(EActorType actorType, int configId = 0)
+        {
+            CreateActorType = actorType;
+            ConfigId = configId;
+        }
+    }
 }

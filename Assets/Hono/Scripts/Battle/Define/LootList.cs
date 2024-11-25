@@ -1,35 +1,38 @@
 #region
 
-using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine.Serialization;
 
 #endregion
 
-namespace Hono.Scripts.Battle {
-	[Serializable]
-	public class LootSetting {
-		public ELootFunctionType LootFunctionType;
+namespace Hono.Scripts.Battle
+{
+    [Serializable]
+    public class LootSetting
+    {
+        public ELootFunctionType LootFunctionType;
 
-		[ShowIf("LootFunctionType", ELootFunctionType.SkillLevelUp)]
-		public int SkillLevelNum;
+        [ShowIf("LootFunctionType", ELootFunctionType.SkillLevelUp)]
+        public int SkillLevelNum;
 
-		[ShowIf("LootFunctionType", ELootFunctionType.BuffAdd)]
-		public int BuffId;
+        [ShowIf("LootFunctionType", ELootFunctionType.BuffAdd)]
+        public int BuffId;
 
-		[ShowIf("LootFunctionType", ELootFunctionType.BuffAdd)]
-		public int BuffLayer;
+        [ShowIf("LootFunctionType", ELootFunctionType.BuffAdd)]
+        public int BuffLayer;
 
-		[FormerlySerializedAs("AttrType")] [ShowIf("LootFunctionType", ELootFunctionType.AttrChange)]
-		public EAttrType attrTypeType;
+        [FormerlySerializedAs("AttrType")] [ShowIf("LootFunctionType", ELootFunctionType.AttrChange)]
+        public EAttrType attrTypeType;
 
-		[ShowIf("LootFunctionType", ELootFunctionType.AttrChange)]
-		public int ChangeAttrValue;
-	}
+        [ShowIf("LootFunctionType", ELootFunctionType.AttrChange)]
+        public int ChangeAttrValue;
+    }
 
-	[Serializable]
-	public class LootList {
-		public List<LootSetting> LootSettings = new();
-	}
+    [Serializable]
+    public class LootList
+    {
+        public List<LootSetting> LootSettings = new();
+    }
 }

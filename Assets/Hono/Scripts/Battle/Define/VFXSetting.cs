@@ -1,38 +1,42 @@
 #region
 
-using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle {
-	public enum EVFXType {
-		InWorld,
-		FollowActor,
-		BindActorBone,
-	}
+namespace Hono.Scripts.Battle
+{
+    public enum EVFXType
+    {
+        InWorld,
+        FollowActor,
+        BindActorBone,
+    }
 
-	[Serializable]
-	public class VFXSetting {
-		[FilePath(Extensions = "prefab")] public string VFXPath;
+    [Serializable]
+    public class VFXSetting
+    {
+        [FilePath(Extensions = "prefab")] public string VFXPath;
 
-		public Vector3 Offset;
-		public Vector3 Rot;
-		public float Scale = 1;
+        public Vector3 Offset;
+        public Vector3 Rot;
+        public float Scale = 1;
 
-		public EVFXType VFXBindType;
+        public EVFXType VFXBindType;
 
-		[ShowIf("VFXBindType", EVFXType.BindActorBone)] [ValueDropdown("GetBindBoneNames")]
-		public string BoneName = "";
+        [ShowIf("VFXBindType", EVFXType.BindActorBone)] [ValueDropdown("GetBindBoneNames")]
+        public string BoneName = "";
 
-		[LabelText("特效持续时长 -1为永久")] public float Duration;
+        [LabelText("特效持续时长 -1为永久")] public float Duration;
 
 
-		private static IEnumerable<string> GetBindBoneNames() {
-			List<string> BindList = new() { "effect_point" };
-			return BindList;
-		}
-	}
+        private static IEnumerable<string> GetBindBoneNames()
+        {
+            List<string> BindList = new() { "effect_point" };
+            return BindList;
+        }
+    }
 }

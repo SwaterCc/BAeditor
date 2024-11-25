@@ -4,64 +4,65 @@ using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle {
+namespace Hono.Scripts.Battle
+{
+    public class BulletSetting
+    {
+        public Vector3 Offset;
+        public float Angle;
+        public float Speed;
+    }
 
-	public class BulletSetting {
-		public Vector3 Offset;
-		public float Angle;
-		public float Speed;
-	}
-	
-	public class BulletData : ScriptableObject, IAllowedIndexing {
-		public int ID => Id;
-		public int Id;
+    public class BulletData : ScriptableObject, IAllowedIndexing
+    {
+        public int ID => Id;
+        public int Id;
 
-		/// <summary>
-		/// 使用Ability自定义位移类型
-		/// </summary>
-		public bool CustomMotion;
-		
-		/// <summary>
-		/// 位移类型
-		/// </summary>
-		public EMotionType MotionType = EMotionType.Liner;
-		
-		/// <summary>
-		/// 关闭跟随，默认为跟随目标
-		/// </summary>
-		public bool CloseFollowTarget;
+        /// <summary>
+        /// 使用Ability自定义位移类型
+        /// </summary>
+        public bool CustomMotion;
 
-		/// <summary>
-		/// 速度，废弃，移动到setting中
-		/// </summary>
-		public float BulletSpeed;
-		
-		/// <summary>
-		/// 是否命中路径中的Actor
-		/// </summary>
-		public bool IsHitPathActor;
-		
-		/// <summary>
-		/// 伤害id
-		/// </summary>
-		public int DamageConfigId;
-		
-		public float BulletLifeTime;
-		
-		public int MaxHitCount;
+        /// <summary>
+        /// 位移类型
+        /// </summary>
+        public EMotionType MotionType = EMotionType.Liner;
 
-		/// <summary>
-		/// 飞行时特效
-		/// </summary>
-		public string FlyVFX;
-		
-		/// <summary>
-		/// 命中时特效
-		/// </summary>
-		public string HitVFX;
+        /// <summary>
+        /// 关闭跟随，默认为跟随目标
+        /// </summary>
+        public bool CloseFollowTarget;
 
-		
-		
-		public FilterSetting FilterSetting = new(true);
-	}
+        /// <summary>
+        /// 速度，废弃，移动到setting中
+        /// </summary>
+        public float BulletSpeed;
+
+        /// <summary>
+        /// 是否命中路径中的Actor
+        /// </summary>
+        public bool IsHitPathActor;
+
+        /// <summary>
+        /// 伤害id
+        /// </summary>
+        public int DamageConfigId;
+
+        public float BulletLifeTime;
+
+        public int MaxHitCount;
+
+        /// <summary>
+        /// 飞行时特效
+        /// </summary>
+        public string FlyVFX;
+
+        /// <summary>
+        /// 命中时特效
+        /// </summary>
+        public string HitVFX;
+
+
+        public FilterSetting FilterSetting = new(true);
+    }
 }

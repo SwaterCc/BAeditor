@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
         {
             try
             {
-                using (StringReader  reader = new StringReader (csvFile))
+                using (StringReader reader = new StringReader(csvFile))
                 {
                     int lineCount = 0;
                     while (reader.ReadLine() is { } line)
@@ -22,6 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
+
                         var row = Activator.CreateInstance<LootLogicRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
@@ -65,32 +66,31 @@ namespace Hono.Scripts.Battle
             return _tableData.TryGetValue(id, out data);
         }
 
-         public Dictionary<int, LootLogicRow> GetTable()
-         {
-             return _tableData;
-         }
+        public Dictionary<int, LootLogicRow> GetTable()
+        {
+            return _tableData;
+        }
     }
 
     public partial class LootLogicTable
     {
         public class LootLogicRow : TableRow
         {
-           
             /// <summary>
             /// 描述
             /// </summary>
             public string Desc { get; private set; }
-            
+
             /// <summary>
             /// 功能类型
             /// </summary>
             public int LootFunctionType { get; private set; }
-            
+
             /// <summary>
             /// 参数
             /// </summary>
             public IntArray LootParam { get; private set; }
-            
+
 
             public LootLogicRow()
             {
@@ -108,13 +108,11 @@ namespace Hono.Scripts.Battle
 
                 protected override void onParse(string[] line)
                 {
-                    
                     _row.Desc = parseString(line[1]);
-            
+
                     _row.LootFunctionType = parseInt(line[2]);
-            
+
                     _row.LootParam = parseIntArray(line[3]);
-            
                 }
             }
         }

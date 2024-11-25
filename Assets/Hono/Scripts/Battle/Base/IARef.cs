@@ -1,5 +1,7 @@
-namespace Hono.Scripts.Battle.Base {
-	public interface IARef {
-		public IARef DeepCopy();
-	}
+namespace Hono.Scripts.Battle.Base
+{
+    public interface IARef
+    {
+        public IARef DeepCopy();
+    }
 }

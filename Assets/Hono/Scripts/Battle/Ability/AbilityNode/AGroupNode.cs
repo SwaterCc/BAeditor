@@ -1,68 +1,82 @@
-using Hono.Scripts.Battle.Tools;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Tools;
 
-namespace Hono.Scripts.Battle {
-	public partial class Ability {
-		/// <summary>
-		/// Group相当于Ability中的轻量级的小状态，Group在Ability中是以状态机的小状态来运行的，无自动流转状态机，除非手动勾选了AutoNext或者使用切换节点否则不会停止
-		/// Group是在Ability运行后的下一帧执行的
-		/// </summary>
-		private class AGroupNode : ANode<GroupNodeData>, IAPoolObject, ITickANode {
-			
-			/// <summary>
-			/// 隶属Group的Timer节点
-			/// </summary>
-			private readonly List<ITickANode> _groupTicks = new(10);
-			private readonly List<ITickANode> _tickRemoveList = new(5);
+namespace Hono.Scripts.Battle
+{
+    public partial class Ability
+    {
+        /// <summary>
+        /// Group相当于Ability中的轻量级的小状态，Group在Ability中是以状态机的小状态来运行的，无自动流转状态机，除非手动勾选了AutoNext或者使用切换节点否则不会停止
+        /// Group是在Ability运行后的下一帧执行的
+        /// </summary>
+        private class AGroupNode : ANode<GroupNodeData>, IAPoolObject, ITickANode
+        {
+            /// <summary>
+            /// 隶属Group的Timer节点
+            /// </summary>
+            private readonly List<ITickANode> _groupTicks = new(10);
 
-			public override void DoJob() { }
+            private readonly List<ITickANode> _tickRemoveList = new(5);
 
-			public override void Recycle() {
-				AObjectPool<AGroupNode>.Pool.Recycle(this);
-			}
+            public override void DoJob() { }
 
-			public void GroupEnter() {
-				ACycles.NextGroupId = Data.defaultNextGroupId;
-				DoChildrenJob();
-			}
+            public override void Recycle()
+            {
+                AObjectPool<AGroupNode>.Pool.Recycle(this);
+            }
 
-			public void AddTick(ITickANode node) {
-				_groupTicks.Add(node);
-			}
+            public void GroupEnter()
+            {
+                ACycles.NextGroupId = Data.defaultNextGroupId;
+                DoChildrenJob();
+            }
 
-			public void RemoveTick(ITickANode node) {
-				_tickRemoveList.Add(node);
-			}
+            public void AddTick(ITickANode node)
+            {
+                _groupTicks.Add(node);
+            }
 
-			public void Tick(float dt) {
-				foreach (var tickANode in _groupTicks) {
-					tickANode.Tick(dt);
-				}
+            public void RemoveTick(ITickANode node)
+            {
+                _tickRemoveList.Add(node);
+            }
 
-				foreach (ITickANode removeTick in _tickRemoveList) {
-					_groupTicks.RemoveSwapBack(removeTick);
-				}
+            public void Tick(float dt)
+            {
+                foreach (var tickANode in _groupTicks)
+                {
+                    tickANode.Tick(dt);
+                }
 
-				_tickRemoveList.Clear();
+                foreach (ITickANode removeTick in _tickRemoveList)
+                {
+                    _groupTicks.RemoveSwapBack(removeTick);
+                }
 
-				if (_groupTicks.Count != 0) {
-					return;
-				}
+                _tickRemoveList.Clear();
 
-				//当计时器全部执行完毕后，如果勾选了自动退出，尝试退出Group
-				if (Data.autoNext) {
-					ACycles.SwitchGroup();
-				}
-			}
+                if (_groupTicks.Count != 0)
+                {
+                    return;
+                }
 
-			public void GroupExit() {
-				Reset();
-			}
+                //当计时器全部执行完毕后，如果勾选了自动退出，尝试退出Group
+                if (Data.autoNext)
+                {
+                    ACycles.SwitchGroup();
+                }
+            }
 
-			protected override void onReset() {
-				_groupTicks.Clear();
-				_tickRemoveList.Clear();
-			}
-		}
-	}
+            public void GroupExit()
+            {
+                Reset();
+            }
+
+            protected override void onReset()
+            {
+                _groupTicks.Clear();
+                _tickRemoveList.Clear();
+            }
+        }
+    }
 }

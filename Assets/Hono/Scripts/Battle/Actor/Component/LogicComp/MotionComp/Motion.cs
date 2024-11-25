@@ -1,222 +1,249 @@
 #region
 
-using Hono.Scripts.Battle.Event;
-using Hono.Scripts.Battle.Tools;
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Event;
+using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle {
-	public partial class ActorLogic {
-		/// <summary>
-		/// 移动数据，目前其实是直接对坐标进行修正，后续改为速度向量的修正，单位移动最后依靠最终速度来决定移动
-		/// </summary>
-		public class Motion : IAPoolObject {
-			/// <summary>
-			/// 位移组件
-			/// </summary>
-			public MotionComp Comp { get; private set; }
+namespace Hono.Scripts.Battle
+{
+    public partial class ActorLogic
+    {
+        /// <summary>
+        /// 移动数据，目前其实是直接对坐标进行修正，后续改为速度向量的修正，单位移动最后依靠最终速度来决定移动
+        /// </summary>
+        public class Motion : IAPoolObject
+        {
+            /// <summary>
+            /// 位移组件
+            /// </summary>
+            public MotionComp Comp { get; private set; }
 
-			/// <summary>
-			/// Logic
-			/// </summary>
-			public ActorLogic Logic { get; private set; }
+            /// <summary>
+            /// Logic
+            /// </summary>
+            public ActorLogic Logic { get; private set; }
 
-			/// <summary>
-			/// 唯一Id
-			/// </summary>
-			public int Uid { get; private set; }
+            /// <summary>
+            /// 唯一Id
+            /// </summary>
+            public int Uid { get; private set; }
 
-			/// <summary>
-			/// 移动设置
-			/// </summary>
-			public MotionSetting Setting { get; private set; }
+            /// <summary>
+            /// 移动设置
+            /// </summary>
+            public MotionSetting Setting { get; private set; }
 
-			/// <summary>
-			/// 移动目标的UID
-			/// </summary>
-			private int _moveTargetUid;
+            /// <summary>
+            /// 移动目标的UID
+            /// </summary>
+            private int _moveTargetUid;
 
-			/// <summary>
-			/// 目的地坐标
-			/// </summary>
-			private Vector3 _moveTargetPos;
+            /// <summary>
+            /// 目的地坐标
+            /// </summary>
+            private Vector3 _moveTargetPos;
 
-			/// <summary>
-			/// 目标是否存活
-			/// </summary>
-			private bool _targetSurvive;
+            /// <summary>
+            /// 目标是否存活
+            /// </summary>
+            private bool _targetSurvive;
 
-			private readonly MotionEventInfo _motionEventInfo = new();
-			private Vector3 _moveOffset;
-			private float _speed;
-			private const float ModelRadius = 1.2f;
-			private List<int> _hitResults = new(32);
+            private readonly MotionEventInfo _motionEventInfo = new();
+            private Vector3 _moveOffset;
+            private float _speed;
+            private const float ModelRadius = 1.2f;
+            private List<int> _hitResults = new(32);
 
-			/// <summary>
-			/// 移动持续时长
-			/// </summary>
-			private float _motionDuration;
+            /// <summary>
+            /// 移动持续时长
+            /// </summary>
+            private float _motionDuration;
 
-			/// <summary>
-			/// 位移开始
-			/// </summary>
-			public bool IsBegin { get; private set; }
+            /// <summary>
+            /// 位移开始
+            /// </summary>
+            public bool IsBegin { get; private set; }
 
-			/// <summary>
-			/// 位移结束
-			/// </summary>
-			public bool IsEnd { get; private set; }
-			
-			/// <summary>
-			/// 位移碰撞回调
-			/// </summary>
-			private Action<int> _moveCollisionCallBack;
+            /// <summary>
+            /// 位移结束
+            /// </summary>
+            public bool IsEnd { get; private set; }
 
-			public void OnRent(in int uid, in ActorLogic logic, in Actor target, in MotionSetting setting,
-				Action<int> callBack = null) {
-				_moveTargetUid = target.Uid;
-				Setting = setting;
-				Logic = logic;
-				_moveOffset = Vector3.zero;
+            /// <summary>
+            /// 位移碰撞回调
+            /// </summary>
+            private Action<int> _moveCollisionCallBack;
 
-				_motionEventInfo.MotionUid = uid;
-				_speed = setting.Speed;
-				_moveTargetPos = target.Pos;
-				_moveCollisionCallBack = callBack;
-			}
+            public void OnRent(in int uid, in ActorLogic logic, in Actor target, in MotionSetting setting,
+                Action<int> callBack = null)
+            {
+                _moveTargetUid = target.Uid;
+                Setting = setting;
+                Logic = logic;
+                _moveOffset = Vector3.zero;
 
-			#region 重载运算符
+                _motionEventInfo.MotionUid = uid;
+                _speed = setting.Speed;
+                _moveTargetPos = target.Pos;
+                _moveCollisionCallBack = callBack;
+            }
 
-			public static implicit operator Vector3(Motion a) {
-				return a._moveOffset;
-			}
+            #region 重载运算符
 
-			public static Vector3 operator +(Motion a, Motion b) {
-				return a._moveOffset + b._moveOffset;
-			}
+            public static implicit operator Vector3(Motion a)
+            {
+                return a._moveOffset;
+            }
 
-			public static Vector3 operator +(Vector3 a, Motion b) {
-				return a + b._moveOffset;
-			}
+            public static Vector3 operator +(Motion a, Motion b)
+            {
+                return a._moveOffset + b._moveOffset;
+            }
 
-			public static Vector3 operator +(Motion a, Vector3 b) {
-				return a._moveOffset + b;
-			}
+            public static Vector3 operator +(Vector3 a, Motion b)
+            {
+                return a + b._moveOffset;
+            }
 
-			#endregion
+            public static Vector3 operator +(Motion a, Vector3 b)
+            {
+                return a._moveOffset + b;
+            }
 
-			private void checkCollisionAfterMove() {
-				var checkBox = new CheckBoxData() {
-					ShapeType = ECheckBoxShapeType.Cube,
-					Height = 2,
-					Width = ModelRadius,
-					Length = 1,
-					Offset = new Vector3(0, 1, ModelRadius / 2f),
-				};
+            #endregion
 
-				if (CommonUtility.HitRayCast(checkBox, Logic.Self.Pos, Logic.Self.Rot, ref _hitResults)) {
-					foreach (var uid in _hitResults) {
-						if (uid == Logic.Uid) {
-							continue;
-						}
+            private void checkCollisionAfterMove()
+            {
+                var checkBox = new CheckBoxData()
+                {
+                    ShapeType = ECheckBoxShapeType.Cube,
+                    Height = 2,
+                    Width = ModelRadius,
+                    Length = 1,
+                    Offset = new Vector3(0, 1, ModelRadius / 2f),
+                };
 
-						OnMoveCollision(uid);
-					}
-				}
-			}
+                if (CommonUtility.HitRayCast(checkBox, Logic.Self.Pos, Logic.Self.Rot, ref _hitResults))
+                {
+                    foreach (var uid in _hitResults)
+                    {
+                        if (uid == Logic.Uid)
+                        {
+                            continue;
+                        }
 
-			public void MotionBegin() {
-				BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnMotionBegin,
-					_motionEventInfo);
-				IsBegin = true;
-			}
+                        OnMoveCollision(uid);
+                    }
+                }
+            }
 
-			public void Moving(float dt) {
-				if (_motionDuration > Setting.Duration) {
-					IsEnd = true;
-				}
+            public void MotionBegin()
+            {
+                BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnMotionBegin,
+                    _motionEventInfo);
+                IsBegin = true;
+            }
 
-				if (ActorManager.Instance.TryGetActor(_moveTargetUid, out Actor target)) {
-					_moveTargetPos = target.Pos;
-				}
-				else {
-					if (Vector3.Distance(Logic.Self.Pos, _moveTargetPos) < ModelRadius / 2f) {
-						IsEnd = true;
-					}
-				}
+            public void Moving(float dt)
+            {
+                if (_motionDuration > Setting.Duration)
+                {
+                    IsEnd = true;
+                }
 
-				checkCollisionAfterMove();
+                if (ActorManager.Instance.TryGetActor(_moveTargetUid, out Actor target))
+                {
+                    _moveTargetPos = target.Pos;
+                }
+                else
+                {
+                    if (Vector3.Distance(Logic.Self.Pos, _moveTargetPos) < ModelRadius / 2f)
+                    {
+                        IsEnd = true;
+                    }
+                }
 
-				if (IsEnd) return;
+                checkCollisionAfterMove();
 
-				switch (Setting.MoveType) {
-					case EMotionType.Liner:
-						doLinerMotion(dt);
-						break;
-					case EMotionType.Around:
-						doAroundMotion(dt);
-						break;
-					case EMotionType.Parabola:
-						doCurve(dt);
-						break;
-				}
+                if (IsEnd) return;
 
-				_motionDuration += dt;
-			}
+                switch (Setting.MoveType)
+                {
+                    case EMotionType.Liner:
+                        doLinerMotion(dt);
+                        break;
+                    case EMotionType.Around:
+                        doAroundMotion(dt);
+                        break;
+                    case EMotionType.Parabola:
+                        doCurve(dt);
+                        break;
+                }
 
-			private void doLinerMotion(float dt) {
-				//方向
-				var dir = (_moveTargetPos - Logic.Self.Pos).normalized;
-				//dir.y = 0;
-				if (Setting.IsReverse) {
-					dir *= -1;
-				}
+                _motionDuration += dt;
+            }
 
-				_moveOffset = dir * (_speed * dt);
-				_speed -= Setting.Acceleration * dt;
-			}
+            private void doLinerMotion(float dt)
+            {
+                //方向
+                var dir = (_moveTargetPos - Logic.Self.Pos).normalized;
+                //dir.y = 0;
+                if (Setting.IsReverse)
+                {
+                    dir *= -1;
+                }
 
-			private void doAroundMotion(float dt) { }
+                _moveOffset = dir * (_speed * dt);
+                _speed -= Setting.Acceleration * dt;
+            }
 
-			private void doCurve(float dt) { }
+            private void doAroundMotion(float dt) { }
 
-			public void OnMoveCollision(int colliderUid) {
-				_moveCollisionCallBack?.Invoke(colliderUid);
+            private void doCurve(float dt) { }
 
-				if (Setting.TriggerEventClose) return;
+            public void OnMoveCollision(int colliderUid)
+            {
+                _moveCollisionCallBack?.Invoke(colliderUid);
 
-				if (!Setting.StopAfterCollision) {
-					if (colliderUid != _moveTargetUid) {
-						return;
-					}
-				}
+                if (Setting.TriggerEventClose) return;
 
-				_motionEventInfo.MotionCollisionId = colliderUid;
-				BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnMoveCollision,
-					_motionEventInfo);
+                if (!Setting.StopAfterCollision)
+                {
+                    if (colliderUid != _moveTargetUid)
+                    {
+                        return;
+                    }
+                }
 
-				IsEnd = true;
-			}
+                _motionEventInfo.MotionCollisionId = colliderUid;
+                BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnMoveCollision,
+                    _motionEventInfo);
 
-			public void MoveEnd() {
-				BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnMotionEnd,
-					_motionEventInfo);
-			}
+                IsEnd = true;
+            }
 
-			public void OnRecycle() {
-				_moveTargetUid = 0;
-				Setting = null;
-				Logic = null;
-				_moveOffset = Vector3.zero;
+            public void MoveEnd()
+            {
+                BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnMotionEnd,
+                    _motionEventInfo);
+            }
 
-				_motionEventInfo.MotionUid = 0;
-				_speed = 0;
-				_moveTargetPos = default;
-				_moveCollisionCallBack = null;
-			}
-		}
-	}
+            public void OnRecycle()
+            {
+                _moveTargetUid = 0;
+                Setting = null;
+                Logic = null;
+                _moveOffset = Vector3.zero;
+
+                _motionEventInfo.MotionUid = 0;
+                _speed = 0;
+                _moveTargetPos = default;
+                _moveCollisionCallBack = null;
+            }
+        }
+    }
 }

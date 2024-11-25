@@ -1,139 +1,150 @@
 ﻿#region
 
-using Hono.Demo2;
-using Hono.Scripts.Battle.Scene;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Scene;
 using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle {
-	public partial class BattleGround {
-		private EBattleStateType _currentStateType;
-		private EBattleStateType _nextStateType;
-		private BattleState _currentState;
-		private readonly string _battleGroundName;
-		private readonly Dictionary<EBattleStateType, BattleState> _battleStates;
-		private BattleController _battleController;
-		private BattleLevelData _levelData;
-		private readonly PawnTeamController _pawnTeamController;
-		private readonly LootController _lootController;
-		private bool _isScoreSuccess;
-		private readonly Dictionary<int, Vector3> _birthPoint = new(BattleConstValue.TeamMaxCount);
-		private readonly Dictionary<int, int> _teamRefreshPoint = new(BattleConstValue.TeamMaxCount);
-		public BattleGroundRtInfo RtInfo { get; }
-		public int BattleGroundConfigId { get; }
-		public BattleLevelData LevelData => _levelData;
-		public PawnTeamController TeamController => _pawnTeamController;
-		public LootController LootController => _lootController;
-		public War SaveFileDict { get; }
-		public BattleSceneTable.BattleSceneRow BattleConfig { get; }
-		public bool Result => _isScoreSuccess;
-		public BattleController BattleController => _battleController;
+namespace Hono.Scripts.Battle
+{
+    public partial class BattleGround
+    {
+        private EBattleStateType _currentStateType;
+        private EBattleStateType _nextStateType;
+        private BattleState _currentState;
+        private readonly string _battleGroundName;
+        private readonly Dictionary<EBattleStateType, BattleState> _battleStates;
+        private BattleController _battleController;
+        private BattleLevelData _levelData;
+        private readonly PawnTeamController _pawnTeamController;
+        private readonly LootController _lootController;
+        private bool _isScoreSuccess;
+        private readonly Dictionary<int, Vector3> _birthPoint = new(BattleConstValue.TeamMaxCount);
+        private readonly Dictionary<int, int> _teamRefreshPoint = new(BattleConstValue.TeamMaxCount);
+        public BattleGroundRtInfo RtInfo { get; }
+        public int BattleGroundConfigId { get; }
+        public BattleLevelData LevelData => _levelData;
+        public PawnTeamController TeamController => _pawnTeamController;
+        public LootController LootController => _lootController;
 
-		public BattleGround(int configId, War saveFileDict) {
-			BattleGroundConfigId = configId;
-			BattleConfig = ConfigManager.Table<BattleSceneTable>().Get(configId);
-			SaveFileDict = saveFileDict;
-			_battleGroundName = BattleConfig.ScenePath;
-			_isScoreSuccess = false;
-			_pawnTeamController = new PawnTeamController(this);
-			_lootController = new LootController();
-			RtInfo = new BattleGroundRtInfo();
-			_battleStates = new Dictionary<EBattleStateType, BattleState>() {
-				{ EBattleStateType.NoGaming, new NoGameState(this, EBattleStateType.NoGaming) },
-				{ EBattleStateType.BuildTeams, new BuildTeamsState(this, EBattleStateType.BuildTeams) }, {
-					EBattleStateType.LoadBattleGround,
-					new LoadBattleGroundState(this, EBattleStateType.LoadBattleGround)
-				},
-				{ EBattleStateType.Playing, new GameRunningState(this, EBattleStateType.Playing) },
-				{ EBattleStateType.Score, new ScoreState(this, EBattleStateType.Score) },
-			};
+        public BattleSceneTable.BattleSceneRow BattleConfig { get; }
+        public bool Result => _isScoreSuccess;
+        public BattleController BattleController => _battleController;
 
-			_currentStateType = EBattleStateType.NoGaming;
-			_currentState = _battleStates[_currentStateType];
-		}
+        public BattleGround(int configId)
+        {
+            BattleGroundConfigId = configId;
+            BattleConfig = ConfigManager.Table<BattleSceneTable>().Get(configId);
 
-		public void OnCreate() { }
+            _battleGroundName = BattleConfig.ScenePath;
+            _isScoreSuccess = false;
+            _pawnTeamController = new PawnTeamController(this);
+            _lootController = new LootController();
+            RtInfo = new BattleGroundRtInfo();
+            _battleStates = new Dictionary<EBattleStateType, BattleState>()
+            {
+                { EBattleStateType.NoGaming, new NoGameState(this, EBattleStateType.NoGaming) },
+                { EBattleStateType.BuildTeams, new BuildTeamsState(this, EBattleStateType.BuildTeams) },
+                {
+                    EBattleStateType.LoadBattleGround,
+                    new LoadBattleGroundState(this, EBattleStateType.LoadBattleGround)
+                },
+                { EBattleStateType.Playing, new GameRunningState(this, EBattleStateType.Playing) },
+                { EBattleStateType.Score, new ScoreState(this, EBattleStateType.Score) },
+            };
 
-		public void EnterGround() {
-			switchState(EBattleStateType.LoadBattleGround);
-			MonsterGeneratorLogic.CurMonsterCount = 0;
-		
-		}
+            _currentStateType = EBattleStateType.NoGaming;
+            _currentState = _battleStates[_currentStateType];
+        }
 
-		public void OnDestroy() {
-			
+        public void OnCreate() { }
 
-			RtInfo.ClearAll();
-			ActorManager.Instance.ClearAllActor();
-			
-			MonsterGeneratorLogic.CurMonsterCount = 0;
-		}
+        public void EnterGround()
+        {
+            switchState(EBattleStateType.LoadBattleGround);
+            MonsterGeneratorLogic.CurMonsterCount = 0;
+        }
 
-		public bool TryGetSaveFile(out BattleSaveFile saveFile) {
-			saveFile = null;
-			if (SaveFileDict == null) {
-				return false;
-			}
+        public void OnDestroy()
+        {
+            RtInfo.ClearAll();
+            ActorManager.Instance.ClearAllActor();
 
-			return SaveFileDict.BattleSaveFiles.TryGetValue(BattleGroundConfigId, out saveFile);
-		}
+            MonsterGeneratorLogic.CurMonsterCount = 0;
+        }
 
-		private void switchState(EBattleStateType nextStateType) {
-			//Debug.Log($"[BattleState] switchState Next {nextStateType}");
-			_nextStateType = nextStateType;
-		}
+        public bool TryGetSaveFile(out BattleSaveFile saveFile)
+        {
+            saveFile = null;
+            return false;
+        }
 
-		public bool TryGetTeamPoint(int teamIdx, out Vector3 centerPos) {
-			if (!_teamRefreshPoint.TryGetValue(teamIdx, out var pointUid) || pointUid <= 0) {
-				return _birthPoint.TryGetValue(teamIdx, out centerPos);
-			}
+        private void switchState(EBattleStateType nextStateType)
+        {
+            //Debug.Log($"[BattleState] switchState Next {nextStateType}");
+            _nextStateType = nextStateType;
+        }
 
-			if (!ActorManager.Instance.TryGetActor(pointUid, out var point)) {
-				return _birthPoint.TryGetValue(teamIdx, out centerPos);
-			}
+        public bool TryGetTeamPoint(int teamIdx, out Vector3 centerPos)
+        {
+            if (!_teamRefreshPoint.TryGetValue(teamIdx, out var pointUid) || pointUid <= 0)
+            {
+                return _birthPoint.TryGetValue(teamIdx, out centerPos);
+            }
 
-			centerPos = point.Pos;
-			return true;
-		}
+            if (!ActorManager.Instance.TryGetActor(pointUid, out var point))
+            {
+                return _birthPoint.TryGetValue(teamIdx, out centerPos);
+            }
 
-		public void AddTeamRefreshPoint(int teamIdx, int uid) {
-			if (!_teamRefreshPoint.TryGetValue(teamIdx, out var pointUid) || pointUid <= 0) {
-				_teamRefreshPoint.Add(teamIdx, uid);
-			}
-			else {
-				_teamRefreshPoint[teamIdx] = uid;
-				ActorManager.Instance.RemoveActor(pointUid);
-			}
-		}
+            centerPos = point.Pos;
+            return true;
+        }
 
-		public void Tick(float dt) {
-			
-			ActorManager.Instance.Tick(dt);
+        public void AddTeamRefreshPoint(int teamIdx, int uid)
+        {
+            if (!_teamRefreshPoint.TryGetValue(teamIdx, out var pointUid) || pointUid <= 0)
+            {
+                _teamRefreshPoint.Add(teamIdx, uid);
+            }
+            else
+            {
+                _teamRefreshPoint[teamIdx] = uid;
+                ActorManager.Instance.RemoveActor(pointUid);
+            }
+        }
 
-			if (_currentState == null) return;
+        public void Tick(float dt)
+        {
+            ActorManager.Instance.Tick(dt);
 
-			_currentState.Tick(dt);
+            if (_currentState == null) return;
 
-			if (_currentStateType != _nextStateType) {
-				_currentState.Exit();
-				_currentState = _battleStates[_nextStateType];
-				_currentStateType = _nextStateType;
-				_currentState.Enter();
-			}
-		}
+            _currentState.Tick(dt);
 
-		public void RoundBegin() {
-			if (_currentState.StateType != EBattleStateType.Playing) {
-				return;
-			}
+            if (_currentStateType != _nextStateType)
+            {
+                _currentState.Exit();
+                _currentState = _battleStates[_nextStateType];
+                _currentStateType = _nextStateType;
+                _currentState.Enter();
+            }
+        }
 
-			((GameRunningState)_currentState).RoundBegin();
-		}
+        public void RoundBegin()
+        {
+            if (_currentState.StateType != EBattleStateType.Playing)
+            {
+                return;
+            }
 
-		public void BuildTeam(PawnTeamDataList dataList) {
-			_pawnTeamController.BuildTeam(dataList);
-		}
-	}
+            ((GameRunningState)_currentState).RoundBegin();
+        }
+
+        public void BuildTeam(PawnTeamDataList dataList)
+        {
+            _pawnTeamController.BuildTeam(dataList);
+        }
+    }
 }

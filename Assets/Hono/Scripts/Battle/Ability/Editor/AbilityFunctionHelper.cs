@@ -28,7 +28,7 @@ namespace Editor.BattleEditor.AbilityEditor
         
         private static Dictionary<string, FuncInfo> _funcInfoDict;
 
-        private static Dictionary<EParameterValueType, List<FuncInfo>> _funcInfoTypeDict;
+        private static Dictionary<EParamValueType, List<FuncInfo>> _funcInfoTypeDict;
 
         public class EventEditorInfo
         {
@@ -58,7 +58,7 @@ namespace Editor.BattleEditor.AbilityEditor
             return _funcInfoDict.TryGetValue(funcName, out funcInfo);
         }
         
-        public static List<FuncInfo> GetFuncInfosByType(EParameterValueType type)
+        public static List<FuncInfo> GetFuncInfosByType(EParamValueType type)
         {
             return _funcInfoTypeDict[type];
         }
@@ -104,41 +104,41 @@ namespace Editor.BattleEditor.AbilityEditor
             throw new InvalidCastException("类型转换失败");
         }
         
-        public static EParameterValueType GetParameterValueType(this Type type)
+        public static EParamValueType GetParameterValueType(this Type type)
         {
             if (type == typeof(int))
             {
-                return EParameterValueType.Int;
+                return EParamValueType.Int;
             }
             if (type == typeof(bool))
             {
-                return EParameterValueType.Bool;
+                return EParamValueType.Bool;
             }
             if (type == typeof(float))
             {
-                return EParameterValueType.Float;
+                return EParamValueType.Float;
             }
             if (type == typeof(string))
             {
-                return EParameterValueType.String;
+                return EParamValueType.String;
             }
             /*if (type == typeof(List<int>))
             {
                 return EParameterValueType.IntList;
             }*/
             if (type == typeof(object)) {
-	            return EParameterValueType.Object;
+	            return EParamValueType.Object;
             }
             if (type.IsEnum)
             {
-                return EParameterValueType.Enum;
+                return EParamValueType.Enum;
             }
             if (type.IsSerializable && type.IsClass)
             {
-                return EParameterValueType.Custom;
+                return EParamValueType.Custom;
             }
 
-            return EParameterValueType.Any;
+            return EParamValueType.Any;
         }
 
         public static void Init()
@@ -151,7 +151,7 @@ namespace Editor.BattleEditor.AbilityEditor
         {
             _funcInfoDict = new Dictionary<string, FuncInfo>();   
             _funcInfoTypeDict = new();
-            _funcInfoTypeDict.Add(EParameterValueType.Any, new List<FuncInfo>());
+            _funcInfoTypeDict.Add(EParamValueType.Any, new List<FuncInfo>());
 
             Type type = typeof(AbilityFunctionDefine);
 
@@ -190,7 +190,7 @@ namespace Editor.BattleEditor.AbilityEditor
                 _funcInfoDict.Add(method.Name, info);
 
                 var valueType = method.ReturnType.GetParameterValueType();
-                if (valueType != EParameterValueType.Any)
+                if (valueType != EParamValueType.Any)
                 {
                     if (!_funcInfoTypeDict.TryGetValue(valueType, out var funcInfos))
                     {
@@ -199,7 +199,7 @@ namespace Editor.BattleEditor.AbilityEditor
                     }
                     funcInfos.Add(info);
                 }
-                _funcInfoTypeDict[EParameterValueType.Any].Add(info);
+                _funcInfoTypeDict[EParamValueType.Any].Add(info);
             }
         }
 

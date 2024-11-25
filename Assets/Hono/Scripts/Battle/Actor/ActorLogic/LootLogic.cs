@@ -1,45 +1,45 @@
 #region
 
-using System.Collections.Generic;
-using UnityEngine;
-using Random = System.Random;
-
 #endregion
 
-namespace Hono.Scripts.Battle {
-	/// <summary>
-	/// 战利品
-	/// </summary>
-	public class LootLogic : ActorLogic, IAPoolObject {
-		private LootSetting _lootSetting;
+namespace Hono.Scripts.Battle
+{
+    /// <summary>
+    /// 战利品
+    /// </summary>
+    public class LootLogic : ActorLogic, IAPoolObject
+    {
+        private LootSetting _lootSetting;
 
-		public void OnPawnPickUp(int actorUid) {
-			/*
-			//拾取特效
-			if (!ActorManager.Instance.GetActor(actorUid, out var pawn)) {
-				ActorManager.Instance.RemoveActor(Uid);
-				return;
-			}
-			
-			if (pawn.Logic.TryGetComponent<VFXComp>(out var comp)) {
-				var setting = new VFXSetting() {
-					VFXBindType = EVFXType.InWorld,
-					Duration = 1,
-					Offset = new SVector3(0, 0.5f, 0),
-					VFXPath =
-						"Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_PickupCast.prefab"
-				};
+        public void OnPawnPickUp(int actorUid)
+        {
+            /*
+            //拾取特效
+            if (!ActorManager.Instance.GetActor(actorUid, out var pawn)) {
+                ActorManager.Instance.RemoveActor(Uid);
+                return;
+            }
 
-				comp.AddVFXObject(setting);
-			}
-			*/
+            if (pawn.Logic.TryGetComponent<VFXComp>(out var comp)) {
+                var setting = new VFXSetting() {
+                    VFXBindType = EVFXType.InWorld,
+                    Duration = 1,
+                    Offset = new SVector3(0, 0.5f, 0),
+                    VFXPath =
+                        "Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_PickupCast.prefab"
+                };
 
-			ActorManager.Instance.RemoveActor(Uid);
-			BattleManager.CurBattle.LootController.CreateRougeCards(actorUid);
-		}
+                comp.AddVFXObject(setting);
+            }
+            */
 
-		public override void RecycleLogicObject() {
-			AObjectPool<LootLogic>.Pool.Recycle(this);
-		}
-	}
+            ActorManager.Instance.RemoveActor(Uid);
+            BattleManager.CurBattle.LootController.CreateRougeCards(actorUid);
+        }
+
+        public override void RecycleLogicObject()
+        {
+            AObjectPool<LootLogic>.Pool.Recycle(this);
+        }
+    }
 }
