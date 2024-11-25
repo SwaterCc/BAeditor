@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Hono.Scripts.Battle.Base
 {
     [Serializable]
-    public class RefVector3 : IARef, IAPoolObject
+    public class RefVector3 : ARef , IAPoolObject
     {
         public float x;
         public float y;
@@ -107,13 +107,18 @@ namespace Hono.Scripts.Battle.Base
             return $"({x}, {y}, {z})";
         }
 
-        public IARef DeepCopy()
+        public override ARef DeepCopy()
         {
-            var vec3 = AObjectPool<RefVector3>.Pool.Rent();
+            var vec3 = APool<RefVector3>.Pool.Rent();
             vec3.x = x;
             vec3.y = y;
             vec3.z = z;
             return vec3;
+        }
+
+        public override void ARefRecycle()
+        {
+            APool<RefVector3>.Pool.Recycle(this);
         }
 
         public void OnRecycle()

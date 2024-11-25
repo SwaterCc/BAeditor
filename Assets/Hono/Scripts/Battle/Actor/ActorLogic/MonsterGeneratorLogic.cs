@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle
 
         public override void RecycleLogicObject()
         {
-            AObjectPool<MonsterGeneratorLogic>.Pool.Recycle(this);
+            APool<MonsterGeneratorLogic>.Pool.Recycle(this);
         }
 
         protected override void OnChildRecycle()

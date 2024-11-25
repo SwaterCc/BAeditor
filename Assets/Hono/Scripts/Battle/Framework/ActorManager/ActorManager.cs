@@ -100,7 +100,7 @@ namespace Hono.Scripts.Battle
         /// <returns></returns>
         private Actor getActor(in EActorType type, in int configId, in ActorModel actorModel, Action<Actor> callback)
         {
-            Actor actor = AObjectPool<Actor>.Pool.Rent();
+            Actor actor = APool<Actor>.Pool.Rent();
             bool res = false;
             int uid = 0;
             bool needGenerateUid = true;
@@ -143,7 +143,7 @@ namespace Hono.Scripts.Battle
             if (!res)
             {
                 Debug.LogError("创建Actor失败");
-                AObjectPool<Actor>.Pool.Recycle(actor);
+                APool<Actor>.Pool.Recycle(actor);
                 return null;
             }
 
@@ -187,7 +187,7 @@ namespace Hono.Scripts.Battle
                 {
                     actor.ExitScene();
                     _runningActorList.RemoveSwapBack(actor);
-                    AObjectPool<Actor>.Pool.Recycle(actor);
+                    APool<Actor>.Pool.Recycle(actor);
                 }
 
                 _removeList.Clear();
@@ -227,7 +227,7 @@ namespace Hono.Scripts.Battle
             foreach (Actor actor in _runningActorList)
             {
                 actor.ExitScene();
-                AObjectPool<Actor>.Pool.Recycle(actor);
+                APool<Actor>.Pool.Recycle(actor);
             }
 
             _runningActorList.Clear();

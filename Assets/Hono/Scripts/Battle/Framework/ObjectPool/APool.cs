@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle
@@ -15,7 +16,7 @@ namespace Hono.Scripts.Battle
         int GetReferenceCount();
     }
     
-    public class AObjectPool<T> : IAPool where T : class, IAPoolObject, new()
+    public class APool<T> : IAPool where T : class, IAPoolObject, new()
     {
         /// <summary>
         /// 稳定池
@@ -43,23 +44,23 @@ namespace Hono.Scripts.Battle
         private float _duration;
 
         // 泛型类型的单例实例
-        private static AObjectPool<T> _instance;
+        private static APool<T> _instance;
 
         // 获取单例实例的方法
-        public static AObjectPool<T> Pool
+        public static APool<T> Pool
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new AObjectPool<T>();
+                    _instance = new APool<T>();
                 }
 
                 return _instance;
             }
         }
 
-        private AObjectPool()
+        private APool()
         {
             _pool = new Queue<T>(100);
             _tempPool = new Queue<T>(15);
@@ -88,6 +89,11 @@ namespace Hono.Scripts.Battle
             return obj;
         }
         
+        public void Recycle(IAPoolObject obj)
+        {
+            Recycle((T)obj);
+        }
+        
         public void Recycle(in T obj)
         {
             if (obj is IAPoolRefCount refCountObj)
@@ -109,6 +115,11 @@ namespace Hono.Scripts.Battle
             {
                 _pool.Enqueue(obj);
             }
+        }
+
+        public Type GetPoolType()
+        {
+            return typeof(T);
         }
 
         public void Tick(float dt)

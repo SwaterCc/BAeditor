@@ -7,7 +7,7 @@ using System;
 namespace Hono.Scripts.Battle.Base
 {
     [Serializable]
-    public class RefFloat : IARef, IAPoolObject
+    public class RefFloat : ARef, IAPoolObject
     {
         public float Value;
 
@@ -20,11 +20,6 @@ namespace Hono.Scripts.Battle.Base
         {
             Value = initialValue;
         }
-
-        // 显式转换到 RefInt 注意会产生新的对象
-        /*public static explicit operator RefInt(RefFloat refFloat) {
-            return new RefInt((int)refFloat.Value);
-        }*/
 
         // 隐式转换到 float
         public static implicit operator float(RefFloat refFloat)
@@ -95,11 +90,16 @@ namespace Hono.Scripts.Battle.Base
             return a.Value <= b.Value;
         }
 
-        public IARef DeepCopy()
+        public override ARef DeepCopy()
         {
-            RefFloat rInt = AObjectPool<RefFloat>.Pool.Rent();
+            RefFloat rInt = APool<RefFloat>.Pool.Rent();
             rInt.Value = Value;
             return rInt;
+        }
+
+        public override void ARefRecycle()
+        {
+            APool<RefFloat>.Pool.Recycle(this);
         }
 
         public void OnRecycle()

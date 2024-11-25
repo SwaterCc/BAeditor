@@ -48,18 +48,18 @@ namespace Hono.Scripts.Battle
                 return null;
             }
 
-            Ability ability = AObjectPool<Ability>.Pool.Rent();
+            Ability ability = APool<Ability>.Pool.Rent();
             if (!ability.Init(_actor, id))
             {
                 Debug.LogError($"Ability {id} Init failed!");
-                AObjectPool<Ability>.Pool.Recycle(ability);
+                APool<Ability>.Pool.Recycle(ability);
                 return null;
             }
 
             if (!_searchDict.TryAdd(ability.Id, ability))
             {
                 Debug.LogError($"Ability {id} Add failed!");
-                AObjectPool<Ability>.Pool.Recycle(ability);
+                APool<Ability>.Pool.Recycle(ability);
                 return null;
             }
 
@@ -83,7 +83,7 @@ namespace Hono.Scripts.Battle
                 }
 
                 _runningList.RemoveSwapBack(ability);
-                AObjectPool<Ability>.Pool.Recycle(ability);
+                APool<Ability>.Pool.Recycle(ability);
             }
 
             _removeList.Clear();
@@ -110,7 +110,7 @@ namespace Hono.Scripts.Battle
             _removeList.Clear();
             foreach (var ability in _runningList)
             {
-                AObjectPool<Ability>.Pool.Recycle(ability);
+                APool<Ability>.Pool.Recycle(ability);
             }
 
             _runningList.Clear();

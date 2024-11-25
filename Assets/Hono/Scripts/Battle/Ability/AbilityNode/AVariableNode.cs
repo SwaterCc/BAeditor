@@ -30,6 +30,7 @@ namespace Hono.Scripts.Battle
                         return;
                     }
                 }
+                
                 //这里的目标是持有
                 AContext.Vairables.Set(Data.Name, variable);
 
@@ -38,7 +39,7 @@ namespace Hono.Scripts.Battle
 
             public override void Recycle()
             {
-                AObjectPool<AVariableNode>.Pool.Recycle(this);
+                APool<AVariableNode>.Pool.Recycle(this);
             }
         }
     }

@@ -15,7 +15,7 @@ namespace Hono.Scripts.Battle
 
             public override void Recycle()
             {
-                AObjectPool<ARepeatNode>.Pool.Recycle(this);
+                APool<ARepeatNode>.Pool.Recycle(this);
             }
 
             public override void DoJob()

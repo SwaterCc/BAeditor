@@ -34,7 +34,7 @@ namespace Hono.Scripts.Battle
                             return false;
                         }
 
-                        PawnLogic pawnLogic = AObjectPool<PawnLogic>.Pool.Rent();
+                        PawnLogic pawnLogic = APool<PawnLogic>.Pool.Rent();
                         pawnLogic.PawnLogicRow = pawnLogicRow;
                         logic = pawnLogic;
                         modelId = pawnLogicRow.ModelId;
@@ -46,7 +46,7 @@ namespace Hono.Scripts.Battle
                             return false;
                         }
 
-                        MonsterLogic monsterLogic = AObjectPool<MonsterLogic>.Pool.Rent();
+                        MonsterLogic monsterLogic = APool<MonsterLogic>.Pool.Rent();
                         monsterLogic.MonsterConfig = monsterLogicRow;
                         logic = monsterLogic;
                         modelId = monsterLogicRow.ModelId;
@@ -58,7 +58,7 @@ namespace Hono.Scripts.Battle
                             return false;
                         }
 
-                        BuildingLogic buildingLogic = AObjectPool<BuildingLogic>.Pool.Rent();
+                        BuildingLogic buildingLogic = APool<BuildingLogic>.Pool.Rent();
                         buildingLogic.BuildingConfig = buildingLogicRow;
                         logic = buildingLogic;
                         modelId = buildingLogicRow.Model;
@@ -106,13 +106,13 @@ namespace Hono.Scripts.Battle
                 switch (actor.ActorType)
                 {
                     case EActorType.Bullet:
-                        logic = AObjectPool<BulletLogic>.Pool.Rent();
+                        logic = APool<BulletLogic>.Pool.Rent();
                         break;
                     case EActorType.HitBox:
-                        logic = AObjectPool<HitBoxLogic>.Pool.Rent();
+                        logic = APool<HitBoxLogic>.Pool.Rent();
                         break;
                     case EActorType.Loot:
-                        logic = AObjectPool<LootLogic>.Pool.Rent();
+                        logic = APool<LootLogic>.Pool.Rent();
                         break;
                     default:
                         Debug.LogError("非法ActorType");
@@ -135,13 +135,13 @@ namespace Hono.Scripts.Battle
                 switch (actor.ActorType)
                 {
                     case EActorType.BattleLevelController:
-                        logic = AObjectPool<BattleController>.Pool.Rent();
+                        logic = APool<BattleController>.Pool.Rent();
                         break;
                     case EActorType.MonsterGenerator:
-                        logic = AObjectPool<MonsterGeneratorLogic>.Pool.Rent();
+                        logic = APool<MonsterGeneratorLogic>.Pool.Rent();
                         break;
                     case EActorType.TriggerBox:
-                        logic = AObjectPool<TriggerBoxLogic>.Pool.Rent();
+                        logic = APool<TriggerBoxLogic>.Pool.Rent();
                         break;
                     default:
                         Debug.LogError("非法ActorType");

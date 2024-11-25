@@ -33,7 +33,7 @@ namespace Hono.Scripts.Battle
 
             public override void Recycle()
             {
-                AObjectPool<ABranchNode>.Pool.Recycle(this);
+                APool<ABranchNode>.Pool.Recycle(this);
             }
         }
     }

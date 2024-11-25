@@ -56,7 +56,7 @@ namespace Hono.Scripts.Battle
 
                 if (!Buffs.TryGetValue(buffConfigId, out var buff))
                 {
-                    buff = AObjectPool<Buff>.Pool.Rent();
+                    buff = APool<Buff>.Pool.Rent();
                     buff.OnRent(ActorLogic, sourceActorId, buffData);
                     Buffs.Add(buff.ConfigId, buff);
                 }
@@ -64,8 +64,8 @@ namespace Hono.Scripts.Battle
                 {
                     if (CheckReplace(buff, buffData, sourceActorId))
                     {
-                        AObjectPool<Buff>.Pool.Recycle(buff);
-                        buff = AObjectPool<Buff>.Pool.Rent();
+                        APool<Buff>.Pool.Recycle(buff);
+                        buff = APool<Buff>.Pool.Rent();
                         buff.OnRent(ActorLogic, sourceActorId, buffData);
                         Buffs[buffConfigId] = buff;
                     }
@@ -111,7 +111,7 @@ namespace Hono.Scripts.Battle
                 if (Buffs.TryGetValue(buffConfigId, out var buff))
                 {
                     Buffs.Remove(buffConfigId);
-                    AObjectPool<Buff>.Pool.Recycle(buff);
+                    APool<Buff>.Pool.Recycle(buff);
                 }
             }
 

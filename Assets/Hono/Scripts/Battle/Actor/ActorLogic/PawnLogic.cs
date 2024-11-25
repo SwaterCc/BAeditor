@@ -84,7 +84,7 @@
 
         public override void RecycleLogicObject()
         {
-            AObjectPool<PawnLogic>.Pool.Recycle(this);
+            APool<PawnLogic>.Pool.Recycle(this);
         }
     }
 }

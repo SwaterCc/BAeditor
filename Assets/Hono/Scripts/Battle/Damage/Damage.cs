@@ -69,7 +69,7 @@ namespace Hono.Scripts.Battle
             foreach (var addiId in _damageRow.AdditiveId)
             {
                 var damageAddi = ConfigManager.Table<DamageAdditiveTable>().Get(addiId);
-                var funcInfo = AObjectPool<DamageFuncInfo>.Pool.Rent();
+                var funcInfo = APool<DamageFuncInfo>.Pool.Rent();
                 funcInfo.ValueFuncName = damageAddi.ApplyFuncName;
                 funcInfo.ConditionIds = damageAddi.ConditionIds;
                 funcInfo.ConditionParams = damageAddi.ConditionParams;
@@ -81,7 +81,7 @@ namespace Hono.Scripts.Battle
             foreach (var multiId in _damageRow.MultiplyId)
             {
                 var damageMultiply = ConfigManager.Table<DamageMultiplyTable>().Get(multiId);
-                var funcInfo = AObjectPool<DamageFuncInfo>.Pool.Rent();
+                var funcInfo = APool<DamageFuncInfo>.Pool.Rent();
                 funcInfo.ValueFuncName = damageMultiply.ApplyFuncName;
                 funcInfo.ConditionIds = damageMultiply.ConditionIds;
                 funcInfo.ConditionParams = damageMultiply.ConditionParams;
@@ -146,7 +146,7 @@ namespace Hono.Scripts.Battle
             _damageConfig.Clear();
             foreach (var info in _recyclePools)
             {
-                AObjectPool<DamageFuncInfo>.Pool.Recycle(info);
+                APool<DamageFuncInfo>.Pool.Recycle(info);
             }
 
             _recyclePools.Clear();

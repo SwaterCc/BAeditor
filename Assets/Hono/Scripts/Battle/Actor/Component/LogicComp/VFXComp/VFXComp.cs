@@ -32,7 +32,7 @@ namespace Hono.Scripts.Battle
 
             public int AddVFXObject(VFXSetting setting)
             {
-                var vfxObj = AObjectPool<VFXObject>.Pool.Rent();
+                var vfxObj = APool<VFXObject>.Pool.Rent();
                 vfxObj.OnRent(IDGenerator.GenerateId(), setting);
 
                 switch (setting.VFXBindType)
@@ -80,7 +80,7 @@ namespace Hono.Scripts.Battle
             protected void onRemove(VFXObject obj)
             {
                 _vfxes.Remove(obj.Uid);
-                AObjectPool<VFXObject>.Pool.Recycle(obj);
+                APool<VFXObject>.Pool.Recycle(obj);
                 VFXRemove?.Invoke(obj);
             }
 

@@ -26,7 +26,7 @@ namespace Hono.Scripts.Battle.Base
         {
             if (!_attrs.TryGetValue(attrType, out Attr attr))
             {
-                attr = AObjectPool<Attr>.Pool.Rent();
+                attr = APool<Attr>.Pool.Rent();
                 _attrs.Add(attrType, attr);
             }
 
@@ -39,7 +39,7 @@ namespace Hono.Scripts.Battle.Base
 
             if (!_attrs.TryGetValue(attrTypeInt, out var attr))
             {
-                attr = AObjectPool<Attr>.Pool.Rent();
+                attr = APool<Attr>.Pool.Rent();
                 _attrs.Add(attrTypeInt, attr);
             }
 

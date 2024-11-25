@@ -81,33 +81,33 @@ namespace Hono.Scripts.Battle
                 switch (data.NodeType)
                 {
                     case EAbilityNodeType.EAbilityCycle:
-                        node = AObjectPool<ACycleNode>.Pool.Rent();
+                        node = APool<ACycleNode>.Pool.Rent();
                         break;
                     case EAbilityNodeType.EBranchControl:
-                        node = AObjectPool<ABranchNode>.Pool.Rent();
+                        node = APool<ABranchNode>.Pool.Rent();
                         break;
                     case EAbilityNodeType.EVariableSetter:
-                        node = AObjectPool<AVariableNode>.Pool.Rent();
+                        node = APool<AVariableNode>.Pool.Rent();
                         break;
                     case EAbilityNodeType.ERepeat:
-                        node = AObjectPool<ARepeatNode>.Pool.Rent();
+                        node = APool<ARepeatNode>.Pool.Rent();
                         break;
                     case EAbilityNodeType.EAction:
-                        node = AObjectPool<AActionNode>.Pool.Rent();
+                        node = APool<AActionNode>.Pool.Rent();
                         break;
                     case EAbilityNodeType.EAttrSetter:
-                        node = AObjectPool<AAttrNode>.Pool.Rent();
+                        node = APool<AAttrNode>.Pool.Rent();
                         break;
                     case EAbilityNodeType.EGroup:
-                        node = AObjectPool<AGroupNode>.Pool.Rent();
+                        node = APool<AGroupNode>.Pool.Rent();
                         AGroupNode groupNode = (AGroupNode)node;
                         Groups.Add(groupNode.Data.groupId, groupNode);
                         break;
                     case EAbilityNodeType.ETimer:
-                        node = AObjectPool<ATimerNode>.Pool.Rent();
+                        node = APool<ATimerNode>.Pool.Rent();
                         break;
                     case EAbilityNodeType.EEvent:
-                        node = AObjectPool<AEventNode>.Pool.Rent();
+                        node = APool<AEventNode>.Pool.Rent();
                         _eventNodeList.Add((AEventNode)node);
                         break;
                     default:

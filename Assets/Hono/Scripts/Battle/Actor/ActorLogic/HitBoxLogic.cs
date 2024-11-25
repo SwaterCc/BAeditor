@@ -166,7 +166,7 @@ namespace Hono.Scripts.Battle
 
         public override void RecycleLogicObject()
         {
-            AObjectPool<HitBoxLogic>.Pool.Recycle(this);
+            APool<HitBoxLogic>.Pool.Recycle(this);
         }
 
         protected override void OnChildRecycle()

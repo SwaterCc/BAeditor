@@ -45,7 +45,7 @@ namespace Hono.Scripts.Battle.Base
         // 会产生池对象
         public static explicit operator RefInt(Attr attr)
         {
-            RefInt refInt = AObjectPool<RefInt>.Pool.Rent();
+            RefInt refInt = APool<RefInt>.Pool.Rent();
             refInt.Value = attr.Get();
             return refInt;
         }

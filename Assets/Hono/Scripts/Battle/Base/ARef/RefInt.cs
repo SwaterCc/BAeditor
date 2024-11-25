@@ -7,7 +7,7 @@ using System;
 namespace Hono.Scripts.Battle.Base
 {
     [Serializable]
-    public class RefInt : IARef, IAPoolObject, IAPoolRefCount
+    public class RefInt : ARef, IAPoolObject
     {
         public int Value;
 
@@ -105,32 +105,22 @@ namespace Hono.Scripts.Battle.Base
             return a.Value <= b.Value;
         }
 
-        public IARef DeepCopy()
+        public override ARef DeepCopy()
         {
-            RefInt rInt = AObjectPool<RefInt>.Pool.Rent();
+            RefInt rInt = APool<RefInt>.Pool.Rent();
             rInt.Value = Value;
             return rInt;
+        }
+
+        public override void ARefRecycle()
+        {
+            APool<RefInt>.Pool.Recycle(this);
         }
 
         public void OnRecycle()
         {
             Value = 0;
             _refCount = 0;
-        }
-
-        public void AddReference()
-        {
-            ++_refCount;
-        }
-
-        public void RemoveReference()
-        {
-            --_refCount;
-        }
-
-        public int GetReferenceCount()
-        {
-            return _refCount;
         }
     }
 }

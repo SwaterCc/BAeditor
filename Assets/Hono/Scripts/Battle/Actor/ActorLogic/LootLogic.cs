@@ -39,7 +39,7 @@ namespace Hono.Scripts.Battle
 
         public override void RecycleLogicObject()
         {
-            AObjectPool<LootLogic>.Pool.Recycle(this);
+            APool<LootLogic>.Pool.Recycle(this);
         }
     }
 }

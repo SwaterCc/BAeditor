@@ -95,7 +95,7 @@ namespace Hono.Scripts.Battle
 
         public override void RecycleLogicObject()
         {
-            AObjectPool<BarrackLogic>.Pool.Recycle(this);
+            APool<BarrackLogic>.Pool.Recycle(this);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
 
 namespace Hono.Scripts.Battle
@@ -7,8 +8,8 @@ namespace Hono.Scripts.Battle
         public abstract class AFunctionWrap
         {
             public int ParamCount { get; protected set; }
-
-            public bool Invoke(Ability caller, AParamsParser.AFuncParams @params, out object value)
+            
+            public bool Invoke(Ability caller, AFuncParams @params, out object value)
             {
                 ARunningTime.UpdateContext(caller);
                 var result = OnInvoke(caller, @params, out value);
@@ -16,17 +17,19 @@ namespace Hono.Scripts.Battle
                 return result;
             }
 
-            protected abstract bool OnInvoke(Ability caller, AParamsParser.AFuncParams @param, out object value);
+            protected abstract bool OnInvoke(Ability caller, AFuncParams @param, out object value);
         }
+        
         //@Auto
         public class AFuncWrap_GetBuffLayer : AFunctionWrap
         {
+            public int ParamCount { get; protected set; }
             public AFuncWrap_GetBuffLayer()
             {
                 ParamCount = 2;
             }
 
-            protected override bool OnInvoke(Ability caller, AParamsParser.AFuncParams @params, out object value)
+            protected override bool OnInvoke(Ability caller, AFuncParams @params, out object value)
             {
                 value = null;
                 if (@params.Count <= ParamCount)
@@ -38,7 +41,7 @@ namespace Hono.Scripts.Battle
 
                 RefInt param1 = @params.Pop<RefInt>();
 
-                var result = AObjectPool<RefInt>.Pool.Rent();
+                var result = APool<RefInt>.Pool.Rent();
 
                 result.Value = AbilityFunctionDefine.GetBuffLayer(param0, param1);
                 value = result;

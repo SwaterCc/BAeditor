@@ -7,9 +7,12 @@ using System;
 namespace Hono.Scripts.Battle.Base
 {
     [Serializable]
-    public class RefBool : IARef, IAPoolObject
+    public class RefBool : ARef, IAPoolObject
     {
         public bool Value;
+        private int _refCount;
+
+        public RefBool() { }
 
         public RefBool(bool initialValue = false)
         {
@@ -18,12 +21,19 @@ namespace Hono.Scripts.Battle.Base
 
         public void OnRecycle()
         {
-            throw new NotImplementedException();
+            Value = false;
         }
 
-        public IARef DeepCopy()
+        public override ARef DeepCopy()
         {
-            throw new NotImplementedException();
+            RefBool rInt = APool<RefBool>.Pool.Rent();
+            rInt.Value = Value;
+            return rInt;
+        }
+
+        public override void ARefRecycle()
+        {
+            APool<RefBool>.Pool.Recycle(this);
         }
 
         // 隐式转换到 bool

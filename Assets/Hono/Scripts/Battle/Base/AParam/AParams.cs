@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 #endregion
 
@@ -44,14 +46,14 @@ namespace Hono.Scripts.Battle.Base
         public EParamValueType valueType;
         
         /// <summary>
-        /// SimpaleValue
+        /// 基础类型需要包装
         /// </summary>
-        public IARef value; //基础数值，
+        public object value;
 
         public AParams() { }
 
         /// <summary>
-        ///     拷贝构造函数
+        /// 拷贝构造函数
         /// </summary>
         /// <param name="aParams"></param>
         public AParams(in AParams aParams)
@@ -72,7 +74,7 @@ namespace Hono.Scripts.Battle.Base
                 }
             }
 
-            value = aParams.value.DeepCopy();
+            value = aParams.DeepCopy();
             variableName = aParams.variableName;
             attrType = aParams.attrType;
         }
@@ -90,6 +92,17 @@ namespace Hono.Scripts.Battle.Base
             value = temp.value;
             variableName = temp.variableName;
             attrType = temp.attrType;
+        }
+        
+        public AParams DeepCopy()
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(memoryStream, this);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return (AParams)formatter.Deserialize(memoryStream);
+            }
         }
 
         public override string ToString()

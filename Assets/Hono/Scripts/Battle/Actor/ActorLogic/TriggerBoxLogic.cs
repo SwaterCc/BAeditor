@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle
 
         public override void RecycleLogicObject()
         {
-            AObjectPool<TriggerBoxLogic>.Pool.Recycle(this);
+            APool<TriggerBoxLogic>.Pool.Recycle(this);
         }
     }
 }

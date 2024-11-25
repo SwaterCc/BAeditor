@@ -65,17 +65,13 @@ namespace Hono.Scripts.Battle.Base
             return _collection.GetValueOrDefault(name);
         }
 
-        public T Get<T>(in string key) where T : class
+        public T Get<T>(string key) where T : class
         {
+            //需要处理引用计数
             throw new NotImplementedException();
         }
 
-        public void Set<T>(in string key, in T value) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public T Change<T>(in string key, in T changeValue) where T : class
+        public void Set<T>(string key, in T value) where T : class
         {
             throw new NotImplementedException();
         }

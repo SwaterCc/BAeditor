@@ -55,7 +55,7 @@ namespace Hono.Scripts.Battle
 
                 foreach (KeyValuePair<int, Skill> skill in Skills)
                 {
-                    AObjectPool<Skill>.Pool.Recycle(skill.Value);
+                    APool<Skill>.Pool.Recycle(skill.Value);
                 }
 
                 Skills.Clear();
@@ -73,7 +73,7 @@ namespace Hono.Scripts.Battle
 
                 foreach (KeyValuePair<int, Skill> skill in Skills)
                 {
-                    AObjectPool<Skill>.Pool.Recycle(skill.Value);
+                    APool<Skill>.Pool.Recycle(skill.Value);
                 }
 
                 Skills.Clear();
@@ -105,7 +105,7 @@ namespace Hono.Scripts.Battle
             /// <param name="level"></param>
             public void LearnSkill(int skillId, int level)
             {
-                Skill skill = AObjectPool<Skill>.Pool.Rent();
+                Skill skill = APool<Skill>.Pool.Rent();
                 skill.OnRent(ActorLogic, skillId, level);
                 if (!Skills.TryAdd(skillId, skill))
                 {
@@ -121,7 +121,7 @@ namespace Hono.Scripts.Battle
             {
                 if (Skills.Remove(skillId, out Skill skill))
                 {
-                    AObjectPool<Skill>.Pool.Recycle(skill);
+                    APool<Skill>.Pool.Recycle(skill);
                 }
             }
 

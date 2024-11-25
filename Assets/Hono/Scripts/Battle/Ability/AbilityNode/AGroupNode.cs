@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
 
             public override void Recycle()
             {
-                AObjectPool<AGroupNode>.Pool.Recycle(this);
+                APool<AGroupNode>.Pool.Recycle(this);
             }
 
             public void GroupEnter()

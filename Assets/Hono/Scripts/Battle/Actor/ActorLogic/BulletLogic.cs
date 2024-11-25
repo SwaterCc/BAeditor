@@ -1,5 +1,6 @@
 #region
 
+using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
@@ -41,7 +42,7 @@ namespace Hono.Scripts.Battle
         protected override void onInit()
         {
             _bulletData = AssetManager.Instance.GetData<BulletData>(GetAttr(EAttrType.AttrConfigId));
-            _targetUid = (int)(Variables.Get("targetUid"));
+            _targetUid = (Variables.Get<RefInt>("targetUid"));
             _attacker = ActorManager.Instance.GetActor(GetAttr(EAttrType.AttrSourceActorUid));
             _attacker.ExitSceneCallBack += setBulletExpire;
 
@@ -141,7 +142,7 @@ namespace Hono.Scripts.Battle
 
         public override void RecycleLogicObject()
         {
-            AObjectPool<BulletLogic>.Pool.Recycle(this);
+            APool<BulletLogic>.Pool.Recycle(this);
         }
     }
 }

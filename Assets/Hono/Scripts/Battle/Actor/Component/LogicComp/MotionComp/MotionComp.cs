@@ -58,7 +58,7 @@ namespace Hono.Scripts.Battle
                 }
 
                 var uid = _idGenerator.GenerateId();
-                var motion = AObjectPool<Motion>.Pool.Rent();
+                var motion = APool<Motion>.Pool.Rent();
                 motion.OnRent(uid, ActorLogic, moveTarget, motionSetting, moveCallBack);
                 _motionDict.Add(uid, motion);
                 return uid;
@@ -69,7 +69,7 @@ namespace Hono.Scripts.Battle
                 if (_motionDict.TryGetValue(uid, out var motion))
                 {
                     motion.MoveEnd();
-                    AObjectPool<Motion>.Pool.Recycle(motion);
+                    APool<Motion>.Pool.Recycle(motion);
                     _removeList.Add(uid);
                 }
             }
@@ -129,7 +129,7 @@ namespace Hono.Scripts.Battle
             {
                 foreach (var pMotion in _motionDict)
                 {
-                    AObjectPool<Motion>.Pool.Recycle(pMotion.Value);
+                    APool<Motion>.Pool.Recycle(pMotion.Value);
                 }
 
                 _motionDict.Clear();

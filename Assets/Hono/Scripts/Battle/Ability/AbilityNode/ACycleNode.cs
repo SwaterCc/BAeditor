@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle
 
             public override void Recycle()
             {
-                AObjectPool<ACycleNode>.Pool.Recycle(this);
+                APool<ACycleNode>.Pool.Recycle(this);
             }
         }
     }
