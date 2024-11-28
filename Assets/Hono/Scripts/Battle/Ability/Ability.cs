@@ -79,7 +79,7 @@ namespace Hono.Scripts.Battle
                 return false;
             }
 
-            Id = Data.ID;
+            Id = Data.id;
             TimeScaleFactory = 1;
             Vairables.SetParent(actor.Variables);
             TagCollection.SetParent(actor.TagCollection);

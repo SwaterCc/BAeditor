@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
 
         private bool _isExpire;
         private readonly Damage _damage;
-        private FilterSetting _filterSetting;
+        private RangeFilterSetting _rangeFilterSetting;
         private List<int> _aoeTargetIds = new(32);
         private readonly Dictionary<BeHurtComp, int> _hitCountDict = new(16);
         private readonly List<BeHurtComp> _hurtComps = new(32);
@@ -62,7 +62,7 @@ namespace Hono.Scripts.Battle
         {
             _curCount = 0;
             _intervalDuration = _hitBoxData.Interval;
-            _filterSetting = _hitBoxData.FilterSetting;
+            _rangeFilterSetting = _hitBoxData.rangeFilterSetting;
             Self.Pos = _target.Pos;
             Self.Rot = _attacker.Rot;
         }
@@ -122,7 +122,7 @@ namespace Hono.Scripts.Battle
         private void aoeHit()
         {
             //aoe会根据目标坐标二次筛选
-            ActorManager.Instance.UseFilter(Self, _filterSetting, ref _aoeTargetIds);
+            ActorManager.Instance.UseFilter(Self, _rangeFilterSetting, ref _aoeTargetIds);
 
             if (_aoeTargetIds.Count == 0)
             {
@@ -181,7 +181,7 @@ namespace Hono.Scripts.Battle
 
             _isExpire = false;
 
-            _filterSetting = null;
+            _rangeFilterSetting = null;
             _aoeTargetIds.Clear();
             _hitCountDict.Clear();
             _hurtComps.Clear();

@@ -247,9 +247,9 @@ namespace Hono.Scripts.Battle
                 var skill = pSkill.Value;
                 if (!skill.IsEnable)
                     continue;
-                if (skill.SkillData.SkillType == ESkillType.PassiveSkill)
+                if (skill.SkillData.skillType == ESkillType.PassiveSkill)
                     continue;
-                if (skill.SkillData.SkillType == ESkillType.UltimateSkill &&
+                if (skill.SkillData.skillType == ESkillType.UltimateSkill &&
                     !BattleManager.CurBattle.RtInfo.OpenAutoUlt)
                     continue;
                 if (_skillComp.TryUseSkill(skill.Id))

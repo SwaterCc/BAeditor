@@ -39,16 +39,11 @@ namespace Hono.Scripts.Battle.Base
         /// 属性类型
         /// </summary>
         public EAttrType attrType;
-
-        /// <summary>
-        /// 变量类型
-        /// </summary>
-        public EParamValueType valueType;
         
         /// <summary>
         /// 基础类型需要包装
         /// </summary>
-        public object value;
+        public object Value;
 
         public AParams() { }
 
@@ -74,7 +69,7 @@ namespace Hono.Scripts.Battle.Base
                 }
             }
 
-            value = aParams.DeepCopy();
+            Value = aParams.DeepCopy();
             variableName = aParams.variableName;
             attrType = aParams.attrType;
         }
@@ -89,7 +84,7 @@ namespace Hono.Scripts.Battle.Base
             paramType = temp.paramType;
             funcName = temp.funcName;
             funcParams = temp.funcParams;
-            value = temp.value;
+            Value = temp.Value;
             variableName = temp.variableName;
             attrType = temp.attrType;
         }
@@ -112,7 +107,7 @@ namespace Hono.Scripts.Battle.Base
             switch (paramType)
             {
                 case EParamType.Simple:
-                    desc = value == null ? "null" : value.ToString();
+                    desc = Value == null ? "null" : Value.ToString();
                     break;
                 case EParamType.Function:
                     if (string.IsNullOrEmpty(funcName))

@@ -94,7 +94,7 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// 废弃，后续采用索敌组件
             /// </summary>
-            private FilterSetting _skillTargetSetting;
+            private RangeFilterSetting _skillTargetSetting;
 
             /// <summary>
             /// cd数据
@@ -111,6 +111,11 @@ namespace Hono.Scripts.Battle
             /// </summary>
             public Ability Ability { get; private set; }
 
+            /// <summary>
+            /// 技能的目标
+            /// </summary>
+            public List<int> SkillTargetIdList;
+
             public void OnRent(ActorLogic logic, int skillId, int level)
             {
                 SkillData = AssetManager.Instance.GetData<SkillData>(skillId);
@@ -122,12 +127,12 @@ namespace Hono.Scripts.Battle
                 _isDisable = false;
                 _isExecuting = false;
 
-                _skillTargetSetting = SkillData.CustomFilter;
+               
 
                 Ability = Logic.Self.Abilities.AwardAbility(Id);
                 Ability.AddCycleCallback(EAbilityCycle.PreExecute, onAbilityBegin);
                 Ability.AddCycleCallback(EAbilityCycle.EndExecute, onAbilityEnd);
-                if (SkillData.SkillType != ESkillType.PassiveSkill)
+                if (SkillData.skillType != ESkillType.PassiveSkill)
                 {
                     Ability.Execute();
                 }
@@ -144,17 +149,17 @@ namespace Hono.Scripts.Battle
             private void onAbilityBegin()
             {
                 _isExecuting = true;
-                if (SkillData.SkillType != ESkillType.PassiveSkill && SkillData.SkillType != ESkillType.RogueSkill)
+                if (SkillData.skillType != ESkillType.PassiveSkill && SkillData.skillType != ESkillType.EffectSkill)
                 {
                     Logic._stateMachine.SwitchState(EActorStateType.Attack);
                 }
 
-                if (SkillData.CostType == EResCostType.BeforeExecute)
+                if (SkillData.costTimingType == EResCostTimingType.BeforeExecute)
                 {
                     costResource();
                 }
 
-                if (SkillData.EcdMode == ECDMode.BeforeExecute)
+                if (SkillData.enterCdType == EEnterCdType.BeforeExecute)
                 {
                     CdBegin();
                 }
@@ -170,17 +175,17 @@ namespace Hono.Scripts.Battle
             {
                 _isExecuting = false;
 
-                if (SkillData.CostType == EResCostType.AfterExecute)
+                if (SkillData.costTimingType == EResCostTimingType.AfterExecute)
                 {
                     costResource();
                 }
 
-                if (SkillData.EcdMode == ECDMode.AfterExecute)
+                if (SkillData.enterCdType == EEnterCdType.AfterExecute)
                 {
                     CdBegin();
                 }
 
-                if (SkillData.SkillType != ESkillType.PassiveSkill && SkillData.SkillType != ESkillType.RogueSkill)
+                if (SkillData.skillType != ESkillType.PassiveSkill && SkillData.skillType != ESkillType.EffectSkill)
                 {
                     Logic._stateMachine.SwitchState(EActorStateType.Idle);
                 }
@@ -222,7 +227,7 @@ namespace Hono.Scripts.Battle
             /// </summary>
             private void calculateCd()
             {
-                _realCd = SkillData.SkillCD;
+               // _realCd = SkillData.skillCD;
             }
 
             /// <summary>
@@ -274,13 +279,13 @@ namespace Hono.Scripts.Battle
             /// </summary>
             private void checkResource()
             {
-                if (SkillData.SkillResCheck.Count == 0)
+                if (SkillData.skillResCheck.Count == 0)
                 {
                     _resEnough = true;
                     return;
                 }
 
-                foreach (var resItems in SkillData.SkillResCheck)
+                foreach (var resItems in SkillData.skillResCheck)
                 {
                     foreach (var resItem in resItems.Items)
                     {
@@ -306,7 +311,7 @@ namespace Hono.Scripts.Battle
             /// </summary>
             private void costResource()
             {
-                foreach (var resItems in SkillData.SkillResCost)
+                foreach (var resItems in SkillData.skillResCost)
                 {
                     //组检测
                     foreach (var resItem in resItems.Items)
@@ -358,7 +363,7 @@ namespace Hono.Scripts.Battle
 
                 var targetUids = new List<int>();
 
-                //选敌
+                /*//选敌
                 if (!SkillData.SelectSelf)
                 {
                     ActorManager.Instance.UseFilter(Logic.Self, _skillTargetSetting, ref targetUids);
@@ -366,14 +371,14 @@ namespace Hono.Scripts.Battle
                 else
                 {
                     targetUids.Add(Logic.Uid);
-                }
+                }*/
 
                 if (targetUids.Count > 0)
                 {
                     Debug.Log($"[UseSkill] Actor{Logic.Uid} -->执行了技能 {Ability.Id}");
                     Ability.Execute();
 
-                    if (SkillData.ForceFaceTarget)
+                    /*if (SkillData.ForceFaceTarget)
                     {
                         if (ActorManager.Instance.TryGetActor(targetUids[0], out var target))
                         {
@@ -381,7 +386,7 @@ namespace Hono.Scripts.Battle
                             dir.y = 0;
                             Logic.Self.Rot = Quaternion.FromToRotation(Vector3.forward, dir);
                         }
-                    }
+                    }*/
 
                     checkResource();
                 }
@@ -398,17 +403,7 @@ namespace Hono.Scripts.Battle
             {
                 _isDisable = value;
             }
-
-            public static bool operator <(Skill control1, Skill control2)
-            {
-                return control1.SkillData.PriorityATK > control2.SkillData.PriorityDEF;
-            }
-
-            public static bool operator >(Skill control1, Skill control2)
-            {
-                return control1.SkillData.PriorityDEF > control2.SkillData.PriorityATK;
-            }
-
+            
             public void OnRecycle()
             {
                 Id = 0;

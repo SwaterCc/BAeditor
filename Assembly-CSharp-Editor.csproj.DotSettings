@@ -5,4 +5,15 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ceditor_005Cabilityeditor_005Cabilitycycledraw/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ceditor_005Cabilityeditor_005Clogicdrawer/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ceditor_005Cbattleeditor_005Cabilityeditor_005Cabilitycycledraw/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ceditor_005Cbattleeditor_005Cabilityeditor_005Clogicdrawer/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Ceditor_005Cbattleeditor_005Cabilityeditor_005Clogicdrawer/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Cabilityeditorsetting/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Cabilityeditorsetting_005Cabilityhierarchy/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Cabilityeditor_005Ceditormenuitem/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Cabilityeditor_005Ceditorsetting/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Ceditormenuitem/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Ceditorsetting_005Cabilityhierarchy/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Ceditorsetting/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Cpowereditor_005Ceditormenuitem/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Cpowereditor_005Ceditorsetting/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Cpppowereditor_005Ceditormenuitem/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ceditor_005Cpppowereditor_005Ceditorsetting/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

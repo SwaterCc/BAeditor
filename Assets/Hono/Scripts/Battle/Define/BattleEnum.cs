@@ -259,11 +259,26 @@ namespace Hono.Scripts.Battle
     /// </summary>
     public enum ESkillType
     {
-        NormalSkill,
+        /// <summary>
+        /// 普通攻击
+        /// </summary>
+        NormalAttack,
+        /// <summary>
+        /// 武器技能
+        /// </summary>
         WeaponSkill,
+        /// <summary>
+        /// 终极技能
+        /// </summary>
         UltimateSkill,
+        /// <summary>
+        /// 被动技能
+        /// </summary>
         PassiveSkill,
-        RogueSkill,
+        /// <summary>
+        /// 效果技能（定义暂时不明，没有和被动技能做出区别）
+        /// </summary>
+        EffectSkill,
     }
 
     /// <summary>
@@ -329,16 +344,18 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    ///     技能目标类型
+    /// 技能目标选择方式
     /// </summary>
-    public enum ESkillTargetType
+    public enum ESkillTargetSelectType
     {
-        Enemy,
-        Self,
-        Friendly,
-        Team,
-        Group,
-        All
+        /// <summary>
+        /// 指向技能
+        /// </summary>
+        TargetedSkill,
+        /// <summary>
+        /// 非指向技能
+        /// </summary>
+        NoTargetedSkill,
     }
 
     /// <summary>
@@ -357,9 +374,9 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    ///     cd模式
+    /// cd模式
     /// </summary>
-    public enum ECDMode
+    public enum EEnterCdType
     {
         BeforeExecute,
         AfterExecute
@@ -368,7 +385,7 @@ namespace Hono.Scripts.Battle
     /// <summary>
     ///     资源消耗时机
     /// </summary>
-    public enum EResCostType
+    public enum EResCostTimingType
     {
         BeforeExecute,
         AfterExecute
@@ -476,7 +493,7 @@ namespace Hono.Scripts.Battle
         MoreAndEqual
     }
 
-    public enum EFilterRangeType
+    public enum EFilterConditionType
     {
         Tag,
         ActorState,

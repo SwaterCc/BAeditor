@@ -14,7 +14,7 @@ namespace Hono.Scripts.Battle
 {
     public interface IDataHelper { }
 
-    public class DataHelper<T> : IDataHelper where T : ScriptableObject, IAllowedIndexing
+    public class DataHelper<T> : IDataHelper where T :  ASerializableData
     {
         private readonly Dictionary<int, T> _assets = new();
         private readonly Dictionary<int, string> _paths = new Dictionary<int, string>();
@@ -160,7 +160,7 @@ namespace Hono.Scripts.Battle
             _isLoadFinish = true;
         }
 
-        private bool addLoadTask<T>(ref List<UniTask> tasks, string root) where T : ScriptableObject, IAllowedIndexing
+        private bool addLoadTask<T>(ref List<UniTask> tasks, string root) where T :  ASerializableData
         {
             if (TryGetAllAssetPaths(root, out var paths))
             {
@@ -201,7 +201,7 @@ namespace Hono.Scripts.Battle
             return true;
         }
 
-        private async UniTask loadPathAllAssets<T>(List<string> paths) where T : ScriptableObject, IAllowedIndexing
+        private async UniTask loadPathAllAssets<T>(List<string> paths) where T : ASerializableData
         {
             var key = typeof(T);
             if (_assetDict.ContainsKey(key))
@@ -231,13 +231,13 @@ namespace Hono.Scripts.Battle
         }
 
         public static async UniTask<bool> loadAsset<T>(DataHelper<T> helper, string path)
-            where T : ScriptableObject, IAllowedIndexing
+            where T :  ASerializableData
         {
             try
             {
                 path = path.Replace("\\", "/");
                 var data = await Addressables.LoadAssetAsync<T>(path).ToUniTask();
-                helper.AddData(data.ID, path, data);
+                helper.AddData(data.id, path, data);
             }
             catch (InvalidKeyException)
             {
@@ -282,7 +282,7 @@ namespace Hono.Scripts.Battle
             _reloadHandles.Remove(reloadHandle);
         }
 
-        public async UniTask ReloadAsset<T>(int id) where T : ScriptableObject, IAllowedIndexing
+        public async UniTask ReloadAsset<T>(int id) where T : ASerializableData
         {
 #if UNITY_EDITOR
             if (_assetDict.TryGetValue(typeof(T), out var iHelper) && iHelper is DataHelper<T> dataHelper)
@@ -301,7 +301,7 @@ namespace Hono.Scripts.Battle
 #endif
         }
 
-        public T GetData<T>(int id) where T : ScriptableObject, IAllowedIndexing
+        public T GetData<T>(int id) where T : ASerializableData
         {
             if (_assetDict.TryGetValue(typeof(T), out var idataHelper) && idataHelper is DataHelper<T> dataHelper)
             {
@@ -314,7 +314,7 @@ namespace Hono.Scripts.Battle
             return null;
         }
 
-        public bool TryGetData<T>(int id, out T data) where T : ScriptableObject, IAllowedIndexing
+        public bool TryGetData<T>(int id, out T data) where T : ASerializableData
         {
             data = null;
             if (_assetDict.TryGetValue(typeof(T), out var idataHelper) && idataHelper is DataHelper<T> dataHelper)

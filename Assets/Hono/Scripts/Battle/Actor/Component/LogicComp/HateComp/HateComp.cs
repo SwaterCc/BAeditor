@@ -15,7 +15,7 @@ namespace Hono.Scripts.Battle
         public class HateComp : AComponent
         {
             private float _duration;
-            private FilterSetting _setting;
+            private RangeFilterSetting _setting;
             private int _hateUid;
             private bool _isReturnTeam;
             private List<int> _hateUids = new(32);
@@ -23,13 +23,13 @@ namespace Hono.Scripts.Battle
 
             public override void Init()
             {
-                _setting = new FilterSetting()
+                _setting = new RangeFilterSetting()
                 {
                     OpenBoxCheck = true,
                     BoxData = new CheckBoxData() { ShapeType = ECheckBoxShapeType.Sphere, Radius = 10, },
-                    Ranges = new List<FilterRange>() { new() { RangeType = EFilterRangeType.Faction, Value = 2 }, },
-                    FilterFunctionType = EFilterFunctionType.Near,
-                    MaxTargetCount = 1,
+                   // Ranges = new List<FilterCondition>() { new() { conditionType = EFilterConditionType.Faction, value = 2 }, },
+                   // FilterFunctionType = EFilterFunctionType.Near,
+                    maxResultCount = 1,
                 };
             }
 

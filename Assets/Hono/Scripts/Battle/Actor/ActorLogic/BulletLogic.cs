@@ -74,7 +74,7 @@ namespace Hono.Scripts.Battle
             };
 
             _motionComp.AddMotion(_targetUid, motionSetting, onBulletCollision);
-            var ability = Self.Abilities.AwardAbility(_bulletData.Id);
+            var ability = Self.Abilities.AwardAbility(_bulletData.id);
             ability.Execute();
         }
 
@@ -85,10 +85,10 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            if (!ActorManager.Instance.CheckActorPassFilter(Self, uid, _bulletData.FilterSetting))
+            /*if (!ActorManager.Instance.CheckActorPassFilter(Self, uid, _bulletData.rangeFilterSetting))
             {
                 return;
-            }
+            }*/
 
             if (_bulletData.IsHitPathActor)
             {

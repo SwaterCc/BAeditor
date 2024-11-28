@@ -50,7 +50,7 @@ namespace Hono.Scripts.Battle.Base
             switch (aParams.paramType)
             {
                 case EParamType.Simple:
-                    objectValue = aParams.value;
+                    objectValue = aParams.Value;
                     break;
                 case EParamType.Function:
                     if (!aParams.TryCallFunction(ability, out objectValue))
@@ -84,7 +84,7 @@ namespace Hono.Scripts.Battle.Base
             switch (aParams.paramType)
             {
                 case EParamType.Simple:
-                    value = aParams.value;
+                    value = aParams.Value;
                     break;
                 case EParamType.Function:
                     if (!aParams.TryCallFunction(ability, out value))

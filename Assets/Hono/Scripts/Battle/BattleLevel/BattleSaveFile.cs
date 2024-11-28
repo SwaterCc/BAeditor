@@ -9,13 +9,13 @@ namespace Hono.Scripts.Battle
 {
     public class BattleSaveFile
     {
-        private static FilterSetting _buildingFilter = new()
+        private static RangeFilterSetting _buildingRangeFilter = new()
         {
             OpenBoxCheck = false,
-            Ranges = new List<FilterRange>()
+            /*Ranges = new List<FilterCondition>()
             {
-                new() { RangeType = EFilterRangeType.ActorType, Value = (int)EActorType.Building, }
-            }
+                new() { conditionType = EFilterConditionType.ActorType, value = (int)EActorType.Building, }
+            }*/
         };
 
 

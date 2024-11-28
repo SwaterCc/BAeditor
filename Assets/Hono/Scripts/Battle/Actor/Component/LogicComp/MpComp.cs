@@ -46,7 +46,7 @@ namespace Hono.Scripts.Battle
                 var useSkillInfo = (UsedSkillEventInfo)info;
                 var skillData = AssetManager.Instance.GetData<SkillData>(useSkillInfo.SkillId);
                 if (skillData == null) return;
-                if (skillData.SkillType == ESkillType.UltimateSkill) return;
+                if (skillData.skillType == ESkillType.UltimateSkill) return;
 
                 var maxMp = Self.GetAttr(EAttrType.AttrMaxMp);
                 var curMp = Self.GetAttr(EAttrType.AttrMp);

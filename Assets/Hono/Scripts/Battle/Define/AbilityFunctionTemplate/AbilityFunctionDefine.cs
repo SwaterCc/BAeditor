@@ -266,7 +266,7 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityFunction]
-        public static List<int> SelectTargets(int centerActorUid, FilterSetting setting)
+        public static List<int> SelectTargets(int centerActorUid, RangeFilterSetting setting)
         {
             List<int> actorUids = new();
             if (ARunningTime.TryGetActor(centerActorUid, out var actor))
@@ -278,7 +278,7 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityFunction]
-        public static void ResetActorTargets(int centerActorUid, FilterSetting setting)
+        public static void ResetActorTargets(int centerActorUid, RangeFilterSetting setting)
         {
             /*List<int> actorUids = new();
             if (ARunningTime.TryGetActor(centerActorUid, out var actor)) {

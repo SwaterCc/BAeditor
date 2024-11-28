@@ -14,7 +14,7 @@ namespace Hono.Scripts.Battle
     {
         private Filter _filter;
 
-        public void UseFilter(Actor filterUser, in FilterSetting setting, ref List<int> result)
+        public void UseFilter(Actor filterUser, in RangeFilterSetting setting, ref List<int> result)
         {
             if (setting == null)
             {
@@ -34,7 +34,7 @@ namespace Hono.Scripts.Battle
             _filter.GetResults(ref result);
         }
 
-        public bool CheckActorPassFilter(Actor filterUser, int checkActorUid, in FilterSetting setting)
+        public bool CheckActorPassFilter(Actor filterUser, int checkActorUid, in RangeFilterSetting setting)
         {
             _filter.SettingChange(filterUser, setting);
             return _filter.CheckPass(checkActorUid);
@@ -42,7 +42,7 @@ namespace Hono.Scripts.Battle
 
         private class Filter
         {
-            private FilterSetting _filterSetting;
+            private RangeFilterSetting _rangeFilterSetting;
             private Actor _filterUser;
             private readonly ActorManager _actorManager;
             private readonly List<Actor> _filterActors = new(32);
@@ -59,40 +59,40 @@ namespace Hono.Scripts.Battle
                 _checkBoxResult.Clear();
             }
 
-            public void SettingChange(in Actor filterUser, in FilterSetting setting)
+            public void SettingChange(in Actor filterUser, in RangeFilterSetting setting)
             {
-                _filterSetting = setting;
+                _rangeFilterSetting = setting;
                 _filterUser = filterUser;
             }
 
-            private bool rangeCheck(in Actor actor, in FilterRange range)
+            private bool rangeCheck(in Actor actor, in FilterCondition condition)
             {
                 bool checkResult = false;
-                switch (range.RangeType)
+                switch (condition.conditionType)
                 {
-                    case EFilterRangeType.ActorType:
-                        checkResult = (int)actor.ActorType == range.Value;
+                    case EFilterConditionType.ActorType:
+                        checkResult = (int)actor.ActorType == condition.value;
                         break;
-                    case EFilterRangeType.Tag:
-                        checkResult = actor.TagCollection.HasTag(range.Value, ETagSearchRange.Actor);
+                    case EFilterConditionType.Tag:
+                        checkResult = actor.TagCollection.HasTag(condition.value, ETagSearchRange.Actor);
                         break;
-                    case EFilterRangeType.ActorState:
-                        checkResult = actor.Logic.CurState() == (EActorStateType)range.Value;
+                    case EFilterConditionType.ActorState:
+                        checkResult = actor.Logic.CurState() == (EActorStateType)condition.value;
                         break;
-                    case EFilterRangeType.AbilityID:
-                        checkResult = actor.Abilities.HasAbility(range.Value);
+                    case EFilterConditionType.AbilityID:
+                        checkResult = actor.Abilities.HasAbility(condition.value);
                         break;
-                    case EFilterRangeType.Faction:
+                    case EFilterConditionType.Faction:
                         var f1 = _filterUser.GetAttr(EAttrType.AttrFaction);
                         var f2 = actor.GetAttr(EAttrType.AttrFaction);
-                        checkResult = LuaInterface.GetFaction(f1, f2) == range.Value;
+                        checkResult = LuaInterface.GetFaction(f1, f2) == condition.value;
                         break;
                     default:
-                        Debug.LogError($"使用了未实现的范围筛选 settingId {_filterUser.Uid} type {range.RangeType}");
+                        Debug.LogError($"使用了未实现的范围筛选 settingId {_filterUser.Uid} type {condition.conditionType}");
                         return false;
                 }
 
-                if (range.IsReverse)
+                if (condition.isReverse)
                     checkResult = !checkResult;
 
                 return checkResult;
@@ -124,19 +124,19 @@ namespace Hono.Scripts.Battle
 
             private bool checkActorPass(in Actor actor)
             {
-                foreach (var range in _filterSetting.Ranges)
+                foreach (var condition in _rangeFilterSetting.conditionFilterSetting.conditions)
                 {
-                    if (!rangeCheck(actor, range))
+                    if (!rangeCheck(actor, condition))
                     {
                         return false;
                     }
                 }
 
-                foreach (var compare in _filterSetting.Compares)
+                foreach (var compare in _rangeFilterSetting.conditionFilterSetting.attrCompares)
                 {
-                    var left = actor.GetAttr(compare.attrTypeType);
-                    int res = left.CompareTo((int)compare.CompareValue);
-                    if (!getCompareRes(compare.CompareResType, res))
+                    var left = actor.GetAttr(compare.attrType);
+                    int res = left.CompareTo((int)compare.compareValue);
+                    if (!getCompareRes(compare.compareResType, res))
                     {
                         return false;
                     }
@@ -148,20 +148,20 @@ namespace Hono.Scripts.Battle
             public void GetResults(ref List<int> result)
             {
                 Profiler.BeginSample("UseFilter");
-                if (_filterSetting == null)
+                if (_rangeFilterSetting == null)
                 {
                     Debug.LogError("筛选器设置为空");
                     return;
                 }
 
-                if (_filterSetting.OpenBoxCheck)
+                if (_rangeFilterSetting.OpenBoxCheck)
                 {
                     var pos = _filterUser.Pos;
                     var rot = _filterUser.Rot;
 
                     //bool show = _filterUser.GetAttr(ELogicAttr.AttrFaction) == 11;
 
-                    if (CommonUtility.HitRayCast(_filterSetting.BoxData, pos, rot, ref _checkBoxResult))
+                    if (CommonUtility.HitRayCast(_rangeFilterSetting.BoxData, pos, rot, ref _checkBoxResult))
                     {
                         foreach (var uid in _checkBoxResult)
                         {
@@ -179,7 +179,7 @@ namespace Hono.Scripts.Battle
                     _filterActors.AddRange(_actorManager._runningActorList);
                 }
 
-                if (!_filterSetting.HasSelf && _filterActors.Contains(_filterUser))
+                if (!_rangeFilterSetting.includeSelf && _filterActors.Contains(_filterUser))
                 {
                     _filterActors.Remove(_filterUser);
                 }
@@ -190,18 +190,18 @@ namespace Hono.Scripts.Battle
                         result.Add(actor.Uid);
                 }
 
-                if (_filterSetting.MaxTargetCount <= 0)
+                if (_rangeFilterSetting.maxResultCount <= 0)
                 {
                     return;
                 }
 
-                if (_filterSetting.MaxTargetCount >= result.Count)
+                if (_rangeFilterSetting.maxResultCount >= result.Count)
                 {
                     return;
                 }
 
                 //TODO:实现比较器，减少GC
-                switch (_filterSetting.FilterFunctionType)
+                switch (_rangeFilterSetting.filterFunctionType)
                 {
                     case EFilterFunctionType.LeastHp:
                         result.Sort((aUid, bUid) =>
@@ -270,7 +270,7 @@ namespace Hono.Scripts.Battle
 
                 for (int index = result.Count - 1; index > -1; index--)
                 {
-                    if (index > _filterSetting.MaxTargetCount - 1)
+                    if (index > _rangeFilterSetting.maxResultCount - 1)
                     {
                         result.RemoveAt(index);
                     }
