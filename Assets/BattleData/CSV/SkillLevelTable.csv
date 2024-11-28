@@ -1,0 +1,4 @@
+﻿Id,描述,Cd成长值,技能可释放区域半径成长值,最大命中数量成长,矩形筛选范围成长值,圆形筛选半径成长值,自定义参数
+Id,Desc,CdGrowth,RangeGrowth,HitCeilingGrowth,RectGrowth,RadiusGrowth,SkillParams
+int,string,float,float,int,floatArray,float,intArray
+1,,,,,,,
