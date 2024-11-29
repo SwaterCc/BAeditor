@@ -8,6 +8,32 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
 {
     public static class PowerEditorUIHelper
     {
+        private static readonly float _simpleFieldLineHeight = 25f;
+        private static float _simpleFieldLineHeightChangeValue = 0f;
+        private static int _fontSize = 18;
+        private static int _fontSizeChange = 0;
+        public static float SimpleFieldLineHeight
+        {
+            get => _simpleFieldLineHeightChangeValue > 0 ? _simpleFieldLineHeightChangeValue : _simpleFieldLineHeight;
+            set => _simpleFieldLineHeightChangeValue = value;
+        }
+        
+        public static int FontSize
+        {
+            get => _fontSizeChange > 0 ? _fontSizeChange : _fontSize;
+            set => _fontSizeChange = value;
+        }
+        
+        public static void ResetLineHeight()
+        {
+            _simpleFieldLineHeightChangeValue = 0;
+        }
+
+        public static void ResetFontSize()
+        {
+            _fontSizeChange = 0;
+        }
+        
         /// <summary>
         /// 绘制简单字段，支持类型string，int，bool，float，enum
         /// </summary>
@@ -44,10 +70,16 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
         /// <param name="label"></param>
         /// <param name="value">当前值</param>
         /// <param name="drawSplitLine">绘制分割线</param>
-        public static void DrawSimpleField<T>(ref T field, GUIContent label, object value, bool drawSplitLine = true)
+        public static void DrawSimpleField<T>(ref T field, GUIContent label, object value , bool drawSplitLine = true)
         {
-            var type = field.GetType();
+            var type = typeof(T);
             object temp = null;
+            
+            if (drawSplitLine)
+            {
+                SirenixEditorGUI.BeginListItem();
+            }
+            
             if (type == typeof(string))
             {
                 temp = SirenixEditorFields.TextField(label, (string)value);
@@ -66,7 +98,7 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
                     SirenixEditorFields.Dropdown(new GUIContent(""), value.ToString(), new[] { "true", "false" });
                 temp = bool.Parse(select);
             }
-            else if (type == typeof(Enum))
+            else if (type.IsEnum)
             {
                 temp = SirenixEditorFields.EnumDropdown(label, (Enum)value);
             }
@@ -75,7 +107,7 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
 
             if (drawSplitLine)
             {
-                SirenixEditorGUI.HorizontalLineSeparator();
+                SirenixEditorGUI.EndListItem();
             }
         }
 
@@ -83,18 +115,20 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
         /// 绘制Icon
         /// </summary>
         /// <param name="iconField"></param>
-        public static void DrawIconField(ref string iconField)
+        /// <param name="height"></param>
+        public static string DrawIconField(string iconField, float height = 33f)
         {
             // 尝试加载Sprite
             Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(iconField);
 
             // 绘制Sprite选择框
-            sprite = (Sprite)SirenixEditorFields.UnityObjectField(sprite, typeof(Sprite), false);
+            sprite = (Sprite)SirenixEditorFields.UnityObjectField(new GUIContent("Icon"),
+                sprite, typeof(Sprite), false);
 
             // 如果选择了新的Sprite，更新路径
-            if (sprite == null) return;
+            if (sprite == null) return "";
             string newPath = AssetDatabase.GetAssetPath(sprite);
-            iconField = newPath;
+            return newPath;
         }
         
         /// <summary>

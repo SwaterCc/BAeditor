@@ -8,6 +8,7 @@ namespace Editor.AbilityEditor
 {
     public abstract class AView
     {
+        public bool HasError { get; protected set; }
         public abstract void Load(string path);
         public abstract void Draw();
         public abstract void Save();
@@ -17,14 +18,20 @@ namespace Editor.AbilityEditor
     {
         private T _serializableData;
         public T Data => _serializableData;
-        
-        public sealed override void Load(string path)
+
+        public override void Load(string path)
         {
-            _serializableData = PowerEditorTools.GetSerializeAsset<T>(path);
+            _serializableData = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (_serializableData == null)
+            {
+                Debug.LogError(path + " Get File is Null");
+                HasError = true;
+            }
         }
 
         public override void Save()
         {
+            if (HasError) return;
             EditorUtility.SetDirty(_serializableData);
             AssetDatabase.SaveAssets();
         }
@@ -32,17 +39,16 @@ namespace Editor.AbilityEditor
 
     public class AViewDrawer<T> : OdinValueDrawer<T> where T : AView
     {
-        protected T View;
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-            View = ValueEntry.SmartValue;
-        }
-
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            View.Draw();
+            if (!ValueEntry.SmartValue.HasError)
+            {
+                ValueEntry.SmartValue.Draw();
+            }
+            else
+            {
+                EditorGUILayout.LabelField("加载出错");
+            }
         }
     }
 }

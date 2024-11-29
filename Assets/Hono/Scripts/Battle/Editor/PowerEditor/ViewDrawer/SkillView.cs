@@ -16,6 +16,15 @@ namespace Editor.AbilityEditor
 
         private AbilityView _abilityView;
 
+        public override void Load(string path)
+        {
+            base.Load(path);
+            if (Data.abilityId > 0)
+            {
+                _abilityView.Load(BattleEditorPath.AbilityRootPath + "/" + Data.abilityId + ".asset");
+            }
+        }
+
         #region 资源列表绘制
 
         /// <summary>
@@ -57,8 +66,8 @@ namespace Editor.AbilityEditor
                         (EBattleResourceType)SirenixEditorFields.EnumDropdown("消耗资源类型", item.ResourceType,
                                                                               GUILayout.Width(180));
                     EditorGUIUtility.labelWidth = 50;
-                    item.ResId                  = SirenixEditorFields.IntField("资源Id", item.ResId);
-                    item.Value                  = SirenixEditorFields.IntField("消耗数量", item.Value);
+                    item.ResId = SirenixEditorFields.IntField("资源Id", item.ResId);
+                    item.Value = SirenixEditorFields.IntField("消耗数量", item.Value);
                     EditorGUILayout.EndHorizontal();
                 }
 
@@ -97,19 +106,24 @@ namespace Editor.AbilityEditor
 
         private void DrawSkillView()
         {
+            SirenixEditorGUI.BeginBox("技能数据");
+
             float oldWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 140;
-            SirenixEditorGUI.BeginBox("技能数据");
-            PowerEditorUIHelper.DrawIconField(ref Data.skillIcon);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillName,             "技能名",    Data.skillName);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillDesc,             "技能描述",   Data.skillDesc);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillType,             "技能类型",   Data.skillType);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillTargetType,       "目标选择类型", Data.skillTargetType);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.enterCdType,           "进入cd时机", Data.enterCdType);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.speedOfRotateToTarget, "转向释放方向的速度",    Data.speedOfRotateToTarget);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillName,             "技能名",    Data.skillName);
-
+            SirenixEditorGUI.BeginVerticalList();
             
+            Data.skillIcon = PowerEditorUIHelper.DrawIconField(Data.skillIcon, 50f);
+            
+            PowerEditorUIHelper.DrawSimpleField(ref Data.skillName, "技能名",  Data.skillName);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.skillDesc, "技能描述", Data.skillDesc);
+            
+            PowerEditorUIHelper.DrawSimpleField(ref Data.skillType,       "技能类型",   Data.skillType);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.skillTargetType, "目标选择类型", Data.skillTargetType);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.enterCdType,     "进入cd时机", Data.enterCdType);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.speedOfRotateToTarget, "转向释放方向的速度",
+                                                Data.speedOfRotateToTarget);
+
+
             /*SirenixEditorGUI.HorizontalLineSeparator();
             Data.ForceFaceTarget = EditorGUILayout.Toggle("是否转向技能目标", Data.ForceFaceTarget);
             SirenixEditorGUI.HorizontalLineSeparator();
@@ -127,6 +141,8 @@ namespace Editor.AbilityEditor
                 (EResCostTimingType)SirenixEditorFields.EnumDropdown("战斗资源扣除时机", Data.costTimingType);
             SirenixEditorGUI.HorizontalLineSeparator();
             drawResList(Data.skillResCost, "扣除资源配置");*/
+            SirenixEditorGUI.EndVerticalList();
+
             SirenixEditorGUI.EndBox();
             EditorGUIUtility.labelWidth = oldWidth;
         }
@@ -134,8 +150,18 @@ namespace Editor.AbilityEditor
         public override void Draw()
         {
             SirenixEditorGUI.BeginHorizontalToolbar();
-            _isSkillDrawerTab   = SirenixEditorGUI.ToolbarTab(_isSkillDrawerTab,   "技能配置");
-            _isAbilityDrawerTab = SirenixEditorGUI.ToolbarTab(_isAbilityDrawerTab, "Ability");
+            if (SirenixEditorGUI.ToolbarTab(_isSkillDrawerTab, "技能配置"))
+            {
+                _isSkillDrawerTab = true;
+                _isAbilityDrawerTab = false;
+            }
+
+            if (SirenixEditorGUI.ToolbarTab(_isAbilityDrawerTab, "Ability"))
+            {
+                _isAbilityDrawerTab = true;
+                _isSkillDrawerTab = false;
+            }
+
             SirenixEditorGUI.EndHorizontalToolbar();
 
             if (_isSkillDrawerTab)
@@ -145,8 +171,10 @@ namespace Editor.AbilityEditor
 
             if (_isAbilityDrawerTab)
             {
-                _abilityView.Draw();
+                _abilityView?.Draw();
             }
         }
     }
+
+    public class SkillViewDrawer : AViewDrawer<SkillView> { }
 }

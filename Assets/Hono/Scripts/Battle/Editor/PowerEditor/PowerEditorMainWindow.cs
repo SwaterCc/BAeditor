@@ -22,7 +22,7 @@ namespace Editor.AbilityEditor
             var treeInstance = new OdinMenuTree(true);
             treeInstance.Config.DrawSearchToolbar = true;
 
-            List<PowerMenuItemBase> rootItems = new List<PowerMenuItemBase>()
+            List<ARootMenuItem> rootItems = new List<ARootMenuItem>()
             {
                 new SkillRootMenu(treeInstance, "Skill"),
                 //new BuffRootMenu(treeInstance, "Buff"),

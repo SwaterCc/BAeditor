@@ -5,9 +5,14 @@ using Sirenix.OdinInspector.Editor;
 
 namespace Hono.Scripts.Battle.Editor
 {
-    public class BulletRootMenu : ARootMenuItemBase
+    public class BulletRootMenu : ARootMenuItem
     {
         public BulletRootMenu(OdinMenuTree tree, string itemName) : base(tree, itemName,
             BattleEditorPath.PowerEditorRootPath + "/Bullet") { }
+
+        public override AView GetViewDrawer()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using Editor.AbilityEditor;
+using Editor.AbilityEditor.SimpleWindow;
+using Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -18,7 +20,8 @@ namespace Hono.Scripts.Battle.Editor
     {
         public enum EMenuItemOperation
         {
-            Create,
+            CreateFolder,
+            CreateFileItem,
             CopyIn,
             MoveIn,
             Delete,
@@ -27,20 +30,20 @@ namespace Hono.Scripts.Battle.Editor
         private readonly GenericMenu _rightMenu;
         private readonly Dictionary<EMenuItemOperation, bool> _rightMenuOperationFlags;
         private readonly Dictionary<EMenuItemOperation, GenericMenu.MenuFunction> _rightMenuOperationFunctions;
-        private bool _allowMove;
-        private bool _allowCopy;
-        
-        public string Path { get; set; }
 
-        protected PowerMenuItemBase(OdinMenuTree tree, string name, object view) : base(tree, name, view)
+        public string Path { get; }
+
+        public ARootMenuItem Root { get; set; }
+
+        protected PowerMenuItemBase(OdinMenuTree tree, string name, string path, object view) : base(tree, name, view)
         {
-            _allowMove = true;
-            _allowCopy = true;
+            Path = path;
             _rightMenu = new GenericMenu();
             OnRightClick += showMenu;
             _rightMenuOperationFlags = new Dictionary<EMenuItemOperation, bool>()
             {
-                { EMenuItemOperation.Create, true },
+                { EMenuItemOperation.CreateFolder, true },
+                { EMenuItemOperation.CreateFileItem, true },
                 { EMenuItemOperation.CopyIn, true },
                 { EMenuItemOperation.MoveIn, true },
                 { EMenuItemOperation.Delete, true },
@@ -48,23 +51,14 @@ namespace Hono.Scripts.Battle.Editor
 
             _rightMenuOperationFunctions = new Dictionary<EMenuItemOperation, GenericMenu.MenuFunction>()
             {
-                { EMenuItemOperation.Create, CreateItem },
+                { EMenuItemOperation.CreateFolder, CreateFolder },
+                { EMenuItemOperation.CreateFileItem, CreateFileItem },
                 { EMenuItemOperation.CopyIn, SelectionCopyToHere },
                 { EMenuItemOperation.MoveIn, SelectionMoveToHere },
                 { EMenuItemOperation.Delete, DeleteItem },
             };
         }
 
-        protected void SetAllowMove(bool allow)
-        {
-            _allowMove = allow;
-        }
-
-        protected void SetAllowCopy(bool allow)
-        {
-            _allowCopy = allow;
-        }
-        
         protected void SetOperationAllow(EMenuItemOperation operation, bool flag)
         {
             _rightMenuOperationFlags[operation] = flag;
@@ -75,7 +69,8 @@ namespace Hono.Scripts.Battle.Editor
         /// </summary>
         private void showMenu(OdinMenuItem item)
         {
-            addRightMenuItem(EMenuItemOperation.Create, "新建");
+            addRightMenuItem(EMenuItemOperation.CreateFileItem, "新建Power");
+            addRightMenuItem(EMenuItemOperation.CreateFolder, "新建文件夹");
             addRightMenuItem(EMenuItemOperation.CopyIn, "复制选中项到这里");
             addRightMenuItem(EMenuItemOperation.MoveIn, "移动选中项到这里");
             _rightMenu.AddDisabledItem(new GUIContent("-------------------"));
@@ -92,9 +87,20 @@ namespace Hono.Scripts.Battle.Editor
                 _rightMenu.AddDisabledItem(new GUIContent(label));
         }
 
-        protected virtual void CreateItem() { }
-        protected virtual void DeleteItem() { }
+        protected virtual void CreateFileItem()
+        {
+            CreateFileWindow.OpenWindow(this);
+        }
 
+        protected virtual void CreateFolder()
+        {
+            CreateFolderWindow.OpenWindow(this);
+        }
+
+        protected virtual void DeleteItem()
+        {
+            DeleteItemWindow.OpenWindow(this);
+        }
         protected virtual void SelectionCopyToHere()
         {
             /*List<AbilityEditorMenuItem> copyList = new List<AbilityEditorMenuItem>(MenuTree.Selection.Count);
@@ -102,55 +108,42 @@ namespace Hono.Scripts.Battle.Editor
             {
                 if (item is not AbilityEditorMenuItem aItem)
                 {
-                    continue;    
+                    continue;
                 }
 
                 if (!aItem._allowCopy)
                 {
                     continue;
                 }
-                
+
                 copyList.Add(aItem);
             }*/
         }
+
         protected virtual void SelectionMoveToHere() { }
-        
-
-        public virtual void BuildTree() { }
     }
 
-    public class AAbilityMenuItemBase : PowerMenuItemBase
-    {
-        public AAbilityMenuItemBase(OdinMenuTree tree, string name, AView view) : base(tree, name, view)
-        {
-            SetOperationAllow(EMenuItemOperation.Create, false);
-            SetOperationAllow(EMenuItemOperation.CopyIn, false);
-            SetOperationAllow(EMenuItemOperation.MoveIn, false);
-        }
-    }
-
-    public class AFolderMenuItemBase : PowerMenuItemBase
+    public abstract class ARootMenuItem : PowerMenuItemBase
     {
         private readonly List<string> _folders = new();
         private readonly List<string> _files = new();
-        
-        public AFolderMenuItemBase(OdinMenuTree tree, string name, string path) : base(tree, name, null)
+
+        protected ARootMenuItem(OdinMenuTree tree, string name, string path) : base(tree, name, path, null)
         {
-            Path = path;
+            Root = this;
             PowerEditorTools.GetPathAssetsAndFolders(path, ref _folders, ref _files);
+            SetOperationAllow(EMenuItemOperation.Delete, false);
         }
 
-        protected virtual AView getViewDrawer()
-        {
-            return new AbilityView();;
-        }
+        public abstract AView GetViewDrawer();
 
-        public override void BuildTree()
+        public void BuildTree()
         {
             foreach (var path in _folders)
             {
                 string menuName = System.IO.Path.GetFileName(path);
-                var folderMenuItem = new AFolderMenuItemBase(MenuTree, menuName, path);
+                var folderMenuItem = new AFolderMenuItem(MenuTree, menuName, path);
+                folderMenuItem.Root = this;
                 ChildMenuItems.Add(folderMenuItem);
                 folderMenuItem.BuildTree();
             }
@@ -158,23 +151,56 @@ namespace Hono.Scripts.Battle.Editor
             foreach (var path in _files)
             {
                 string menuName = System.IO.Path.GetFileName(path).Split(".")[0];
-                var view = getViewDrawer();
+                var view = GetViewDrawer();
                 view.Load(path);
-                var abilityMenuItem = new AAbilityMenuItemBase(MenuTree, menuName, view)
-                {
-                    Path = path
-                };
+                var abilityMenuItem = new PowerDataMenuItem(MenuTree, menuName, path, view);
+                abilityMenuItem.Root = this;
                 ChildMenuItems.Add(abilityMenuItem);
-                abilityMenuItem.BuildTree();
             }
         }
     }
 
-    public abstract class ARootMenuItemBase : AFolderMenuItemBase
+    public class AFolderMenuItem : PowerMenuItemBase
     {
-        protected ARootMenuItemBase(OdinMenuTree tree, string name, string path) : base(tree, name, path)
+        private readonly List<string> _folders = new();
+        private readonly List<string> _files = new();
+
+        public AFolderMenuItem(OdinMenuTree tree, string name, string path) : base(tree, name, path, null)
         {
-            SetOperationAllow(EMenuItemOperation.Delete, false);
+            PowerEditorTools.GetPathAssetsAndFolders(path, ref _folders, ref _files);
+        }
+
+        public void BuildTree()
+        {
+            foreach (var path in _folders)
+            {
+                string menuName = System.IO.Path.GetFileName(path);
+                var folderMenuItem = new AFolderMenuItem(MenuTree, menuName, path);
+                folderMenuItem.Root = Root;
+                ChildMenuItems.Add(folderMenuItem);
+                folderMenuItem.BuildTree();
+            }
+
+            foreach (var path in _files)
+            {
+                string menuName = System.IO.Path.GetFileName(path).Split(".")[0];
+                var view = Root.GetViewDrawer();
+                view.Load(path);
+                var abilityMenuItem = new PowerDataMenuItem(MenuTree, menuName, path, view);
+                abilityMenuItem.Root = Root;
+                ChildMenuItems.Add(abilityMenuItem);
+            }
+        }
+    }
+
+    public class PowerDataMenuItem : PowerMenuItemBase
+    {
+        public PowerDataMenuItem(OdinMenuTree tree, string name, string path, AView view) : base(tree, name, path, view)
+        {
+            SetOperationAllow(EMenuItemOperation.CreateFileItem, false);
+            SetOperationAllow(EMenuItemOperation.CreateFolder, false);
+            SetOperationAllow(EMenuItemOperation.CopyIn, false);
+            SetOperationAllow(EMenuItemOperation.MoveIn, false);
         }
     }
 }

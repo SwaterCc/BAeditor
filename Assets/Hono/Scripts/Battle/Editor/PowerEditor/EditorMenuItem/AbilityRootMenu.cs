@@ -4,8 +4,13 @@ using Sirenix.OdinInspector.Editor;
 
 namespace Hono.Scripts.Battle.Editor
 {
-    public class AbilityRootMenu : ARootMenuItemBase
-    { 
-        public AbilityRootMenu(OdinMenuTree tree) : base(tree, "其他", BattleEditorPath.PowerEditorRootPath + "/Other") { }
+    public class AbilityRootMenu : ARootMenuItem
+    {
+        public AbilityRootMenu(OdinMenuTree tree) : base(tree, "Ability", BattleEditorPath.AbilityRootPath) { }
+
+        public override AView GetViewDrawer()
+        {
+            return new AbilityView();
+        }
     }
 }

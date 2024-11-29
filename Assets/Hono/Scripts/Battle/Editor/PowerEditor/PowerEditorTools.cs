@@ -40,24 +40,7 @@ namespace Editor.AbilityEditor
 
             return assetFileNames;
         }
-
-        /// <summary>
-        /// 获取序列化数据，如果不存在则会创建一个
-        /// </summary>
-        /// <param name="path"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T GetSerializeAsset<T>(string path) where T : ScriptableObject
-        {
-           var data = AssetDatabase.LoadAssetAtPath<T>(path);
-            if (data == null)
-            {
-                data = ScriptableObject.CreateInstance<T>();
-                AssetDatabase.CreateAsset(data, path);
-            }
-
-            return data;
-        }
+        
         
         /// <summary>
         /// 指定路径获取该路径下的文件及文件夹
