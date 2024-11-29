@@ -21,10 +21,6 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public ESkillType skillType;
         /// <summary>
-        /// 技能目标选择范围
-        /// </summary>
-        public ESkillTargetSelectType skillTargetType;
-        /// <summary>
         /// 进入cd时机
         /// </summary>
         public EEnterCdType enterCdType;
@@ -48,6 +44,10 @@ namespace Hono.Scripts.Battle
         /// 转向技能释放方向的速度
         /// </summary>
         public float speedOfRotateToTarget;
+        /// <summary>
+        /// 技能目标选择范围
+        /// </summary>
+        public ESkillTargetSelectType skillTargetType;
         /// <summary>
         /// 一级过滤，对当前技能选出的目标进行筛选，指向性技能会在选择时生效，aoe技能则会影响存入的技能目标列表
         /// </summary>
