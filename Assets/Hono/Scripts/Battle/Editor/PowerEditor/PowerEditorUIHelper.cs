@@ -41,7 +41,7 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
         /// <param name="label"></param>
         /// <param name="value"></param>
         /// <param name="drawSplitLine"></param>
-        public static void DrawSimpleField<T>(ref T field, string label, object value, bool drawSplitLine = true)
+        public static void DrawSimpleField<T>(ref T field, string label, object value, bool drawSplitLine = false)
         {
             DrawSimpleField(ref field, new GUIContent(label), value, drawSplitLine);
         }
@@ -58,7 +58,7 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
             string label,
             string tooltip,
             object value,
-            bool drawSplitLine = true)
+            bool drawSplitLine = false)
         {
             DrawSimpleField(ref field, new GUIContent(label, tooltip), value, drawSplitLine);
         }
@@ -70,7 +70,7 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
         /// <param name="label"></param>
         /// <param name="value">当前值</param>
         /// <param name="drawSplitLine">绘制分割线</param>
-        public static void DrawSimpleField<T>(ref T field, GUIContent label, object value , bool drawSplitLine = true)
+        public static void DrawSimpleField<T>(ref T field, GUIContent label, object value , bool drawSplitLine = false)
         {
             var type = typeof(T);
             object temp = null;

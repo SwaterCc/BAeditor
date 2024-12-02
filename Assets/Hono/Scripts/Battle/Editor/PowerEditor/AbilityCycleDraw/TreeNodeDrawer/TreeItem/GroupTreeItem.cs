@@ -7,39 +7,39 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class GroupTreeItem : AbilityLogicTreeItem
+    public class GroupTreeItem : ACycleTreeItem
     {
         private new GroupNodeData _nodeData;
 
-        public GroupTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public GroupTreeItem(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
         {
             _nodeData = (GroupNodeData)base._nodeData;
         }
 
         protected override void buildMenu()
         {
-            _menu.AddItem(new GUIContent("´´½¨½Úµã/Ìí¼ÓAction"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/æ·»åŠ Action"), false,
                 AddChild, (EAbilityNodeType.EAction));
-            _menu.AddItem(new GUIContent("´´½¨½Úµã/Ìí¼ÓIf"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/æ·»åŠ If"), false,
                 AddChild, (EAbilityNodeType.EBranchControl));
-            _menu.AddItem(new GUIContent("´´½¨½Úµã/Set±äÁ¿"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/Setå˜é‡"), false,
                 AddChild, (EAbilityNodeType.EVariableSetter));
-            _menu.AddItem(new GUIContent("´´½¨½Úµã/SetAttr"), false,
+            _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/SetAttr"), false,
                 AddChild, (EAbilityNodeType.EAttrSetter));
 
             if (!checkHasParent(EAbilityNodeType.ERepeat))
             {
-                _menu.AddItem(new GUIContent("´´½¨½Úµã/´´½¨Repeat½Úµã"), false,
+                _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/åˆ›å»ºRepeatèŠ‚ç‚¹"), false,
                     AddChild, (EAbilityNodeType.ERepeat));
             }
 
             if (!checkHasParent(EAbilityNodeType.ETimer))
             {
-                _menu.AddItem(new GUIContent("´´½¨½Úµã/´´½¨Timer½Úµã"), false,
+                _menu.AddItem(new GUIContent("åˆ›å»ºèŠ‚ç‚¹/åˆ›å»ºTimerèŠ‚ç‚¹"), false,
                     AddChild, (EAbilityNodeType.ETimer));
             }
             
-            _menu.AddItem(new GUIContent("É¾³ı"), false,
+            _menu.AddItem(new GUIContent("åˆ é™¤"), false,
                 Remove);
         }
 
@@ -55,7 +55,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonTips()
         {
-            return "Group½ÚµãµÄ×Ó½Úµã ÊÇÔÚGroup±»µ÷ÓÃºóµÄÏÂÒ»Ö¡¿ªÊ¼Ö´ĞĞ";
+            return "GroupèŠ‚ç‚¹çš„å­èŠ‚ç‚¹ æ˜¯åœ¨Groupè¢«è°ƒç”¨åçš„ä¸‹ä¸€å¸§å¼€å§‹æ‰§è¡Œ";
         }
 
         protected override void OnBtnClicked(Rect btnRect)
@@ -78,10 +78,10 @@ namespace Editor.AbilityEditor.TreeItem
 
         private void OnGUI()
         {
-            SirenixEditorGUI.BeginBox("ÉèÖÃGroup");
-            _nodeData.groupId = SirenixEditorFields.IntField("½×¶ÎId", _nodeData.groupId);
+            SirenixEditorGUI.BeginBox("è®¾ç½®Group");
+            _nodeData.groupId = SirenixEditorFields.IntField("é˜¶æ®µId", _nodeData.groupId);
 
-            if (SirenixEditorGUI.Button("±£   ´æ", ButtonSizes.Large))
+            if (SirenixEditorGUI.Button("ä¿   å­˜", ButtonSizes.Large))
             {
                 Save();
             }

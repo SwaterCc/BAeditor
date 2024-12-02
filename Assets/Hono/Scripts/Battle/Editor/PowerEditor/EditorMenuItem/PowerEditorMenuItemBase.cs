@@ -4,6 +4,7 @@ using System.IO;
 using Editor.AbilityEditor;
 using Editor.AbilityEditor.SimpleWindow;
 using Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow;
+using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -36,7 +37,8 @@ namespace Hono.Scripts.Battle.Editor
 
         public PMenuRootItem Root { get; set; }
 
-        protected PowerEditorMenuItemBase(OdinMenuTree tree, string name, string path, object view) : base(tree, name, view)
+        protected PowerEditorMenuItemBase(OdinMenuTree tree, string name, string path, object view) : base(
+            tree, name, view)
         {
             Path = path;
             _rightMenu = new GenericMenu();
@@ -115,6 +117,7 @@ namespace Hono.Scripts.Battle.Editor
 
                 powerMenuItemBase.CopyTo(this);
             }
+
             MenuTree.UpdateMenuTree();
         }
 
@@ -132,6 +135,7 @@ namespace Hono.Scripts.Battle.Editor
 
                 powerMenuItemBase.MoveTo(this);
             }
+
             MenuTree.UpdateMenuTree();
         }
 
@@ -146,6 +150,25 @@ namespace Hono.Scripts.Battle.Editor
         protected PMenuRootItem(OdinMenuTree tree, string name, string path) : base(tree, name, path, null)
         {
             Root = this;
+            SdfIcon = SdfIconType.Hammer;
+            Style = new OdinMenuStyle()
+            {
+                Height = 28,
+                Offset = 20.00f,
+                IndentAmount = 18.00f,
+                IconSize = 16.00f,
+                IconOffset = 0.00f,
+                NotSelectedIconAlpha = 0.85f,
+                IconPadding = 0.00f,
+                TriangleSize = 16.00f,
+                TrianglePadding = 0.00f,
+                AlignTriangleLeft = true,
+                Borders = true,
+                BorderPadding = 4.80f,
+                BorderAlpha = 0.62f,
+                SelectedColorDarkSkin = new Color(0.689f,  0.210f, 0.172f, 1.000f),
+                SelectedColorLightSkin = new Color(0.243f, 0.490f, 0.900f, 1.000f)
+            };
             PowerEditorTools.GetPathAssetsAndFolders(path, ref _folders, ref _files);
             SetOperationAllow(EMenuItemOperation.Delete, false);
         }
@@ -195,6 +218,25 @@ namespace Hono.Scripts.Battle.Editor
         public PFolderMenuItem(OdinMenuTree tree, string name, string path) : base(tree, name, path, null)
         {
             PowerEditorTools.GetPathAssetsAndFolders(path, ref _folders, ref _files);
+            SdfIcon = SdfIconType.Folder;
+            Style = new OdinMenuStyle()
+            {
+                Height = 28,
+                Offset = 20.00f,
+                IndentAmount = 18.00f,
+                IconSize = 16.00f,
+                IconOffset = 0.00f,
+                NotSelectedIconAlpha = 0.85f,
+                IconPadding = 0.00f,
+                TriangleSize = 16.00f,
+                TrianglePadding = 0.00f,
+                AlignTriangleLeft = true,
+                Borders = true,
+                BorderPadding = 4.80f,
+                BorderAlpha = 0.62f,
+                SelectedColorDarkSkin = new Color(0.189f,  0.610f, 0.572f, 1.000f),
+                SelectedColorLightSkin = new Color(0.243f, 0.490f, 0.900f, 1.000f)
+            };
         }
 
         public void BuildTree()
@@ -227,6 +269,7 @@ namespace Hono.Scripts.Battle.Editor
             {
                 AssetDatabase.CreateFolder(parent.Path, Name);
             }
+
             foreach (var item in ChildMenuItems)
             {
                 if (item is not PowerEditorMenuItemBase powerMenuItemBase)
@@ -245,6 +288,7 @@ namespace Hono.Scripts.Battle.Editor
             {
                 AssetDatabase.CreateFolder(parent.Path, Name);
             }
+
             foreach (var item in ChildMenuItems)
             {
                 if (item is not PowerEditorMenuItemBase powerMenuItemBase)
@@ -276,7 +320,7 @@ namespace Hono.Scripts.Battle.Editor
 
         public override void MoveTo(PowerEditorMenuItemBase parent)
         {
-            AssetDatabase.MoveAsset(Path, parent.Path + "/" + Name+ ".asset");
+            AssetDatabase.MoveAsset(Path, parent.Path + "/" + Name + ".asset");
         }
     }
 }

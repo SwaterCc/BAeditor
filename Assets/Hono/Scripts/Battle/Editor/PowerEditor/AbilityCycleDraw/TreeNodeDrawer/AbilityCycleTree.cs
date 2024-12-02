@@ -8,15 +8,16 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public class AbilityLogicTree : TreeView
+    public class AbilityCycleTree : TreeView
     {
-        private AbilityNodeData _cycleHeadData;
         private AbilityData _treeData;
+        private AbilityNodeData _cycleHeadData;
+       
         public AbilityData TreeData => _treeData;
 
         private int _drawItemCount;
 
-        public AbilityLogicTree(TreeViewState state, AbilityData treeData, AbilityNodeData head) : base(state)
+        public AbilityCycleTree(AbilityData treeData, AbilityNodeData head) : base(new TreeViewState())
         {
             _cycleHeadData = head;
             _cycleHeadData.Depth = -1;
@@ -43,13 +44,13 @@ namespace Editor.AbilityEditor
             return root;
         }
 
-        private void setupChild(AbilityNodeData nodeData, AbilityLogicTreeItem parent)
+        private void setupChild(AbilityNodeData nodeData, ACycleTreeItem parent)
         {
             foreach (var childId in nodeData.ChildrenIds)
             {
                 if (_treeData.NodeDict.TryGetValue(childId, out var childNodeData))
                 {
-                    AbilityLogicTreeItem item = null;
+                    ACycleTreeItem item = null;
                     switch (childNodeData.NodeType)
                     {
                         case EAbilityNodeType.EAbilityCycle:
@@ -90,7 +91,7 @@ namespace Editor.AbilityEditor
         protected override void RowGUI(RowGUIArgs args)
         {
             base.RowGUI(args);
-            if (args.item is not AbilityLogicTreeItem item)
+            if (args.item is not ACycleTreeItem item)
             {
                 return;
             }
@@ -116,7 +117,7 @@ namespace Editor.AbilityEditor
         
         protected override void ContextClickedItem(int id)
         {
-            if (FindItem(id, rootItem) is AbilityLogicTreeItem select)
+            if (FindItem(id, rootItem) is ACycleTreeItem select)
             {
                 select.ShowMenu();
             }
@@ -141,12 +142,12 @@ namespace Editor.AbilityEditor
             if (hasSearch) return;
 
             DragAndDrop.PrepareStartDrag();
-            var draggedRows = new List<AbilityLogicTreeItem>(16);
+            var draggedRows = new List<ACycleTreeItem>(16);
             foreach (var item in GetRows())
             {
                 if (args.draggedItemIDs.Contains(item.id))
                 {
-                    draggedRows.Add(item as AbilityLogicTreeItem);
+                    draggedRows.Add(item as ACycleTreeItem);
                 }
             }
 
@@ -167,7 +168,7 @@ namespace Editor.AbilityEditor
 
             if (args.performDrop)
             {
-                var draggedItems = (List<AbilityLogicTreeItem>)genericData;
+                var draggedItems = (List<ACycleTreeItem>)genericData;
 
                 bool CheckLoop(TreeViewItem item)
                 {
@@ -205,7 +206,7 @@ namespace Editor.AbilityEditor
 
                 foreach (var treeViewItem in draggedItems)
                 {
-                    var parentItem = (AbilityLogicTreeItem)args.parentItem;
+                    var parentItem = (ACycleTreeItem)args.parentItem;
                     if (!parentItem.hasChildren)
                     {
                         parentItem.children = new List<TreeViewItem>();

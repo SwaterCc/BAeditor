@@ -187,19 +187,7 @@ namespace Hono.Scripts.Battle
         Normal,
         Dead,
     }
-
-    /// <summary>
-    /// 当前Ability执行到哪一步了
-    /// </summary>
-    public enum EAbilityState
-    {
-        NoActive,
-        Init,
-        PreExecute,
-        Executing,
-        EndExecute,
-    }
-
+    
     public enum ESelectPosType
     {
         Self,

@@ -5,14 +5,6 @@ namespace Hono.Scripts.Battle
     public class SkillData : ASerializableData
     {
         /// <summary>
-        /// 技能名
-        /// </summary>
-        public string skillName;
-        /// <summary>
-        /// 技能描述
-        /// </summary>
-        public string skillDesc;
-        /// <summary>
         /// 技能icon路径
         /// </summary>
         public string skillIcon;

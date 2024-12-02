@@ -11,10 +11,10 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem {
-	public class EventTreeItem : AbilityLogicTreeItem {
+	public class EventTreeItem : ACycleTreeItem {
 		private new EventNodeData _nodeData;
 
-		public EventTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(tree, nodeData) {
+		public EventTreeItem(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData) {
 			_nodeData = (EventNodeData)base._nodeData;
 		}
 

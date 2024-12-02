@@ -83,10 +83,6 @@ namespace Hono.Scripts.Battle
             TimeScaleFactory = 1;
             Vairables.SetParent(actor.Variables);
             TagCollection.SetParent(actor.TagCollection);
-            foreach (var tag in Data.Tags)
-            {
-                TagCollection.Add(tag);
-            }
 
             _abilityCycle.Init();
             return true;

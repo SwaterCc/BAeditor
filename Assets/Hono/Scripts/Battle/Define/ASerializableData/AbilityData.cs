@@ -18,10 +18,6 @@ namespace Hono.Scripts.Battle
     {
         public EAbilityType Type;
 
-        public string Desc = "NoInit";
-
-        public List<int> Tags = new();
-
         public int DefaultStartGroupId = -1;
 
         /// <summary>

@@ -7,34 +7,20 @@ namespace Editor.AbilityEditor
 {
     public class BuffView : AView<BuffData>
     {
-        private BuffData _data;
-        
-
-        public void LoadAsset(int id)
-        {
-            string path = AbilityAssetPath.BuffPath + "/" + id + ".asset";
-            _data = AssetDatabase.LoadAssetAtPath<BuffData>(path);
-            if (_data == null)
-            {
-                _data = ScriptableObject.CreateInstance<BuffData>();
-                _data.id = id;
-
-                AssetDatabase.CreateAsset(_data, path);
-            }
-        }
-
         public override void Draw()
         {
             SirenixEditorGUI.BeginBox("Buff数据");
-            _data.AddRule = (EApplicationRequirement)SirenixEditorFields.EnumDropdown("Buff添加规则", _data.AddRule);
-            if (_data.AddRule == EApplicationRequirement.HasTags || _data.AddRule == EApplicationRequirement.NoTags)
+            Data.AddRule = (EApplicationRequirement)SirenixEditorFields.EnumDropdown("Buff添加规则", Data.AddRule);
+            if (Data.AddRule == EApplicationRequirement.HasTags || Data.AddRule == EApplicationRequirement.NoTags)
             {
 	           // AbilityEditorTools.DrawIntList(_data.FilterTags,"筛选tag",50);
             }
-            _data.ReplaceRule = (EBuffReplaceRule)SirenixEditorFields.EnumDropdown("Buff替换规则", _data.ReplaceRule);
-            _data.InitLayer = SirenixEditorFields.IntField("Buff初始层数",_data.InitLayer);
-            _data.BuffDamageBasePer = SirenixEditorFields.IntField("Buff基础伤害万分比",_data.BuffDamageBasePer);
+            Data.ReplaceRule = (EBuffReplaceRule)SirenixEditorFields.EnumDropdown("Buff替换规则", Data.ReplaceRule);
+            Data.InitLayer = SirenixEditorFields.IntField("Buff初始层数",Data.InitLayer);
+            Data.BuffDamageBasePer = SirenixEditorFields.IntField("Buff基础伤害万分比",Data.BuffDamageBasePer);
             SirenixEditorGUI.EndBox();
         }
     }
+    
+    public class BuffViewDrawer : AViewDrawer<BuffView> { }
 }

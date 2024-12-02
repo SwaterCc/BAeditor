@@ -10,6 +10,7 @@ namespace Editor.AbilityEditor
     {
         public bool HasError { get; protected set; }
         public abstract void Load(string path);
+        public abstract void Init(OdinDrawer odinDrawer);
         public abstract void Draw();
         public abstract void Save();
     }
@@ -29,6 +30,13 @@ namespace Editor.AbilityEditor
             }
         }
 
+        public sealed override void Init(OdinDrawer odinDrawer)
+        {
+            onInit(odinDrawer);
+        }
+
+        protected virtual void onInit(OdinDrawer odinDrawer) { }
+
         public override void Save()
         {
             if (HasError) return;
@@ -39,8 +47,22 @@ namespace Editor.AbilityEditor
 
     public class AViewDrawer<T> : OdinValueDrawer<T> where T : AView
     {
+        private Vector2 _scrollViewPos = Vector2.zero;
+        public bool EnableScrollView { get; set; }
+
+        protected override void Initialize()
+        {
+            base.Initialize();
+            ValueEntry.SmartValue.Init(this);
+        }
+
         protected override void DrawPropertyLayout(GUIContent label)
         {
+            if (EnableScrollView)
+            {
+                _scrollViewPos = GUILayout.BeginScrollView(_scrollViewPos, false, true);
+            }
+
             if (!ValueEntry.SmartValue.HasError)
             {
                 ValueEntry.SmartValue.Draw();
@@ -48,6 +70,11 @@ namespace Editor.AbilityEditor
             else
             {
                 EditorGUILayout.LabelField("加载出错");
+            }
+
+            if (EnableScrollView)
+            {
+                GUILayout.EndScrollView();
             }
         }
     }

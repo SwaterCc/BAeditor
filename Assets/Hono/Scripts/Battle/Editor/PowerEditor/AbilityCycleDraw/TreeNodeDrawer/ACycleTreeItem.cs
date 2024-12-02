@@ -10,12 +10,12 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public abstract class AbilityLogicTreeItem : TreeViewItem
+    public abstract class ACycleTreeItem : TreeViewItem
     {
         protected AbilityNodeData _nodeData;
         public AbilityNodeData NodeData => _nodeData;
 
-        protected AbilityLogicTree _tree;
+        protected AbilityCycleTree _tree;
 
         public EditorWindow SettingWindow;
 
@@ -23,7 +23,7 @@ namespace Editor.AbilityEditor
 
         protected GenericMenu _menu;
         
-        protected AbilityLogicTreeItem(AbilityLogicTree tree, AbilityNodeData nodeData) : base(nodeData.NodeId, nodeData.Depth)
+        protected ACycleTreeItem(AbilityCycleTree tree, AbilityNodeData nodeData) : base(nodeData.NodeId, nodeData.Depth)
         {
             _nodeData = nodeData;
             _tree = tree;
@@ -114,7 +114,6 @@ namespace Editor.AbilityEditor
                     OnBtnClicked(btnRect);
                 }
             }
-
             GUI.backgroundColor = bgColor;
         }
 
@@ -137,7 +136,7 @@ namespace Editor.AbilityEditor
             {
                 foreach (var treeViewItem in children)
                 {
-                    if (treeViewItem is AbilityLogicTreeItem logicTreeViewItem)
+                    if (treeViewItem is ACycleTreeItem logicTreeViewItem)
                     {
                         logicTreeViewItem.UpdateDepth(data);
                     }
@@ -220,7 +219,7 @@ namespace Editor.AbilityEditor
         public void OnRemove() {
 	        if (children != null) {
 		        foreach (var child in children) {
-			        if (child is AbilityLogicTreeItem aChild) {
+			        if (child is ACycleTreeItem aChild) {
 				        var childData = aChild._nodeData;
 				        _tree.TreeData.NodeDict.Remove(childData.NodeId);
 				        aChild.OnRemove();
@@ -249,7 +248,7 @@ namespace Editor.AbilityEditor
             {
                 foreach (var child in children)
                 {
-                    if (child is AbilityLogicTreeItem abilityLogicTreeItem)
+                    if (child is ACycleTreeItem abilityLogicTreeItem)
                     {
                         var copy =  abilityLogicTreeItem.OnCopy(ref nodeDatas);
                         copy.ParentId = selfCopy.NodeId;

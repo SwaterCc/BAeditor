@@ -112,46 +112,45 @@ namespace Editor.AbilityEditor
             SirenixEditorGUI.BeginBox("技能信息");
             SirenixEditorGUI.BeginVerticalList();
             Data.skillIcon = PowerEditorUIHelper.DrawIconField(Data.skillIcon, 50f);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillName,     "技能名",  Data.skillName);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillDesc,     "技能描述", Data.skillDesc);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillType,     "技能类型", Data.skillType);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillDuration, "技能时长", Data.skillDuration);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.fileName,      "技能名",  Data.fileName,      true);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.desc,          "技能描述", Data.desc,          true);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.skillType,     "技能类型", Data.skillType,     true);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.skillDuration, "技能时长", Data.skillDuration, true);
             SirenixEditorGUI.EndVerticalList();
             SirenixEditorGUI.EndBox();
 
             SirenixEditorGUI.BeginBox("技能目标选择");
             SirenixEditorGUI.BeginVerticalList();
             PowerEditorUIHelper.DrawSimpleField(ref Data.skillTargetType, "目标选择类型", "指向性技能与非指向性技能",
-                                                Data.skillTargetType);
+                                                Data.skillTargetType, true);
             EditorGUILayout.LabelField("一级过滤：对当前技能选出的目标进行筛选，指向性技能会在选择时生效，aoe技能则会影响存入的技能目标列表");
-            PowerEditorUIHelper.DrawSimpleField(ref Data.hitCeiling, "命中数量上限", "会随技能等级表成长", Data.hitCeiling);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillRange, "允许释放范围", "会随技能等级表成长", Data.skillRange);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillRange, "允许释放范围", "会随技能等级表成长", Data.skillRange);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.hitCeiling, "命中数量上限", "会随技能等级表成长", Data.hitCeiling, true);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.skillRange, "允许释放范围", "会随技能等级表成长", Data.skillRange, true);
             if (Data.skillTargetType == ESkillTargetSelectType.NoTargetedSkill)
             {
                 EditorGUILayout.LabelField("非指向技能选择范围配置");
             }
 
             PowerEditorUIHelper.DrawSimpleField(ref Data.speedOfRotateToTarget, "转向释放方向的速度",
-                                                Data.speedOfRotateToTarget);
+                                                Data.speedOfRotateToTarget, true);
             SirenixEditorGUI.EndVerticalList();
             SirenixEditorGUI.EndBox();
 
             SirenixEditorGUI.BeginBox("冷却时间");
             SirenixEditorGUI.BeginVerticalList();
-            PowerEditorUIHelper.DrawSimpleField(ref Data.enterCdType, "进入cd时机", Data.enterCdType);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillCd,     "基础Cd",   Data.skillCd);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.enterCdType, "进入cd时机", Data.enterCdType, true);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.skillCd,     "基础Cd",   Data.skillCd,     true);
             SirenixEditorGUI.EndVerticalList();
             SirenixEditorGUI.EndBox();
 
             SirenixEditorGUI.BeginBox("冷却时间");
             SirenixEditorGUI.BeginVerticalList();
             drawResList(Data.skillResCheck, "资源检查");
-            PowerEditorUIHelper.DrawSimpleField(ref Data.costTimingType, "资源扣除时机", Data.costTimingType);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.costTimingType, "资源扣除时机", Data.costTimingType, true);
             drawResList(Data.skillResCost, "资源扣除");
             SirenixEditorGUI.EndVerticalList();
             SirenixEditorGUI.EndBox();
-            
+
             EditorGUIUtility.labelWidth = oldWidth;
         }
 

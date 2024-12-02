@@ -1,87 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Hono.Scripts.Battle;
-using Sirenix.Utilities;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
-
+using UnityEditor.IMGUI.Controls;
+using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public class OnPreAwardCheckDrawer : AbilityCycleDrawBase
+    public class AbilityCycleDrawer
     {
-        public OnPreAwardCheckDrawer(EAbilityCycle cycle, AbilityData data) : base(cycle,
-            data) { }
+        public AbilityView View { get; }
+        public AbilityData Data { get; }
+        public EAbilityCycle Cycle { get; }
+        public AbilityNodeData CycleNode { get; }
+        /// <summary>
+        /// 周期View是否展开
+        /// </summary>
+        public bool CycleViewFoldout { get; set; }
 
-        protected override bool getDefaultFoldout()
+        /// <summary>
+        /// 树
+        /// </summary>
+        private readonly AbilityCycleTree _cycleTree;
+        public AbilityCycleDrawer(AbilityView view, EAbilityCycle cycle, bool viewFoldoutShow = false)
         {
-            return Data.Type == EAbilityType.Buff;
-        }
+            View = view;
+            Data = view.Data;
+            Cycle = cycle;
+            CycleViewFoldout = viewFoldoutShow;
 
-        protected override void drawEx() { }
-    }
-
-    public class OnPreExecuteCheckDrawer : AbilityCycleDrawBase
-    {
-        private ResItem _removeItem;
-        private List<ResItem> _removeList;
-
-
-        public OnPreExecuteCheckDrawer(EAbilityCycle cycle, AbilityData data) : base(cycle,
-            data) { }
-
-        protected override bool getDefaultFoldout()
-        {
-            return Data.Type == EAbilityType.Skill;
-        }
-
-        protected override void drawEx() { }
-    }
-
-    public class OnInitDrawer : AbilityCycleDrawBase
-    {
-        public OnInitDrawer(EAbilityCycle cycle, AbilityData data) : base(cycle, data) { }
-
-        protected override void drawEx() { }
-    }
-
-    public class OnPreExecuteDrawer : AbilityCycleDrawBase
-    {
-        private EResCostTimingType _resCostTimingType;
-        private bool _hasType;
-
-        public OnPreExecuteDrawer(EAbilityCycle cycle, AbilityData data) :
-            base(cycle, data) { }
-
-        protected override bool getDefaultFoldout() => false;
-
-        protected override void drawEx()
-        {
-            if (Data.Type == EAbilityType.Skill && _hasType && _resCostTimingType == EResCostTimingType.BeforeExecute)
+            if (!Data.HeadNodeDict.TryGetValue(cycle, out var nodeId))
             {
-                Foldout = true;
+                var cycleNodeData = (CycleNodeData)Data.GetNodeData(EAbilityNodeType.EAbilityCycle);
+                cycleNodeData.cycleNodeData = cycle;
+                cycleNodeData.ParentId = -1;
+
+                Data.NodeDict.Add(cycleNodeData.NodeId, cycleNodeData);
+                Data.HeadNodeDict.Add(Cycle, cycleNodeData.NodeId);
+                CycleNode = cycleNodeData;
             }
+            else
+            {
+                CycleNode = Data.NodeDict[nodeId];
+            }
+
+            _cycleTree = new AbilityCycleTree(Data, CycleNode);
         }
-    }
+        
+        public virtual void DrawCycle()
+        {
+            SirenixEditorGUI.BeginBox();
+            var mainRect = GUIHelper.GetCurrentLayoutRect();
+            SirenixEditorGUI.BeginBoxHeader();
+            var headHeight = GUIHelper.GetCurrentLayoutRect().height;
+            CycleViewFoldout = SirenixEditorGUI.Foldout(CycleViewFoldout, Cycle.ToString());
+            if (SirenixEditorGUI.Button("展开树", ButtonSizes.Medium))
+            {
+                _cycleTree.ExpandAll();
+            }
 
-    public class OnExecutingDrawer : AbilityCycleDrawBase
-    {
-        public OnExecutingDrawer(EAbilityCycle cycle, AbilityData data) :
-            base(cycle, data) { }
+            SirenixEditorGUI.EndBoxHeader();
+            if (CycleViewFoldout)
+            {
+                SirenixEditorGUI.BeginBox("编写逻辑");
+                var boxRect = GUIHelper.GetCurrentLayoutRect();
+                GUILayout.Box(" ", GUILayout.Height(_cycleTree.totalHeight), GUILayout.Width(boxRect.width)); //无所谓这个盒子，只是占位用的
+                var treeRect = new Rect(boxRect.x, boxRect.y + headHeight, mainRect.width - 8, _cycleTree.totalHeight + 8);
+                _cycleTree.OnGUI(treeRect);
+                SirenixEditorGUI.EndBox();
+            }
 
-        protected override bool getDefaultFoldout() => true;
-    }
-
-    public class OnEndExecuteDrawer : AbilityCycleDrawBase
-    {
-        private EResCostTimingType _resCostTimingType;
-        private bool _hasType;
-
-        public OnEndExecuteDrawer(EAbilityCycle cycle, AbilityData data) :
-            base(cycle, data) { }
-
-        protected override bool getDefaultFoldout() => false;
-
-        protected override void drawEx() { }
+            SirenixEditorGUI.EndBox();
+        }
+        
     }
 }
