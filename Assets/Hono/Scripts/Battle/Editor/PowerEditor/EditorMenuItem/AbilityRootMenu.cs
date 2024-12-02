@@ -4,9 +4,9 @@ using Sirenix.OdinInspector.Editor;
 
 namespace Hono.Scripts.Battle.Editor
 {
-    public class AbilityRootMenu : ARootMenuItem
+    public class AbilityRoot : PMenuRootItem
     {
-        public AbilityRootMenu(OdinMenuTree tree) : base(tree, "Ability", BattleEditorPath.AbilityRootPath) { }
+        public AbilityRoot(OdinMenuTree tree) : base(tree, "Ability", BattleEditorPath.AbilityRootPath) { }
 
         public override AView GetViewDrawer()
         {

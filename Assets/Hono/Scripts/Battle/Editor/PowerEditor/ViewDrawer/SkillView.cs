@@ -106,8 +106,6 @@ namespace Editor.AbilityEditor
 
         private void DrawSkillView()
         {
-           
-
             float oldWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 140;
 

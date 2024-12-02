@@ -13,9 +13,9 @@ namespace Editor.AbilityEditor.SimpleWindow
 {
     public class CreateFileWindow : OdinEditorWindow
     {
-        public PowerMenuItemBase MenuItem { get; private set; }
+        public PowerEditorMenuItemBase MenuItem { get; private set; }
 
-        public static void OpenWindow(PowerMenuItemBase itemBase)
+        public static void OpenWindow(PowerEditorMenuItemBase itemBase)
         {
             var window = GetWindow<CreateFileWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(400, 100);
@@ -27,15 +27,15 @@ namespace Editor.AbilityEditor.SimpleWindow
         {
             string label = "";
 
-            if (MenuItem.Root is SkillRootMenu)
+            if (MenuItem.Root is SkillRootItem)
             {
                 label = "正在创建技能：";
             }
-            else if (MenuItem.Root is BuffRootMenu)
+            else if (MenuItem.Root is BuffMenuRoot)
             {
                 label = "正在创建BUFF：";
             }
-            else if (MenuItem.Root is BulletRootMenu)
+            else if (MenuItem.Root is BulletMenuRoot)
             {
                 label = "正在创建Bullet：";
             }
@@ -85,9 +85,9 @@ namespace Editor.AbilityEditor.SimpleWindow
 
             ASerializableData data = MenuItem.Root switch
             {
-                SkillRootMenu  => CreateInstance<SkillData>(),
-                BuffRootMenu   => CreateInstance<BuffData>(),
-                BulletRootMenu => CreateInstance<BulletData>(),
+                SkillRootItem  => CreateInstance<SkillData>(),
+                BuffMenuRoot   => CreateInstance<BuffData>(),
+                BulletMenuRoot => CreateInstance<BulletData>(),
                 _              => CreateInstance<AbilityData>()
             };
 

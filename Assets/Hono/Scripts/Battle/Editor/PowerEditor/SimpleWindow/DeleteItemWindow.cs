@@ -9,9 +9,9 @@ namespace Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow
 {
     public class DeleteItemWindow : EditorWindow
     {
-        public PowerMenuItemBase MenuItem { get; private set; }
+        public PowerEditorMenuItemBase MenuItem { get; private set; }
         public string Msg;
-        public static void OpenWindow(PowerMenuItemBase itemBase)
+        public static void OpenWindow(PowerEditorMenuItemBase itemBase)
         {
             var window = GetWindow<DeleteItemWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(400, 100);
@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow
             Msg = MenuItem switch
             {
                 PowerDataMenuItem => $"是否要删除File {MenuItem.Name}？",
-                AFolderMenuItem   => $"是否要删除路径 {MenuItem.Name} 及路径下所有的文件？",
+                PFolderMenuItem   => $"是否要删除路径 {MenuItem.Name} 及路径下所有的文件？",
                 _                 => "Msg?????"
             };
         }

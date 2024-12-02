@@ -11,9 +11,9 @@ namespace Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow
 {
     public class CreateFolderWindow : OdinEditorWindow
     {
-        public PowerMenuItemBase MenuItem { get; private set; }
+        public PowerEditorMenuItemBase MenuItem { get; private set; }
 
-        public static void OpenWindow(PowerMenuItemBase itemBase)
+        public static void OpenWindow(PowerEditorMenuItemBase itemBase)
         {
             var window = GetWindow<CreateFolderWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(400, 100);

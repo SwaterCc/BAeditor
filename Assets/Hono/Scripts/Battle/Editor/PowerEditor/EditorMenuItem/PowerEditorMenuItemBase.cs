@@ -5,6 +5,7 @@ using Editor.AbilityEditor;
 using Editor.AbilityEditor.SimpleWindow;
 using Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow;
 using Sirenix.OdinInspector.Editor;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace Hono.Scripts.Battle.Editor
     /// 路径项右键实现添加文件，添加路径，删除文件夹
     /// 文件项实现右键复制，移动，删除
     /// </summary>
-    public abstract class PowerMenuItemBase : OdinMenuItem
+    public abstract class PowerEditorMenuItemBase : OdinMenuItem
     {
         public enum EMenuItemOperation
         {
@@ -33,9 +34,9 @@ namespace Hono.Scripts.Battle.Editor
 
         public string Path { get; }
 
-        public ARootMenuItem Root { get; set; }
+        public PMenuRootItem Root { get; set; }
 
-        protected PowerMenuItemBase(OdinMenuTree tree, string name, string path, object view) : base(tree, name, view)
+        protected PowerEditorMenuItemBase(OdinMenuTree tree, string name, string path, object view) : base(tree, name, view)
         {
             Path = path;
             _rightMenu = new GenericMenu();
@@ -70,9 +71,9 @@ namespace Hono.Scripts.Battle.Editor
         private void showMenu(OdinMenuItem item)
         {
             addRightMenuItem(EMenuItemOperation.CreateFileItem, "新建Power");
-            addRightMenuItem(EMenuItemOperation.CreateFolder, "新建文件夹");
-            addRightMenuItem(EMenuItemOperation.CopyIn, "复制选中项到这里");
-            addRightMenuItem(EMenuItemOperation.MoveIn, "移动选中项到这里");
+            addRightMenuItem(EMenuItemOperation.CreateFolder,   "新建文件夹");
+            addRightMenuItem(EMenuItemOperation.CopyIn,         "复制选中项到这里");
+            addRightMenuItem(EMenuItemOperation.MoveIn,         "移动选中项到这里");
             _rightMenu.AddDisabledItem(new GUIContent("-------------------"));
             addRightMenuItem(EMenuItemOperation.Delete, "删除选中项");
             _rightMenu.ShowAsContext();
@@ -101,34 +102,48 @@ namespace Hono.Scripts.Battle.Editor
         {
             DeleteItemWindow.OpenWindow(this);
         }
+
         protected virtual void SelectionCopyToHere()
         {
-            /*List<AbilityEditorMenuItem> copyList = new List<AbilityEditorMenuItem>(MenuTree.Selection.Count);
+            List<PowerEditorMenuItemBase> copyList = new List<PowerEditorMenuItemBase>(MenuTree.Selection.Count);
             foreach (var item in MenuTree.Selection)
             {
-                if (item is not AbilityEditorMenuItem aItem)
+                if (item is not PowerEditorMenuItemBase powerMenuItemBase)
                 {
                     continue;
                 }
 
-                if (!aItem._allowCopy)
-                {
-                    continue;
-                }
-
-                copyList.Add(aItem);
-            }*/
+                powerMenuItemBase.CopyTo(this);
+            }
+            MenuTree.UpdateMenuTree();
         }
 
-        protected virtual void SelectionMoveToHere() { }
+        public abstract void CopyTo(PowerEditorMenuItemBase parent);
+
+        protected virtual void SelectionMoveToHere()
+        {
+            List<PowerEditorMenuItemBase> copyList = new List<PowerEditorMenuItemBase>(MenuTree.Selection.Count);
+            foreach (var item in MenuTree.Selection)
+            {
+                if (item is not PowerEditorMenuItemBase powerMenuItemBase)
+                {
+                    continue;
+                }
+
+                powerMenuItemBase.MoveTo(this);
+            }
+            MenuTree.UpdateMenuTree();
+        }
+
+        public abstract void MoveTo(PowerEditorMenuItemBase parent);
     }
 
-    public abstract class ARootMenuItem : PowerMenuItemBase
+    public abstract class PMenuRootItem : PowerEditorMenuItemBase
     {
         private readonly List<string> _folders = new();
         private readonly List<string> _files = new();
 
-        protected ARootMenuItem(OdinMenuTree tree, string name, string path) : base(tree, name, path, null)
+        protected PMenuRootItem(OdinMenuTree tree, string name, string path) : base(tree, name, path, null)
         {
             Root = this;
             PowerEditorTools.GetPathAssetsAndFolders(path, ref _folders, ref _files);
@@ -142,7 +157,7 @@ namespace Hono.Scripts.Battle.Editor
             foreach (var path in _folders)
             {
                 string menuName = System.IO.Path.GetFileName(path);
-                var folderMenuItem = new AFolderMenuItem(MenuTree, menuName, path);
+                var folderMenuItem = new PFolderMenuItem(MenuTree, menuName, path);
                 folderMenuItem.Root = this;
                 ChildMenuItems.Add(folderMenuItem);
                 folderMenuItem.BuildTree();
@@ -158,14 +173,26 @@ namespace Hono.Scripts.Battle.Editor
                 ChildMenuItems.Add(abilityMenuItem);
             }
         }
+
+        /// <summary>
+        /// 禁止拷贝
+        /// </summary>
+        /// <param name="parent"></param>
+        public sealed override void CopyTo(PowerEditorMenuItemBase parent) { }
+
+        /// <summary>
+        /// 禁止移动
+        /// </summary>
+        /// <param name="parent"></param>
+        public sealed override void MoveTo(PowerEditorMenuItemBase parent) { }
     }
 
-    public class AFolderMenuItem : PowerMenuItemBase
+    public class PFolderMenuItem : PowerEditorMenuItemBase
     {
         private readonly List<string> _folders = new();
         private readonly List<string> _files = new();
 
-        public AFolderMenuItem(OdinMenuTree tree, string name, string path) : base(tree, name, path, null)
+        public PFolderMenuItem(OdinMenuTree tree, string name, string path) : base(tree, name, path, null)
         {
             PowerEditorTools.GetPathAssetsAndFolders(path, ref _folders, ref _files);
         }
@@ -175,7 +202,7 @@ namespace Hono.Scripts.Battle.Editor
             foreach (var path in _folders)
             {
                 string menuName = System.IO.Path.GetFileName(path);
-                var folderMenuItem = new AFolderMenuItem(MenuTree, menuName, path);
+                var folderMenuItem = new PFolderMenuItem(MenuTree, menuName, path);
                 folderMenuItem.Root = Root;
                 ChildMenuItems.Add(folderMenuItem);
                 folderMenuItem.BuildTree();
@@ -191,16 +218,65 @@ namespace Hono.Scripts.Battle.Editor
                 ChildMenuItems.Add(abilityMenuItem);
             }
         }
+
+        public override void CopyTo(PowerEditorMenuItemBase parent)
+        {
+            //新建一个文件夹
+            string newPath = parent.Path + "/" + Name;
+            if (!Directory.Exists(newPath))
+            {
+                AssetDatabase.CreateFolder(parent.Path, Name);
+            }
+            foreach (var item in ChildMenuItems)
+            {
+                if (item is not PowerEditorMenuItemBase powerMenuItemBase)
+                {
+                    continue;
+                }
+
+                powerMenuItemBase.CopyTo(this);
+            }
+        }
+
+        public override void MoveTo(PowerEditorMenuItemBase parent)
+        {
+            string newPath = parent.Path + "/" + Name;
+            if (!Directory.Exists(newPath))
+            {
+                AssetDatabase.CreateFolder(parent.Path, Name);
+            }
+            foreach (var item in ChildMenuItems)
+            {
+                if (item is not PowerEditorMenuItemBase powerMenuItemBase)
+                {
+                    continue;
+                }
+
+                powerMenuItemBase.MoveTo(this);
+            }
+
+            AssetDatabase.DeleteAsset(Path);
+        }
     }
 
-    public class PowerDataMenuItem : PowerMenuItemBase
+    public class PowerDataMenuItem : PowerEditorMenuItemBase
     {
         public PowerDataMenuItem(OdinMenuTree tree, string name, string path, AView view) : base(tree, name, path, view)
         {
             SetOperationAllow(EMenuItemOperation.CreateFileItem, false);
-            SetOperationAllow(EMenuItemOperation.CreateFolder, false);
-            SetOperationAllow(EMenuItemOperation.CopyIn, false);
-            SetOperationAllow(EMenuItemOperation.MoveIn, false);
+            SetOperationAllow(EMenuItemOperation.CreateFolder,   false);
+            SetOperationAllow(EMenuItemOperation.CopyIn,         false);
+            SetOperationAllow(EMenuItemOperation.MoveIn,         false);
+        }
+
+        public override void CopyTo(PowerEditorMenuItemBase parent)
+        {
+            AssetDatabase.CopyAsset(Path, parent.Path + "/" + Name + ".asset");
+        }
+
+        public override void MoveTo(PowerEditorMenuItemBase parent)
+        {
+            AssetDatabase.MoveAsset(Path, parent.Path + "/" + Name+ ".asset");
         }
     }
 }

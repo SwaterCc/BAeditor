@@ -4,9 +4,9 @@ using Sirenix.OdinInspector.Editor;
 
 namespace Hono.Scripts.Battle.Editor
 {
-    public class BuffRootMenu : ARootMenuItem
+    public class BuffMenuRoot : PMenuRootItem
     {
-        public BuffRootMenu(OdinMenuTree tree, string itemName) : base(tree, itemName,
+        public BuffMenuRoot(OdinMenuTree tree, string itemName) : base(tree, itemName,
             BattleEditorPath.BuffRootPath) { }
 
         
