@@ -69,10 +69,10 @@ namespace Editor.AbilityEditor.TreeItem {
 		}
 
 		protected override void OnBtnClicked(Rect btnRect) {
-			SettingWindow = BaseNodeWindow<EventNodeDataWindow, EventNodeData>.GetSettingWindow(_tree.TreeData,
+			SettingWindow = BaseNodeWindow<EventNodeDataWindow, EventNodeData>.GetSettingWindow(Tree.TreeData,
 				_nodeData,
 				(nodeData) => {
-					_tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+					Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
 					_nodeData = nodeData;
 				});
 			SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 240);

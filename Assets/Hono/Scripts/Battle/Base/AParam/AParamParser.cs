@@ -63,7 +63,7 @@ namespace Hono.Scripts.Battle.Base
                     objectValue = ability.Vairables.Get(aParams.variableName);
                     break;
                 case EParamType.Attr:
-                    objectValue = ability.Actor.GetAttr(aParams.attrType);
+                    objectValue = ability.Actor.Attrs.GetAttr(aParams.attrType).GetRef();
                     break;
             }
 
@@ -97,7 +97,7 @@ namespace Hono.Scripts.Battle.Base
                     value = ability.Vairables.Get(aParams.variableName);
                     break;
                 case EParamType.Attr:
-                    value = ability.Actor.GetAttr(aParams.attrType);
+                    value = ability.Actor.Attrs.GetAttr(aParams.attrType).GetRef();
                     break;
             }
 

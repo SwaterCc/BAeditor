@@ -12,19 +12,18 @@ namespace Editor.AbilityEditor
 {
     public abstract class ATreeNode : TreeViewItem
     {
-        protected AbilityNodeData _nodeData;
-        public AbilityNodeData NodeData => _nodeData;
-
-        protected AbilityCycleTree _tree;
-
+        public AbilityCycleTree Tree { get; }
+        public AbilityNodeData NodeData { get; }
+        
         public EditorWindow SettingWindow;
 
-        protected GenericMenu _menu;
+        private readonly GenericMenu _menu;
         
         protected ATreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(nodeData.NodeId, nodeData.Depth)
         {
-            _nodeData = nodeData;
-            _tree = tree;
+            Tree = tree;
+            NodeData = nodeData;
+
             _menu = new GenericMenu();
         }
 
@@ -80,7 +79,7 @@ namespace Editor.AbilityEditor
                 buttonText += "...";
             }
 
-            if (_nodeData.NodeType != EAbilityNodeType.EAbilityCycle)
+            if (NodeData.NodeType != EAbilityNodeType.EAbilityCycle)
                 buttonText = $"<{NodeData.NodeId}>" + buttonText;
 
             if (GUI.Button(lineRect, new GUIContent(buttonText, getButtonTips()), getButtonTextStyle()))
@@ -100,14 +99,14 @@ namespace Editor.AbilityEditor
       
         public void UpdateDepth(AbilityData data)
         {
-            if (_nodeData.ParentId > 0)
+            if (NodeData.ParentId > 0)
             {
-                var parentItem = data.NodeDict[_nodeData.ParentId];
-                _nodeData.Depth = parentItem.Depth + 1;
+                var parentItem = data.NodeDict[NodeData.ParentId];
+                NodeData.Depth = parentItem.Depth + 1;
             }
             else
             {
-                _nodeData.Depth = 0;
+                NodeData.Depth = 0;
             }
             //this.depth = TreeNode.depth;
             if (hasChildren)
@@ -129,10 +128,10 @@ namespace Editor.AbilityEditor
         /// <returns></returns>
         protected bool checkHasParent(EAbilityNodeType checkType)
         {
-            int parentId = _nodeData.ParentId;
+            int parentId = NodeData.ParentId;
             while (parentId > 0)
             {
-                var parentNode = _tree.TreeData.NodeDict[parentId];
+                var parentNode = Tree.TreeData.NodeDict[parentId];
                 if (parentNode.NodeType == checkType)
                 {
                     return true;
@@ -151,15 +150,15 @@ namespace Editor.AbilityEditor
         protected void AddChild(object oNodeType)
         {
             var nodeType = (EAbilityNodeType)oNodeType;
-            var node = _tree.TreeData.GetNodeData(nodeType);
-            node.ParentId = _nodeData.NodeId;
-            node.Depth = _nodeData.Depth + 1;
-            _nodeData.ChildrenIds.Add(node.NodeId);
-            _tree.TreeData.NodeDict.Add(node.NodeId, node);
-            EditorUtility.SetDirty(_tree.TreeData);
+            var node = Tree.TreeData.GetNodeData(nodeType);
+            node.ParentId = NodeData.NodeId;
+            node.Depth = NodeData.Depth + 1;
+            NodeData.ChildrenIds.Add(node.NodeId);
+            Tree.TreeData.NodeDict.Add(node.NodeId, node);
+            EditorUtility.SetDirty(Tree.TreeData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            _tree.Reload();
+            Tree.Reload();
         }
         
         /// <summary>
@@ -169,14 +168,14 @@ namespace Editor.AbilityEditor
         protected void AddNext(object oNodeType)
         {
             var nodeType = (EAbilityNodeType)oNodeType;
-            var node = _tree.TreeData.GetNodeData(nodeType);
-            node.ParentId = _nodeData.ParentId;
-            node.Depth = _nodeData.Depth;
-            _tree.TreeData.NodeDict[_nodeData.ParentId].ChildrenIds.Add(node.NodeId);
-            EditorUtility.SetDirty(_tree.TreeData);
+            var node = Tree.TreeData.GetNodeData(nodeType);
+            node.ParentId = NodeData.ParentId;
+            node.Depth = NodeData.Depth;
+            Tree.TreeData.NodeDict[NodeData.ParentId].ChildrenIds.Add(node.NodeId);
+            EditorUtility.SetDirty(Tree.TreeData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            _tree.Reload();
+            Tree.Reload();
         }
 		
         /// <summary>
@@ -185,27 +184,27 @@ namespace Editor.AbilityEditor
         /// <param name="treeData"></param>
         public void Remove()
         {
-            var parentNodeData = _tree.TreeData.NodeDict[_nodeData.ParentId];
-            parentNodeData.ChildrenIds.Remove(_nodeData.NodeId);
+            var parentNodeData = Tree.TreeData.NodeDict[NodeData.ParentId];
+            parentNodeData.ChildrenIds.Remove(NodeData.NodeId);
             OnRemove();
-            EditorUtility.SetDirty(_tree.TreeData);
+            EditorUtility.SetDirty(Tree.TreeData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            _tree.Reload();
+            Tree.Reload();
         }
 
         public void OnRemove() {
 	        if (children != null) {
 		        foreach (var child in children) {
 			        if (child is ATreeNode aChild) {
-				        var childData = aChild._nodeData;
-				        _tree.TreeData.NodeDict.Remove(childData.NodeId);
+				        var childData = aChild.NodeData;
+				        Tree.TreeData.NodeDict.Remove(childData.NodeId);
 				        aChild.OnRemove();
 			        }
 		        }
 	        }
 	       
-	        _tree.TreeData.NodeDict.Remove(_nodeData.NodeId);
+	        Tree.TreeData.NodeDict.Remove(NodeData.NodeId);
         }
     }
 }

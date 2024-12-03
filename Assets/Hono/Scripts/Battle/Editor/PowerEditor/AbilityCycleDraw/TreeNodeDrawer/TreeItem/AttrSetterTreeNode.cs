@@ -53,9 +53,9 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect)
         {
             AbilityViewDrawer.NodeBtnClick(_nodeData);
-            SettingWindow = BaseNodeWindow<AttrSetterWindow, AttrNodeData>.GetSettingWindow(_tree.TreeData,
+            SettingWindow = BaseNodeWindow<AttrSetterWindow, AttrNodeData>.GetSettingWindow(Tree.TreeData,
                 _nodeData,
-                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                (nodeData) => { Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
                 });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);

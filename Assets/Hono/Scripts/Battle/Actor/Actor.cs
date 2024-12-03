@@ -34,6 +34,11 @@ namespace Hono.Scripts.Battle
         /// Tag
         /// </summary>
         public TagCollection TagCollection { get; }
+        
+        /// <summary>
+        /// Actor属性列表
+        /// </summary>
+        public AttrCollection Attrs { get; }
 
         /// <summary>
         /// Actor逻辑
@@ -49,12 +54,7 @@ namespace Hono.Scripts.Battle
         /// 玩家位置信息
         /// </summary>
         private readonly ActorLocation _location;
-
-        /// <summary>
-        /// Actor属性
-        /// </summary>
-        private readonly AttrCollection _attrs;
-
+        
         /// <summary>
         /// 消息容器
         /// </summary>
@@ -116,9 +116,8 @@ namespace Hono.Scripts.Battle
 
         public Actor()
         {
-            _attrs = new AttrCollection(this);
             _message = new MessageCollection(this);
-
+            Attrs = new AttrCollection(this);
             TagCollection = new TagCollection();
             Abilities = new AbilityController(this);
             Variables = new VarCollection(128);
@@ -219,19 +218,19 @@ namespace Hono.Scripts.Battle
 
         public int GetAttr(EAttrType attrType)
         {
-            var value = _attrs.GetAttr(attrType);
+            var value = Attrs.GetAttr(attrType);
             return value;
         }
 
         public Attr GetAttrNoParse(EAttrType attrType)
         {
-            var value = _attrs.GetAttr(attrType);
+            var value = Attrs.GetAttr(attrType);
             return value;
         }
 
         public void SetAttr(EAttrType attrType, int value, bool isCommand = false)
         {
-            _attrs.SetAttr(attrType, value, isCommand);
+            Attrs.SetAttr(attrType, value, isCommand);
         }
 
         #endregion

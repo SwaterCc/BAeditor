@@ -5,33 +5,45 @@ namespace Hono.Scripts.Battle.Base
     /// </summary>
     public class Attr : IAPoolObject
     {
-        private int _commandTotalValue;
-        private int _originValue;
-
+        private int _dynamicValue;
+        private int _permanentValue;
+        private RefInt _finalValue = new();
+        
         /// <summary>
         /// 获取属性值（指令值和原值的总值）
         /// </summary>
         /// <returns></returns>
         public int Get()
         {
-            return _commandTotalValue + _originValue;
+            return _finalValue.Value;
+        }
+
+        /// <summary>
+        /// 获取引用最终值
+        /// </summary>
+        /// <returns></returns>
+        public RefInt GetRef()
+        {
+            return _finalValue;
         }
 
         /// <summary>
         /// 设置属性
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="isCommand"></param>
-        public void Set(int value, bool isCommand)
+        /// <param name="isPermanent"></param>
+        public void Set(int value, bool isPermanent)
         {
-            if (isCommand)
+            if (isPermanent)
             {
-                _commandTotalValue += value;
+                _dynamicValue += value;
             }
             else
             {
-                _originValue = value;
+                _permanentValue = value;
             }
+
+            _finalValue = _dynamicValue + _permanentValue;
         }
 
         #region 运算符重写
@@ -40,14 +52,6 @@ namespace Hono.Scripts.Battle.Base
         public static implicit operator int(Attr attr)
         {
             return attr.Get();
-        }
-
-        // 会产生池对象
-        public static explicit operator RefInt(Attr attr)
-        {
-            RefInt refInt = APool<RefInt>.Pool.Rent();
-            refInt.Value = attr.Get();
-            return refInt;
         }
 
         // 加法操作符重载
@@ -103,8 +107,9 @@ namespace Hono.Scripts.Battle.Base
 
         public void OnRecycle()
         {
-            _commandTotalValue = 0;
-            _originValue = 0;
+            _finalValue = 0;
+            _dynamicValue = 0;
+            _permanentValue = 0;
         }
     }
 }

@@ -16,19 +16,20 @@ namespace Hono.Scripts.Battle
 {
     public class AbilityData : ASerializableData
     {
-        public EAbilityType Type;
-
         public int DefaultStartGroupId = -1;
 
         /// <summary>
         /// 头节点字典
         /// </summary>
-        [OdinSerialize] public Dictionary<EAbilityCycle, int> HeadNodeDict = new();
+        [OdinSerialize] 
+        public Dictionary<EAbilityCycle, int> HeadNodeDict = new();
 
         /// <summary>
         /// 存储所有数据
         /// </summary>
-        [Searchable] [OdinSerialize] public Dictionary<int, AbilityNodeData> NodeDict = new();
+        [Searchable] 
+        [OdinSerialize] 
+        public Dictionary<int, AbilityNodeData> NodeDict = new();
 
         public AbilityNodeData GetNodeData(EAbilityNodeType type)
         {
@@ -114,8 +115,6 @@ namespace Hono.Scripts.Battle
         public int Depth;
 
         public int BelongGroupId = -1;
-
-        public bool DebugSkip = false;
 
         public List<int> ChildrenIds = new();
 

@@ -37,20 +37,20 @@ namespace Editor.AbilityEditor.TreeItem
         
         private void AddElseIfNode(object obj)
         {
-            var node = (BranchNodeData)_tree.TreeData.GetNodeData(EAbilityNodeType.EBranchControl);
+            var node = (BranchNodeData)Tree.TreeData.GetNodeData(EAbilityNodeType.EBranchControl);
             node.ParentId = _nodeData.ParentId;
             node.Depth = _nodeData.Depth;
             node.BranchGroupId = _nodeData.BranchGroupId;
             node.Desc = "else if";
-            var parentNode = _tree.TreeData.NodeDict[node.ParentId];
+            var parentNode = Tree.TreeData.NodeDict[node.ParentId];
             var index = parentNode.ChildrenIds.IndexOf(_nodeData.NodeId);
             parentNode.ChildrenIds.Insert(index + 1, node.NodeId);
-            _tree.TreeData.NodeDict.Add(node.NodeId, node);
+            Tree.TreeData.NodeDict.Add(node.NodeId, node);
             
-            EditorUtility.SetDirty(_tree.TreeData);
+            EditorUtility.SetDirty(Tree.TreeData);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            _tree.Reload();
+            Tree.Reload();
         }
 
         protected override Color getButtonColor()
@@ -75,9 +75,9 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect)
         {
             AbilityViewDrawer.NodeBtnClick(_nodeData);
-            SettingWindow = BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>.GetSettingWindow(_tree.TreeData,
+            SettingWindow = BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>.GetSettingWindow(Tree.TreeData,
                 _nodeData,
-                (nodeData) => { _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                (nodeData) => { Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
                 });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);

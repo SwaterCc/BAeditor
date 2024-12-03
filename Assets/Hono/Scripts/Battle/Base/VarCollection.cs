@@ -73,14 +73,23 @@ namespace Hono.Scripts.Battle.Base
 
         public void Set<T>(string key, in T value) where T : class
         {
-            throw new NotImplementedException();
+            if (_collection.TryAdd(key, value))
+            {
+                if (value is IAPoolRefCount refCount)
+                {
+                    refCount.AddReference();
+                }
+            }
         }
 
         public void Delete(string name)
         {
-            if (_collection.ContainsKey(name))
+            if (_collection.Remove(name,out object value))
             {
-                _collection.Remove(name);
+                if (value is IAPoolRefCount refCount)
+                {
+                    refCount.RemoveReference();
+                }
             }
         }
 

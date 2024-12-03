@@ -32,7 +32,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            var parentData = _tree.TreeData.NodeDict[_nodeData.ParentId];
+            var parentData = Tree.TreeData.NodeDict[_nodeData.ParentId];
             string name = string.IsNullOrEmpty(_nodeData.Name) ? "未设置" : _nodeData.Name;
 
             if (parentData is ActionNodeData parentActionData)
@@ -61,11 +61,11 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect)
         {
             AbilityViewDrawer.NodeBtnClick(_nodeData);
-            SettingWindow = BaseNodeWindow<VarNodeDataWindow, VariableNodeData>.GetSettingWindow(_tree.TreeData,
+            SettingWindow = BaseNodeWindow<VarNodeDataWindow, VariableNodeData>.GetSettingWindow(Tree.TreeData,
                 _nodeData,
                 (nodeData) =>
                 {
-                    _tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
+                    Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
                 });
             SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
