@@ -10,11 +10,11 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class VarSetterTreeItem : ACycleTreeItem
+    public class VarSetterTreeNode : ATreeNode
     {
         private new VariableNodeData _nodeData;
 
-        public VarSetterTreeItem(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public VarSetterTreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
         {
             _nodeData = (VariableNodeData)base._nodeData;
         }

@@ -32,8 +32,8 @@ namespace Editor.AbilityEditor
         protected override TreeViewItem BuildRoot()
         {
             var root = new TreeViewItem(0, -1, "root");
-            _drawItemCount = 0;
-            var cycleRoot = new CycleTreeItem(this, _cycleHeadData);
+
+            var cycleRoot = new CycleTreeNode(this, _cycleHeadData);
             cycleRoot.depth = 0;
             root.AddChild(cycleRoot);
             setupChild(_cycleHeadData, cycleRoot);
@@ -44,46 +44,45 @@ namespace Editor.AbilityEditor
             return root;
         }
 
-        private void setupChild(AbilityNodeData nodeData, ACycleTreeItem parent)
+        private void setupChild(AbilityNodeData nodeData, ATreeNode parent)
         {
             foreach (var childId in nodeData.ChildrenIds)
             {
                 if (_treeData.NodeDict.TryGetValue(childId, out var childNodeData))
                 {
-                    ACycleTreeItem item = null;
+                    ATreeNode node = null;
                     switch (childNodeData.NodeType)
                     {
                         case EAbilityNodeType.EAbilityCycle:
                             throw new Exception("出现了生命周期节点，有bug！！");
                         case EAbilityNodeType.EEvent:
-                            item = new EventTreeItem(this, childNodeData);
+                            node = new EventTreeNode(this, childNodeData);
                             break;
                         case EAbilityNodeType.EBranchControl:
-                            item = new BranchTreeItem(this, childNodeData);
+                            node = new BranchTreeNode(this, childNodeData);
                             break;
                         case EAbilityNodeType.EVariableSetter:
-                            item = new VarSetterTreeItem(this, childNodeData);
+                            node = new VarSetterTreeNode(this, childNodeData);
                             break;
                         case EAbilityNodeType.EAttrSetter:
-                            item = new AttrSetterTreeItem(this, childNodeData);
+                            node = new AttrSetterTreeNode(this, childNodeData);
                             break;
                         case EAbilityNodeType.ERepeat:
-                            item = new RepeatTreeItem(this, childNodeData);
+                            node = new RepeatTreeNode(this, childNodeData);
                             break;
                         case EAbilityNodeType.EAction:
-                            item = new ActionTreeItem(this, childNodeData);
+                            node = new ActionTreeNode(this, childNodeData);
                             break;
                         case EAbilityNodeType.ETimer:
-                            item = new TimerTreeItem(this, childNodeData);
+                            node = new TimerTreeNode(this, childNodeData);
                             break;
                         case EAbilityNodeType.EGroup:
-                            item = new GroupTreeItem(this, childNodeData);
+                            node = new GroupTreeNode(this, childNodeData);
                             break;
                     }
-
-                    item.DrawCount = ++_drawItemCount;
-                    parent.AddChild(item);
-                    setupChild(childNodeData, item);
+                    
+                    parent.AddChild(node);
+                    setupChild(childNodeData, node);
                 }
             }
         }
@@ -91,7 +90,7 @@ namespace Editor.AbilityEditor
         protected override void RowGUI(RowGUIArgs args)
         {
             base.RowGUI(args);
-            if (args.item is not ACycleTreeItem item)
+            if (args.item is not ATreeNode item)
             {
                 return;
             }
@@ -117,7 +116,7 @@ namespace Editor.AbilityEditor
         
         protected override void ContextClickedItem(int id)
         {
-            if (FindItem(id, rootItem) is ACycleTreeItem select)
+            if (FindItem(id, rootItem) is ATreeNode select)
             {
                 select.ShowMenu();
             }
@@ -130,7 +129,7 @@ namespace Editor.AbilityEditor
         /// <returns></returns>
         protected override bool CanStartDrag(CanStartDragArgs args)
         {
-            return args.draggedItem is not CycleTreeItem;
+            return args.draggedItem is not CycleTreeNode;
         }
 
         /// <summary>
@@ -142,12 +141,12 @@ namespace Editor.AbilityEditor
             if (hasSearch) return;
 
             DragAndDrop.PrepareStartDrag();
-            var draggedRows = new List<ACycleTreeItem>(16);
+            var draggedRows = new List<ATreeNode>(16);
             foreach (var item in GetRows())
             {
                 if (args.draggedItemIDs.Contains(item.id))
                 {
-                    draggedRows.Add(item as ACycleTreeItem);
+                    draggedRows.Add(item as ATreeNode);
                 }
             }
 
@@ -168,7 +167,7 @@ namespace Editor.AbilityEditor
 
             if (args.performDrop)
             {
-                var draggedItems = (List<ACycleTreeItem>)genericData;
+                var draggedItems = (List<ATreeNode>)genericData;
 
                 bool CheckLoop(TreeViewItem item)
                 {
@@ -206,7 +205,7 @@ namespace Editor.AbilityEditor
 
                 foreach (var treeViewItem in draggedItems)
                 {
-                    var parentItem = (ACycleTreeItem)args.parentItem;
+                    var parentItem = (ATreeNode)args.parentItem;
                     if (!parentItem.hasChildren)
                     {
                         parentItem.children = new List<TreeViewItem>();

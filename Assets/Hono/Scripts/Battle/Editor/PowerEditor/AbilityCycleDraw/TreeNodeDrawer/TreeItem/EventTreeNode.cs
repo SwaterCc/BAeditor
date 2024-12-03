@@ -11,10 +11,10 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem {
-	public class EventTreeItem : ACycleTreeItem {
+	public class EventTreeNode : ATreeNode {
 		private new EventNodeData _nodeData;
 
-		public EventTreeItem(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData) {
+		public EventTreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData) {
 			_nodeData = (EventNodeData)base._nodeData;
 		}
 
@@ -69,7 +69,6 @@ namespace Editor.AbilityEditor.TreeItem {
 		}
 
 		protected override void OnBtnClicked(Rect btnRect) {
-			AbilityViewDrawer.NodeBtnClick(_nodeData);
 			SettingWindow = BaseNodeWindow<EventNodeDataWindow, EventNodeData>.GetSettingWindow(_tree.TreeData,
 				_nodeData,
 				(nodeData) => {

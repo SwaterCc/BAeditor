@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public abstract class ACycleTreeItem : TreeViewItem
+    public abstract class ATreeNode : TreeViewItem
     {
         protected AbilityNodeData _nodeData;
         public AbilityNodeData NodeData => _nodeData;
@@ -19,11 +19,9 @@ namespace Editor.AbilityEditor
 
         public EditorWindow SettingWindow;
 
-        public int DrawCount;
-
         protected GenericMenu _menu;
         
-        protected ACycleTreeItem(AbilityCycleTree tree, AbilityNodeData nodeData) : base(nodeData.NodeId, nodeData.Depth)
+        protected ATreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(nodeData.NodeId, nodeData.Depth)
         {
             _nodeData = nodeData;
             _tree = tree;
@@ -34,37 +32,17 @@ namespace Editor.AbilityEditor
         {
             buildMenu();
             
-            if (_nodeData.NodeType != EAbilityNodeType.EAbilityCycle)
-            {
-                _menu.AddItem(new GUIContent("复制"),false,Copy);
-            }
-            else
-            {
-                _menu.AddDisabledItem(new GUIContent("复制"));
-            }
-
-            if (AbilityViewDrawer.CopyDataList != null)
-            {
-                _menu.AddItem(new GUIContent("黏贴"),false,Paste);
-            }
-            else
-            {
-                _menu.AddDisabledItem(new GUIContent("黏贴"));
-            }
             
             _menu.ShowAsContext();
         }
 
         protected abstract void buildMenu();
         
-        
         #region 按钮绘制
-
         protected abstract Color getButtonColor();
-
         protected abstract string getButtonText();
-
         protected abstract string getButtonTips();
+        
 
         protected virtual float getButtonWidth()
         {
@@ -119,7 +97,7 @@ namespace Editor.AbilityEditor
 
         #endregion
 
-        #region 数据处理
+      
         public void UpdateDepth(AbilityData data)
         {
             if (_nodeData.ParentId > 0)
@@ -136,7 +114,7 @@ namespace Editor.AbilityEditor
             {
                 foreach (var treeViewItem in children)
                 {
-                    if (treeViewItem is ACycleTreeItem logicTreeViewItem)
+                    if (treeViewItem is ATreeNode logicTreeViewItem)
                     {
                         logicTreeViewItem.UpdateDepth(data);
                     }
@@ -219,7 +197,7 @@ namespace Editor.AbilityEditor
         public void OnRemove() {
 	        if (children != null) {
 		        foreach (var child in children) {
-			        if (child is ACycleTreeItem aChild) {
+			        if (child is ATreeNode aChild) {
 				        var childData = aChild._nodeData;
 				        _tree.TreeData.NodeDict.Remove(childData.NodeId);
 				        aChild.OnRemove();
@@ -229,56 +207,5 @@ namespace Editor.AbilityEditor
 	       
 	        _tree.TreeData.NodeDict.Remove(_nodeData.NodeId);
         }
-
-        /// <summary>
-        /// 复制该节点
-        /// </summary>
-        public void Copy()
-        {
-            List<AbilityNodeData> nodeDatas = new List<AbilityNodeData>();
-            OnCopy(ref nodeDatas);
-            AbilityViewDrawer.CopyDataList = nodeDatas;
-        }
-        
-        public AbilityNodeData OnCopy(ref List<AbilityNodeData> nodeDatas)
-        {
-            AbilityNodeData selfCopy = _tree.TreeData.GetNodeData(_nodeData.NodeType);
-            selfCopy.CopyTo(_nodeData);
-            if (children != null)
-            {
-                foreach (var child in children)
-                {
-                    if (child is ACycleTreeItem abilityLogicTreeItem)
-                    {
-                        var copy =  abilityLogicTreeItem.OnCopy(ref nodeDatas);
-                        copy.ParentId = selfCopy.NodeId;
-                        selfCopy.ChildrenIds.Add(copy.NodeId);
-                    }
-                }
-            }
-            nodeDatas.Add(selfCopy);
-            return selfCopy;
-        }
-
-        public void Paste()
-        {
-            foreach (var data in AbilityViewDrawer.CopyDataList)
-            {
-                _tree.TreeData.NodeDict.Add(data.NodeId,data);
-                if (_nodeData.NodeType == EAbilityNodeType.EGroup)
-                {
-                    data.BelongGroupId = ((GroupNodeData)_nodeData).groupId;
-                }
-            }
-
-            var copyDataHead = AbilityViewDrawer.CopyDataList[^1];
-            copyDataHead.ParentId = _nodeData.NodeId;
-            _nodeData.ChildrenIds.Add(copyDataHead.NodeId);
-            AbilityViewDrawer.CopyDataList = null;
-            
-            _tree.Reload();
-        }
-        
-        #endregion
     }
 }

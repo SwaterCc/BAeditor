@@ -11,9 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AstarPathfindingProjectEdit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.Linq", "UniTask.Linq.csproj", "{8e11af49-9e39-1ef2-53f7-3ac9af389f3b}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{f7491f7c-98f1-e003-7873-cd5737c9f313}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drawing", "Drawing.csproj", "{10e17fd0-4103-6fdd-27e7-4e10950403d9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{f7491f7c-98f1-e003-7873-cd5737c9f313}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.Addressables", "UniTask.Addressables.csproj", "{99d2502e-2370-095e-4952-3fb3b876b55c}"
 EndProject
@@ -54,10 +54,10 @@ Global
 		{524227df-fd3c-7b77-4edf-69739973918e}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8e11af49-9e39-1ef2-53f7-3ac9af389f3b}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8e11af49-9e39-1ef2-53f7-3ac9af389f3b}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{f7491f7c-98f1-e003-7873-cd5737c9f313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{f7491f7c-98f1-e003-7873-cd5737c9f313}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10e17fd0-4103-6fdd-27e7-4e10950403d9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{10e17fd0-4103-6fdd-27e7-4e10950403d9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{f7491f7c-98f1-e003-7873-cd5737c9f313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{f7491f7c-98f1-e003-7873-cd5737c9f313}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99d2502e-2370-095e-4952-3fb3b876b55c}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{99d2502e-2370-095e-4952-3fb3b876b55c}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{681d0402-fa42-a836-223b-65c3de5fea7a}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
