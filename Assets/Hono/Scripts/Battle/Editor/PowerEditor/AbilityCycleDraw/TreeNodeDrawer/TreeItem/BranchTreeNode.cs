@@ -75,7 +75,7 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect)
         {
             AbilityViewDrawer.NodeBtnClick(_nodeData);
-            SettingWindow = BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>.GetSettingWindow(Tree.TreeData,
+            SettingWindow = NodeWindowBase<BranchNodeDataWindow, BranchNodeData>.GetSettingWindow(Tree.TreeData,
                 _nodeData,
                 (nodeData) => { Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
@@ -85,7 +85,7 @@ namespace Editor.AbilityEditor.TreeItem
         }
     }
 
-    public class BranchNodeDataWindow : BaseNodeWindow<BranchNodeDataWindow, BranchNodeData>, IAbilityNodeWindow<BranchNodeData>
+    public class BranchNodeDataWindow : NodeWindowBase<BranchNodeDataWindow, BranchNodeData>, IAbilityNodeWindow<BranchNodeData>
     {
         private ParameterField _compareFunc;
 

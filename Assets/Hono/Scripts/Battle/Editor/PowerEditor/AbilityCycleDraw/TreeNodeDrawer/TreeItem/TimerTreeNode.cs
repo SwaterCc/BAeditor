@@ -60,7 +60,7 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect)
         {
             AbilityViewDrawer.NodeBtnClick(_nodeData);
-            SettingWindow = BaseNodeWindow<TimerNodeDataWindow, TimerNodeData>.GetSettingWindow(Tree.TreeData,
+            SettingWindow = NodeWindowBase<TimerNodeDataWindow, TimerNodeData>.GetSettingWindow(Tree.TreeData,
                 _nodeData,
                 (nodeData) => { Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
@@ -70,7 +70,7 @@ namespace Editor.AbilityEditor.TreeItem
         }
     }
 
-    public class TimerNodeDataWindow : BaseNodeWindow<TimerNodeDataWindow, TimerNodeData>,
+    public class TimerNodeDataWindow : NodeWindowBase<TimerNodeDataWindow, TimerNodeData>,
         IAbilityNodeWindow<TimerNodeData>
     {
         private ParameterField _firstInterval;

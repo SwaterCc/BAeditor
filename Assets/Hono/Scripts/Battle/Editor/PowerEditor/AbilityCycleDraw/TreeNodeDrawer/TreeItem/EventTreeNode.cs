@@ -69,7 +69,7 @@ namespace Editor.AbilityEditor.TreeItem {
 		}
 
 		protected override void OnBtnClicked(Rect btnRect) {
-			SettingWindow = BaseNodeWindow<EventNodeDataWindow, EventNodeData>.GetSettingWindow(Tree.TreeData,
+			SettingWindow = NodeWindowBase<EventNodeDataWindow, EventNodeData>.GetSettingWindow(Tree.TreeData,
 				_nodeData,
 				(nodeData) => {
 					Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
@@ -80,7 +80,7 @@ namespace Editor.AbilityEditor.TreeItem {
 		}
 	}
 
-	public class EventNodeDataWindow : BaseNodeWindow<EventNodeDataWindow, EventNodeData>,
+	public class EventNodeDataWindow : NodeWindowBase<EventNodeDataWindow, EventNodeData>,
 		IAbilityNodeWindow<EventNodeData> {
 		private List<ParameterField> _parameterFields;
 		private EBattleEventType _curEvent;

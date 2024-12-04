@@ -13,6 +13,7 @@ namespace Editor.AbilityEditor.TreeItem
             _cycleNode = (CycleNodeData)_nodeData;
             _nodeData.Depth = 0;
         }
+        
 
         protected override void buildMenu()
         {

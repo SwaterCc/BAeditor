@@ -12,7 +12,7 @@ namespace Editor.AbilityEditor
         public void Init(AbilityNodeData nodeData, Action<TNodeData> onSave);
     }
 
-    public abstract class BaseNodeWindow<T,TNodeData> : EditorWindow where T : EditorWindow, IAbilityNodeWindow<TNodeData> where TNodeData : AbilityNodeData
+    public abstract class NodeWindowBase<T,TNodeData> : EditorWindow where T : EditorWindow, IAbilityNodeWindow<TNodeData> where TNodeData : AbilityNodeData
     {
         public static EditorWindow GetSettingWindow(AbilityData treeData, TNodeData nodeData,
             Action<TNodeData> onSave)

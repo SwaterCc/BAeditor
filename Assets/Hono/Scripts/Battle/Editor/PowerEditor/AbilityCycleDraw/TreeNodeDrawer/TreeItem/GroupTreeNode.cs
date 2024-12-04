@@ -61,7 +61,7 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect)
         {
             AbilityViewDrawer.NodeBtnClick(_nodeData);
-            SettingWindow = BaseNodeWindow<GroupNodeDataWindow, GroupNodeData>.GetSettingWindow(Tree.TreeData,
+            SettingWindow = NodeWindowBase<GroupNodeDataWindow, GroupNodeData>.GetSettingWindow(Tree.TreeData,
                 _nodeData,
                 (nodeData) => { Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
@@ -71,7 +71,7 @@ namespace Editor.AbilityEditor.TreeItem
         }
     }
 
-    public class GroupNodeDataWindow : BaseNodeWindow<GroupNodeDataWindow, GroupNodeData>,
+    public class GroupNodeDataWindow : NodeWindowBase<GroupNodeDataWindow, GroupNodeData>,
         IAbilityNodeWindow<GroupNodeData>
     {
         protected override void onInit() { }

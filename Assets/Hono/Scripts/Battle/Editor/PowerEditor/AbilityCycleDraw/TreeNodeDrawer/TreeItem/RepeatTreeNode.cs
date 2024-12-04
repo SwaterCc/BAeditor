@@ -55,7 +55,7 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect)
         {
             AbilityViewDrawer.NodeBtnClick(_nodeData);
-            SettingWindow = BaseNodeWindow<RepeatNodeDataWindow, RepeatNodeData>.GetSettingWindow(Tree.TreeData,
+            SettingWindow = NodeWindowBase<RepeatNodeDataWindow, RepeatNodeData>.GetSettingWindow(Tree.TreeData,
                 _nodeData,
                 (nodeData) => { Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
                     _nodeData = nodeData;
@@ -65,7 +65,7 @@ namespace Editor.AbilityEditor.TreeItem
         }
     }
 
-    public class RepeatNodeDataWindow : BaseNodeWindow<RepeatNodeDataWindow,RepeatNodeData>, IAbilityNodeWindow<RepeatNodeData>
+    public class RepeatNodeDataWindow : NodeWindowBase<RepeatNodeDataWindow,RepeatNodeData>, IAbilityNodeWindow<RepeatNodeData>
     {
 
         private ParameterField _maxCount;
