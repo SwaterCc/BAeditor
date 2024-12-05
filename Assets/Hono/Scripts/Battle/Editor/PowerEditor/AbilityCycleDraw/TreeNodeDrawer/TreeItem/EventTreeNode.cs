@@ -14,7 +14,7 @@ namespace Editor.AbilityEditor.TreeItem {
 	public class EventTreeNode : ATreeNode {
 		private new EventNodeData _nodeData;
 
-		public EventTreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData) {
+		public EventTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data) {
 			_nodeData = (EventNodeData)base._nodeData;
 		}
 

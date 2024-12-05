@@ -12,7 +12,7 @@ namespace Editor.AbilityEditor.TreeItem
         private ActionNodeData _actionNode;
         
 
-        public ActionTreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public ActionTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             _actionNode = (ActionNodeData)_nodeData;
         }

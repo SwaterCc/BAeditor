@@ -8,37 +8,43 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
+    
+    /// <summary>
+    /// 换一种思维，不是将数据实例化，而是将树转数据化
+    /// 即现有树，再有数据
+    /// </summary>
+    
     public class AbilityCycleTree : TreeView
     {
         public AbilityView View { get; }
         public AbilityData TreeData { get; }
-        public CycleTreeNode Head { get; }
+        public EAbilityCycle Cycle { get; }
+        
+        public CycleTreeNode Head;
 
         public AbilityCycleTree(AbilityView view, EAbilityCycle cycle) : base(new TreeViewState())
         {
             View = view;
             TreeData = view.Data;
-            var headNodeId = TreeData.HeadNodeDict[cycle];
-            Head = new CycleTreeNode(this, TreeData.NodeDict[headNodeId]);
+            Cycle = cycle;
 
             showAlternatingRowBackgrounds = true;
             showBorder = true;
             extraSpaceBeforeIconAndLabel = 30;
             rowHeight = 36;
+
             Reload();
         }
-      
+
         protected override TreeViewItem BuildRoot()
         {
             var root = new TreeViewItem(0, -1, "root");
+            var headNodeId = TreeData.HeadNodeDict[Cycle];
+            Head = new CycleTreeNode(this, TreeData.NodeDict[headNodeId]);
             root.AddChild(Head);
+            Head.BuildTree();
             SetupDepthsFromParentsAndChildren(root);
             return root;
-        }
-        
-        public void SaveTree()
-        {
-            Head.Serialize();
         }
         
         protected override void RowGUI(RowGUIArgs args)
@@ -72,7 +78,7 @@ namespace Editor.AbilityEditor
         {
             if (FindItem(id, rootItem) is ATreeNode select)
             {
-                select.ShowMenu();
+                select.ShowRightMenu();
             }
         }
 
@@ -83,7 +89,24 @@ namespace Editor.AbilityEditor
         /// <returns></returns>
         protected override bool CanStartDrag(CanStartDragArgs args)
         {
-            return args.draggedItem is not CycleTreeNode;
+            return args.draggedItem is not CycleTreeHead;
+        }
+
+        /// <summary>
+        /// 仅能多选同一树下的子节点
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        protected override bool CanMultiSelect(TreeViewItem item)
+        {
+            var selections = GetSelection();
+            if (selections.Count > 0)
+            {
+               var firstSelect = FindItem(selections[0], rootItem);
+               return firstSelect.parent == item.parent;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -95,7 +118,7 @@ namespace Editor.AbilityEditor
             if (hasSearch) return;
 
             DragAndDrop.PrepareStartDrag();
-            var draggedRows = new List<ATreeNode>(16);
+            var draggedRows = new List<ATreeNode>(32);
             foreach (var item in GetRows())
             {
                 if (args.draggedItemIDs.Contains(item.id))

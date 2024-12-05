@@ -11,7 +11,7 @@ namespace Editor.AbilityEditor.TreeItem
     {
         private new TimerNodeData _nodeData;
 
-        public TimerTreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public TimerTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             _nodeData = (TimerNodeData)base._nodeData;
         }
@@ -51,15 +51,10 @@ namespace Editor.AbilityEditor.TreeItem
             return "计时器 首次调用间隔：" + _nodeData.FirstInterval + " 间隔：" + _nodeData.Interval + " 调用次数：" +
                    _nodeData.MaxCount;
         }
-
-        protected override string getButtonTips()
-        {
-            return "计时器节点";
-        }
+        
 
         protected override void OnBtnClicked(Rect btnRect)
         {
-            AbilityViewDrawer.NodeBtnClick(_nodeData);
             SettingWindow = NodeWindowBase<TimerNodeDataWindow, TimerNodeData>.GetSettingWindow(Tree.TreeData,
                 _nodeData,
                 (nodeData) => { Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;

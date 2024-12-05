@@ -10,34 +10,38 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class VarSetterTreeNode : ATreeNode
+    public class VariableTreeNode : ATreeNode<VariableNodeData>
     {
-        private new VariableNodeData _nodeData;
-
-        public VarSetterTreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public VariableTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
-            _nodeData = (VariableNodeData)base._nodeData;
+            Style.Color = new Color(0.6f, 0.3f, 0.95f);
+            Style.Label = getButtonText();
         }
 
-        protected override void buildMenu()
+        protected override void OnCopy(ATreeNode parentNode, int idx)
         {
-            _menu.AddItem(new GUIContent("删除"), false,
-                Remove);
+            throw new NotImplementedException();
         }
 
-        protected override Color getButtonColor()
+        protected override void OnMove(ATreeNode parentNode)
         {
-            return new Color(0.6f, 0.3f, 0.95f);
+            throw new NotImplementedException();
         }
 
-        protected override string getButtonText()
+        protected override GenericMenu buildRightMenu(GenericMenu menu)
         {
-            var parentData = Tree.TreeData.NodeDict[_nodeData.ParentId];
-            string name = string.IsNullOrEmpty(_nodeData.Name) ? "未设置" : _nodeData.Name;
+            menu.AddItem(new GUIContent("删除"), false, parent.RemoveChild,this);
+            return menu;
+        }
 
-            if (parentData is ActionNodeData parentActionData)
+        private  string getButtonText()
+        {
+            var parentData = Tree.TreeData.NodeDict[Data.ParentId];
+            string name = string.IsNullOrEmpty(Data.Desc) ? "未设置" : Data.Desc;
+
+            if (parentData is ActionNodeData actionNode)
             {
-                if (AbilityFunctionHelper.TryGetFuncInfo(parentActionData.Function.funcName, out var funcInfo))
+                if (AbilityFunctionHelper.TryGetFuncInfo(actionNode.Function.funcName, out var funcInfo))
                 {
                     if (funcInfo.ReturnType == typeof(void))
                     {
@@ -50,17 +54,11 @@ namespace Editor.AbilityEditor.TreeItem
                 return "获取函数失败";
             }
 
-            return "设置变量 " + name + " = " + _nodeData.Value;
+            return "设置变量 " + name + " = " + Data.Value;
         }
-
-        protected override string getButtonTips()
-        {
-            return "Set变量";
-        }
-
+        
         protected override void OnBtnClicked(Rect btnRect)
         {
-            AbilityViewDrawer.NodeBtnClick(_nodeData);
             SettingWindow = NodeWindowBase<VarNodeDataWindow, VariableNodeData>.GetSettingWindow(Tree.TreeData,
                 _nodeData,
                 (nodeData) =>
@@ -84,9 +82,6 @@ namespace Editor.AbilityEditor.TreeItem
             "float",
             "bool",
             "string",
-            "intList",
-            "floatList",
-            "custom"
         };
 
         private string _curSelect;

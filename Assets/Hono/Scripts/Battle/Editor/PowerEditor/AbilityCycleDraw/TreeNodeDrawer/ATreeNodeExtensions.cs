@@ -9,13 +9,12 @@ namespace Editor.AbilityEditor
         /// 获取Node节点
         /// </summary>
         /// <param name="tree"></param>
-        /// <param name="nodeType"></param>
         /// <param name="nodeData"></param>
         /// <returns></returns>
-        public static ATreeNode GetNode(AbilityCycleTree tree, EAbilityNodeType nodeType, AbilityNodeData nodeData)
+        public static ATreeNode GetNode(AbilityCycleTree tree, AbilityNodeData nodeData)
         {
             ATreeNode node = null;
-            switch (nodeType)
+            switch (nodeData.NodeType)
             {
                 case EAbilityNodeType.EEvent:
                     node = new EventTreeNode<EventNodeData>(tree, nodeData);
@@ -24,7 +23,7 @@ namespace Editor.AbilityEditor
                     node = new BranchTreeNode<BranchNodeData>(tree, nodeData);
                     break;
                 case EAbilityNodeType.EVariableSetter:
-                    node = new VarSetterTreeNode<VariableNodeData>(tree, nodeData);
+                    node = new VariableTreeNode<VariableNodeData>(tree, nodeData);
                     break;
                 case EAbilityNodeType.EAttrSetter:
                     node = new AttrSetterTreeNode<AttrNodeData>(tree, nodeData);
@@ -55,7 +54,7 @@ namespace Editor.AbilityEditor
         /// <returns></returns>
         public static bool CheckHasTypeParent(this AbilityCycleTree tree, ATreeNode node, EAbilityNodeType checkType)
         {
-            int parentId = node.NodeData.ParentId;
+            int parentId = node.Data.ParentId;
             while (parentId > 0)
             {
                 var parentNode = tree.TreeData.NodeDict[parentId];

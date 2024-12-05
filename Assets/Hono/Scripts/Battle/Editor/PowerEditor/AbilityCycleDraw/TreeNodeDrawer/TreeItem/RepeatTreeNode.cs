@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class RepeatTreeNode : ATreeNode
+    public class RepeatTreeNode : ATreeNode<RepeatNodeData>
     {
         private new RepeatNodeData _nodeData;
 
-        public RepeatTreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public RepeatTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             _nodeData = (RepeatNodeData)base._nodeData;
         }
@@ -36,20 +36,35 @@ namespace Editor.AbilityEditor.TreeItem
             _menu.AddItem(new GUIContent("删除"), false,
                 Remove);
         }
-
-        protected override Color getButtonColor()
+        
+        protected override AbilityNodeWindow getSettingWindow()
         {
-            return Color.green;
+            throw new NotImplementedException();
         }
 
-        protected override string getButtonText()
+        protected override void OnCopy()
         {
-            return "循环次数 : " + _nodeData.MaxRepeatCount;
+            throw new NotImplementedException();
         }
 
-        protected override string getButtonTips()
+        protected override void OnMove()
         {
-            return "循环节点，循环指定次数";
+            throw new NotImplementedException();
+        }
+
+        protected override void OnAdd()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnRemove()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void buildMenu(GenericMenu menu)
+        {
+            throw new NotImplementedException();
         }
 
         protected override void OnBtnClicked(Rect btnRect)

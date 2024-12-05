@@ -11,7 +11,7 @@ namespace Editor.AbilityEditor.TreeItem
     {
         private new BranchNodeData _nodeData;
 
-        public BranchTreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public BranchTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             _nodeData = (BranchNodeData)base._nodeData;
         }

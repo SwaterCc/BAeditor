@@ -7,7 +7,7 @@ namespace Editor.AbilityEditor.TreeItem
     public class CycleTreeNode : ATreeNode
     {
         private CycleNodeData _cycleNode;
-        public CycleTreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public CycleTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             base.depth = 0;
             _cycleNode = (CycleNodeData)_nodeData;
@@ -75,26 +75,5 @@ namespace Editor.AbilityEditor.TreeItem
         }
 
         protected override void OnBtnClicked(Rect btnRect) { }
-
-        protected override string getButtonTips()
-        {
-            string desc = "";
-            switch (_cycleNode.cycleNodeData)
-            {
-                case EAbilityCycle.Init:
-                    desc = "Ability被授予后下一帧执行该周期，执行后会进入Ready状态";
-                    break;
-                case EAbilityCycle.PreExecute:
-                    desc = "启动前的阶段，下一阶段进入执行阶段";
-                    break;
-                case EAbilityCycle.Executing:
-                    desc = "执行阶段";
-                    break;
-                case EAbilityCycle.EndExecute:
-                    desc = "执行阶段结束后会进入该阶段，此时数据还未清理，可以做一些自定义逻辑，之后会重置数据";
-                    break;
-            }
-            return desc;
-        }
     }
 }

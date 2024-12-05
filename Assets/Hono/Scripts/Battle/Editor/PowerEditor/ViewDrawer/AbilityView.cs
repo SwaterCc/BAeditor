@@ -34,7 +34,7 @@ namespace Editor.AbilityEditor
                 SirenixEditorGUI.BeginBoxHeader();
                 var headHeight = GUIHelper.GetCurrentLayoutRect().height;
                 var cycleLabel = string.IsNullOrEmpty(Label)
-                    ? _cycleTree.Head.NodeData.ToString()
+                    ? _cycleTree.Head.Data.ToString()
                     : Label;
                 _cycleViewFoldout = SirenixEditorGUI.Foldout(_cycleViewFoldout, cycleLabel);
                 if (SirenixEditorGUI.Button("展开", ButtonSizes.Medium))

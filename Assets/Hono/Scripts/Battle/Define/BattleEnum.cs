@@ -316,7 +316,7 @@ namespace Hono.Scripts.Battle
         ERepeat,
 
         /// <summary>
-        ///     任务，动作
+        ///    动作
         /// </summary>
         EAction,
 

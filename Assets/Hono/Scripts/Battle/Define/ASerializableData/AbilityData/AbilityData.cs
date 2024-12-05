@@ -1,16 +1,7 @@
 #region
-
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using Hono.Scripts.Battle.Base;
-using Hono.Scripts.Battle.Event;
-using Hono.Scripts.Battle.Tools;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine.Serialization;
-
 #endregion
 
 namespace Hono.Scripts.Battle

@@ -1,4 +1,5 @@
-﻿using Hono.Scripts.Battle;
+﻿using System;
+using Hono.Scripts.Battle;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -9,17 +10,27 @@ namespace Editor.AbilityEditor
     {
         public Color Color;
         public string Label;
-        public string ToolTip;
         public float Width;
         public GUIStyle ButtonStyle;
     }
-
+    
     public abstract class ATreeNode : TreeViewItem
     {
+        /// <summary>
+        /// ability周期树
+        /// </summary>
         public AbilityCycleTree Tree { get; }
+
+        /// <summary>
+        /// 节点类型
+        /// </summary>
         public EAbilityNodeType NodeType { get; }
-        public AbilityNodeData NodeData { get; private set; }
-       
+
+        /// <summary>
+        /// ability节点数据
+        /// </summary>
+        public AbilityNodeData Data { get; }
+
         /// <summary>
         /// 按钮样式
         /// </summary>
@@ -29,22 +40,17 @@ namespace Editor.AbilityEditor
         /// </summary>
         private readonly GenericMenu _menu;
 
-        protected ATreeNode(AbilityCycleTree tree)
-        {
-            
-        }
-        
-        protected ATreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(nodeData.NodeId)
+        public new ATreeNode parent => (ATreeNode)base.parent;
+
+        protected ATreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(data.NodeId)
         {
             Tree = tree;
-            NodeData = nodeData;
-            _menu = new GenericMenu();
-
+            Data = data;
+            NodeType = data.NodeType;
             Style = new NodeStyle()
             {
                 Color = Color.black,
                 Label = "null",
-                ToolTip = "",
                 Width = 456f,
 
                 ButtonStyle = new GUIStyle(GUI.skin.button)
@@ -52,38 +58,52 @@ namespace Editor.AbilityEditor
                     alignment = TextAnchor.MiddleLeft
                 }
             };
+            _menu = new GenericMenu();
         }
 
-        #region 右键菜单绘制
-
-        protected abstract void buildMenu(GenericMenu menu);
-
-        public void ShowMenu()
+        /// <summary>
+        /// 构建树
+        /// </summary>
+        public void BuildTree()
         {
-            buildMenu(_menu);
-
-            _menu.ShowAsContext();
+            //根据数据构造树
+            foreach (var nodeId in Data.ChildrenIds)
+            {
+                var childData = Tree.TreeData.NodeDict[nodeId];
+                var childItem = ATreeNodeExtensions.GetNode(Tree, childData);
+                children.Add(childItem);
+                childItem.BuildTree();
+            }
         }
 
-        #endregion
+        public void AddChild(ATreeNode child)
+        {
+            
+        }
 
-        #region 按钮绘制
+        public void RemoveChild(object removeChild)
+        {
+            RemoveChild((ATreeNode)removeChild);
+        }
+        
+        protected void RemoveChild(ATreeNode removeChild)
+        {
+            
+        }
+        
+        protected abstract void OnCopy(ATreeNode parentNode,int idx);
+        protected abstract void OnMove(ATreeNode parentNode);
+        
+        protected abstract GenericMenu buildRightMenu(GenericMenu menu);
+        public void ShowRightMenu()
+        {
+            buildRightMenu(_menu).ShowAsContext();
+        }
 
         protected abstract void OnBtnClicked(Rect btnRect);
 
-        public virtual void DrawItem(Rect lineRect)
+        public void DrawItem(Rect lineRect)
         {
-            var bgColor = GUI.backgroundColor;
-
-            /*if (SettingWindow != null)
-            {
-                GUI.backgroundColor = new Color(2, 2, 2);
-            }
-            else
-            {
-                GUI.backgroundColor = Style.Color;
-            }*/
-
             lineRect.width = Style.Width;
             var buttonText = Style.Label;
 
@@ -94,9 +114,8 @@ namespace Editor.AbilityEditor
                 buttonText += "...";
             }
 
-            if (NodeData.NodeType != EAbilityNodeType.EAbilityCycle)
-                buttonText = $"<{NodeData.NodeId}>" + buttonText;
-
+            var bgColor = GUI.backgroundColor;
+            GUI.backgroundColor = Style.Color;
             if (GUI.Button(lineRect, new GUIContent(buttonText, Style.Label), Style.ButtonStyle))
             {
                 var btnRect = EditorGUIUtility.GetMainWindowPosition();
@@ -109,38 +128,15 @@ namespace Editor.AbilityEditor
 
             GUI.backgroundColor = bgColor;
         }
-
-        #endregion
-        
-        /// <summary>
-        /// 序列化该节点
-        /// </summary>
-        public void Serialize()
-        {
-            if (NodeData == null)
-            {
-                NodeData = AbilityDataExtensions.CreateNode()
-            }
-            OnSerialize();
-            foreach (var child in children)
-            {
-                if (child is ATreeNode aTreeNode)
-                {
-                    aTreeNode.Serialize();
-                }
-            }
-        }
-
-        protected abstract void OnSerialize();
     }
 
     public abstract class ATreeNode<T> : ATreeNode where T : AbilityNodeData
     {
-        public new T NodeData { get; private set; }
+        public new T Data { get; private set; }
 
-        protected ATreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        protected ATreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
-            NodeData = nodeData == null ? null : (T)base.NodeData;
+            Data = data == null ? null : (T)base.Data;
         }
     }
 }

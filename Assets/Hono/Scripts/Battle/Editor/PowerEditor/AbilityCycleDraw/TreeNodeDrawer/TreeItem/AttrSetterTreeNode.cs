@@ -14,7 +14,7 @@ namespace Editor.AbilityEditor.TreeItem
     {
         private new AttrNodeData _nodeData;
 
-        public AttrSetterTreeNode(AbilityCycleTree tree, AbilityNodeData nodeData) : base(tree, nodeData)
+        public AttrSetterTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             _nodeData = (AttrNodeData)base._nodeData;
         }
