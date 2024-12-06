@@ -7,12 +7,12 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class ActionTreeNode : ATreeNode
+    public class ActionTreeItem : ATreeItem
     {
         private ActionNodeData _actionNode;
         
 
-        public ActionTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
+        public ActionTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             _actionNode = (ActionNodeData)_nodeData;
         }

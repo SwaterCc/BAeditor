@@ -11,11 +11,11 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem {
-	public class EventTreeNode : ATreeNode {
-		private new EventNodeData _nodeData;
+	public class EventTreeItem : ATreeItem {
+		private new ListenerNodeData _nodeData;
 
-		public EventTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data) {
-			_nodeData = (EventNodeData)base._nodeData;
+		public EventTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data) {
+			_nodeData = (ListenerNodeData)base._nodeData;
 		}
 
 		protected override void buildMenu() {
@@ -40,7 +40,7 @@ namespace Editor.AbilityEditor.TreeItem {
 			
 			_menu.AddItem(new GUIContent("重置"),false,() => {
 				_nodeData.EventType = EBattleEventType.NoInit;
-				_nodeData.CreateChecker = new AParams();
+				_nodeData.GetChecker = new AParams();
 			});
 
 			_menu.AddItem(new GUIContent("删除"), false,
@@ -69,7 +69,7 @@ namespace Editor.AbilityEditor.TreeItem {
 		}
 
 		protected override void OnBtnClicked(Rect btnRect) {
-			SettingWindow = NodeWindowBase<EventNodeDataWindow, EventNodeData>.GetSettingWindow(Tree.TreeData,
+			SettingWindow = NodeWindowBase<EventNodeDataWindow, ListenerNodeData>.GetSettingWindow(Tree.TreeData,
 				_nodeData,
 				(nodeData) => {
 					Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
@@ -80,8 +80,8 @@ namespace Editor.AbilityEditor.TreeItem {
 		}
 	}
 
-	public class EventNodeDataWindow : NodeWindowBase<EventNodeDataWindow, EventNodeData>,
-		IAbilityNodeWindow<EventNodeData> {
+	public class EventNodeDataWindow : NodeWindowBase<EventNodeDataWindow, ListenerNodeData>,
+		IAbilityNodeWindow<ListenerNodeData> {
 		private List<ParameterField> _parameterFields;
 		private EBattleEventType _curEvent;
 
@@ -97,9 +97,9 @@ namespace Editor.AbilityEditor.TreeItem {
 				return;
 			}
 
-			if (!string.IsNullOrEmpty(_nodeData.CreateChecker.funcName)) {
-				for (int index = 0; index < _nodeData.CreateChecker.funcParams.Count; index++) {
-					AParams aParameter = _nodeData.CreateChecker.funcParams[index];
+			if (!string.IsNullOrEmpty(_nodeData.GetChecker.funcName)) {
+				for (int index = 0; index < _nodeData.GetChecker.funcParams.Count; index++) {
+					AParams aParameter = _nodeData.GetChecker.funcParams[index];
 					if(funcInfo.ParamInfos.Count <= index) continue;
 					_parameterFields.Add(new ParameterField(aParameter, funcInfo.ParamInfos[index].ParamName,
 						funcInfo.ParamInfos[index].ParamType));
@@ -116,14 +116,14 @@ namespace Editor.AbilityEditor.TreeItem {
 				return;
 			}
 
-			_nodeData.CreateChecker.paramType = EParamType.Function;
-			_nodeData.CreateChecker.funcName = value.CreateFuncName;
-			_nodeData.CreateChecker.funcParams ??= new List<AParams>();
-			_nodeData.CreateChecker.funcParams.Clear();
+			_nodeData.GetChecker.paramType = EParamType.Function;
+			_nodeData.GetChecker.funcName = value.CreateFuncName;
+			_nodeData.GetChecker.funcParams ??= new List<AParams>();
+			_nodeData.GetChecker.funcParams.Clear();
 			_parameterFields.Clear();
 			foreach (var paramInfo in funcInfo.ParamInfos) {
 				var parameter = new AParams();
-				_nodeData.CreateChecker.funcParams.Add(parameter);
+				_nodeData.GetChecker.funcParams.Add(parameter);
 				var param = new ParameterField(parameter, paramInfo.ParamName, paramInfo.ParamType);
 				_parameterFields.Add(param);
 			}
@@ -162,7 +162,7 @@ namespace Editor.AbilityEditor.TreeItem {
 				_curEvent = _nodeData.EventType;
 			}
 
-			if (_curEvent == EBattleEventType.NoInit || string.IsNullOrEmpty(_nodeData.CreateChecker.funcName)) {
+			if (_curEvent == EBattleEventType.NoInit || string.IsNullOrEmpty(_nodeData.GetChecker.funcName)) {
 				EditorGUILayout.LabelField("未初始化，请选择事件类型");
 			}
 			else {

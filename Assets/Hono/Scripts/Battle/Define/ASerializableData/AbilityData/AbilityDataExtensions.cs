@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle
                     nodeData = new CycleNodeData();
                     break;
                 case EAbilityNodeType.EEvent:
-                    nodeData = new EventNodeData();
+                    nodeData = new ListenerNodeData();
                     break;
                 case EAbilityNodeType.EBranchControl:
                     nodeData = new BranchNodeData();
@@ -46,7 +46,7 @@ namespace Hono.Scripts.Battle
                 default:
                     throw new InvalidCastException("找不到对应的Node类型");
             }
-            nodeData.NodeType = type;
+           
             return nodeData;
         }
 
@@ -75,7 +75,6 @@ namespace Hono.Scripts.Battle
             }
 
             var cycleNode = CreateNode<CycleNodeData>(EAbilityNodeType.EAbilityCycle);
-            cycleNode.NodeId = abilityData.GenNodeId();
             cycleNode.cycleNodeData = cycle;
             abilityData.HeadNodeDict[cycle] = cycleNode.NodeId;
             abilityData.NodeDict.Add(cycleNode.NodeId, cycleNode);

@@ -62,9 +62,9 @@ namespace Hono.Scripts.Battle
                     Children.Add(node);
                     node.Build(this);
 
-                    if (node.Data.NodeType == EAbilityNodeType.EBranchControl)
+                    if (node is ABranchNode branchNode)
                     {
-                        _branchGroupState.TryAdd(((BranchNodeData)(node.Data)).BranchGroupId, false);
+                        _branchGroupState.TryAdd(branchNode.Data.BranchGroupId, false);
                     }
                 }
             }
@@ -81,9 +81,9 @@ namespace Hono.Scripts.Battle
             {
                 foreach (var node in Children)
                 {
-                    if (node.Data.NodeType == EAbilityNodeType.EBranchControl)
+                    if (node is ABranchNode branchNode)
                     {
-                        var ifGroupId = ((BranchNodeData)(node.Data)).BranchGroupId;
+                        var ifGroupId = branchNode.Data.BranchGroupId;
                         if (_branchGroupState.TryGetValue(ifGroupId, out var hasSuccess) && hasSuccess)
                         {
                             continue;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
+using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
 {
@@ -10,8 +11,6 @@ namespace Hono.Scripts.Battle
     {
         public int NodeId;
 
-        public EAbilityNodeType NodeType;
-
         public int ParentId;
 
         public int BelongGroupId = -1;
@@ -19,17 +18,8 @@ namespace Hono.Scripts.Battle
         public List<int> ChildrenIds = new();
 
         public string Desc;
-        
-        public virtual void CopyTo(AbilityNodeData copy)
-        {
-            NodeType = copy.NodeType;
-            Desc = copy.Desc;
-        }
 
-        public bool IsHead()
-        {
-            return ParentId == -1;
-        }
+        public abstract AbilityNodeData Copy();
     }
 
     [Serializable]
@@ -37,10 +27,11 @@ namespace Hono.Scripts.Battle
     {
         public AParams Function = new();
 
-        public override void CopyTo(AbilityNodeData copy)
+        public override AbilityNodeData Copy()
         {
-            base.CopyTo(copy);
-            Function = new AParams(((ActionNodeData)copy).Function);
+            var copy = new ActionNodeData();
+            copy.Function = new AParams(copy.Function);
+            return copy;
         }
     }
 
@@ -48,39 +39,66 @@ namespace Hono.Scripts.Battle
     public class CycleNodeData : AbilityNodeData
     {
         public EAbilityCycle cycleNodeData;
+
+        public override AbilityNodeData Copy()
+        {
+            var copy = new CycleNodeData
+            {
+                cycleNodeData = cycleNodeData
+            };
+            return copy;
+        }
+    }
+
+    [Serializable]
+    public class BranchGroupNodeData : AbilityNodeData
+    {
+        public List<int> BranchNodeIds = new();
+
+        public override AbilityNodeData Copy()
+        {
+            var copy = new BranchGroupNodeData();
+            copy.BranchNodeIds.AddRange(BranchNodeIds);
+            return copy;
+        }
     }
 
     [Serializable]
     public class BranchNodeData : AbilityNodeData
     {
         public AParams CompareFunc = new();
-        public int BranchGroupId;
 
-        public override void CopyTo(AbilityNodeData copy)
+        public override AbilityNodeData Copy()
         {
-            base.CopyTo(copy);
-            var branch = (BranchNodeData)copy;
-            CompareFunc = new AParams(branch.CompareFunc);
-            BranchGroupId = branch.BranchGroupId + 100;
+            var copy = new BranchNodeData();
+            copy.CompareFunc = new AParams(CompareFunc);
+            return copy;
         }
     }
 
     [Serializable]
-    public class EventNodeData : AbilityNodeData
+    public class ListenerNodeData : AbilityNodeData
     {
         public bool IsEvent;
         public EBattleEventType EventType;
-        public AParams CreateChecker = new();
+        public AParams GetChecker = new();
         public string MsgName;
 
-        public override void CopyTo(AbilityNodeData copy)
+        public override AbilityNodeData Copy()
         {
-            base.CopyTo(copy);
-            var eventNode = (EventNodeData)copy;
-            IsEvent = eventNode.IsEvent;
-            EventType = eventNode.EventType;
-            CreateChecker = new AParams(eventNode.CreateChecker);
-            MsgName = eventNode.MsgName;
+            var copy = new ListenerNodeData();
+            copy.IsEvent = IsEvent;
+            if (copy.IsEvent)
+            {
+                copy.EventType = EventType;
+                copy.GetChecker = new AParams(GetChecker);
+            }
+            else
+            {
+                copy.MsgName = MsgName;
+            }
+
+            return copy;
         }
     }
 

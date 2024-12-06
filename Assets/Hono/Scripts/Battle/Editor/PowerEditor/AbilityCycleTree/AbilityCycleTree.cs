@@ -13,15 +13,14 @@ namespace Editor.AbilityEditor
     /// 换一种思维，不是将数据实例化，而是将树转数据化
     /// 即现有树，再有数据
     /// </summary>
-    
     public class AbilityCycleTree : TreeView
     {
+        private int _idCounter;
         public AbilityView View { get; }
         public AbilityData TreeData { get; }
         public EAbilityCycle Cycle { get; }
+        public ATreeEditorNode Head { get; }
         
-        public CycleTreeNode Head;
-
         public AbilityCycleTree(AbilityView view, EAbilityCycle cycle) : base(new TreeViewState())
         {
             View = view;
@@ -33,16 +32,18 @@ namespace Editor.AbilityEditor
             extraSpaceBeforeIconAndLabel = 30;
             rowHeight = 36;
 
+            var headNodeId = TreeData.HeadNodeDict[Cycle];
+            Head = new ATreeEditorNode(TreeData.NodeDict[headNodeId]);
+            Head.Build(TreeData, new ATreeEditorNode.IdGenerator());
             Reload();
         }
 
         protected override TreeViewItem BuildRoot()
         {
             var root = new TreeViewItem(0, -1, "root");
-            var headNodeId = TreeData.HeadNodeDict[Cycle];
-            Head = new CycleTreeNode(this, TreeData.NodeDict[headNodeId]);
-            root.AddChild(Head);
-            Head.BuildTree();
+          
+           
+           
             SetupDepthsFromParentsAndChildren(root);
             return root;
         }
@@ -50,7 +51,7 @@ namespace Editor.AbilityEditor
         protected override void RowGUI(RowGUIArgs args)
         {
             base.RowGUI(args);
-            if (args.item is not ATreeNode item)
+            if (args.item is not ATreeItem item)
             {
                 return;
             }
@@ -76,7 +77,7 @@ namespace Editor.AbilityEditor
 
         protected override void ContextClickedItem(int id)
         {
-            if (FindItem(id, rootItem) is ATreeNode select)
+            if (FindItem(id, rootItem) is ATreeItem select)
             {
                 select.ShowRightMenu();
             }
@@ -89,7 +90,7 @@ namespace Editor.AbilityEditor
         /// <returns></returns>
         protected override bool CanStartDrag(CanStartDragArgs args)
         {
-            return args.draggedItem is not CycleTreeHead;
+            return args.draggedItem is not CycleTreeItem;
         }
 
         /// <summary>
@@ -118,12 +119,12 @@ namespace Editor.AbilityEditor
             if (hasSearch) return;
 
             DragAndDrop.PrepareStartDrag();
-            var draggedRows = new List<ATreeNode>(32);
+            var draggedRows = new List<ATreeItem>(32);
             foreach (var item in GetRows())
             {
                 if (args.draggedItemIDs.Contains(item.id))
                 {
-                    draggedRows.Add(item as ATreeNode);
+                    draggedRows.Add(item as ATreeItem);
                 }
             }
 

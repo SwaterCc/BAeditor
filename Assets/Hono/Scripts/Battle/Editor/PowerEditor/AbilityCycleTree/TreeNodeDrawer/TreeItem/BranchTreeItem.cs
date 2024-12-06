@@ -7,11 +7,11 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class BranchTreeNode : ATreeNode
+    public class BranchTreeItem : ATreeItem
     {
         private new BranchNodeData _nodeData;
 
-        public BranchTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
+        public BranchTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             _nodeData = (BranchNodeData)base._nodeData;
         }

@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class CycleTreeNode : ATreeNode
+    public class CycleTreeItem : ATreeItem
     {
         private CycleNodeData _cycleNode;
-        public CycleTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
+        public CycleTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             base.depth = 0;
             _cycleNode = (CycleNodeData)_nodeData;

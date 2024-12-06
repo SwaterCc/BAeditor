@@ -210,22 +210,22 @@ namespace Editor.AbilityEditor
                 _dropDownList = AbilityViewDrawer.VarCollector.GetVariables(_type);
                 if (AbilityViewDrawer.BeforeClick != null)
                 {
-                    EventNodeData eventNode = null;
+                    ListenerNodeData listenerNode = null;
                     int parentId = AbilityViewDrawer.BeforeClick.ParentId;
                     while (parentId > 0)
                     {
                         var parentNode = AbilityViewDrawer.AbilityData.NodeDict[parentId];
                         parentId = parentNode.ParentId;
                         if (parentNode.NodeType != EAbilityNodeType.EEvent) continue;
-                        eventNode = (EventNodeData)parentNode;
+                        listenerNode = (ListenerNodeData)parentNode;
                         break;
                     }
 
-                    if (eventNode != null)
+                    if (listenerNode != null)
                     {
-                        if (eventNode.IsEvent)
+                        if (listenerNode.IsEvent)
                         {
-                            if (AbilityFunctionHelper.EventCheckerDict.TryGetValue(eventNode.EventType,
+                            if (AbilityFunctionHelper.EventCheckerDict.TryGetValue(listenerNode.EventType,
                                     out var editorInfo))
                             {
                                 foreach (var fieldInfo in editorInfo.EventInfoType.GetFields(BindingFlags.Public |

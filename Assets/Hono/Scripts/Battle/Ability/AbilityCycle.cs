@@ -78,35 +78,35 @@ namespace Hono.Scripts.Battle
             public ANode GetNode(in Ability ability, in AbilityNodeData data)
             {
                 ANode node = null;
-                switch (data.NodeType)
+                switch (data)
                 {
-                    case EAbilityNodeType.EAbilityCycle:
+                    case CycleNodeData:
                         node = APool<ACycleNode>.Pool.Rent();
                         break;
-                    case EAbilityNodeType.EBranchControl:
+                    case BranchNodeData:
                         node = APool<ABranchNode>.Pool.Rent();
                         break;
-                    case EAbilityNodeType.EVariableSetter:
+                    case VariableNodeData:
                         node = APool<AVariableNode>.Pool.Rent();
                         break;
-                    case EAbilityNodeType.ERepeat:
+                    case RepeatNodeData:
                         node = APool<ARepeatNode>.Pool.Rent();
                         break;
-                    case EAbilityNodeType.EAction:
+                    case ActionNodeData:
                         node = APool<AActionNode>.Pool.Rent();
                         break;
-                    case EAbilityNodeType.EAttrSetter:
+                    case AttrNodeData:
                         node = APool<AAttrNode>.Pool.Rent();
                         break;
-                    case EAbilityNodeType.EGroup:
+                    case GroupNodeData:
                         node = APool<AGroupNode>.Pool.Rent();
                         AGroupNode groupNode = (AGroupNode)node;
                         Groups.Add(groupNode.Data.groupId, groupNode);
                         break;
-                    case EAbilityNodeType.ETimer:
+                    case TimerNodeData:
                         node = APool<ATimerNode>.Pool.Rent();
                         break;
-                    case EAbilityNodeType.EEvent:
+                    case ListenerNodeData:
                         node = APool<AEventNode>.Pool.Rent();
                         _eventNodeList.Add((AEventNode)node);
                         break;
@@ -130,16 +130,16 @@ namespace Hono.Scripts.Battle
                 }
 
                 AContext.Log("Build Finish");
-                
+
                 //注册事件节点
                 foreach (var eventNode in _eventNodeList)
                 {
                     eventNode.RegisterEvent();
                 }
-                
+
                 //执行
                 doCycle(EAbilityCycle.Init);
-                
+
                 IsAllGroupRunFinish = false;
             }
 
@@ -203,8 +203,8 @@ namespace Hono.Scripts.Battle
             /// <param name="dt"></param>
             public void Tick(float dt)
             {
-                if(_ticks.Count == 0) return;
-                
+                if (_ticks.Count == 0) return;
+
                 try
                 {
                     foreach (ITickANode tickNode in _ticks)

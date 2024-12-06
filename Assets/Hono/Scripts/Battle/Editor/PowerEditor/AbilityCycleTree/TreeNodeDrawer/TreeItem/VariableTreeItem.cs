@@ -10,20 +10,20 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class VariableTreeNode : ATreeNode<VariableNodeData>
+    public class VariableTreeItem : ATreeItem<VariableNodeData>
     {
-        public VariableTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
+        public VariableTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             Style.Color = new Color(0.6f, 0.3f, 0.95f);
             Style.Label = getButtonText();
         }
 
-        protected override void OnCopy(ATreeNode parentNode, int idx)
+        protected override void OnCopy(ATreeItem parentItem, int idx)
         {
             throw new NotImplementedException();
         }
 
-        protected override void OnMove(ATreeNode parentNode)
+        protected override void OnMove(ATreeItem parentItem)
         {
             throw new NotImplementedException();
         }
@@ -36,8 +36,8 @@ namespace Editor.AbilityEditor.TreeItem
 
         private  string getButtonText()
         {
-            var parentData = Tree.TreeData.NodeDict[Data.ParentId];
-            string name = string.IsNullOrEmpty(Data.Desc) ? "未设置" : Data.Desc;
+            var parentData = Tree.TreeData.NodeDict[EditorNode.ParentId];
+            string name = string.IsNullOrEmpty(EditorNode.Desc) ? "未设置" : EditorNode.Desc;
 
             if (parentData is ActionNodeData actionNode)
             {
@@ -54,7 +54,7 @@ namespace Editor.AbilityEditor.TreeItem
                 return "获取函数失败";
             }
 
-            return "设置变量 " + name + " = " + Data.Value;
+            return "设置变量 " + name + " = " + EditorNode.Value;
         }
         
         protected override void OnBtnClicked(Rect btnRect)

@@ -7,11 +7,11 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class TimerTreeNode : ATreeNode
+    public class TimerTreeItem : ATreeItem
     {
         private new TimerNodeData _nodeData;
 
-        public TimerTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
+        public TimerTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             _nodeData = (TimerNodeData)base._nodeData;
         }

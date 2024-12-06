@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle
 {
     public partial class Ability
     {
-        private class AEventNode : ANode<EventNodeData>, IAPoolObject
+        private class AEventNode : ANode<ListenerNodeData>, IAPoolObject
         {
             private EventChecker _checker;
             private MessageListener _messageListener = new();
@@ -23,7 +23,7 @@ namespace Hono.Scripts.Battle
             {
                 if (Data.IsEvent)
                 {
-                    if (!Data.CreateChecker.TryParse(AContext, out _checker))
+                    if (!Data.GetChecker.TryParse(AContext, out _checker))
                     {
                         Debug.LogError("Event执行失败");
                         return;

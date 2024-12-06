@@ -14,7 +14,7 @@ namespace Editor.AbilityEditor
         public GUIStyle ButtonStyle;
     }
     
-    public abstract class ATreeNode : TreeViewItem
+    public abstract class ATreeItem : TreeViewItem
     {
         /// <summary>
         /// ability周期树
@@ -22,14 +22,9 @@ namespace Editor.AbilityEditor
         public AbilityCycleTree Tree { get; }
 
         /// <summary>
-        /// 节点类型
-        /// </summary>
-        public EAbilityNodeType NodeType { get; }
-
-        /// <summary>
         /// ability节点数据
         /// </summary>
-        public AbilityNodeData Data { get; }
+        public ATreeEditorNode EditorNode { get; }
 
         /// <summary>
         /// 按钮样式
@@ -40,13 +35,13 @@ namespace Editor.AbilityEditor
         /// </summary>
         private readonly GenericMenu _menu;
 
-        public new ATreeNode parent => (ATreeNode)base.parent;
+        public new ATreeItem parent => (ATreeItem)base.parent;
 
-        protected ATreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(data.NodeId)
+        protected ATreeItem(AbilityCycleTree tree, ATreeEditorNode editorNode) : base(editorNode.Id)
         {
             Tree = tree;
-            Data = data;
-            NodeType = data.NodeType;
+            EditorNode = editorNode;
+          
             Style = new NodeStyle()
             {
                 Color = Color.black,
@@ -67,32 +62,32 @@ namespace Editor.AbilityEditor
         public void BuildTree()
         {
             //根据数据构造树
-            foreach (var nodeId in Data.ChildrenIds)
+            foreach (var nodeId in EditorNode.Children)
             {
                 var childData = Tree.TreeData.NodeDict[nodeId];
-                var childItem = ATreeNodeExtensions.GetNode(Tree, childData);
+                var childItem = ATreeItemExtensions.CreateTreeItem(Tree, childData);
                 children.Add(childItem);
                 childItem.BuildTree();
             }
         }
 
-        public void AddChild(ATreeNode child)
+        public void AddChild(ATreeItem child)
         {
             
         }
 
         public void RemoveChild(object removeChild)
         {
-            RemoveChild((ATreeNode)removeChild);
+            RemoveChild((ATreeItem)removeChild);
         }
         
-        protected void RemoveChild(ATreeNode removeChild)
+        protected void RemoveChild(ATreeItem removeChild)
         {
             
         }
         
-        protected abstract void OnCopy(ATreeNode parentNode,int idx);
-        protected abstract void OnMove(ATreeNode parentNode);
+        protected abstract void OnCopy(ATreeItem parentItem,int idx);
+        protected abstract void OnMove(ATreeItem parentItem);
         
         protected abstract GenericMenu buildRightMenu(GenericMenu menu);
         public void ShowRightMenu()
@@ -127,16 +122,6 @@ namespace Editor.AbilityEditor
             }
 
             GUI.backgroundColor = bgColor;
-        }
-    }
-
-    public abstract class ATreeNode<T> : ATreeNode where T : AbilityNodeData
-    {
-        public new T Data { get; private set; }
-
-        protected ATreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
-        {
-            Data = data == null ? null : (T)base.Data;
         }
     }
 }

@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class RepeatTreeNode : ATreeNode<RepeatNodeData>
+    public class RepeatTreeItem : ATreeItem<RepeatNodeData>
     {
         private new RepeatNodeData _nodeData;
 
-        public RepeatTreeNode(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
+        public RepeatTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
         {
             _nodeData = (RepeatNodeData)base._nodeData;
         }

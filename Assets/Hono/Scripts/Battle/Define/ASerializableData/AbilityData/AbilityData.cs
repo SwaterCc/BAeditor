@@ -9,11 +9,6 @@ namespace Hono.Scripts.Battle
     public class AbilityData : ASerializableData
     {
         /// <summary>
-        /// 节点id计数器
-        /// </summary>
-        private int _nodeIdCounter;
-        
-        /// <summary>
         /// 默认起始Group
         /// </summary>
         public int defaultStartGroupId = -1;
@@ -37,11 +32,6 @@ namespace Hono.Scripts.Battle
             this.InitCycleHead(EAbilityCycle.PreExecute);
             this.InitCycleHead(EAbilityCycle.Executing);
             this.InitCycleHead(EAbilityCycle.EndExecute);
-        }
-        
-        public int GenNodeId()
-        {
-            return ++_nodeIdCounter;
         }
     }
 }
