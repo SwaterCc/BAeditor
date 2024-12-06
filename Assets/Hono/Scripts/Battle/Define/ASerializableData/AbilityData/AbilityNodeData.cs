@@ -19,7 +19,7 @@ namespace Hono.Scripts.Battle
 
         public string Desc;
 
-        public abstract AbilityNodeData Copy();
+        public abstract AbilityNodeData DeepCopy();
     }
 
     [Serializable]
@@ -27,7 +27,7 @@ namespace Hono.Scripts.Battle
     {
         public AParams Function = new();
 
-        public override AbilityNodeData Copy()
+        public override AbilityNodeData DeepCopy()
         {
             var copy = new ActionNodeData();
             copy.Function = new AParams(copy.Function);
@@ -40,7 +40,7 @@ namespace Hono.Scripts.Battle
     {
         public EAbilityCycle cycleNodeData;
 
-        public override AbilityNodeData Copy()
+        public override AbilityNodeData DeepCopy()
         {
             var copy = new CycleNodeData
             {
@@ -55,7 +55,7 @@ namespace Hono.Scripts.Battle
     {
         public List<int> BranchNodeIds = new();
 
-        public override AbilityNodeData Copy()
+        public override AbilityNodeData DeepCopy()
         {
             var copy = new BranchGroupNodeData();
             copy.BranchNodeIds.AddRange(BranchNodeIds);
@@ -68,7 +68,7 @@ namespace Hono.Scripts.Battle
     {
         public AParams CompareFunc = new();
 
-        public override AbilityNodeData Copy()
+        public override AbilityNodeData DeepCopy()
         {
             var copy = new BranchNodeData();
             copy.CompareFunc = new AParams(CompareFunc);
@@ -84,7 +84,7 @@ namespace Hono.Scripts.Battle
         public AParams GetChecker = new();
         public string MsgName;
 
-        public override AbilityNodeData Copy()
+        public override AbilityNodeData DeepCopy()
         {
             var copy = new ListenerNodeData();
             copy.IsEvent = IsEvent;
@@ -109,11 +109,10 @@ namespace Hono.Scripts.Battle
         public bool autoNext;
         public int defaultNextGroupId;
 
-        public override void CopyTo(AbilityNodeData copy)
+        public override AbilityNodeData DeepCopy()
         {
-            base.CopyTo(copy);
-            var groupNode = (GroupNodeData)copy;
-            groupId = groupNode.groupId + 100;
+            var copy = new GroupNodeData();
+            return copy;
         }
     }
 
@@ -124,13 +123,13 @@ namespace Hono.Scripts.Battle
         public AParams Interval = new();
         public AParams MaxCount = new();
 
-        public override void CopyTo(AbilityNodeData copy)
+        public override AbilityNodeData DeepCopy()
         {
-            base.CopyTo(copy);
-            var timerNode = (TimerNodeData)copy;
-            FirstInterval = new AParams(timerNode.FirstInterval);
-            Interval = new AParams(timerNode.Interval);
-            MaxCount = new AParams(timerNode.MaxCount);
+            var copy = new TimerNodeData();
+            copy.FirstInterval = new AParams(FirstInterval);
+            copy.Interval = new AParams(Interval);
+            copy.MaxCount = new AParams(MaxCount);
+            return copy;
         }
     }
 
@@ -139,28 +138,26 @@ namespace Hono.Scripts.Battle
     {
         public AParams MaxRepeatCount = new();
 
-        public override void CopyTo(AbilityNodeData copy)
+        public override AbilityNodeData DeepCopy()
         {
-            base.CopyTo(copy);
-            var repeatNode = (RepeatNodeData)copy;
-            MaxRepeatCount = new AParams(repeatNode.MaxRepeatCount);
+            var copy = new RepeatNodeData();
+            copy.MaxRepeatCount = new AParams(MaxRepeatCount);
+            return copy;
         }
     }
 
     [Serializable]
     public class VariableNodeData : AbilityNodeData
     {
-        public string Name;
-        public string typeString = "int";
+        public string Key;
         public AParams Value = new();
-
-        public override void CopyTo(AbilityNodeData copy)
+        public bool IsGetReturnValue;
+        public override AbilityNodeData DeepCopy()
         {
-            base.CopyTo(copy);
-            var varSetter = (VariableNodeData)copy;
-            Value = new AParams(varSetter.Value);
-            Name = varSetter.Name;
-            typeString = varSetter.typeString;
+            var copy = new VariableNodeData();
+            copy.Key = Key;
+            copy.Value = new AParams(Value);
+            return copy;
         }
     }
 
@@ -169,15 +166,15 @@ namespace Hono.Scripts.Battle
     {
         public EAttrType attrType;
         public AParams Value = new();
-        public bool IsTempAttr;
+        public bool IsPersistent;
 
-        public override void CopyTo(AbilityNodeData copy)
+        public override AbilityNodeData DeepCopy()
         {
-            base.CopyTo(copy);
-            var attrSetter = (AttrNodeData)copy;
-            Value = new AParams(attrSetter.Value);
-            attrType = attrSetter.attrType;
-            IsTempAttr = attrSetter.IsTempAttr;
+            var copy = new AttrNodeData();
+            copy.attrType = attrType;
+            copy.Value = new AParams(Value);
+            copy.IsPersistent = IsPersistent;
+            return copy;
         }
     }
 }

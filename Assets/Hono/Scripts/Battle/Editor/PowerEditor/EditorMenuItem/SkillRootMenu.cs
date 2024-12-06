@@ -9,9 +9,9 @@ using Sirenix.OdinInspector.Editor;
 
 namespace Hono.Scripts.Battle.Editor
 {
-    public class SkillRootItem : PMenuRootItem
+    public class SkillMenuRoot : PMenuRootItem
     {
-        public SkillRootItem(OdinMenuTree tree, string itemName) : base(tree, itemName,
+        public SkillMenuRoot(OdinMenuTree tree, string itemName) : base(tree, itemName,
                                                                         BattleEditorPath.SkillRootPath)
         {
             SdfIcon = SdfIconType.LightningChargeFill;

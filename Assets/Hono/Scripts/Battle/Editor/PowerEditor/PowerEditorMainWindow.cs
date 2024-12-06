@@ -17,27 +17,35 @@ namespace Editor.AbilityEditor
     /// </summary>
     public class PowerEditorMainWindow : OdinMenuEditorWindow
     {
-        protected override OdinMenuTree BuildMenuTree()
-        {
-            var treeInstance = new OdinMenuTree(true);
-            treeInstance.Config.DrawSearchToolbar = true;
+        private OdinMenuTree _treeInstance;
+        private List<PMenuRootItem> _rootItems = new List<PMenuRootItem>();
 
-            List<PMenuRootItem> rootItems = new List<PMenuRootItem>()
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            
+            _treeInstance = new OdinMenuTree(true);
+            _treeInstance.Config.DrawSearchToolbar = true;
+
+            _rootItems = new List<PMenuRootItem>()
             {
-                new SkillRootItem(treeInstance, "Skill"),
-                new BuffMenuRoot(treeInstance, "Buff"),
-                new BulletMenuRoot(treeInstance, "Bullet"),
-                new AbilityRoot(treeInstance),
+                new SkillMenuRoot(_treeInstance, "Skill"),
+                new BuffMenuRoot(_treeInstance, "Buff"),
+                new BulletMenuRoot(_treeInstance, "Bullet"),
+                new AbilityRoot(_treeInstance),
             };
 
-            treeInstance.MenuItems.AddRange(rootItems);
+            _treeInstance.MenuItems.AddRange(_rootItems);
 
-            foreach (var root in rootItems)
+            foreach (var root in _rootItems)
             {
                 root.BuildTree();
             }
+        }
 
-            return treeInstance;
+        protected override OdinMenuTree BuildMenuTree()
+        {
+            return _treeInstance;
         }
 
         protected override void OnDestroy() { }

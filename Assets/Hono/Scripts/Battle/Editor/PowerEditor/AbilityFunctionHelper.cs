@@ -63,47 +63,6 @@ namespace Editor.BattleEditor.AbilityEditor
             return _funcInfoTypeDict[type];
         }
         
-        public static Type GetVariableType(string typeString)
-        {
-            if (typeString == "int")
-            {
-                return typeof(int);
-            }
-
-            if (typeString == "float")
-            {
-                return typeof(float);
-            }
-
-            if (typeString == "bool")
-            {
-                return typeof(bool);
-            }
-
-            if (typeString == "string")
-            {
-                return typeof(string);
-            }
-
-            if (typeString == "intList")
-            {
-                return typeof(List<int>);
-            }
-
-            if (typeString == "floatList")
-            {
-                return typeof(List<float>);
-            }
-
-            var custom = Type.GetType(typeString);
-            if (custom != null)
-            {
-                return custom;
-            }
-
-            throw new InvalidCastException("类型转换失败");
-        }
-        
         public static EParamValueType GetParameterValueType(this Type type)
         {
             if (type == typeof(int))

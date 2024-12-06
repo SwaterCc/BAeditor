@@ -54,7 +54,10 @@ namespace Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow
             }
 
             AssetDatabase.CreateFolder(MenuItem.Path, folderName);
-            
+            if (MenuItem is ICollectionMenuItem collectionMenuItem)
+            {
+                collectionMenuItem.AddItem(MenuItem.Path + "/" + folderName, true);
+            }
             Close();
             MenuItem.MenuTree.UpdateMenuTree();
         }

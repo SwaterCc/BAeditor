@@ -41,6 +41,10 @@ namespace Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow
             if (SirenixEditorGUI.Button("确 认", ButtonSizes.Medium))
             {
                 AssetDatabase.DeleteAsset(MenuItem.Path);
+                if (MenuItem is ICollectionMenuItem collectionMenuItem)
+                {
+                    collectionMenuItem.RemoveItem(MenuItem.Path, MenuItem is PFolderMenuItem);
+                }
                 Close();
             }
             

@@ -27,7 +27,7 @@ namespace Editor.AbilityEditor.SimpleWindow
         {
             string label = "";
 
-            if (MenuItem.Root is SkillRootItem)
+            if (MenuItem.Root is SkillMenuRoot)
             {
                 label = "正在创建技能：";
             }
@@ -85,7 +85,7 @@ namespace Editor.AbilityEditor.SimpleWindow
 
             ASerializableData data = MenuItem.Root switch
             {
-                SkillRootItem  => CreateInstance<SkillData>(),
+                SkillMenuRoot  => CreateInstance<SkillData>(),
                 BuffMenuRoot   => CreateInstance<BuffData>(),
                 BulletMenuRoot => CreateInstance<BulletData>(),
                 _              => CreateInstance<AbilityData>()
@@ -95,8 +95,11 @@ namespace Editor.AbilityEditor.SimpleWindow
             data.id = id;
 
             AssetDatabase.CreateAsset(data, newPath);
+            if (MenuItem is ICollectionMenuItem collectionMenuItem)
+            {
+                collectionMenuItem.AddItem(newPath);
+            }
             Close();
-            MenuItem.MenuTree.UpdateMenuTree();
         }
     }
 }

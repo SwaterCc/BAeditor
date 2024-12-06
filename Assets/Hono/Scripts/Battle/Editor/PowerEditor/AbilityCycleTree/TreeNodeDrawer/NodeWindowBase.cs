@@ -1,5 +1,7 @@
 ﻿using System;
 using Hono.Scripts.Battle;
+using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -7,38 +9,66 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public interface IAbilityNodeWindow<out TNodeData>
+    public abstract class AbilityEditorWindow : OdinEditorWindow
     {
-        public void Init(AbilityNodeData nodeData, Action<TNodeData> onSave);
-    }
-
-    public abstract class NodeWindowBase<T,TNodeData> : EditorWindow where T : EditorWindow, IAbilityNodeWindow<TNodeData> where TNodeData : AbilityNodeData
-    {
-        public static EditorWindow GetSettingWindow(AbilityData treeData, TNodeData nodeData,
-            Action<TNodeData> onSave)
+        protected ATreeItem TreeItem { get; private set; }
+        protected AbilityNodeData TempData { get; private set; }
+        public static void Open<T>(ATreeItem treeItem) where T : AbilityEditorWindow
         {
             var window = GetWindow<T>();
-            var copy = treeData.DeepCopyNodeData(nodeData);
-            window.Init(copy, onSave);
-            return window;
+            window.TreeItem = treeItem;
+            window.OnBeginGUI += treeItem.OnItemEditWindowOpen;
+            window.OnClose += treeItem.OnItemEditWindowClose;
+            window.CopyData();
+            window.Init();
         }
 
-        protected TNodeData _nodeData;
-        protected Action<TNodeData> _onSave;
-
-        public void Init(AbilityNodeData nodeData, Action<TNodeData> onSave)
+        protected virtual void CopyData()
         {
-            _nodeData = (TNodeData)nodeData;
-            _onSave = onSave;
-            onInit();
+            TempData = TreeItem.EditorNode.DeepCopy();
         }
-
-        protected abstract void onInit();
         
-        protected void Save()
+        protected abstract void Init();
+
+        protected override void OnImGUI()
         {
-            _onSave.Invoke(_nodeData);
-            Close();
+            base.OnImGUI();
+            SirenixEditorGUI.BeginBox();
+            EditorGUILayout.BeginVertical();
+            //Desc
+            TempData.Desc = SirenixEditorFields.TextField("输入描述：", TempData.Desc);
+            Draw();
+            EditorGUILayout.Space(6);
+            
+            //应用按钮
+            if (SirenixEditorGUI.Button("保存修改", ButtonSizes.Medium))
+            {
+                SaveDataToEditorNode();
+                Close();
+            }
+            EditorGUILayout.EndVertical();
+        }
+
+        protected abstract void Draw();
+
+        protected virtual void SaveDataToEditorNode()
+        {
+            TreeItem.EditorNode.SaveNodeDataChange(TempData);
+        }
+    }
+
+    public abstract class AbilityEditorWindow<TAbilityNodeData> : AbilityEditorWindow where TAbilityNodeData : AbilityNodeData
+    {
+        protected new TAbilityNodeData TempData { get; private set; }
+
+        protected sealed override void CopyData()
+        {
+            TempData = TreeItem.EditorNode.DeepCopy<TAbilityNodeData>();
+        }
+
+        protected sealed override void OnImGUI()
+        {
+            base.OnImGUI();
         }
     }
 }

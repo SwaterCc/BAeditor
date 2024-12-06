@@ -1,8 +1,36 @@
-﻿using Editor.AbilityEditor.TreeItem;
+﻿using System.Runtime.CompilerServices;
+using Editor.AbilityEditor.TreeItem;
 using Hono.Scripts.Battle;
 
 namespace Editor.AbilityEditor
 {
+    
+    /// <summary>
+    /// 右键操作类型,注意分段，分段是有意义的
+    /// </summary>
+    public enum ERightClickOperationType
+    {
+        AddActionChild = 1,
+        AddBranchGroupChild,
+        AddBranchChild,
+        AddListenerChild,
+        AddGroupChild,
+        AddTimerChild,
+        AddRepeatChild,
+        AddVariableChild,
+        AddAttrChild,
+        
+        AddChildLimit = 100,
+        
+        RemoveSelf = 101,
+        Copy = 102,
+        Paste = 103,
+        
+        GetResult = 200,
+        JoinBranchGroup = 300,
+        Other,
+    }
+    
     public static class ATreeItemExtensions
     {
         /// <summary>
@@ -14,35 +42,29 @@ namespace Editor.AbilityEditor
         public static ATreeItem CreateTreeItem(AbilityCycleTree tree, ATreeEditorNode node)
         {
             ATreeItem item = null;
-            switch (node.GetDataRef())
+            switch (node.Data)
             {
+                case CycleNodeData:
+                    return new CycleTreeItem(tree, node);
                 case ListenerNodeData:
-                    item = new EventTreeItem(tree, node);
-                    break;
+                    return new EventTreeItem(tree, node);
                 case BranchNodeData:
-                    item = new BranchTreeItem(tree, node);
-                    break;
+                    return new BranchTreeItem(tree, node);
                 case VariableNodeData:
-                    item = new VariableTreeItem(tree, node);
-                    break;
+                    return new VariableTreeItem(tree, node);
                 case AttrNodeData:
-                    item = new AttrSetterTreeItem(tree, node);
-                    break;
+                    return new AttrSetterTreeItem(tree, node);
                 case RepeatNodeData:
-                    item = new RepeatTreeItem(tree, node);
-                    break;
+                    return new RepeatTreeItem(tree, node);
                 case ActionNodeData:
-                    item = new ActionTreeItem(tree, node);
-                    break;
+                    return new ActionTreeItem(tree, node);
                 case TimerNodeData:
-                    item = new TimerTreeItem(tree, node);
-                    break;
+                    return new TimerTreeItem(tree, node);
                 case GroupNodeData:
-                    item = new GroupTreeItem(tree, node);
-                    break;
+                    return new GroupTreeItem(tree, node);
             }
 
-            return item;
+            throw new SwitchExpressionException("不存在该类型的节点");
         }
 
         /*/// <summary>

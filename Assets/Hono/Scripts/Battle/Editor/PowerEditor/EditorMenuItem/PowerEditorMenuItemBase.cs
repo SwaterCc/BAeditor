@@ -142,7 +142,13 @@ namespace Hono.Scripts.Battle.Editor
         public abstract void MoveTo(PowerEditorMenuItemBase parent);
     }
 
-    public abstract class PMenuRootItem : PowerEditorMenuItemBase
+    public interface ICollectionMenuItem
+    {
+        public void AddItem(string path, bool isFolder = false);
+        public void RemoveItem(string path, bool isFolder = false);
+    }
+
+    public abstract class PMenuRootItem : PowerEditorMenuItemBase, ICollectionMenuItem
     {
         private readonly List<string> _folders = new();
         private readonly List<string> _files = new();
@@ -169,7 +175,7 @@ namespace Hono.Scripts.Battle.Editor
                 SelectedColorDarkSkin = new Color(0.689f,  0.210f, 0.172f, 1.000f),
                 SelectedColorLightSkin = new Color(0.243f, 0.490f, 0.900f, 1.000f)
             };
-            PowerEditorTools.GetPathAssetsAndFolders(path, ref _folders, ref _files);
+            PowerEditorTools.GetPathAssetsAndFolders(Path, ref _folders, ref _files);
             SetOperationAllow(EMenuItemOperation.Delete, false);
         }
 
@@ -208,9 +214,39 @@ namespace Hono.Scripts.Battle.Editor
         /// </summary>
         /// <param name="parent"></param>
         public sealed override void MoveTo(PowerEditorMenuItemBase parent) { }
+
+        public void AddItem(string path, bool isFolder = false)
+        {
+            if (isFolder)
+            {
+                string menuName = System.IO.Path.GetFileName(path);
+                var folderMenuItem = new PFolderMenuItem(MenuTree, menuName, path);
+                folderMenuItem.Root = this;
+                ChildMenuItems.Add(folderMenuItem);
+            }
+            else
+            {
+                string menuName = System.IO.Path.GetFileName(path).Split(".")[0];
+                var view = GetViewDrawer();
+                view.Load(path);
+                var abilityMenuItem = new PowerDataMenuItem(MenuTree, menuName, path, view);
+                abilityMenuItem.Root = this;
+                ChildMenuItems.Add(abilityMenuItem);
+            }
+        }
+
+        public void RemoveItem(string path, bool isFolder = false)
+        {
+             string menuName = isFolder ? System.IO.Path.GetFileName(path) : System.IO.Path.GetFileName(path).Split(".")[0];
+             var item = ChildMenuItems.Find((menuItem => menuItem.Name == menuName));
+             if (item != null)
+             {
+                 ChildMenuItems.Remove(item);
+             }
+        }
     }
 
-    public class PFolderMenuItem : PowerEditorMenuItemBase
+    public class PFolderMenuItem : PowerEditorMenuItemBase, ICollectionMenuItem
     {
         private readonly List<string> _folders = new();
         private readonly List<string> _files = new();
@@ -300,6 +336,36 @@ namespace Hono.Scripts.Battle.Editor
             }
 
             AssetDatabase.DeleteAsset(Path);
+        }
+
+        public void AddItem(string path, bool isFolder = false)
+        {
+            if (isFolder)
+            {
+                string menuName = System.IO.Path.GetFileName(path);
+                var folderMenuItem = new PFolderMenuItem(MenuTree, menuName, path);
+                folderMenuItem.Root = Root;
+                ChildMenuItems.Add(folderMenuItem);
+            }
+            else
+            {
+                string menuName = System.IO.Path.GetFileName(path).Split(".")[0];
+                var view = Root.GetViewDrawer();
+                view.Load(path);
+                var abilityMenuItem = new PowerDataMenuItem(MenuTree, menuName, path, view);
+                abilityMenuItem.Root = Root;
+                ChildMenuItems.Add(abilityMenuItem);
+            }
+        }
+
+        public void RemoveItem(string path, bool isFolder = false)
+        {
+            string menuName = isFolder ? System.IO.Path.GetFileName(path) : System.IO.Path.GetFileName(path).Split(".")[0];
+            var item = ChildMenuItems.Find((menuItem => menuItem.Name == menuName));
+            if (item != null)
+            {
+                ChildMenuItems.Remove(item);
+            }
         }
     }
 

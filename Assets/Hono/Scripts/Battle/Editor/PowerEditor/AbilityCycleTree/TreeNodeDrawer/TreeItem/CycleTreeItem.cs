@@ -1,49 +1,29 @@
 using System;
 using Hono.Scripts.Battle;
+using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class CycleTreeItem : ATreeItem
+    public class CycleTreeItem : ATreeItem<CycleNodeData>
     {
-        private CycleNodeData _cycleNode;
-        public CycleTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
+        public CycleTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
         {
-            base.depth = 0;
-            _cycleNode = (CycleNodeData)_nodeData;
-            _nodeData.Depth = 0;
-        }
-        
-
-        protected override void buildMenu()
-        {
-            _menu.AddItem(new GUIContent("添加Action"), false,
-                AddChild, (EAbilityNodeType.EAction));
-            _menu.AddItem(new GUIContent("添加If"), false,
-                AddChild, (EAbilityNodeType.EBranchControl));
-            _menu.AddItem(new GUIContent("Set变量"), false,
-                AddChild, (EAbilityNodeType.EVariableSetter));
-            _menu.AddItem(new GUIContent("SetAttr"), false,
-                AddChild, (EAbilityNodeType.EAttrSetter));
-            _menu.AddItem(new GUIContent("创建Event节点"), false,
-                AddChild, (EAbilityNodeType.EEvent));
-            _menu.AddItem(new GUIContent("创建Repeat节点"), false,
-                AddChild, (EAbilityNodeType.ERepeat));
-            _menu.AddItem(new GUIContent("创建Group节点"), false,
-                AddChild, (EAbilityNodeType.EGroup));
-            _menu.AddItem(new GUIContent("创建Timer节点"), false,
-                AddChild, (EAbilityNodeType.ETimer));
+            ButtonWidth = 200;
+            ButtonTextAnchor = TextAnchor.MiddleCenter;
         }
 
-        protected override Color getButtonColor()
+        protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
-            return Color.black;
+            return info.OperationType == ERightClickOperationType.RemoveSelf
+                ? ERightMenuState.Disable
+                : ERightMenuState.Enable;
         }
 
         protected override string getButtonText()
         {
             string desc = "";
-            switch (_cycleNode.cycleNodeData)
+            switch (Data.cycleNodeData)
             {
                 case EAbilityCycle.Init:
                     desc = "Init(初始化阶段)";
@@ -58,20 +38,8 @@ namespace Editor.AbilityEditor.TreeItem
                     desc = "EndExecute(执行结束阶段)";
                     break;
             }
-            
+
             return desc;
-        }
-
-        protected override float getButtonWidth()
-        {
-            return 200;
-        }
-
-        protected override GUIStyle getButtonTextStyle()
-        {
-            var buttonStyle = new GUIStyle(GUI.skin.button);
-            buttonStyle.alignment = TextAnchor.MiddleCenter;
-            return buttonStyle;
         }
 
         protected override void OnBtnClicked(Rect btnRect) { }
