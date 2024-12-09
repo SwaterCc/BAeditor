@@ -7,89 +7,51 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class TimerTreeItem : ATreeItem
+    public class TimerTreeItem : ATreeItem<TimerNodeData>
     {
-        private new TimerNodeData _nodeData;
-
-        public TimerTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
+        public TimerTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
         {
-            _nodeData = (TimerNodeData)base._nodeData;
+            ButtonBackGroundColor = new Color(1f, 2.0f, 0.3f);
         }
 
-        protected override void buildMenu()
-        {
-            _menu.AddItem(new GUIContent("创建节点/添加Action"), false,
-                AddChild, (EAbilityNodeType.EAction));
-            _menu.AddItem(new GUIContent("创建节点/添加If"), false,
-                AddChild, (EAbilityNodeType.EBranchControl));
-            _menu.AddItem(new GUIContent("创建节点/Set变量"), false,
-                AddChild, (EAbilityNodeType.EVariableSetter));
-            _menu.AddItem(new GUIContent("创建节点/SetAttr"), false,
-                AddChild, (EAbilityNodeType.EAttrSetter));
-            if (checkHasParent(EAbilityNodeType.EEvent))
-            {
-                _menu.AddItem(new GUIContent("创建节点/创建Event节点"), false,
-                    AddChild, (EAbilityNodeType.EEvent));
-            }
 
-            if (checkHasParent(EAbilityNodeType.ERepeat))
-            {
-                _menu.AddItem(new GUIContent("创建节点/创建Repeat节点"), false,
-                    AddChild, (EAbilityNodeType.ERepeat));
-            }
-            _menu.AddItem(new GUIContent("删除"), false,
-                Remove);
-        }
-
-        protected override Color getButtonColor()
+        protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
-            return new Color(1f, 2.0f, 0.3f);
+            throw new System.NotImplementedException();
         }
 
         protected override string getButtonText()
         {
-            return "计时器 首次调用间隔：" + _nodeData.FirstInterval + " 间隔：" + _nodeData.Interval + " 调用次数：" +
-                   _nodeData.MaxCount;
+            return "计时器 首次调用间隔：" + Data.FirstInterval + " 间隔：" + Data.Interval + " 调用次数：" +
+                   Data.MaxCount;
         }
-        
+
 
         protected override void OnBtnClicked(Rect btnRect)
         {
-            SettingWindow = NodeWindowBase<TimerNodeDataWindow, TimerNodeData>.GetSettingWindow(Tree.TreeData,
-                _nodeData,
-                (nodeData) => { Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
-                    _nodeData = nodeData;
-                });
-            SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
-            SettingWindow.Show();
+            ANodeSettingWindow.Open<TimerNodeDataWindow>(this);
         }
     }
 
-    public class TimerNodeDataWindow : NodeWindowBase<TimerNodeDataWindow, TimerNodeData>,
-        IAbilityNodeWindow<TimerNodeData>
+    public class TimerNodeDataWindow : ANodeSettingWindow<TimerNodeData>
     {
-        private ParameterField _firstInterval;
+        private ParameterField _first;
         private ParameterField _interval;
         private ParameterField _maxCount;
 
-        protected override void onInit()
+        protected override void Init()
         {
-            _firstInterval = new ParameterField(_nodeData.FirstInterval, "第一次触发间隔", typeof(float));
-            _interval = new ParameterField(_nodeData.Interval, "触发间隔", typeof(float));
-            _maxCount = new ParameterField(_nodeData.MaxCount, "触发次数(-1为无限次)", typeof(int));
+            _first = new ParameterField(TempData.FirstInterval, "第一次触发间隔",      typeof(float));
+            _interval = new ParameterField(TempData.Interval,   "触发间隔",         typeof(float));
+            _maxCount = new ParameterField(TempData.MaxCount,   "触发次数(-1为无限次)", typeof(int));
         }
 
-        private void OnGUI()
+        protected override void Draw()
         {
             SirenixEditorGUI.BeginBox("配置计时器");
-            _firstInterval.Draw();
+            _first.Draw();
             _interval.Draw();
             _maxCount.Draw();
-            _nodeData.Desc = SirenixEditorFields.TextField("备注", _nodeData.Desc);
-            if (SirenixEditorGUI.Button("保  存", ButtonSizes.Medium))
-            {
-                Save();
-            }
             SirenixEditorGUI.EndBox();
         }
     }

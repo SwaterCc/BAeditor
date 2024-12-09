@@ -104,7 +104,7 @@ namespace Editor.AbilityEditor
             }
         }
 
-        protected void addMenu(string label, ERightClickOperationType operation, object param)
+        private void addMenu(string label, ERightClickOperationType operation, object param)
         {
             var rightMenuInfo = new MenuInfo
             {
@@ -124,16 +124,32 @@ namespace Editor.AbilityEditor
                 case ERightClickOperationType.AddRepeatChild:
                 case ERightClickOperationType.AddVariableChild:
                 case ERightClickOperationType.AddAttrChild:
-                    rightMenuInfo.Function += data => EditorNode.AddChild(new ATreeEditorNode((AbilityNodeData)data));
+                    rightMenuInfo.Function += data =>
+                    {
+                        EditorNode.AddChild(new ATreeEditorNode((AbilityNodeData)data));
+                        Tree.Reload();
+                    };
                     break;
                 case ERightClickOperationType.RemoveSelf:
-                    rightMenuInfo.Function += _ => EditorNode.RemoveSelfFromParent();
+                    rightMenuInfo.Function += _ =>
+                    {
+                        EditorNode.RemoveSelfFromParent();
+                        Tree.Reload();
+                    };
                     break;
                 case ERightClickOperationType.Copy:
-                    rightMenuInfo.Function += _ => AbilityCycleTreeUtility.SaveCopyItems(Tree.GetSelection());
+                    rightMenuInfo.Function += _ =>
+                    {
+                        AbilityCycleTreeUtility.SaveCopyItems(Tree.GetSelection());
+                        Tree.Reload();
+                    };
                     break;
                 case ERightClickOperationType.Paste:
-                    rightMenuInfo.Function += _ => EditorNode.AddChildren(AbilityCycleTreeUtility.GetCopyItems());
+                    rightMenuInfo.Function += _ =>
+                    {
+                        EditorNode.AddChildren(AbilityCycleTreeUtility.GetCopyItems());
+                        Tree.Reload();
+                    };
                     break;
             }
 
@@ -188,22 +204,22 @@ namespace Editor.AbilityEditor
 
         public void DrawItem(Rect lineRect)
         {
-            lineRect.width = ButtonWidth;
             var buttonText = getButtonText();
+            if (string.IsNullOrEmpty(buttonText)) 
+                buttonText = "未定义描述";
 
-            if (string.IsNullOrEmpty(buttonText)) buttonText = "未定义描述";
-            if (buttonText.Length > 70)
+            if (!string.IsNullOrEmpty(EditorNode.Data.Desc))
             {
-                buttonText = buttonText.Substring(0, 70);
-                buttonText += "...";
+                buttonText = EditorNode.Data.Desc;
             }
 
             var bgColor = GUI.backgroundColor;
             GUI.backgroundColor = _nodeEditorWindowIsOpen ? _onNodeEditorWindowOpenColor : ButtonBackGroundColor;
-            if (GUI.Button(lineRect, new GUIContent(buttonText, getButtonText()), _buttonStyle))
+            var buttonContent = new GUIContent(buttonText, getButtonText());
+            lineRect.width = GUILayoutUtility.GetRect(buttonContent, EditorStyles.label).width;
+            if (GUI.Button(lineRect, buttonContent, _buttonStyle))
             {
                 var btnRect = EditorGUIUtility.GetMainWindowPosition();
-
                 if (Event.current.button == 0)
                 {
                     OnBtnClicked(btnRect);

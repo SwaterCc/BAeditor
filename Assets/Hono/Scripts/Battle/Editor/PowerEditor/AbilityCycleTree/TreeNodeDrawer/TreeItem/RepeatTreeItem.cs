@@ -1,4 +1,3 @@
-
 using System;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
@@ -10,95 +9,34 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class RepeatTreeItem : ATreeItem<RepeatNodeData>
     {
-        private new RepeatNodeData _nodeData;
+        public RepeatTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data) { }
 
-        public RepeatTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
-        {
-            _nodeData = (RepeatNodeData)base._nodeData;
-        }
-
-        protected override void buildMenu()
-        {
-            _menu.AddItem(new GUIContent("创建节点/添加Action"), false,
-                AddChild, (EAbilityNodeType.EAction));
-            _menu.AddItem(new GUIContent("创建节点/添加If"), false,
-                AddChild, (EAbilityNodeType.EBranchControl));
-            _menu.AddItem(new GUIContent("创建节点/Set变量"), false,
-                AddChild, (EAbilityNodeType.EVariableSetter));
-            _menu.AddItem(new GUIContent("创建节点/SetAttr"), false,
-                AddChild, (EAbilityNodeType.EAttrSetter));
-            
-            if (checkHasParent(EAbilityNodeType.ETimer))
-            {
-                _menu.AddItem(new GUIContent("创建节点/创建Timer节点"), false,
-                    AddChild, (EAbilityNodeType.ETimer));
-            }
-            _menu.AddItem(new GUIContent("删除"), false,
-                Remove);
-        }
-        
-        protected override AbilityNodeWindow getSettingWindow()
+        protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
             throw new NotImplementedException();
         }
 
-        protected override void OnCopy()
+        protected override string getButtonText()
         {
-            throw new NotImplementedException();
+            return "Foreach";
         }
 
-        protected override void OnMove()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void OnAdd()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void OnRemove()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void buildMenu(GenericMenu menu)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void OnBtnClicked(Rect btnRect)
-        {
-            AbilityViewDrawer.NodeBtnClick(_nodeData);
-            SettingWindow = NodeWindowBase<RepeatNodeDataWindow, RepeatNodeData>.GetSettingWindow(Tree.TreeData,
-                _nodeData,
-                (nodeData) => { Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
-                    _nodeData = nodeData;
-                });
-            SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
-            SettingWindow.Show();
-        }
+        protected override void OnBtnClicked(Rect btnRect) { }
     }
 
-    public class RepeatNodeDataWindow : NodeWindowBase<RepeatNodeDataWindow,RepeatNodeData>, IAbilityNodeWindow<RepeatNodeData>
+    public class RepeatSettingWindow : ANodeSettingWindow<RepeatNodeData>
     {
-
         private ParameterField _maxCount;
-        protected override void onInit()
+
+        protected override void Init()
         {
-            _maxCount = new ParameterField(_nodeData.MaxRepeatCount, "循环次数", typeof(int));
+            _maxCount = new ParameterField(TempData.MaxRepeatCount, "循环次数", typeof(int));
         }
 
-        private void OnGUI()
+        protected override void Draw()
         {
             SirenixEditorGUI.BeginBox("设置循环次数");
-            
             _maxCount.Draw();
-            
-            if (SirenixEditorGUI.Button("保  存", ButtonSizes.Medium))
-            {
-                Save();
-            }
             SirenixEditorGUI.EndBox();
         }
     }

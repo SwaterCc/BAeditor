@@ -12,32 +12,21 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class VariableTreeItem : ATreeItem<VariableNodeData>
     {
-        public VariableTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
+        public VariableTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
         {
-            Style.Color = new Color(0.6f, 0.3f, 0.95f);
-            Style.Label = getButtonText();
+            ButtonBackGroundColor = new Color(0.6f, 0.3f, 0.95f);
         }
 
-        protected override void OnCopy(ATreeItem parentItem, int idx)
+
+        protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
             throw new NotImplementedException();
         }
 
-        protected override void OnMove(ATreeItem parentItem)
+        protected override string getButtonText()
         {
-            throw new NotImplementedException();
-        }
-
-        protected override GenericMenu buildRightMenu(GenericMenu menu)
-        {
-            menu.AddItem(new GUIContent("删除"), false, parent.RemoveChild,this);
-            return menu;
-        }
-
-        private  string getButtonText()
-        {
-            var parentData = Tree.TreeData.NodeDict[EditorNode.ParentId];
-            string name = string.IsNullOrEmpty(EditorNode.Desc) ? "未设置" : EditorNode.Desc;
+            var parentData = parent.EditorNode.Data;
+            string name ="未设置";
 
             if (parentData is ActionNodeData actionNode)
             {
@@ -54,25 +43,16 @@ namespace Editor.AbilityEditor.TreeItem
                 return "获取函数失败";
             }
 
-            return "设置变量 " + name + " = " + EditorNode.Value;
+            return "设置变量 " + name + " = " + Data.Value;
         }
         
         protected override void OnBtnClicked(Rect btnRect)
         {
-            SettingWindow = NodeWindowBase<VarNodeDataWindow, VariableNodeData>.GetSettingWindow(Tree.TreeData,
-                _nodeData,
-                (nodeData) =>
-                {
-                    Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
-                    _nodeData = nodeData;
-                });
-            SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
-            SettingWindow.Show();
+            ANodeSettingWindow.Open<VariableSettingWindow>(this);
         }
     }
 
-    public class VarNodeDataWindow : NodeWindowBase<VarNodeDataWindow, VariableNodeData>,
-        IAbilityNodeWindow<VariableNodeData>
+    public class VariableSettingWindow : ANodeSettingWindow< VariableNodeData>
     {
         private ParameterField _value;
 
@@ -89,11 +69,11 @@ namespace Editor.AbilityEditor.TreeItem
         private bool _customCastSuccess;
         private bool _isGetReturn;
 
-        protected override void onInit()
+        protected override void Init()
         {
-            _value = new ParameterField(_nodeData.Value, "变量值：",
-                AbilityFunctionHelper.GetVariableType(_nodeData.typeString));
-            _curSelect = _nodeData.typeString;
+            _value = new ParameterField(TempData.Value, "变量值：",
+               TempData.Value.GetType());
+           
             if (_curSelect == "custom")
             {
                 _customTypeStr = _curSelect;
@@ -107,15 +87,16 @@ namespace Editor.AbilityEditor.TreeItem
             _isGetReturn = false;
         }
 
-        private void OnGUI()
+        protected override void Draw()
         {
             SirenixEditorGUI.BeginBox();
 
-            _nodeData.Name = SirenixEditorFields.TextField("变量名：", _nodeData.Name);
+            /*
+            TempData.Name = SirenixEditorFields.TextField("变量名：", TempData.Name);
 
-            if (_nodeData.ParentId > 0)
+            if (TempData.ParentId > 0)
             {
-                var parentNode = AbilityViewDrawer.AbilityData.NodeDict[_nodeData.ParentId];
+                var parentNode = AbilityViewDrawer.AbilityData.NodeDict[TempData.ParentId];
                 if (parentNode.NodeType == EAbilityNodeType.EAction)
                 {
                     var actionNode = (ActionNodeData)parentNode;
@@ -133,14 +114,14 @@ namespace Editor.AbilityEditor.TreeItem
             }
             
             _curSelect = SirenixEditorFields.Dropdown(new GUIContent("变量类型"), _curSelect, _dropList);
-            if (_curSelect != _nodeData.typeString)
+            if (_curSelect != TempData.typeString)
             {
-	            _nodeData.typeString = _curSelect;
-	            _nodeData.Value = new AParams();
+	            TempData.typeString = _curSelect;
+	            TempData.Value = new AParams();
                 if (_curSelect != "custom")
                 {
-                    _value = new ParameterField(_nodeData.Value, "变量值：",
-                        AbilityFunctionHelper.GetVariableType(_nodeData.typeString));
+                    _value = new ParameterField(TempData.Value, "变量值：",
+                        AbilityFunctionHelper.GetVariableType(TempData.typeString));
                 }
                 else
                 {
@@ -152,7 +133,7 @@ namespace Editor.AbilityEditor.TreeItem
                         _customCastSuccess = customType != null;
                         if (_customCastSuccess)
                         {
-                            _value = new ParameterField(_nodeData.Value, "变量值：", customType);
+                            _value = new ParameterField(TempData.Value, "变量值：", customType);
                         }
                     }
 
@@ -172,7 +153,7 @@ namespace Editor.AbilityEditor.TreeItem
                 }
             }
             else {
-	            _nodeData.typeString = _curSelect;
+	            TempData.typeString = _curSelect;
             }
 
             if (SirenixEditorGUI.Button("保   存", ButtonSizes.Large))
@@ -187,6 +168,7 @@ namespace Editor.AbilityEditor.TreeItem
                     Debug.LogError("无法识别类型，无法保存");
                 }
             }
+            */
 
             SirenixEditorGUI.EndBox();
         }

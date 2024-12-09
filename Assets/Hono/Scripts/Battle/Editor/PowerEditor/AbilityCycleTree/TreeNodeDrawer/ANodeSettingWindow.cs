@@ -9,11 +9,11 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public abstract class AbilityEditorWindow : OdinEditorWindow
+    public abstract class ANodeSettingWindow : OdinEditorWindow
     {
         protected ATreeItem TreeItem { get; private set; }
         protected AbilityNodeData TempData { get; private set; }
-        public static void Open<T>(ATreeItem treeItem) where T : AbilityEditorWindow
+        public static void Open<T>(ATreeItem treeItem) where T : ANodeSettingWindow
         {
             var window = GetWindow<T>();
             window.TreeItem = treeItem;
@@ -57,7 +57,7 @@ namespace Editor.AbilityEditor
         }
     }
 
-    public abstract class AbilityEditorWindow<TAbilityNodeData> : AbilityEditorWindow where TAbilityNodeData : AbilityNodeData
+    public abstract class ANodeSettingWindow<TAbilityNodeData> : ANodeSettingWindow where TAbilityNodeData : AbilityNodeData
     {
         protected new TAbilityNodeData TempData { get; private set; }
 

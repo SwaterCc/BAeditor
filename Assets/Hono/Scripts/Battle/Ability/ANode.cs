@@ -62,10 +62,7 @@ namespace Hono.Scripts.Battle
                     Children.Add(node);
                     node.Build(this);
 
-                    if (node is ABranchNode branchNode)
-                    {
-                        _branchGroupState.TryAdd(branchNode.Data.BranchGroupId, false);
-                    }
+                   
                 }
             }
 
@@ -83,11 +80,7 @@ namespace Hono.Scripts.Battle
                 {
                     if (node is ABranchNode branchNode)
                     {
-                        var ifGroupId = branchNode.Data.BranchGroupId;
-                        if (_branchGroupState.TryGetValue(ifGroupId, out var hasSuccess) && hasSuccess)
-                        {
-                            continue;
-                        }
+                        
                     }
 
                     //Debug.Log($"[Ability] AbilityId:{_executor.AbilityData.ConfigId} nodeId {NodeId} NodeType {NodeType} DoChildrenJob Next Node is {node.NodeType} : {node.NodeId}");

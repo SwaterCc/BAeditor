@@ -18,7 +18,7 @@ namespace Hono.Scripts.Battle
             {
                 object variable = null;
 
-                if (Parent.Data.NodeType == EAbilityNodeType.EAction)
+                if (Parent.Data is ActionNodeData)
                 {
                     variable = ((AActionNode)Parent).FuncResult;
                 }
@@ -26,13 +26,13 @@ namespace Hono.Scripts.Battle
                 {
                     if (!Data.Value.TryParse(AContext, out variable))
                     {
-                        Debug.LogError($"函数执行失败 Name {Data.Name}");
+                        Debug.LogError($"函数执行失败 Name {Data.Key}");
                         return;
                     }
                 }
                 
                 //这里的目标是持有
-                AContext.Vairables.Set(Data.Name, variable);
+                AContext.Vairables.Set(Data.Key, variable);
 
                 DoChildrenJob();
             }

@@ -28,7 +28,6 @@ namespace Editor.AbilityEditor
         
         GetResult = 200,
         JoinBranchGroup = 300,
-        Other,
     }
     
     public static class ATreeItemExtensions
@@ -47,13 +46,13 @@ namespace Editor.AbilityEditor
                 case CycleNodeData:
                     return new CycleTreeItem(tree, node);
                 case ListenerNodeData:
-                    return new EventTreeItem(tree, node);
+                    return new ListenerTreeItem(tree, node);
                 case BranchNodeData:
                     return new BranchTreeItem(tree, node);
                 case VariableNodeData:
                     return new VariableTreeItem(tree, node);
                 case AttrNodeData:
-                    return new AttrSetterTreeItem(tree, node);
+                    return new AttrTreeItem(tree, node);
                 case RepeatNodeData:
                     return new RepeatTreeItem(tree, node);
                 case ActionNodeData:

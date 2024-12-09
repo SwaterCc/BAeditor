@@ -206,7 +206,7 @@ namespace Editor.AbilityEditor
             if (SirenixEditorGUI.Button("使用变量" + _aParameter.variableName, ButtonSizes.Medium))
             {
                 _dropDownList.Clear();
-                //获取变量列表
+                /*//获取变量列表
                 _dropDownList = AbilityViewDrawer.VarCollector.GetVariables(_type);
                 if (AbilityViewDrawer.BeforeClick != null)
                 {
@@ -245,7 +245,7 @@ namespace Editor.AbilityEditor
 	                        _dropDownList.Add("Msg:P5");
                         }
                     }
-                }
+                }*/
 
                 _showDropDown = true;
             }

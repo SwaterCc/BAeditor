@@ -13,10 +13,7 @@ namespace Hono.Scripts.Battle
         {
             public override void DoJob()
             {
-                if (Parent.GetBranchGroupState(Data.BranchGroupId))
-                {
-                    return;
-                }
+               
 
                 if (!Data.CompareFunc.TryParse(AContext, out RefBool branchResult))
                 {
@@ -24,11 +21,7 @@ namespace Hono.Scripts.Battle
                     return;
                 }
 
-                if (branchResult)
-                {
-                    Parent.SetBranchGroupPass(Data.BranchGroupId);
-                    DoChildrenJob();
-                }
+              
             }
 
             public override void Recycle()

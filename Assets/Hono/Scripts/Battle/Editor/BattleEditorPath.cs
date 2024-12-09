@@ -17,5 +17,8 @@
         public static readonly string SkillCacheRootPath = $"{PowerEditorCache}/Skill";
         public static readonly string BuffCacheRootPath = $"{PowerEditorCache}/Buff";
         public static readonly string BulletCacheRootPath = $"{PowerEditorCache}/Bullet";
+
+        public static readonly string TagEditorInfoPath = $"{DataRootPath}/TagEditorInfo.asset";
+        public static readonly string TagTreePath = $"{DataRootPath}/TagTree.asset";
     }
 }

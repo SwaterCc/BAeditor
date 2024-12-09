@@ -18,7 +18,7 @@ namespace Editor.AbilityEditor
 
         public void RefreshAllVariable()
         {
-            _variables.Clear();
+            /*_variables.Clear();
             foreach (var pair in _abilityData.NodeDict)
             {
                 var nodeData = pair.Value;
@@ -47,7 +47,7 @@ namespace Editor.AbilityEditor
                 }
                 
                 list.Add(variableNodeData.Name);
-            }
+            }*/
         }
 
         public List<string> GetVariables(Type type)

@@ -13,7 +13,7 @@ namespace Editor.BattleEditor.TagEditor {
 		private TagTreeView _tagTreeView ;
 		private SearchField _search;
 		
-		[MenuItem("战斗编辑器/Tag编辑器")]
+		[MenuItem("Power！！/Tag编辑器")]
 		public static void OpenWindow() {
 			var window = CreateInstance<TagEditorWindow>();
 			window.titleContent = new GUIContent("Tag编辑");

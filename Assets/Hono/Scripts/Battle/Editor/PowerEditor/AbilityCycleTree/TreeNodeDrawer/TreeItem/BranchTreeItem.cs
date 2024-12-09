@@ -7,107 +7,49 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class BranchTreeItem : ATreeItem
+    public class BranchTreeItem : ATreeItem<BranchNodeData>
     {
-        private new BranchNodeData _nodeData;
-
-        public BranchTreeItem(AbilityCycleTree tree, AbilityNodeData data) : base(tree, data)
+        public BranchTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
         {
-            _nodeData = (BranchNodeData)base._nodeData;
-        }
-
-        protected override void buildMenu()
-        {
-            _menu.AddItem(new GUIContent("创建节点/添加Action"), false,
-                AddChild, (EAbilityNodeType.EAction));
-            _menu.AddItem(new GUIContent("创建节点/添加If"), false,
-                AddChild, (EAbilityNodeType.EBranchControl));
-            _menu.AddItem(new GUIContent("创建节点/添加ElseIf"), false,
-                AddElseIfNode, (EAbilityNodeType.EBranchControl));
-            _menu.AddItem(new GUIContent("创建节点/Set变量"), false,
-                AddChild, (EAbilityNodeType.EVariableSetter));
-            _menu.AddItem(new GUIContent("创建节点/SetAttr"), false,
-                AddChild, (EAbilityNodeType.EAttrSetter));
-            _menu.AddItem(new GUIContent("创建节点/创建Event节点"), false,
-                AddChild, (EAbilityNodeType.EEvent));
-           
-            _menu.AddItem(new GUIContent("删除"), false,
-                Remove);
+            ButtonBackGroundColor = Color.cyan;
+            addCustomMenu("合并为分支组", ERightClickOperationType.JoinBranchGroup, null, null);
         }
         
-        private void AddElseIfNode(object obj)
+        protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
-            var node = (BranchNodeData)Tree.TreeData.GetNodeData(EAbilityNodeType.EBranchControl);
-            node.ParentId = _nodeData.ParentId;
-            node.Depth = _nodeData.Depth;
-            node.BranchGroupId = _nodeData.BranchGroupId;
-            node.Desc = "else if";
-            var parentNode = Tree.TreeData.NodeDict[node.ParentId];
-            var index = parentNode.ChildrenIds.IndexOf(_nodeData.NodeId);
-            parentNode.ChildrenIds.Insert(index + 1, node.NodeId);
-            Tree.TreeData.NodeDict.Add(node.NodeId, node);
-            
-            EditorUtility.SetDirty(Tree.TreeData);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            Tree.Reload();
-        }
-
-        protected override Color getButtonColor()
-        {
-            return Color.cyan;
+            return ERightMenuState.Enable;
         }
 
         protected override string getButtonText()
         {
-            string label = string.IsNullOrEmpty(_nodeData.Desc)
-                ? "If"
-                : _nodeData.Desc;
+            string label = "If:";
+            if (parent is BranchGroupTreeItem)
+            {
+                label = "Case:";
+            }
 
-            return label +" : "+ _nodeData.CompareFunc;
-        }
-
-        protected override string getButtonTips()
-        {
-            return "执行if判定，如果判定成功则执行子节点内容，判定失败则走同级的下一节点";
+            return label + " : " + Data.CompareFunc;
         }
 
         protected override void OnBtnClicked(Rect btnRect)
         {
-            AbilityViewDrawer.NodeBtnClick(_nodeData);
-            SettingWindow = NodeWindowBase<BranchNodeDataWindow, BranchNodeData>.GetSettingWindow(Tree.TreeData,
-                _nodeData,
-                (nodeData) => { Tree.TreeData.NodeDict[nodeData.NodeId] = nodeData;
-                    _nodeData = nodeData;
-                });
-            SettingWindow.position = new Rect(btnRect.x, btnRect.y, 740, 140);
-            SettingWindow.Show();
+            ANodeSettingWindow.Open<BranchSettingWindow>(this);
         }
     }
 
-    public class BranchNodeDataWindow : NodeWindowBase<BranchNodeDataWindow, BranchNodeData>, IAbilityNodeWindow<BranchNodeData>
+    public class BranchSettingWindow : ANodeSettingWindow<BranchNodeData>
     {
         private ParameterField _compareFunc;
 
-        protected override void onInit()
+        protected override void Init()
         {
-            _compareFunc = new ParameterField(_nodeData.CompareFunc, "判定条件", typeof(bool));
+            _compareFunc = new ParameterField(TempData.CompareFunc, "判定条件", typeof(bool));
         }
 
-        private void OnGUI()
+        protected override void Draw()
         {
             SirenixEditorGUI.BeginBox("If节点", true);
-            EditorGUILayout.BeginVertical();
             _compareFunc.Draw();
-            EditorGUILayout.EndVertical();
-            SirenixEditorGUI.BeginBox();
-            _nodeData.Desc = EditorGUILayout.TextField("节点描述:", _nodeData.Desc);
-            if (SirenixEditorGUI.Button("保   存", ButtonSizes.Medium))
-            {
-                Save();
-            }
-
-            SirenixEditorGUI.EndBox();
             SirenixEditorGUI.EndBox();
         }
     }
