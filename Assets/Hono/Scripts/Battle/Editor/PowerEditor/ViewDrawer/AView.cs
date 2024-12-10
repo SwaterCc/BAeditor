@@ -10,7 +10,7 @@ namespace Editor.AbilityEditor
     {
         public bool HasError { get; protected set; }
         public abstract void Load(string path);
-        public abstract void Init(OdinDrawer odinDrawer);
+        public abstract void Init();
         public abstract void Draw();
         public abstract void Save();
     }
@@ -30,12 +30,12 @@ namespace Editor.AbilityEditor
             }
         }
 
-        public sealed override void Init(OdinDrawer odinDrawer)
+        public sealed override void Init()
         {
-            onInit(odinDrawer);
+            onInit();
         }
 
-        protected virtual void onInit(OdinDrawer odinDrawer) { }
+        protected virtual void onInit() { }
 
         public override void Save()
         {
@@ -53,7 +53,7 @@ namespace Editor.AbilityEditor
         protected override void Initialize()
         {
             base.Initialize();
-            ValueEntry.SmartValue.Init(this);
+            ValueEntry.SmartValue.Init();
         }
 
         protected override void DrawPropertyLayout(GUIContent label)

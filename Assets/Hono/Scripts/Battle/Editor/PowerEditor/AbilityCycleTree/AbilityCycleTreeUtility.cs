@@ -5,17 +5,16 @@ namespace Editor.AbilityEditor
 {
     public static class AbilityCycleTreeUtility
     {
-        private static Dictionary<int, Dictionary<EAbilityCycle, ATreeEditorNode>> _treeCache = new();
-        private static List<ATreeEditorNode> _copyCache = new();
+        private static readonly Dictionary<int, Dictionary<EAbilityCycle, ATreeEditorNode>> TreeCache = new();
+        private static readonly List<ATreeEditorNode> CopyCache = new();
         private static ATreeEditorNode CreateAEditorTree(AbilityData abilityData, EAbilityCycle cycle)
         {
-            var headNodeId = abilityData.HeadNodeDict[cycle];
-            var headNode = new ATreeEditorNode(abilityData.NodeDict[headNodeId]);
+            var headNode = new ATreeEditorNode(abilityData.HeadNodeDict[cycle]);
             headNode.Build(abilityData, new ATreeEditorNode.IdGenerator());
-            if (!_treeCache.TryGetValue(abilityData.id, out var cycleDict))
+            if (!TreeCache.TryGetValue(abilityData.id, out var cycleDict))
             {
                 cycleDict = new Dictionary<EAbilityCycle, ATreeEditorNode>();
-                _treeCache.Add(abilityData.id, cycleDict);
+                TreeCache.Add(abilityData.id, cycleDict);
             }
 
             cycleDict[cycle] = headNode;
@@ -50,25 +49,25 @@ namespace Editor.AbilityEditor
             out ATreeEditorNode head)
         {
             head = null;
-            return _treeCache.TryGetValue(abilityData.id, out var cycleDict) && cycleDict.TryGetValue(cycle, out head);
+            return TreeCache.TryGetValue(abilityData.id, out var cycleDict) && cycleDict.TryGetValue(cycle, out head);
         }
 
         public static void SaveCopyItems(List<ATreeEditorNode> copySelectItems)
         {
             foreach (var item in copySelectItems)
             {
-                _copyCache.Add(new ATreeEditorNode(item));
+                CopyCache.Add(new ATreeEditorNode(item));
             }
         }
 
         public static void ClearCopyCache()
         {
-            _copyCache.Clear();
+            CopyCache.Clear();
         }
 
         public static List<ATreeEditorNode>  GetCopyItems()
         {
-            return _copyCache;
+            return CopyCache;
         }
     }
 }

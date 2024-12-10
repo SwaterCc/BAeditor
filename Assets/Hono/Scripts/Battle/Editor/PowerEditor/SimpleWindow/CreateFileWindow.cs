@@ -21,6 +21,7 @@ namespace Editor.AbilityEditor.SimpleWindow
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(400, 100);
             window.MenuItem = itemBase;
             window.init();
+            window.ShowModal();
         }
 
         private void init()
@@ -83,23 +84,31 @@ namespace Editor.AbilityEditor.SimpleWindow
                 return;
             }
 
-            ASerializableData data = MenuItem.Root switch
+            try
             {
-                SkillMenuRoot  => CreateInstance<SkillData>(),
-                BuffMenuRoot   => CreateInstance<BuffData>(),
-                BulletMenuRoot => CreateInstance<BulletData>(),
-                _              => CreateInstance<AbilityData>()
-            };
+                ASerializableData data = MenuItem.Root switch
+                {
+                    SkillMenuRoot  => CreateInstance<SkillData>(),
+                    BuffMenuRoot   => CreateInstance<BuffData>(),
+                    BulletMenuRoot => CreateInstance<BulletData>(),
+                    _              => CreateInstance<AbilityData>()
+                };
+                
+                data.name = id.ToString();
+                data.id = id;
 
-            data.name = id.ToString();
-            data.id = id;
-
-            AssetDatabase.CreateAsset(data, newPath);
-            if (MenuItem is ICollectionMenuItem collectionMenuItem)
-            {
-                collectionMenuItem.AddItem(newPath);
+                AssetDatabase.CreateAsset(data, newPath);
+                if (MenuItem is ICollectionMenuItem collectionMenuItem)
+                {
+                    collectionMenuItem.AddItem(newPath);
+                }
+                Close();
             }
-            Close();
+            catch (Exception e)
+            { 
+                Close();
+                throw;
+            }
         }
     }
 }

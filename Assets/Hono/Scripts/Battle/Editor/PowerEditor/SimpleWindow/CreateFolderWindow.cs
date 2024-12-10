@@ -18,6 +18,7 @@ namespace Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow
             var window = GetWindow<CreateFolderWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(400, 100);
             window.MenuItem = itemBase;
+            window.ShowModal();
         }
 
         [LabelText("路径名:")]

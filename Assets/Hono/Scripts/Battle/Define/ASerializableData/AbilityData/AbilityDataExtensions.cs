@@ -60,26 +60,7 @@ namespace Hono.Scripts.Battle
         {
             return (T)CreateNode(type);
         }
-
-        /// <summary>
-        /// 初始化周期节点
-        /// </summary>
-        /// <param name="abilityData"></param>
-        /// <param name="cycle"></param>
-        /// <exception cref="Exception"></exception>
-        public static void InitCycleHead(this AbilityData abilityData, EAbilityCycle cycle)
-        {
-            if (abilityData.HeadNodeDict.ContainsKey(cycle))
-            {
-                throw new Exception($"ability {abilityData.id} 重复添加相同的周期节点 {cycle}");
-            }
-
-            var cycleNode = CreateNode<CycleNodeData>(EAbilityNodeType.EAbilityCycle);
-            cycleNode.cycleNodeData = cycle;
-            abilityData.HeadNodeDict[cycle] = cycleNode.NodeId;
-            abilityData.NodeDict.Add(cycleNode.NodeId, cycleNode);
-        }
-
+        
         /// <summary>
         /// 添加节点
         /// </summary>

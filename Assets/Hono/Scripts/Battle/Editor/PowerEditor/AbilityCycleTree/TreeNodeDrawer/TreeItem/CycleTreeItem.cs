@@ -15,7 +15,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
-            return info.OperationType == ERightClickOperationType.RemoveSelf
+            return info.OperationType is ERightClickOperationType.RemoveSelf or ERightClickOperationType.Copy
                 ? ERightMenuState.Disable
                 : ERightMenuState.Enable;
         }

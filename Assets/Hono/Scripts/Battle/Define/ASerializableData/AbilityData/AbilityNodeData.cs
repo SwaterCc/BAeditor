@@ -40,6 +40,13 @@ namespace Hono.Scripts.Battle
     {
         public EAbilityCycle cycleNodeData;
 
+        public CycleNodeData(){}
+
+        public CycleNodeData(EAbilityCycle cycle)
+        {
+            cycleNodeData = cycle;
+        }
+        
         public override AbilityNodeData DeepCopy()
         {
             var copy = new CycleNodeData

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -22,11 +23,15 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 按钮颜色
         /// </summary>
-        public Color ButtonBackGroundColor;
+        public Color ButtonBackGroundColor = Color.black;
         /// <summary>
         /// 按钮宽度
         /// </summary>
         public float ButtonWidth;
+        /// <summary>
+        /// 自适应宽度
+        /// </summary>
+        public bool AutoSize;
         /// <summary>
         /// 按钮字体对齐
         /// </summary>
@@ -35,7 +40,6 @@ namespace Editor.AbilityEditor
         /// 右键菜单
         /// </summary>
         private readonly GenericMenu _menu;
-        private readonly GUIStyle _buttonStyle;
         private readonly Color _onNodeEditorWindowOpenColor = new Color(2, 2, 2);
         private bool _nodeEditorWindowIsOpen;
 
@@ -65,14 +69,8 @@ namespace Editor.AbilityEditor
         {
             Tree = tree;
             EditorNode = editorNode;
-
-            ButtonWidth = 200f;
-
-            _buttonStyle = new GUIStyle(GUI.skin.button)
-            {
-                alignment = TextAnchor.MiddleLeft,
-            };
-
+            ButtonTextAnchor = TextAnchor.MiddleLeft;
+            
             _menu = new GenericMenu();
             //添加节点
             addMenu("添加节点/Action",      ERightClickOperationType.AddActionChild,      new ActionNodeData());
@@ -98,9 +96,10 @@ namespace Editor.AbilityEditor
             //根据数据构造树
             foreach (var editorNode in EditorNode.Children)
             {
-                var childItem = ATreeItemExtensions.CreateTreeItem(Tree, editorNode);
-                children.Add(childItem);
-                childItem.BuildTree();
+                var child = ATreeItemExtensions.CreateTreeItem(Tree, editorNode);
+                children ??= new List<TreeViewItem>();
+                children.Add(child);
+                child.BuildTree();
             }
         }
 
@@ -184,6 +183,13 @@ namespace Editor.AbilityEditor
             {
                 var menuInfo = pMenuInfo.Value;
                 var state = checkRightMenuState(menuInfo);
+                if (menuInfo.OperationType == ERightClickOperationType.Paste)
+                {
+                    if (AbilityCycleTreeUtility.GetCopyItems().IsNullOrEmpty())
+                    {
+                        state = ERightMenuState.Disable;
+                    }
+                }
                 switch (state)
                 {
                     case ERightMenuState.Enable:
@@ -215,9 +221,13 @@ namespace Editor.AbilityEditor
 
             var bgColor = GUI.backgroundColor;
             GUI.backgroundColor = _nodeEditorWindowIsOpen ? _onNodeEditorWindowOpenColor : ButtonBackGroundColor;
+            var buttonStyle = new GUIStyle(GUI.skin.button)
+            {
+                alignment = ButtonTextAnchor
+            };
             var buttonContent = new GUIContent(buttonText, getButtonText());
-            lineRect.width = GUILayoutUtility.GetRect(buttonContent, EditorStyles.label).width;
-            if (GUI.Button(lineRect, buttonContent, _buttonStyle))
+            lineRect.width = ButtonWidth > 0 ? ButtonWidth : Mathf.Min(200f, buttonStyle.CalcSize(buttonContent).x);
+            if (GUI.Button(lineRect, buttonContent, buttonStyle))
             {
                 var btnRect = EditorGUIUtility.GetMainWindowPosition();
                 if (Event.current.button == 0)

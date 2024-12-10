@@ -17,6 +17,7 @@ namespace Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(400, 100);
             window.MenuItem = itemBase;
             window.init();
+            window.ShowModal();
         }
         
         private void init()

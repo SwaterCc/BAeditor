@@ -124,7 +124,7 @@ namespace Hono.Scripts.Battle
                 //构建树
                 foreach (var pCycle in AContext.Data.HeadNodeDict)
                 {
-                    var node = GetNode(AContext, AContext.Data.NodeDict[pCycle.Value]);
+                    var node = GetNode(AContext, pCycle.Value);
                     node.Build(null);
                     _cycleHeads.Add(pCycle.Key, node);
                 }

@@ -20,8 +20,8 @@ namespace Editor.AbilityEditor
             private bool _cycleViewFoldout;
             private readonly AbilityCycleTree _cycleTree;
             public string Label { get; set; }
-            
-            public AbilityCycleDrawer(AbilityView view, EAbilityCycle cycle, bool viewFoldoutShow = false)
+
+            public AbilityCycleDrawer(AbilityView view, EAbilityCycle cycle, bool viewFoldoutShow = true)
             {
                 _cycleViewFoldout = viewFoldoutShow;
                 _cycleTree = new AbilityCycleTree(view, cycle);
@@ -45,33 +45,29 @@ namespace Editor.AbilityEditor
                 SirenixEditorGUI.EndBoxHeader();
                 if (_cycleViewFoldout)
                 {
-                    var boxRect = GUIHelper.GetCurrentLayoutRect();
-                    GUILayout.Box(" ", GUILayout.Height(_cycleTree.totalHeight), GUILayout.Width(boxRect.width)); //无所谓这个盒子，只是占位用的
-                    var treeRect = new Rect(boxRect.x, boxRect.y + headHeight, mainRect.width - 8, _cycleTree.totalHeight + 8);
+                    GUILayout.Box(" ", GUILayout.Height(_cycleTree.totalHeight),
+                                  GUILayout.Width(mainRect.width)); //无所谓这个盒子，只是占位用的
+                    var treeRect = new Rect(mainRect.x, mainRect.y + headHeight + 2, mainRect.width,
+                                            _cycleTree.totalHeight + 8);
                     _cycleTree.OnGUI(treeRect);
                 }
 
                 SirenixEditorGUI.EndBox();
             }
         }
-        
-        private readonly List<AbilityCycleDrawer> _cycleDrawers;
 
-        public AbilityView()
+        private List<AbilityCycleDrawer> _cycleDrawers;
+
+
+        protected override void onInit()
         {
-            _cycleDrawers = new()
+            _cycleDrawers = new List<AbilityCycleDrawer>
             {
-                new AbilityCycleDrawer(this, EAbilityCycle.Init),
-                new AbilityCycleDrawer(this, EAbilityCycle.PreExecute),
-                new AbilityCycleDrawer(this, EAbilityCycle.Executing),
-                new AbilityCycleDrawer(this, EAbilityCycle.EndExecute),
+                new(this, EAbilityCycle.Init) { Label = "初始化" },
+                new(this, EAbilityCycle.PreExecute) { Label = "预启动" },
+                new(this, EAbilityCycle.Executing) { Label = "执行" },
+                new(this, EAbilityCycle.EndExecute) { Label = "结束" },
             };
-        }
-
-        protected override void onInit(OdinDrawer odinDrawer)
-        {
-            var drawer = (AbilityViewDrawer)odinDrawer;
-            drawer.EnableScrollView = true;
         }
 
         public override void Draw()
@@ -86,6 +82,7 @@ namespace Editor.AbilityEditor
             foreach (var cycleDrawer in _cycleDrawers)
             {
                 cycleDrawer.DrawCycleTree();
+                EditorGUILayout.Space(10);
             }
         }
     }
