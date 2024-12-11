@@ -9,7 +9,7 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class BranchTreeItem : ATreeItem<BranchNodeData>
     {
-        public BranchTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
+        public BranchTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
         {
             ButtonBackGroundColor = Color.cyan;
             addCustomMenu("合并为分支组", ERightClickOperationType.JoinBranchGroup, null, null);

@@ -18,7 +18,7 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// ability节点数据
         /// </summary>
-        public ATreeEditorNode EditorNode { get; }
+        public AEditorTreeNode Node { get; }
 
         /// <summary>
         /// 按钮颜色
@@ -40,9 +40,11 @@ namespace Editor.AbilityEditor
         /// 右键菜单
         /// </summary>
         private readonly GenericMenu _menu;
+        /// <summary>
+        /// 按钮选中时颜色
+        /// </summary>
         private readonly Color _onNodeEditorWindowOpenColor = new Color(2, 2, 2);
         private bool _nodeEditorWindowIsOpen;
-
         /// <summary>
         /// 菜单状态
         /// </summary>
@@ -65,10 +67,10 @@ namespace Editor.AbilityEditor
 
         public new ATreeItem parent => (ATreeItem)base.parent;
 
-        protected ATreeItem(AbilityCycleTree tree, ATreeEditorNode editorNode) : base(editorNode.Id)
+        protected ATreeItem(AbilityCycleTree tree, AEditorTreeNode node) : base(node.Id)
         {
             Tree = tree;
-            EditorNode = editorNode;
+            Node = node;
             ButtonTextAnchor = TextAnchor.MiddleLeft;
             
             _menu = new GenericMenu();
@@ -84,23 +86,24 @@ namespace Editor.AbilityEditor
             addMenu("添加节点/Attr",        ERightClickOperationType.AddAttrChild,        new AttrNodeData());
             //基础操作
             addMenu("复制",   ERightClickOperationType.Copy,       null);
-            addMenu("粘贴",   ERightClickOperationType.Paste,      EditorNode);
-            addMenu("删除节点", ERightClickOperationType.RemoveSelf, EditorNode);
+            addMenu("粘贴",   ERightClickOperationType.Paste,      Node);
+            addMenu("删除节点", ERightClickOperationType.RemoveSelf, Node);
         }
 
         /// <summary>
         /// 构建树
         /// </summary>
-        public void BuildTree()
+        protected void OnTreeBuild()
         {
             //根据数据构造树
-            foreach (var editorNode in EditorNode.Children)
+            foreach (var editorNode in Node.Children)
             {
-                var child = ATreeItemExtensions.CreateTreeItem(Tree, editorNode);
-                children ??= new List<TreeViewItem>();
-                children.Add(child);
-                child.BuildTree();
+                var child = AbilityEditorUtility.CreateTreeItem(Tree, editorNode);
+                AddChild(child);
+                child.OnTreeBuild();
             }
+
+            Tree.SetExpanded(id, !children.IsNullOrEmpty());
         }
 
         private void addMenu(string label, ERightClickOperationType operation, object param)
@@ -125,28 +128,29 @@ namespace Editor.AbilityEditor
                 case ERightClickOperationType.AddAttrChild:
                     rightMenuInfo.Function += data =>
                     {
-                        EditorNode.AddChild(new ATreeEditorNode((AbilityNodeData)data));
+                        Node.AddChild(new AEditorTreeNode((AbilityNodeData)data));
                         Tree.Reload();
                     };
                     break;
                 case ERightClickOperationType.RemoveSelf:
                     rightMenuInfo.Function += _ =>
                     {
-                        EditorNode.RemoveSelfFromParent();
+                        Node.RemoveSelfFromParent();
                         Tree.Reload();
                     };
                     break;
                 case ERightClickOperationType.Copy:
                     rightMenuInfo.Function += _ =>
                     {
-                        AbilityCycleTreeUtility.SaveCopyItems(Tree.GetSelection());
+                        AbilityEditorUtility.SaveCopyItems(Tree.GetSelection());
                         Tree.Reload();
                     };
                     break;
                 case ERightClickOperationType.Paste:
                     rightMenuInfo.Function += _ =>
                     {
-                        EditorNode.AddChildren(AbilityCycleTreeUtility.GetCopyItems());
+                        Node.AddChildren(AbilityEditorUtility.GetCopyItems());
+                        AbilityEditorUtility.ClearCopyCache();
                         Tree.Reload();
                     };
                     break;
@@ -185,7 +189,7 @@ namespace Editor.AbilityEditor
                 var state = checkRightMenuState(menuInfo);
                 if (menuInfo.OperationType == ERightClickOperationType.Paste)
                 {
-                    if (AbilityCycleTreeUtility.GetCopyItems().IsNullOrEmpty())
+                    if (AbilityEditorUtility.GetCopyItems().IsNullOrEmpty())
                     {
                         state = ERightMenuState.Disable;
                     }
@@ -214,9 +218,9 @@ namespace Editor.AbilityEditor
             if (string.IsNullOrEmpty(buttonText)) 
                 buttonText = "未定义描述";
 
-            if (!string.IsNullOrEmpty(EditorNode.Data.Desc))
+            if (!string.IsNullOrEmpty(Node.Data.Desc))
             {
-                buttonText = EditorNode.Data.Desc;
+                buttonText = Node.Data.Desc;
             }
 
             var bgColor = GUI.backgroundColor;
@@ -225,7 +229,7 @@ namespace Editor.AbilityEditor
             {
                 alignment = ButtonTextAnchor
             };
-            var buttonContent = new GUIContent(buttonText, getButtonText());
+            var buttonContent = new GUIContent($"{id}", getButtonText());
             lineRect.width = ButtonWidth > 0 ? ButtonWidth : Mathf.Min(200f, buttonStyle.CalcSize(buttonContent).x);
             if (GUI.Button(lineRect, buttonContent, buttonStyle))
             {
@@ -254,9 +258,9 @@ namespace Editor.AbilityEditor
     {
         public readonly T Data;
 
-        protected ATreeItem(AbilityCycleTree tree, ATreeEditorNode editorNode) : base(tree, editorNode)
+        protected ATreeItem(AbilityCycleTree tree, AEditorTreeNode node) : base(tree, node)
         {
-            Data = (T)EditorNode.Data;
+            Data = (T)Node.Data;
         }
     }
 }

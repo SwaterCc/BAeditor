@@ -5,7 +5,7 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class BranchGroupTreeItem : ATreeItem<BranchGroupNodeData>
     {
-        public BranchGroupTreeItem(AbilityCycleTree tree, ATreeEditorNode editorNode) : base(tree, editorNode)
+        public BranchGroupTreeItem(AbilityCycleTree tree, AEditorTreeNode node) : base(tree, node)
         {
             ButtonBackGroundColor = Color.blue;
         }

@@ -25,7 +25,7 @@ namespace Editor.AbilityEditor
 
         protected virtual void CopyData()
         {
-            TempData = TreeItem.EditorNode.DeepCopy();
+            TempData = TreeItem.Node.DeepCopy();
         }
         
         protected abstract void Init();
@@ -53,7 +53,7 @@ namespace Editor.AbilityEditor
 
         protected virtual void SaveDataToEditorNode()
         {
-            TreeItem.EditorNode.SaveNodeDataChange(TempData);
+            TreeItem.Node.SaveNodeDataChange(TempData);
         }
     }
 
@@ -63,7 +63,7 @@ namespace Editor.AbilityEditor
 
         protected sealed override void CopyData()
         {
-            TempData = TreeItem.EditorNode.DeepCopy<TAbilityNodeData>();
+            TempData = TreeItem.Node.DeepCopy<TAbilityNodeData>();
         }
 
         protected sealed override void OnImGUI()

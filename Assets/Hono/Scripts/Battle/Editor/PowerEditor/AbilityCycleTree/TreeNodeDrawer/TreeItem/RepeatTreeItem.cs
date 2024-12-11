@@ -9,7 +9,7 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class RepeatTreeItem : ATreeItem<RepeatNodeData>
     {
-        public RepeatTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data) { }
+        public RepeatTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data) { }
 
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {

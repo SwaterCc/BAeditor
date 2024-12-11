@@ -8,31 +8,38 @@ namespace Editor.AbilityEditor
     /// Ability在Editor中直接使用很难用，先做一层解析，将其解析为更好用的数据结构
     /// 同时也是作为数据中间层,修改缓存层，他不会立刻序列化，也不会立刻被清除
     /// </summary>
-    public class ATreeEditorNode
+    public class AEditorTreeNode
     {
-        public class IdGenerator
-        {
-            private int _idCount = 0;
+        /// <summary>
+        /// 节点id
+        /// </summary>
+        public int Id { get; protected set; }
 
-            public int Get()
-            {
-                return ++_idCount;
-            }
-        }
-
-        public int Id { get; private set; }
-
+        /// <summary>
+        /// 节点序列化数据
+        /// </summary>
         public AbilityNodeData Data { get; private set; }
-        public ATreeEditorNode Parent;
-        public readonly List<ATreeEditorNode> Children = new();
 
-        private AbilityData _abilityOriginData;
-        
+        /// <summary>
+        /// 父节点
+        /// </summary>
+        public AEditorTreeNode Parent { get; protected set; }
+
+        /// <summary>
+        /// 子节点
+        /// </summary>
+        public List<AEditorTreeNode> Children { get; protected set; } = new();
+
+        /// <summary>
+        /// 根节点
+        /// </summary>
+        public AEditorTreeHeadNode Root { get; protected set; }
+
         /// <summary>
         /// 构建函数
         /// </summary>
         /// <param name="nodeData"></param>
-        public ATreeEditorNode(AbilityNodeData nodeData)
+        public AEditorTreeNode(AbilityNodeData nodeData)
         {
             Data = nodeData.DeepCopy();
         }
@@ -40,18 +47,18 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 拷贝构造函数
         /// </summary>
-        /// <param name="editorNode"></param>
-        public ATreeEditorNode(ATreeEditorNode editorNode)
+        /// <param name="node"></param>
+        public AEditorTreeNode(AEditorTreeNode node)
         {
-            Data = editorNode.DeepCopy();
-            foreach (var editorNodeChild in editorNode.Children)
+            Data = node.DeepCopy();
+            foreach (var editorNodeChild in node.Children)
             {
-                var copyChild = new ATreeEditorNode(editorNodeChild);
+                var copyChild = new AEditorTreeNode(editorNodeChild);
                 copyChild.Parent = this;
                 Children.Add(copyChild);
             }
         }
-        
+
         /// <summary>
         /// 深拷贝
         /// </summary>
@@ -60,7 +67,7 @@ namespace Editor.AbilityEditor
         {
             return Data.DeepCopy();
         }
-        
+
         /// <summary>
         /// 深拷贝并做类型转换
         /// </summary>
@@ -76,6 +83,75 @@ namespace Editor.AbilityEditor
         }
 
         /// <summary>
+        /// 构建树，头节点调用
+        /// </summary>
+        /// <param name="abilityData"></param>
+        /// <param name="idGenerator"></param>
+        protected void OnBuild(AbilityData abilityData)
+        {
+            foreach (var id in Data.ChildrenIds)
+            {
+                var child = new AEditorTreeNode(abilityData.NodeDict[id]);
+                AddChild(child);
+                child.OnBuild(abilityData);
+            }
+        }
+
+        /// <summary>
+        /// 添加复数子节点
+        /// </summary>
+        /// <param name="children"></param>
+        public void AddChildren(List<AEditorTreeNode> children)
+        {
+            foreach (var child in children)
+            {
+                AddChild(child);
+            }
+        }
+
+        /// <summary>
+        /// 添加子节点
+        /// </summary>
+        /// <param name="node"></param>
+        public void AddChild(AEditorTreeNode node)
+        {
+            node.Parent = this;
+            node.OnRootChange(Root);
+            Children.Add(node);
+        }
+
+        /// <summary>
+        /// 更新root
+        /// </summary>
+        /// <param name="root"></param>
+        private void OnRootChange(AEditorTreeHeadNode root)
+        {
+            Root = root;
+            Id = root.IdGen.Get();
+            foreach (var child in Children)
+            {
+                child.OnRootChange(root);
+            }
+        }
+
+        /// <summary>
+        /// 删除子节点
+        /// </summary>
+        /// <param name="node"></param>
+        public void RemoveChild(AEditorTreeNode node)
+        {
+            Children.Remove(node);
+        }
+
+        /// <summary>
+        /// 从节点的父节点删除自己
+        /// </summary>
+        public void RemoveSelfFromParent()
+        {
+            Parent?.RemoveChild(this);
+        }
+
+        /// <summary>
         /// 存储数据
         /// </summary>
         /// <param name="data"></param>
@@ -87,61 +163,6 @@ namespace Editor.AbilityEditor
             {
                 Serialize();
             }
-        }
-        
-        /// <summary>
-        /// 构建树，头节点调用
-        /// </summary>
-        /// <param name="abilityData"></param>
-        /// <param name="idGenerator"></param>
-        public void Build(AbilityData abilityData, IdGenerator idGenerator)
-        {
-            Id = idGenerator.Get();
-            foreach (var id in Data.ChildrenIds)
-            {
-                var child = new ATreeEditorNode(abilityData.NodeDict[id]);
-                AddChild(child);
-                child.Build(abilityData, idGenerator);
-            }
-        }
-
-        /// <summary>
-        /// 添加复数子节点
-        /// </summary>
-        /// <param name="children"></param>
-        public void AddChildren(List<ATreeEditorNode> children)
-        {
-            foreach (var child in children)
-            {
-                AddChild(child);
-            }
-        }
-        
-        /// <summary>
-        /// 添加子节点
-        /// </summary>
-        /// <param name="editorNode"></param>
-        public void AddChild(ATreeEditorNode editorNode)
-        {
-            editorNode.Parent = this;
-            Children.Add(editorNode);
-        }
-
-        /// <summary>
-        /// 删除子节点
-        /// </summary>
-        /// <param name="editorNode"></param>
-        public void RemoveChild(ATreeEditorNode editorNode)
-        {
-            Children.Remove(editorNode);
-        }
-
-        /// <summary>
-        /// 从节点的父节点删除自己
-        /// </summary>
-        public void RemoveSelfFromParent()
-        {
-            Parent?.RemoveChild(this);
         }
 
         /// <summary>

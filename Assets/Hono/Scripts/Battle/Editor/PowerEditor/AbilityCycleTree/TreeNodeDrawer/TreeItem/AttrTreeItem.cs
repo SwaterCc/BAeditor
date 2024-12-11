@@ -12,7 +12,7 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class AttrTreeItem : ATreeItem<AttrNodeData>
     {
-        public AttrTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
+        public AttrTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
         {
           ButtonBackGroundColor =Color.magenta;
         }

@@ -7,19 +7,27 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class CycleTreeItem : ATreeItem<CycleNodeData>
     {
-        public CycleTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
+        public CycleTreeItem(AbilityCycleTree tree, AEditorTreeHeadNode data) : base(tree, data)
         {
             ButtonWidth = 200;
             ButtonTextAnchor = TextAnchor.MiddleCenter;
         }
-
+        
+        /// <summary>
+        /// 构建树
+        /// </summary>
+        public void BuildTree()
+        {
+            OnTreeBuild();
+        }
+        
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
             return info.OperationType is ERightClickOperationType.RemoveSelf or ERightClickOperationType.Copy
                 ? ERightMenuState.Disable
                 : ERightMenuState.Enable;
         }
-
+      
         protected override string getButtonText()
         {
             string desc = "";

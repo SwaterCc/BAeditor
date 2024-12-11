@@ -19,7 +19,13 @@ namespace Hono.Scripts.Battle
         /// 头节点字典
         /// </summary>
         [OdinSerialize]
-        public Dictionary<EAbilityCycle, AbilityNodeData> HeadNodeDict = new();
+        public Dictionary<EAbilityCycle, AbilityNodeData> HeadNodeDict = new()
+        {
+            { EAbilityCycle.Init, new CycleNodeData(EAbilityCycle.Init) },
+            { EAbilityCycle.PreExecute, new CycleNodeData(EAbilityCycle.PreExecute) },
+            { EAbilityCycle.Executing, new CycleNodeData(EAbilityCycle.Executing) },
+            { EAbilityCycle.EndExecute, new CycleNodeData(EAbilityCycle.EndExecute) }
+        };
 
         /// <summary>
         /// 存储非头节点的其他节点
@@ -27,13 +33,5 @@ namespace Hono.Scripts.Battle
         [Searchable]
         [OdinSerialize]
         public Dictionary<int, AbilityNodeData> NodeDict = new();
-
-        public AbilityData()
-        {
-            HeadNodeDict[EAbilityCycle.Init] = new CycleNodeData(EAbilityCycle.Init);
-            HeadNodeDict[EAbilityCycle.PreExecute] = new CycleNodeData(EAbilityCycle.PreExecute);
-            HeadNodeDict[EAbilityCycle.Executing] = new CycleNodeData(EAbilityCycle.Executing);
-            HeadNodeDict[EAbilityCycle.EndExecute] = new CycleNodeData(EAbilityCycle.EndExecute);
-        }
     }
 }

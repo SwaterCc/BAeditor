@@ -14,7 +14,7 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class ListenerTreeItem : ATreeItem<ListenerNodeData>
     {
-        public ListenerTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
+        public ListenerTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
         {
             ButtonBackGroundColor = new Color(0.4f, 1.8f, 1.5f);
         }

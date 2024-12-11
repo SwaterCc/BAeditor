@@ -10,7 +10,7 @@ namespace Editor.AbilityEditor.TreeItem
     public class ActionTreeItem : ATreeItem<ActionNodeData>
     {
         private readonly MenuInfo _menuInfo;
-        public ActionTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
+        public ActionTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
         {
             ButtonBackGroundColor = new Color(2f, 0.5f, 0.5f);
             _menuInfo = addCustomMenu("获取返回值", ERightClickOperationType.GetResult, null, null);
@@ -41,7 +41,7 @@ namespace Editor.AbilityEditor.TreeItem
                 }
 
                 _menuInfo.Label = "获取返回值";
-                _menuInfo.Function += data => EditorNode.AddChild(new ATreeEditorNode((AbilityNodeData)data));
+                _menuInfo.Function += data => Node.AddChild(new AEditorTreeNode((AbilityNodeData)data));
                 _menuInfo.Param = new VariableNodeData() { IsGetReturnValue = true };
                 return ERightMenuState.Enable;
             }

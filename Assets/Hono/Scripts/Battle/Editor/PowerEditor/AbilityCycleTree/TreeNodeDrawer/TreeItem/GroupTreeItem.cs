@@ -10,7 +10,7 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class GroupTreeItem : ATreeItem<GroupNodeData>
     {
-        public GroupTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
+        public GroupTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
         {
             ButtonBackGroundColor = new Color(0, 0.5f, 1.5f);
         }

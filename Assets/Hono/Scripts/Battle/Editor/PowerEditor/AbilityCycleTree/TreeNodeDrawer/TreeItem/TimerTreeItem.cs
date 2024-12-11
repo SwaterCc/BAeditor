@@ -9,7 +9,7 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class TimerTreeItem : ATreeItem<TimerNodeData>
     {
-        public TimerTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
+        public TimerTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
         {
             ButtonBackGroundColor = new Color(1f, 2.0f, 0.3f);
         }

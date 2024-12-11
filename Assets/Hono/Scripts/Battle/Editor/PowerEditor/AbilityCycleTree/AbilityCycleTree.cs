@@ -17,7 +17,7 @@ namespace Editor.AbilityEditor
         public AbilityView View { get; }
         public AbilityData TreeData { get; }
         public EAbilityCycle Cycle { get; }
-        public ATreeEditorNode Head { get; }
+        public AEditorTreeHeadNode Head { get; }
 
         public AbilityCycleTree(AbilityView view, EAbilityCycle cycle) : base(new TreeViewState())
         {
@@ -29,8 +29,10 @@ namespace Editor.AbilityEditor
             showBorder = true;
             extraSpaceBeforeIconAndLabel = 30;
             rowHeight = 36;
+           
+            
             //获取EditorAbilityData树
-            Head = AbilityCycleTreeUtility.GetTreeHead(TreeData, cycle);
+            Head = AbilityEditorUtility.GetTreeHead(TreeData, cycle);
             Reload();
         }
 
@@ -41,6 +43,8 @@ namespace Editor.AbilityEditor
             root.AddChild(cycleNode);
             cycleNode.BuildTree();
             SetupDepthsFromParentsAndChildren(root);
+            //每次重建时清除选项
+            SetSelection(new List<int>());
             return root;
         }
 
@@ -51,7 +55,7 @@ namespace Editor.AbilityEditor
             {
                 return;
             }
-
+            
             var rowRect = args.rowRect;
             float labelWidth = 24;
             rowRect.x = rowRect.x + 25 + 38 * item.depth;
@@ -71,22 +75,23 @@ namespace Editor.AbilityEditor
             item.DrawItem(rowRect);
         }
 
-        public new List<ATreeEditorNode> GetSelection()
+        public new List<AEditorTreeNode> GetSelection()
         {
             var selection = base.GetSelection();
-            var result = new List<ATreeEditorNode>();
+            var result = new List<AEditorTreeNode>();
             foreach (var selectId in selection)
             {
                 if (FindItem(selectId, rootItem) is not ATreeItem treeItem)
                 {
                     continue;
                 }
-                result.Add(treeItem.EditorNode);
+
+                result.Add(treeItem.Node);
             }
 
             return result;
         }
-        
+
         protected override void ContextClickedItem(int id)
         {
             if (FindItem(id, rootItem) is ATreeItem select)
@@ -121,8 +126,28 @@ namespace Editor.AbilityEditor
 
             return true;
         }
-        
-        
+
+        /// <summary>
+        /// 多选时排除子节点，仅允许选中同级节点
+        /// </summary>
+        /// <param name="selectedIds"></param>
+        protected override void SelectionChanged(IList<int> selectedIds)
+        {
+            var finalSelectList = new List<int>(selectedIds);
+            
+            if (finalSelectList.Count <= 1) return;
+            var firstSelect = FindItem(finalSelectList[0], rootItem);
+            for (int i = 1; i < finalSelectList.Count - 1; i++)
+            {
+                var item = FindItem(finalSelectList[i], rootItem);
+                if (item.parent == firstSelect.parent) continue;
+                finalSelectList.RemoveAt(i);
+                --i;
+            }
+            
+            SetSelection(finalSelectList, TreeViewSelectionOptions.RevealAndFrame);
+        }
+
         /// <summary>
         /// 实现拖拽操作
         /// </summary>

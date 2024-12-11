@@ -12,7 +12,7 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class VariableTreeItem : ATreeItem<VariableNodeData>
     {
-        public VariableTreeItem(AbilityCycleTree tree, ATreeEditorNode data) : base(tree, data)
+        public VariableTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
         {
             ButtonBackGroundColor = new Color(0.6f, 0.3f, 0.95f);
         }
@@ -25,7 +25,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            var parentData = parent.EditorNode.Data;
+            var parentData = parent.Node.Data;
             string name ="未设置";
 
             if (parentData is ActionNodeData actionNode)
