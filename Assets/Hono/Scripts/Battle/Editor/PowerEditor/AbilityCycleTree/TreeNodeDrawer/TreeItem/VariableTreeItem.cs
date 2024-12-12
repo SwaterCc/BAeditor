@@ -20,12 +20,29 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
-            throw new NotImplementedException();
+            //禁止添加子节点
+            if (info.OperationType < ERightClickOperationType.AddChildOperation)
+            {
+                return ERightMenuState.NoShow;
+            }
+
+            return ERightMenuState.Enable;
+        }
+
+
+        protected override bool checkIsAllowMove(ATreeItem newParent)
+        {
+            if (newParent is AttrTreeItem or VariableTreeItem or ActionTreeItem or BranchGroupTreeItem)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         protected override string getButtonText()
         {
-            var parentData = parent.Node.Data;
+            var parentData = ((ATreeItem)parent).Node.Data;
             string name ="未设置";
 
             if (parentData is ActionNodeData actionNode)

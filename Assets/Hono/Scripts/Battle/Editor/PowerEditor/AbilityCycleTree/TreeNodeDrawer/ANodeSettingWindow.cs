@@ -21,6 +21,7 @@ namespace Editor.AbilityEditor
             window.OnClose += treeItem.OnItemEditWindowClose;
             window.CopyData();
             window.Init();
+            window.ShowModal();
         }
 
         protected virtual void CopyData()

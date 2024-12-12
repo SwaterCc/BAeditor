@@ -17,9 +17,29 @@ namespace Editor.AbilityEditor.TreeItem
         
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
+            if (info.OperationType is 
+                ERightClickOperationType.AddListenerChild or 
+                ERightClickOperationType.AddGroupChild)
+            {
+                return ERightMenuState.NoShow;
+            }
+            
+            if (this.HasParent<TimerTreeItem>() && info.OperationType == ERightClickOperationType.AddTimerChild)
+                return ERightMenuState.Disable;
+
             return ERightMenuState.Enable;
         }
 
+        protected override bool checkIsAllowMove(ATreeItem newParent)
+        {
+            if (newParent is AttrTreeItem or VariableTreeItem or ActionTreeItem)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        
         protected override string getButtonText()
         {
             string label = "If:";

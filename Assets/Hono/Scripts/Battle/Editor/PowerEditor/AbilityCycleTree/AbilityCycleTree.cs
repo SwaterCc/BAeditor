@@ -18,6 +18,8 @@ namespace Editor.AbilityEditor
         public AbilityData TreeData { get; }
         public EAbilityCycle Cycle { get; }
         public AEditorTreeHeadNode Head { get; }
+        
+        private const string DragKey = "ATreeItemDrag";
 
         public AbilityCycleTree(AbilityView view, EAbilityCycle cycle) : base(new TreeViewState())
         {
@@ -101,7 +103,7 @@ namespace Editor.AbilityEditor
         }
 
         /// <summary>
-        /// 设置拖拽规则
+        /// 设置禁止Cycle节点拖拽
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
@@ -158,22 +160,73 @@ namespace Editor.AbilityEditor
 
             DragAndDrop.PrepareStartDrag();
             var draggedRows = new List<ATreeItem>(32);
-            foreach (var item in GetRows())
+            var list = FindRows(args.draggedItemIDs);
+            foreach (var item in list)
             {
-                if (args.draggedItemIDs.Contains(item.id))
+                if (item is ATreeItem aTreeItem)
                 {
-                    draggedRows.Add(item as ATreeItem);
+                    draggedRows.Add(aTreeItem);
                 }
             }
-
-            DragAndDrop.SetGenericData("MyDragging", draggedRows);
-            DragAndDrop.objectReferences = new UnityEngine.Object[] { };
+          
+            DragAndDrop.SetGenericData(DragKey, draggedRows);
             DragAndDrop.StartDrag("Dragging TreeViewItem");
         }
 
         protected override DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args)
         {
-            return DragAndDropVisualMode.Move;
+           var dragList = (List<ATreeItem>)DragAndDrop.GetGenericData(DragKey);
+
+           if (dragList == null || 
+               args.parentItem == null || 
+               args.dragAndDropPosition == DragAndDropPosition.OutsideItems) 
+               return DragAndDropVisualMode.None;
+
+           if (args.parentItem is not ATreeItem parent)
+           {
+               return DragAndDropVisualMode.None;
+           }
+           
+           //不允许父级拖向子节点
+           if (dragList[0].IsParent(parent))
+           {
+               return DragAndDropVisualMode.None;
+           }
+           
+           if (args.performDrop)
+           {
+               switch (args.dragAndDropPosition)
+               {
+                   case DragAndDropPosition.UponItem:
+                       foreach (var item in dragList)
+                       {
+                           item.TryMoveTo(parent, item.Node.Children.Count);
+                       }
+                       break;
+                   case DragAndDropPosition.BetweenItems:
+                       for (var index = 0; index < dragList.Count; index++)
+                       {
+                           ATreeItem item = dragList[index];
+                           var insertIdx = args.insertAtIndex + index;
+                           if (insertIdx >= parent.children.Count)
+                           {
+                               insertIdx = parent.children.Count - 1;
+                           }
+                           item.TryMoveTo(parent, insertIdx);
+                       }
+
+                       break;
+               }
+
+               if (dragList[0].Tree != this)
+               {
+                   dragList[0].Tree.Reload();
+               }
+               
+               Reload();
+           }
+
+           return DragAndDropVisualMode.Move;
         }
     }
 }

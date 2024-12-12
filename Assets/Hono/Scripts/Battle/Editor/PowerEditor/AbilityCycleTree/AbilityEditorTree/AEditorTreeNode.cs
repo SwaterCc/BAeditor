@@ -36,6 +36,11 @@ namespace Editor.AbilityEditor
         public AEditorTreeHeadNode Root { get; protected set; }
 
         /// <summary>
+        /// 子节点数量
+        /// </summary>
+        public int ChildrenCount => Children.Count;
+
+        /// <summary>
         /// 构建函数
         /// </summary>
         /// <param name="nodeData"></param>
@@ -121,11 +126,43 @@ namespace Editor.AbilityEditor
         }
 
         /// <summary>
+        /// 插入子节点
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="idx"></param>
+        public void InsertChild(AEditorTreeNode node, int idx)
+        {
+            node.Parent = this;
+            node.OnRootChange(Root);
+            Children.Insert(idx, node);
+        }
+
+        /// <summary>
+        /// 将该节点与指定索引的节点交换位置
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="index"></param>
+        public void SwapChildIndex(AEditorTreeNode node, int index)
+        {
+            if (index >= Children.Count)
+            {
+                return;
+            }
+
+            var itemIdx = Children.IndexOf(node);
+            var temp = Children[index];
+            Children[index] = node;
+            Children[itemIdx] = temp;
+        }
+
+        /// <summary>
         /// 更新root
         /// </summary>
         /// <param name="root"></param>
         private void OnRootChange(AEditorTreeHeadNode root)
         {
+            if (Root == root)
+                return;
             Root = root;
             Id = root.IdGen.Get();
             foreach (var child in Children)

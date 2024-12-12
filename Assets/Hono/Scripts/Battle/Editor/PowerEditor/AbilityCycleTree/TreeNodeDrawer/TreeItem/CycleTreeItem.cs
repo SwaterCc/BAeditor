@@ -27,7 +27,12 @@ namespace Editor.AbilityEditor.TreeItem
                 ? ERightMenuState.Disable
                 : ERightMenuState.Enable;
         }
-      
+
+        protected override bool checkIsAllowMove(ATreeItem newParent)
+        {
+            return false;
+        }
+
         protected override string getButtonText()
         {
             string desc = "";

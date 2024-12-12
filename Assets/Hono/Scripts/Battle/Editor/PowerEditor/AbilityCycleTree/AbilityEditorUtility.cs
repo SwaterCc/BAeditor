@@ -19,22 +19,26 @@ namespace Editor.AbilityEditor
         AddRepeatChild,
         AddVariableChild,
         AddAttrChild,
-        
-        AddChildLimit = 100,
-        
-        RemoveSelf = 101,
-        Copy = 102,
-        Paste = 103,
-        
+        AddGroupSwitchChild,
+
+        AddChildOperation = 50,
+
+        RemoveSelf = 51,
+        Copy = 52,
+        Paste = 53,
+
+        BaseOperation = 100,
+
+        //额外拓展，动态添加，并不在基础操作中
         GetResult = 200,
         JoinBranchGroup = 300,
     }
-    
+
     public static class AbilityEditorUtility
     {
         private static readonly Dictionary<int, Dictionary<EAbilityCycle, AEditorTreeHeadNode>> TreeCache = new();
         private static readonly List<AEditorTreeNode> CopyCache = new();
-        
+
         /// <summary>
         /// 获取Node节点
         /// </summary>
@@ -64,11 +68,13 @@ namespace Editor.AbilityEditor
                     return new TimerTreeItem(tree, node);
                 case GroupNodeData:
                     return new GroupTreeItem(tree, node);
+                case GroupSwitchNodeData:
+                    return new GroupSwitchTreeItem(tree, node);
             }
 
             throw new SwitchExpressionException("不存在该类型的节点");
         }
-        
+
         /// <summary>
         /// 创建新的树
         /// </summary>
@@ -88,7 +94,7 @@ namespace Editor.AbilityEditor
             cycleDict[cycle] = headNode;
             return headNode;
         }
-        
+
         /// <summary>
         /// 获取树缓存，如果不存在则会新建一个缓存
         /// </summary>
@@ -104,7 +110,7 @@ namespace Editor.AbilityEditor
 
             return head;
         }
-        
+
         /// <summary>
         /// 尝试获取一个已经存在的TreeHead
         /// </summary>
@@ -120,6 +126,10 @@ namespace Editor.AbilityEditor
             return TreeCache.TryGetValue(abilityData.id, out var cycleDict) && cycleDict.TryGetValue(cycle, out head);
         }
 
+        /// <summary>
+        /// 缓存拷贝项目
+        /// </summary>
+        /// <param name="copySelectItems"></param>
         public static void SaveCopyItems(List<AEditorTreeNode> copySelectItems)
         {
             foreach (var item in copySelectItems)
@@ -128,14 +138,70 @@ namespace Editor.AbilityEditor
             }
         }
 
+        /// <summary>
+        /// 清空拷贝
+        /// </summary>
         public static void ClearCopyCache()
         {
             CopyCache.Clear();
         }
 
+        /// <summary>
+        /// 获取拷贝缓存
+        /// </summary>
+        /// <returns></returns>
         public static List<AEditorTreeNode> GetCopyItems()
         {
             return CopyCache;
+        }
+
+        /// <summary>
+        /// 追溯父级类型
+        /// </summary>
+        /// <param name="item"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static bool HasParent<T>(this ATreeItem item) where T : ATreeItem
+        {
+            var parent = item.parent;
+            while (parent != null)
+            {
+                if (parent is T)
+                {
+                    return true;
+                }
+
+                if (parent is CycleTreeItem)
+                {
+                    return typeof(T) == typeof(CycleTreeItem);
+                }
+
+                parent = parent.parent;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 判定该节点是否为传入节点的父级
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="child"></param>
+        /// <returns></returns>
+        public static bool IsParent(this ATreeItem parent, ATreeItem child)
+        {
+            var checkParent = child.parent;
+            while (checkParent != null)
+            {
+                if (checkParent == parent)
+                {
+                    return true;
+                }
+
+                checkParent = checkParent.parent;
+            }
+
+            return false;
         }
     }
 }

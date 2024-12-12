@@ -20,12 +20,22 @@ namespace Editor.AbilityEditor.TreeItem
         
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
-            if (info.OperationType < ERightClickOperationType.AddChildLimit)
+            if (info.OperationType < ERightClickOperationType.AddChildOperation)
             {
                 return ERightMenuState.NoShow;
             }
 
             return ERightMenuState.Enable;
+        }
+
+        protected override bool checkIsAllowMove(ATreeItem newParent)
+        {
+            if (newParent is AttrTreeItem or VariableTreeItem or ActionTreeItem or BranchGroupTreeItem)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         protected override string getButtonText()

@@ -45,6 +45,7 @@ namespace Editor.AbilityEditor
         /// </summary>
         private readonly Color _onNodeEditorWindowOpenColor = new Color(2, 2, 2);
         private bool _nodeEditorWindowIsOpen;
+
         /// <summary>
         /// 菜单状态
         /// </summary>
@@ -64,15 +65,13 @@ namespace Editor.AbilityEditor
         }
 
         private readonly Dictionary<ERightClickOperationType, MenuInfo> _rightMenuItems = new();
-
-        public new ATreeItem parent => (ATreeItem)base.parent;
-
+        
         protected ATreeItem(AbilityCycleTree tree, AEditorTreeNode node) : base(node.Id)
         {
             Tree = tree;
             Node = node;
             ButtonTextAnchor = TextAnchor.MiddleLeft;
-            
+
             _menu = new GenericMenu();
             //添加节点
             addMenu("添加节点/Action",      ERightClickOperationType.AddActionChild,      new ActionNodeData());
@@ -84,6 +83,7 @@ namespace Editor.AbilityEditor
             addMenu("添加节点/Repeat",      ERightClickOperationType.AddRepeatChild,      new RepeatNodeData());
             addMenu("添加节点/Variable",    ERightClickOperationType.AddVariableChild,    new VariableNodeData());
             addMenu("添加节点/Attr",        ERightClickOperationType.AddAttrChild,        new AttrNodeData());
+            addMenu("添加节点/GroupSwitch", ERightClickOperationType.AddGroupSwitchChild, new GroupSwitchNodeData());
             //基础操作
             addMenu("复制",   ERightClickOperationType.Copy,       null);
             addMenu("粘贴",   ERightClickOperationType.Paste,      Node);
@@ -194,6 +194,7 @@ namespace Editor.AbilityEditor
                         state = ERightMenuState.Disable;
                     }
                 }
+
                 switch (state)
                 {
                     case ERightMenuState.Enable:
@@ -208,6 +209,31 @@ namespace Editor.AbilityEditor
             _menu.ShowAsContext();
         }
 
+        /// <summary>
+        /// 尝试移动到指定父节点的某个位置
+        /// </summary>
+        /// <param name="newParent"></param>
+        /// <param name="childIndex"></param>
+        public void TryMoveTo(ATreeItem newParent, int childIndex)
+        {
+            if (checkIsAllowMove(newParent))
+            {
+                var nodeParent = Node.Parent;
+
+                if (nodeParent == newParent.Node)
+                {//同一树下俩节点在交换位置
+                    nodeParent.SwapChildIndex(Node, childIndex);
+                }
+                else
+                {
+                    newParent.Node.InsertChild(Node, childIndex);
+                    nodeParent.RemoveChild(Node);
+                }
+               
+            }
+        }
+
+        protected abstract bool checkIsAllowMove(ATreeItem newParent);
 
         protected abstract string getButtonText();
         protected abstract void OnBtnClicked(Rect btnRect);
@@ -215,7 +241,7 @@ namespace Editor.AbilityEditor
         public void DrawItem(Rect lineRect)
         {
             var buttonText = getButtonText();
-            if (string.IsNullOrEmpty(buttonText)) 
+            if (string.IsNullOrEmpty(buttonText))
                 buttonText = "未定义描述";
 
             if (!string.IsNullOrEmpty(Node.Data.Desc))
@@ -230,7 +256,7 @@ namespace Editor.AbilityEditor
                 alignment = ButtonTextAnchor
             };
             var buttonContent = new GUIContent($"{id}", getButtonText());
-            lineRect.width = ButtonWidth > 0 ? ButtonWidth : Mathf.Min(200f, buttonStyle.CalcSize(buttonContent).x);
+            lineRect.width = ButtonWidth > 0 ? ButtonWidth : Mathf.Max(200f, buttonStyle.CalcSize(buttonContent).x);
             if (GUI.Button(lineRect, buttonContent, buttonStyle))
             {
                 var btnRect = EditorGUIUtility.GetMainWindowPosition();

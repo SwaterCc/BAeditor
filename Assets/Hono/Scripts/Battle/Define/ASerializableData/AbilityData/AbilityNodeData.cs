@@ -119,6 +119,22 @@ namespace Hono.Scripts.Battle
         public override AbilityNodeData DeepCopy()
         {
             var copy = new GroupNodeData();
+            copy.autoNext = autoNext;
+            return copy;
+        }
+    }
+
+    [Serializable]
+    public class GroupSwitchNodeData : AbilityNodeData
+    {
+        public bool switchGroupNow;
+        public AParams nextGroupId;
+        
+        public override AbilityNodeData DeepCopy()
+        {
+            var copy = new GroupSwitchNodeData();
+            copy.switchGroupNow = switchGroupNow;
+            copy.nextGroupId = new AParams(nextGroupId);
             return copy;
         }
     }

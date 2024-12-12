@@ -4,14 +4,15 @@ using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
-using Hono.Scripts.Battle.Tools.CustomAttribute;
-using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
+    /// <summary>
+    /// 监听节点，仅允许放置在Cycle节点下，仅在监听到事件或消息时执行其子节点
+    /// </summary>
     public class ListenerTreeItem : ATreeItem<ListenerNodeData>
     {
         public ListenerTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
@@ -21,7 +22,22 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
-            throw new NotImplementedException();
+            if (info.OperationType is ERightClickOperationType.AddListenerChild or ERightClickOperationType.AddGroupChild)
+            {
+                return ERightMenuState.NoShow;
+            }
+
+            return ERightMenuState.Enable;
+        }
+
+        protected override bool checkIsAllowMove(ATreeItem newParent)
+        {
+            if (newParent is not CycleTreeItem)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         protected override string getButtonText()

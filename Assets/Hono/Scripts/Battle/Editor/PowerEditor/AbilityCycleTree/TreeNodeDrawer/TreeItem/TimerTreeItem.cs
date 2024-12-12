@@ -17,7 +17,15 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
-            throw new System.NotImplementedException();
+            if (info.OperationType is 
+                ERightClickOperationType.AddTimerChild or 
+                ERightClickOperationType.AddGroupChild or 
+                ERightClickOperationType.AddListenerChild)
+            {
+                return ERightMenuState.NoShow;
+            }
+
+            return ERightMenuState.Enable;
         }
 
         protected override string getButtonText()
@@ -26,7 +34,21 @@ namespace Editor.AbilityEditor.TreeItem
                    Data.MaxCount;
         }
 
+        protected override bool checkIsAllowMove(ATreeItem newParent)
+        {
+            if (newParent is AttrTreeItem or VariableTreeItem or ActionTreeItem or TimerTreeItem or BranchGroupTreeItem)
+            {
+                return false;
+            }
 
+            if (newParent.HasParent<TimerTreeItem>())
+            {
+                return false;
+            }
+            
+            return true;
+        }
+        
         protected override void OnBtnClicked(Rect btnRect)
         {
             ANodeSettingWindow.Open<TimerNodeDataWindow>(this);

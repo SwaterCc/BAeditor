@@ -13,9 +13,27 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
-            throw new NotImplementedException();
+            if (info.OperationType is 
+                ERightClickOperationType.AddGroupChild or 
+                ERightClickOperationType.AddListenerChild or 
+                ERightClickOperationType.AddTimerChild)
+            {
+                return ERightMenuState.Disable;
+            }
+
+            return ERightMenuState.Enable;
         }
 
+        protected override bool checkIsAllowMove(ATreeItem newParent)
+        {
+            if (newParent is AttrTreeItem or VariableTreeItem or ActionTreeItem or BranchGroupTreeItem)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        
         protected override string getButtonText()
         {
             return "Foreach";
