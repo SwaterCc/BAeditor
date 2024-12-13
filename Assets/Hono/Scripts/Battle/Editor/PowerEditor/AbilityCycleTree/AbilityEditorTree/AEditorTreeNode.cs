@@ -150,6 +150,11 @@ namespace Editor.AbilityEditor
             }
 
             var itemIdx = Children.IndexOf(node);
+            if (itemIdx == index)
+            {
+                return;
+            }
+
             var temp = Children[index];
             Children[index] = node;
             Children[itemIdx] = temp;
@@ -179,7 +184,7 @@ namespace Editor.AbilityEditor
         {
             Children.Remove(node);
         }
-
+        
         /// <summary>
         /// 从节点的父节点删除自己
         /// </summary>
@@ -202,6 +207,15 @@ namespace Editor.AbilityEditor
             }
         }
 
+        /// <summary>
+        /// 是否已经序列化保存
+        /// </summary>
+        /// <returns></returns>
+        public bool IsDirty()
+        {
+            return false;
+        }
+        
         /// <summary>
         /// 数据序列化
         /// </summary>

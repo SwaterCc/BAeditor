@@ -213,20 +213,23 @@ namespace Editor.AbilityEditor
         /// 尝试移动到指定父节点的某个位置
         /// </summary>
         /// <param name="newParent"></param>
-        /// <param name="childIndex"></param>
-        public void TryMoveTo(ATreeItem newParent, int childIndex)
+        /// <param name="insertIdx"></param>
+        public void TryMoveTo(ATreeItem newParent, int insertIdx)
         {
             if (checkIsAllowMove(newParent))
             {
                 var nodeParent = Node.Parent;
 
                 if (nodeParent == newParent.Node)
-                {//同一树下俩节点在交换位置
-                    nodeParent.SwapChildIndex(Node, childIndex);
+                {
+                    var oldIndex = nodeParent.Children.IndexOf(Node);
+                    var removeIdx = insertIdx < oldIndex ? oldIndex + 1 : oldIndex;
+                    nodeParent.InsertChild(Node, insertIdx);
+                    nodeParent.Children.RemoveAt(removeIdx);
                 }
                 else
                 {
-                    newParent.Node.InsertChild(Node, childIndex);
+                    newParent.Node.InsertChild(Node, insertIdx);
                     nodeParent.RemoveChild(Node);
                 }
                

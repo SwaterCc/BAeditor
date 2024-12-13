@@ -13,18 +13,11 @@ MonoBehaviour:
   m_Name: Default Local Group
   m_EditorClassIdentifier: 
   m_GroupName: Default Local Group
-  m_Data:
-    m_SerializedData: []
   m_GUID: 9118bc1ec081c8f45b0b9085f5f4db06
-  m_SerializeEntries:
-  - m_GUID: 4419b5ad230421c44a47d592bfed9055
-    m_Address: Assets/BattleData/LabelCount.asset
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7656358260d6a194f8b387281fc83166, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 9ae4766ed0773ea409417bbd2123a6bb, type: 2}
     - {fileID: 11400000, guid: b84299df3fbb81f47a3a79a59f5b388e, type: 2}
+    - {fileID: 11400000, guid: 9ae4766ed0773ea409417bbd2123a6bb, type: 2}

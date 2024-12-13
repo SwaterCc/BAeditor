@@ -52,10 +52,16 @@ namespace Editor.AbilityEditor
 
         protected override void RowGUI(RowGUIArgs args)
         {
-            base.RowGUI(args);
             if (args.item is not ATreeItem item)
             {
                 return;
+            }
+
+            if (item.Node.IsDirty())
+            {
+                var rect = args.rowRect;
+                var bgColor = new Color(2.1f, 0.0f, 0.0f, 0.1f);
+                EditorGUI.DrawRect(rect, bgColor);
             }
             
             var rowRect = args.rowRect;
@@ -75,6 +81,8 @@ namespace Editor.AbilityEditor
             }
 
             item.DrawItem(rowRect);
+            
+            base.RowGUI(args);
         }
 
         public new List<AEditorTreeNode> GetSelection()
@@ -161,6 +169,18 @@ namespace Editor.AbilityEditor
             DragAndDrop.PrepareStartDrag();
             var draggedRows = new List<ATreeItem>(32);
             var list = FindRows(args.draggedItemIDs);
+            /*var parent = (ATreeItem)(list[0].parent);
+            //按顺序放入
+            foreach (var item in parent.Node.Children)
+            {
+                foreach (var dragItem in list)
+                {
+                    if (dragItem is not ATreeItem aDragItem || aDragItem.Node != item) continue;
+                    draggedRows.Add(aDragItem);
+                    break;
+                }
+            }*/
+
             foreach (var item in list)
             {
                 if (item is ATreeItem aTreeItem)
@@ -168,6 +188,7 @@ namespace Editor.AbilityEditor
                     draggedRows.Add(aTreeItem);
                 }
             }
+            
           
             DragAndDrop.SetGenericData(DragKey, draggedRows);
             DragAndDrop.StartDrag("Dragging TreeViewItem");
@@ -200,7 +221,7 @@ namespace Editor.AbilityEditor
                    case DragAndDropPosition.UponItem:
                        foreach (var item in dragList)
                        {
-                           item.TryMoveTo(parent, item.Node.Children.Count);
+                           item.TryMoveTo(parent, parent.Node.Children.Count);
                        }
                        break;
                    case DragAndDropPosition.BetweenItems:
@@ -208,10 +229,6 @@ namespace Editor.AbilityEditor
                        {
                            ATreeItem item = dragList[index];
                            var insertIdx = args.insertAtIndex + index;
-                           if (insertIdx >= parent.children.Count)
-                           {
-                               insertIdx = parent.children.Count - 1;
-                           }
                            item.TryMoveTo(parent, insertIdx);
                        }
 
