@@ -24,7 +24,7 @@ namespace Editor.AbilityEditor
             window.ShowModal();
         }
 
-        protected virtual void CopyData()
+        private void CopyData()
         {
             TempData = TreeItem.Node.DeepCopy();
         }
@@ -60,12 +60,7 @@ namespace Editor.AbilityEditor
 
     public abstract class ANodeSettingWindow<TAbilityNodeData> : ANodeSettingWindow where TAbilityNodeData : AbilityNodeData
     {
-        protected new TAbilityNodeData TempData { get; private set; }
-
-        protected sealed override void CopyData()
-        {
-            TempData = TreeItem.Node.DeepCopy<TAbilityNodeData>();
-        }
+        protected new TAbilityNodeData TempData => (TAbilityNodeData)base.TempData;
 
         protected sealed override void OnImGUI()
         {

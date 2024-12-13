@@ -36,6 +36,15 @@ namespace Hono.Scripts.Battle.Base
     }
 
     
+    public struct AutoParam
+    {
+        //int
+        //float
+        //bool
+        //string
+        //object
+    }
+    
     public static class AParamsParser
     {
         public static bool TryParse<T>(this AParams aParams, in Ability ability, out T value) where T : class

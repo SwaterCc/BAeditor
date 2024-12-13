@@ -17,7 +17,7 @@ namespace Hono.Scripts.Battle
 
         public List<int> ChildrenIds = new();
 
-        public string Desc;
+        public string Desc = "";
 
         public abstract AbilityNodeData DeepCopy();
     }

@@ -16,63 +16,38 @@ namespace Editor.AbilityEditor
     public class ParameterField
     {
         private readonly GenericMenu _menu;
-        private AParams _aParameter;
-        private string _searchString;
-        private Vector2 _dropDownPos;
-        private bool _showDropDown;
-        private Rect _dropDownRect;
+        private AParams _params;
         private string _paramName;
-        private Type _type;
-        private List<string> _dropDownList;
+        private Type _parseType;
         private Type _originType;
 
-        public ParameterField(AParams aParameter, string paramName, Type type)
+        public ParameterField(AParams aParams, string paramName, Type type)
         {
             _menu = new GenericMenu();
-            _aParameter = aParameter;
+            _params = aParams;
             _paramName = paramName;
-            _type = type;
-            _originType = type;
-            _dropDownPos = Vector2.zero;
-            _dropDownList = new List<string>();
-            _searchString = "";
-            
-            if (_originType == typeof(object) && _aParameter.Value != null) {
-	            _type = _aParameter.Value.GetType();
-            }
+            _originType = _parseType = type;
         }
 
-        private void showMenu()
+        private void drawTypeParse()
         {
-            _menu.AddItem(new GUIContent("调用函数"), false, () => { _aParameter.paramType = EParamType.Function; });
+            if (GUILayout.Button("▼", GUILayout.Width(22))) { }
+        }
 
-            _menu.AddItem(new GUIContent("直接输入"), false, () => { _aParameter.paramType = EParamType.Simple; });
-
-            _menu.AddItem(new GUIContent("自定义变量"), false,
-                () => { _aParameter.paramType = EParamType.Variable; });
-
-            _menu.AddItem(new GUIContent("属性"), false, () => { _aParameter.paramType = EParamType.Attr; });
-
-            if (_originType == typeof(object)) {
-	            _menu.AddItem(new GUIContent("Object/int"), false, () => {
-		            _type = typeof(RefInt);
-		            _aParameter.Value = new RefInt();
-	            });
-	            _menu.AddItem(new GUIContent("Object/float"), false, () => {
-		            _type = typeof(RefFloat);
-		            _aParameter.Value = new RefFloat();
-	            });
-	            _menu.AddItem(new GUIContent("Object/bool"), false, () => {
-		            _type = typeof(bool);
-		            _aParameter.Value = new RefBool();
-	            });
-	            _menu.AddItem(new GUIContent("Object/重置"), false, () => {
-		            _type = typeof(object);
-		            _aParameter.Value = null;
-	            });
+        private void drawParamSwitch()
+        {
+            if (GUILayout.Button("▼", GUILayout.Width(22)))
+            {
+                _menu.AddItem(new GUIContent("调用函数"), false,
+                              () => { _params.paramType = EParamType.Function; });
+                _menu.AddItem(new GUIContent("直接输入"), false,
+                              () => { _params.paramType = EParamType.Simple; });
+                _menu.AddItem(new GUIContent("自定义变量"), false,
+                              () => { _params.paramType = EParamType.Variable; });
+                _menu.AddItem(new GUIContent("属性"), false,
+                              () => { _params.paramType = EParamType.Attr; });
+                _menu.ShowAsContext();
             }
-
-            _menu.ShowAsContext();
         }
 
         public void Draw()
@@ -82,33 +57,27 @@ namespace Editor.AbilityEditor
 
             EditorGUILayout.LabelField(new GUIContent(_paramName), GUILayout.Width(100));
 
-            if (GUILayout.Button("▼", GUILayout.Width(22)))
-            {
-                showMenu();
-            }
-            
-            switch (_aParameter.paramType)
-            {
-	            case EParamType.Simple:
-		            baseDraw();
-		            break;
-	            case EParamType.Function:
-		            functionDraw();
-		            break;
-	            case EParamType.Variable:
-		            variableDraw();
-		            break;
-	            case EParamType.Attr:
-		            attrDraw();
-		            break;
-            }
-            
-            if (_showDropDown)
-            {
-                drawDropDown();
-            }
+            //绘制类型转换按钮
+            drawTypeParse();
 
-            handleClickOutside();
+            //绘制参数来源切换按钮
+            drawParamSwitch();
+
+            switch (_params.paramType)
+            {
+                case EParamType.Simple:
+                    baseDraw();
+                    break;
+                case EParamType.Function:
+                    functionDraw();
+                    break;
+                case EParamType.Variable:
+                    variableDraw();
+                    break;
+                case EParamType.Attr:
+                    attrDraw();
+                    break;
+            }
 
             EditorGUIUtility.labelWidth = old;
             EditorGUILayout.EndHorizontal();
@@ -118,142 +87,87 @@ namespace Editor.AbilityEditor
         private void functionDraw()
         {
             string text = "";
-            if (string.IsNullOrEmpty(_aParameter.funcName))
+            if (string.IsNullOrEmpty(_params.funcName))
             {
                 text = "未选择函数";
             }
             else
             {
-                text = "调用函数" + _aParameter.funcName;
+                text = "调用函数" + _params.funcName;
             }
 
+            var rect = GUILayoutUtility.GetLastRect();
             if (SirenixEditorGUI.Button(text, ButtonSizes.Medium))
             {
-                _dropDownRect = GUIHelper.GetCurrentLayoutRect();
-                var funcWindow = FuncWindow.Open(_aParameter, _type.GetParameterValueType(),
-                    (parameter) => _aParameter.CopyTo(parameter));
-                funcWindow.position = new Rect(_dropDownRect.position, new Vector2(680, 500));
+                var funcWindow = FuncWindow.Open(_params, _parseType.GetParameterValueType(),
+                                                 (parameter) => _params.CopyTo(parameter));
+                funcWindow.position = new Rect(rect.position, new Vector2(680, 500));
             }
         }
 
         private void baseDraw()
         {
-	        try {
-		          //变量名加按钮
-            switch (_type.GetParameterValueType())
+            try
             {
-                case EParamValueType.Int:
-                case EParamValueType.Enum:
-                    _aParameter.Value ??= new RefInt();
-                    ((RefInt)_aParameter.Value).Value = SirenixEditorFields.IntField((RefInt)_aParameter.Value);
-                    break;
-                case EParamValueType.Float:
-                    _aParameter.Value ??= new RefFloat();
-                    ((RefFloat)_aParameter.Value).Value = SirenixEditorFields.FloatField((RefFloat)_aParameter.Value);
-                    break;
-                case EParamValueType.Bool:
-                    _aParameter.Value ??= new RefBool();
-                    string select = ((RefBool)_aParameter.Value).ToString();
-                    select =
-                        SirenixEditorFields.Dropdown(new GUIContent(""), select, new[] { "true", "false" });
-                    ((RefBool)_aParameter.Value).Value = bool.Parse(select);
-                    break;
-                case EParamValueType.Vector3:
-	                _aParameter.Value ??= new RefVector3();
-	                ((RefVector3)_aParameter.Value).FromVector3(SirenixEditorFields.Vector3Field((RefVector3)_aParameter.Value));
-	                break;
-                case EParamValueType.Object:
-	                if (_aParameter.Value == null) {
-		                EditorGUILayout.LabelField("←----请选择类型！");
-	                }
-	                break;
-                default:
-                    EditorGUILayout.LabelField($"还未实现{_type}");
-                    break;
+                //变量名加按钮
+                switch (_parseType.GetParameterValueType())
+                {
+                    case EParamValueType.Int:
+                        _params.Value ??= new RefInt();
+                        ((RefInt)_params.Value).Value = SirenixEditorFields.IntField((RefInt)_params.Value);
+                        break;
+                    case EParamValueType.Float:
+                        _params.Value ??= new RefFloat();
+                        ((RefFloat)_params.Value).Value =
+                            SirenixEditorFields.FloatField((RefFloat)_params.Value);
+                        break;
+                    case EParamValueType.Bool:
+                        _params.Value ??= new RefBool();
+                        string select = ((RefBool)_params.Value).ToString();
+                        select =
+                            SirenixEditorFields.Dropdown(new GUIContent(""), select, new[] { "true", "false" });
+                        ((RefBool)_params.Value).Value = bool.Parse(select);
+                        break;
+                    case EParamValueType.Vector3:
+                        _params.Value ??= new RefVector3();
+                        ((RefVector3)_params.Value).FromVector3(
+                            SirenixEditorFields.Vector3Field((RefVector3)_params.Value));
+                        break;
+                    case EParamValueType.Object:
+                        if (_params.Value == null)
+                        {
+                            EditorGUILayout.LabelField("←----请选择类型！");
+                        }
+
+                        break;
+                    default:
+                        EditorGUILayout.LabelField($"还未实现{_parseType}");
+                        break;
+                }
             }
-	        }
-	        catch (InvalidCastException e) {
-		        Debug.LogError(e);
-		        _aParameter.Value = null;
-	        }
-	        catch (Exception e) {
-		        Debug.LogError(e);
-		        throw;
-	        }
+            catch (InvalidCastException e)
+            {
+                Debug.LogError(e);
+                _params.Value = null;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                throw;
+            }
         }
 
         private void attrDraw()
         {
-            if (SirenixEditorGUI.Button("使用属性" + _aParameter.attrType, ButtonSizes.Medium))
-            {
-                _dropDownRect = GUILayoutUtility.GetLastRect();
-                _dropDownList.Clear();
-                //获取属性列表
-                foreach (var attrName in Enum.GetNames(typeof(EAttrType)))
-                {
-                    if (_type == typeof(int) ||_type == typeof(float))
-                    {
-                        _dropDownList.Add(attrName);
-                    }
-                }
-
-                _showDropDown = true;
-            }
+            if (SirenixEditorGUI.Button("使用属性" + _params.attrType, ButtonSizes.Medium)) { }
         }
 
         private void variableDraw()
         {
-            if (SirenixEditorGUI.Button("使用变量" + _aParameter.variableName, ButtonSizes.Medium))
-            {
-                _dropDownList.Clear();
-                /*//获取变量列表
-                _dropDownList = AbilityViewDrawer.VarCollector.GetVariables(_type);
-                if (AbilityViewDrawer.BeforeClick != null)
-                {
-                    ListenerNodeData listenerNode = null;
-                    int parentId = AbilityViewDrawer.BeforeClick.ParentId;
-                    while (parentId > 0)
-                    {
-                        var parentNode = AbilityViewDrawer.AbilityData.NodeDict[parentId];
-                        parentId = parentNode.ParentId;
-                        if (parentNode.NodeType != EAbilityNodeType.EEvent) continue;
-                        listenerNode = (ListenerNodeData)parentNode;
-                        break;
-                    }
-
-                    if (listenerNode != null)
-                    {
-                        if (listenerNode.IsEvent)
-                        {
-                            if (AbilityFunctionHelper.EventCheckerDict.TryGetValue(listenerNode.EventType,
-                                    out var editorInfo))
-                            {
-                                foreach (var fieldInfo in editorInfo.EventInfoType.GetFields(BindingFlags.Public |
-                                             BindingFlags.Instance))
-                                {
-                                    if (fieldInfo.FieldType == _type)
-                                        _dropDownList.Add("EventInfo:" + fieldInfo.Name);
-                                }
-                            }
-                        }
-                        else
-                        {
-	                        _dropDownList.Add("Msg:P1");
-	                        _dropDownList.Add("Msg:P2");
-	                        _dropDownList.Add("Msg:P3");
-	                        _dropDownList.Add("Msg:P4");
-	                        _dropDownList.Add("Msg:P5");
-                        }
-                    }
-                }*/
-
-                _showDropDown = true;
-            }
+            if (SirenixEditorGUI.Button("使用变量" + _params.variableName, ButtonSizes.Medium)) { }
         }
 
-        private void processEventNodeChildren() { }
-
-        private void drawDropDown()
+        /*private void drawDropDown()
         {
             SirenixEditorGUI.BeginVerticalList();
 
@@ -285,9 +199,9 @@ namespace Editor.AbilityEditor
 
             EditorGUILayout.EndScrollView();
             SirenixEditorGUI.EndVerticalList();
-        }
+        }*/
 
-        private void handleClickOutside()
+        /*private void handleClickOutside()
         {
             Event currentEvent = Event.current;
             if (currentEvent.type == EventType.MouseDown && _showDropDown)
@@ -297,6 +211,6 @@ namespace Editor.AbilityEditor
                     _showDropDown = false;
                 }
             }
-        }
+        }*/
     }
 }
