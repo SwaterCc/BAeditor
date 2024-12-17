@@ -1,7 +1,11 @@
+using System;
+
 namespace Hono.Scripts.Battle.Base
 {
+    [Serializable]
     public abstract class ARef : IAPoolRefCount
     {
+        [NonSerialized]
         private int _refCount;
         
         public abstract ARef DeepCopy();
