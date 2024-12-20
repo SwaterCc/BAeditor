@@ -169,17 +169,6 @@ namespace Editor.AbilityEditor
             DragAndDrop.PrepareStartDrag();
             var draggedRows = new List<ATreeItem>(32);
             var list = FindRows(args.draggedItemIDs);
-            /*var parent = (ATreeItem)(list[0].parent);
-            //按顺序放入
-            foreach (var item in parent.Node.Children)
-            {
-                foreach (var dragItem in list)
-                {
-                    if (dragItem is not ATreeItem aDragItem || aDragItem.Node != item) continue;
-                    draggedRows.Add(aDragItem);
-                    break;
-                }
-            }*/
 
             foreach (var item in list)
             {

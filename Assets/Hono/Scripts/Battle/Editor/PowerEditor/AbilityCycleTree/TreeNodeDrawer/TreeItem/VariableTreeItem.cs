@@ -71,7 +71,7 @@ namespace Editor.AbilityEditor.TreeItem
 
     public class VariableSettingWindow : ANodeSettingWindow< VariableNodeData>
     {
-        private ParameterField _value;
+        private AParamsField _value;
 
         private List<string> _dropList = new List<string>()
         {
@@ -88,7 +88,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void Init()
         {
-            _value = new ParameterField(TempData.Value, "变量值：",
+            _value = new AParamsField(TempData.Value, "变量值：",
                TempData.Value.GetType());
            
             if (_curSelect == "custom")

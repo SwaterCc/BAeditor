@@ -57,15 +57,15 @@ namespace Editor.AbilityEditor.TreeItem
 
     public class TimerNodeDataWindow : ANodeSettingWindow<TimerNodeData>
     {
-        private ParameterField _first;
-        private ParameterField _interval;
-        private ParameterField _maxCount;
+        private AParamsField _first;
+        private AParamsField _interval;
+        private AParamsField _maxCount;
 
         protected override void Init()
         {
-            _first = new ParameterField(TempData.FirstInterval, "第一次触发间隔",      typeof(float));
-            _interval = new ParameterField(TempData.Interval,   "触发间隔",         typeof(float));
-            _maxCount = new ParameterField(TempData.MaxCount,   "触发次数(-1为无限次)", typeof(int));
+            _first = new AParamsField(TempData.FirstInterval, "第一次触发间隔",      typeof(float));
+            _interval = new AParamsField(TempData.Interval,   "触发间隔",         typeof(float));
+            _maxCount = new AParamsField(TempData.MaxCount,   "触发次数(-1为无限次)", typeof(int));
         }
 
         protected override void Draw()

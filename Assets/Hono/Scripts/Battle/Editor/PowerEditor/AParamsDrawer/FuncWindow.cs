@@ -26,14 +26,14 @@ namespace Editor.AbilityEditor
         private EParamValueType _valueType;
         private Action<AParams> _onSave;
         private FunctionView _funcTree;
-        private List<ParameterField> _parameterFields;
+        private List<AParamsField> _parameterFields;
 
         public void Init(AParams aParameter, EParamValueType valueType, Action<AParams> onSave)
         {
             _function = new AParams(aParameter);
             _valueType = valueType;
             _onSave = onSave;
-            _parameterFields = new List<ParameterField>();
+            _parameterFields = new List<AParamsField>();
 
             if (!string.IsNullOrEmpty(_function.funcName))
             {
@@ -42,7 +42,7 @@ namespace Editor.AbilityEditor
                 {
                     var funcParam = _function.funcParams[index];
                     var paramInfo = funcInfo.ParamInfos[index];
-                    _parameterFields.Add(new ParameterField(funcParam, paramInfo.ParamName, paramInfo.ParamType));
+                    _parameterFields.Add(new AParamsField(funcParam, paramInfo.ParamName, paramInfo.ParamType));
                 }
             }
             
@@ -65,7 +65,7 @@ namespace Editor.AbilityEditor
                     paramType = EParamType.Simple
                 };
                 _function.funcParams.Add(funcParam);
-                _parameterFields.Add(new ParameterField(funcParam, paramInfo.ParamName, paramInfo.ParamType));
+                _parameterFields.Add(new AParamsField(funcParam, paramInfo.ParamName, paramInfo.ParamType));
             }
         }
 

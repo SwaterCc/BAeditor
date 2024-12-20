@@ -7,14 +7,14 @@ using System;
 namespace Hono.Scripts.Battle.Base
 {
     [Serializable]
-    public class RefBool : ARef, IAPoolObject
+    public class RefBoolean : ARef, IAPoolObject
     {
         public bool Value;
         private int _refCount;
 
-        public RefBool() { }
+        public RefBoolean() { }
 
-        public RefBool(bool initialValue = false)
+        public RefBoolean(bool initialValue = false)
         {
             Value = initialValue;
         }
@@ -26,38 +26,38 @@ namespace Hono.Scripts.Battle.Base
 
         public override ARef DeepCopy()
         {
-            RefBool rInt = APool<RefBool>.Pool.Rent();
+            RefBoolean rInt = APool<RefBoolean>.Pool.Rent();
             rInt.Value = Value;
             return rInt;
         }
 
         public override void ARefRecycle()
         {
-            APool<RefBool>.Pool.Recycle(this);
+            APool<RefBoolean>.Pool.Recycle(this);
         }
 
         // 隐式转换到 bool
-        public static implicit operator bool(RefBool refBool)
+        public static implicit operator bool(RefBoolean refBoolean)
         {
-            return refBool.Value;
+            return refBoolean.Value;
         }
 
         // 等于操作符重载
-        public static bool operator ==(RefBool a, RefBool b)
+        public static bool operator ==(RefBoolean a, RefBoolean b)
         {
             return a.Value == b.Value;
         }
 
         // 不等于操作符重载
-        public static bool operator !=(RefBool a, RefBool b)
+        public static bool operator !=(RefBoolean a, RefBoolean b)
         {
             return a.Value != b.Value;
         }
 
         private new bool Equals(object obj)
         {
-            if (!(obj is RefBool)) return false;
-            return this == (RefBool)obj;
+            if (!(obj is RefBoolean)) return false;
+            return this == (RefBoolean)obj;
         }
 
         public override string ToString()

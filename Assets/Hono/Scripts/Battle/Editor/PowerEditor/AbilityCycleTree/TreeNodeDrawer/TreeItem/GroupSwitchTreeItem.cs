@@ -53,10 +53,10 @@ namespace Editor.AbilityEditor.TreeItem
 
     public class GroupSwitchSettingWindow : ANodeSettingWindow<GroupSwitchNodeData>
     {
-        private ParameterField _nextGroupId;
+        private AParamsField _nextGroupId;
         protected override void Init()
         {
-            _nextGroupId = new ParameterField(TempData.nextGroupId, "Next Group Id", typeof(int));
+            _nextGroupId = new AParamsField(TempData.nextGroupId, "Next Group Id", typeof(int));
         }
 
         protected override void Draw()

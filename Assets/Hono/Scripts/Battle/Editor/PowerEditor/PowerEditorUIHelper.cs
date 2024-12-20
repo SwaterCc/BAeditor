@@ -154,6 +154,52 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
         }
 
         /// <summary>
+        /// GenericMenu添加Item
+        /// </summary>
+        /// <param name="menu"></param>
+        /// <param name="label"></param>
+        /// <param name="function"></param>
+        /// <param name="isDisable"></param>
+        public static void AddMenuItem(this GenericMenu menu,
+            string label,
+            GenericMenu.MenuFunction function,
+            bool isDisable = false)
+        {
+            if (!isDisable)
+            {
+                menu.AddItem(new GUIContent(label), false, function);
+            }
+            else
+            {
+                menu.AddDisabledItem(new GUIContent(label));
+            }
+        }
+
+        /// <summary>
+        /// GenericMenu添加Item
+        /// </summary>
+        /// <param name="menu"></param>
+        /// <param name="label"></param>
+        /// <param name="function"></param>
+        /// <param name="param"></param>
+        /// <param name="isDisable"></param>
+        public static void AddMenuItem(this GenericMenu menu,
+            string label,
+            GenericMenu.MenuFunction2 function,
+            object param,
+            bool isDisable = false)
+        {
+            if (!isDisable)
+            {
+                menu.AddItem(new GUIContent(label), false, function, param);
+            }
+            else
+            {
+                menu.AddDisabledItem(new GUIContent(label));
+            }
+        }
+
+        /// <summary>
         /// 绘制简单 int List
         /// </summary>
         /// <param name="list"></param>

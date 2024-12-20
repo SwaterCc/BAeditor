@@ -62,7 +62,7 @@ namespace Editor.AbilityEditor.TreeItem
 
     public class AttrSettingWindow : ANodeSettingWindow<AttrNodeData>
     {
-        private ParameterField _value;
+        private AParamsField _value;
         private EAttrType _curSelect;
         
         private Vector2 _dropDownPos;
@@ -72,7 +72,7 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void Init()
         {
             _searchString = "";
-            _value = new ParameterField(TempData.Value, "属性值：", typeof(int));
+            _value = new AParamsField(TempData.Value, "属性值：", typeof(int));
             _dropDownPos = Vector2.zero;
         }
 

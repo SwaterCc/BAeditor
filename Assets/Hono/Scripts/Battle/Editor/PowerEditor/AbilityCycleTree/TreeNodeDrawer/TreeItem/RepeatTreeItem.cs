@@ -44,11 +44,11 @@ namespace Editor.AbilityEditor.TreeItem
 
     public class RepeatSettingWindow : ANodeSettingWindow<RepeatNodeData>
     {
-        private ParameterField _maxCount;
+        private AParamsField _maxCount;
 
         protected override void Init()
         {
-            _maxCount = new ParameterField(TempData.MaxRepeatCount, "循环次数", typeof(int));
+            _maxCount = new AParamsField(TempData.MaxRepeatCount, "循环次数", typeof(int));
         }
 
         protected override void Draw()

@@ -15,7 +15,7 @@ namespace Hono.Scripts.Battle
             {
                
 
-                if (!Data.CompareFunc.TryParse(AContext, out RefBool branchResult))
+                if (!Data.CompareFunc.TryParse(AContext, out RefBoolean branchResult))
                 {
                     Debug.LogError("Branch节点执行错误");
                     return;

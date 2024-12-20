@@ -1,4 +1,5 @@
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Base;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -59,11 +60,11 @@ namespace Editor.AbilityEditor.TreeItem
 
     public class BranchSettingWindow : ANodeSettingWindow<BranchNodeData>
     {
-        private ParameterField _compareFunc;
+        private AParamsField _compareFunc;
 
         protected override void Init()
         {
-            _compareFunc = new ParameterField(TempData.CompareFunc, "判定条件", typeof(bool));
+            _compareFunc = new AParamsField<RefBoolean>(TempData.CompareFunc, "判定条件");
         }
 
         protected override void Draw()

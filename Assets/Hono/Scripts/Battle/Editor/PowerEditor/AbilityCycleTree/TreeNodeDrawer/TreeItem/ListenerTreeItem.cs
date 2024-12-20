@@ -65,12 +65,12 @@ namespace Editor.AbilityEditor.TreeItem
 
     public class ListenerSettingWindow : ANodeSettingWindow<ListenerNodeData>
     {
-        private List<ParameterField> _parameterFields;
+        private List<AParamsField> _parameterFields;
         private EBattleEventType _curEvent;
 
         protected override void Init()
         {
-            _parameterFields = new List<ParameterField>();
+            _parameterFields = new List<AParamsField>();
             _curEvent = TempData.EventType;
 
             if (!AbilityFunctionHelper.EventCheckerDict.TryGetValue(TempData.EventType, out var value))
@@ -89,7 +89,7 @@ namespace Editor.AbilityEditor.TreeItem
                 {
                     AParams aParameter = TempData.GetChecker.funcParams[index];
                     if (funcInfo.ParamInfos.Count <= index) continue;
-                    _parameterFields.Add(new ParameterField(aParameter, funcInfo.ParamInfos[index].ParamName,
+                    _parameterFields.Add(new AParamsField(aParameter, funcInfo.ParamInfos[index].ParamName,
                                                             funcInfo.ParamInfos[index].ParamType));
                 }
             }
@@ -116,7 +116,7 @@ namespace Editor.AbilityEditor.TreeItem
             {
                 var parameter = new AParams();
                 TempData.GetChecker.funcParams.Add(parameter);
-                var param = new ParameterField(parameter, paramInfo.ParamName, paramInfo.ParamType);
+                var param = new AParamsField(parameter, paramInfo.ParamName, paramInfo.ParamType);
                 _parameterFields.Add(param);
             }
         }
