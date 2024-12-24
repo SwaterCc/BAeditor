@@ -48,6 +48,7 @@ namespace Editor.AbilityEditor
                 Close();
             }
             EditorGUILayout.EndVertical();
+            SirenixEditorGUI.EndBox();
         }
 
         protected abstract void Draw();

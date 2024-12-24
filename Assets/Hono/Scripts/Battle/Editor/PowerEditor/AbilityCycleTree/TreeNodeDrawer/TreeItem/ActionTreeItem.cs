@@ -71,7 +71,26 @@ namespace Editor.AbilityEditor.TreeItem
         
         protected override void OnBtnClicked(Rect btnRect)
         {
+            ANodeSettingWindow.Open<ActionSettingWindow>(this);
+        }
+    }
+    
+    public class ActionSettingWindow : ANodeSettingWindow<ActionNodeData>
+    {
+        private AParamsField _function;
+
+        protected override void Init()
+        {
+            //下拉框，选择函数类型，
+           // _function = new AParamsField<RefBoolean>(TempData.CompareFunc, "判定条件");
             
+        }
+
+        protected override void Draw()
+        {
+            SirenixEditorGUI.BeginBox("If节点", true);
+           // _compareFunc.Draw();
+            SirenixEditorGUI.EndBox();
         }
     }
 }

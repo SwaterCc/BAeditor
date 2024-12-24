@@ -1,4 +1,5 @@
 ﻿using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Editor.AbilityEditor;
 using Sirenix.Utilities.Editor;
 using UnityEngine;
@@ -56,7 +57,7 @@ namespace Editor.AbilityEditor.TreeItem
         private AParamsField _nextGroupId;
         protected override void Init()
         {
-            _nextGroupId = new AParamsField(TempData.nextGroupId, "Next Group Id", typeof(int));
+            _nextGroupId = new AParamsField<RefInt>(TempData.nextGroupId, "Next Group Id");
         }
 
         protected override void Draw()

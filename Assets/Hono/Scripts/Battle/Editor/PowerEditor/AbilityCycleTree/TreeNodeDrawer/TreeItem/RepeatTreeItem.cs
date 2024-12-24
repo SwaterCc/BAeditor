@@ -1,5 +1,6 @@
 using System;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Base;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -48,7 +49,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void Init()
         {
-            _maxCount = new AParamsField(TempData.MaxRepeatCount, "循环次数", typeof(int));
+            _maxCount = new AParamsField<RefInt>(TempData.MaxRepeatCount, "循环次数");
         }
 
         protected override void Draw()

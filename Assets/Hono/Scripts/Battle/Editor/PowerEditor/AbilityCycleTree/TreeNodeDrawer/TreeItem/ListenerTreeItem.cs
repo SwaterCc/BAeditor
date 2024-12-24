@@ -87,10 +87,14 @@ namespace Editor.AbilityEditor.TreeItem
             {
                 for (int index = 0; index < TempData.GetChecker.funcParams.Count; index++)
                 {
-                    AParams aParameter = TempData.GetChecker.funcParams[index];
+                    /*AParams aParameter = TempData.GetChecker.funcParams[index];
                     if (funcInfo.ParamInfos.Count <= index) continue;
-                    _parameterFields.Add(new AParamsField(aParameter, funcInfo.ParamInfos[index].ParamName,
-                                                            funcInfo.ParamInfos[index].ParamType));
+                    // 获取泛型类的类型
+                    Type genericClassType = typeof(AParamsField<>);
+                    // 为泛型类指定具体类型参数，例如 typeof(int)
+                    Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
+                    object param = Activator.CreateInstance(constructedType, parameter, paramInfo.ParamName);
+                    _parameterFields.Add(new AParamsField(aParameter, funcInfo.ParamInfos[index].ParamName));*/
                 }
             }
         }
@@ -116,8 +120,13 @@ namespace Editor.AbilityEditor.TreeItem
             {
                 var parameter = new AParams();
                 TempData.GetChecker.funcParams.Add(parameter);
-                var param = new AParamsField(parameter, paramInfo.ParamName, paramInfo.ParamType);
-                _parameterFields.Add(param);
+                // 获取泛型类的类型
+                Type genericClassType = typeof(AParamsField<>);
+                // 为泛型类指定具体类型参数，例如 typeof(int)
+                Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
+                object param = Activator.CreateInstance(constructedType, parameter, paramInfo.ParamName);
+             
+                _parameterFields.Add((AParamsField)param);
             }
         }
 

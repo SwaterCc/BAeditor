@@ -42,8 +42,13 @@ namespace Editor.AbilityEditor
                 {
                     var funcParam = _function.funcParams[index];
                     var paramInfo = funcInfo.ParamInfos[index];
+                    // 获取泛型类的类型
+                    Type genericClassType = typeof(AParamsField<>);
+                    // 为泛型类指定具体类型参数，例如 typeof(int)
+                    Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
+                    object instance = Activator.CreateInstance(constructedType, funcParam, paramInfo.ParamName);
                     //反射参数创建模板
-                    _parameterFields.Add(new AParamsField(funcParam, paramInfo.ParamName));
+                    _parameterFields.Add((AParamsField)instance);
                 }
             }
             
@@ -65,8 +70,13 @@ namespace Editor.AbilityEditor
                 {
                     paramType = EParamType.Simple
                 };
+                // 获取泛型类的类型
+                Type genericClassType = typeof(AParamsField<>);
+                // 为泛型类指定具体类型参数，例如 typeof(int)
+                Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
+                object instance = Activator.CreateInstance(constructedType, funcParam, paramInfo.ParamName);
                 _function.funcParams.Add(funcParam);
-                _parameterFields.Add(new AParamsField(funcParam, paramInfo.ParamName, paramInfo.ParamType));
+                _parameterFields.Add((AParamsField)instance);
             }
         }
 

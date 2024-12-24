@@ -194,8 +194,11 @@ namespace Editor.AbilityEditor
 
         private void attrDraw()
         {
-            var dropdown = new AttrDropdown(new AdvancedDropdownState());
-            dropdown.Show(GUILayoutUtility.GetRect(300, 300, 100, 600));
+            if (SirenixEditorGUI.Button("使用属性" + _params.variableName, ButtonSizes.Medium))
+            {
+                var dropdown = new AttrDropdown(new AdvancedDropdownState());
+                dropdown.Show(GUILayoutUtility.GetRect(300, 300, 100, 400));
+            }
         }
 
         private void variableDraw()
