@@ -25,6 +25,9 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class ActionNodeData : AbilityNodeData
     {
+        public string returnType;
+        public bool catchReturnValue;
+        public string returnValueKey;
         public AParams Function = new();
 
         public override AbilityNodeData DeepCopy()
@@ -173,6 +176,7 @@ namespace Hono.Scripts.Battle
     public class VariableNodeData : AbilityNodeData
     {
         public string Key;
+        public string valueType;
         public AParams Value = new();
         public bool IsGetReturnValue;
         public override AbilityNodeData DeepCopy()

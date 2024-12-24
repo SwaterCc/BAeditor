@@ -1,144 +1,129 @@
-﻿#region
-
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-
-#endregion
 
 namespace Hono.Scripts.Battle.Base
 {
-    public class AFuncParams : IAPoolObject
+    public partial class AParamParser
     {
-        private readonly Queue<object> _paramQueue = new(10);
-        public int Count => _paramQueue.Count;
+        private readonly IntParser _intParser = new();
+        private readonly FloatParser _floatParser = new();
+        private readonly BooleanParser _booleanParser = new();
+        private readonly Vector3Parser _v3Parser = new();
+        private readonly RefParser _refParser = new();
 
-        public void Push<T>(T obj) where T : class
+        /// <summary>
+        /// 解析获得Int
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <param name="aParams"></param>
+        /// <returns></returns>
+        public int ParseInt(Ability ability, AParams aParams)
         {
-            _paramQueue.Enqueue(obj);
-        }
-
-        public T Pop<T>() where T : class
-        {
-            return (T)_paramQueue.Dequeue();
-        }
-
-        public void OnRecycle()
-        {
-            foreach (var obj in _paramQueue)
+            try
             {
-                if (obj is IAPoolObject poolObject)
-                {
-                    ObjectPoolManager.Instance.RecycleAObject(poolObject);
-                }
+                return _intParser.Parse(ability, aParams);
             }
-            _paramQueue.Clear();
-        }
-    }
-
-    
-    public struct AutoParam
-    {
-        //int
-        //float
-        //bool
-        //string
-        //object
-    }
-    
-    public static class AParamsParser
-    {
-        public static bool TryParse<T>(this AParams aParams, in Ability ability, out T value) where T : class
-        {
-            value = null;
-            object objectValue = null;
-            if (aParams == null)
+            catch (Exception e)
             {
+                Debug.LogError(e);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// 解析获取float
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <param name="aParams"></param>
+        /// <returns></returns>
+        public float ParseFloat(Ability ability, AParams aParams)
+        {
+            try
+            {
+                return _floatParser.Parse(ability, aParams);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// 解析获取bool
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <param name="aParams"></param>
+        /// <returns></returns>
+        public bool ParseBoolean(Ability ability, AParams aParams)
+        {
+            try
+            {
+                return _booleanParser.Parse(ability, aParams);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
                 return false;
             }
-
-            switch (aParams.paramType)
+        }
+        
+        /// <summary>
+        /// 解析获取Vector3
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <param name="aParams"></param>
+        /// <returns></returns>
+        public Vector3 ParseVector3(Ability ability, AParams aParams)
+        {
+            try
             {
-                case EParamType.Simple:
-                    objectValue = aParams.Value;
-                    break;
-                case EParamType.Function:
-                    if (!aParams.TryCallFunction(ability, out objectValue))
-                    {
-                        return false;
-                    }
-
-                    break;
-                case EParamType.Variable:
-                    objectValue = ability.Vairables.Get(aParams.variableName);
-                    break;
-                case EParamType.Attr:
-                    objectValue = ability.Actor.Attrs.GetAttr(aParams.attrType).GetRef();
-                    break;
+                return _v3Parser.Parse(ability, aParams);
             }
-
-            value = (T)objectValue;
-
-            return true;
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                return Vector3.zero;
+            }
         }
 
-        public static object Parse(this AParams aParams, in Ability ability)
+        /// <summary>
+        /// 解析引用对象
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <param name="aParams"></param>
+        /// <returns></returns>
+        public object ParseRef(Ability ability, AParams aParams)
         {
-            if (aParams == null)
+            try
             {
+                return _refParser.Parse(ability, aParams);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
                 return null;
             }
-
-            object value = null;
-
-            switch (aParams.paramType)
-            {
-                case EParamType.Simple:
-                    value = aParams.Value;
-                    break;
-                case EParamType.Function:
-                    if (!aParams.TryCallFunction(ability, out value))
-                    {
-                        return null;
-                    }
-
-                    break;
-                case EParamType.Variable:
-                    value = ability.Vairables.Get(aParams.variableName);
-                    break;
-                case EParamType.Attr:
-                    value = ability.Actor.Attrs.GetAttr(aParams.attrType).GetRef();
-                    break;
-            }
-
-            return value;
         }
 
-        public static bool TryCallFunction(this AParams aParams, in Ability ability, out object value)
+        /// <summary>
+        /// 解析对象
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <param name="aParams"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T ParseRef<T>(Ability ability, AParams aParams) where T : class
         {
-            value = null;
-            if (string.IsNullOrEmpty(aParams.funcName))
+            try
             {
-                Debug.LogError("函数名为空");
-                return false;
+                return (T)_refParser.Parse(ability, aParams);
             }
-
-            var wrap = Ability.AFuncInvoker.Instance.Get(aParams.funcName);
-            if (wrap == null)
+            catch (Exception e)
             {
-                Debug.LogError($"获取函数失败{aParams.funcName}");
-                return false;
+                Debug.LogError(e);
+                return null;
             }
-
-            var @params = APool<AFuncParams>.Pool.Rent();
-            for (var index = 0; index < aParams.funcParams.Count; index++)
-            {
-                var funcParam = aParams.funcParams[index];
-                @params.Push(funcParam.Parse(ability));
-            }
-            wrap.Invoke(ability, @params, out value);
-            APool<AFuncParams>.Pool.Recycle(@params);
-            
-            return true;
         }
     }
 }

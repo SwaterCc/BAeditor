@@ -1,52 +1,54 @@
+using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
     public partial class Ability
     {
-        public abstract class AFunctionWrap
-        {
-            public int ParamCount { get; protected set; }
-            
-            public bool Invoke(Ability caller, AFuncParams @params, out object value)
-            {
-                ARunningTime.UpdateContext(caller);
-                var result = OnInvoke(caller, @params, out value);
-                ARunningTime.UpdateContext(null);
-                return result;
-            }
+        public abstract class AFunctionWrap { }
 
-            protected abstract bool OnInvoke(Ability caller, AFuncParams @param, out object value);
+        public interface IReturnFloat
+        {
+            public float CallFunc(Ability caller, List<AParams> @params);
+        }
+
+        public interface IReturnInt
+        {
+            public int CallFunc(Ability caller, List<AParams> @params);
+        }
+
+        public interface IReturnBoolean
+        {
+            public bool CallFunc(Ability caller, List<AParams> @params);
+        }
+
+        public interface IReturnVector3
+        {
+            public Vector3 CallFunc(Ability caller, List<AParams> @params);
+        }
+
+        public interface IReturnRef
+        {
+            public object CallFunc(Ability caller, List<AParams> @params);
         }
         
-        //@Auto
-        public class AFuncWrap_GetBuffLayer : AFunctionWrap
+        public interface IReturnVoid
         {
-            public int ParamCount { get; protected set; }
-            public AFuncWrap_GetBuffLayer()
+            public void CallFunc(Ability caller, List<AParams> @params);
+        }
+
+
+        //@Auto
+        public class AFuncWrap_GetBuffLayer : AFunctionWrap, IReturnInt
+        {
+            public int CallFunc(Ability caller, List<AParams> @params)
             {
-                ParamCount = 2;
-            }
-
-            protected override bool OnInvoke(Ability caller, AFuncParams @params, out object value)
-            {
-                value = null;
-                if (@params.Count <= ParamCount)
-                {
-                    return false;
-                }
-
-                RefInt param0 = @params.Pop<RefInt>();
-
-                RefInt param1 = @params.Pop<RefInt>();
-
-                var result = APool<RefInt>.Pool.Rent();
-
-                result.Value = AbilityFunctionDefine.GetBuffLayer(param0, param1);
-                value = result;
-
-                return true;
+                RefInt param0 = AParamParser.ParseInt(caller, @params[0]);
+                RefInt param1 = AParamParser.ParseInt(caller, @params[1]);
+                var value = AbilityFunctionDefine.GetBuffLayer(param0, param1);
+                return value;
             }
         }
     }

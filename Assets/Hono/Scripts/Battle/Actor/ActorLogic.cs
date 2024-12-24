@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// Actor的黑板数据
         /// </summary>
-        protected VarCollection Variables => Self.Variables;
+        protected VariableBoard Variables => Self.Variables;
 
         /// <summary>
         /// 状态机

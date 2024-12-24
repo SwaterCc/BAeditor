@@ -35,7 +35,7 @@ namespace Hono.Scripts.Battle
         {
             _beforeTargetPos = Vector3.zero;
             Logic.TryGetComponent(out _skillComp);
-            var wayPoint = (List<Vector3>)Logic.Self.Variables.Get("WayPoints");
+            var wayPoint = Logic.Self.Variables.Get<List<Vector3>>("WayPoints");
             if (wayPoint is { Count: > 0 })
             {
                 _wayPoint.AddRange(wayPoint);

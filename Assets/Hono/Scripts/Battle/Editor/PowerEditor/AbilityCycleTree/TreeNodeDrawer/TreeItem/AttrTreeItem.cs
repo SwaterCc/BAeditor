@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Base;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -72,7 +73,7 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void Init()
         {
             _searchString = "";
-            _value = new AParamsField(TempData.Value, "属性值：", typeof(int));
+            _value = new AParamsField<RefInt>(TempData.Value, "属性值：");
             _dropDownPos = Vector2.zero;
         }
 

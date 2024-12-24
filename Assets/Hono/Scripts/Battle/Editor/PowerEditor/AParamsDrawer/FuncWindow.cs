@@ -42,7 +42,8 @@ namespace Editor.AbilityEditor
                 {
                     var funcParam = _function.funcParams[index];
                     var paramInfo = funcInfo.ParamInfos[index];
-                    _parameterFields.Add(new AParamsField(funcParam, paramInfo.ParamName, paramInfo.ParamType));
+                    //反射参数创建模板
+                    _parameterFields.Add(new AParamsField(funcParam, paramInfo.ParamName));
                 }
             }
             

@@ -34,12 +34,12 @@ namespace Hono.Scripts.Battle
 
         protected override void onInit()
         {
-            _hitBoxData = (HitBoxData)(Variables.Get("hitBoxData"));
+            _hitBoxData = Variables.Get<HitBoxData>("hitBoxData");
             //因为是同帧，所以攻击者必然存在
             _attacker = ActorManager.Instance.GetActor(GetAttr(EAttrType.AttrSourceActorUid));
             _attacker.ExitSceneCallBack += setHitBoxExpire;
             //打击目标
-            var targetUid = (int)(Variables.Get("targetUid"));
+            var targetUid = Variables.Get<int>("targetUid");
             if (targetUid != 0)
             {
                 _target = ActorManager.Instance.GetActor(targetUid);

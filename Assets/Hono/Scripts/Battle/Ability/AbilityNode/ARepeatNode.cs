@@ -11,8 +11,6 @@ namespace Hono.Scripts.Battle
     {
         private class ARepeatNode : ANode<RepeatNodeData>, IAPoolObject
         {
-            private RefInt _maxCount;
-
             public override void Recycle()
             {
                 APool<ARepeatNode>.Pool.Recycle(this);
@@ -20,12 +18,8 @@ namespace Hono.Scripts.Battle
 
             public override void DoJob()
             {
-                if (!Data.MaxRepeatCount.TryParse(AContext, out _maxCount))
-                {
-                    Debug.LogError("Foreach节点执行错误");
-                }
-
-                for (int i = 0; i < _maxCount; i++)
+                var maxCount = AParamParser.ParseInt(AContext, Data.MaxRepeatCount);
+                for (int i = 0; i < maxCount; i++)
                 {
                     DoChildrenJob();
                 }
@@ -34,11 +28,6 @@ namespace Hono.Scripts.Battle
             protected override void OnChildrenJobFinish()
             {
                 resetChildren();
-            }
-
-            public new void OnRecycle()
-            {
-                _maxCount = null;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Base;
 using UnityEditor;
 
 namespace Editor.AbilityEditor
@@ -10,7 +11,7 @@ namespace Editor.AbilityEditor
         /// </summary>
         public static readonly Dictionary<Type, List<Type>> AllowCastConfig = new()
         {
-            { typeof(float),new(){typeof(int)} },
+            { typeof(RefFloat),new(){typeof(RefInt)} },
         };
 
         /// <summary>

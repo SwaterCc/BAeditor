@@ -1,5 +1,6 @@
 #region
 
+using System;
 using Hono.Scripts.Battle.Base;
 using UnityEngine;
 
@@ -18,13 +19,44 @@ namespace Hono.Scripts.Battle
 
             public override void DoJob()
             {
-                if (Data.Function.paramType == EParamType.Function)
+                var returnType = Type.GetType(Data.returnType);
+                if (returnType == typeof(int))
                 {
-                    FuncResult = Data.Function.Parse(AContext);
-                    if (FuncResult == null)
+                    var value = AParamParser.ParseInt(AContext, Data.Function);
+                    if (Data.catchReturnValue)
+                        AContext.VariableBoard.Set(Data.returnValueKey, value);
+                }
+                else if (returnType == typeof(float))
+                {
+                    var value = AParamParser.ParseFloat(AContext, Data.Function);
+                    if (Data.catchReturnValue)
+                        AContext.VariableBoard.Set(Data.returnValueKey, value);
+                }
+                else if (returnType == typeof(bool))
+                {
+                    var value = AParamParser.ParseBoolean(AContext, Data.Function);
+                    if (Data.catchReturnValue)
+                        AContext.VariableBoard.Set(Data.returnValueKey, value);
+                }
+                else if (returnType == typeof(Vector3))
+                {
+                    var value = AParamParser.ParseVector3(AContext, Data.Function);
+                    if (Data.catchReturnValue)
+                        AContext.VariableBoard.Set(Data.returnValueKey, value);
+                }
+                else if (returnType == typeof(void))
+                {
+                    var wrap = AFuncInvoker.Instance.Get(Data.Function.funcName);
+                    if (wrap is IReturnVoid voidWrap)
                     {
-                        Debug.LogError("函数执行失败！");
+                        voidWrap.CallFunc(AContext,Data.Function.funcParams);
                     }
+                }
+                else
+                {
+                    var value = AParamParser.ParseRef(AContext, Data.Function);
+                    if (Data.catchReturnValue)
+                        AContext.VariableBoard.Set(Data.returnValueKey, value);
                 }
 
                 DoChildrenJob();

@@ -28,7 +28,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 变量黑板
         /// </summary>
-        public VarCollection Variables { get; }
+        public VariableBoard Variables { get; }
 
         /// <summary>
         /// Tag
@@ -120,7 +120,7 @@ namespace Hono.Scripts.Battle
             Attrs = new AttrCollection(this);
             TagCollection = new TagCollection();
             Abilities = new AbilityController(this);
-            Variables = new VarCollection(128);
+            Variables = new VariableBoard(128);
             ModelController = new ModelController(this);
         }
 

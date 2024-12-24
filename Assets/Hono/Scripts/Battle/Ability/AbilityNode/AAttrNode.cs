@@ -13,13 +13,9 @@ namespace Hono.Scripts.Battle
         {
             public override void DoJob()
             {
-                if (!Data.Value.TryParse(AContext, out RefInt value))
-                {
-                    Debug.LogError($"设置属性失败 {Data.attrType}");
-                    return;
-                }
+                int attrValue = AParamParser.ParseInt(AContext, Data.Value);
 
-                AContext.AddCommand(new AttrCommand(AContext.Actor.GetAttrNoParse(Data.attrType), value));
+                AContext.AddCommand(new AttrCommand(AContext.Actor.GetAttrNoParse(Data.attrType), attrValue));
 
                 DoChildrenJob();
             }

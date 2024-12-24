@@ -18,7 +18,7 @@ namespace Hono.Scripts.Battle.Event
             foreach (var fieldInfo in eventInfo.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
                 var name = "EventInfo:" + fieldInfo.Name;
-                ability.Vairables.Set(name, fieldInfo.GetValue(eventInfo));
+                ability.VariableBoard.Set(name, fieldInfo.GetValue(eventInfo));
             }
         }
 
@@ -27,7 +27,7 @@ namespace Hono.Scripts.Battle.Event
             foreach (var fieldInfo in eventInfo.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
                 var name = "EventInfo:" + fieldInfo.Name;
-                ability.Vairables.Delete(name);
+                ability.VariableBoard.Delete(name);
             }
         }
     }

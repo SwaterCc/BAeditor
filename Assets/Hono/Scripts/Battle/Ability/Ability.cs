@@ -15,6 +15,11 @@ namespace Hono.Scripts.Battle
     public sealed partial class Ability : IAPoolObject
     {
         /// <summary>
+        /// AParam解析器
+        /// </summary>
+        public static readonly AParamParser AParamParser = new();
+        
+        /// <summary>
         /// 基础数据配置Id
         /// </summary>
         public int Id { get; private set; }
@@ -32,7 +37,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 属于Ability的变量
         /// </summary>
-        public VarCollection Vairables { get; }
+        public VariableBoard VariableBoard { get; }
 
         /// <summary>
         /// tags
@@ -58,7 +63,7 @@ namespace Hono.Scripts.Battle
         {
             _abilityCycle = new AbilityCycle(this);
             _commandCaches = new HashSet<ICommand>(20);
-            Vairables = new VarCollection(10);
+            VariableBoard = new VariableBoard(10);
             TagCollection = new TagCollection();
         }
 
@@ -81,7 +86,6 @@ namespace Hono.Scripts.Battle
 
             Id = Data.id;
             TimeScaleFactory = 1;
-            Vairables.SetParent(actor.Variables);
             TagCollection.SetParent(actor.TagCollection);
 
             _abilityCycle.Init();
@@ -113,7 +117,7 @@ namespace Hono.Scripts.Battle
             _abilityCycle.Stop();
 
             //清理变量
-            Vairables.Clear();
+            VariableBoard.Clear();
 
             //指令撤销
             foreach (var command in _commandCaches)
@@ -203,9 +207,8 @@ namespace Hono.Scripts.Battle
 
             TagCollection.SetParent(null);
             TagCollection.Clear();
-
-            Vairables.SetParent(null);
-            Vairables.Clear();
+            
+            VariableBoard.Clear();
         }
     }
 

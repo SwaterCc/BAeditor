@@ -1,4 +1,5 @@
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Base;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -63,9 +64,9 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void Init()
         {
-            _first = new AParamsField(TempData.FirstInterval, "第一次触发间隔",      typeof(float));
-            _interval = new AParamsField(TempData.Interval,   "触发间隔",         typeof(float));
-            _maxCount = new AParamsField(TempData.MaxCount,   "触发次数(-1为无限次)", typeof(int));
+            _first = new AParamsField<RefFloat>(TempData.FirstInterval, "第一次触发间隔");
+            _interval = new AParamsField<RefFloat>(TempData.Interval,   "触发间隔");
+            _maxCount = new AParamsField<RefInt>(TempData.MaxCount,   "触发次数(-1为无限次)");
         }
 
         protected override void Draw()

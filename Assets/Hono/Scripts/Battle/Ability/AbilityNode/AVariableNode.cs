@@ -18,21 +18,14 @@ namespace Hono.Scripts.Battle
             {
                 object variable = null;
 
-                if (Parent.Data is ActionNodeData)
-                {
-                    variable = ((AActionNode)Parent).FuncResult;
-                }
-                else
-                {
-                    if (!Data.Value.TryParse(AContext, out variable))
+                /*if (!Data.Value.TryParse(AContext, out variable))
                     {
                         Debug.LogError($"函数执行失败 Name {Data.Key}");
                         return;
-                    }
-                }
+                    }*/
                 
                 //这里的目标是持有
-                AContext.Vairables.Set(Data.Key, variable);
+                AContext.VariableBoard.Set(Data.Key, variable);
 
                 DoChildrenJob();
             }

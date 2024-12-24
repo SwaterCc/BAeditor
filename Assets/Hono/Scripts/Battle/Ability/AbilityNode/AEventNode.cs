@@ -23,12 +23,7 @@ namespace Hono.Scripts.Battle
             {
                 if (Data.IsEvent)
                 {
-                    if (!Data.GetChecker.TryParse(AContext, out _checker))
-                    {
-                        Debug.LogError("Event执行失败");
-                        return;
-                    }
-
+                    _checker = AParamParser.ParseRef<EventChecker>(AContext, Data.GetChecker);
                     _checker.BindFunc(onEventFired);
                     BattleEventManager.Instance.Register(_checker);
                 }
@@ -60,17 +55,17 @@ namespace Hono.Scripts.Battle
 
             private void onMsgCall(object p1, object p2, object p3, object p4, object p5)
             {
-                AContext.Vairables.Set("Msg:P1", p1);
-                AContext.Vairables.Set("Msg:P2", p2);
-                AContext.Vairables.Set("Msg:P3", p3);
-                AContext.Vairables.Set("Msg:P4", p4);
-                AContext.Vairables.Set("Msg:P5", p5);
+                AContext.VariableBoard.Set("Msg:P1", p1);
+                AContext.VariableBoard.Set("Msg:P2", p2);
+                AContext.VariableBoard.Set("Msg:P3", p3);
+                AContext.VariableBoard.Set("Msg:P4", p4);
+                AContext.VariableBoard.Set("Msg:P5", p5);
                 DoChildrenJob();
-                AContext.Vairables.Delete("Msg:P1");
-                AContext.Vairables.Delete("Msg:P2");
-                AContext.Vairables.Delete("Msg:P3");
-                AContext.Vairables.Delete("Msg:P4");
-                AContext.Vairables.Delete("Msg:P5");
+                AContext.VariableBoard.Delete("Msg:P1");
+                AContext.VariableBoard.Delete("Msg:P2");
+                AContext.VariableBoard.Delete("Msg:P3");
+                AContext.VariableBoard.Delete("Msg:P4");
+                AContext.VariableBoard.Delete("Msg:P5");
             }
 
             public override void DoJob() { }

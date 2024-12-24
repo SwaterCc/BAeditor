@@ -14,9 +14,9 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private class ATimerNode : ANode<TimerNodeData>, IAPoolObject, ITickANode
         {
-            private RefInt _maxCount;
-            private RefFloat _interval;
-            private RefFloat _firstInterval;
+            private int _maxCount;
+            private float _interval;
+            private float _firstInterval;
 
             private float _duration;
             private int _count;
@@ -28,23 +28,9 @@ namespace Hono.Scripts.Battle
                 _count = 0;
                 _isFirst = true;
 
-                if (!Data.FirstInterval.TryParse(AContext, out _firstInterval))
-                {
-                    Debug.LogError("Timer节点解析FirstInterval错误");
-                    return;
-                }
-
-                if (!Data.MaxCount.TryParse(AContext, out _maxCount))
-                {
-                    Debug.LogError("Timer节点解析MaxCount错误");
-                    return;
-                }
-
-                if (!Data.Interval.TryParse(AContext, out _interval))
-                {
-                    Debug.LogError("Timer节点解析Interval错误");
-                    return;
-                }
+                _firstInterval = AParamParser.ParseFloat(AContext, Data.FirstInterval);
+                _interval = AParamParser.ParseFloat(AContext,      Data.Interval);
+                _maxCount = AParamParser.ParseInt(AContext, Data.MaxCount);
 
                 ACycles.RegisterTick(this);
             }
@@ -95,9 +81,9 @@ namespace Hono.Scripts.Battle
                 _count = 0;
                 _isFirst = true;
 
-                _maxCount = null;
-                _interval = null;
-                _firstInterval = null;
+                _maxCount = 0;
+                _interval = 0;
+                _firstInterval = 0;
             }
 
             public override void Recycle()

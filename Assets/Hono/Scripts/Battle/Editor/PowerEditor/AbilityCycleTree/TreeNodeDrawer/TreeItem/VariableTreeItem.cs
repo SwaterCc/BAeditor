@@ -79,6 +79,7 @@ namespace Editor.AbilityEditor.TreeItem
             "float",
             "bool",
             "string",
+            "vector3",
         };
 
         private string _curSelect;
@@ -88,8 +89,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override void Init()
         {
-            _value = new AParamsField(TempData.Value, "变量值：",
-               TempData.Value.GetType());
+            _value = new AParamsField<RefInt>(TempData.Value, "变量值：");
            
             if (_curSelect == "custom")
             {

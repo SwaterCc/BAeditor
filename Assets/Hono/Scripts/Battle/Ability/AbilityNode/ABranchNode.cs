@@ -14,13 +14,7 @@ namespace Hono.Scripts.Battle
             public override void DoJob()
             {
                
-
-                if (!Data.CompareFunc.TryParse(AContext, out RefBoolean branchResult))
-                {
-                    Debug.LogError("Branch节点执行错误");
-                    return;
-                }
-
+                
               
             }
 

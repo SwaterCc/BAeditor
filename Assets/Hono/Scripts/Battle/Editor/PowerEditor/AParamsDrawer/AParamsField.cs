@@ -10,13 +10,17 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-   
-    
-    public class AParamsField<T> where T : class, new()
+    public abstract class AParamsField
+    {
+        public abstract void Draw();
+    }
+
+    public class AParamsField<T> : AParamsField where T : class, new()
     {
         private readonly GenericMenu _paramTypeMenu;
         private readonly GenericMenu _castMenu;
@@ -40,12 +44,12 @@ namespace Editor.AbilityEditor
 
             if (!_originType.IsSerializable)
             {
-                throw new Exception("")
+                throw new Exception("类型必须为可序列化对象");
             }
-            
+
             _params = aParams;
             _label = label;
-          
+
             _paramTypeMenu = new GenericMenu();
             _castMenu = new GenericMenu();
 
@@ -99,7 +103,7 @@ namespace Editor.AbilityEditor
             }
         }
 
-        public void Draw(Type type)
+        public override void Draw()
         {
             EditorGUILayout.BeginHorizontal();
             var old = EditorGUIUtility.labelWidth;
@@ -127,15 +131,16 @@ namespace Editor.AbilityEditor
                     attrDraw();
                     break;
             }
-            
+
             EditorGUIUtility.labelWidth = old;
             EditorGUILayout.EndHorizontal();
         }
-        
+
         private void baseDraw()
         {
             if (_originType.BaseType == typeof(ARef))
-            {//继承自ARef，自行补充
+            {
+                //继承自ARef，自行补充
                 switch (_params.Value)
                 {
                     case RefInt value:
@@ -152,15 +157,16 @@ namespace Editor.AbilityEditor
                         break;
                 }
             }
-            else if(_originType.IsSerializable)
-            {//可序列化类型
+            else if (_originType.IsSerializable)
+            {
+                //可序列化类型
                 if (AParamsFieldConfig.SerializeWindow.TryGetValue(_originType, out var window))
                 {
                     window.ShowModal();
                 }
                 else
                 {
-                    SerializableOdinWindow.Open(_params.Value,_originType,);
+                    SerializableOdinWindow.Open(_params.Value);
                 }
             }
         }
@@ -185,10 +191,11 @@ namespace Editor.AbilityEditor
                 funcWindow.position = new Rect(rect.position, new Vector2(680, 500));
             }
         }
-        
+
         private void attrDraw()
         {
-            if (SirenixEditorGUI.Button("使用属性" + _params.attrType, ButtonSizes.Medium)) { }
+            var dropdown = new AttrDropdown(new AdvancedDropdownState());
+            dropdown.Show(GUILayoutUtility.GetRect(300, 300, 100, 600));
         }
 
         private void variableDraw()
