@@ -21,7 +21,6 @@ namespace Editor.AbilityEditor
             window.OnClose += treeItem.OnItemEditWindowClose;
             window.CopyData();
             window.Init();
-            window.ShowModal();
         }
 
         private void CopyData()
@@ -33,12 +32,11 @@ namespace Editor.AbilityEditor
 
         protected override void OnImGUI()
         {
-            base.OnImGUI();
             SirenixEditorGUI.BeginBox();
             EditorGUILayout.BeginVertical();
             //Desc
-            TempData.Desc = SirenixEditorFields.TextField("输入描述：", TempData.Desc);
             Draw();
+            TempData.Desc = SirenixEditorFields.TextField("输入描述：", TempData.Desc);
             EditorGUILayout.Space(6);
             
             //应用按钮

@@ -47,7 +47,7 @@ namespace Editor.AbilityEditor.TreeItem
 
             if (parentData is ActionNodeData actionNode)
             {
-                if (AbilityFunctionHelper.TryGetFuncInfo(actionNode.Function.funcName, out var funcInfo))
+                if (AbilityFuncInfoCache.TryGetFuncInfo(actionNode.Function.funcName, out var funcInfo))
                 {
                     if (funcInfo.ReturnType == typeof(void))
                     {
@@ -73,14 +73,7 @@ namespace Editor.AbilityEditor.TreeItem
     {
         private AParamsField _value;
 
-        private List<string> _dropList = new List<string>()
-        {
-            "int",
-            "float",
-            "bool",
-            "string",
-            "vector3",
-        };
+   
 
         private string _curSelect;
         private string _customTypeStr;

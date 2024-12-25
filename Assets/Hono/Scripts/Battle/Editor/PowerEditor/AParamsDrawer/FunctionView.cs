@@ -7,30 +7,26 @@ namespace Editor.AbilityEditor
 {
     public class FunctionView : TreeView
     {
-        public string CurSelect { get; private set; }
-
         private readonly FuncWindow _window;
-        private readonly List<AbilityFunctionHelper.FuncInfo> _funcInfos;
+        private string _groupName;
 
-        public FunctionView(TreeViewState state, FuncWindow window, string funcName,
-            List<AbilityFunctionHelper.FuncInfo> infos) : base(state)
+        public FunctionView(FuncWindow window) : base(new TreeViewState())
         {
-            _funcInfos = infos;
             _window = window;
-            CurSelect = funcName;
             showAlternatingRowBackgrounds = true;
             showBorder = true;
             Reload();
-            
-            if(string.IsNullOrEmpty(CurSelect))
-                return;
-            foreach (var item in rootItem.children)
+        }
+
+        public void ChangeFunctionGroup(string groupName)
+        {
+            if (groupName == _groupName)
             {
-                if (item.displayName == CurSelect)
-                {
-                    SelectionClick(item, false);
-                }
+                return;
             }
+
+            _groupName = groupName;
+            Reload();
         }
         
         protected override TreeViewItem BuildRoot()
@@ -39,7 +35,12 @@ namespace Editor.AbilityEditor
 
             int idx = 1;
 
-            foreach (var funcInfo in _funcInfos)
+            if (!AbilityFuncInfoCache.TryGetFuncGroup(_groupName, out var funcInfos))
+            {
+                return root;
+            }
+            
+            foreach (var funcInfo in funcInfos)
             {
                 if(!funcInfo.ShowInEditorView) continue;
                 
@@ -48,11 +49,6 @@ namespace Editor.AbilityEditor
             }
 
             return root;
-        }
-
-        protected override void SingleClickedItem(int id)
-        {
-            CurSelect = FindItem(id, rootItem).displayName;
         }
 
         protected override void DoubleClickedItem(int id)

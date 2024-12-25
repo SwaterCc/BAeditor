@@ -29,10 +29,12 @@ namespace Editor.AbilityEditor
         /// label
         /// </summary>
         private string _label;
+
         /// <summary>
-        /// 转换类型
+        /// 转换后的类型
         /// </summary>
         private Type _castType;
+
         /// <summary>
         /// 初始类型
         /// </summary>
@@ -52,33 +54,28 @@ namespace Editor.AbilityEditor
 
             _paramTypeMenu = new GenericMenu();
             _castMenu = new GenericMenu();
-
-            if (aParams.paramType == EParamType.Simple && aParams.Value == null)
-            {
-                aParams.Value = new T();
-            }
         }
 
         private void drawParamCast()
         {
             string getCastLabel(string cast)
             {
-                return cast + "→" + _originType.Name;
+                return _castType.Name + "→" + cast;
             }
 
-            if (GUILayout.Button(nameof(_originType), GUILayout.Width(60)))
+            var curType = _castType.ToString().Split(".")[^1];
+
+            if (AParamsFieldConfig.AllowCastConfig.TryGetValue(_castType, out var castList))
             {
-                _castMenu.AddMenuItem(getCastLabel("object"), setCastType, typeof(object));
-                if (AParamsFieldConfig.AllowCastConfig.TryGetValue(_originType, out var castList))
+                if (GUILayout.Button(curType, GUILayout.Width(80)))
                 {
                     foreach (var type in castList)
                     {
                         _castMenu.AddMenuItem(getCastLabel(type.Name), setCastType, type);
                     }
-                }
 
-                _castMenu.AddMenuItem("（空）",               null,        true);
-                _castMenu.AddMenuItem(nameof(_originType), setCastType, _originType);
+                    _castMenu.ShowAsContext();
+                }
             }
 
             void setCastType(object castType)
@@ -138,8 +135,13 @@ namespace Editor.AbilityEditor
 
         private void baseDraw()
         {
-            if (_originType.BaseType == typeof(ARef))
+            if (_castType.BaseType == typeof(ARef))
             {
+                if (_params.Value == null)
+                {
+                    _params.Value = new T();
+                }
+
                 //继承自ARef，自行补充
                 switch (_params.Value)
                 {
@@ -157,12 +159,12 @@ namespace Editor.AbilityEditor
                         break;
                 }
             }
-            else if (_originType.IsSerializable)
+            else if (_castType.IsSerializable)
             {
                 //可序列化类型
                 if (AParamsFieldConfig.SerializeWindow.TryGetValue(_originType, out var window))
                 {
-                    window.ShowModal();
+                    window.Show();
                 }
                 else
                 {
@@ -194,16 +196,16 @@ namespace Editor.AbilityEditor
 
         private void attrDraw()
         {
-            if (SirenixEditorGUI.Button("使用属性" + _params.variableName, ButtonSizes.Medium))
+            if (SirenixEditorGUI.Button("使用属性 : " + _params.attrType, ButtonSizes.Medium))
             {
-                var dropdown = new AttrDropdown(new AdvancedDropdownState());
+                var dropdown = new AttrDropdown(_params);
                 dropdown.Show(GUILayoutUtility.GetRect(300, 300, 100, 400));
             }
         }
 
         private void variableDraw()
         {
-            if (SirenixEditorGUI.Button("使用变量" + _params.variableName, ButtonSizes.Medium)) { }
+            if (SirenixEditorGUI.Button("黑板变量 : " + _params.variableName, ButtonSizes.Medium)) { }
         }
     }
 }

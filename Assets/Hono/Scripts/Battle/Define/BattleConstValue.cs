@@ -28,6 +28,7 @@ namespace Hono.Scripts.Battle
         public static readonly string TeamRefreshPoint = $"{PreModelRoot}/TeamRefreshPoint.prefab";
         public static readonly string LootModel = $"{PreModelRoot}/LootModel.prefab";
         public static readonly string DefaultModel = "";
+        
         public const int BattleRootControllerUid = 1;
 
         /// <summary>

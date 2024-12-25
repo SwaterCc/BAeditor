@@ -69,7 +69,18 @@ namespace Hono.Scripts.Battle.Base
                 }
             }
 
-            Value = aParams.DeepCopy();
+            if (aParams.Value != null)
+            {
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    BinaryFormatter formatter = new();
+                    formatter.Serialize(memoryStream,  aParams.Value);
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    Value = formatter.Deserialize(memoryStream);;
+                }
+
+            }
+          
             variableName = aParams.variableName;
             attrType = aParams.attrType;
         }
@@ -87,17 +98,6 @@ namespace Hono.Scripts.Battle.Base
             Value = temp.Value;
             variableName = temp.variableName;
             attrType = temp.attrType;
-        }
-        
-        public AParams DeepCopy()
-        {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                return (AParams)formatter.Deserialize(memoryStream);
-            }
         }
 
         public override string ToString()

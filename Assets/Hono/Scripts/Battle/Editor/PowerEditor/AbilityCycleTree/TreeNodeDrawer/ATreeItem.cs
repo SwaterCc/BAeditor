@@ -65,7 +65,7 @@ namespace Editor.AbilityEditor
         }
 
         private readonly Dictionary<ERightClickOperationType, MenuInfo> _rightMenuItems = new();
-        
+
         protected ATreeItem(AbilityCycleTree tree, AEditorTreeNode node) : base(node.Id)
         {
             Tree = tree;
@@ -81,7 +81,7 @@ namespace Editor.AbilityEditor
             addMenu("添加节点/Group",       ERightClickOperationType.AddGroupChild,       new GroupNodeData());
             addMenu("添加节点/Timer",       ERightClickOperationType.AddTimerChild,       new TimerNodeData());
             addMenu("添加节点/Repeat",      ERightClickOperationType.AddRepeatChild,      new RepeatNodeData());
-            addMenu("添加节点/Variable",    ERightClickOperationType.AddVariableChild,    new VariableNodeData());
+            //addMenu("添加节点/Variable",    ERightClickOperationType.AddVariableChild,    new VariableNodeData());
             addMenu("添加节点/Attr",        ERightClickOperationType.AddAttrChild,        new AttrNodeData());
             addMenu("添加节点/GroupSwitch", ERightClickOperationType.AddGroupSwitchChild, new GroupSwitchNodeData());
             //基础操作
@@ -124,7 +124,7 @@ namespace Editor.AbilityEditor
                 case ERightClickOperationType.AddGroupChild:
                 case ERightClickOperationType.AddTimerChild:
                 case ERightClickOperationType.AddRepeatChild:
-                case ERightClickOperationType.AddVariableChild:
+                //case ERightClickOperationType.AddVariableChild:
                 case ERightClickOperationType.AddAttrChild:
                     rightMenuInfo.Function += data =>
                     {
@@ -232,7 +232,6 @@ namespace Editor.AbilityEditor
                     newParent.Node.InsertChild(Node, insertIdx);
                     nodeParent.RemoveChild(Node);
                 }
-               
             }
         }
 
@@ -258,7 +257,7 @@ namespace Editor.AbilityEditor
             {
                 alignment = ButtonTextAnchor
             };
-            var buttonContent = new GUIContent($"{id}", getButtonText());
+            var buttonContent = new GUIContent(buttonText, getButtonText());
             lineRect.width = ButtonWidth > 0 ? ButtonWidth : Mathf.Max(200f, buttonStyle.CalcSize(buttonContent).x);
             if (GUI.Button(lineRect, buttonContent, buttonStyle))
             {

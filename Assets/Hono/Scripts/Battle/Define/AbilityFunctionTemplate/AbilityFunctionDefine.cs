@@ -114,7 +114,7 @@ namespace Hono.Scripts.Battle
                     });
             }
         }
-
+        
         [AbilityFunction]
         public static void CreateHitBoxToTargets(HitBoxData hitData)
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Editor.AbilityEditor.TreeItemWindow;
 using Hono.Scripts.Battle;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
@@ -48,25 +49,6 @@ namespace Editor.AbilityEditor.TreeItem
         protected override void OnBtnClicked(Rect btnRect)
         {
             ANodeSettingWindow.Open<GroupSettingWindow>(this);
-        }
-    }
-
-    public class GroupSettingWindow : ANodeSettingWindow<GroupNodeData>
-    {
-        protected override void Init() { }
-
-        protected override void Draw()
-        {
-            SirenixEditorGUI.BeginBox("设置Group");
-
-            TempData.groupId = SirenixEditorFields.IntField("阶段Id", TempData.groupId);
-            TempData.autoNext = EditorGUILayout.Toggle("阶段Id", TempData.autoNext);
-            if (TempData.autoNext)
-            {
-                TempData.defaultNextGroupId = SirenixEditorFields.IntField("默认下一阶段Id", TempData.defaultNextGroupId);
-            }
-
-            SirenixEditorGUI.EndBox();
         }
     }
 }

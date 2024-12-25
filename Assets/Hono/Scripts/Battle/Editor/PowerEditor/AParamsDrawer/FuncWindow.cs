@@ -14,50 +14,33 @@ namespace Editor.AbilityEditor
 {
     public class FuncWindow : EditorWindow
     {
-        public static FuncWindow Open(AParams aParameter, EParamValueType valueType, Action<AParams> onSave)
+        public static FuncWindow Open<T>(AParams aParameter)
         {
             var window = CreateInstance<FuncWindow>();
-            window.Init(aParameter, valueType, onSave);
-            window.Show();
+            window.Init(aParameter);
+            window.ShowModal();
             return window;
         }
         
         private AParams _function;
         private EParamValueType _valueType;
         private Action<AParams> _onSave;
-        private FunctionView _funcTree;
+        private FunctionView _funcListView;
         private List<AParamsField> _parameterFields;
+        
+        private float _windowWidth;
+        private float _windowHeight;
 
-        public void Init(AParams aParameter, EParamValueType valueType, Action<AParams> onSave)
+        public void Init(AParams aParameter)
         {
-            _function = new AParams(aParameter);
-            _valueType = valueType;
-            _onSave = onSave;
+            _function = aParameter;
             _parameterFields = new List<AParamsField>();
-
-            if (!string.IsNullOrEmpty(_function.funcName))
-            {
-                var funcInfo = AbilityFunctionHelper.GetFuncInfo(_function.funcName);
-                for (var index = 0; index < _function.funcParams.Count; index++)
-                {
-                    var funcParam = _function.funcParams[index];
-                    var paramInfo = funcInfo.ParamInfos[index];
-                    // 获取泛型类的类型
-                    Type genericClassType = typeof(AParamsField<>);
-                    // 为泛型类指定具体类型参数，例如 typeof(int)
-                    Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
-                    object instance = Activator.CreateInstance(constructedType, funcParam, paramInfo.ParamName);
-                    //反射参数创建模板
-                    _parameterFields.Add((AParamsField)instance);
-                }
-            }
-            
-            _funcTree = new FunctionView(new TreeViewState(), this, _function.funcName, AbilityFunctionHelper.GetFuncInfosByType(_valueType));
+            _funcListView = new FunctionView(this);
         }
         
         public void OnDoubleClick(string funcName)
         {
-            var funcInfo = AbilityFunctionHelper.GetFuncInfo(funcName);
+            var funcInfo = AbilityFuncInfoCache.GetFuncInfo(funcName);
 
             _function.funcName = funcName;
             _function.funcParams ??= new List<AParams>();
@@ -84,42 +67,11 @@ namespace Editor.AbilityEditor
         {
             EditorGUILayout.BeginVertical();
             //SirenixEditorGUI.Title(FromString, "", TextAlignment.Center, true);
-            EditorGUILayout.BeginHorizontal();
-            //函数列表界面
-            GUILayout.Box("", GUILayout.Width(300), GUILayout.Height(280));
-            var rect = GUIHelper.GetCurrentLayoutRect();
-            _funcTree.OnGUI(new Rect(rect.x, rect.y, 300, 280));
-            //函数预览界面
             SirenixEditorGUI.BeginBox();
-            SirenixEditorGUI.BeginVerticalList();
-            
-            if (AbilityFunctionHelper.TryGetFuncInfo(_funcTree.CurSelect, out var funcInfo) && funcInfo.ParamCount > 0)
-            {
-                foreach (var param in funcInfo.ParamInfos)
-                {
-                    SirenixEditorGUI.BeginListItem();
-                    EditorGUILayout.LabelField("参数名：" + param.ParamName);
-                    EditorGUILayout.LabelField("参数类型：" + param.ParamType);
-                    SirenixEditorGUI.EndListItem();
-                }
-
-                if (funcInfo.ReturnType != typeof(void))
-                {
-                    SirenixEditorGUI.BeginListItem();
-                    EditorGUILayout.LabelField("返回类型：" + funcInfo.ReturnType);
-                    SirenixEditorGUI.EndListItem();
-                }
-                else
-                {
-                    SirenixEditorGUI.BeginListItem();
-                    EditorGUILayout.LabelField("无返回值");
-                    SirenixEditorGUI.EndListItem();
-                }
-            }
-
-            SirenixEditorGUI.EndVerticalList();
-            SirenixEditorGUI.EndBox();
-
+            //函数列表界面
+            var rect = GUILayoutUtility.GetRect(200, 200, 300, 500);
+            _funcListView.OnGUI(rect);
+           
             EditorGUILayout.EndHorizontal();
             GUILayout.Space(30);
             //配置界面

@@ -17,7 +17,6 @@ namespace Editor.AbilityEditor
         AddGroupChild,
         AddTimerChild,
         AddRepeatChild,
-        AddVariableChild,
         AddAttrChild,
         AddGroupSwitchChild,
 
