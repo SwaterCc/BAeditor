@@ -17,6 +17,21 @@ namespace Editor.AbilityEditor
 {
     public abstract class AParamsField
     {
+        /// <summary>
+        /// 参数队列
+        /// </summary>
+        protected readonly AParams Params;
+        /// <summary>
+        /// label
+        /// </summary>
+        protected readonly string Label;
+
+        protected AParamsField(AParams aParams, string label)
+        {
+            Params = aParams;
+            Label = label;
+        }
+
         public abstract void Draw();
     }
 
@@ -24,11 +39,6 @@ namespace Editor.AbilityEditor
     {
         private readonly GenericMenu _paramTypeMenu;
         private readonly GenericMenu _castMenu;
-        private AParams _params;
-        /// <summary>
-        /// label
-        /// </summary>
-        private string _label;
 
         /// <summary>
         /// 转换后的类型
@@ -40,7 +50,7 @@ namespace Editor.AbilityEditor
         /// </summary>
         private Type _originType;
 
-        public AParamsField(AParams aParams, string label)
+        public AParamsField(AParams aParams, string label) : base(aParams, label)
         {
             _originType = _castType = typeof(T);
 
@@ -48,9 +58,6 @@ namespace Editor.AbilityEditor
             {
                 throw new Exception("类型必须为可序列化对象");
             }
-
-            _params = aParams;
-            _label = label;
 
             _paramTypeMenu = new GenericMenu();
             _castMenu = new GenericMenu();
@@ -88,14 +95,14 @@ namespace Editor.AbilityEditor
         {
             if (GUILayout.Button("▼", GUILayout.Width(22)))
             {
-                _paramTypeMenu.AddItem(new GUIContent("调用函数"), false,
-                                       () => { _params.paramType = EParamType.Function; });
                 _paramTypeMenu.AddItem(new GUIContent("直接输入"), false,
-                                       () => { _params.paramType = EParamType.Simple; });
-                _paramTypeMenu.AddItem(new GUIContent("自定义变量"), false,
-                                       () => { _params.paramType = EParamType.Variable; });
+                                       () => { Params.paramType = EParamType.Simple; });
+                _paramTypeMenu.AddItem(new GUIContent("调用函数"), false,
+                                       () => { Params.paramType = EParamType.Function; });
+                _paramTypeMenu.AddItem(new GUIContent("黑板变量"), false,
+                                       () => { Params.paramType = EParamType.Variable; });
                 _paramTypeMenu.AddItem(new GUIContent("属性"), false,
-                                       () => { _params.paramType = EParamType.Attr; });
+                                       () => { Params.paramType = EParamType.Attr; });
                 _paramTypeMenu.ShowAsContext();
             }
         }
@@ -105,7 +112,7 @@ namespace Editor.AbilityEditor
             EditorGUILayout.BeginHorizontal();
             var old = EditorGUIUtility.labelWidth;
 
-            EditorGUILayout.LabelField(new GUIContent(_label), GUILayout.Width(100));
+            EditorGUILayout.LabelField(new GUIContent(Label, Label), GUILayout.Width(100));
 
             //绘制类型转换按钮
             drawParamCast();
@@ -113,7 +120,7 @@ namespace Editor.AbilityEditor
             //绘制参数来源切换按钮
             drawParamTypeSwitch();
 
-            switch (_params.paramType)
+            switch (Params.paramType)
             {
                 case EParamType.Simple:
                     baseDraw();
@@ -137,13 +144,13 @@ namespace Editor.AbilityEditor
         {
             if (_castType.BaseType == typeof(ARef))
             {
-                if (_params.Value == null)
+                if (Params.Value == null)
                 {
-                    _params.Value = new T();
+                    Params.Value = new T();
                 }
 
                 //继承自ARef，自行补充
-                switch (_params.Value)
+                switch (Params.Value)
                 {
                     case RefInt value:
                         value.Value = SirenixEditorFields.IntField(value);
@@ -161,14 +168,17 @@ namespace Editor.AbilityEditor
             }
             else if (_castType.IsSerializable)
             {
-                //可序列化类型
-                if (AParamsFieldConfig.SerializeWindow.TryGetValue(_originType, out var window))
+                if ((SirenixEditorGUI.Button("编辑 " + _castType.Name, ButtonSizes.Medium)))
                 {
-                    window.Show();
-                }
-                else
-                {
-                    SerializableOdinWindow.Open(_params.Value);
+                    //可序列化类型
+                    if (AParamsFieldConfig.SerializeWindow.TryGetValue(_castType, out var window))
+                    {
+                        window.Show();
+                    }
+                    else
+                    {
+                        SerializableOdinWindow.Open(Params.Value = new T());
+                    }
                 }
             }
         }
@@ -176,36 +186,34 @@ namespace Editor.AbilityEditor
         private void functionDraw()
         {
             string text = "";
-            if (string.IsNullOrEmpty(_params.funcName))
+            if (string.IsNullOrEmpty(Params.funcName))
             {
                 text = "未选择函数";
             }
             else
             {
-                text = "调用函数" + _params.funcName;
+                text = "调用函数" + Params.funcName;
             }
 
             var rect = GUILayoutUtility.GetLastRect();
             if (SirenixEditorGUI.Button(text, ButtonSizes.Medium))
             {
-                var funcWindow = FuncWindow.Open(_params, _castType.GetParameterValueType(),
-                                                 (parameter) => _params.CopyTo(parameter));
-                funcWindow.position = new Rect(rect.position, new Vector2(680, 500));
+                FuncWindow.Open(Params, new List<Type>() { _castType });
             }
         }
 
         private void attrDraw()
         {
-            if (SirenixEditorGUI.Button("使用属性 : " + _params.attrType, ButtonSizes.Medium))
+            if (SirenixEditorGUI.Button("使用属性 : " + Params.attrType, ButtonSizes.Medium))
             {
-                var dropdown = new AttrDropdown(_params);
+                var dropdown = new AttrDropdown(Params);
                 dropdown.Show(GUILayoutUtility.GetRect(300, 300, 100, 400));
             }
         }
 
         private void variableDraw()
         {
-            if (SirenixEditorGUI.Button("黑板变量 : " + _params.variableName, ButtonSizes.Medium)) { }
+            if (SirenixEditorGUI.Button("黑板变量 : " + Params.variableName, ButtonSizes.Medium)) { }
         }
     }
 }

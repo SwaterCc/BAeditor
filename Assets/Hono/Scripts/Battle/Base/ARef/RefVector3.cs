@@ -35,6 +35,11 @@ namespace Hono.Scripts.Battle.Base
             z = vector.z;
         }
 
+        public override Type GetValueType()
+        {
+            return typeof(Vector3);
+        }
+        
         // 将当前实例转换为 Vector3
         public Vector3 ToVector3()
         {

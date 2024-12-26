@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Base;
@@ -105,7 +106,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
         private void showEvent()
         {
             TempData.EventType = SirenixEditorFields.Dropdown(new GUIContent("事件类型"),
-                                                              TempData.EventType, AbilityFuncInfoCache.AllowEvent);
+                                                              TempData.EventType, AbilityFuncInfoCache.EventCheckerDict.Keys.ToList());
 
             if (_curEvent != TempData.EventType)
             {

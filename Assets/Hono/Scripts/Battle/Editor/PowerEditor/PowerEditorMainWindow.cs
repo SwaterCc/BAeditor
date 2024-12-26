@@ -26,7 +26,7 @@ namespace Editor.AbilityEditor
             
             _treeInstance = new OdinMenuTree(true);
             _treeInstance.Config.DrawSearchToolbar = true;
-
+            AbilityFuncInfoCache.Init();
             _rootItems = new List<PMenuRootItem>()
             {
                 new SkillMenuRoot(_treeInstance, "Skill"),

@@ -15,7 +15,6 @@ namespace Hono.Scripts.Battle
             var window = EditorWindow.GetWindow<PowerEditorMainWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1600, 900);
             window.titleContent = new GUIContent("MORE 帕瓦！！");
-            AbilityFuncInfoCache.Init();
         }
     }
 }

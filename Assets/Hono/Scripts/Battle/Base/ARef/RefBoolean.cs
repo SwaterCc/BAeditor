@@ -24,6 +24,11 @@ namespace Hono.Scripts.Battle.Base
             Value = false;
         }
 
+        public override Type GetValueType()
+        {
+            return typeof(bool);
+        }
+        
         public override ARef DeepCopy()
         {
             RefBoolean rInt = APool<RefBoolean>.Pool.Rent();

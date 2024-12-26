@@ -4,44 +4,49 @@ using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Base;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using SearchField = UnityEditor.IMGUI.Controls.SearchField;
 
 namespace Editor.AbilityEditor
 {
-    public class FuncWindow : EditorWindow
+    public partial class FuncWindow : EditorWindow
     {
-        public static FuncWindow Open<T>(AParams aParameter)
+        public static void Open(AParams aParameter, List<Type> filters = null)
         {
             var window = CreateInstance<FuncWindow>();
+            window._filters = filters;
             window.Init(aParameter);
-            window.ShowModal();
-            return window;
+            window.Show();
         }
-        
+
         private AParams _function;
-        private EParamValueType _valueType;
-        private Action<AParams> _onSave;
         private FunctionView _funcListView;
         private List<AParamsField> _parameterFields;
-        
+        private SearchField _searchField;
+        private string _curTab;
+        private List<Type> _filters;
+
         private float _windowWidth;
         private float _windowHeight;
 
-        public void Init(AParams aParameter)
+        private void Init(AParams aParameter)
         {
             _function = aParameter;
+            _searchField = new SearchField();
             _parameterFields = new List<AParamsField>();
-            _funcListView = new FunctionView(this);
+            _curTab = "All";
+            _funcListView = new FunctionView(this, _curTab);
+            ChangeSelectFunction(aParameter.funcName);
         }
-        
-        public void OnDoubleClick(string funcName)
-        {
-            var funcInfo = AbilityFuncInfoCache.GetFuncInfo(funcName);
 
+        private void ChangeSelectFunction(string funcName)
+        {
+            if (string.IsNullOrEmpty(funcName))
+                return;
+
+            var funcInfo = AbilityFuncInfoCache.GetFuncInfo(funcName);
             _function.funcName = funcName;
             _function.funcParams ??= new List<AParams>();
             _function.funcParams.Clear();
@@ -53,58 +58,82 @@ namespace Editor.AbilityEditor
                 {
                     paramType = EParamType.Simple
                 };
+                
                 // 获取泛型类的类型
-                Type genericClassType = typeof(AParamsField<>);
-                // 为泛型类指定具体类型参数，例如 typeof(int)
+                var genericClassType = paramInfo.ParamType.IsEnum ? typeof(AParamsEnumField<>) : typeof(AParamsField<>);
                 Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
-                object instance = Activator.CreateInstance(constructedType, funcParam, paramInfo.ParamName);
+                var field = (AParamsField)Activator.CreateInstance(constructedType, funcParam, paramInfo.ParamName);
+
                 _function.funcParams.Add(funcParam);
-                _parameterFields.Add((AParamsField)instance);
+                _parameterFields.Add(field);
             }
         }
 
         private void OnGUI()
         {
             EditorGUILayout.BeginVertical();
-            //SirenixEditorGUI.Title(FromString, "", TextAlignment.Center, true);
-            SirenixEditorGUI.BeginBox();
+            _funcListView.searchString = _searchField.OnGUI(_funcListView.searchString);
+
+            SirenixEditorGUI.BeginHorizontalToolbar();
+            foreach (var tab in AbilityFuncInfoCache.FuncGroupDict.Keys)
+            {
+                if (SirenixEditorGUI.ToolbarTab(_curTab == tab, tab))
+                {
+                    _curTab = tab;
+                    _funcListView.ChangeFunctionGroup(_curTab);
+                }
+            }
+
+            SirenixEditorGUI.EndHorizontalToolbar();
+
             //函数列表界面
-            var rect = GUILayoutUtility.GetRect(200, 200, 300, 500);
+            var rect = GUILayoutUtility.GetRect(300, 500, 60, 200);
             _funcListView.OnGUI(rect);
-           
-            EditorGUILayout.EndHorizontal();
+
             GUILayout.Space(30);
             //配置界面
-
+            SirenixEditorGUI.BeginBox();
             if (string.IsNullOrEmpty(_function.funcName))
             {
-                SirenixEditorGUI.BeginBox();
                 EditorGUILayout.LabelField("未选择函数！");
-                SirenixEditorGUI.EndBox();
             }
             else
             {
+                var funcInfo = AbilityFuncInfoCache.GetFuncInfo(_function.funcName);
+
                 SirenixEditorGUI.BeginBox($"当前函数:{_function.funcName}", true);
-                if (_parameterFields.Count == 0)
+
+                SirenixEditorGUI.BeginVerticalList();
+                for (var index = 0; index < _parameterFields.Count; index++)
                 {
-                    EditorGUILayout.LabelField("无参函数");
-                }
-                else
-                {
-                    foreach (var parameterField in _parameterFields)
+                    SirenixEditorGUI.BeginListItem();
+                    if (!string.IsNullOrEmpty(funcInfo.ParamInfos[index].ParamDesc))
                     {
-                        parameterField.Draw();
+                        //绘制参数描述
+                        EditorGUILayout.LabelField(funcInfo.ParamInfos[index].ParamDesc,
+                                                   new GUIStyle(EditorStyles.label)
+                                                   {
+                                                       richText = true,
+                                                       alignment = TextAnchor.LowerLeft,
+                                                   });
                     }
+
+                    AParamsField parameterField = _parameterFields[index];
+                    parameterField.Draw();
+                    SirenixEditorGUI.EndListItem();
                 }
 
-                if (SirenixEditorGUI.Button("确认修改",ButtonSizes.Gigantic))
+                SirenixEditorGUI.EndVerticalList();
+
+                if (SirenixEditorGUI.Button("确认修改", ButtonSizes.Gigantic))
                 {
-                    _onSave.Invoke(_function);
                     Close();
                 }
+
                 SirenixEditorGUI.EndBox();
             }
-            
+
+            SirenixEditorGUI.EndBox();
             EditorGUILayout.EndVertical();
         }
     }

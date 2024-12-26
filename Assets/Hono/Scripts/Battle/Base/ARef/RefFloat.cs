@@ -21,6 +21,11 @@ namespace Hono.Scripts.Battle.Base
             Value = initialValue;
         }
 
+        public override Type GetValueType()
+        {
+            return typeof(float);
+        }
+        
         // 隐式转换到 float
         public static implicit operator float(RefFloat refFloat)
         {

@@ -112,6 +112,11 @@ namespace Hono.Scripts.Battle.Base
             return rInt;
         }
 
+        public override Type GetValueType()
+        {
+            return typeof(int);
+        }
+
         public override void ARefRecycle()
         {
             APool<RefInt>.Pool.Recycle(this);

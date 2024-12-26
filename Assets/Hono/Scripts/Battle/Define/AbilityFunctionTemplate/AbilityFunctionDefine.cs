@@ -40,6 +40,7 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityFunction]
+        [AbilityFunctionDesc("改技能等级",null,"技能id","技能等级")]
         public static void ChangeSkillLevel(int skillId, int level)
         {
             ARunningTime.Actor.Logic.ChangeSkillLevel(skillId, level);
@@ -60,7 +61,7 @@ namespace Hono.Scripts.Battle
 #endif
         }
 
-        [AbilityFunction]
+        [AbilityFunction("HitBox")]
         public static void CreateHitBox(int attackUid, int targetUid, HitBoxData hitData, bool fromTopSummer = false)
         {
             if (!ARunningTime.TryGetActor(attackUid, out var attack))
@@ -85,7 +86,7 @@ namespace Hono.Scripts.Battle
             );
         }
 
-        [AbilityFunction]
+        [AbilityFunction("HitBox")]
         public static void CreateHitBoxes(int attackUid, List<int> targetUids, HitBoxData hitData,
             bool fromTopSummer = false)
         {
@@ -115,7 +116,8 @@ namespace Hono.Scripts.Battle
             }
         }
         
-        [AbilityFunction]
+        [AbilityFunction("HitBox")]
+        [AbilityFunctionDesc("创建打击盒子攻击指定目标","无返回值","打击盒子信息")]
         public static void CreateHitBoxToTargets(HitBoxData hitData)
         {
             //返回打击点的Uid
@@ -145,7 +147,7 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        [AbilityFunction]
+        [AbilityFunction("Bullet")]
         public static void CreateBullet(int targetUid, int bulletId, bool fromTopSummer = false)
         {
             var bullet = ActorManager.Instance.SummonActor(ARunningTime.Actor, EActorType.Bullet,
@@ -157,7 +159,7 @@ namespace Hono.Scripts.Battle
                 });
         }
 
-        [AbilityFunction]
+        [AbilityFunction("Bullet")]
         public static void CreateBullets(List<int> targetUids, int bulletId, bool fromTopSummer = false)
         {
             if (targetUids is not { Count: > 0 }) return;
@@ -174,7 +176,7 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        [AbilityFunction]
+        [AbilityFunction("Bullet")]
         public static int AddVFX(VFXSetting setting, int vfxTargetUid = 0)
         {
             if (!ARunningTime.TryGetActor(vfxTargetUid, out var target))
@@ -191,7 +193,7 @@ namespace Hono.Scripts.Battle
             return -1;
         }
 
-        [AbilityFunction]
+        [AbilityFunction("VfX")]
         public static void AddVFXToTargets(VFXSetting setting, List<int> vfxTargetUids)
         {
             if (vfxTargetUids is not { Count: > 0 })
@@ -213,7 +215,7 @@ namespace Hono.Scripts.Battle
             return;
         }
 
-        [AbilityFunction]
+        [AbilityFunction("VfX")]
         public static void RemoveVFX(int vfxUid, int vfxTargetUid = 0)
         {
             if (!ARunningTime.TryGetActor(vfxTargetUid, out var target))

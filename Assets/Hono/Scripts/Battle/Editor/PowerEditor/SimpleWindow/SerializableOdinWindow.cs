@@ -19,12 +19,12 @@ namespace Editor.AbilityEditor
             var window = GetWindow<SerializableOdinWindow>();
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(450, 500);
             window.titleContent = new GUIContent("创建序列化参数");
-            window.Setting = serializableObject;
+            window.Data = serializableObject;
         }
         
         [OdinSerialize]
         [NonSerialized]
-        public object Setting;
+        public object Data;
         
        
         [Button("确 定")]
