@@ -25,11 +25,8 @@ namespace Hono.Scripts.Battle
                 case EAbilityNodeType.EBranchControl:
                     nodeData = new BranchNodeData();
                     break;
-                case EAbilityNodeType.EVariableSetter:
-                    nodeData = new VariableNodeData();
-                    break;
                 case EAbilityNodeType.EAttrSetter:
-                    nodeData = new AttrNodeData();
+                    nodeData = new AttrModifyNodeData();
                     break;
                 case EAbilityNodeType.ERepeat:
                     nodeData = new RepeatNodeData();

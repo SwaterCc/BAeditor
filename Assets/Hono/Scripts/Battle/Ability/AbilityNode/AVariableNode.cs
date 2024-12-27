@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle
         {
             public override void DoJob()
             {
-                object variable = null;
+                
 
                 /*if (!Data.Value.TryParse(AContext, out variable))
                     {
@@ -25,7 +25,7 @@ namespace Hono.Scripts.Battle
                     }*/
                 
                 //这里的目标是持有
-                AContext.VariableBoard.Set(Data.Key, variable);
+                //AContext.VariableBoard.Set(Data.key, );
 
                 DoChildrenJob();
             }

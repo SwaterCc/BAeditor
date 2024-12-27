@@ -17,12 +17,10 @@ namespace Hono.Scripts.Battle
         Loot,
         MonsterGenerator,
         TriggerBox,
-        //TeamDefaultBirthPoint,
-        //TeamRefreshPoint,
     }
 
     /// <summary>
-    ///     战斗模式
+    /// 战斗模式
     /// </summary>
     public enum EBattleModeType
     {
@@ -188,10 +186,11 @@ namespace Hono.Scripts.Battle
         Dead,
     }
     
-    public enum ESelectPosType
+    public enum EAttrModifyType
     {
-        Self,
-        Target,
+        Always,
+        ResetWhenAbilityEndCycle,
+        ResetWhenAbilityRemove,
     }
 
     /// <summary>

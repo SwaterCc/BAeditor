@@ -6,6 +6,7 @@ using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Editor.AbilityEditor
@@ -19,12 +20,14 @@ namespace Editor.AbilityEditor
         {
             private bool _cycleViewFoldout;
             private readonly AbilityCycleTree _cycleTree;
+            private readonly TreeViewState _treeViewState;
             public string Label { get; set; }
 
             public AbilityCycleDrawer(AbilityView view, EAbilityCycle cycle, bool viewFoldoutShow = true)
             {
                 _cycleViewFoldout = viewFoldoutShow;
-                _cycleTree = new AbilityCycleTree(view, cycle);
+                _treeViewState = new TreeViewState();
+                _cycleTree = new AbilityCycleTree(_treeViewState, view, cycle);
             }
 
             public void DrawCycleTree()

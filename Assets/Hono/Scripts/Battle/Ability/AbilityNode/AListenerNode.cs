@@ -11,10 +11,10 @@ namespace Hono.Scripts.Battle
 {
     public partial class Ability
     {
-        private class AEventNode : ANode<ListenerNodeData>, IAPoolObject
+        private class AListenerNode : ANode<ListenerNodeData>, IAPoolObject
         {
             private EventChecker _checker;
-            private MessageListener _messageListener = new();
+            private readonly MessageListener _messageListener = new();
 
             /// <summary>
             /// TODO:还有GC
@@ -72,7 +72,7 @@ namespace Hono.Scripts.Battle
 
             public override void Recycle()
             {
-                APool<AEventNode>.Pool.Recycle(this);
+                APool<AListenerNode>.Pool.Recycle(this);
             }
 
             public new void OnRecycle()

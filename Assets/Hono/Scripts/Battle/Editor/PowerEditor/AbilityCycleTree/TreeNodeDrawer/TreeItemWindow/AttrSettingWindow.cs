@@ -9,20 +9,15 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItemWindow
 {
-     public class AttrSettingWindow : ANodeSettingWindow<AttrNodeData>
+     public class AttrSettingWindow : ANodeSettingWindow<AttrModifyNodeData>
     {
         private AParamsField _value;
-        private EAttrType _curSelect;
-        
-        private Vector2 _dropDownPos;
-        private string _searchString;
-        private bool _showDropDown;
+        private AttrDropdown _attrDropdown;
 
         protected override void Init()
         {
-            _searchString = "";
-            _value = new AParamsField<RefInt>(TempData.Value, "属性值：");
-            _dropDownPos = Vector2.zero;
+            _value = new AParamsField<RefInt>(TempData.value, "属性值：");
+            _attrDropdown = new AttrDropdown(TempData.value);
         }
 
         protected override void Draw()
@@ -40,49 +35,14 @@ namespace Editor.AbilityEditor.TreeItemWindow
             
             EditorGUILayout.LabelField("当前属性：" + attrName);
             
-            if (!_showDropDown)
+            if (SirenixEditorGUI.Button("选择属性", ButtonSizes.Medium))
             {
-                if (SirenixEditorGUI.Button("选择属性", ButtonSizes.Medium))
-                {
-                    _showDropDown = true;
-                }
-            }
-
-            if (_showDropDown)
-            {
-                drawDropDown();
+                _attrDropdown.Show(GUILayoutUtility.GetRect(100,100,300,300));
             }
 
             _value?.Draw();
-
-            TempData.IsPersistent = EditorGUILayout.Toggle("是否为常驻属性（不勾选则会在ability删除时撤销本次修改）", TempData.IsPersistent);
+            TempData.modifyType = (EAttrModifyType)SirenixEditorFields.EnumDropdown("属性修改方式：", TempData.modifyType);
             SirenixEditorGUI.EndBox();
-        }
-        
-        private void drawDropDown()
-        {
-            SirenixEditorGUI.BeginVerticalList();
-
-            // 绘制搜索栏
-            SirenixEditorGUI.BeginListItem();
-            _searchString = EditorGUILayout.TextField("搜索:", _searchString);
-            SirenixEditorGUI.EndListItem();
-            // 创建一个滚动视图以显示下拉列表项
-            _dropDownPos = EditorGUILayout.BeginScrollView(_dropDownPos, GUILayout.Height(150));
-
-            // 过滤列表项并显示
-            foreach (var item in Enum.GetNames(typeof(EAttrType))
-                         .Where(i => i.ToLower().Contains(_searchString.ToLower())))
-            {
-                if (SirenixEditorGUI.Button(item, ButtonSizes.Medium))
-                {
-                    _curSelect = Enum.Parse<EAttrType>(item);
-                    _showDropDown = false; // 选择后关闭下拉框
-                }
-            }
-
-            EditorGUILayout.EndScrollView();
-            SirenixEditorGUI.EndVerticalList();
         }
     }
 }

@@ -1,3 +1,4 @@
+using Editor.AbilityEditor.TreeItemWindow;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Sirenix.Utilities;
@@ -9,11 +10,9 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class ActionTreeItem : ATreeItem<ActionNodeData>
     {
-        private readonly MenuInfo _menuInfo;
         public ActionTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
         {
-            ButtonBackGroundColor = new Color(2f, 1.5f, 1.5f);
-            _menuInfo = addCustomMenu("获取返回值", ERightClickOperationType.GetResult, null, null);
+            ButtonBackGroundColor = new Color(2f, 0.5f, 0.5f);
         }
 
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
@@ -28,7 +27,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override bool checkIsAllowMove(ATreeItem newParent)
         {
-            if (newParent is AttrTreeItem or VariableTreeItem or ActionTreeItem or BranchGroupTreeItem)
+            if (newParent is AttrModifyTreeItem or ActionTreeItem or BranchGroupTreeItem)
             {
                 return false;
             }
@@ -38,36 +37,26 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            if (Data.Function.paramType != EParamType.Function)
+            string text = "";
+            if (Data.action.paramType != EParamType.Function)
             {
                 return "未指定函数！";
             }
 
-            return Data.Function.ToString();
+            text = Data.action.ToString();
+
+            if (Data.isCreateVariable)
+            {//获取变量
+                var varName = string.IsNullOrEmpty(Data.returnValueKey) ? "变量名未设置" : Data.returnValueKey;
+                text = varName + " = " + text;
+            }
+            
+            return text;
         }
         
         protected override void OnBtnClicked(Rect btnRect)
         {
             ANodeSettingWindow.Open<ActionSettingWindow>(this);
-        }
-    }
-    
-    public class ActionSettingWindow : ANodeSettingWindow<ActionNodeData>
-    {
-        private AParamsField _function;
-
-        protected override void Init()
-        {
-            //下拉框，选择函数类型，
-           // _function = new AParamsField<RefBoolean>(TempData.CompareFunc, "判定条件");
-            
-        }
-
-        protected override void Draw()
-        {
-            SirenixEditorGUI.BeginBox("If节点", true);
-           // _compareFunc.Draw();
-            SirenixEditorGUI.EndBox();
         }
     }
 }

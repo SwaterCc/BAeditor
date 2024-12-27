@@ -20,10 +20,10 @@ namespace Hono.Scripts.Battle.Event
 
             if (monsterGenInfo.FiredAll) return true;
 
-            if (monsterGenInfo.SingleUid > 0) return _checkerBelongActorUid == monsterGenInfo.SingleUid;
+            if (monsterGenInfo.SingleUid > 0) return CheckerBelongActorUid == monsterGenInfo.SingleUid;
 
             if (monsterGenInfo.SpecialUids.Count > 0)
-                return monsterGenInfo.SpecialUids.Contains(_checkerBelongActorUid);
+                return monsterGenInfo.SpecialUids.Contains(CheckerBelongActorUid);
 
             return false;
         }

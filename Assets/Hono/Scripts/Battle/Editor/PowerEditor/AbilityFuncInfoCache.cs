@@ -23,6 +23,7 @@ namespace Editor.BattleEditor.AbilityEditor
             public string FuncReturnDesc;
             public bool ShowInEditorView;
             public Type ReturnType;
+            public Type RealReturnType;
             public List<ParamInfo> ParamInfos = new();
         }
 
@@ -34,6 +35,7 @@ namespace Editor.BattleEditor.AbilityEditor
             public string ParamName;
             public string ParamDesc;
             public Type ParamType;
+            public Type RealParamType;
         }
 
         /// <summary>
@@ -93,6 +95,11 @@ namespace Editor.BattleEditor.AbilityEditor
             MethodInfo[] methods = typeof(AbilityFunctionDefine).GetMethods(BindingFlags.Public | BindingFlags.Static);
 
             //处理函数缓存
+            FuncInfoDict.Clear();
+            foreach (var list in FuncGroupDict.Values)
+            {
+                list.Clear();
+            }
             foreach (var method in methods)
             {
                 var abilityFunction = method.GetCustomAttribute<AbilityFunction>();
@@ -125,12 +132,13 @@ namespace Editor.BattleEditor.AbilityEditor
                 FuncName = method.Name,
                 FuncDesc = desc?.FunctionDesc,
                 FuncReturnDesc = desc?.FunctionReturnDesc,
+                RealReturnType = method.ReturnType,
                 ShowInEditorView = attr.ShowInEditorView,
             };
 
-            if (method.ReturnType == typeof(void) && string.IsNullOrEmpty(info.FuncReturnDesc))
+            if ( string.IsNullOrEmpty(info.FuncReturnDesc))
             {
-                info.FuncReturnDesc = "无返回值";
+                info.FuncReturnDesc = method.ReturnType == typeof(void) ? "无返回值" : info.RealReturnType.ToString().Split(".")[^1];
             }
 
             if (!ARef.TryGetRefType(method.ReturnType, out var returnRefType))
@@ -152,6 +160,7 @@ namespace Editor.BattleEditor.AbilityEditor
                 var paramInfo = new ParamInfo()
                 {
                     ParamType = paramType,
+                    RealParamType = parameter.ParameterType,
                     ParamName = parameter.Name,
                 };
 

@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle.Event
         ///     事件类型
         /// </summary>
         private EBattleEventType _eventType;
-
+        
         public EBattleEventType EventType => _eventType;
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         ///     Checker属于的ActorUid
         /// </summary>
-        protected readonly int _checkerBelongActorUid;
+        protected readonly int CheckerBelongActorUid;
 
         /// <summary>
         ///     是否仅监听全部的actor发送的消息
@@ -48,7 +48,7 @@ namespace Hono.Scripts.Battle.Event
             _func = func;
             _eventType = eventType;
             _isDisable = false;
-            _checkerBelongActorUid = actor.Uid;
+            CheckerBelongActorUid = actor.Uid;
         }
 
         protected EventChecker(EBattleEventType eventType, int actorUid, Action<IEventInfo> func = null)
@@ -56,7 +56,7 @@ namespace Hono.Scripts.Battle.Event
             _func = func;
             _eventType = eventType;
             _isDisable = false;
-            _checkerBelongActorUid = actorUid;
+            CheckerBelongActorUid = actorUid;
         }
 
         public void BindFunc(Action<IEventInfo> func)
@@ -78,7 +78,7 @@ namespace Hono.Scripts.Battle.Event
         {
             if (!_listenAllActor)
             {
-                return triggerEventActorUid == _checkerBelongActorUid && onCheck(info);
+                return triggerEventActorUid == CheckerBelongActorUid && onCheck(info);
             }
 
             return onCheck(info);

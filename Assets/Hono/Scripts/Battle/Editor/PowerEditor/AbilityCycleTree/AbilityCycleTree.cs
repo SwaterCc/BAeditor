@@ -21,7 +21,7 @@ namespace Editor.AbilityEditor
         
         private const string DragKey = "ATreeItemDrag";
 
-        public AbilityCycleTree(AbilityView view, EAbilityCycle cycle) : base(new TreeViewState())
+        public AbilityCycleTree(TreeViewState treeViewState ,AbilityView view, EAbilityCycle cycle) : base(treeViewState)
         {
             View = view;
             TreeData = view.Data;

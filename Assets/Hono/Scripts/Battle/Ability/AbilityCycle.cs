@@ -53,7 +53,7 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// EventNode
             /// </summary>
-            private readonly List<AEventNode> _eventNodeList = new(10);
+            private readonly List<AListenerNode> _eventNodeList = new(10);
 
             /// <summary>
             /// TickList，目前只有TimerNode会Tick
@@ -86,16 +86,13 @@ namespace Hono.Scripts.Battle
                     case BranchNodeData:
                         node = APool<ABranchNode>.Pool.Rent();
                         break;
-                    case VariableNodeData:
-                        node = APool<AVariableNode>.Pool.Rent();
-                        break;
                     case RepeatNodeData:
                         node = APool<ARepeatNode>.Pool.Rent();
                         break;
                     case ActionNodeData:
                         node = APool<AActionNode>.Pool.Rent();
                         break;
-                    case AttrNodeData:
+                    case AttrModifyNodeData:
                         node = APool<AAttrNode>.Pool.Rent();
                         break;
                     case GroupNodeData:
@@ -107,8 +104,8 @@ namespace Hono.Scripts.Battle
                         node = APool<ATimerNode>.Pool.Rent();
                         break;
                     case ListenerNodeData:
-                        node = APool<AEventNode>.Pool.Rent();
-                        _eventNodeList.Add((AEventNode)node);
+                        node = APool<AListenerNode>.Pool.Rent();
+                        _eventNodeList.Add((AListenerNode)node);
                         break;
                     default:
                         throw new InvalidCastException("使用了不存在的Node类型");

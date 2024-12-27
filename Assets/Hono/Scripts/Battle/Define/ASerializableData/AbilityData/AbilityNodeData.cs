@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
@@ -18,6 +19,16 @@ namespace Hono.Scripts.Battle
         public List<int> ChildrenIds = new();
 
         public string Desc = "";
+        
+        //TODO:调试相关数据后续将其拆分为编辑器独立数据中
+        /// <summary>
+        /// 跳过执行
+        /// </summary>
+        public bool skipExecute;
+        /// <summary>
+        /// 打印执行日志
+        /// </summary>
+        public bool showLog;
 
         public abstract AbilityNodeData DeepCopy();
     }
@@ -25,18 +36,44 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class ActionNodeData : AbilityNodeData
     {
+        public AParams action = new();
         public string returnType;
-        public bool catchReturnValue;
+        public bool isCreateVariable;
         public string returnValueKey;
-        public AParams Function = new();
 
         public override AbilityNodeData DeepCopy()
         {
             var copy = new ActionNodeData();
-            copy.Function = new AParams(copy.Function);
+            copy.action = new AParams(copy.action);
+            copy.isCreateVariable = isCreateVariable;
+            copy.returnValueKey = returnValueKey;
             return copy;
         }
     }
+    
+    [Serializable]
+    public class VariableNodeData : AbilityNodeData
+    {
+        public string key;
+        public bool isModify;
+        public string valueType;
+        public int iValue;
+        public float fValue;
+        public bool bValue;
+      
+        public override AbilityNodeData DeepCopy()
+        {
+            var copy = new VariableNodeData();
+            copy.key = key;
+            copy.isModify = isModify;
+            copy.valueType = valueType;
+            copy.iValue = iValue;
+            copy.fValue = fValue;
+            copy.bValue = bValue;
+            return copy;
+        }
+    }
+
 
     [Serializable]
     public class CycleNodeData : AbilityNodeData
@@ -173,34 +210,18 @@ namespace Hono.Scripts.Battle
     }
 
     [Serializable]
-    public class VariableNodeData : AbilityNodeData
-    {
-        public string Key;
-        public string valueType;
-        public AParams Value = new();
-        public bool IsGetReturnValue;
-        public override AbilityNodeData DeepCopy()
-        {
-            var copy = new VariableNodeData();
-            copy.Key = Key;
-            copy.Value = new AParams(Value);
-            return copy;
-        }
-    }
-
-    [Serializable]
-    public class AttrNodeData : AbilityNodeData
+    public class AttrModifyNodeData : AbilityNodeData
     {
         public EAttrType attrType;
-        public AParams Value = new();
-        public bool IsPersistent;
+        public AParams value = new();
+        public EAttrModifyType modifyType;
 
         public override AbilityNodeData DeepCopy()
         {
-            var copy = new AttrNodeData();
+            var copy = new AttrModifyNodeData();
             copy.attrType = attrType;
-            copy.Value = new AParams(Value);
-            copy.IsPersistent = IsPersistent;
+            copy.value = new AParams(value);
+            copy.modifyType = modifyType;
             return copy;
         }
     }

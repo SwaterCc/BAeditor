@@ -35,14 +35,14 @@ namespace Editor.AbilityEditor.TreeItemWindow
             {
                 for (int index = 0; index < TempData.GetChecker.funcParams.Count; index++)
                 {
-                    /*AParams aParameter = TempData.GetChecker.funcParams[index];
+                    AParams aParameter = TempData.GetChecker.funcParams[index];
                     if (funcInfo.ParamInfos.Count <= index) continue;
                     // 获取泛型类的类型
                     Type genericClassType = typeof(AParamsField<>);
                     // 为泛型类指定具体类型参数，例如 typeof(int)
-                    Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
-                    object param = Activator.CreateInstance(constructedType, parameter, paramInfo.ParamName);
-                    _parameterFields.Add(new AParamsField(aParameter, funcInfo.ParamInfos[index].ParamName));*/
+                    Type constructedType = genericClassType.MakeGenericType(funcInfo.ParamInfos[index].ParamType);
+                    object param = Activator.CreateInstance(constructedType, aParameter, funcInfo.ParamInfos[index].ParamName);
+                    _parameterFields.Add((AParamsField)param);
                 }
             }
         }
@@ -128,9 +128,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
                 {
                     parameterField.Draw();
                 }
-
-                TempData.Desc = SirenixEditorFields.TextField("备注", TempData.Desc);
-
+                
                 EditorGUILayout.EndVertical();
                 SirenixEditorGUI.EndBox();
             }

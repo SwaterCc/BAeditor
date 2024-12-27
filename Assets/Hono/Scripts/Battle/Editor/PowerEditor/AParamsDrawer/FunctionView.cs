@@ -97,20 +97,7 @@ namespace Editor.AbilityEditor
                 foreach (var funcInfo in funcInfos)
                 {
                     if (!funcInfo.ShowInEditorView) continue;
-                    bool passFilter = true;
-                    if (_window._filters is { Count: > 0 })
-                    {
-                        foreach (var type in _window._filters)
-                        {
-                            if (funcInfo.ReturnType != type)
-                            {
-                                passFilter = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!passFilter)
+                    if (!_window._filters.Filter(funcInfo.ReturnType))
                     {
                         continue;
                     }
@@ -136,7 +123,7 @@ namespace Editor.AbilityEditor
                 }
 
                 GUI.Label(args.GetCellRect(0),"    " + functionTreeItem.FuncInfo.FuncName,
-                          new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleLeft });
+                          new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleLeft,fontStyle = FontStyle.Bold});
                 GUI.Label(args.GetCellRect(1), "    " + functionTreeItem.FuncInfo.FuncDesc,
                           new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleLeft });
                 GUI.Label(args.GetCellRect(2), "    " + functionTreeItem.FuncInfo.FuncReturnDesc,

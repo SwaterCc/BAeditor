@@ -7,10 +7,8 @@ using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Editor.AbilityEditor;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Editor.AbilityEditor

@@ -55,10 +55,8 @@ namespace Editor.AbilityEditor
                     return new BranchGroupTreeItem(tree, node);
                 case BranchNodeData:
                     return new BranchTreeItem(tree, node);
-                case VariableNodeData:
-                    return new VariableTreeItem(tree, node);
-                case AttrNodeData:
-                    return new AttrTreeItem(tree, node);
+                case AttrModifyNodeData:
+                    return new AttrModifyTreeItem(tree, node);
                 case RepeatNodeData:
                     return new RepeatTreeItem(tree, node);
                 case ActionNodeData:

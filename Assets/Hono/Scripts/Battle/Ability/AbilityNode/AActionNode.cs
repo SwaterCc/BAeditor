@@ -22,44 +22,43 @@ namespace Hono.Scripts.Battle
                 var returnType = Type.GetType(Data.returnType);
                 if (returnType == typeof(int))
                 {
-                    var value = AParamParser.ParseInt(AContext, Data.Function);
-                    if (Data.catchReturnValue)
+                    var value = AParamParser.ParseInt(AContext, Data.action);
+                    if (Data.isCreateVariable)
                         AContext.VariableBoard.Set(Data.returnValueKey, value);
                 }
                 else if (returnType == typeof(float))
                 {
-                    var value = AParamParser.ParseFloat(AContext, Data.Function);
-                    if (Data.catchReturnValue)
+                    var value = AParamParser.ParseFloat(AContext, Data.action);
+                    if (Data.isCreateVariable)
                         AContext.VariableBoard.Set(Data.returnValueKey, value);
                 }
                 else if (returnType == typeof(bool))
                 {
-                    var value = AParamParser.ParseBoolean(AContext, Data.Function);
-                    if (Data.catchReturnValue)
+                    var value = AParamParser.ParseBoolean(AContext, Data.action);
+                    if (Data.isCreateVariable)
                         AContext.VariableBoard.Set(Data.returnValueKey, value);
                 }
                 else if (returnType == typeof(Vector3))
                 {
-                    var value = AParamParser.ParseVector3(AContext, Data.Function);
-                    if (Data.catchReturnValue)
+                    var value = AParamParser.ParseVector3(AContext, Data.action);
+                    if (Data.isCreateVariable)
                         AContext.VariableBoard.Set(Data.returnValueKey, value);
                 }
                 else if (returnType == typeof(void))
                 {
-                    var wrap = AFuncInvoker.Instance.Get(Data.Function.funcName);
+                    var wrap = AFuncInvoker.Instance.Get(Data.action.funcName);
                     if (wrap is IReturnVoid voidWrap)
                     {
-                        voidWrap.CallFunc(AContext,Data.Function.funcParams);
+                        voidWrap.CallFunc(AContext,Data.action.funcParams);
                     }
                 }
                 else
                 {
-                    var value = AParamParser.ParseRef(AContext, Data.Function);
-                    if (Data.catchReturnValue)
+                    var value = AParamParser.ParseRef(AContext, Data.action);
+                    if (Data.isCreateVariable)
                         AContext.VariableBoard.Set(Data.returnValueKey, value);
                 }
-
-                DoChildrenJob();
+                
             }
 
             protected override void onReset()

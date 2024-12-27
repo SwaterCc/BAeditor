@@ -15,7 +15,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
         protected override void Draw()
         {
-            SirenixEditorGUI.BeginBox("If节点", true);
+            SirenixEditorGUI.BeginBox("分支节点配置");
             _compareFunc.Draw();
             SirenixEditorGUI.EndBox();
         }

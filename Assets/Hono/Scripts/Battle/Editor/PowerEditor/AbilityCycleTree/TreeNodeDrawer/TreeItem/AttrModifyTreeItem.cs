@@ -12,11 +12,11 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
 {
-    public class AttrTreeItem : ATreeItem<AttrNodeData>
+    public class AttrModifyTreeItem : ATreeItem<AttrModifyNodeData>
     {
-        public AttrTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
+        public AttrModifyTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
         {
-          ButtonBackGroundColor =Color.magenta;
+          ButtonBackGroundColor = Color.magenta;
         }
 
         
@@ -32,7 +32,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override bool checkIsAllowMove(ATreeItem newParent)
         {
-            if (newParent is AttrTreeItem or VariableTreeItem or ActionTreeItem or BranchGroupTreeItem)
+            if (newParent is AttrModifyTreeItem  or ActionTreeItem or BranchGroupTreeItem)
             {
                 return false;
             }
@@ -52,7 +52,7 @@ namespace Editor.AbilityEditor.TreeItem
                 attrName = Enum.GetName(typeof(EAttrType), Data.attrType);
             }
 
-            return "设置属性 (属性Id:" + attrName + ") = " + Data.Value;
+            return "设置属性 (属性Id:" + attrName + ") = " + Data.value;
         }
         
 

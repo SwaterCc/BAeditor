@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
     {
         private readonly Dictionary<int, MessageCollection> _collections = new(128);
         private readonly Dictionary<int, List<MsgCache>> _msgCaches = new(128);
-
+        private readonly List<MsgCache> _removes = new();
         private const float MsgCacheClearTime = 3f;
         private float _clearTimeDuration = 0;
 
@@ -74,20 +74,21 @@ namespace Hono.Scripts.Battle
             {
                 if (_collections.TryGetValue(pair.Key, out var collection))
                 {
-                    List<MsgCache> removes = new();
                     foreach (var msgCache in pair.Value)
                     {
                         if (collection.SendMsg(msgCache.MsgKey, msgCache.P1, msgCache.P2, msgCache.P3, msgCache.P4,
-                                msgCache.P5))
+                                               msgCache.P5))
                         {
-                            removes.Add(msgCache);
+                            _removes.Add(msgCache);
                         }
                     }
 
-                    foreach (var removeItem in removes)
+                    foreach (var removeItem in _removes)
                     {
                         pair.Value.Remove(removeItem);
                     }
+
+                    _removes.Clear();
                 }
             }
 

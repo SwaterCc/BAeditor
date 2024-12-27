@@ -4,6 +4,7 @@ using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Base;
 using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -13,11 +14,10 @@ namespace Editor.AbilityEditor
 {
     public partial class FuncWindow : EditorWindow
     {
-        public static void Open(AParams aParameter, List<Type> filters = null)
+        public static void Open(AParams aParameter, List<Type> filters = null, bool reelection = false)
         {
             var window = CreateInstance<FuncWindow>();
-            window._filters = filters;
-            window.Init(aParameter);
+            window.Init(aParameter, filters, reelection);
             window.Show();
         }
 
@@ -26,17 +26,24 @@ namespace Editor.AbilityEditor
         private List<AParamsField> _parameterFields;
         private SearchField _searchField;
         private string _curTab;
-        private List<Type> _filters;
+        private FuncWindowFilter _filters;
 
         private float _windowWidth;
         private float _windowHeight;
 
-        private void Init(AParams aParameter)
+        private void Init(AParams aParameter, List<Type> filters = null, bool reelection = false)
         {
             _function = aParameter;
             _searchField = new SearchField();
             _parameterFields = new List<AParamsField>();
             _curTab = "All";
+            _filters = new FuncWindowFilter();
+           
+            if (filters != null)
+            {
+                _filters.FilterItems.AddRange(filters);
+            }
+            _filters.Reelection = reelection;
             _funcListView = new FunctionView(this, _curTab);
             ChangeSelectFunction(aParameter.funcName);
         }
@@ -58,7 +65,7 @@ namespace Editor.AbilityEditor
                 {
                     paramType = EParamType.Simple
                 };
-                
+
                 // 获取泛型类的类型
                 var genericClassType = paramInfo.ParamType.IsEnum ? typeof(AParamsEnumField<>) : typeof(AParamsField<>);
                 Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
@@ -69,7 +76,7 @@ namespace Editor.AbilityEditor
             }
         }
 
-        private void OnGUI()
+        protected void OnGUI()
         {
             EditorGUILayout.BeginVertical();
             _funcListView.searchString = _searchField.OnGUI(_funcListView.searchString);
@@ -101,21 +108,24 @@ namespace Editor.AbilityEditor
             {
                 var funcInfo = AbilityFuncInfoCache.GetFuncInfo(_function.funcName);
 
-                SirenixEditorGUI.BeginBox($"当前函数:{_function.funcName}", true);
-
+                SirenixEditorGUI.BeginBox($"当前正在配置 {_function.funcName}",true);
                 SirenixEditorGUI.BeginVerticalList();
                 for (var index = 0; index < _parameterFields.Count; index++)
                 {
                     SirenixEditorGUI.BeginListItem();
                     if (!string.IsNullOrEmpty(funcInfo.ParamInfos[index].ParamDesc))
                     {
+                        var fontColor = GUI.contentColor;
+                        GUI.contentColor = Color.yellow;
                         //绘制参数描述
-                        EditorGUILayout.LabelField(funcInfo.ParamInfos[index].ParamDesc,
+                        EditorGUILayout.LabelField("参数描述：" + funcInfo.ParamInfos[index].ParamDesc,
                                                    new GUIStyle(EditorStyles.label)
                                                    {
+                                                       fontStyle = FontStyle.BoldAndItalic,
                                                        richText = true,
                                                        alignment = TextAnchor.LowerLeft,
                                                    });
+                        GUI.contentColor = fontColor;
                     }
 
                     AParamsField parameterField = _parameterFields[index];

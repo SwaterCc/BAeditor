@@ -263,7 +263,7 @@ namespace Hono.Scripts.Battle
                     P4 = p4,
                     P5 = p5,
                 };
-                MessageCenter.Instance.AddMsg(actorUid, msgCache);
+                MessageCenter.Instance.AddMsg(actor.Uid, msgCache);
             }
         }
 

@@ -9,14 +9,17 @@ namespace Hono.Scripts.Battle
 {
     public partial class Ability
     {
-        private class AAttrNode : ANode<AttrNodeData>, IAPoolObject
+        private class AAttrNode : ANode<AttrModifyNodeData>, IAPoolObject
         {
             public override void DoJob()
             {
-                int attrValue = AParamParser.ParseInt(AContext, Data.Value);
+                int attrValue = AParamParser.ParseInt(AContext, Data.value);
 
-                AContext.AddCommand(new AttrCommand(AContext.Actor.GetAttrNoParse(Data.attrType), attrValue));
-
+                /*if (Data.IsPersistent)
+                {
+                    AContext.AddCommand(new AttrCommand(AContext.Actor.GetAttrNoParse(Data.attrType), attrValue));
+                }*/
+                
                 DoChildrenJob();
             }
 
