@@ -10,7 +10,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
         protected override void Init()
         {
-            _maxCount = new AParamsField<RefInt>(TempData.MaxRepeatCount, "循环次数");
+            _maxCount = new AParamsField<RefInt>(TreeItem,TempData.MaxRepeatCount, "循环次数");
         }
 
         protected override void Draw()

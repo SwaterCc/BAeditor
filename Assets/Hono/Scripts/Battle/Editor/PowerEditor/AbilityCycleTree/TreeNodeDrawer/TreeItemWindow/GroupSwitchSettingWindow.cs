@@ -10,7 +10,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
         private AParamsField _nextGroupId;
         protected override void Init()
         {
-            _nextGroupId = new AParamsField<RefInt>(TempData.nextGroupId, "Next Group Id");
+            _nextGroupId = new AParamsField<RefInt>(TreeItem,TempData.nextGroupId, "Next Group Id");
         }
 
         protected override void Draw()

@@ -1,6 +1,7 @@
 #region
 
 using System;
+using System.Globalization;
 
 #endregion
 
@@ -19,6 +20,11 @@ namespace Hono.Scripts.Battle.Base
         public RefFloat(float initialValue = 0f)
         {
             Value = initialValue;
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString(CultureInfo.InvariantCulture);
         }
 
         public override Type GetValueType()

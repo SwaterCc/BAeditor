@@ -8,7 +8,7 @@ namespace Editor.AbilityEditor
 {
     public class AParamsEnumField<T> : AParamsField where T : Enum
     {
-        public AParamsEnumField(AParams aParams, string label) : base(aParams, label) { }
+        public AParamsEnumField(ATreeItem node, AParams aParams, string label) : base(node, aParams, label) { }
 
         public override void Draw()
         {

@@ -58,7 +58,7 @@ namespace Editor.AbilityEditor
         protected virtual void SaveDataToEditorNode()
         {
             TreeItem.Node.SaveNodeDataChange(TempData);
-            TreeItem.Tree.Repaint();
+            TreeItem.Tree.Reload();
         }
     }
 

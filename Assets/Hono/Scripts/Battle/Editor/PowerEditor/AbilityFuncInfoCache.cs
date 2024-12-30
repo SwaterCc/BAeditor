@@ -108,7 +108,8 @@ namespace Editor.BattleEditor.AbilityEditor
                     cacheAbilityFuncInfo(method, abilityFunction);
                 }
             }
-
+            
+            EventCheckerDict.Clear();
             foreach (var field in typeof(EBattleEventType).GetFields())
             {
                 var checkerBinder = field.GetCustomAttribute<EventCheckerBinder>();

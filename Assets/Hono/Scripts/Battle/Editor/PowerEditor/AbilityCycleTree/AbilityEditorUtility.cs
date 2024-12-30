@@ -18,8 +18,9 @@ namespace Editor.AbilityEditor
         AddTimerChild,
         AddRepeatChild,
         AddAttrChild,
+        AddVariableChild,
         AddGroupSwitchChild,
-
+        
         AddChildOperation = 50,
 
         RemoveSelf = 51,

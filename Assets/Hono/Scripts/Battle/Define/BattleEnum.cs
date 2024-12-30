@@ -186,11 +186,29 @@ namespace Hono.Scripts.Battle
         Dead,
     }
     
-    public enum EAttrModifyType
+    public enum EAttrModifyEffectType
     {
+        //永久修改
         Always,
+        /// <summary>
+        /// 当ability执行的到end阶段时回退
+        /// </summary>
         ResetWhenAbilityEndCycle,
+        /// <summary>
+        /// 当ability删除时回退
+        /// </summary>
         ResetWhenAbilityRemove,
+    }
+
+    /// <summary>
+    /// 对变量进行操作
+    /// </summary>
+    public enum EVariableOperationType
+    {
+        Add,
+        Sub,
+        Reset,
+        Reverse,
     }
 
     /// <summary>

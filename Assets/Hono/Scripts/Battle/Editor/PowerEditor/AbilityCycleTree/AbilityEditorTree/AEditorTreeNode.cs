@@ -91,7 +91,6 @@ namespace Editor.AbilityEditor
         /// 构建树，头节点调用
         /// </summary>
         /// <param name="abilityData"></param>
-        /// <param name="idGenerator"></param>
         protected void OnBuild(AbilityData abilityData)
         {
             foreach (var id in Data.ChildrenIds)
@@ -215,10 +214,13 @@ namespace Editor.AbilityEditor
         {
             return false;
         }
-        
+
         /// <summary>
         /// 数据序列化
         /// </summary>
-        public void Serialize() { }
+        public void Serialize()
+        {
+            
+        }
     }
 }

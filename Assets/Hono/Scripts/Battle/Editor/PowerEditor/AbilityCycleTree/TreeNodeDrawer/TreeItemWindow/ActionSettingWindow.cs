@@ -18,7 +18,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
             if (SirenixEditorGUI.Button(buttonText, ButtonSizes.Medium))
             {
-                FuncWindow.Open(TempData.action, null, true);
+                FuncWindow.Open(TreeItem,TempData.action, null, true);
             }
 
             if (AbilityFuncInfoCache.TryGetFuncInfo(TempData.action.funcName, out var funcInfo))

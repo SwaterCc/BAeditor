@@ -44,7 +44,7 @@ namespace Hono.Scripts.Battle
         public override AbilityNodeData DeepCopy()
         {
             var copy = new ActionNodeData();
-            copy.action = new AParams(copy.action);
+            copy.action = new AParams(action);
             copy.isCreateVariable = isCreateVariable;
             copy.returnValueKey = returnValueKey;
             return copy;
@@ -56,20 +56,16 @@ namespace Hono.Scripts.Battle
     {
         public string key;
         public bool isModify;
-        public string valueType;
-        public int iValue;
-        public float fValue;
-        public bool bValue;
-      
+        public string valueType = typeof(int).ToString();
+        public string value = "0";
+        public EVariableOperationType operationType;
         public override AbilityNodeData DeepCopy()
         {
             var copy = new VariableNodeData();
             copy.key = key;
             copy.isModify = isModify;
             copy.valueType = valueType;
-            copy.iValue = iValue;
-            copy.fValue = fValue;
-            copy.bValue = bValue;
+            copy.value = value;
             return copy;
         }
     }
@@ -214,14 +210,15 @@ namespace Hono.Scripts.Battle
     {
         public EAttrType attrType;
         public AParams value = new();
-        public EAttrModifyType modifyType;
+        [FormerlySerializedAs("modifyType")]
+        public EAttrModifyEffectType modifyEffectType;
 
         public override AbilityNodeData DeepCopy()
         {
             var copy = new AttrModifyNodeData();
             copy.attrType = attrType;
             copy.value = new AParams(value);
-            copy.modifyType = modifyType;
+            copy.modifyEffectType = modifyEffectType;
             return copy;
         }
     }

@@ -14,35 +14,41 @@ namespace Editor.AbilityEditor
 {
     public partial class FuncWindow : EditorWindow
     {
-        public static void Open(AParams aParameter, List<Type> filters = null, bool reelection = false)
+        public static void Open(ATreeItem treeItem,
+            AParams aParameter,
+            List<Type> filters = null,
+            bool reelection = false)
         {
             var window = CreateInstance<FuncWindow>();
-            window.Init(aParameter, filters, reelection);
+            window.Init(treeItem, aParameter, filters, reelection);
             window.Show();
         }
 
+        private ATreeItem _treeItem;
         private AParams _function;
         private FunctionView _funcListView;
         private List<AParamsField> _parameterFields;
         private SearchField _searchField;
         private string _curTab;
-        private FuncWindowFilter _filters;
+        private AParamFiledFilter _filters;
 
         private float _windowWidth;
         private float _windowHeight;
 
-        private void Init(AParams aParameter, List<Type> filters = null, bool reelection = false)
+        private void Init(ATreeItem treeItem, AParams aParameter, List<Type> filters = null, bool reelection = false)
         {
+            _treeItem = treeItem;
             _function = aParameter;
             _searchField = new SearchField();
             _parameterFields = new List<AParamsField>();
             _curTab = "All";
-            _filters = new FuncWindowFilter();
-           
+            _filters = new AParamFiledFilter();
+
             if (filters != null)
             {
                 _filters.FilterItems.AddRange(filters);
             }
+
             _filters.Reelection = reelection;
             _funcListView = new FunctionView(this, _curTab);
             ChangeSelectFunction(aParameter.funcName);
@@ -69,7 +75,8 @@ namespace Editor.AbilityEditor
                 // 获取泛型类的类型
                 var genericClassType = paramInfo.ParamType.IsEnum ? typeof(AParamsEnumField<>) : typeof(AParamsField<>);
                 Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
-                var field = (AParamsField)Activator.CreateInstance(constructedType, funcParam, paramInfo.ParamName);
+                var field = (AParamsField)Activator.CreateInstance(constructedType, _treeItem, funcParam,
+                                                                   paramInfo.ParamName);
 
                 _function.funcParams.Add(funcParam);
                 _parameterFields.Add(field);
@@ -108,7 +115,7 @@ namespace Editor.AbilityEditor
             {
                 var funcInfo = AbilityFuncInfoCache.GetFuncInfo(_function.funcName);
 
-                SirenixEditorGUI.BeginBox($"当前正在配置 {_function.funcName}",true);
+                SirenixEditorGUI.BeginBox($"当前正在配置 {_function.funcName}", true);
                 SirenixEditorGUI.BeginVerticalList();
                 for (var index = 0; index < _parameterFields.Count; index++)
                 {

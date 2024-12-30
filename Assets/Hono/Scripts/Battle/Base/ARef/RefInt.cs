@@ -19,6 +19,11 @@ namespace Hono.Scripts.Battle.Base
             _refCount = 0;
         }
 
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
         public RefInt(int initialValue = 0)
         {
             Value = initialValue;

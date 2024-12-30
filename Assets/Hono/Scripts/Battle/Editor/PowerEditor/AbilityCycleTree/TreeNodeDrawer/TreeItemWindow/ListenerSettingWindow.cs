@@ -72,7 +72,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
                 Type genericClassType = typeof(AParamsField<>);
                 // 为泛型类指定具体类型参数，例如 typeof(int)
                 Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
-                object param = Activator.CreateInstance(constructedType, parameter, paramInfo.ParamName);
+                object param = Activator.CreateInstance(constructedType,TreeItem, parameter, paramInfo.ParamName);
              
                 _parameterFields.Add((AParamsField)param);
             }

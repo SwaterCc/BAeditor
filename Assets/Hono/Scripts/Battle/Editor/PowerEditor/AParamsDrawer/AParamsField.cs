@@ -15,6 +15,7 @@ namespace Editor.AbilityEditor
 {
     public abstract class AParamsField
     {
+        protected readonly ATreeItem TreeItem;
         /// <summary>
         /// 参数队列
         /// </summary>
@@ -24,8 +25,9 @@ namespace Editor.AbilityEditor
         /// </summary>
         protected readonly string Label;
 
-        protected AParamsField(AParams aParams, string label)
+        protected AParamsField(ATreeItem treeItem, AParams aParams, string label)
         {
+            TreeItem = treeItem;
             Params = aParams;
             Label = label;
         }
@@ -48,7 +50,7 @@ namespace Editor.AbilityEditor
         /// </summary>
         private Type _originType;
 
-        public AParamsField(AParams aParams, string label) : base(aParams, label)
+        public AParamsField(ATreeItem node, AParams aParams, string label) : base(node, aParams, label)
         {
             _originType = _castType = typeof(T);
 
@@ -101,6 +103,9 @@ namespace Editor.AbilityEditor
                                        () => { Params.paramType = EParamType.Variable; });
                 _paramTypeMenu.AddItem(new GUIContent("属性"), false,
                                        () => { Params.paramType = EParamType.Attr; });
+                //来自事件回调
+                //来自消息传递
+                //来自运行时
                 _paramTypeMenu.ShowAsContext();
             }
         }
@@ -196,7 +201,7 @@ namespace Editor.AbilityEditor
             var rect = GUILayoutUtility.GetLastRect();
             if (SirenixEditorGUI.Button(text, ButtonSizes.Medium))
             {
-                FuncWindow.Open(Params, new List<Type>() { _castType });
+                FuncWindow.Open(TreeItem, Params, new List<Type>() { _castType });
             }
         }
 
@@ -211,7 +216,11 @@ namespace Editor.AbilityEditor
 
         private void variableDraw()
         {
-            if (SirenixEditorGUI.Button("黑板变量 : " + Params.variableName, ButtonSizes.Medium)) { }
+            if (SirenixEditorGUI.Button("黑板变量 : " + Params.variableName, ButtonSizes.Medium))
+            {
+                //func -> refInt
+                //create int var -> int -> refint
+            }
         }
     }
 }

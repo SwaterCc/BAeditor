@@ -16,32 +16,30 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
         protected override void Init()
         {
-            _value = new AParamsField<RefInt>(TempData.value, "属性值：");
+            _value = new AParamsField<RefInt>(TreeItem, TempData.value, "修改属性值：");
             _attrDropdown = new AttrDropdown(TempData.value);
         }
 
         protected override void Draw()
         {
-            SirenixEditorGUI.BeginBox("设置属性");
+            SirenixEditorGUI.BeginBox("修改属性（Modify）");
             string attrName ="";
             if (Enum.GetName(typeof(EAttrType), TempData.attrType) == null)
             {
-                attrName = "未设置";
+                attrName = "未选择属性";
             }
             else
             {
                 attrName = Enum.GetName(typeof(EAttrType), TempData.attrType);
             }
             
-            EditorGUILayout.LabelField("当前属性：" + attrName);
-            
-            if (SirenixEditorGUI.Button("选择属性", ButtonSizes.Medium))
+            if (SirenixEditorGUI.Button(attrName, ButtonSizes.Medium))
             {
                 _attrDropdown.Show(GUILayoutUtility.GetRect(100,100,300,300));
             }
 
             _value?.Draw();
-            TempData.modifyType = (EAttrModifyType)SirenixEditorFields.EnumDropdown("属性修改方式：", TempData.modifyType);
+            TempData.modifyEffectType = (EAttrModifyEffectType)SirenixEditorFields.EnumDropdown("属性修改方式：", TempData.modifyEffectType);
             SirenixEditorGUI.EndBox();
         }
     }

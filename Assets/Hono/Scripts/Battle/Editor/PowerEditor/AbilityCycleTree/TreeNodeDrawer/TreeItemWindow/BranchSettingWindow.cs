@@ -10,7 +10,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
         protected override void Init()
         {
-            _compareFunc = new AParamsField<RefBoolean>(TempData.CompareFunc, "判定条件");
+            _compareFunc = new AParamsField<RefBoolean>(TreeItem,TempData.CompareFunc, "判定条件");
         }
 
         protected override void Draw()

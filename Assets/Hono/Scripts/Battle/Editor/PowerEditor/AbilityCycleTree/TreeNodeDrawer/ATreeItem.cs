@@ -123,8 +123,9 @@ namespace Editor.AbilityEditor
                 case ERightClickOperationType.AddGroupChild:
                 case ERightClickOperationType.AddTimerChild:
                 case ERightClickOperationType.AddRepeatChild:
-                //case ERightClickOperationType.AddVariableChild:
+                case ERightClickOperationType.AddVariableChild:
                 case ERightClickOperationType.AddAttrChild:
+                case ERightClickOperationType.AddGroupSwitchChild:
                     rightMenuInfo.Function += data =>
                     {
                         Node.AddChild(new AEditorTreeNode((AbilityNodeData)data));

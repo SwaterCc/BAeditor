@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public class VarCollector
+    public class AbilityEditorVariableBoard
     {
         private AbilityData _abilityData;
         public Dictionary<Type, List<string>> _variables = new();
@@ -14,40 +14,42 @@ namespace Editor.AbilityEditor
         public void SetAbilityData(AbilityData abilityData)
         {
             _abilityData = abilityData;
+            RefreshAllVariable();
         }
 
         public void RefreshAllVariable()
         {
-            /*_variables.Clear();
+            _variables.Clear();
             foreach (var pair in _abilityData.NodeDict)
             {
                 var nodeData = pair.Value;
                 if(nodeData == null)
                     continue;
                 
-                if (nodeData.NodeType != EAbilityNodeType.EVariableSetter)
+                if (nodeData is not VariableNodeData variableNodeData)
                     continue;
 
-                var variableNodeData = (VariableNodeData)nodeData;
-                if (string.IsNullOrEmpty(variableNodeData.Name))
+                if (string.IsNullOrEmpty(variableNodeData.key))
                     continue;
-                var type = AbilityFunctionHelper.GetVariableType(variableNodeData.typeString);
+
+                var type = Type.GetType(variableNodeData.valueType);
                 if(type == null) 
                     continue;
+                
                 if (!_variables.TryGetValue(type, out var list))
                 {
                     list = new List<string>();
                     _variables.Add(type,list);
                 }
 
-                if (list.Contains(variableNodeData.Name))
+                if (list.Contains(variableNodeData.key))
                 {
-                    Debug.LogError($"配置AbilityId {_abilityData.id} 中存在重复的变量命名 name {variableNodeData.Name} ！！！");
+                    
                     
                 }
                 
-                list.Add(variableNodeData.Name);
-            }*/
+                list.Add(variableNodeData.key);
+            }
         }
 
         public List<string> GetVariables(Type type)
