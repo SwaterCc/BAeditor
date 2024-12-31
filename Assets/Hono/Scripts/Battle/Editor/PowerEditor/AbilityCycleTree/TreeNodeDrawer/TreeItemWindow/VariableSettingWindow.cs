@@ -14,12 +14,15 @@ namespace Editor.AbilityEditor.TreeItemWindow
         private string[] _baseTypeValue =
             { typeof(int).ToString(), typeof(float).ToString(), typeof(bool).ToString(), typeof(string).ToString() };
 
+        private string _beforeType;
+        
         protected override void Init()
         {
             //创建变量 基础类型 int float bool string
             //修改变量 下拉框选择已有变量  -> 行为自增，自减，加值，乘值，取反，重设
             //int float bool 可能来自属性？可能性很低，暂时不做
             //变量存储变量类型？一般不会有
+            _beforeType = TempData.valueType;
         }
 
         protected override void Draw()
@@ -56,9 +59,27 @@ namespace Editor.AbilityEditor.TreeItemWindow
         private void drawCreateView()
         {
             TempData.key = SirenixEditorFields.TextField("变量Name:", TempData.key);
+            
+            if (AbilityView.VariableBoard.HasVariable(TempData.key))
+            {
+                PowerEditorUIHelper.DrawColorLabel("变量名重复！！", Color.red);
+                DisableCloseButton = true;
+            }
+            else
+            {
+                DisableCloseButton = false;
+            }
+            
             TempData.valueType =
                 SirenixEditorFields.Dropdown("选择变量类型", TempData.valueType, _baseTypeValue, _baseTypeShow);
             var type = Type.GetType(TempData.valueType);
+            
+            if (_beforeType != TempData.valueType)
+            {
+                TempData.value = type == typeof(string) ? "" : Activator.CreateInstance(type).ToString();
+                _beforeType = TempData.valueType;
+            }
+            
             object value;
             if (type == typeof(int))
             {
@@ -109,6 +130,15 @@ namespace Editor.AbilityEditor.TreeItemWindow
                     break;
                 case EVariableOperationType.Reverse:
                     break;
+            }
+        }
+
+        protected override void SaveDataToEditorNode()
+        {
+            base.SaveDataToEditorNode();
+            if (!TempData.isModify)
+            {
+                AbilityView.VariableBoard.RefreshAllVariable();
             }
         }
     }

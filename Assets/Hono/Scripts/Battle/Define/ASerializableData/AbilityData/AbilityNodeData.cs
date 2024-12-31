@@ -19,7 +19,7 @@ namespace Hono.Scripts.Battle
         public List<int> ChildrenIds = new();
 
         public string Desc = "";
-        
+
         //TODO:调试相关数据后续将其拆分为编辑器独立数据中
         /// <summary>
         /// 跳过执行
@@ -50,15 +50,16 @@ namespace Hono.Scripts.Battle
             return copy;
         }
     }
-    
+
     [Serializable]
     public class VariableNodeData : AbilityNodeData
     {
-        public string key;
+        public string key = "";
         public bool isModify;
         public string valueType = typeof(int).ToString();
         public string value = "0";
         public EVariableOperationType operationType;
+
         public override AbilityNodeData DeepCopy()
         {
             var copy = new VariableNodeData();
@@ -76,13 +77,13 @@ namespace Hono.Scripts.Battle
     {
         public EAbilityCycle cycleNodeData;
 
-        public CycleNodeData(){}
+        public CycleNodeData() { }
 
         public CycleNodeData(EAbilityCycle cycle)
         {
             cycleNodeData = cycle;
         }
-        
+
         public override AbilityNodeData DeepCopy()
         {
             var copy = new CycleNodeData
@@ -165,7 +166,7 @@ namespace Hono.Scripts.Battle
     {
         public bool switchGroupNow;
         public AParams nextGroupId;
-        
+
         public override AbilityNodeData DeepCopy()
         {
             var copy = new GroupSwitchNodeData();
@@ -195,12 +196,24 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class RepeatNodeData : AbilityNodeData
     {
-        public AParams MaxRepeatCount = new();
+        public ERepeatNodeOperationType operationType;
+        public int repeatCount;
+        public AParams traverseList;
+        public bool isCatchForeachCount;
+        public string foreachVarName;
+        public bool isCatchForeachObject;
+        public string listItemVarName;
 
         public override AbilityNodeData DeepCopy()
         {
             var copy = new RepeatNodeData();
-            copy.MaxRepeatCount = new AParams(MaxRepeatCount);
+            copy.operationType = operationType;
+            copy.repeatCount = repeatCount;
+            copy.traverseList = new AParams(traverseList);
+            copy.isCatchForeachCount = isCatchForeachCount;
+            copy.foreachVarName = foreachVarName;
+            copy.isCatchForeachObject = isCatchForeachObject;
+            copy.listItemVarName = listItemVarName;
             return copy;
         }
     }
@@ -210,7 +223,6 @@ namespace Hono.Scripts.Battle
     {
         public EAttrType attrType;
         public AParams value = new();
-        [FormerlySerializedAs("modifyType")]
         public EAttrModifyEffectType modifyEffectType;
 
         public override AbilityNodeData DeepCopy()

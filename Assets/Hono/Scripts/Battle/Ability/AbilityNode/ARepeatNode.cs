@@ -1,5 +1,6 @@
 #region
 
+using System;
 using Hono.Scripts.Battle.Base;
 using UnityEngine;
 
@@ -18,11 +19,26 @@ namespace Hono.Scripts.Battle
 
             public override void DoJob()
             {
-                var maxCount = AParamParser.ParseInt(AContext, Data.MaxRepeatCount);
-                for (int i = 0; i < maxCount; i++)
+
+                switch (Data.operationType)
                 {
-                    DoChildrenJob();
+                    case ERepeatNodeOperationType.Repeat:
+                        for (int i = 0; i < Data.repeatCount; i++)
+                        {
+                            DoChildrenJob();
+                        }
+                        break;
+                    case ERepeatNodeOperationType.ETraverseList:
+                        /*var maxCount = AParamParser.ParseRef<>(AContext, Data.MaxRepeatCount);
+                        foreach (var VARIABLE in COLLECTION)
+                        {
+                            
+                        }*/
+                        break;
                 }
+                
+            
+               
             }
 
             protected override void OnChildrenJobFinish()

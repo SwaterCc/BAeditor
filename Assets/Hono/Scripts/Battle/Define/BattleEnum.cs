@@ -212,6 +212,15 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
+    /// 循环节点操作
+    /// </summary>
+    public enum ERepeatNodeOperationType
+    {
+        Repeat,
+        ETraverseList,
+    }
+    
+    /// <summary>
     ///     Ability可编辑周期
     /// </summary>
     public enum EAbilityCycle

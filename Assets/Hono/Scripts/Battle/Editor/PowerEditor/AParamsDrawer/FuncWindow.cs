@@ -72,11 +72,7 @@ namespace Editor.AbilityEditor
                     paramType = EParamType.Simple
                 };
 
-                // 获取泛型类的类型
-                var genericClassType = paramInfo.ParamType.IsEnum ? typeof(AParamsEnumField<>) : typeof(AParamsField<>);
-                Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
-                var field = (AParamsField)Activator.CreateInstance(constructedType, _treeItem, funcParam,
-                                                                   paramInfo.ParamName);
+                var field = new AParamsField(_treeItem, funcParam, paramInfo.ParamName, paramInfo.ParamType);
 
                 _function.funcParams.Add(funcParam);
                 _parameterFields.Add(field);

@@ -44,5 +44,14 @@ namespace Editor.AbilityEditor.TreeItemWindow
             //调用函数 且捕获返回值
             SirenixEditorGUI.EndBox();
         }
+        
+        protected override void SaveDataToEditorNode()
+        {
+            base.SaveDataToEditorNode();
+            if (!TempData.isCreateVariable)
+            {
+                AbilityView.VariableBoard.RefreshAllVariable();
+            }
+        }
     }
 }

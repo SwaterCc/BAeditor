@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItemWindow
 {
-       public class ListenerSettingWindow : ANodeSettingWindow<ListenerNodeData>
+    public class ListenerSettingWindow : ANodeSettingWindow<ListenerNodeData>
     {
         private List<AParamsField> _parameterFields;
         private EBattleEventType _curEvent;
@@ -37,12 +37,11 @@ namespace Editor.AbilityEditor.TreeItemWindow
                 {
                     AParams aParameter = TempData.GetChecker.funcParams[index];
                     if (funcInfo.ParamInfos.Count <= index) continue;
-                    // 获取泛型类的类型
-                    Type genericClassType = typeof(AParamsField<>);
-                    // 为泛型类指定具体类型参数，例如 typeof(int)
-                    Type constructedType = genericClassType.MakeGenericType(funcInfo.ParamInfos[index].ParamType);
-                    object param = Activator.CreateInstance(constructedType, aParameter, funcInfo.ParamInfos[index].ParamName);
-                    _parameterFields.Add((AParamsField)param);
+
+
+                    var field = new AParamsField(TreeItem, aParameter, funcInfo.ParamInfos[index].ParamName,
+                                                 funcInfo.ParamInfos[index].ParamType);
+                    _parameterFields.Add(field);
                 }
             }
         }
@@ -68,13 +67,9 @@ namespace Editor.AbilityEditor.TreeItemWindow
             {
                 var parameter = new AParams();
                 TempData.GetChecker.funcParams.Add(parameter);
-                // 获取泛型类的类型
-                Type genericClassType = typeof(AParamsField<>);
-                // 为泛型类指定具体类型参数，例如 typeof(int)
-                Type constructedType = genericClassType.MakeGenericType(paramInfo.ParamType);
-                object param = Activator.CreateInstance(constructedType,TreeItem, parameter, paramInfo.ParamName);
-             
-                _parameterFields.Add((AParamsField)param);
+
+                AParamsField param = new(TreeItem, parameter, paramInfo.ParamName, paramInfo.ParamType);
+                _parameterFields.Add(param);
             }
         }
 
@@ -106,7 +101,8 @@ namespace Editor.AbilityEditor.TreeItemWindow
         private void showEvent()
         {
             TempData.EventType = SirenixEditorFields.Dropdown(new GUIContent("事件类型"),
-                                                              TempData.EventType, AbilityFuncInfoCache.EventCheckerDict.Keys.ToList());
+                                                              TempData.EventType,
+                                                              AbilityFuncInfoCache.EventCheckerDict.Keys.ToList());
 
             if (_curEvent != TempData.EventType)
             {
@@ -128,7 +124,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
                 {
                     parameterField.Draw();
                 }
-                
+
                 EditorGUILayout.EndVertical();
                 SirenixEditorGUI.EndBox();
             }

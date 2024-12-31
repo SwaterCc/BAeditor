@@ -202,7 +202,7 @@ namespace Editor.AbilityEditor
             //if (autoSave)
             if (true)
             {
-                Serialize();
+                Root.SaveTree();
             }
         }
 

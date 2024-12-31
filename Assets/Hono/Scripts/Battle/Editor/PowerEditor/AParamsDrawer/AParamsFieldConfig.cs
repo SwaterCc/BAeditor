@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
 using UnityEditor;

@@ -68,6 +68,8 @@ namespace Editor.AbilityEditor
                     return new GroupTreeItem(tree, node);
                 case GroupSwitchNodeData:
                     return new GroupSwitchTreeItem(tree, node);
+                case VariableNodeData:
+                    return new VariableTreeItem(tree, node);
             }
 
             throw new SwitchExpressionException("不存在该类型的节点");
@@ -166,6 +168,36 @@ namespace Editor.AbilityEditor
             {
                 if (parent is T)
                 {
+                    return true;
+                }
+
+                if (parent is CycleTreeItem)
+                {
+                    return typeof(T) == typeof(CycleTreeItem);
+                }
+
+                parent = parent.parent;
+            }
+
+            return false;
+        }
+        
+        
+        /// <summary>
+        /// 尝试获取指定类型的第一个父级
+        /// </summary>
+        /// <param name="item"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static bool TryGetFirstParent<T>(this ATreeItem item,out T parentItem) where T : ATreeItem
+        {
+            parentItem = null;
+            var parent = item.parent;
+            while (parent != null)
+            {
+                if (parent is T)
+                {
+                    parentItem = (T)parent;
                     return true;
                 }
 

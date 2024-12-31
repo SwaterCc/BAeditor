@@ -16,7 +16,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
         protected override void Init()
         {
-            _value = new AParamsField<RefInt>(TreeItem, TempData.value, "修改属性值：");
+            _value = new AParamsField(TreeItem, TempData.value, "修改属性值：", typeof(RefInt));
             _attrDropdown = new AttrDropdown(TempData.value);
         }
 

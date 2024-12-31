@@ -1,4 +1,5 @@
 using System;
+using Editor.AbilityEditor.TreeItemWindow;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Base;
 using Sirenix.OdinInspector;
@@ -10,7 +11,10 @@ namespace Editor.AbilityEditor.TreeItem
 {
     public class RepeatTreeItem : ATreeItem<RepeatNodeData>
     {
-        public RepeatTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data) { }
+        public RepeatTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
+        {
+            ButtonBackGroundColor = new Color(2,0.9f,0.1f);
+        }
 
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
@@ -40,6 +44,9 @@ namespace Editor.AbilityEditor.TreeItem
             return "Foreach";
         }
 
-        protected override void OnBtnClicked(Rect btnRect) { }
+        protected override void OnBtnClicked(Rect btnRect)
+        {
+            ANodeSettingWindow.Open<RepeatSettingWindow>(this);
+        }
     }
 }

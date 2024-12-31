@@ -34,10 +34,8 @@ namespace Hono.Scripts.Battle.Base
             return _refCount;
         }
 
-        public static Type GetRefType<T>() where T : struct
+        public static Type ParseValueTypeToARefType(Type paramType)
         {
-            var paramType = typeof(T);
-
             if (paramType == typeof(int))
             {
                 return typeof(RefInt);
@@ -50,7 +48,7 @@ namespace Hono.Scripts.Battle.Base
 
             if (paramType == typeof(bool))
             {
-                return typeof(RefBoolean);
+                return  typeof(RefBoolean);
             }
 
             if (paramType == typeof(Vector3))
@@ -58,44 +56,32 @@ namespace Hono.Scripts.Battle.Base
                 return typeof(RefVector3);
             }
 
-            return null;
+            return paramType;
         }
-
-        public static bool TryGetRefType(Type paramType, out Type refType)
+        
+        public static Type ParseARefTypeToValueType(Type paramType)
         {
-            refType = null;
-
-            if (paramType.IsClass || paramType.IsEnum || paramType == typeof(void))
+            if (paramType == typeof(RefInt))
             {
-                refType = paramType;
-                return true;
+                return typeof(int);
             }
 
-            if (paramType == typeof(int))
+            if (paramType == typeof(RefFloat))
             {
-                refType = typeof(RefInt);
-                return true;
+                return typeof(float);
             }
 
-            if (paramType == typeof(float))
+            if (paramType == typeof(RefBoolean))
             {
-                refType = typeof(RefFloat);
-                return true;
+                return  typeof(bool);
             }
 
-            if (paramType == typeof(bool))
+            if (paramType == typeof(RefVector3))
             {
-                refType = typeof(RefBoolean);
-                return true;
+                return typeof(Vector3);
             }
 
-            if (paramType == typeof(Vector3))
-            {
-                refType = typeof(RefVector3);
-                return true;
-            }
-
-            return false;
+            return paramType;
         }
     }
 }

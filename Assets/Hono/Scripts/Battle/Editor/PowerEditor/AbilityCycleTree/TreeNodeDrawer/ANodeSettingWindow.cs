@@ -13,6 +13,12 @@ namespace Editor.AbilityEditor
     {
         protected ATreeItem TreeItem { get; private set; }
         protected AbilityNodeData TempData { get; private set; }
+        
+        /// <summary>
+        /// 失效关闭按钮
+        /// </summary>
+        protected bool DisableCloseButton { get; set; }
+
         public static void Open<T>(ATreeItem treeItem) where T : ANodeSettingWindow
         {
             var window = GetWindow<T>();
@@ -46,6 +52,8 @@ namespace Editor.AbilityEditor
             //应用按钮
             if (SirenixEditorGUI.Button("保存修改", ButtonSizes.Medium))
             {
+                if(DisableCloseButton)
+                    return;
                 SaveDataToEditorNode();
                 Close();
             }

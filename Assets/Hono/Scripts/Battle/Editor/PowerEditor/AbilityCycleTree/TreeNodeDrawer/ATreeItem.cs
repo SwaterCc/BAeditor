@@ -82,6 +82,7 @@ namespace Editor.AbilityEditor
             addMenu("添加节点/Timer",       ERightClickOperationType.AddTimerChild,       new TimerNodeData());
             addMenu("添加节点/Repeat",      ERightClickOperationType.AddRepeatChild,      new RepeatNodeData());
             addMenu("添加节点/Attr",        ERightClickOperationType.AddAttrChild,        new AttrModifyNodeData());
+            addMenu("添加节点/Variable",    ERightClickOperationType.AddVariableChild,    new VariableNodeData());
             addMenu("添加节点/GroupSwitch", ERightClickOperationType.AddGroupSwitchChild, new GroupSwitchNodeData());
             //基础操作
             addMenu("复制",   ERightClickOperationType.Copy,       null);
@@ -101,7 +102,7 @@ namespace Editor.AbilityEditor
                 AddChild(child);
                 child.OnTreeBuild();
             }
-            
+
             //Tree.SetExpanded(id, !children.IsNullOrEmpty());
         }
 

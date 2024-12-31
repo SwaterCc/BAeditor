@@ -36,6 +36,38 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
         }
 
         /// <summary>
+        /// 绘制带颜色的Label
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="fontColor"></param>
+        /// <param name="style"></param>
+        public static void DrawColorLabel(string label, Color fontColor, GUIStyle style = null)
+        {
+            DrawColorLabel(new GUIContent(label), fontColor, style);
+        }
+        
+        /// <summary>
+        /// 绘制带颜色的Label
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="fontColor"></param>
+        /// <param name="style"></param>
+        public static void DrawColorLabel(GUIContent content, Color fontColor, GUIStyle style = null)
+        {
+            var oldColor = GUI.contentColor;
+            GUI.contentColor = fontColor;
+            if (style == null)
+            {
+                EditorGUILayout.LabelField(content);
+            }
+            else
+            {
+                EditorGUILayout.LabelField(content,style);
+            }
+            GUI.contentColor = oldColor;
+        }
+
+        /// <summary>
         /// 绘制简单字段，支持类型string，int，bool，float，enum
         /// </summary>
         /// <param name="field"></param>

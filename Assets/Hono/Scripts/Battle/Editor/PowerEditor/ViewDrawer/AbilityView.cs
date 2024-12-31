@@ -61,6 +61,10 @@ namespace Editor.AbilityEditor
 
         private List<AbilityCycleDrawer> _cycleDrawers;
 
+        /// <summary>
+        /// 变量黑板
+        /// </summary>
+        public static AEditorVariableBoard VariableBoard = new();
 
         protected override void onInit()
         {
@@ -71,6 +75,8 @@ namespace Editor.AbilityEditor
                 new(this, EAbilityCycle.Executing) { Label = "执行" },
                 new(this, EAbilityCycle.EndExecute) { Label = "结束" },
             };
+            
+            VariableBoard.SetAbilityData(Data);
         }
 
         public override void Draw()

@@ -23,7 +23,6 @@ namespace Editor.BattleEditor.AbilityEditor
             public string FuncReturnDesc;
             public bool ShowInEditorView;
             public Type ReturnType;
-            public Type RealReturnType;
             public List<ParamInfo> ParamInfos = new();
         }
 
@@ -35,7 +34,6 @@ namespace Editor.BattleEditor.AbilityEditor
             public string ParamName;
             public string ParamDesc;
             public Type ParamType;
-            public Type RealParamType;
         }
 
         /// <summary>
@@ -133,35 +131,23 @@ namespace Editor.BattleEditor.AbilityEditor
                 FuncName = method.Name,
                 FuncDesc = desc?.FunctionDesc,
                 FuncReturnDesc = desc?.FunctionReturnDesc,
-                RealReturnType = method.ReturnType,
+                ReturnType = method.ReturnType,
                 ShowInEditorView = attr.ShowInEditorView,
             };
 
             if ( string.IsNullOrEmpty(info.FuncReturnDesc))
             {
-                info.FuncReturnDesc = method.ReturnType == typeof(void) ? "无返回值" : info.RealReturnType.ToString().Split(".")[^1];
+                info.FuncReturnDesc = method.ReturnType == typeof(void) ? "无返回值" : info.ReturnType.ToString().Split(".")[^1];
             }
-
-            if (!ARef.TryGetRefType(method.ReturnType, out var returnRefType))
-            {
-                Debug.LogError($"func {info.FuncName} returnType {method.ReturnType} 是值类型但是没有对应的ARef包装");
-            }
-
-            info.ReturnType = returnRefType;
 
             for (var index = 0; index < method.GetParameters().Length; index++)
             {
                 ParameterInfo parameter = method.GetParameters()[index];
-
-                if (!ARef.TryGetRefType(parameter.ParameterType, out var paramType))
-                {
-                    Debug.LogError($"func {info.FuncName} param {parameter.Name} 是值类型但是没有对应的ARef包装");
-                }
+                
 
                 var paramInfo = new ParamInfo()
                 {
-                    ParamType = paramType,
-                    RealParamType = parameter.ParameterType,
+                    ParamType = parameter.ParameterType,
                     ParamName = parameter.Name,
                 };
 
