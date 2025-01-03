@@ -1,0 +1,20 @@
+﻿using System.Collections.Generic;
+using Hono.Scripts.Battle.Base;
+
+namespace Hono.Scripts.Battle
+{
+    //@Auto
+    public class AFuncWrap_%functionName : Ability.AFunctionWrap, Ability.%returnValueInterface
+    {
+        public %returnType CallFunc(Ability caller, List<AParams> @params)
+        {
+            
+            %paramParse
+                
+            ARunningTime.UpdateContext(caller);
+            var value = AbilityFunctionDefine.%functionName(%paramList);
+            ARunningTime.UpdateContext(null);
+            return value;
+        }
+    }
+}

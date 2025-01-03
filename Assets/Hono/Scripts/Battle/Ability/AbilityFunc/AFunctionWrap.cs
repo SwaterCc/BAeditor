@@ -38,18 +38,5 @@ namespace Hono.Scripts.Battle
         {
             public void CallFunc(Ability caller, List<AParams> @params);
         }
-
-
-        //@Auto
-        public class AFuncWrap_GetBuffLayer : AFunctionWrap, IReturnInt
-        {
-            public int CallFunc(Ability caller, List<AParams> @params)
-            {
-                RefInt param0 = AParamParser.ParseInt(caller, @params[0]);
-                RefInt param1 = AParamParser.ParseInt(caller, @params[1]);
-                var value = AbilityFunctionDefine.GetBuffLayer(param0, param1);
-                return value;
-            }
-        }
     }
 }

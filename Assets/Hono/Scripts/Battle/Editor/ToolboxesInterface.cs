@@ -16,5 +16,11 @@ namespace Hono.Scripts.Battle
             window.position = GUIHelper.GetEditorWindowRect().AlignCenter(1600, 900);
             window.titleContent = new GUIContent("MORE 帕瓦！！");
         }
+
+        
+        private static void MakeAbilityFunctionWrap()
+        {
+            
+        }
     }
 }
