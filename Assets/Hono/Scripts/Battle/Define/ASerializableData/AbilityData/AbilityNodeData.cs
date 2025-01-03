@@ -10,15 +10,15 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public abstract class AbilityNodeData
     {
-        public int NodeId;
+        public int nodeIndex;
+        
+        public int parentIndex;
 
-        public int ParentId;
-
-        public int BelongGroupId = -1;
-
-        public List<int> ChildrenIds = new();
-
-        public string Desc = "";
+        public int belongGroupId = -1;
+        
+        public List<int> childrenIndexes = new();
+        
+        public string desc = "";
 
         //TODO:调试相关数据后续将其拆分为编辑器独立数据中
         /// <summary>
@@ -32,7 +32,30 @@ namespace Hono.Scripts.Battle
 
         public abstract AbilityNodeData DeepCopy();
     }
+    
+    [Serializable]
+    public class CycleNodeData : AbilityNodeData
+    {
+        public EAbilityCycle cycleType;
+        
+        public List<AbilityNodeData> SerializableNodeList = new();
 
+        public CycleNodeData() { }
+
+        public CycleNodeData(EAbilityCycle cycle)
+        {
+            cycleType = cycle;
+        }
+
+        public override AbilityNodeData DeepCopy()
+        {
+            var copy = new CycleNodeData();
+            copy.cycleType = cycleType;
+            copy.SerializableNodeList = SerializableNodeList;
+            return copy;
+        }
+    }
+    
     [Serializable]
     public class ActionNodeData : AbilityNodeData
     {
@@ -70,30 +93,7 @@ namespace Hono.Scripts.Battle
             return copy;
         }
     }
-
-
-    [Serializable]
-    public class CycleNodeData : AbilityNodeData
-    {
-        public EAbilityCycle cycleNodeData;
-
-        public CycleNodeData() { }
-
-        public CycleNodeData(EAbilityCycle cycle)
-        {
-            cycleNodeData = cycle;
-        }
-
-        public override AbilityNodeData DeepCopy()
-        {
-            var copy = new CycleNodeData
-            {
-                cycleNodeData = cycleNodeData
-            };
-            return copy;
-        }
-    }
-
+    
     [Serializable]
     public class BranchGroupNodeData : AbilityNodeData
     {

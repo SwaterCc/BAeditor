@@ -66,6 +66,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public bool CriticalFlag;
         
+        [LabelText("Aoe二次筛选配置")]
         [ShowIf("HitType", EHitType.Aoe)]
         public RangeFilterSetting rangeFilterSetting = new();
     }

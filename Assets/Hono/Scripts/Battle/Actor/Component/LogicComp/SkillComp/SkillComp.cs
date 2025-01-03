@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// 技能使用事件回调
             /// </summary>
-            private readonly UseSkillChecker _eventChecker;
+            private UseSkillChecker _eventChecker;
 
             /// <summary>
             /// 当前运行的技能
@@ -30,11 +30,11 @@ namespace Hono.Scripts.Battle
             public SkillComp(ActorLogic logic) : base(logic)
             {
                 Skills = new Dictionary<int, Skill>(6);
-                _eventChecker = new UseSkillChecker(EBattleEventType.UseSkill, ActorLogic.Self, -1, UseSkillByEvent);
             }
 
             public override void Init()
             {
+                _eventChecker = new UseSkillChecker(EBattleEventType.UseSkill, ActorLogic.Self, -1, UseSkillByEvent);
                 _eventChecker.Register();
                 AssetManager.Instance.AddReloadHandle(this);
             }

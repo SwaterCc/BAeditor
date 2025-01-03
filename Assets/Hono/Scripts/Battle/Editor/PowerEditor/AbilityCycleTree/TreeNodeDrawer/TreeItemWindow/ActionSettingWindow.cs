@@ -50,7 +50,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
             base.SaveDataToEditorNode();
             if (!TempData.isCreateVariable)
             {
-                AbilityView.VariableBoard.RefreshAllVariable();
+                AEditorVariableBoard.CycleVariableRefresh(TreeItem.Node.Root);
             }
         }
     }

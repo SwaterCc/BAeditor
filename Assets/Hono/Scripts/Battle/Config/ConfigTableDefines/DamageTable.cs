@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
         {
             try
             {
-                using (StringReader reader = new StringReader(csvFile))
+                using (StringReader  reader = new StringReader (csvFile))
                 {
                     int lineCount = 0;
                     while (reader.ReadLine() is { } line)
@@ -22,7 +22,6 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
-
                         var row = Activator.CreateInstance<DamageRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
@@ -66,61 +65,62 @@ namespace Hono.Scripts.Battle
             return _tableData.TryGetValue(id, out data);
         }
 
-        public Dictionary<int, DamageRow> GetTable()
-        {
-            return _tableData;
-        }
+         public Dictionary<int, DamageRow> GetTable()
+         {
+             return _tableData;
+         }
     }
 
     public partial class DamageTable
     {
         public class DamageRow : TableRow
         {
+           
             /// <summary>
             /// 策划描述
             /// </summary>
             public string Desc { get; private set; }
-
+            
             /// <summary>
             /// 伤害计算公式
             /// </summary>
             public string FormulaName { get; private set; }
-
+            
             /// <summary>
             /// 伤害倍率万分比
             /// </summary>
             public int DamageRatio { get; private set; }
-
+            
             /// <summary>
             /// 伤害类型(普通伤害，百分比伤害，Dot，治疗)
             /// </summary>
             public int DamageType { get; private set; }
-
+            
             /// <summary>
             /// 元素类型（物理，法术）
             /// </summary>
             public int ElementType { get; private set; }
-
+            
             /// <summary>
             /// 冲击力
             /// </summary>
             public int ImpactValue { get; private set; }
-
+            
             /// <summary>
             /// 加值表配置
             /// </summary>
             public IntArray AdditiveId { get; private set; }
-
+            
             /// <summary>
             /// 乘值表配置
             /// </summary>
             public IntArray MultiplyId { get; private set; }
-
+            
             /// <summary>
             /// 受击特效路径
             /// </summary>
             public string BeHitVFXPath { get; private set; }
-
+            
 
             public DamageRow()
             {
@@ -138,23 +138,25 @@ namespace Hono.Scripts.Battle
 
                 protected override void onParse(string[] line)
                 {
+                    
                     _row.Desc = parseString(line[1]);
-
+            
                     _row.FormulaName = parseString(line[2]);
-
+            
                     _row.DamageRatio = parseInt(line[3]);
-
+            
                     _row.DamageType = parseInt(line[4]);
-
+            
                     _row.ElementType = parseInt(line[5]);
-
+            
                     _row.ImpactValue = parseInt(line[6]);
-
+            
                     _row.AdditiveId = parseIntArray(line[7]);
-
+            
                     _row.MultiplyId = parseIntArray(line[8]);
-
+            
                     _row.BeHitVFXPath = parseString(line[9]);
+            
                 }
             }
         }

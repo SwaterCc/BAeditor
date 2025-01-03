@@ -51,18 +51,17 @@ namespace Hono.Scripts.Battle
             /// 构建树，递归补全子节点
             /// </summary>
             /// <param name="parent"></param>
-            public void Build(in ANode parent)
+            /// <param name="nodeDatas"></param>
+            public void Build(in ANode parent, in List<AbilityNodeData> nodeDatas)
             {
                 //设置父节点
                 Parent = parent;
                 //填充子节点
-                foreach (var nodeId in Data.ChildrenIds)
+                foreach (var nodeIdx in Data.childrenIndexes)
                 {
-                    var node = ACycles.GetNode(AContext, AContext.Data.NodeDict[nodeId]);
+                    var node = ACycles.GetNode(AContext, nodeDatas[nodeIdx]);
                     Children.Add(node);
-                    node.Build(this);
-
-                   
+                    node.Build(this, nodeDatas);
                 }
             }
 

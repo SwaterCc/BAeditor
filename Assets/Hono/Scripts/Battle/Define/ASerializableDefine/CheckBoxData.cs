@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using Hono.Scripts.Battle.Base;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -13,9 +14,9 @@ namespace Hono.Scripts.Battle
     {
         public ECheckBoxShapeType ShapeType;
 
-        public Vector3 Rot;
+        public RefVector3 Rot = new();
 
-        public Vector3 Offset;
+        public RefVector3 Offset = new();
 
         /// <summary>
         /// 矩形长轴（X）

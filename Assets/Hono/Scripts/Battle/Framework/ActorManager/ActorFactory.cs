@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private static class MajorActorFactory
         {
-            public static bool ActorSetup(ref Actor actor, in int configId, in ActorModel actorModel)
+            public static bool ActorSetup(ref Actor actor, in int configId, ActorModel actorModel)
             {
                 if (configId <= 0)
                 {

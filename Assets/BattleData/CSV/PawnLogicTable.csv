@@ -1,6 +1,7 @@
 ﻿Id,角色名字,描述,角色头像,职业ID,副职业ID,索敌半径,初始阵营,初始标签,模型表Id,初始化属性模板Id,拥有技能,拥有Buff,拥有的其他Ability,不吃位移控制
 Id,Name,Desc,RPGIcon,ActorClassId,ActorSubClassId,SearchRadiu,Faction,TagList,ModelId,AttrTemplateId,OwnerSkills,OwnerBuffs,ownerOtherAbility,IgnoreOtherMotion
 int,string,string,string,int,int,float,int,intArray,int,int,intTable,intArray,intTable,int
+1,测试单位,,Character/Avatar/avatar_holo_head,201,,2.5,1,,1,1,,,,
 1001,守卫,护盾型坦克，推荐手操<br>特性：【冲锋】【护盾】【大招聚怪】,Character/Avatar/avatar_robotgirl_head,201,,2.5,1,,1001,2,201003=1|201001=1|201002=1|201004=1|1001001=1,201200,,
 1002,野蛮人,近战物理输出<br>特性：【减物抗】【减治疗】【大招眩晕】,Character/Avatar/avatar_vampire_head,202,,3,1,,1002,4,202003=1|202001=1|202002=1|202004=1|1002001=1,202200,,
 1003,火法,远程法系输出<br>特性：【爆发】【减法抗】,Character/Avatar/avatar_ram_head,203,,20,1,,1003,1,203003=1|203001=1|203002=1|203004=1|1003001=1,203200,,

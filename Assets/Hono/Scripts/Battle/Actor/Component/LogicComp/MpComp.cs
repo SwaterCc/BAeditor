@@ -11,24 +11,23 @@ namespace Hono.Scripts.Battle
     {
         public class MpComp : AComponent
         {
-            private readonly UseSkillChecker _useSkillChecker;
-            private readonly HitEventChecker _hitEventChecker;
-            private readonly HitEventChecker _beHitEventChecker;
+            private UseSkillChecker _useSkillChecker;
+            private HitEventChecker _hitEventChecker;
+            private HitEventChecker _beHitEventChecker;
 
             private const int MpRecCastBase = 180;
             private const int MpRecBehit = 1000;
             private const int MpRecKilled = 400;
 
-            public MpComp(ActorLogic logic) : base(logic)
-            {
-                _useSkillChecker =
-                    new UseSkillChecker(EBattleEventType.OnSkillUseSuccess, Self, -1, AttackChangeMp);
-                _hitEventChecker = new HitEventChecker(EBattleEventType.OnHit, Self, -1, -1, KillChangeMp);
-                _beHitEventChecker = new HitEventChecker(EBattleEventType.OnBeHit, Self, -1, -1, BeHitChangeMp);
-            }
+            public MpComp(ActorLogic logic) : base(logic) { }
 
             public override void Init()
             {
+                _useSkillChecker =
+                    new UseSkillChecker(EBattleEventType.OnSkillUseSuccess, Self, -1, AttackChangeMp);
+                _hitEventChecker = new HitEventChecker(EBattleEventType.OnHit,     Self, -1, -1, KillChangeMp);
+                _beHitEventChecker = new HitEventChecker(EBattleEventType.OnBeHit, Self, -1, -1, BeHitChangeMp);
+
                 _useSkillChecker.Register();
                 _beHitEventChecker.Register();
                 _hitEventChecker.Register();

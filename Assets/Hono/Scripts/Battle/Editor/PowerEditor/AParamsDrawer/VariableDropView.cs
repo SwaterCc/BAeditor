@@ -10,14 +10,12 @@ namespace Editor.AbilityEditor
     public class VariableDropViewItem : AdvancedDropdownItem
     {
         public string VarKey;
-        public string VarTypeStr;
         public Type VarType;
-        
+
         public VariableDropViewItem(string key, Type varType, string name) : base(name)
         {
             VarKey = key;
             VarType = varType;
-            VarTypeStr = VarType?.ToString().Split(".")[^1];
         }
     }
 
@@ -26,8 +24,12 @@ namespace Editor.AbilityEditor
         private Type _filter;
         private bool _onlyCustom;
         private ATreeItem _treeItem;
-        private Action<string> _onItemSelect; 
-        public VariableDropView(ATreeItem treeItem, Action<string> onItemSelect, Type filter = null, bool onlyCustom = false) : base(
+        private Action<string, Type> _onItemSelect;
+
+        public VariableDropView(ATreeItem treeItem,
+            Action<string, Type> onItemSelect,
+            Type filter = null,
+            bool onlyCustom = false) : base(
             new AdvancedDropdownState())
         {
             _treeItem = treeItem;
@@ -36,24 +38,23 @@ namespace Editor.AbilityEditor
             _onItemSelect = onItemSelect;
         }
 
+        private bool filterCheck(Type type)
+        {
+            if (_filter == null)
+                return true;
+            return _filter == type;
+        }
+
         protected override AdvancedDropdownItem BuildRoot()
         {
             var root = new AdvancedDropdownItem("变量列表");
 
-            if (_filter == null)
+            var list = AEditorVariableBoard.GetVariables(_treeItem.Node.Root.Cycle);
+            foreach (var pVar in list)
             {
-                var dict = AbilityView.VariableBoard.KeySearch;
-                foreach (var info in dict)
+                if (filterCheck(pVar.Value))
                 {
-                    root.AddChild(new VariableDropViewItem(info.Key, info.Value, info.Key + $"({info.Value})"));
-                }
-            }
-            else
-            {
-                var list = AbilityView.VariableBoard.GetVariables(_filter);
-                foreach (var varKey in list)
-                {
-                    root.AddChild(new VariableDropViewItem(varKey, _filter, varKey + $"({_filter})"));
+                    root.AddChild(new VariableDropViewItem(pVar.Key, pVar.Value, pVar.Key + $"({_filter})"));
                 }
             }
 
@@ -73,15 +74,9 @@ namespace Editor.AbilityEditor
                             eventEditorInfo.EventInfoType.GetFields(BindingFlags.Public | BindingFlags.Instance);
                         foreach (var fieldInfo in fields)
                         {
-                            if (_filter == null)
+                            if (filterCheck(fieldInfo.FieldType))
                             {
                                 root.AddChild(new VariableDropViewItem(fieldInfo.Name, fieldInfo.FieldType,
-                                                                       "Event:" + fieldInfo.Name +
-                                                                       $"({fieldInfo.FieldType})"));
-                            }
-                            else if (fieldInfo.FieldType == _filter)
-                            {
-                                root.AddChild(new VariableDropViewItem(fieldInfo.Name, _filter,
                                                                        "Event:" + fieldInfo.Name +
                                                                        $"({fieldInfo.FieldType})"));
                             }
@@ -103,7 +98,10 @@ namespace Editor.AbilityEditor
 
         protected override void ItemSelected(AdvancedDropdownItem item)
         {
-            _onItemSelect.Invoke(((VariableDropViewItem)item).VarKey);
+            if (item is VariableDropViewItem variableDropViewItem)
+            {
+                _onItemSelect.Invoke(variableDropViewItem.VarKey, variableDropViewItem.VarType);
+            }
         }
     }
 }

@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public partial class DamageMultiplyTable : ITableHelper
+    public partial class SkillLevelTable : ITableHelper
     {
-        private readonly Dictionary<int, DamageMultiplyRow> _tableData = new();
+        private readonly Dictionary<int, SkillLevelRow> _tableData = new();
 
         public bool LoadCSV(string csvFile)
         {
@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
-                        var row = Activator.CreateInstance<DamageMultiplyRow>();
+                        var row = Activator.CreateInstance<SkillLevelRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
                     }
@@ -47,73 +47,83 @@ namespace Hono.Scripts.Battle
             return null;
         }
 
-        private void addRow(int id, DamageMultiplyRow row)
+        private void addRow(int id, SkillLevelRow row)
         {
             if (!_tableData.TryAdd(id, row))
             {
-                Debug.LogError($"{typeof(DamageMultiplyRow)} TryAdd {id} id重复");
+                Debug.LogError($"{typeof(SkillLevelRow)} TryAdd {id} id重复");
             }
         }
 
-        public DamageMultiplyRow Get(int id)
+        public SkillLevelRow Get(int id)
         {
             return _tableData[id];
         }
 
-        public bool TryGet(int id, out DamageMultiplyRow data)
+        public bool TryGet(int id, out SkillLevelRow data)
         {
             return _tableData.TryGetValue(id, out data);
         }
 
-         public Dictionary<int, DamageMultiplyRow> GetTable()
+         public Dictionary<int, SkillLevelRow> GetTable()
          {
              return _tableData;
          }
     }
 
-    public partial class DamageMultiplyTable
+    public partial class SkillLevelTable
     {
-        public class DamageMultiplyRow : TableRow
+        public class SkillLevelRow : TableRow
         {
            
             /// <summary>
-            /// 备注
+            /// 描述
             /// </summary>
             public string Desc { get; private set; }
             
             /// <summary>
-            /// Apply增伤数值万分比
+            /// Cd成长值
             /// </summary>
-            public IntArray DamageValue { get; private set; }
+            public float CdGrowth { get; private set; }
             
             /// <summary>
-            /// Apply数值的方法，可以在lua中自定义计算方法，通常保持默认即可
+            /// 技能可释放区域半径成长值
             /// </summary>
-            public string ApplyFuncName { get; private set; }
+            public float RangeGrowth { get; private set; }
             
             /// <summary>
-            /// 增伤条件ID列表
+            /// 最大命中数量成长
             /// </summary>
-            public IntArray ConditionIds { get; private set; }
+            public int HitCeilingGrowth { get; private set; }
             
             /// <summary>
-            /// 增伤条件参数表
+            /// 矩形筛选范围成长值
             /// </summary>
-            public IntTable ConditionParams { get; private set; }
+            public NumberArray RectGrowth { get; private set; }
+            
+            /// <summary>
+            /// 圆形筛选半径成长值
+            /// </summary>
+            public float RadiusGrowth { get; private set; }
+            
+            /// <summary>
+            /// 自定义参数
+            /// </summary>
+            public IntArray SkillParams { get; private set; }
             
 
-            public DamageMultiplyRow()
+            public SkillLevelRow()
             {
-                Parser = new DamageMultiplyRowCSVParser(this);
+                Parser = new SkillLevelRowCSVParser(this);
             }
 
-            private class DamageMultiplyRowCSVParser : CSVParser
+            private class SkillLevelRowCSVParser : CSVParser
             {
-                private DamageMultiplyRow _row;
+                private SkillLevelRow _row;
 
-                public DamageMultiplyRowCSVParser(DamageMultiplyRow row) : base(row)
+                public SkillLevelRowCSVParser(SkillLevelRow row) : base(row)
                 {
-                    _row = (DamageMultiplyRow)base._row;
+                    _row = (SkillLevelRow)base._row;
                 }
 
                 protected override void onParse(string[] line)
@@ -121,13 +131,17 @@ namespace Hono.Scripts.Battle
                     
                     _row.Desc = parseString(line[1]);
             
-                    _row.DamageValue = parseIntArray(line[2]);
+                    _row.CdGrowth = parseNumber(line[2]);
             
-                    _row.ApplyFuncName = parseString(line[3]);
+                    _row.RangeGrowth = parseNumber(line[3]);
             
-                    _row.ConditionIds = parseIntArray(line[4]);
+                    _row.HitCeilingGrowth = parseInt(line[4]);
             
-                    _row.ConditionParams = parseIntTable(line[5]);
+                    _row.RectGrowth = parseNumberArray(line[5]);
+            
+                    _row.RadiusGrowth = parseNumber(line[6]);
+            
+                    _row.SkillParams = parseIntArray(line[7]);
             
                 }
             }

@@ -55,7 +55,10 @@ namespace Editor.AbilityEditor
             _label = label;
 
             _originType = _castType = ARef.ParseValueTypeToARefType(type);
-
+            if (_params.paramType == EParamType.Simple)
+            {
+                _params.Value ??= AParamsFieldConfig.GetDefaultValue(_castType);
+            }
             _paramTypeMenu = new GenericMenu();
         }
 
@@ -94,7 +97,11 @@ namespace Editor.AbilityEditor
             if (GUILayout.Button("▼", GUILayout.Width(22)))
             {
                 _paramTypeMenu.AddItem(new GUIContent("直接输入"), false,
-                                       () => { _params.paramType = EParamType.Simple; });
+                                       () =>
+                                       {
+                                           _params.paramType = EParamType.Simple;
+                                           _params.Value = AParamsFieldConfig.GetDefaultValue(_castType);
+                                       });
                 _paramTypeMenu.AddItem(new GUIContent("调用函数"), false,
                                        () => { _params.paramType = EParamType.Function; });
                 _paramTypeMenu.AddItem(new GUIContent("黑板变量"), false,
@@ -141,16 +148,6 @@ namespace Editor.AbilityEditor
 
         private void baseDraw()
         {
-            try
-            {
-                _params.Value ??= Activator.CreateInstance(_castType);
-            }
-            catch (Exception)
-            {
-                Debug.LogError($"{_castType} 该类型没有默认构造函数，无法创建默认对象");
-                return;
-            }
-
             if (_castType.BaseType == typeof(ARef))
             {
                 //继承自ARef，自行补充
@@ -170,11 +167,15 @@ namespace Editor.AbilityEditor
                         break;
                 }
             }
+            else if (_castType == typeof(string))
+            {
+                _params.Value = SirenixEditorFields.TextField((string)_params.Value);
+            }
             else if (_castType.IsEnum)
             {
                 _params.Value = SirenixEditorFields.EnumDropdown((Enum)_params.Value);
             }
-            else if (_castType.IsSerializable)
+            else if (_castType.IsSerializable && _castType != typeof(object))
             {
                 if ((SirenixEditorGUI.Button("编辑 " + _castType.Name, ButtonSizes.Medium)))
                 {
@@ -227,11 +228,12 @@ namespace Editor.AbilityEditor
         {
             if (SirenixEditorGUI.Button("黑板变量 : " + _params.variableName, ButtonSizes.Medium))
             {
-                var dropdown = new VariableDropView(_treeItem, onVariableSelect,ARef.ParseARefTypeToValueType(_castType) );
+                var dropdown =
+                    new VariableDropView(_treeItem, onVariableSelect, ARef.ParseARefTypeToValueType(_castType));
                 dropdown.Show(GUILayoutUtility.GetRect(300, 300, 100, 400));
             }
 
-            void onVariableSelect(string key)
+            void onVariableSelect(string key, Type type)
             {
                 _params.variableName = key;
             }

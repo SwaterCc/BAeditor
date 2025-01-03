@@ -10,7 +10,7 @@ using UnityEngine.Profiling;
 
 namespace Hono.Scripts.Battle
 {
-    public partial class ActorManager : Singleton<ActorManager>
+    public partial class ActorManager : Singleton<ActorManager>,IBattleFrameworkTick
     {
         /// <summary>
         /// 正在运行的actor列表
@@ -92,7 +92,6 @@ namespace Hono.Scripts.Battle
 
         /// <summary>
         /// </summary>
-        /// <param name="uid"></param>
         /// <param name="type"></param>
         /// <param name="configId"></param>
         /// <param name="callback"></param>
@@ -116,7 +115,7 @@ namespace Hono.Scripts.Battle
                 case EActorType.Monster:
                 case EActorType.Building:
                     uid = needGenerateUid ? ActorUidGenerator.GenerateUid(EActorUidRangeType.NormalActor) : uid;
-                    actor.Init(uid, actor.ActorType);
+                    actor.Init(uid, type);
                     res = MajorActorFactory.ActorSetup(ref actor, configId, actorModel);
                     break;
                 case EActorType.Bullet:
@@ -160,7 +159,7 @@ namespace Hono.Scripts.Battle
         /// <param name="actor"></param>
         private void addToScene(in Actor actor)
         {
-            if (!_uidActorDict.ContainsKey(actor.Uid))
+            if (_uidActorDict.ContainsKey(actor.Uid))
             {
                 Debug.LogError("uid 重复");
                 return;
@@ -176,9 +175,9 @@ namespace Hono.Scripts.Battle
             Profiler.BeginSample("AllActorTick");
 
             int i = 0;
-            while (i++ < _runningActorList.Count)
+            while (i < _runningActorList.Count)
             {
-                _runningActorList[i].Tick(dt);
+                _runningActorList[i++].Tick(dt);
             }
 
             if (_removeList.Count != 0)

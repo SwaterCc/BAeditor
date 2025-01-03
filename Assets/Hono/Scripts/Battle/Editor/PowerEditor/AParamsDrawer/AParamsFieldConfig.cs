@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
 using UnityEditor;
+using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
@@ -15,6 +16,7 @@ namespace Editor.AbilityEditor
         {
             { typeof(RefFloat), new() { typeof(RefInt) } },
             { typeof(RefInt), new() { typeof(RefFloat) } },
+            { typeof(object), new() { typeof(RefInt), typeof(RefFloat), typeof(RefBoolean), typeof(RefVector3) } },
         };
 
         /// <summary>
@@ -22,5 +24,33 @@ namespace Editor.AbilityEditor
         /// </summary>
         public static readonly Dictionary<Type, EditorWindow> SerializeWindow = new()
             { };
+        
+        public static object GetDefaultValue(Type type)
+        {
+            object value;
+            try
+            {
+                if (type == typeof(object))
+                {
+                    return null;
+                }
+                
+                if (type == typeof(string))
+                {
+                    value = "";
+                }
+                else
+                {
+                    value = Activator.CreateInstance(type);
+                }
+            }
+            catch (Exception)
+            {
+                value = null;
+                Debug.LogError($"{type} 该类型没有默认构造函数，无法创建默认对象");
+            }
+
+            return value;
+        }
     }
 }

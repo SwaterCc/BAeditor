@@ -37,9 +37,12 @@ namespace Editor.AbilityEditor
 
         protected virtual void onInit() { }
 
+        protected virtual void onSave(){}
+        
         public override void Save()
         {
             if (HasError) return;
+            onSave();
             EditorUtility.SetDirty(_serializableData);
             AssetDatabase.SaveAssets();
         }

@@ -36,7 +36,7 @@ namespace Editor.AbilityEditor.TreeItem
         protected override string getButtonText()
         {
             string desc = "";
-            switch (Data.cycleNodeData)
+            switch (Data.cycleType)
             {
                 case EAbilityCycle.Init:
                     desc = "Init(初始化阶段)";

@@ -61,11 +61,6 @@ namespace Editor.AbilityEditor
 
         private List<AbilityCycleDrawer> _cycleDrawers;
 
-        /// <summary>
-        /// 变量黑板
-        /// </summary>
-        public static AEditorVariableBoard VariableBoard = new();
-
         protected override void onInit()
         {
             _cycleDrawers = new List<AbilityCycleDrawer>
@@ -76,7 +71,8 @@ namespace Editor.AbilityEditor
                 new(this, EAbilityCycle.EndExecute) { Label = "结束" },
             };
             
-            VariableBoard.SetAbilityData(Data);
+            //重置变量容器
+            AEditorVariableBoard.Clear();
         }
 
         public override void Draw()
@@ -92,6 +88,17 @@ namespace Editor.AbilityEditor
             {
                 cycleDrawer.DrawCycleTree();
                 EditorGUILayout.Space(10);
+            }
+        }
+
+        protected override void onSave()
+        {
+            foreach (EAbilityCycle cycle in Enum.GetValues(typeof(EAbilityCycle)))
+            {
+                if (AbilityEditorUtility.TryGetExistATreeHead(Data, cycle, out var cycleHead))
+                {
+                    cycleHead.SerializeCycleTree();
+                }
             }
         }
     }

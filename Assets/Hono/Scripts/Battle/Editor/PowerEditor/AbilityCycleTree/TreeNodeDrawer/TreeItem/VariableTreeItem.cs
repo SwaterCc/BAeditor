@@ -37,16 +37,34 @@ namespace Editor.AbilityEditor.TreeItem
             {
                 return false;
             }
-
+ 
             return true;
         }
 
         protected override string getButtonText()
         {
-            string operation = Data.isModify ? "修改" : "创建";
-
-          
-            return operation + Data.key + " = ";
+            string operation1 = Data.isModify ? "修改 " : "创建 ";
+            string operation2 = " = ";
+            if (Data.isModify)
+            {
+                switch (Data.operationType)
+                {
+                    case EVariableOperationType.Reset:
+                        operation2 = " = ";
+                        break;
+                    case EVariableOperationType.Add:
+                        operation2 = $" = {Data.key} + ";
+                        break;
+                    case EVariableOperationType.Sub:
+                        operation2 =$" = {Data.key} * ";
+                        break;
+                    case EVariableOperationType.Reverse:
+                        operation2 =" bool取反 ";
+                        break;
+                }
+            }
+            
+            return operation1 + Data.key + operation2 + Data.value;
         }
         
         protected override void OnBtnClicked(Rect btnRect)

@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle
         {
             try
             {
-                using (StringReader reader = new StringReader(csvFile))
+                using (StringReader  reader = new StringReader (csvFile))
                 {
                     int lineCount = 0;
                     while (reader.ReadLine() is { } line)
@@ -22,7 +22,6 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
-
                         var row = Activator.CreateInstance<MonsterGenerateTmpRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
@@ -66,71 +65,72 @@ namespace Hono.Scripts.Battle
             return _tableData.TryGetValue(id, out data);
         }
 
-        public Dictionary<int, MonsterGenerateTmpRow> GetTable()
-        {
-            return _tableData;
-        }
+         public Dictionary<int, MonsterGenerateTmpRow> GetTable()
+         {
+             return _tableData;
+         }
     }
 
     public partial class MonsterGenerateTmpTable
     {
         public class MonsterGenerateTmpRow : TableRow
         {
+           
             /// <summary>
             /// ����
             /// </summary>
             public string Desc { get; private set; }
-
+            
             /// <summary>
             /// ������Ϊ��0=ԭ�ز�����1����Ѱ�ҵ�ǰ�ٿصĶ��飩
             /// </summary>
             public int MonsterBehave { get; private set; }
-
+            
             /// <summary>
             /// �ӳ�ʱ��
             /// </summary>
             public float DelayTime { get; private set; }
-
+            
             /// <summary>
             /// �������
             /// </summary>
             public float Interval { get; private set; }
-
+            
             /// <summary>
             /// ���δ����������
             /// </summary>
             public int MaxCreationOnce { get; private set; }
-
+            
             /// <summary>
             /// �����б����˳��ˢ��
             /// </summary>
             public IntTable MonsterInfos { get; private set; }
-
+            
             /// <summary>
             /// ����ʱ��ӵ�buff
             /// </summary>
             public IntTable ExBuffs { get; private set; }
-
+            
             /// <summary>
             /// ����ļ���
             /// </summary>
             public IntTable ExSkills { get; private set; }
-
+            
             /// <summary>
             /// ��Ӫ����
             /// </summary>
             public int FactionId { get; private set; }
-
+            
             /// <summary>
             /// �ȼ�����
             /// </summary>
             public int LevelOverride { get; private set; }
-
+            
             /// <summary>
             /// ����Tag
             /// </summary>
             public IntArray ExTags { get; private set; }
-
+            
 
             public MonsterGenerateTmpRow()
             {
@@ -148,27 +148,29 @@ namespace Hono.Scripts.Battle
 
                 protected override void onParse(string[] line)
                 {
+                    
                     _row.Desc = parseString(line[1]);
-
+            
                     _row.MonsterBehave = parseInt(line[2]);
-
+            
                     _row.DelayTime = parseNumber(line[3]);
-
+            
                     _row.Interval = parseNumber(line[4]);
-
+            
                     _row.MaxCreationOnce = parseInt(line[5]);
-
+            
                     _row.MonsterInfos = parseIntTable(line[6]);
-
+            
                     _row.ExBuffs = parseIntTable(line[7]);
-
+            
                     _row.ExSkills = parseIntTable(line[8]);
-
+            
                     _row.FactionId = parseInt(line[9]);
-
+            
                     _row.LevelOverride = parseInt(line[10]);
-
+            
                     _row.ExTags = parseIntArray(line[11]);
+            
                 }
             }
         }

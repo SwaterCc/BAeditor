@@ -30,7 +30,6 @@ namespace Editor.AbilityEditor
         BaseOperation = 100,
 
         //额外拓展，动态添加，并不在基础操作中
-        GetResult = 200,
         JoinBranchGroup = 300,
     }
 

@@ -122,7 +122,7 @@ namespace Hono.Scripts.Battle
                 foreach (var pCycle in AContext.Data.HeadNodeDict)
                 {
                     var node = GetNode(AContext, pCycle.Value);
-                    node.Build(null);
+                    node.Build(null, pCycle.Value.SerializableNodeList);
                     _cycleHeads.Add(pCycle.Key, node);
                 }
 
@@ -258,13 +258,13 @@ namespace Hono.Scripts.Battle
             public void RegisterTick(ITickANode tickNode)
             {
                 ANode node = (ANode)tickNode;
-                if (node.Data.BelongGroupId == 0)
+                if (node.Data.belongGroupId == 0)
                 {
                     _ticks.Add(tickNode);
                 }
                 else
                 {
-                    if (CurGroup != null && CurGroup.Data.groupId == node.Data.BelongGroupId)
+                    if (CurGroup != null && CurGroup.Data.groupId == node.Data.belongGroupId)
                     {
                         CurGroup.AddTick(tickNode);
                     }

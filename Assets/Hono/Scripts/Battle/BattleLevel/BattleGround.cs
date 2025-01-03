@@ -13,9 +13,12 @@ namespace Hono.Scripts.Battle
         private EBattleStateType _currentStateType;
         private EBattleStateType _nextStateType;
         private BattleState _currentState;
+        
         private readonly string _battleGroundName;
         private readonly Dictionary<EBattleStateType, BattleState> _battleStates;
+        
         private BattleController _battleController;
+        
         private BattleLevelData _levelData;
         private readonly PawnTeamController _pawnTeamController;
         private readonly LootController _lootController;
@@ -58,15 +61,13 @@ namespace Hono.Scripts.Battle
             _currentState = _battleStates[_currentStateType];
         }
 
-        public void OnCreate() { }
-
         public void EnterGround()
         {
             switchState(EBattleStateType.LoadBattleGround);
             MonsterGeneratorLogic.CurMonsterCount = 0;
         }
 
-        public void OnDestroy()
+        public void ExitGround()
         {
             RtInfo.ClearAll();
             ActorManager.Instance.ClearAllActor();

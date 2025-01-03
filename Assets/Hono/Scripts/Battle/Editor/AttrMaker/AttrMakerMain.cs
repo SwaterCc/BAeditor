@@ -67,12 +67,12 @@ namespace Hono.Scripts.Battle
             string _attrEnumStr = "";
             string _attrCase = "";
             string _attrDictItem = "";
-            private string _genCShapePath = "Assets/Hono/Scripts/Battle/Attr";
+            private string _genCShapePath = "Assets/Hono/Scripts/Battle/Base/Attr";
 
             public AttrFileProcess()
             {
                 using (StreamReader reader =
-                       new StreamReader($"{AbilityAssetPath.EditorRootPath}/AttrMaker/AttrCreatorTemplate", Encoding.Default))
+                       new StreamReader("Assets/Hono/Scripts/Battle/Editor/AttrMaker/AttrCreatorTemplate", Encoding.Default))
                 {
                     _classTempStr = reader.ReadToEnd();
                 }
@@ -81,7 +81,7 @@ namespace Hono.Scripts.Battle
             public void Process()
             {
                 
-                using (StreamReader reader = new StreamReader($"{AbilityAssetPath.EditorRootPath}/AttrMaker/AttrMakerDefine",
+                using (StreamReader reader = new StreamReader("Assets/Hono/Scripts/Battle/Editor/AttrMaker/AttrMakerDefine",
                            Encoding.Default))
                 {
                     string line;

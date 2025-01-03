@@ -33,7 +33,7 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 根节点
         /// </summary>
-        public AEditorTreeHeadNode Root { get; protected set; }
+        public AEditorTreeHeadNode Root { get; protected set; } 
 
         /// <summary>
         /// 子节点数量
@@ -46,7 +46,7 @@ namespace Editor.AbilityEditor
         /// <param name="nodeData"></param>
         public AEditorTreeNode(AbilityNodeData nodeData)
         {
-            Data = nodeData.DeepCopy();
+            Data = nodeData;
         }
 
         /// <summary>
@@ -90,14 +90,14 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 构建树，头节点调用
         /// </summary>
-        /// <param name="abilityData"></param>
-        protected void OnBuild(AbilityData abilityData)
+        /// <param name="nodeDatas"></param>
+        protected void OnBuild(List<AbilityNodeData>  nodeDatas)
         {
-            foreach (var id in Data.ChildrenIds)
+            foreach (var index in Data.childrenIndexes)
             {
-                var child = new AEditorTreeNode(abilityData.NodeDict[id]);
+                var child = new AEditorTreeNode(nodeDatas[index]);
                 AddChild(child);
-                child.OnBuild(abilityData);
+                child.OnBuild(nodeDatas);
             }
         }
 
@@ -134,29 +134,6 @@ namespace Editor.AbilityEditor
             node.Parent = this;
             node.OnRootChange(Root);
             Children.Insert(idx, node);
-        }
-
-        /// <summary>
-        /// 将该节点与指定索引的节点交换位置
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="index"></param>
-        public void SwapChildIndex(AEditorTreeNode node, int index)
-        {
-            if (index >= Children.Count)
-            {
-                return;
-            }
-
-            var itemIdx = Children.IndexOf(node);
-            if (itemIdx == index)
-            {
-                return;
-            }
-
-            var temp = Children[index];
-            Children[index] = node;
-            Children[itemIdx] = temp;
         }
 
         /// <summary>
@@ -202,7 +179,7 @@ namespace Editor.AbilityEditor
             //if (autoSave)
             if (true)
             {
-                Root.SaveTree();
+                Root.SerializeCycleTree();
             }
         }
 
@@ -218,9 +195,19 @@ namespace Editor.AbilityEditor
         /// <summary>
         /// 数据序列化
         /// </summary>
-        public void Serialize()
+        public virtual int OnSerialize(ref List<AbilityNodeData> datas)
         {
-            
+            datas.Add(Data);
+            Data.nodeIndex = datas.Count - 1;
+            Data.parentIndex = Parent == null ? -1 : Parent.Data.nodeIndex;
+            Data.childrenIndexes.Clear();
+            foreach (var child in Children)
+            {
+                var childIndex = child.OnSerialize(ref datas);
+                Data.childrenIndexes.Add(childIndex);
+            }
+
+            return Data.nodeIndex;
         }
     }
 }

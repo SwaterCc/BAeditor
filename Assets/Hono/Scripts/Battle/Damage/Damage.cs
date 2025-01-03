@@ -52,7 +52,7 @@ namespace Hono.Scripts.Battle
         private void initDamageInfo()
         {
             _damageInfo.SourceAbilityType = (EAbilityType)_binder.GetAttr(EAttrType.SourceAbilityType);
-            _damageInfo.SourceAbilityConfigId = _binder.GetAttr(EAttrType.AttrSourceAbilityId);
+            _damageInfo.SourceAbilityConfigId = _binder.GetAttr(EAttrType.AttrSourceAbilityConfigId);
         }
 
         /// <summary>

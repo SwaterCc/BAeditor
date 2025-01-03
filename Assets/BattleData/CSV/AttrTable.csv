@@ -1,0 +1,11 @@
+﻿属性id,属性名字,属性名字,属性使用方式（int or float or bool）,属性下限,属性上限,最终值,总值,加值,额外加值,乘值,额外乘值,外显名称,属性说明文本
+Id,EnumName,Name,Type,AttrLowerLimit,AttrUpperLimit,AttrFinal,AttrTotal,AttrAdd,AttrExAdd,AttrPer,AttrExPer,OfficialName,AttrDes
+int,string,string,string,int,int,int,int,int,int,int,int,string,string
+10000,AttrHp,当前HP,int64,0,-1,10000,0,0,0,0,0,生命值,
+10010,AttrMaxHp,MAXHP,int64,0,-1,10010,10011,10012,10013,10014,10015,生命值上限,角色的基础生存能力
+12100,AttrAttack,攻击力,int32,0,999999,12100,12101,12102,12103,12104,12105,攻击力,影响角色造成伤害的基础攻击属性
+12110,AttrDefense,防御力,int32,0,999999,12110,12111,12112,12113,12114,12115,防御力,可减少角色受到伤害量的基础生存属性
+12120,AttrIgnoreDefense,忽视防御,int32,0,999999,12120,12121,12122,12123,12124,12125,忽视防御,代表忽视目标防御的值
+12130,AttrIgnoreDefensePCT,忽视防御万分比,int32,0,-1,12130,12131,12132,12133,12134,12135,忽视防御百分比,代表忽视目标防御的比例
+12140,AttrCrit,暴击率,int32,0,-1,12140,12141,12142,12143,12144,12145,暴击率,代表进行攻击时，伤害产生暴击的概率
+12150,AttrCritDamage,暴击伤害,int32,0,-1,12150,12151,12152,12153,12154,12155,暴击伤害,提升伤害暴击时的伤害提升比率

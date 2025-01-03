@@ -1,97 +1,111 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public class AEditorVariableBoard
+    public static class AEditorVariableBoard
     {
-        private AbilityData _abilityData;
-        private readonly Dictionary<Type, List<string>> _variables = new();
-        public Dictionary<string, Type> KeySearch { get; } = new();
+        public static Dictionary<EAbilityCycle, Dictionary<string, Type>> Variables = new();
 
-
-        public void SetAbilityData(AbilityData abilityData)
+        public static bool HasVariable(string key)
         {
-            _abilityData = abilityData;
-            RefreshAllVariable();
-        }
-
-
-        public void RefreshAllVariable()
-        {
-            _variables.Clear();
-            
-            foreach (var pair in _abilityData.NodeDict)
+            foreach (var collection in Variables)
             {
-                var nodeData = pair.Value;
-
-                if (nodeData is VariableNodeData variableNodeData)
+                if (collection.Value.ContainsKey(key))
                 {
-                    if (variableNodeData.isModify)
-                        continue;
-
-                    if (string.IsNullOrEmpty(variableNodeData.key))
-                        continue;
-
-                    var type = Type.GetType(variableNodeData.valueType);
-                    if (type == null)
-                        continue;
-
-                    addVariable(type, variableNodeData.key);
+                    return true;
                 }
+            }
 
-                if (nodeData is ActionNodeData actionNodeData)
+            return false;
+        }
+        
+        public static Dictionary<string,Type> GetVariables(EAbilityCycle cycle)
+        {
+            var result = new Dictionary<string,Type>();
+            for (int i = 1; i <= (int)cycle; i++)
+            {
+                if (Variables.TryGetValue((EAbilityCycle)i, out var dict))
                 {
-                    if (!actionNodeData.isCreateVariable)
-                        continue;
-                    var type = Type.GetType(actionNodeData.returnType);
-                    if (type == null)
-                        continue;
-                    if (string.IsNullOrEmpty(actionNodeData.returnValueKey))
-                        continue;
-                    addVariable(type, actionNodeData.returnValueKey);
+                    foreach (var pVar in dict)
+                    {
+                        result.Add(pVar.Key, pVar.Value);
+                    }
                 }
-
-                if (nodeData is RepeatNodeData repeatNodeData) { }
-            }
-        }
-
-        private void addVariable(Type varType, string varKey)
-        {
-            if (!KeySearch.TryAdd(varKey, varType))
-            {
-                return;
-            }
-
-            if (!_variables.TryGetValue(varType, out var list))
-            {
-                list = new List<string>();
-                _variables.Add(varType, list);
-            }
-
-            if (!list.Contains(varKey))
-            {
-                list.Add(varKey);
-            }
-        }
-
-        public bool HasVariable(string key)
-        {
-            return KeySearch.ContainsKey(key);
-        }
-
-        public List<string> GetVariables(Type type)
-        {
-            var result = new List<string>();
-            if (_variables.TryGetValue(type, out var list))
-            {
-                result.AddRange(list);
             }
 
             return result;
+        }
+
+        public static void Clear()
+        {
+            Variables.Clear();
+        }
+
+        public static void CycleVariableRefresh(AEditorTreeHeadNode cycleHeadNode)
+        {
+            if (!Variables.TryGetValue(cycleHeadNode.Cycle, out var varCollection))
+            {
+                varCollection = new Dictionary<string, Type>();
+                Variables.Add(cycleHeadNode.Cycle, varCollection);
+            }
+
+            varCollection.Clear();
+
+            deepNodeAndAddVariable(cycleHeadNode, varCollection);
+        }
+
+        private static void addVariable(AbilityNodeData nodeData, Dictionary<string, Type> collection)
+        {
+            if (nodeData is VariableNodeData variableNodeData)
+            {
+                if (variableNodeData.isModify)
+                    return;
+
+                if (string.IsNullOrEmpty(variableNodeData.key))
+                    return;
+
+                var type = Type.GetType(variableNodeData.valueType);
+                if (type == null)
+                    return;
+
+                if (!collection.TryAdd(variableNodeData.key, type))
+                {
+                    Debug.LogError($"变量重复添加 key:{variableNodeData.key}");
+                }
+            }
+
+            if (nodeData is ActionNodeData actionNodeData)
+            {
+                if (!actionNodeData.isCreateVariable)
+                    return;
+                var type = Type.GetType(actionNodeData.returnType);
+                if (type == null)
+                    return;
+                if (string.IsNullOrEmpty(actionNodeData.returnValueKey))
+                    return;
+                if (!collection.TryAdd(actionNodeData.returnValueKey, type))
+                {
+                    Debug.LogError($"变量重复添加 key:{actionNodeData.returnValueKey}");
+                }
+            }
+
+            if (nodeData is RepeatNodeData repeatNodeData) { }
+        }
+
+        private static void deepNodeAndAddVariable(AEditorTreeNode node, Dictionary<string, Type> collection)
+        {
+            var nodeData = node.Data;
+            addVariable(nodeData, collection);
+
+            foreach (var nodeChild in node.Children)
+            {
+                deepNodeAndAddVariable(nodeChild, collection);
+            }
         }
     }
 }

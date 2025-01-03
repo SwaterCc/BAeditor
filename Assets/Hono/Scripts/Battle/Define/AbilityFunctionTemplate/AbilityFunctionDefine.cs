@@ -78,7 +78,7 @@ namespace Hono.Scripts.Battle
                 1, fromTopSummer,
                 (hitBox) =>
                 {
-                    hitBox.SetAttr(EAttrType.AttrSourceAbilityId, ARunningTime.AContext.Id, false);
+                    hitBox.SetAttr(EAttrType.AttrSourceAbilityConfigId, ARunningTime.AContext.Id, false);
                     hitBox.Variables.Set("hitBoxData", hitData);
                     //hitBox.Variables.Set("targetUid", targetId);
                     hitBox.Variables.Set("abilityTags", ARunningTime.AContext.TagCollection.GetAllTag());
@@ -108,7 +108,7 @@ namespace Hono.Scripts.Battle
                 ActorManager.Instance.SummonActor(attack, EActorType.HitBox,
                     1, fromTopSummer, (hitBox) =>
                     {
-                        hitBox.SetAttr(EAttrType.AttrSourceAbilityId, ARunningTime.AContext.Id, false);
+                        hitBox.SetAttr(EAttrType.AttrSourceAbilityConfigId, ARunningTime.AContext.Id, false);
                         hitBox.Variables.Set("hitBoxData", hitData);
                         //hitBox.Variables.Set("targetUid", targetUid);
                         hitBox.Variables.Set("abilityTags", ARunningTime.AContext.TagCollection.GetAllTag());
@@ -138,7 +138,7 @@ namespace Hono.Scripts.Battle
                 ActorManager.Instance.SummonActor(ARunningTime.Actor, EActorType.HitBox,
                     1, false, (hitBox) =>
                     {
-                        hitBox.SetAttr(EAttrType.AttrSourceAbilityId, ARunningTime.AContext.Id, false);
+                        hitBox.SetAttr(EAttrType.AttrSourceAbilityConfigId, ARunningTime.AContext.Id, false);
                         hitBox.Variables.Set("hitBoxData", hitData);
                         //hitBox.Variables.Set("targetUid", targetUid);
                         //hitBox.Variables.Set("targetPos", target.Pos);
@@ -153,7 +153,7 @@ namespace Hono.Scripts.Battle
             var bullet = ActorManager.Instance.SummonActor(ARunningTime.Actor, EActorType.Bullet,
                 bulletId, fromTopSummer, (bullet) =>
                 {
-                    bullet.SetAttr(EAttrType.AttrSourceAbilityId, ARunningTime.AContext.Id, false);
+                    bullet.SetAttr(EAttrType.AttrSourceAbilityConfigId, ARunningTime.AContext.Id, false);
                     //bullet.Variables.Set("targetUid", targetUid);
                     bullet.Variables.Set("abilityTags", ARunningTime.AContext.TagCollection.GetAllTag());
                 });
@@ -169,7 +169,7 @@ namespace Hono.Scripts.Battle
                 var bullet = ActorManager.Instance.SummonActor(ARunningTime.Actor, EActorType.Bullet,
                     bulletId, fromTopSummer, (bullet) =>
                     {
-                        bullet.SetAttr(EAttrType.AttrSourceAbilityId, ARunningTime.AContext.Id, false);
+                        bullet.SetAttr(EAttrType.AttrSourceAbilityConfigId, ARunningTime.AContext.Id, false);
                         //bullet.Variables.Set("targetUid", targetUid);
                         bullet.Variables.Set("abilityTags", ARunningTime.AContext.TagCollection.GetAllTag());
                     });

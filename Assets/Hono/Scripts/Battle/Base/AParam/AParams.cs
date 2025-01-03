@@ -107,7 +107,7 @@ namespace Hono.Scripts.Battle.Base
             switch (paramType)
             {
                 case EParamType.Simple:
-                    desc = Value == null ? "null" : Value.ToString();
+                    desc = Value == null ? "null" : Value.ToString().Split(".")[^1];
                     break;
                 case EParamType.Function:
                     if (string.IsNullOrEmpty(funcName))
@@ -115,24 +115,24 @@ namespace Hono.Scripts.Battle.Base
                         return "函数未初始化";
                     }
 
-                    desc = "" + funcName + "(";
+                    desc = "" + funcName + " ( ";
                     for (var index = 0; index < funcParams.Count; index++)
                     {
                         var parameter = funcParams[index];
                         desc += parameter;
                         if (index != funcParams.Count - 1)
                         {
-                            desc += ",";
+                            desc += ", ";
                         }
                     }
 
-                    desc += ")";
+                    desc += " ) ";
                     break;
                 case EParamType.Variable:
-                    desc = string.IsNullOrEmpty(variableName) ? "未设置变量名" : "变量：" + variableName;
+                    desc = string.IsNullOrEmpty(variableName) ? "未设置变量名" : "变量:" + variableName;
                     break;
                 case EParamType.Attr:
-                    desc = "属性：" + attrType;
+                    desc = "属性:" + attrType;
                     break;
             }
 

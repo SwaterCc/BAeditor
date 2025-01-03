@@ -9,40 +9,4 @@ namespace Hono.Scripts.Battle
     {
         @EnumAttrDefine
     }
-
-    public static class AttrCreator
-    {
-        #region AttrTypeDict
-    
-        private static Dictionary<ELogicAttr, Type> _attrTypeDict = new Dictionary<ELogicAttr, Type>()
-        {
-            @AttrDictItem
-        };
-    
-        public static Type GetValueType(this ELogicAttr attrType)
-        {
-            if (_attrTypeDict.TryGetValue(attrType, out var type))
-            {
-                return _attrTypeDict[attrType];
-            }
-        
-            return null;
-        }
-    
-        #endregion
-    
-        #region AttrCreate
-    
-        public static IAttr Create(int attrType)
-        {
-            switch ((ELogicAttr)attrType)
-            {
-                @Case
-            }
-
-            return null;
-        }
-        
-        #endregion
-    }
 }

@@ -60,17 +60,31 @@ namespace Editor.AbilityEditor
                 return;
 
             var funcInfo = AbilityFuncInfoCache.GetFuncInfo(funcName);
-            _function.funcName = funcName;
-            _function.funcParams ??= new List<AParams>();
-            _function.funcParams.Clear();
-            _function.paramType = EParamType.Function;
-            _parameterFields.Clear();
-            foreach (var paramInfo in funcInfo.ParamInfos)
+
+            if (funcName != _function.funcName)
             {
-                var funcParam = new AParams
+                _function.funcName = funcName;
+                _function.funcParams = new List<AParams>();
+                for (int i = 0; i < funcInfo.ParamInfos.Count; i++)
                 {
-                    paramType = EParamType.Simple
-                };
+                    var funcParam = new AParams
+                    {
+                        paramType = EParamType.Simple
+                    };
+                    _function.funcParams.Add(funcParam);
+                }
+
+                _function.paramType = EParamType.Function;
+                _parameterFields.Clear();
+            }
+
+            for (var index = 0; index < funcInfo.ParamInfos.Count; index++)
+            {
+                var paramInfo = funcInfo.ParamInfos[index];
+
+                var funcParam = index < _function.funcParams.Count
+                    ? _function.funcParams[index]
+                    : new AParams() { paramType = EParamType.Simple };
 
                 var field = new AParamsField(_treeItem, funcParam, paramInfo.ParamName, paramInfo.ParamType);
 

@@ -205,9 +205,9 @@ namespace Hono.Scripts.Battle
     /// </summary>
     public enum EVariableOperationType
     {
+        Reset,
         Add,
         Sub,
-        Reset,
         Reverse,
     }
 

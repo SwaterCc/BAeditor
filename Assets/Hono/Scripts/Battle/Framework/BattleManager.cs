@@ -61,16 +61,15 @@ namespace Hono.Scripts.Battle
         private readonly List<IBattleFrameworkEnterExit> _frameworkEnterExits = new(16);
         private readonly List<IBattleFrameworkAsyncInit> _frameworkAsyncLoads = new(16);
         private readonly List<IBattleFrameworkTick> _frameworkTicks = new(16);
+        
         private Paths _paths;
-
         private string _formScene;
-        private BattleGround _waitEnterGround;
-        private bool _popTopGround;
-        private readonly Stack<BattleGround> _groundStack = new(4);
+        private BattleGround _curGround;
 
         public static BattleController BattleController => CurBattle.BattleController;
-        public static BattleGround CurBattle => Instance._groundStack.Count > 0 ? Instance._groundStack.Peek() : null;
+        public static BattleGround CurBattle => Instance._curGround;
         public static Paths Paths => Instance._paths;
+        
         public Action<bool> ExitBattleCallBack { get; set; }
 
         protected void Start()
@@ -114,12 +113,13 @@ namespace Hono.Scripts.Battle
 
         private void registerAllFrameworks()
         {
-            register(LuaInterface.Instance);
+            //register(LuaInterface.Instance);
             register(ConfigManager.Instance);
-            register(AssetManager.Instance);
+            //register(AssetManager.Instance);
             register(BattleEventManager.Instance);
             register(MessageCenter.Instance);
-            register(GameObjectPreLoadMgr.Instance);
+            //register(GameObjectPreLoadMgr.Instance);
+            register(ActorManager.Instance);
         }
 
         /// <summary>
@@ -194,24 +194,9 @@ namespace Hono.Scripts.Battle
         public void EnterBattle(string fromScene, int battleGroundId)
         {
             _formScene = fromScene;
-            PushBattleGround(battleGroundId);
+            _curGround = new BattleGround(battleGroundId);
+            _curGround.ExitGround();
         }
-
-        /// <summary>
-        ///     开始战斗玩法
-        /// </summary>
-        public void PushBattleGround(int battleGroundId)
-        {
-            _waitEnterGround = new BattleGround(battleGroundId);
-            _waitEnterGround.OnCreate();
-        }
-
-        public void PopBattleGround()
-        {
-            _popTopGround = _groundStack.Count != 0;
-        }
-
-        private void onSwitchBattleGround() { }
 
         /// <summary>
         ///     退出战斗玩法返回主界面
@@ -225,14 +210,7 @@ namespace Hono.Scripts.Battle
                 framework.OnExitBattle();
             }
 
-            var result = _groundStack.Peek().Result;
-
-            foreach (var ground in _groundStack)
-            {
-                ground.OnDestroy();
-            }
-
-            _groundStack.Clear();
+            _curGround.ExitGround();
 
             /*if (LoadingPanel.Exists)
             {
@@ -257,35 +235,8 @@ namespace Hono.Scripts.Battle
             {
                 frameworkTick.Tick(dt);
             }
-
-            if (_waitEnterGround != null)
-            {
-                _groundStack.Push(_waitEnterGround);
-                _waitEnterGround.EnterGround();
-                _waitEnterGround = null;
-                onSwitchBattleGround();
-            }
-
-            if (_groundStack.Count == 0) return;
-
-            var curGround = _groundStack.Peek();
-            curGround.Tick(dt);
-
-            if (_popTopGround)
-            {
-                var pop = _groundStack.Pop();
-                pop.OnDestroy();
-                if (_groundStack.Count == 0)
-                {
-                    ExitBattle();
-                }
-                else
-                {
-                    onSwitchBattleGround();
-                }
-
-                _popTopGround = false;
-            }
+            
+            _curGround?.Tick(dt);
         }
 
         private void Update()

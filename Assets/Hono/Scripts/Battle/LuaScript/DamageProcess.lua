@@ -4,7 +4,7 @@
 --- DateTime: 2024/8/27 下午2:14
 
 --【【【配置】】】=======================================================================================================================================
-ELogicAttr = CS.Hono.Scripts.Battle.ELogicAttr
+ELogicAttr = CS.Hono.Scripts.Battle.EAttrType
 local maxDamage = 999999
 local baseDamageCritRate = 10000
 local damageDistance = 5

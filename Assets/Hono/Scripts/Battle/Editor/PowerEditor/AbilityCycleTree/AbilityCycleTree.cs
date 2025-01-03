@@ -35,6 +35,8 @@ namespace Editor.AbilityEditor
             
             //获取EditorAbilityData树
             Head = AbilityEditorUtility.GetTreeHead(TreeData, cycle);
+            //刷新变量
+            AEditorVariableBoard.CycleVariableRefresh(Head);
             Reload();
         }
 

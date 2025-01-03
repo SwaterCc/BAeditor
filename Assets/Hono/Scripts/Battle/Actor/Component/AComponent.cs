@@ -4,12 +4,11 @@ namespace Hono.Scripts.Battle
     {
         public abstract class AComponent
         {
-            public Actor Self { get; }
             public ActorLogic ActorLogic { get; }
+            public Actor Self => ActorLogic.Self;
 
             protected AComponent(ActorLogic logic)
             {
-                Self = logic.Self;
                 ActorLogic = logic;
             }
 

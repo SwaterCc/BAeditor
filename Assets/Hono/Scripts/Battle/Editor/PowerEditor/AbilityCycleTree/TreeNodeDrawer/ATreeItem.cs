@@ -247,9 +247,9 @@ namespace Editor.AbilityEditor
             if (string.IsNullOrEmpty(buttonText))
                 buttonText = "未定义描述";
 
-            if (!string.IsNullOrEmpty(Node.Data.Desc))
+            if (!string.IsNullOrEmpty(Node.Data.desc))
             {
-                buttonText = Node.Data.Desc;
+                buttonText = Node.Data.desc;
             }
 
             var bgColor = GUI.backgroundColor;

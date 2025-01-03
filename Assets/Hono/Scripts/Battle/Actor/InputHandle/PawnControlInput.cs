@@ -87,7 +87,6 @@ namespace Hono.Scripts.Battle
 
         protected override void AutoUseSkill()
         {
-            PawnRogueSkillAuto();
             if (!Logic.Self.IsPlayerControl)
             {
                 PawnAutoSkill();

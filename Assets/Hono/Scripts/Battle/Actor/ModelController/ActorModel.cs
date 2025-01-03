@@ -13,11 +13,15 @@ namespace Hono.Scripts.Battle
 {
     public class ActorModel : MonoBehaviour
     {
-        [Title("基础信息")] [InfoBox("如果是需要静态创建的Actor且需要指定Uid请给予初始值，该uid全局不变")]
+        [Title("基础信息")] 
+        [InfoBox("如果是需要静态创建的Actor且需要指定Uid请给予初始值，该uid全局不变")]
         public int ActorUid;
 
-        [InfoBox("如果是需要静态创建的Actor需要指定类型")] public EActorType ActorType;
-        [Title("特效相关")] public List<Transform> EffectPoints = new();
+        [InfoBox("如果是需要静态创建的Actor需要指定类型")] 
+        public EActorType ActorType;
+        
+        [Title("特效相关")] 
+        public List<Transform> EffectPoints = new();
         public Transform HeadPoint;
         public Transform CenterPoint;
 
@@ -56,7 +60,7 @@ namespace Hono.Scripts.Battle
 
 #if UNITY_EDITOR
         [Button("激活")]
-        public void ActorCreate(EActorType actorType, int configId)
+        public void ActorCreate(int configId)
         {
             if (!Application.isPlaying)
             {
@@ -64,7 +68,7 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            ActorManager.Instance.CreateActor(actorType, configId);
+            ActorManager.Instance.CreateActor(ActorType, configId, this);
         }
 #endif
 

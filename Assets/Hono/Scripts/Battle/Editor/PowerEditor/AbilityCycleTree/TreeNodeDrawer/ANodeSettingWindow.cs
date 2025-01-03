@@ -43,7 +43,7 @@ namespace Editor.AbilityEditor
             //Desc
             Draw();
             SirenixEditorGUI.BeginBox("调试信息");
-            TempData.Desc = SirenixEditorFields.TextField("输入描述：", TempData.Desc);
+            TempData.desc = SirenixEditorFields.TextField("输入描述：", TempData.desc);
             TempData.showLog = EditorGUILayout.Toggle("是否打印运行日志：",    TempData.showLog);
             TempData.skipExecute = EditorGUILayout.Toggle("是否跳过该节点：", TempData.skipExecute);
             SirenixEditorGUI.EndBox();
