@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.AbilitySystem;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
@@ -57,7 +58,7 @@ namespace Hono.Scripts.Battle
     }
     
     [Serializable]
-    public class ActionNodeData : AbilityNodeData
+    public class FunctionNodeData : AbilityNodeData
     {
         public AParams action = new();
         public string returnType;
@@ -66,7 +67,7 @@ namespace Hono.Scripts.Battle
 
         public override AbilityNodeData DeepCopy()
         {
-            var copy = new ActionNodeData();
+            var copy = new FunctionNodeData();
             copy.action = new AParams(action);
             copy.isCreateVariable = isCreateVariable;
             copy.returnValueKey = returnValueKey;
@@ -97,25 +98,21 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class BranchGroupNodeData : AbilityNodeData
     {
-        public List<int> BranchNodeIds = new();
-
         public override AbilityNodeData DeepCopy()
         {
-            var copy = new BranchGroupNodeData();
-            copy.BranchNodeIds.AddRange(BranchNodeIds);
-            return copy;
+            return new BranchGroupNodeData();
         }
     }
 
     [Serializable]
     public class BranchNodeData : AbilityNodeData
     {
-        public AParams CompareFunc = new();
+        public AParams condition = new();
 
         public override AbilityNodeData DeepCopy()
         {
             var copy = new BranchNodeData();
-            copy.CompareFunc = new AParams(CompareFunc);
+            copy.condition = new AParams(condition);
             return copy;
         }
     }

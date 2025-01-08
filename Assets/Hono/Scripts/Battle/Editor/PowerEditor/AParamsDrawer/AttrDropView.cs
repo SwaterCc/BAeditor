@@ -1,8 +1,7 @@
 ﻿using System;
 using Hono.Scripts.Battle;
-using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.AbilitySystem;
 using UnityEditor.IMGUI.Controls;
-using UnityEngine;
 
 namespace Editor.AbilityEditor
 {

@@ -79,7 +79,7 @@ namespace Editor.AbilityEditor
                 }
             }
 
-            if (nodeData is ActionNodeData actionNodeData)
+            if (nodeData is FunctionNodeData actionNodeData)
             {
                 if (!actionNodeData.isCreateVariable)
                     return;

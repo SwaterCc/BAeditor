@@ -131,6 +131,8 @@ namespace Hono.Scripts.Battle
         Function,
         Variable,
         Attr,
+        Event,
+        Msg,
     }
 
     /// <summary>

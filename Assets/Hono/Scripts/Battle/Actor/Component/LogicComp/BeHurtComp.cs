@@ -30,7 +30,10 @@ namespace Hono.Scripts.Battle
                     ActorLogic._stateMachine?.SwitchState(EActorStateType.Death);
                 }
 
-                BattleEventManager.Instance.TriggerActorEvent(Self.Uid, EBattleEventType.OnBeHit, hitDamageInfo);
+              //  EventManager.FireEvent(Self.Uid, EBattleEventType.OnBeHit, hitDamageInfo);
+                
+                //事件发送者
+                
             }
 
 

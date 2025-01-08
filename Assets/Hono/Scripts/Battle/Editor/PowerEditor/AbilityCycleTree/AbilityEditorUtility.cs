@@ -10,7 +10,7 @@ namespace Editor.AbilityEditor
     /// </summary>
     public enum ERightClickOperationType
     {
-        AddActionChild = 1,
+        AddFunctionChild = 1,
         AddBranchGroupChild,
         AddBranchChild,
         AddListenerChild,
@@ -59,8 +59,8 @@ namespace Editor.AbilityEditor
                     return new AttrModifyTreeItem(tree, node);
                 case RepeatNodeData:
                     return new RepeatTreeItem(tree, node);
-                case ActionNodeData:
-                    return new ActionTreeItem(tree, node);
+                case FunctionNodeData:
+                    return new FunctionTreeItem(tree, node);
                 case TimerNodeData:
                     return new TimerTreeItem(tree, node);
                 case GroupNodeData:

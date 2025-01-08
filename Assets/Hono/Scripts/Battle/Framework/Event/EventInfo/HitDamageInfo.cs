@@ -1,6 +1,6 @@
 namespace Hono.Scripts.Battle.Event
 {
-    public struct HitDamageInfo : IEventInfo
+    public class HitDamageInfo : IEventInfo
     {
         /// <summary>
         /// 伤害来源Actor

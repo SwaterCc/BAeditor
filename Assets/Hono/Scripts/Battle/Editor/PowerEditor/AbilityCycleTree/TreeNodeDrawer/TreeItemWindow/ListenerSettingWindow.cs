@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.AbilitySystem;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using Sirenix.Utilities.Editor;

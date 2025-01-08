@@ -38,7 +38,7 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override bool checkIsAllowMove(ATreeItem newParent)
         {
-            if (newParent is AttrModifyTreeItem  or ActionTreeItem or TimerTreeItem or BranchGroupTreeItem)
+            if (newParent is AttrModifyTreeItem  or FunctionTreeItem or TimerTreeItem or BranchGroupTreeItem)
             {
                 return false;
             }

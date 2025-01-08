@@ -74,16 +74,16 @@ namespace Editor.AbilityEditor
 
             _menu = new GenericMenu();
             //添加节点
-            addMenu("添加节点/Action",      ERightClickOperationType.AddActionChild,      new ActionNodeData());
-            addMenu("添加节点/BranchGroup", ERightClickOperationType.AddBranchGroupChild, new BranchGroupNodeData());
-            addMenu("添加节点/Branch",      ERightClickOperationType.AddBranchChild,      new BranchNodeData());
-            addMenu("添加节点/Listener",    ERightClickOperationType.AddListenerChild,    new ListenerNodeData());
-            addMenu("添加节点/Group",       ERightClickOperationType.AddGroupChild,       new GroupNodeData());
-            addMenu("添加节点/Timer",       ERightClickOperationType.AddTimerChild,       new TimerNodeData());
-            addMenu("添加节点/Repeat",      ERightClickOperationType.AddRepeatChild,      new RepeatNodeData());
-            addMenu("添加节点/Attr",        ERightClickOperationType.AddAttrChild,        new AttrModifyNodeData());
-            addMenu("添加节点/Variable",    ERightClickOperationType.AddVariableChild,    new VariableNodeData());
-            addMenu("添加节点/GroupSwitch", ERightClickOperationType.AddGroupSwitchChild, new GroupSwitchNodeData());
+            addMenu("添加节点/CallFunction", ERightClickOperationType.AddFunctionChild,    new FunctionNodeData());
+            addMenu("添加节点/BranchGroup",  ERightClickOperationType.AddBranchGroupChild, new BranchGroupNodeData());
+            addMenu("添加节点/Branch",       ERightClickOperationType.AddBranchChild,      new BranchNodeData());
+            addMenu("添加节点/Listener",     ERightClickOperationType.AddListenerChild,    new ListenerNodeData());
+            addMenu("添加节点/Group",        ERightClickOperationType.AddGroupChild,       new GroupNodeData());
+            addMenu("添加节点/Timer",        ERightClickOperationType.AddTimerChild,       new TimerNodeData());
+            addMenu("添加节点/Repeat",       ERightClickOperationType.AddRepeatChild,      new RepeatNodeData());
+            addMenu("添加节点/Attr",         ERightClickOperationType.AddAttrChild,        new AttrModifyNodeData());
+            addMenu("添加节点/Variable",     ERightClickOperationType.AddVariableChild,    new VariableNodeData());
+            addMenu("添加节点/GroupSwitch",  ERightClickOperationType.AddGroupSwitchChild, new GroupSwitchNodeData());
             //基础操作
             addMenu("复制",   ERightClickOperationType.Copy,       null);
             addMenu("粘贴",   ERightClickOperationType.Paste,      Node);
@@ -117,7 +117,7 @@ namespace Editor.AbilityEditor
 
             switch (operation)
             {
-                case ERightClickOperationType.AddActionChild:
+                case ERightClickOperationType.AddFunctionChild:
                 case ERightClickOperationType.AddBranchGroupChild:
                 case ERightClickOperationType.AddBranchChild:
                 case ERightClickOperationType.AddListenerChild:

@@ -116,7 +116,7 @@ namespace Hono.Scripts.Battle
             //register(LuaInterface.Instance);
             register(ConfigManager.Instance);
             //register(AssetManager.Instance);
-            register(BattleEventManager.Instance);
+            register(EventManager.Instance);
             register(MessageCenter.Instance);
             //register(GameObjectPreLoadMgr.Instance);
             register(ActorManager.Instance);

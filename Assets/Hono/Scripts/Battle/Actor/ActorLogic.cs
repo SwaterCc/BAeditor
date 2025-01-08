@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Hono.Scripts.Battle
 {
     /// <summary>
-    /// Actor的逻辑，包含逻辑层自身的逻辑和关联组件，状态机，最终决定出当前Actor逻辑层的属性
+    /// Actor的逻辑，包含逻辑层自身的逻辑和关联组件，最终决定出当前Actor逻辑层的属性
     /// </summary>
     public abstract partial class ActorLogic
     {
@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// Actor的黑板数据
         /// </summary>
-        protected VariableBoard Variables => Self.Variables;
+        protected VariableBoard Variables => Self.VariableBoard;
 
         /// <summary>
         /// 状态机
@@ -41,6 +41,10 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private readonly Dictionary<Type, AComponent> _components;
 
+        /// <summary>
+        /// ActionSystem
+        /// </summary>
+        
         protected ActorLogic()
         {
             _actorInput = new NoInput(this);

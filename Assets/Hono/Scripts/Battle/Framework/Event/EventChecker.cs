@@ -1,6 +1,9 @@
 #region
 
 using System;
+using System.Collections.Generic;
+using Hono.Scripts.Battle.Base;
+using NUnit.Framework;
 
 #endregion
 
@@ -13,6 +16,37 @@ namespace Hono.Scripts.Battle.Event
         public bool CheckGlobal(IEventInfo info);
         public void Invoke(IEventInfo info);
     }
+    
+    //事件监听对象的基本配置
+    public class EventListener
+    {
+        //监听的事件
+        private EBattleEventType _eventType;
+
+        //监听间隔
+        private float _triggerInterval;
+
+        //事件触发后的数据
+        //一个event对应一个数据结构
+
+        //eventinfo 是个类似黑板的容器
+
+        private EventChecker _checker;
+        
+        private Action<VariableBoard> _callback;
+
+        public void SetupChecker(EventChecker checker)
+        {
+            _checker = checker;
+        }
+
+        public void SetCallBack() { }
+
+        public void Invoke(VariableBoard board)
+        {
+            if (_checker == null) { }
+        }
+    }
 
     public abstract class EventChecker : IEventChecker
     {
@@ -20,7 +54,7 @@ namespace Hono.Scripts.Battle.Event
         ///     事件类型
         /// </summary>
         private EBattleEventType _eventType;
-        
+
         public EBattleEventType EventType => _eventType;
 
         /// <summary>
@@ -102,12 +136,12 @@ namespace Hono.Scripts.Battle.Event
     {
         public static void Register(this EventChecker checker)
         {
-            BattleEventManager.Instance.Register(checker);
+            EventManager.Instance.Register(checker);
         }
 
         public static void UnRegister(this EventChecker checker)
         {
-            BattleEventManager.Instance.UnRegister(checker);
+            EventManager.Instance.UnRegister(checker);
         }
     }
 }

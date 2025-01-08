@@ -90,7 +90,7 @@ namespace Editor.BattleEditor.AbilityEditor
 
         public static void Init()
         {
-            MethodInfo[] methods = typeof(AbilityFunctionDefine).GetMethods(BindingFlags.Public | BindingFlags.Static);
+            MethodInfo[] methods = typeof(AFunctionDefine).GetMethods(BindingFlags.Public | BindingFlags.Static);
 
             //处理函数缓存
             FuncInfoDict.Clear();

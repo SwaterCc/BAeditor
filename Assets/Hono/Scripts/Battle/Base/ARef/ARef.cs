@@ -4,36 +4,14 @@ using UnityEngine;
 namespace Hono.Scripts.Battle.Base
 {
     [Serializable]
-    public abstract class ARef : IAPoolRefCount
+    public abstract class ARef 
     {
-        [NonSerialized]
-        private int _refCount;
-
         public abstract Type GetValueType();
 
         public abstract ARef DeepCopy();
 
         public abstract void ARefRecycle();
-
-        public void AddReference()
-        {
-            ++_refCount;
-        }
-
-        public void RemoveReference()
-        {
-            --_refCount;
-            if (_refCount <= 0)
-            {
-                ARefRecycle();
-            }
-        }
-
-        public int GetReferenceCount()
-        {
-            return _refCount;
-        }
-
+        
         public static Type ParseValueTypeToARefType(Type paramType)
         {
             if (paramType == typeof(int))

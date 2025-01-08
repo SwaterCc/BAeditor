@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.AbilitySystem;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
@@ -167,7 +168,7 @@ namespace Hono.Scripts.Battle
                 _usedSkillEventInfo.SkillId = Ability.Id;
                 _usedSkillEventInfo.UserUid = Logic.Uid;
 
-                BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnSkillUseSuccess,
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnSkillUseSuccess,
                     _usedSkillEventInfo);
             }
 
@@ -190,7 +191,7 @@ namespace Hono.Scripts.Battle
                     Logic._stateMachine.SwitchState(EActorStateType.Idle);
                 }
 
-                BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnSkillStop,
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnSkillStop,
                     _usedSkillEventInfo);
             }
 
@@ -237,7 +238,7 @@ namespace Hono.Scripts.Battle
             {
                 calculateCd();
                 _curCdPercent = 1;
-                BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.SkillCDBegin, _cdEventInfo);
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.SkillCDBegin, _cdEventInfo);
             }
 
             /// <summary>
@@ -255,7 +256,7 @@ namespace Hono.Scripts.Battle
             private void CdEnd()
             {
                 _curCdPercent = 0;
-                BattleEventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.SkillCDEnd, _cdEventInfo);
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.SkillCDEnd, _cdEventInfo);
                 _cdTick = null;
             }
 

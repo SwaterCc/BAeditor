@@ -40,7 +40,7 @@ namespace Hono.Scripts.Battle
                     Round.EventInfo.RoundScore = 1;
 
                 if (GetRoundState() != ERoundState.NoRunning)
-                    BattleEventManager.Instance.TriggerGlobalEvent(getEventType(true), Round.EventInfo);
+                    EventManager.Instance.TriggerGlobalEvent(getEventType(true), Round.EventInfo);
 
                 //Debug.Log($"[RoundState] RoundState Enter {GetRoundState()}");
             }
@@ -58,7 +58,7 @@ namespace Hono.Scripts.Battle
             public void Exit()
             {
                 if (GetRoundState() != ERoundState.NoRunning)
-                    BattleEventManager.Instance.TriggerGlobalEvent(getEventType(false), Round.EventInfo);
+                    EventManager.Instance.TriggerGlobalEvent(getEventType(false), Round.EventInfo);
                 onExit();
 
                 //Debug.Log($"[RoundState] RoundState Exit {GetRoundState()}");

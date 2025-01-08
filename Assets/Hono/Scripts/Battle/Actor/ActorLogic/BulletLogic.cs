@@ -130,7 +130,7 @@ namespace Hono.Scripts.Battle
             if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
 
             var hitDamageInfo = _damage.MakeDamage(1, 1, false);
-            BattleEventManager.Instance.TriggerActorEvent(Self.Uid, EBattleEventType.OnHit, hitDamageInfo);
+            EventManager.Instance.TriggerActorEvent(Self.Uid, EBattleEventType.OnHit, hitDamageInfo);
 
             beHurtComp.OnBeHurt(hitDamageInfo);
         }

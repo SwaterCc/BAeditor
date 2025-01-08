@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.AbilitySystem;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Editor.AbilityEditor;
 using Sirenix.OdinInspector;

@@ -56,9 +56,9 @@ namespace Hono.Scripts.Battle
             if (IsLeader)
             {
                 IsLeader = false;
-                actor.IsPlayerControl = false;
+                //actor.IsPlayerControl = false;
                 TeamState.PassingLeader();
-            }
+            } 
 
             if (BattleManager.CurBattle != null)
             {
@@ -69,7 +69,7 @@ namespace Hono.Scripts.Battle
         public void SetPlayerControlFlag(bool isControl)
         {
             var actor = ActorManager.Instance.GetActor(_actorUid);
-            actor.IsPlayerControl = isControl;
+           // actor.IsPlayerControl = isControl;
             if (isControl)
             {
                 BattleManager.CurBattle.RtInfo.LeaderUid = actor.Uid;

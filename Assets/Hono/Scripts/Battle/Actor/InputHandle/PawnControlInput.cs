@@ -39,10 +39,10 @@ namespace Hono.Scripts.Battle
 
         protected override void AutoMove()
         {
-            if (!Logic.Self.IsPlayerControl || !InputManager.Instance.HasMoveInput)
+            /*if (!Logic.Self.IsPlayerControl || !InputManager.Instance.HasMoveInput)
             {
                 PawnAutoMove();
-            }
+            }*/
         }
 
         private void PawnAutoMove()
@@ -87,7 +87,7 @@ namespace Hono.Scripts.Battle
 
         protected override void AutoUseSkill()
         {
-            if (!Logic.Self.IsPlayerControl)
+            /*if (!Logic.Self.IsPlayerControl)
             {
                 PawnAutoSkill();
             }
@@ -97,7 +97,7 @@ namespace Hono.Scripts.Battle
                 {
                     PawnAutoSkill();
                 }
-            }
+            }*/
         }
 
         private void PawnRogueSkillAuto()

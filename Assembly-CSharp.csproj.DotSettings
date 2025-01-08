@@ -16,8 +16,23 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cbattle_005Ctools_005Cvaluebox/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cbattle_005Cvaluebox/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cability/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilityfunc/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilityfunc_005Cwrapgen/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilitynode/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilitynode_005Cabilityparam_005Cparser/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilitynode_005Cabilityparam/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilitynode_005Caparamsparser/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilitynode_005Caparam_005Caparamsparser/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilitynode_005Caparam_005Cparser/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilitynode_005Caparam/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilityparam_005Cparser/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem_005Cabilityparam/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cabilitysystem/@EntryIndexedValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cability_005Cabilityalloweditcycle/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cability_005Cabilityfunc/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cability_005Cabilitynode/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cability_005Cabilityparam/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cability_005Cabilityparam_005Cparser/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cability_005Cabilityruncycle/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cactor/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cactor_005Cactormodelcontrol/@EntryIndexedValue">True</s:Boolean>

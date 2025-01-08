@@ -9,13 +9,43 @@ namespace Hono.Scripts.Battle
         public void OnRecycle();
     }
 
-    public interface IAPoolRefCount
+    public struct APoolRefCount
     {
-        void AddReference();
-        void RemoveReference();
-        int GetReferenceCount();
+        private int _refCount;
+        private IAPoolObject _poolObject;
+
+        public APoolRefCount(IAPoolObject poolObject, int refCount = 0)
+        {
+            _poolObject = poolObject;
+            _refCount = refCount;
+        }
+
+        public void AddReference()
+        {
+            ++_refCount;
+        }
+
+        public void RemoveReference()
+        {
+            --_refCount;
+            if (_refCount <= 0)
+            {
+                ObjectPoolManager.Instance.RecycleAObject(_poolObject);
+                _poolObject = null;
+            }
+        }
+
+        public int GetReferenceCount()
+        {
+            return _refCount;
+        }
     }
-    
+
+    public interface IAPoolRefCount : IAPoolObject
+    {
+        public APoolRefCount RefCount { get; set; }
+    }
+
     public class APool<T> : IAPool where T : class, IAPoolObject, new()
     {
         /// <summary>
@@ -75,36 +105,37 @@ namespace Hono.Scripts.Battle
             {
                 if (obj is IAPoolRefCount refCountObj)
                 {
-                    refCountObj.AddReference();
+                    refCountObj.RefCount = new APoolRefCount(obj,1);
                 }
+
                 return obj;
             }
 
             obj = new T();
             if (obj is IAPoolRefCount newRefCountObj)
             {
-                newRefCountObj.AddReference();
+                newRefCountObj.RefCount = new APoolRefCount(obj,1);
             }
 
             return obj;
         }
-        
+
         public void Recycle(IAPoolObject obj)
         {
             Recycle((T)obj);
         }
-        
+
         public void Recycle(in T obj)
         {
             if (obj is IAPoolRefCount refCountObj)
             {
-                refCountObj.RemoveReference();
-                if (refCountObj.GetReferenceCount() > 0)
+                refCountObj.RefCount.RemoveReference();
+                if (refCountObj.RefCount.GetReferenceCount() > 0)
                 {
                     return;
                 }
             }
-            
+
             obj.OnRecycle();
 
             if (_pool.Count >= _capacity)

@@ -28,7 +28,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 变量黑板
         /// </summary>
-        public VariableBoard Variables { get; }
+        public VariableBoard VariableBoard { get; }
 
         /// <summary>
         /// Tag
@@ -80,11 +80,6 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public Quaternion Rot { get; set; }
 
-        /// <summary>
-        /// 是否为玩家操控单位
-        /// </summary>
-        public bool IsPlayerControl { get; set; }
-
         #region 回调周期
 
         /// <summary>
@@ -118,9 +113,9 @@ namespace Hono.Scripts.Battle
         {
             _message = new MessageCollection(this);
             Attrs = new AttrCollection(this);
-            TagCollection = new TagCollection();
             Abilities = new AbilityController(this);
-            Variables = new VariableBoard(128);
+            VariableBoard = new VariableBoard();
+            TagCollection = new TagCollection();
             ModelController = new ModelController(this);
         }
 
@@ -196,7 +191,7 @@ namespace Hono.Scripts.Battle
             _message.Clear();
             TagCollection.Clear();
             Abilities.Clear();
-            Variables.Clear();
+            VariableBoard.Clear();
             ModelController.Clear();
             Logic.RecycleLogicObject();
             Logic = null;
@@ -221,13 +216,7 @@ namespace Hono.Scripts.Battle
             var value = Attrs.GetAttr(attrType);
             return value;
         }
-
-        public Attr GetAttrNoParse(EAttrType attrType)
-        {
-            var value = Attrs.GetAttr(attrType);
-            return value;
-        }
-
+        
         public void SetAttr(EAttrType attrType, int value, bool isCommand = false)
         {
             Attrs.SetAttr(attrType, value, isCommand);

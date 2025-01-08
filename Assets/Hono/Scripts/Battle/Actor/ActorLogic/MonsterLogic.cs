@@ -8,12 +8,20 @@ namespace Hono.Scripts.Battle
         private float _maxDefGrowUpFactor = 0.05f;
 
         public MonsterLogicTable.MonsterLogicRow MonsterConfig { get; set; }
-
+        //玩家（主角单位）-- 自由组建队伍，号令逻辑，队伍产生技能组合
+        
+        //Unit 输入来源，输入处理，技能列表，
+        
+        //单位间的不同来自 输入方式，技能，行为模式(如何移动,不同的状态)
+        //单位-{
+        // -- 被玩家操控的可能
+        //}
+        
         public MonsterLogic()
         {
             resetInput(new AutoInput(this));
             resetStateMachine(new ActorStateMachine(this));
-
+            
             addComponent(new SkillComp(this));
             addComponent(new BuffComp(this));
             addComponent(new MotionComp(this));

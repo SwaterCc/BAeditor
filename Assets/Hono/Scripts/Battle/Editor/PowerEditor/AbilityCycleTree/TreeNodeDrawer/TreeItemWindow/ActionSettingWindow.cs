@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace Editor.AbilityEditor.TreeItemWindow
 {
-    public class ActionSettingWindow : ANodeSettingWindow<ActionNodeData>
+    public class ActionSettingWindow : ANodeSettingWindow<FunctionNodeData>
     {
         protected override void Init() { }
 

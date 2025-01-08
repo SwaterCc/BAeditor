@@ -39,7 +39,7 @@ namespace Hono.Scripts.Battle
 
         protected override void onEnterScene()
         {
-            BattleEventManager.Instance.Register(_checker);
+            EventManager.Instance.Register(_checker);
             if (Self.ModelController.Model.TryGetComponent<MonsterGeneratorModel>(out var comp))
             {
                 comp.GetWayPoint(ref _wayPoints);
@@ -56,7 +56,7 @@ namespace Hono.Scripts.Battle
 
         protected override void OnChildRecycle()
         {
-            BattleEventManager.Instance.UnRegister(_checker);
+            EventManager.Instance.UnRegister(_checker);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Hono.Scripts.Battle
 
             if (_wayPoints.Count > 0)
             {
-                actor.Variables.Set("WayPoints", _wayPoints);
+                actor.VariableBoard.Set("WayPoints", _wayPoints);
             }
 
             /*if (actor.Logic.TryGetComponent<BeHurtComp>(out var hurtComp)) {
@@ -267,7 +267,7 @@ namespace Hono.Scripts.Battle
                 _rtEventInfo.ConfigId = _beforeConfigId;
                 _rtEventInfo.MonsterGeneratorUid = Uid;
                 _rtEventInfo.CurRoundCount = BattleManager.CurBattle.RtInfo.CurRoundCount;
-                BattleEventManager.Instance.TriggerActorEvent(BattleConstValue.BattleRootControllerUid,
+                EventManager.Instance.TriggerActorEvent(BattleConstValue.BattleRootControllerUid,
                     EBattleEventType.OnMonsterGeneratorAllDead, _rtEventInfo);
             }
         }

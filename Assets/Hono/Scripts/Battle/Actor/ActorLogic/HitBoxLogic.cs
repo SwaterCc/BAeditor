@@ -115,7 +115,7 @@ namespace Hono.Scripts.Battle
             if (!_target.Logic.TryGetComponent(out BeHurtComp beHurtComp)) return;
             hitCounter(beHurtComp);
             var hitInfo = _damage.MakeDamage(1, _hitCountDict[beHurtComp], _hitBoxData.CriticalFlag);
-            BattleEventManager.Instance.TriggerActorEvent(_attacker.Uid, EBattleEventType.OnHit, hitInfo);
+            EventManager.Instance.TriggerActorEvent(_attacker.Uid, EBattleEventType.OnHit, hitInfo);
             beHurtComp.OnBeHurt(hitInfo);
         }
 
@@ -144,7 +144,7 @@ namespace Hono.Scripts.Battle
             {
                 hitCounter(beHurtComp);
                 var hitInfo = _damage.MakeDamage(_hurtComps.Count, _hitCountDict[beHurtComp], _hitBoxData.CriticalFlag);
-                BattleEventManager.Instance.TriggerActorEvent(_attacker.Uid, EBattleEventType.OnHit, hitInfo);
+                EventManager.Instance.TriggerActorEvent(_attacker.Uid, EBattleEventType.OnHit, hitInfo);
                 beHurtComp.OnBeHurt(hitInfo);
             }
         }

@@ -1,3 +1,5 @@
+using Hono.Scripts.Battle.AbilitySystem;
+
 namespace Hono.Scripts.Battle
 {
     public partial class ActorLogic

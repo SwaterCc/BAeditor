@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.AbilitySystem;
 using Hono.Scripts.Battle.Base;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;

@@ -18,7 +18,7 @@ namespace Hono.Scripts.Battle
         public Actor Self { get; }
         public int Uid => Self.Uid;
         public TagCollection TagCollection => Self.TagCollection;
-        public VariableBoard Variables => Self.Variables;
+        public VariableBoard Variables => Self.VariableBoard;
         public ActorLogic Logic => Self.Logic;
 
         /// <summary>
