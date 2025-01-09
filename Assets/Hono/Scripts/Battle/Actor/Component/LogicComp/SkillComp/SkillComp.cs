@@ -34,7 +34,7 @@ namespace Hono.Scripts.Battle
 
             public override void Init()
             {
-                _eventChecker = new UseSkillChecker(EBattleEventType.UseSkill, ActorLogic.Self, -1, UseSkillByEvent);
+                _eventChecker = new UseSkillChecker(EEventType.UseSkill, ActorLogic.Self, -1, UseSkillByEvent);
                 _eventChecker.Register();
                 AssetManager.Instance.AddReloadHandle(this);
             }

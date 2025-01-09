@@ -1,29 +1,22 @@
 using System;
+using Hono.Scripts.Battle.Base;
 
 namespace Hono.Scripts.Battle.Event
 {
     public class MonsterGenRtChecker : EventChecker
     {
-        private int _mGenUid;
-        private int _configId;
-        private int _roundCount;
+        public int _mGenUid;
+        public int _configId;
+        public int _roundCount;
 
-        public MonsterGenRtChecker(EBattleEventType eventType, int uid, int configId, int round,
-            Action<IEventInfo> func = null) : base(eventType,
-            BattleConstValue.BattleRootControllerUid, func)
-        {
-            _mGenUid = uid;
-            _configId = configId;
-            _roundCount = round;
-        }
+        public MonsterGenRtChecker() : base(EEventType.OnCallMonsterGenerator) { }
 
-        protected override bool onCheck(IEventInfo info)
+        protected override bool onCheck(in VariableBoard board)
         {
-            var rtInfo = (MonsterGenRtEventInfo)info;
             var res = true;
             if (_mGenUid > 0)
             {
-                res = _mGenUid == rtInfo.MonsterGeneratorUid;
+                res = _mGenUid == board.Get<int>("MonsterGeneratorUid");
             }
 
             if (_configId > 0)

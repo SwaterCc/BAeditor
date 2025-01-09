@@ -15,14 +15,14 @@ namespace Editor.AbilityEditor.TreeItemWindow
     public class ListenerSettingWindow : ANodeSettingWindow<ListenerNodeData>
     {
         private List<AParamsField> _parameterFields;
-        private EBattleEventType _curEvent;
+        private EEventType _curEvent;
 
         protected override void Init()
         {
             _parameterFields = new List<AParamsField>();
-            _curEvent = TempData.EventType;
+            _curEvent = TempData.eventType;
 
-            if (!AbilityFuncInfoCache.EventCheckerDict.TryGetValue(TempData.EventType, out var value))
+            if (!AbilityFuncInfoCache.EventCheckerDict.TryGetValue(TempData.eventType, out var value))
             {
                 return;
             }
@@ -49,7 +49,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
         private void initParameter()
         {
-            if (!AbilityFuncInfoCache.EventCheckerDict.TryGetValue(TempData.EventType, out var value))
+            if (!AbilityFuncInfoCache.EventCheckerDict.TryGetValue(TempData.eventType, out var value))
             {
                 return;
             }
@@ -78,11 +78,11 @@ namespace Editor.AbilityEditor.TreeItemWindow
         {
             SirenixEditorGUI.BeginBox();
 
-            TempData.IsEvent = SirenixEditorFields.Dropdown(new GUIContent("选择类型："), TempData.IsEvent,
+            TempData.isEvent = SirenixEditorFields.Dropdown(new GUIContent("选择类型："), TempData.isEvent,
                                                             new[] { true, false },
                                                             new[] { "事件", "消息" });
 
-            if (TempData.IsEvent)
+            if (TempData.isEvent)
             {
                 showEvent();
             }
@@ -96,22 +96,22 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
         private void showMsg()
         {
-            TempData.MsgName = SirenixEditorFields.TextField("消息Key：", TempData.MsgName);
+            TempData.msgName = SirenixEditorFields.TextField("消息Key：", TempData.msgName);
         }
 
         private void showEvent()
         {
-            TempData.EventType = SirenixEditorFields.Dropdown(new GUIContent("事件类型"),
-                                                              TempData.EventType,
+            TempData.eventType = SirenixEditorFields.Dropdown(new GUIContent("事件类型"),
+                                                              TempData.eventType,
                                                               AbilityFuncInfoCache.EventCheckerDict.Keys.ToList());
 
-            if (_curEvent != TempData.EventType)
+            if (_curEvent != TempData.eventType)
             {
                 initParameter();
-                _curEvent = TempData.EventType;
+                _curEvent = TempData.eventType;
             }
 
-            if (_curEvent == EBattleEventType.NoInit || string.IsNullOrEmpty(TempData.GetChecker.funcName))
+            if (_curEvent == EEventType.NoInit || string.IsNullOrEmpty(TempData.GetChecker.funcName))
             {
                 EditorGUILayout.LabelField("未初始化，请选择事件类型");
             }

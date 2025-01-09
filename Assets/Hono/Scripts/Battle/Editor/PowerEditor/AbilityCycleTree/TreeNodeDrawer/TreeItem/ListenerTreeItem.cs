@@ -44,13 +44,13 @@ namespace Editor.AbilityEditor.TreeItem
         protected override string getButtonText()
         {
             string text = "";
-            if (Data.IsEvent)
+            if (Data.isEvent)
             {
-                text = "等待事件：" + Enum.GetName(typeof(EBattleEventType), Data.EventType);
+                text = "等待事件：" + Enum.GetName(typeof(EEventType), Data.eventType);
             }
             else
             {
-                var msgName = string.IsNullOrEmpty(Data.MsgName) ? "未定义" : Data.MsgName;
+                var msgName = string.IsNullOrEmpty(Data.msgName) ? "未定义" : Data.msgName;
                 text = "等待消息：" + msgName;
             }
 

@@ -34,12 +34,17 @@ namespace Hono.Scripts.Battle
         /// <summary>
         ///     游戏中最大队伍数量
         /// </summary>
-        public static int TeamMaxCount = 4;
+        public const int TeamMaxCount = 4;
 
         /// <summary>
         ///     队伍成员最大数量
         /// </summary>
-        public static int TeamMemberMaxCount = 4;
+        public const int TeamMemberMaxCount = 4;
+        
+        /// <summary>
+        /// 世界事件（通知全部listener的事件）的ActorKey
+        /// </summary>
+        public const int WorldEventKey = -999;
 
 
         public static LayerMask ActorPawn = 1 << 10;

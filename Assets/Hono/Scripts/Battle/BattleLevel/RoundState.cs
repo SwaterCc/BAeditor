@@ -67,17 +67,17 @@ namespace Hono.Scripts.Battle
             protected abstract void onExit();
 
 
-            private EBattleEventType getEventType(bool isEnter)
+            private EEventType getEventType(bool isEnter)
             {
                 switch (GetRoundState())
                 {
                     case ERoundState.Ready:
-                        return isEnter ? EBattleEventType.RoundReadyEnter : EBattleEventType.RoundReadyExit;
+                        return isEnter ? EEventType.RoundReadyEnter : EEventType.RoundReadyExit;
                     case ERoundState.Running:
-                        return isEnter ? EBattleEventType.RoundRunningEnter : EBattleEventType.RoundRunningExit;
+                        return isEnter ? EEventType.RoundRunningEnter : EEventType.RoundRunningExit;
                     case ERoundState.SuccessScoring:
                     case ERoundState.FailedScoring:
-                        return isEnter ? EBattleEventType.RoundScoreEnter : EBattleEventType.RoundScoreExit;
+                        return isEnter ? EEventType.RoundScoreEnter : EEventType.RoundScoreExit;
                 }
 
                 throw new InvalidEnumArgumentException("找不到枚举");

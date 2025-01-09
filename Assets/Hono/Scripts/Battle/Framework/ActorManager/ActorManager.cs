@@ -10,7 +10,7 @@ using UnityEngine.Profiling;
 
 namespace Hono.Scripts.Battle
 {
-    public partial class ActorManager : Singleton<ActorManager>,IBattleFrameworkTick
+    public partial class ActorManager : Singleton<ActorManager>, IBattleFrameworkTick
     {
         /// <summary>
         /// 正在运行的actor列表
@@ -32,23 +32,6 @@ namespace Hono.Scripts.Battle
             _filter = new Filter(this);
         }
 
-        public void ForeachActor(Action<Actor> action)
-        {
-            foreach (var item in _runningActorList)
-            {
-                switch (item.ActorType)
-                {
-                    case EActorType.Pawn:
-                    case EActorType.Building:
-                    case EActorType.Monster:
-                        action(item);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
         /// <summary>
         /// 创建Actor
         /// </summary>
@@ -57,11 +40,13 @@ namespace Hono.Scripts.Battle
         /// <param name="actorModel"></param>
         /// <param name="afterSetupCallFunc"></param>
         /// <returns>返回Actor对象的Uid</returns>
-        public int CreateActor(EActorType type, int configId = 0, ActorModel actorModel = null,
+        public int CreateActor(EActorType type,
+            int configId = 0,
+            ActorModel actorModel = null,
             Action<Actor> afterSetupCallFunc = null)
         {
             var actor = getActor(type, configId, actorModel, afterSetupCallFunc);
-            actor.SetAttr(EAttrType.AttrSourceActorUid, actor.Uid, false);
+            actor.SetAttr(EAttrType.AttrSourceActorUid,    actor.Uid, false);
             actor.SetAttr(EAttrType.AttrTopSourceActorUid, actor.Uid, false);
             return actor.Uid;
         }
@@ -75,7 +60,10 @@ namespace Hono.Scripts.Battle
         /// <param name="fromTopSummer">是否属于最顶层召唤者</param>
         /// <param name="afterSetupCallFunc">Setup后的回调</param>
         /// <returns>返回Actor对象的Uid</returns>
-        public int SummonActor(Actor summoner, EActorType type, int configId, bool fromTopSummer,
+        public int SummonActor(Actor summoner,
+            EActorType type,
+            int configId,
+            bool fromTopSummer,
             Action<Actor> afterSetupCallFunc = null)
         {
             var summoned = getActor(type, configId, null, afterSetupCallFunc);
@@ -85,7 +73,7 @@ namespace Hono.Scripts.Battle
                 : summoner.GetAttr(EAttrType.AttrSourceActorUid);
             summoned.SetAttr(EAttrType.AttrSourceActorUid, sourceUid, false);
             summoned.SetAttr(EAttrType.AttrTopSourceActorUid, summoner.GetAttr(EAttrType.AttrTopSourceActorUid),
-                false);
+                             false);
             summoned.SetAttr(EAttrType.AttrFaction, summoner.GetAttr(EAttrType.AttrFaction), false);
             return summoned.Uid;
         }

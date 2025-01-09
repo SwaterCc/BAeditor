@@ -257,7 +257,7 @@ namespace Hono.Scripts.Battle
                     P4 = p4,
                     P5 = p5,
                 };
-                MessageCenter.Instance.AddMsg(actor.Uid, msgCache);
+                MessageManager.Instance.AddMsg(actor.Uid, msgCache);
             }
         }
 
@@ -539,62 +539,6 @@ namespace Hono.Scripts.Battle
 
         [AbilityFunction]
         public  float FloatSelfSubtracting(float self) => --self;
-
-        #endregion
-
-
-        #region 场景流程
-
-        [AbilityFunction]
-        public  void ChangeSoliderType(int soliderId)
-        {
-            if (Actor.ActorType != EActorType.Building)
-            {
-                return;
-            }
-
-            if (Actor.Logic is not BarrackLogic barrackLogic)
-            {
-                return;
-            }
-
-            //barrackLogic.ChangeSoliderId(soliderId);
-        }
-
-        [AbilityFunction]
-        public  void SetLootList(LootList lootList)
-        {
-            BattleManager.CurBattle.LootController.SetLootList(ref lootList);
-        }
-
-        [AbilityFunction]
-        public  void ChangeLootRule(ELootDropRule dropRule, int killNumOrTag)
-        {
-            BattleManager.CurBattle.LootController.SwitchRule(dropRule, killNumOrTag);
-        }
-
-        [AbilityFunction]
-        public  void CreateLoot(RefVector3 lootPos)
-        {
-            BattleManager.CurBattle.LootController.CreateLoot(lootPos);
-        }
-
-        [AbilityFunction]
-        public  int CurRoundCount()
-        {
-            return BattleManager.CurBattle.RtInfo.CurRoundCount;
-        }
-
-        [AbilityFunction]
-        public  void CallMonsterGeneratorRun(int uid, int configId)
-        {
-            var monsterGenEventInfo = new MonsterGenEventInfo
-            {
-                MonsterConfigId = configId, SingleUid = uid, Behave = EMonsterGenBehave.Summon
-            };
-            EventManager.Instance.TriggerActorEvent(uid, EBattleEventType.OnCallMonsterGenerator,
-                monsterGenEventInfo);
-        }
 
         #endregion
     }

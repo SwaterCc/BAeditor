@@ -168,7 +168,7 @@ namespace Hono.Scripts.Battle
                 _usedSkillEventInfo.SkillId = Ability.Id;
                 _usedSkillEventInfo.UserUid = Logic.Uid;
 
-                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnSkillUseSuccess,
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EEventType.OnSkillUseSuccess,
                     _usedSkillEventInfo);
             }
 
@@ -191,7 +191,7 @@ namespace Hono.Scripts.Battle
                     Logic._stateMachine.SwitchState(EActorStateType.Idle);
                 }
 
-                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnSkillStop,
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EEventType.OnSkillStop,
                     _usedSkillEventInfo);
             }
 
@@ -238,7 +238,7 @@ namespace Hono.Scripts.Battle
             {
                 calculateCd();
                 _curCdPercent = 1;
-                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.SkillCDBegin, _cdEventInfo);
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EEventType.SkillCDBegin, _cdEventInfo);
             }
 
             /// <summary>
@@ -256,7 +256,7 @@ namespace Hono.Scripts.Battle
             private void CdEnd()
             {
                 _curCdPercent = 0;
-                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.SkillCDEnd, _cdEventInfo);
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EEventType.SkillCDEnd, _cdEventInfo);
                 _cdTick = null;
             }
 

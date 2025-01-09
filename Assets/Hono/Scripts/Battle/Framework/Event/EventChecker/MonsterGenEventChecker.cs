@@ -8,10 +8,10 @@ namespace Hono.Scripts.Battle.Event
 {
     public class MonsterGenEventChecker : EventChecker
     {
-        public MonsterGenEventChecker(EBattleEventType eventType, Actor actor, Action<IEventInfo> func = null) : base(
+        public MonsterGenEventChecker(EEventType eventType, Actor actor, Action<IEventInfo> func = null) : base(
             eventType, actor, func) { }
 
-        public MonsterGenEventChecker(EBattleEventType eventType, int actorUid, Action<IEventInfo> func = null) : base(
+        public MonsterGenEventChecker(EEventType eventType, int actorUid, Action<IEventInfo> func = null) : base(
             eventType, actorUid, func) { }
 
         protected override bool onCheck(IEventInfo info)

@@ -1,6 +1,7 @@
 #region
 
 using System;
+using Hono.Scripts.Battle.Base;
 
 #endregion
 
@@ -8,31 +9,49 @@ namespace Hono.Scripts.Battle.Message
 {
     public class MessageListener
     {
+        /// <summary>
+        /// 关联的Actor
+        /// </summary>
+        public int BindActorUid { get; private set; }
+
+        /// <summary>
+        /// 绑定的MsgKey
+        /// </summary>
         public string MsgKey { get; private set; }
 
-        private Action<object, object, object, object, object> _callback;
+        /// <summary>
+        /// msg收到消息时的回调
+        /// </summary>
+        private Action<VariableBoard> _callback;
 
-        public MessageListener() { }
+        public MessageListener()
+        {
+            BindActorUid = -1;
+            MsgKey = null;
+            _callback = null;
+        }
 
-        public MessageListener(string msgKey, Action<object, object, object, object, object> callback)
+        public MessageListener(int bindActorUid, string msgKey, Action<VariableBoard> callback)
+        {
+            BindActorUid = bindActorUid;
+            MsgKey = msgKey;
+            _callback = callback;
+        }
+
+        public void Bind(string msgKey, Action<VariableBoard> callback)
         {
             MsgKey = msgKey;
             _callback = callback;
         }
 
-        public void Bind(string msgKey, Action<object, object, object, object, object> callback)
+        public void Invoke(VariableBoard board)
         {
-            MsgKey = msgKey;
-            _callback = callback;
+            _callback?.Invoke(board);
         }
 
-        public void Invoke(object p1, object p2, object p3, object p4, object p5)
+        public void Clear()
         {
-            _callback.Invoke(p1, p2, p3, p4, p5);
-        }
-
-        public void Reset()
-        {
+            BindActorUid = -1;
             MsgKey = null;
             _callback = null;
         }

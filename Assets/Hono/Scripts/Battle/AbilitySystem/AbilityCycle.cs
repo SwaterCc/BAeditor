@@ -332,6 +332,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
                 _ticks.Clear();
                 _tickRemoveList.Clear();
+                
                 Groups.Clear();
                 CurGroup = null;
 
@@ -340,7 +341,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
                 {
                     pHead.Value.Recycle();
                 }
-
+                //TODO:疑似子节点没回收
                 _cycleHeads.Clear();
             }
         }

@@ -143,7 +143,7 @@ namespace Hono.Scripts.Battle
 
             public void MotionBegin()
             {
-                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnMotionBegin,
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EEventType.OnMotionBegin,
                     _motionEventInfo);
                 IsBegin = true;
             }
@@ -220,7 +220,7 @@ namespace Hono.Scripts.Battle
                 }
 
                 _motionEventInfo.MotionCollisionId = colliderUid;
-                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnMoveCollision,
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EEventType.OnMoveCollision,
                     _motionEventInfo);
 
                 IsEnd = true;
@@ -228,7 +228,7 @@ namespace Hono.Scripts.Battle
 
             public void MoveEnd()
             {
-                EventManager.Instance.TriggerActorEvent(Logic.Uid, EBattleEventType.OnMotionEnd,
+                EventManager.Instance.TriggerActorEvent(Logic.Uid, EEventType.OnMotionEnd,
                     _motionEventInfo);
             }
 

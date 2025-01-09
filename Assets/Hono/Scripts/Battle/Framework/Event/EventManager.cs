@@ -1,85 +1,138 @@
 #region
 
+using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Tools;
+using UnityEngine;
 
 #endregion
 
 namespace Hono.Scripts.Battle.Event
 {
     /// <summary>
-    ///     管理战斗逻辑中事件节点的注册和监听
+    /// 战斗逻辑的事件管理
+    /// <para>
+    /// 对于事件的定义
+    /// 事件是一种即使的通知，触发者和接收者是一对多的关系
+    /// </para>
     /// </summary>
-    public class EventManager : Singleton<EventManager>, IBattleFrameworkEnterExit
+    public class EventManager : Singleton<EventManager>, IBattleFrameworkEnterExit, IBattleFrameworkTick
     {
         /// <summary>
-        /// 事件注册列表
+        /// actor绑定注册列表
         /// </summary>
-        private readonly Dictionary<EBattleEventType, List<IEventChecker>> _eventDict = new(128);
+        private readonly Dictionary<int, ActorEventListenerCollection> _actorEventListeners = new();
+        private readonly EventListenerCollection _worldEventListeners = new(20);
 
-        
-        private readonly Dictionary<int, Dictionary<EBattleEventType, List<IEventChecker>>> _actorEventListenerCollection;
-        
-        public void OnEnterBattle()
-        {
-            _eventDict.Clear();
-        }
+        public void OnEnterBattle() { }
 
         public void OnExitBattle()
         {
-            _eventDict.Clear();
+            _worldEventListeners.Clear();
+            foreach (var listeners in _actorEventListeners.Values)
+            {
+                listeners.Clear();
+            }
         }
 
-        public void Register(IEventChecker checker)
+        /// <summary>
+        /// 添加事件容器
+        /// </summary>
+        /// <param name="collection"></param>
+        public void AddListenerCollection(ActorEventListenerCollection collection)
         {
-            if (!_eventDict.TryGetValue(checker.EventType, out var handles))
-            {
-                handles = new List<IEventChecker>();
-                _eventDict.Add(checker.EventType, handles);
-            }
-
-            if (!handles.Contains(checker))
-            {
-                handles.Add(checker);
-            }
+            _actorEventListeners.TryAdd(collection.Actor.Uid,collection);
         }
         
-        public void UnRegister(IEventChecker checker)
+        /// <summary>
+        /// 删除事件容器
+        /// </summary>
+        /// <param name="collection"></param>
+        public void RemoveListenerCollection(ActorEventListenerCollection collection)
         {
-            if (checker == null || _eventDict == null) return;
-            if (!_eventDict.TryGetValue(checker.EventType, out var handles)) return;
-            if (handles.Contains(checker))
-            {
-                handles.Remove(checker);
-            }
+            _actorEventListeners.Remove(collection.Actor.Uid);
         }
+        
 
         /// <summary>
-        ///     触发事件
+        /// 注册全局事件监听
         /// </summary>
-        public void TriggerActorEvent(int actorUid, EBattleEventType eventType, IEventInfo eventInfo = null)
+        /// <param name="listener"></param>
+        /// <exception cref="Exception"></exception>
+        public void RegisterGlobalListener(GlobalEventListener listener)
         {
-            if (!_eventDict.TryGetValue(eventType, out var checkers)) return;
-            foreach (IEventChecker checker in checkers)
+#if UNITY_EDITOR
+            if (listener == null)
             {
-                if (checker.CheckActorOnly(actorUid, eventInfo))
+                throw new Exception("listener is null");
+            }
+
+            if (_worldEventListeners.Contains(listener))
+            {
+                Debug.LogWarning("重复注册相同的listener");
+            }
+
+            if (listener.EventType == EEventType.NoInit)
+            {
+                Debug.LogError("listener 未绑定Event！");
+                return;
+            }
+#endif
+            //加入对象监听列表
+            _worldEventListeners.AddListener(listener);
+        }
+
+        public void UnregisterGlobalListener(GlobalEventListener listener)
+        {
+#if UNITY_EDITOR
+            if (listener == null)
+            {
+                throw new Exception("listener is null");
+            }
+
+            if (listener.EventType == EEventType.NoInit)
+            {
+                Debug.LogError("listener 未绑定Event！");
+                return;
+            }
+#endif
+            _worldEventListeners.RemoveListener(listener);
+        }
+        
+        public void Tick(float dt)
+        {
+            _worldEventListeners.Tick(dt);
+        }
+        
+        /// <summary>
+        /// 触发事件
+        /// </summary>
+        /// <param name="eventType">事件类型</param>
+        /// <param name="actorUid">如果小于0则该事件为全局事件，会通知所有全局监听，大于0则会通知对于Actor内的监听</param>
+        /// <param name="board">事件信息</param>
+        public void FireEvent(EEventType eventType,
+            int actorUid = -1,
+            VariableBoard board = null)
+        {
+            bool isGlobalEvent = actorUid > 0;
+
+            if (isGlobalEvent)
+            {
+                //全局事件 通知actor Listener中监听全局事件的listener
+                foreach (var collection in  _actorEventListeners.Values)
                 {
-                    checker.Invoke(eventInfo);
+                    collection.FireEvent(eventType, board);
                 }
+                //然后通知世界监听者
+                _worldEventListeners.FireEvent(eventType,board);
             }
-        }
-
-        /// <summary>
-        ///     触发全局事件
-        /// </summary>
-        public void TriggerGlobalEvent(EBattleEventType eventType, IEventInfo eventInfo = null)
-        {
-            if (!_eventDict.TryGetValue(eventType, out var checkers)) return;
-            foreach (IEventChecker checker in checkers)
+            else
             {
-                if (checker.CheckGlobal(eventInfo))
+                //Actor事件，仅通知给对应的Actor
+                if(_actorEventListeners.TryGetValue(actorUid,out var collection))
                 {
-                    checker.Invoke(eventInfo);
+                    collection.FireEvent(eventType, board);
                 }
             }
         }

@@ -65,9 +65,9 @@ namespace Editor.AbilityEditor
 
             if (_treeItem.TryGetFirstParent<ListenerTreeItem>(out var parentItem))
             {
-                if (parentItem.Data.IsEvent)
+                if (parentItem.Data.isEvent)
                 {
-                    if (AbilityFuncInfoCache.EventCheckerDict.TryGetValue(parentItem.Data.EventType,
+                    if (AbilityFuncInfoCache.EventCheckerDict.TryGetValue(parentItem.Data.eventType,
                                                                           out var eventEditorInfo))
                     {
                         var fields =

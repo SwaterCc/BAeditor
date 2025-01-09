@@ -13,57 +13,46 @@ namespace Hono.Scripts.Battle.AbilitySystem
     {
         private class AListenerNode : ANode<ListenerNodeData>, IAPoolObject
         {
-            private EventChecker _checker;
+            private readonly ActorEventListener _eventListener = new();
             private readonly MessageListener _messageListener = new();
 
-            /// <summary>
-            /// TODO:还有GC
-            /// </summary>
+            public VariableBoard Board { get; private set; }
+
             public void RegisterEvent()
             {
-                if (Data.IsEvent)
+                if (Data.isEvent)
                 {
-                    _checker = ParseRef<EventChecker>(Data.GetChecker);
-                    _checker.BindFunc(onEventFired);
-                    EventManager.Instance.Register(_checker);
+                    _eventListener.BindEvent(Data.eventType);
+                    _eventListener.SetInterval(Data.eventInterval);
+                    _eventListener.SetCallback(OnFire);
+                    _eventListener.SetupChecker(Data.Checker);
+                    _eventListener.IsGlobalListener = Data.isGlobalEvtListener;
+                    AContext.Actor.RegisterEvtListener(_eventListener);
                 }
                 else
                 {
-                    _messageListener.Bind(Data.MsgName, onMsgCall);
-                    AContext.Actor.AddMsgListener(_messageListener);
+                    _messageListener.Bind(Data.msgName, OnFire);
+                    AContext.Actor.RegisterMsgListener(_messageListener);
                 }
             }
 
             public void UnRegisterEvent()
             {
-                if (Data.IsEvent)
+                if (Data.isEvent)
                 {
-                    _checker?.UnRegister();
+                    AContext.Actor.UnregisterEvtListener(_eventListener);
                 }
                 else
                 {
-                    AContext.Actor.RemoveMsgListener(_messageListener);
+                    AContext.Actor.UnregisterMsgListener(_messageListener);
                 }
             }
 
-            private void onEventFired(IEventInfo eventInfo)
+            private void OnFire(VariableBoard board)
             {
+                Board = board;
                 DoChildrenJob();
-            }
-
-            private void onMsgCall(object p1, object p2, object p3, object p4, object p5)
-            {
-                AContext.VariableBoard.Set("Msg:P1", p1);
-                AContext.VariableBoard.Set("Msg:P2", p2);
-                AContext.VariableBoard.Set("Msg:P3", p3);
-                AContext.VariableBoard.Set("Msg:P4", p4);
-                AContext.VariableBoard.Set("Msg:P5", p5);
-                DoChildrenJob();
-                AContext.VariableBoard.Delete("Msg:P1");
-                AContext.VariableBoard.Delete("Msg:P2");
-                AContext.VariableBoard.Delete("Msg:P3");
-                AContext.VariableBoard.Delete("Msg:P4");
-                AContext.VariableBoard.Delete("Msg:P5");
+                Board = null;
             }
 
             public override void DoJob() { }
@@ -75,7 +64,8 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             public new void OnRecycle()
             {
-                _messageListener.Reset();
+                _eventListener.Clear();
+                _messageListener.Clear();
                 ((ANode)this).OnRecycle();
             }
         }

@@ -1,5 +1,6 @@
 using System;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Message;
 using UnityEngine;
 
@@ -34,7 +35,7 @@ namespace Hono.Scripts.Battle
         /// Tag
         /// </summary>
         public TagCollection TagCollection { get; }
-        
+
         /// <summary>
         /// Actor属性列表
         /// </summary>
@@ -49,16 +50,6 @@ namespace Hono.Scripts.Battle
         /// ability控制器
         /// </summary>
         public AbilityController Abilities { get; }
-
-        /// <summary>
-        /// 玩家位置信息
-        /// </summary>
-        private readonly ActorLocation _location;
-        
-        /// <summary>
-        /// 消息容器
-        /// </summary>
-        private readonly MessageCollection _message;
 
         /// <summary>
         /// 配置id
@@ -79,6 +70,16 @@ namespace Hono.Scripts.Battle
         /// 当前旋转
         /// </summary>
         public Quaternion Rot { get; set; }
+
+        /// <summary>
+        /// Actor事件容器
+        /// </summary>
+        private readonly ActorEventListenerCollection _evtListenerCollection;
+
+        /// <summary>
+        /// Actor消息容器
+        /// </summary>
+        private readonly MessageCollection _messageCollection;
 
         #region 回调周期
 
@@ -111,12 +112,14 @@ namespace Hono.Scripts.Battle
 
         public Actor()
         {
-            _message = new MessageCollection(this);
             Attrs = new AttrCollection(this);
             Abilities = new AbilityController(this);
             VariableBoard = new VariableBoard();
             TagCollection = new TagCollection();
             ModelController = new ModelController(this);
+
+            _evtListenerCollection = new ActorEventListenerCollection(this, 10);
+            _messageCollection = new MessageCollection(this, 10);
         }
 
         #region 周期函数
@@ -131,7 +134,6 @@ namespace Hono.Scripts.Battle
             Uid = uid;
             SetAttr(EAttrType.AttrUid, uid, false);
             ActorType = actorType;
-            _message.Init();
         }
 
         /// <summary>
@@ -153,6 +155,9 @@ namespace Hono.Scripts.Battle
             Logic.EnterScene();
             ModelController.EnterScene();
             EnterSceneCallback?.Invoke(this);
+
+            EventManager.Instance.AddListenerCollection(_evtListenerCollection);
+            MessageManager.Instance.AddMsgCollection(_messageCollection);
         }
 
         /// <summary>
@@ -166,6 +171,9 @@ namespace Hono.Scripts.Battle
             ModelController.Tick(dt);
             Abilities.Tick(dt);
             AfterTickCallBack?.Invoke(this, dt);
+
+            _evtListenerCollection.Tick(dt);
+            _messageCollection.Tick(dt);
         }
 
         /// <summary>
@@ -175,6 +183,8 @@ namespace Hono.Scripts.Battle
         {
             ModelController.ExitScene();
             ExitSceneCallBack?.Invoke(this);
+            EventManager.Instance.RemoveListenerCollection(_evtListenerCollection);
+            MessageManager.Instance.RemoveMsgCollection(_messageCollection);
         }
 
         /// <summary>
@@ -188,38 +198,68 @@ namespace Hono.Scripts.Battle
             AfterTickCallBack = null;
             ExitSceneCallBack = null;
 
-            _message.Clear();
             TagCollection.Clear();
             Abilities.Clear();
             VariableBoard.Clear();
             ModelController.Clear();
             Logic.RecycleLogicObject();
             Logic = null;
+
+            _evtListenerCollection.Clear();
+            _messageCollection.Clear();
         }
 
         #endregion
 
         #region 对外接口
 
-        public void AddMsgListener(MessageListener listener)
-        {
-            _message.AddListener(listener);
-        }
-
-        public void RemoveMsgListener(MessageListener listener)
-        {
-            _message.RemoveListener(listener);
-        }
-
         public int GetAttr(EAttrType attrType)
         {
             var value = Attrs.GetAttr(attrType);
             return value;
         }
-        
+
         public void SetAttr(EAttrType attrType, int value, bool isCommand = false)
         {
             Attrs.SetAttr(attrType, value, isCommand);
+        }
+
+        /// <summary>
+        /// 注册事件
+        /// </summary>
+        /// <param name="eventListener"></param>
+        public void RegisterEvtListener(ActorEventListener eventListener)
+        {
+            _evtListenerCollection.AddListener(eventListener);
+        }
+
+        /// <summary>
+        /// 注册事件
+        /// </summary>
+        /// <param name="eventListener"></param>
+        public void UnregisterEvtListener(ActorEventListener eventListener)
+        {
+            _evtListenerCollection.RemoveListener(eventListener);
+        }
+
+        /// <summary>
+        /// 触发仅限定于本Actor内部的事件监听
+        /// </summary>
+        /// <param name="eventType"></param>
+        /// <param name="board"></param>
+        public void FireEvent(EEventType eventType, VariableBoard board = null)
+        {
+            EventManager.Instance.FireEvent(eventType, Uid, board);
+        }
+
+        /// <summary>
+        /// 触发全局事件
+        /// </summary>
+        /// <param name="eventType"></param>
+        /// <param name="board"></param>
+        public void FireGlobalEvent(EEventType eventType, VariableBoard board = null)
+        {
+            EventManager.Instance.FireEvent(eventType, -1, board);
         }
 
         #endregion

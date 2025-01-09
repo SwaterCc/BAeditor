@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Hono.Scripts.Battle.AbilitySystem;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
+using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -118,25 +119,41 @@ namespace Hono.Scripts.Battle
     }
 
     [Serializable]
+    public class MsgSendNodeData : AbilityNodeData
+    {
+        public string msgKey;
+        public List<object> Value = new();
+        public override AbilityNodeData DeepCopy()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [Serializable]
     public class ListenerNodeData : AbilityNodeData
     {
-        public bool IsEvent;
-        public EBattleEventType EventType;
-        public AParams GetChecker = new();
-        public string MsgName;
-
+        public bool isEvent;
+        public EEventType eventType;
+        public float eventInterval;
+        public bool isGlobalEvtListener;
+        [OdinSerialize]
+        public EventChecker Checker;
+        
+        public string msgName;
+        
         public override AbilityNodeData DeepCopy()
         {
             var copy = new ListenerNodeData();
-            copy.IsEvent = IsEvent;
-            if (copy.IsEvent)
+            copy.isEvent = isEvent;
+            if (copy.isEvent)
             {
-                copy.EventType = EventType;
-                copy.GetChecker = new AParams(GetChecker);
+                copy.eventType = eventType;
+                copy.eventInterval = eventInterval;
+                copy.Checker = Checker;
             }
             else
             {
-                copy.MsgName = MsgName;
+                copy.msgName = msgName;
             }
 
             return copy;

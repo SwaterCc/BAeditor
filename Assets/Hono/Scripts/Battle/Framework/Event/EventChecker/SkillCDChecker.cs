@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle.Event
     {
         private int _skillId;
 
-        public SkillCDChecker(EBattleEventType eventType, int actorUid, int skillId, Action<IEventInfo> func = null) :
+        public SkillCDChecker(EEventType eventType, int actorUid, int skillId, Action<IEventInfo> func = null) :
             base(eventType, actorUid, func)
         {
             _skillId = skillId;

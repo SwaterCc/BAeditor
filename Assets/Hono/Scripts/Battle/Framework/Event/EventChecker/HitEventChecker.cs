@@ -18,7 +18,7 @@ namespace Hono.Scripts.Battle.Event
         /// </summary>
         private int _damageConfigId;
 
-        public HitEventChecker(EBattleEventType eventType, Actor bindActor, int abilitySourceUid, int damageConfigId,
+        public HitEventChecker(EEventType eventType, Actor bindActor, int abilitySourceUid, int damageConfigId,
             Action<IEventInfo> func = null) :
             base(eventType, bindActor, func)
         {

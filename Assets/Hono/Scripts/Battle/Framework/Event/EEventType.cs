@@ -6,7 +6,7 @@ using Hono.Scripts.Battle.Tools.CustomAttribute;
 
 namespace Hono.Scripts.Battle.Event
 {
-    public enum EBattleEventType
+    public enum EEventType
     {
         //空占位，说明没有初始化,千万不要改顺序！！
         NoInit = 0,

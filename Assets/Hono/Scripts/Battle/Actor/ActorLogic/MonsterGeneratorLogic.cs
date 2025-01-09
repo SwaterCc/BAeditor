@@ -32,14 +32,14 @@ namespace Hono.Scripts.Battle
 
         public MonsterGeneratorLogic()
         {
-            _checker = new MonsterGenEventChecker(EBattleEventType.OnCallMonsterGenerator, Uid,
+            _checker = new MonsterGenEventChecker(EEventType.OnCallMonsterGenerator, Uid,
                 (info) => { OnGeneratorCall((MonsterGenEventInfo)info); });
             _rtEventInfo = new MonsterGenRtEventInfo();
         }
 
         protected override void onEnterScene()
         {
-            EventManager.Instance.Register(_checker);
+            EventManager.Instance.RegisterWorldListener(_checker);
             if (Self.ModelController.Model.TryGetComponent<MonsterGeneratorModel>(out var comp))
             {
                 comp.GetWayPoint(ref _wayPoints);
@@ -268,7 +268,7 @@ namespace Hono.Scripts.Battle
                 _rtEventInfo.MonsterGeneratorUid = Uid;
                 _rtEventInfo.CurRoundCount = BattleManager.CurBattle.RtInfo.CurRoundCount;
                 EventManager.Instance.TriggerActorEvent(BattleConstValue.BattleRootControllerUid,
-                    EBattleEventType.OnMonsterGeneratorAllDead, _rtEventInfo);
+                    EEventType.OnMonsterGeneratorAllDead, _rtEventInfo);
             }
         }
     }

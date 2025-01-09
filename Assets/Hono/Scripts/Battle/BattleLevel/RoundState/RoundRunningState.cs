@@ -134,7 +134,7 @@ namespace Hono.Scripts.Battle
                     _monsterGenEventInfo.MonsterConfigId = info.ConfigId;
                     _monsterGenEventInfo.SingleUid = info.MonsterBuilderUid;
                     _monsterGenEventInfo.Behave = EMonsterGenBehave.Summon;
-                    EventManager.Instance.TriggerGlobalEvent(EBattleEventType.OnCallMonsterGenerator,
+                    EventManager.Instance.TriggerGlobalEvent(EEventType.OnCallMonsterGenerator,
                         _monsterGenEventInfo);
                 }
 
@@ -220,7 +220,7 @@ namespace Hono.Scripts.Battle
                     _monsterGenEventInfo.MonsterConfigId = info.ConfigId;
                     _monsterGenEventInfo.SingleUid = info.MonsterBuilderUid;
                     _monsterGenEventInfo.Behave = EMonsterGenBehave.Clear;
-                    EventManager.Instance.TriggerGlobalEvent(EBattleEventType.OnCallMonsterGenerator,
+                    EventManager.Instance.TriggerGlobalEvent(EEventType.OnCallMonsterGenerator,
                         _monsterGenEventInfo);
                 }
 

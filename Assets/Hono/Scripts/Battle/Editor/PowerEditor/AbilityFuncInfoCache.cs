@@ -59,7 +59,7 @@ namespace Editor.BattleEditor.AbilityEditor
         /// <summary>
         /// 事件字典
         /// </summary>
-        public static readonly Dictionary<EBattleEventType, EventEditorInfo> EventCheckerDict = new();
+        public static readonly Dictionary<EEventType, EventEditorInfo> EventCheckerDict = new();
 
         public static FuncInfo GetFuncInfo(string funcName)
         {
@@ -108,12 +108,12 @@ namespace Editor.BattleEditor.AbilityEditor
             }
             
             EventCheckerDict.Clear();
-            foreach (var field in typeof(EBattleEventType).GetFields())
+            foreach (var field in typeof(EEventType).GetFields())
             {
                 var checkerBinder = field.GetCustomAttribute<EventCheckerBinder>();
                 if (checkerBinder == null) continue;
 
-                var enumValue = (EBattleEventType)field.GetValue(null);
+                var enumValue = (EEventType)field.GetValue(null);
                 // 获取枚举值
                 var eventInfo = new EventEditorInfo();
                 eventInfo.CreateFuncName = checkerBinder.CreateFunc;

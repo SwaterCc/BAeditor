@@ -24,9 +24,9 @@ namespace Hono.Scripts.Battle
             public override void Init()
             {
                 _useSkillChecker =
-                    new UseSkillChecker(EBattleEventType.OnSkillUseSuccess, Self, -1, AttackChangeMp);
-                _hitEventChecker = new HitEventChecker(EBattleEventType.OnHit,     Self, -1, -1, KillChangeMp);
-                _beHitEventChecker = new HitEventChecker(EBattleEventType.OnBeHit, Self, -1, -1, BeHitChangeMp);
+                    new UseSkillChecker(EEventType.OnSkillUseSuccess, Self, -1, AttackChangeMp);
+                _hitEventChecker = new HitEventChecker(EEventType.OnHit,     Self, -1, -1, KillChangeMp);
+                _beHitEventChecker = new HitEventChecker(EEventType.OnBeHit, Self, -1, -1, BeHitChangeMp);
 
                 _useSkillChecker.Register();
                 _beHitEventChecker.Register();
