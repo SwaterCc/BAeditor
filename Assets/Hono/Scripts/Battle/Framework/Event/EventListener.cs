@@ -30,7 +30,7 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         /// 检查器
         /// </summary>
-        private EventChecker _checker;
+        private IEventChecker _checker;
 
         /// <summary>
         /// 事件触发回调
@@ -55,7 +55,7 @@ namespace Hono.Scripts.Battle.Event
         protected EventListener(EEventType bindEventType = EEventType.NoInit,
             bool isGlobalListener = false,
             float eventTriggerInterval = 0,
-            EventChecker eventChecker = null,
+            IEventChecker eventChecker = null,
             Action<VariableBoard> eventFireCallback = null)
         {
             EventType = bindEventType;
@@ -88,7 +88,7 @@ namespace Hono.Scripts.Battle.Event
             EventType = eventType;
         }
 
-        public void SetupChecker(EventChecker checker)
+        public void SetupChecker(IEventChecker checker)
         {
             _checker = checker;
         }
@@ -129,7 +129,7 @@ namespace Hono.Scripts.Battle.Event
                 return;
             }
 
-            if (_checker == null || _checker.EventType != EventType)
+            if (_checker == null)
             {
                 _callback?.Invoke(board);
                 _waitTriggerDuration = 0;
@@ -145,6 +145,11 @@ namespace Hono.Scripts.Battle.Event
         }
     }
 
+    public interface IEventChecker
+    {
+        public  bool Check(in VariableBoard board);
+    }
+    
     /// <summary>
     /// Actor对象内部使用的EventListener，该Listener会在Actor被回收时失效
     /// </summary>
@@ -156,7 +161,7 @@ namespace Hono.Scripts.Battle.Event
         public ActorEventListener(EEventType bindEventType = EEventType.NoInit,
             bool isGlobalListener = false,
             float eventTriggerInterval = 0,
-            EventChecker eventChecker = null,
+            IEventChecker eventChecker = null,
             Action<VariableBoard> eventFireCallback = null) : base(bindEventType, isGlobalListener, eventTriggerInterval, eventChecker, eventFireCallback) { }
     }
 
@@ -170,7 +175,7 @@ namespace Hono.Scripts.Battle.Event
 
         public GlobalEventListener(EEventType bindEventType = EEventType.NoInit,
             float eventTriggerInterval = 0,
-            EventChecker eventChecker = null,
+            IEventChecker eventChecker = null,
             Action<VariableBoard> eventFireCallback = null) : base(bindEventType, true, eventTriggerInterval, eventChecker, eventFireCallback) { }
     }
 }

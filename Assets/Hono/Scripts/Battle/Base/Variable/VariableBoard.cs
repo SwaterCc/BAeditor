@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
@@ -129,6 +130,27 @@ namespace Hono.Scripts.Battle.Base
             {
                 Debug.LogError($"尝试将值类型对象 key:{key}，装箱，操作不允许！");
             }
+        }
+
+        /// <summary>
+        /// 传入EventInfo字段
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <typeparam name="T"></typeparam>
+        public void Set<T>(EvtInfoField<T> field, T value)
+        {
+            Set(field.Name, value);
+        }
+        
+        /// <summary>
+        /// 获取EventInfo字段
+        /// </summary>
+        /// <param name="field"></param>
+        /// <typeparam name="T"></typeparam>
+        public T Get<T>(EvtInfoField<T> field)
+        {
+           return Get<T>(field.Name);
         }
 
         public void Delete(string key)

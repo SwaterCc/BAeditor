@@ -18,8 +18,6 @@ namespace Hono.Scripts.Battle
     {
         private readonly Dictionary<int, MessageCollection> _collections = new(128);
         private readonly Dictionary<int, Dictionary<string, MessageCacheQueue>> _messageCaches = new(128);
-        private const float MsgCacheClearTime = 3f;
-        private float _clearTimeDuration = 0;
         public void OnEnterBattle() { }
 
         public void OnExitBattle()
@@ -41,7 +39,13 @@ namespace Hono.Scripts.Battle
             _collections.Remove(collection.Actor.Uid);
         }
 
-        public void AddMsg(int uid, string msgKey, VariableBoard board)
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        /// <param name="uid">发给目标Actor的uid</param>
+        /// <param name="msgKey">msg键值</param>
+        /// <param name="board"></param>
+        public void SendMessage(in int uid, string msgKey, VariableBoard board)
         {
             if (!_collections.TryGetValue(uid, out var collection))
             {
@@ -52,6 +56,7 @@ namespace Hono.Scripts.Battle
 
             if (!collection.ContainsKey(msgKey))
             {
+                //key值不存在先缓存
                 cacheMsg(uid, msgKey, board);
                 return;
             }

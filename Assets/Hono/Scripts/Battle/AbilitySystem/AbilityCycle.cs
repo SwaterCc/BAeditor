@@ -118,6 +118,9 @@ namespace Hono.Scripts.Battle.AbilitySystem
                         node = APool<AListenerNode>.Pool.Rent();
                         _eventNodeList.Add((AListenerNode)node);
                         break;
+                    case MsgSendNodeData:
+                        node = APool<AMsgSendNode>.Pool.Rent();
+                        break;
                     default:
                         throw new InvalidCastException("使用了不存在的Node类型");
                 }

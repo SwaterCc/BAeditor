@@ -39,9 +39,6 @@ namespace Hono.Scripts.Battle
                 if (GetRoundState() == ERoundState.SuccessScoring)
                     Round.EventInfo.RoundScore = 1;
 
-                if (GetRoundState() != ERoundState.NoRunning)
-                    EventManager.Instance.TriggerGlobalEvent(getEventType(true), Round.EventInfo);
-
                 //Debug.Log($"[RoundState] RoundState Enter {GetRoundState()}");
             }
 
@@ -57,9 +54,6 @@ namespace Hono.Scripts.Battle
 
             public void Exit()
             {
-                if (GetRoundState() != ERoundState.NoRunning)
-                    EventManager.Instance.TriggerGlobalEvent(getEventType(false), Round.EventInfo);
-                onExit();
 
                 //Debug.Log($"[RoundState] RoundState Exit {GetRoundState()}");
             }

@@ -1,69 +1,50 @@
 namespace Hono.Scripts.Battle.Event
 {
-    public class HitDamageInfo : IEventInfo
+    public static class HitDamageInfo
     {
         /// <summary>
         /// 伤害来源Actor
         /// </summary>
-        public int SourceActorId;
+        public static readonly EvtInfoField<int> SourceActorId = new();
 
         /// <summary>
         /// 伤害来源Ability
         /// </summary>
-        public int SourceAbilityId;
+        public static readonly EvtInfoField<int> SourceAbilityId = new();
 
         /// <summary>
         /// 伤害Id
         /// </summary>
-        public int DamageConfigId;
+        public static readonly EvtInfoField<int> DamageConfigId = new();
 
         /// <summary>
         /// 单次打击盒命中数量
         /// </summary>
-        public int HitBoxHitCount;
+        public static readonly EvtInfoField<int> HitBoxHitCount = new();
 
         /// <summary>
         /// 命中目标的Uid;
         /// </summary>
-        public int HitTargetUid;
+        public static readonly EvtInfoField<int> HitTargetUid = new();
 
         /// <summary>
         /// 最终伤害
         /// </summary>
-        public int FinalDamageValue;
+        public static readonly EvtInfoField<int> FinalDamageValue = new();
 
         /// <summary>
         /// 是否暴击
         /// </summary>
-        public bool IsCritical;
-
-        /// <summary>
-        /// 最终冲击力
-        /// </summary>
-        public int ImpactValue;
+        public static readonly EvtInfoField<bool> IsCritical = new();
 
         /// <summary>
         /// 伤害是否免疫
         /// </summary>
-        public bool IsImmunity;
+        public static readonly EvtInfoField<bool> IsImmunity = new();
 
         /// <summary>
         /// 是否杀死目标
         /// </summary>
-        public bool IsKillTarget;
-
-        public void Clear()
-        {
-            SourceActorId = 0;
-            SourceAbilityId = 0;
-            DamageConfigId = 0;
-            HitBoxHitCount = 0;
-            HitTargetUid = 0;
-            FinalDamageValue = 0;
-            IsCritical = false;
-            ImpactValue = 0;
-            IsImmunity = false;
-            IsKillTarget = false;
-        }
+        public static readonly EvtInfoField<bool> IsKillTarget = new();
     }
 }

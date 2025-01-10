@@ -1,27 +1,20 @@
 namespace Hono.Scripts.Battle.Event
 {
-    public class UsedSkillEventInfo : IEventInfo
+    public static class UsedSkillEventInfo
     {
         /// <summary>
         ///     技能ID
         /// </summary>
-        public int SkillId;
+        public static readonly EvtInfoField<int> SkillId = new();
 
         /// <summary>
         ///     施法者Uid
         /// </summary>
-        public int UserUid;
+        public static readonly EvtInfoField<int> UserUid = new();
 
         /// <summary>
         ///     玩家手动释放
         /// </summary>
-        public bool IsPlayerControl;
-
-        public void Clear()
-        {
-            SkillId = 0;
-            UserUid = 0;
-            IsPlayerControl = false;
-        }
+        public static readonly EvtInfoField<bool> IsPlayerControl = new();
     }
 }

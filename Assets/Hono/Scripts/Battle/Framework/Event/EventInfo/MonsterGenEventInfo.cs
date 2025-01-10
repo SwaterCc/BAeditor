@@ -6,17 +6,12 @@ using System.Collections.Generic;
 
 namespace Hono.Scripts.Battle.Event
 {
-    public class MonsterGenEventInfo : IEventInfo
+    public class MonsterGenEventInfo
     {
-        public bool FiredAll;
-        public int SingleUid;
-        public List<int> SpecialUids = new();
-        public int MonsterConfigId;
-        public EMonsterGenBehave Behave;
-
-        public void Clear()
-        {
-            throw new System.NotImplementedException();
-        }
+        public static readonly EvtInfoField<bool> FiredAll = new();
+        public static readonly EvtInfoField<int> SingleUid = new();
+        public static readonly EvtInfoField<List<int>> SpecialUids = new();
+        public static readonly EvtInfoField<int> MonsterConfigId = new();
+        public static readonly EvtInfoField<EMonsterGenBehave> Behave = new();
     }
 }

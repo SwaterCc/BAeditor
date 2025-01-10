@@ -6,9 +6,13 @@ using Hono.Scripts.Battle.Tools.CustomAttribute;
 
 namespace Hono.Scripts.Battle.Event
 {
+    /// <summary>
+    /// 事件枚举
+    /// 千万不要改顺序！！
+    /// </summary>
     public enum EEventType
     {
-        //空占位，说明没有初始化,千万不要改顺序！！
+        //空占位，说明没有初始化
         NoInit = 0,
 
         [EventCheckerBinder("GetHitOnceChecker", typeof(HitDamageInfo))]
@@ -33,47 +37,10 @@ namespace Hono.Scripts.Battle.Event
 
         [EventCheckerBinder("GetSkillEndChecker", typeof(UsedSkillEventInfo))]
         OnSkillStop,
-
-        OnActorEnterScene = 30,
-        OnActorDead,
-
-        [EventCheckerBinder("GetTriggerBoxEnterChecker", typeof(TriggerBoxEventInfo))]
-        OnTriggerBoxEnter = 50,
-
-        [EventCheckerBinder("GetTriggerBoxStayChecker", typeof(TriggerBoxEventInfo))]
-        OnTriggerBoxStay = 51,
-
-        [EventCheckerBinder("GetTriggerBoxExitChecker", typeof(TriggerBoxEventInfo))]
-        OnTriggerBoxExit = 52,
-
-        SkillCDBegin = 70,
-        SkillCDEnd,
-
+        
         OnCallMonsterGenerator = 1000,
 
         [EventCheckerBinder("GetMonsterAllDeadChecker", typeof(MonsterGenRtEventInfo))]
         OnMonsterGeneratorAllDead = 1001,
-
-        //游戏流程事件
-        [EventCheckerBinder("GetRoundReadyEnterChecker", typeof(RoundStateEventInfo))]
-        RoundReadyEnter = 500001,
-
-        [EventCheckerBinder("GetRoundReadyExitChecker", typeof(RoundStateEventInfo))]
-        RoundReadyExit,
-
-        [EventCheckerBinder("GetRoundRunningEnterChecker", typeof(RoundStateEventInfo))]
-        RoundRunningEnter = 500011,
-
-        [EventCheckerBinder("GetRoundRunningExitChecker", typeof(RoundStateEventInfo))]
-        RoundRunningExit,
-
-        [EventCheckerBinder("GetRoundScoreEnterChecker", typeof(RoundStateEventInfo))]
-        RoundScoreEnter = 500021,
-
-        [EventCheckerBinder("GetRoundScoreExitChecker", typeof(RoundStateEventInfo))]
-        RoundScoreExit,
-
-        [EventCheckerBinder("GetLootChecker", typeof(LootEventInfo))]
-        LootDrop = 500031
     }
 }

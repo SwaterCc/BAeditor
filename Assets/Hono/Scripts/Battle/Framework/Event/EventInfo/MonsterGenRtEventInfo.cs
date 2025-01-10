@@ -1,14 +1,9 @@
 namespace Hono.Scripts.Battle.Event
 {
-    public class MonsterGenRtEventInfo : IEventInfo
+    public class MonsterGenRtEventInfo
     {
-        public int MonsterGeneratorUid;
-        public int ConfigId;
-        public int CurRoundCount;
-
-        public void Clear()
-        {
-            throw new System.NotImplementedException();
-        }
+        public static readonly EvtInfoField<int> MonsterGeneratorUid = new();
+        public static readonly EvtInfoField<int> ConfigId = new();
+        public static readonly EvtInfoField<int> CurRoundCount = new();
     }
 }

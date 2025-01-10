@@ -70,9 +70,15 @@ namespace Hono.Scripts.Battle
         }
 
         /// <summary>
-        /// 发送消息，如果接受对象不存在，会缓存消息
+        /// 发送消息
         /// </summary>
-        public void SendMessage(string key, VariableBoard board) { }
+        public void SendMessage(string key, VariableBoard board)
+        {
+            if (_messageListeners.TryGetValue(key, out var listener))
+            {
+                listener.Invoke(board);
+            }
+        }
 
         public void Tick(float dt)
         {

@@ -262,6 +262,24 @@ namespace Hono.Scripts.Battle
             EventManager.Instance.FireEvent(eventType, -1, board);
         }
 
+        /// <summary>
+        /// 注册消息监听
+        /// </summary>
+        /// <param name="messageListener"></param>
+        public void RegisterMsgListener(MessageListener messageListener)
+        {
+            _messageCollection.AddListener(messageListener);
+        }
+        
+        /// <summary>
+        /// 注册消息监听
+        /// </summary>
+        /// <param name="messageListener"></param>
+        public void UnregisterMsgListener(MessageListener messageListener)
+        {
+            _messageCollection.RemoveListener(messageListener);
+        }
+
         #endregion
     }
 }

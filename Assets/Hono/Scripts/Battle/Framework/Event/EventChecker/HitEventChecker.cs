@@ -1,37 +1,28 @@
 #region
 
 using System;
+using Hono.Scripts.Battle.Base;
 
 #endregion
 
 namespace Hono.Scripts.Battle.Event
 {
-    public class HitEventChecker : EventChecker
+    [Serializable]
+    public class HitEventChecker : IEventChecker
     {
         /// <summary>
-        ///     来源abilityUid
+        /// 来源abilityId
         /// </summary>
-        private int _abilitySourceUid;
+        public int abilityId;
 
         /// <summary>
-        ///     来源的伤害Id
+        /// 来源的伤害Id
         /// </summary>
-        private int _damageConfigId;
-
-        public HitEventChecker(EEventType eventType, Actor bindActor, int abilitySourceUid, int damageConfigId,
-            Action<IEventInfo> func = null) :
-            base(eventType, bindActor, func)
+        public int damageConfigId;
+        
+        public bool Check(in VariableBoard board)
         {
-            _damageConfigId = damageConfigId;
-            _abilitySourceUid = abilitySourceUid;
-        }
-
-        protected override bool onCheck(IEventInfo info)
-        {
-            var hitInfo = (HitDamageInfo)info;
-            bool res = true;
-
-            if (_abilitySourceUid > 0)
+            /*if (board.Get<int>())
             {
                 res = hitInfo.SourceActorId == _abilitySourceUid;
             }
@@ -39,9 +30,8 @@ namespace Hono.Scripts.Battle.Event
             if (_damageConfigId > 0)
             {
                 res = res && hitInfo.DamageConfigId == _damageConfigId;
-            }
-
-            return res;
+            }*/
+            return true;
         }
     }
 }

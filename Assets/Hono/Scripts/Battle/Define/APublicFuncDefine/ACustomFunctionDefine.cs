@@ -244,24 +244,6 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityFunction]
-        public  void SendMsg(int actorUid, string msg, object p1, object p2, object p3, object p4, object p5)
-        {
-            if (tryGetActor(actorUid, out var actor))
-            {
-                var msgCache = new MsgCache()
-                {
-                    MsgKey = msg,
-                    P1 = p1,
-                    P2 = p2,
-                    P3 = p3,
-                    P4 = p4,
-                    P5 = p5,
-                };
-                MessageManager.Instance.AddMsg(actor.Uid, msgCache);
-            }
-        }
-
-        [AbilityFunction]
         public  List<int> SelectTargets(int centerActorUid, RangeFilterSetting setting)
         {
             List<int> actorUids = new();

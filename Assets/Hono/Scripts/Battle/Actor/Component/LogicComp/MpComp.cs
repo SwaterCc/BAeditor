@@ -1,5 +1,6 @@
 #region
 
+using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
@@ -23,25 +24,19 @@ namespace Hono.Scripts.Battle
 
             public override void Init()
             {
-                _useSkillChecker =
+                /*_useSkillChecker =
                     new UseSkillChecker(EEventType.OnSkillUseSuccess, Self, -1, AttackChangeMp);
                 _hitEventChecker = new HitEventChecker(EEventType.OnHit,     Self, -1, -1, KillChangeMp);
-                _beHitEventChecker = new HitEventChecker(EEventType.OnBeHit, Self, -1, -1, BeHitChangeMp);
-
-                _useSkillChecker.Register();
-                _beHitEventChecker.Register();
-                _hitEventChecker.Register();
+                _beHitEventChecker = new HitEventChecker(EEventType.OnBeHit, Self, -1, -1, BeHitChangeMp);*/
             }
 
             public override void Clear()
             {
-                _useSkillChecker.UnRegister();
-                _beHitEventChecker.UnRegister();
-                _hitEventChecker.UnRegister();
             }
 
-            private void AttackChangeMp(IEventInfo info)
+            private void AttackChangeMp(VariableBoard info)
             {
+                info.Set(LootEventInfo.LootUid,15);
                 var useSkillInfo = (UsedSkillEventInfo)info;
                 var skillData = AssetManager.Instance.GetData<SkillData>(useSkillInfo.SkillId);
                 if (skillData == null) return;
@@ -58,7 +53,7 @@ namespace Hono.Scripts.Battle
                 Self.SetAttr(EAttrType.AttrMp, curMp, false);
             }
 
-            private void BeHitChangeMp(IEventInfo info)
+            private void BeHitChangeMp(VariableBoard info)
             {
                 var hitDamageInfo = (HitDamageInfo)info;
                 if (hitDamageInfo.FinalDamageValue < 0) return;
@@ -76,7 +71,7 @@ namespace Hono.Scripts.Battle
                 Self.SetAttr(EAttrType.AttrMp, curMp, false);
             }
 
-            public void KillChangeMp(IEventInfo info)
+            public void KillChangeMp(VariableBoard info)
             {
                 var hitDamageInfo = (HitDamageInfo)info;
                 if (!hitDamageInfo.IsKillTarget) return;

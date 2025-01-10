@@ -1,15 +1,8 @@
 namespace Hono.Scripts.Battle.Event
 {
-    public class MotionEventInfo : IEventInfo
+    public static class MotionEventInfo
     {
-        public int MotionUid;
-
-        public int MotionCollisionId;
-
-        public void Clear()
-        {
-            MotionUid = 0;
-            MotionCollisionId = 0;
-        }
+        public static readonly EvtInfoField<int> MotionUid = new();
+        public static readonly EvtInfoField<int> MotionCollisionId = new();
     }
 }

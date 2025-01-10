@@ -122,7 +122,7 @@ namespace Hono.Scripts.Battle
     public class MsgSendNodeData : AbilityNodeData
     {
         public string msgKey;
-        public List<object> Value = new();
+        public List<AParams> value = new();
         public override AbilityNodeData DeepCopy()
         {
             throw new NotImplementedException();
@@ -137,7 +137,7 @@ namespace Hono.Scripts.Battle
         public float eventInterval;
         public bool isGlobalEvtListener;
         [OdinSerialize]
-        public EventChecker Checker;
+        public IEventChecker Checker;
         
         public string msgName;
         

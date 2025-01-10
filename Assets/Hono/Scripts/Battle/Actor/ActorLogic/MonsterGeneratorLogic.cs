@@ -1,6 +1,7 @@
 #region
 
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -17,7 +18,7 @@ namespace Hono.Scripts.Battle
             public EActorType ActorType;
         }
 
-        private readonly MonsterGenEventChecker _checker;
+        private readonly ActorEventListener _listener;
         private bool _isGeneratorActive;
         private MonsterGenerateTmpTable.MonsterGenerateTmpRow _templateRow;
         private float _duration;
@@ -32,14 +33,13 @@ namespace Hono.Scripts.Battle
 
         public MonsterGeneratorLogic()
         {
-            _checker = new MonsterGenEventChecker(EEventType.OnCallMonsterGenerator, Uid,
-                (info) => { OnGeneratorCall((MonsterGenEventInfo)info); });
+            _listener = new ActorEventListener(EEventType.OnCallMonsterGenerator, true, OnGeneratorCall);
             _rtEventInfo = new MonsterGenRtEventInfo();
         }
 
         protected override void onEnterScene()
         {
-            EventManager.Instance.RegisterWorldListener(_checker);
+            Self.RegisterEvtListener(_listener);
             if (Self.ModelController.Model.TryGetComponent<MonsterGeneratorModel>(out var comp))
             {
                 comp.GetWayPoint(ref _wayPoints);
@@ -56,19 +56,21 @@ namespace Hono.Scripts.Battle
 
         protected override void OnChildRecycle()
         {
-            EventManager.Instance.UnRegister(_checker);
+            Self.UnregisterEvtListener(_listener);
         }
 
         /// <summary>
         ///     传入配置后开始创建怪物
         /// </summary>
         /// <param name="eventInfo"></param>
-        private void OnGeneratorCall(MonsterGenEventInfo eventInfo)
+        private void OnGeneratorCall(VariableBoard eventInfo)
         {
-            switch (eventInfo.Behave)
+            var behave = eventInfo.Get(MonsterGenEventInfo.Behave);
+            var monsterConfigId = eventInfo.Get(MonsterGenEventInfo.MonsterConfigId);
+            switch (behave)
             {
                 case EMonsterGenBehave.Summon:
-                    summonMonster(eventInfo.MonsterConfigId);
+                    summonMonster(monsterConfigId);
                     return;
                 case EMonsterGenBehave.Pause:
                     pauseGenerator();
@@ -109,7 +111,7 @@ namespace Hono.Scripts.Battle
                     else
                     {
                         BattleManager.CurBattle.RtInfo.AddFactionActorCount(info.ActorType,
-                            info.ConfigId);
+                                                                            info.ConfigId);
                     }
                 }
             }
@@ -268,7 +270,7 @@ namespace Hono.Scripts.Battle
                 _rtEventInfo.MonsterGeneratorUid = Uid;
                 _rtEventInfo.CurRoundCount = BattleManager.CurBattle.RtInfo.CurRoundCount;
                 EventManager.Instance.TriggerActorEvent(BattleConstValue.BattleRootControllerUid,
-                    EEventType.OnMonsterGeneratorAllDead, _rtEventInfo);
+                                                        EEventType.OnMonsterGeneratorAllDead, _rtEventInfo);
             }
         }
     }
