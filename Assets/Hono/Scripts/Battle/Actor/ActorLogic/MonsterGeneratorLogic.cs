@@ -264,14 +264,14 @@ namespace Hono.Scripts.Battle
             BattleManager.CurBattle.LootController.OnActorDead(actor);
             _curMonsterUid.Remove(actor.Uid);
             --CurMonsterCount;
-            if (_curMonsterUid.Count == 0)
+            /*if (_curMonsterUid.Count == 0)
             {
                 _rtEventInfo.ConfigId = _beforeConfigId;
                 _rtEventInfo.MonsterGeneratorUid = Uid;
                 _rtEventInfo.CurRoundCount = BattleManager.CurBattle.RtInfo.CurRoundCount;
                 EventManager.Instance.TriggerActorEvent(BattleConstValue.BattleRootControllerUid,
                                                         EEventType.OnMonsterGeneratorAllDead, _rtEventInfo);
-            }
+            }*/
         }
     }
 }

@@ -39,13 +39,12 @@ namespace Editor.AbilityEditor
         private readonly GenericMenu _paramTypeMenu;
 
         /// <summary>
-        /// AParam类型的参数绘制
+        /// AParam类型的参数绘制,如果传入的类型是object则说明支持全类型
         /// </summary>
         /// <param name="treeItem">数据所属的节点</param>
         /// <param name="aParams">aParams对象，修改会直接应用到这里</param>
         /// <param name="label">aParams的label</param>
         /// <param name="type">aParams最终转化的参数类型</param>
-        /// <exception cref="Exception"></exception>
         public AParamsField(ATreeItem treeItem, AParams aParams, string label, Type type)
         {
             _treeItem = treeItem;
@@ -53,23 +52,15 @@ namespace Editor.AbilityEditor
             _label = label;
 
             _originType = _castType = ARef.ParseValueTypeToARefType(type);
-            if (_params.paramType == EParamType.Simple)
-            {
-                _params.Value ??= AParamsFieldConfig.GetDefaultValue(_castType);
-            }
+            
             _paramTypeMenu = new GenericMenu();
         }
 
         private void drawParamCast()
         {
-            string getCastLabel(string cast)
-            {
-                return _castType.Name + "→" + cast;
-            }
-
             var castMenu = new GenericMenu();
 
-            var curType = _castType.ToString().Split(".")[^1];
+            var curType = _castType.Name;
 
             if (AParamsFieldConfig.AllowCastConfig.TryGetValue(_castType, out var castList))
             {
@@ -77,16 +68,12 @@ namespace Editor.AbilityEditor
                 {
                     foreach (var type in castList)
                     {
-                        castMenu.AddMenuItem(getCastLabel(type.Name), setCastType, type);
+                        castMenu.AddMenuItem(_castType.Name + "→" + type.Name, changeValueType, type);
                     }
 
+                    castMenu.AddMenuItem("重 置", changeValueType, _originType);
                     castMenu.ShowAsContext();
                 }
-            }
-
-            void setCastType(object castType)
-            {
-                _castType = (Type)castType;
             }
         }
 
@@ -101,14 +88,45 @@ namespace Editor.AbilityEditor
                                            _params.Value = AParamsFieldConfig.GetDefaultValue(_castType);
                                        });
                 _paramTypeMenu.AddItem(new GUIContent("调用函数"), false,
-                                       () => { _params.paramType = EParamType.Function; });
+                                       () =>
+                                       {
+                                           _params.paramType = EParamType.Function;
+                                           _params.Value = null;
+                                       });
                 _paramTypeMenu.AddItem(new GUIContent("黑板变量"), false,
-                                       () => { _params.paramType = EParamType.Variable; });
+                                       () =>
+                                       {
+                                           _params.paramType = EParamType.Variable;
+                                           _params.Value = null;
+                                       });
                 _paramTypeMenu.AddItem(new GUIContent("属性"), false,
-                                       () => { _params.paramType = EParamType.Attr; });
+                                       () =>
+                                       {
+                                           _params.paramType = EParamType.Attr;
+                                           _params.Value = null;
+                                       });
                 //来自运行时
                 _paramTypeMenu.ShowAsContext();
             }
+        }
+
+        private void changeValueType(object castType)
+        {
+            CastValueType((Type)castType);
+        }
+
+        /// <summary>
+        /// 改变Field的值类型
+        /// </summary>
+        /// <param name="castType"></param>
+        public void CastValueType(Type castType)
+        {
+            if (castType == null)
+                return;
+            if (_castType == castType)
+                return;
+            _castType = castType;
+            _params.paramCastType = _castType.AssemblyQualifiedName;
         }
 
         public void Draw()
@@ -148,6 +166,7 @@ namespace Editor.AbilityEditor
         {
             if (_castType.BaseType == typeof(ARef))
             {
+                _params.Value ??= AParamsFieldConfig.GetDefaultValue(_castType);
                 //继承自ARef，自行补充
                 switch (_params.Value)
                 {

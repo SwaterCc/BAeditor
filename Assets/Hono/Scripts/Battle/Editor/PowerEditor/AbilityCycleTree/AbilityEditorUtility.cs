@@ -20,6 +20,7 @@ namespace Editor.AbilityEditor
         AddAttrChild,
         AddVariableChild,
         AddGroupSwitchChild,
+        AddMsgSendChild,
         
         AddChildOperation = 50,
 

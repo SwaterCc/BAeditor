@@ -90,8 +90,12 @@ ability编辑器优化：
 
 任务
 
-1.Ability节点完善，Ability尝试和Actor脱钩（意义不大放弃），EventManager尝试调整下写法，继承改组合处理掉GC问题
-2.GC池加上限
+1.ActionSystem，指定方向速度
+2.Ability节点功能补全repeat 
+3.Actor Json组件装配，属性初始化流程改变，能从外部传入，属性初始化改到外部（？）
+4.Skill运行态，Buff运行态，Bullet运行态
+5ABility命令模式（完成）
+
 
 3.池对象List，池对象Dictionary
 

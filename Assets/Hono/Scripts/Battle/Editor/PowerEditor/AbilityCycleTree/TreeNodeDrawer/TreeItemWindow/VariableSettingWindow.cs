@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Editor.AbilityEditor;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
@@ -11,25 +12,29 @@ namespace Editor.AbilityEditor.TreeItemWindow
 {
     public class VariableSettingWindow : ANodeSettingWindow<VariableNodeData>
     {
-        private string[] _baseTypeShow = { "int", "float", "bool", "string" };
-        private string[] _baseTypeValue =
-            { typeof(int).ToString(), typeof(float).ToString(), typeof(bool).ToString(), typeof(string).ToString() };
-
         private string _beforeType;
-        private Type _curSelectVarType;
+
         private string _modifyBtnText;
         private int _operation;
+        private AParamsField _varField;
+        private Type _curSelectVarType;
 
         protected override void Init()
         {
-            //创建变量 基础类型 int float bool string
-            //修改变量 下拉框选择已有变量  -> 行为自增，自减，加值，乘值，取反，重设
-            //int float bool 可能来自属性？可能性很低，暂时不做
-            //变量存储变量类型？一般不会有
-            _modifyBtnText = "选择变量";
-            _beforeType = TempData.valueType;
-            _curSelectVarType = Type.GetType(TempData.valueType);
             _operation = (int)TempData.operationType;
+
+            _curSelectVarType = typeof(object);
+            if (!string.IsNullOrEmpty(TempData.value.paramCastType))
+            {
+                var varType = Type.GetType(TempData.value.paramCastType);
+                if (varType != null)
+                {
+                    _curSelectVarType = varType;
+                }
+            }
+
+            _modifyBtnText = string.IsNullOrEmpty(TempData.key) && _curSelectVarType != null ? "选择变量" : TempData.key + $"({_curSelectVarType.Name})";
+            _varField = new AParamsField(TreeItem, TempData.value, "自定义变量值:", _curSelectVarType);
         }
 
         protected override void Draw()
@@ -47,6 +52,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
             }
 
             SirenixEditorGUI.EndHorizontalToolbar();
+
 
             if (!TempData.isModify)
             {
@@ -77,35 +83,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
                 DisableCloseButton = false;
             }
 
-            TempData.valueType =
-                SirenixEditorFields.Dropdown("选择变量类型", TempData.valueType, _baseTypeValue, _baseTypeShow);
-            var type = Type.GetType(TempData.valueType);
-
-            if (_beforeType != TempData.valueType)
-            {
-                TempData.value = type == typeof(string) ? "" : Activator.CreateInstance(type).ToString();
-                _beforeType = TempData.valueType;
-            }
-
-            object value;
-            if (type == typeof(int))
-            {
-                value = SirenixEditorFields.IntField("Value: ", int.Parse(TempData.value));
-            }
-            else if (type == typeof(float))
-            {
-                value = SirenixEditorFields.FloatField("Value: ", float.Parse(TempData.value));
-            }
-            else if (type == typeof(bool))
-            {
-                value = PowerEditorUIHelper.BoolDropField("Value: ", bool.Parse(TempData.value));
-            }
-            else
-            {
-                value = SirenixEditorFields.TextField("Value: ", TempData.value);
-            }
-
-            TempData.value = value.ToString();
+            _varField.Draw();
         }
 
         /// <summary>
@@ -113,35 +91,21 @@ namespace Editor.AbilityEditor.TreeItemWindow
         /// </summary>
         private void drawModifyView()
         {
-            GUILayout.Space(30);
-            if (SirenixEditorGUI.Button(_modifyBtnText, ButtonSizes.Medium))
+            GUILayout.Space(5);
+            if (SirenixEditorGUI.Button(_modifyBtnText, ButtonSizes.Large))
             {
                 //变量下拉框
                 VariableDropView dropView = new(TreeItem, OnVariableSelect, null, true);
                 dropView.Show(GUILayoutUtility.GetLastRect());
             }
 
-            GUILayout.Space(30);
+            GUILayout.Space(10);
 
             EditorGUILayout.BeginHorizontal();
             var old = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = 50;
-            object value;
-            if (_curSelectVarType == typeof(int))
-            {
-                _operation =
-                    SirenixEditorFields.Dropdown(_operation,
-                                                 new[]
-                                                 {
-                                                     (int)EVariableOperationType.Reset,
-                                                     (int)EVariableOperationType.Add,
-                                                     (int)EVariableOperationType.Sub
-                                                 },
-                                                 new[] { "重设", "+", "*" });
 
-                value = SirenixEditorFields.IntField("Value: ", int.Parse(TempData.value));
-            }
-            else if (_curSelectVarType == typeof(float))
+            if (_curSelectVarType == typeof(int) || _curSelectVarType == typeof(RefInt))
             {
                 _operation =
                     SirenixEditorFields.Dropdown(_operation,
@@ -151,10 +115,21 @@ namespace Editor.AbilityEditor.TreeItemWindow
                                                      (int)EVariableOperationType.Add,
                                                      (int)EVariableOperationType.Sub
                                                  },
-                                                 new[] { "重设", "+", "*" });
-                value = SirenixEditorFields.FloatField("Value: ", float.Parse(TempData.value));
+                                                 new[] { "重设", "+", "*" }, GUILayout.Width(60));
             }
-            else if (_curSelectVarType == typeof(bool))
+            else if (_curSelectVarType == typeof(float) || _curSelectVarType == typeof(RefFloat))
+            {
+                _operation =
+                    SirenixEditorFields.Dropdown(_operation,
+                                                 new[]
+                                                 {
+                                                     (int)EVariableOperationType.Reset,
+                                                     (int)EVariableOperationType.Add,
+                                                     (int)EVariableOperationType.Sub
+                                                 },
+                                                 new[] { "重设", "+", "*" }, GUILayout.Width(60));
+            }
+            else if (_curSelectVarType == typeof(bool) || _curSelectVarType == typeof(RefBoolean))
             {
                 _operation =
                     SirenixEditorFields.Dropdown(_operation,
@@ -163,15 +138,22 @@ namespace Editor.AbilityEditor.TreeItemWindow
                                                      (int)EVariableOperationType.Reset,
                                                      (int)EVariableOperationType.Reverse,
                                                  },
-                                                 new[] { "重设", "取反" });
-                value = PowerEditorUIHelper.BoolDropField("Value: ", bool.Parse(TempData.value));
+                                                 new[] { "重设", "取反" }, GUILayout.Width(60));
             }
             else
             {
-                value = SirenixEditorFields.TextField("Value: ", TempData.value);
+                _operation =
+                    SirenixEditorFields.Dropdown(_operation,
+                                                 new[]
+                                                 {
+                                                     (int)EVariableOperationType.Reset,
+                                                     (int)EVariableOperationType.Reverse,
+                                                 },
+                                                 new[] { "重设" }, GUILayout.Width(60));
             }
 
-            TempData.value = value.ToString();
+            _varField.CastValueType(_curSelectVarType);
+            _varField.Draw();
             TempData.operationType = (EVariableOperationType)_operation;
             EditorGUIUtility.labelWidth = old;
             EditorGUILayout.EndHorizontal();
@@ -179,10 +161,9 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
         private void OnVariableSelect(string key, Type type)
         {
-            _modifyBtnText = key + $"({type})";
+            _modifyBtnText = key + $"({type.Name})";
             TempData.key = key;
             _curSelectVarType = type;
-            TempData.valueType = type.ToString();
         }
 
         protected override void SaveDataToEditorNode()

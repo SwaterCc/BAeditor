@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle
         public MonsterLogic()
         {
             resetInput(new AutoInput(this));
-            resetStateMachine(new ActorStateMachine(this));
+          
             
             addComponent(new SkillComp(this));
             addComponent(new BuffComp(this));

@@ -34,11 +34,6 @@ namespace Hono.Scripts.Battle
 
                 onEnter();
 
-                if (GetRoundState() == ERoundState.FailedScoring)
-                    Round.EventInfo.RoundScore = -1;
-                if (GetRoundState() == ERoundState.SuccessScoring)
-                    Round.EventInfo.RoundScore = 1;
-
                 //Debug.Log($"[RoundState] RoundState Enter {GetRoundState()}");
             }
 
@@ -59,23 +54,6 @@ namespace Hono.Scripts.Battle
             }
 
             protected abstract void onExit();
-
-
-            private EEventType getEventType(bool isEnter)
-            {
-                switch (GetRoundState())
-                {
-                    case ERoundState.Ready:
-                        return isEnter ? EEventType.RoundReadyEnter : EEventType.RoundReadyExit;
-                    case ERoundState.Running:
-                        return isEnter ? EEventType.RoundRunningEnter : EEventType.RoundRunningExit;
-                    case ERoundState.SuccessScoring:
-                    case ERoundState.FailedScoring:
-                        return isEnter ? EEventType.RoundScoreEnter : EEventType.RoundScoreExit;
-                }
-
-                throw new InvalidEnumArgumentException("找不到枚举");
-            }
         }
     }
 }

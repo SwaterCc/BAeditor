@@ -15,7 +15,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         {
             public void Tick(float dt);
         }
-        
+
         private class AbilityCycle
         {
             public Ability AContext { get; }
@@ -121,8 +121,11 @@ namespace Hono.Scripts.Battle.AbilitySystem
                     case MsgSendNodeData:
                         node = APool<AMsgSendNode>.Pool.Rent();
                         break;
+                    case VariableNodeData:
+                        node = APool<AVariableNode>.Pool.Rent();
+                        break;
                     default:
-                        throw new InvalidCastException("使用了不存在的Node类型");
+                        throw new InvalidCastException($"使用了不存在的Node类型 NodeType{data.GetType()}");
                 }
 
                 node.OnRent(ability, data);
@@ -325,7 +328,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             public void OnRecycle()
             {
-                //注册事件节点
+                //注销事件节点
                 foreach (var eventNode in _eventNodeList)
                 {
                     eventNode.UnRegisterEvent();
@@ -335,7 +338,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
                 _ticks.Clear();
                 _tickRemoveList.Clear();
-                
+
                 Groups.Clear();
                 CurGroup = null;
 
@@ -344,6 +347,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
                 {
                     pHead.Value.Recycle();
                 }
+
                 //TODO:疑似子节点没回收
                 _cycleHeads.Clear();
             }

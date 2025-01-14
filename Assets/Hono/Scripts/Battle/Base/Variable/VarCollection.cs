@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace Hono.Scripts.Battle.Base
+namespace Hono.Scripts.Battle
 {
     public interface IVarCollection
     {

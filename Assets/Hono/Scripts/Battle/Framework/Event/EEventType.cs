@@ -15,10 +15,10 @@ namespace Hono.Scripts.Battle.Event
         //空占位，说明没有初始化
         NoInit = 0,
 
-        [EventCheckerBinder("GetHitOnceChecker", typeof(HitDamageInfo))]
+        [EventCheckerBinder("GetHitOnceChecker", typeof(HitDamageInfoKeys))]
         OnHit,
 
-        [EventCheckerBinder("GetBeHitChecker", typeof(HitDamageInfo))]
+        [EventCheckerBinder("GetBeHitChecker", typeof(HitDamageInfoKeys))]
         OnBeHit,
 
         [EventCheckerBinder("GetMotionBeginChecker", typeof(MotionEventInfo))]

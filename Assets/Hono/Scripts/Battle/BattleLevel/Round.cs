@@ -69,7 +69,7 @@ namespace Hono.Scripts.Battle
             /// </summary>
             public bool CanRepeat { get; private set; }
 
-            public RoundStateEventInfo EventInfo = new();
+            //public RoundStateEventInfo EventInfo = new();
 
             public RoundController(GameRunningState gameRunningState)
             {
@@ -158,7 +158,7 @@ namespace Hono.Scripts.Battle
             {
                 ++_roundIndex;
                 BattleManager.CurBattle.RtInfo.CurRoundCount = _roundIndex;
-                EventInfo.CurRoundCount = _roundIndex;
+                //EventInfo.CurRoundCount = _roundIndex;
                 Debug.Log($"[RoundState] RoundCountAdd NextRound {_roundIndex}");
             }
 

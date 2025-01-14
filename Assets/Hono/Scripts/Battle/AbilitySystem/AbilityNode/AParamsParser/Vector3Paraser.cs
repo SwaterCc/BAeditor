@@ -30,6 +30,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
                             return value;
                         }
                         break;
+                       
                 }
 
                 throw new Exception("");

@@ -50,9 +50,14 @@ namespace Hono.Scripts.Battle.AbilitySystem
         private readonly AbilityCycle _abilityCycle;
 
         /// <summary>
-        /// 指令缓存
+        /// 周期结束时指令缓存
         /// </summary>
-        private readonly HashSet<ICommand> _commandCaches;
+        private readonly CmdCollection _cycleCmdCollection;
+        
+        /// <summary>
+        /// 周期结束时指令缓存
+        /// </summary>
+        private readonly CmdCollection _abilityCmdCollection;
 
         /// <summary>
         /// 逻辑帧时间缩放系数
@@ -68,7 +73,9 @@ namespace Hono.Scripts.Battle.AbilitySystem
             
             _abilityCycle = new AbilityCycle(this);
             _functionDefine = new AFunctionDefine(this);
-            _commandCaches = new HashSet<ICommand>(20);
+            _cycleCmdCollection = new CmdCollection();
+            _abilityCmdCollection = new CmdCollection();
+            
             VariableBoard = new VariableBoard();
             TagCollection = new TagCollection();
         }
@@ -105,7 +112,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         {
             _abilityCycle.Execute();
         }
-
+        
         /// <summary>
         /// 停止，当帧执行
         /// </summary>
@@ -122,14 +129,12 @@ namespace Hono.Scripts.Battle.AbilitySystem
             //终止能力运行
             _abilityCycle.Stop();
 
+            //指令撤销
+            _cycleCmdCollection.Clear();
+            _abilityCmdCollection.Clear();
+            
             //清理变量
             VariableBoard.Clear();
-
-            //指令撤销
-            foreach (var command in _commandCaches)
-            {
-                command.Undo();
-            }
 
             //重新加载数据
             Data = AssetManager.Instance.GetData<AbilityData>(Id);
@@ -168,38 +173,16 @@ namespace Hono.Scripts.Battle.AbilitySystem
         {
             _abilityCycle.CycleCallbacks[cycle] -= callback;
         }
-
-        /// <summary>
-        /// 添加指令
-        /// </summary>
-        /// <param name="command"></param>
-        public void AddCommand(ICommand command)
-        {
-            command.Do();
-            _commandCaches.Add(command);
-        }
-
-        /// <summary>
-        /// 移除指令
-        /// </summary>
-        /// <param name="command"></param>
-        public void RemoveCommand(ICommand command)
-        {
-            if (_commandCaches.Remove(command))
-            {
-                command.Undo();
-            }
-        }
-
+        
         public void OnRecycle()
         {
-            //指令回撤
-            foreach (var command in _commandCaches)
-            {
-                command.Undo();
-            }
-
-            _commandCaches.Clear();
+            //周期停止
+            _abilityCycle.Stop();
+            _abilityCycle.OnRecycle();
+            
+            //指令撤销
+            _cycleCmdCollection.Clear();
+            _abilityCmdCollection.Clear();
 
             //数据重置
             Id = 0;
@@ -207,13 +190,8 @@ namespace Hono.Scripts.Battle.AbilitySystem
             Data = null;
             //重置时间系数
             TimeScaleFactory = 1;
-
-            _abilityCycle.Stop();
-            _abilityCycle.OnRecycle();
-
             TagCollection.SetParent(null);
             TagCollection.Clear();
-            
             VariableBoard.Clear();
         }
     }

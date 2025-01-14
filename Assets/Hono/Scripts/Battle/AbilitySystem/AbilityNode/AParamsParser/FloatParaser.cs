@@ -16,6 +16,10 @@ namespace Hono.Scripts.Battle.AbilitySystem
                         {
                             return refFloat;
                         }
+                        if (aParams.Value is RefInt refInt)
+                        {
+                            return refInt;
+                        }
                         break;
                     case EParamType.Function:
                         var wrap = AbilityEnv.GetWrapFunc(aParams.funcName);

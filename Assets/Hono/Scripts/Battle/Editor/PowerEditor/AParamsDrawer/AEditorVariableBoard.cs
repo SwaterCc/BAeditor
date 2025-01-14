@@ -69,7 +69,7 @@ namespace Editor.AbilityEditor
                 if (string.IsNullOrEmpty(variableNodeData.key))
                     return;
 
-                var type = Type.GetType(variableNodeData.valueType);
+                var type = Type.GetType(variableNodeData.value.paramCastType);
                 if (type == null)
                     return;
 

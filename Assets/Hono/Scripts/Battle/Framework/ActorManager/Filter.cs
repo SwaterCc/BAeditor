@@ -76,9 +76,6 @@ namespace Hono.Scripts.Battle
                     case EFilterConditionType.Tag:
                         checkResult = actor.TagCollection.HasTag(condition.value, ETagSearchRange.Actor);
                         break;
-                    case EFilterConditionType.ActorState:
-                        checkResult = actor.Logic.CurState() == (EActorStateType)condition.value;
-                        break;
                     case EFilterConditionType.AbilityID:
                         checkResult = actor.Abilities.HasAbility(condition.value);
                         break;

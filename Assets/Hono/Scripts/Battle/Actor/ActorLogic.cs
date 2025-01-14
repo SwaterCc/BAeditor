@@ -27,11 +27,6 @@ namespace Hono.Scripts.Battle
         protected VariableBoard Variables => Self.VariableBoard;
 
         /// <summary>
-        /// 状态机
-        /// </summary>
-        private ActorStateMachine _stateMachine;
-
-        /// <summary>
         /// 输入来源
         /// </summary>
         private ActorInput _actorInput;
@@ -70,15 +65,6 @@ namespace Hono.Scripts.Battle
         protected void resetInput(ActorInput input)
         {
             _actorInput = input;
-        }
-
-        /// <summary>
-        /// 设置状态机,仅当状态机为空时有效果
-        /// </summary>
-        /// <param name="stateMachine"></param>
-        protected void resetStateMachine(ActorStateMachine stateMachine)
-        {
-            _stateMachine ??= stateMachine;
         }
 
         /// <summary>
@@ -166,8 +152,7 @@ namespace Hono.Scripts.Battle
             {
                 component.Value.Tick(dt);
             }
-
-            _stateMachine?.Tick(dt);
+            
             onTick(dt);
         }
 
@@ -185,11 +170,6 @@ namespace Hono.Scripts.Battle
         protected virtual void OnChildRecycle() { }
 
         #region 对外接口
-
-        public EActorStateType CurState()
-        {
-            return _stateMachine?.CurStateType ?? EActorStateType.Empty;
-        }
 
         public int GetAttr(EAttrType attrType)
         {

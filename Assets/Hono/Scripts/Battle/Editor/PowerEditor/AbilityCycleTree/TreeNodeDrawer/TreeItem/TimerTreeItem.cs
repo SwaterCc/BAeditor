@@ -32,8 +32,8 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override string getButtonText()
         {
-            return "计时器 首次调用间隔：" + Data.FirstInterval + " 间隔：" + Data.Interval + " 调用次数：" +
-                   Data.MaxCount;
+            return "计时器 首次调用间隔：" + Data.firstInterval + " 间隔：" + Data.interval + " 调用次数：" +
+                   Data.maxCount;
         }
 
         protected override bool checkIsAllowMove(ATreeItem newParent)

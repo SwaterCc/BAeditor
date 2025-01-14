@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Hono.Scripts.Battle.Event;
 
 namespace Hono.Scripts.Battle
 {
@@ -125,7 +124,6 @@ namespace Hono.Scripts.Battle
             hitInfo.HitTargetUid = _target.Uid;
             hitInfo.FinalDamageValue = results.DamageValue;
             hitInfo.IsCritical = results.IsCritical;
-            hitInfo.ImpactValue = results.ImpactValue;
             hitInfo.IsImmunity = _target.GetAttr(EAttrType.AttrInvincible) > 0;
             hitInfo.IsKillTarget = results.DamageValue > _target.GetAttr(EAttrType.AttrHp);
             return hitInfo;

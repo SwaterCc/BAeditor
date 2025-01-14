@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle
         public BuildingLogic()
         {
             resetInput(new BuildingControlInput(this));
-            resetStateMachine(new ActorStateMachine(this));
+           
 
             addComponent(new BuffComp(this));
             addComponent(new SkillComp(this));

@@ -54,7 +54,7 @@ namespace Editor.AbilityEditor
             {
                 if (filterCheck(pVar.Value))
                 {
-                    root.AddChild(new VariableDropViewItem(pVar.Key, pVar.Value, pVar.Key + $"({_filter})"));
+                    root.AddChild(new VariableDropViewItem(pVar.Key, pVar.Value, pVar.Key + $"({pVar.Value.Name})"));
                 }
             }
 

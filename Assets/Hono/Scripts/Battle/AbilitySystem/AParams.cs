@@ -45,6 +45,11 @@ namespace Hono.Scripts.Battle.AbilitySystem
         /// </summary>
         public object Value;
 
+        /// <summary>
+        /// 参数最终转换类型字符串
+        /// </summary>
+        public string paramCastType;
+        
         public AParams() { }
 
         /// <summary>

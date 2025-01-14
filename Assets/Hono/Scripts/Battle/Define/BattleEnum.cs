@@ -131,8 +131,7 @@ namespace Hono.Scripts.Battle
         Function,
         Variable,
         Attr,
-        Event,
-        Msg,
+        ListenerInfo,
     }
 
     /// <summary>
@@ -188,18 +187,21 @@ namespace Hono.Scripts.Battle
         Dead,
     }
     
-    public enum EAttrModifyEffectType
+    /// <summary>
+    /// ability 指令类型
+    /// </summary>
+    public enum EAbilityCommandType
     {
         //永久修改
-        Always,
+        Permanent,
         /// <summary>
-        /// 当ability执行的到end阶段时回退
+        /// 当ability执行的到end阶段时回退(当Ability删除时该类型的指令也会被删除)
         /// </summary>
-        ResetWhenAbilityEndCycle,
+        UndoWhenAbilityEndCycle,
         /// <summary>
         /// 当ability删除时回退
         /// </summary>
-        ResetWhenAbilityRemove,
+        UndoWhenAbilityRemove,
     }
 
     /// <summary>
@@ -512,7 +514,6 @@ namespace Hono.Scripts.Battle
     public enum EFilterConditionType
     {
         Tag,
-        ActorState,
         AbilityID,
         Faction,
         ActorType,

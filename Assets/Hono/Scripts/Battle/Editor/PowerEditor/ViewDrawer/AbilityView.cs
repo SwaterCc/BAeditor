@@ -63,6 +63,8 @@ namespace Editor.AbilityEditor
 
         protected override void onInit()
         {
+            //重置变量容器
+            AEditorVariableBoard.Clear();
             _cycleDrawers = new List<AbilityCycleDrawer>
             {
                 new(this, EAbilityCycle.Init) { Label = "初始化" },
@@ -70,9 +72,6 @@ namespace Editor.AbilityEditor
                 new(this, EAbilityCycle.Executing) { Label = "执行" },
                 new(this, EAbilityCycle.EndExecute) { Label = "结束" },
             };
-            
-            //重置变量容器
-            AEditorVariableBoard.Clear();
         }
 
         public override void Draw()

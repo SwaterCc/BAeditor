@@ -32,19 +32,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
                 return;
             }
 
-            if (!string.IsNullOrEmpty(TempData.GetChecker.funcName))
-            {
-                for (int index = 0; index < TempData.GetChecker.funcParams.Count; index++)
-                {
-                    AParams aParameter = TempData.GetChecker.funcParams[index];
-                    if (funcInfo.ParamInfos.Count <= index) continue;
-
-
-                    var field = new AParamsField(TreeItem, aParameter, funcInfo.ParamInfos[index].ParamName,
-                                                 funcInfo.ParamInfos[index].ParamType);
-                    _parameterFields.Add(field);
-                }
-            }
+           
         }
 
         private void initParameter()
@@ -59,15 +47,12 @@ namespace Editor.AbilityEditor.TreeItemWindow
                 return;
             }
 
-            TempData.GetChecker.paramType = EParamType.Function;
-            TempData.GetChecker.funcName = value.CreateFuncName;
-            TempData.GetChecker.funcParams ??= new List<AParams>();
-            TempData.GetChecker.funcParams.Clear();
+          
             _parameterFields.Clear();
             foreach (var paramInfo in funcInfo.ParamInfos)
             {
                 var parameter = new AParams();
-                TempData.GetChecker.funcParams.Add(parameter);
+             
 
                 AParamsField param = new(TreeItem, parameter, paramInfo.ParamName, paramInfo.ParamType);
                 _parameterFields.Add(param);
@@ -111,24 +96,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
                 _curEvent = TempData.eventType;
             }
 
-            if (_curEvent == EEventType.NoInit || string.IsNullOrEmpty(TempData.GetChecker.funcName))
-            {
-                EditorGUILayout.LabelField("未初始化，请选择事件类型");
-            }
-            else
-            {
-                SirenixEditorGUI.BeginBox("参数设置");
-
-                EditorGUILayout.BeginVertical();
-
-                foreach (var parameterField in _parameterFields)
-                {
-                    parameterField.Draw();
-                }
-
-                EditorGUILayout.EndVertical();
-                SirenixEditorGUI.EndBox();
-            }
+            
         }
     }
 }

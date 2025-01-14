@@ -19,7 +19,6 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             public override void DoJob()
             {
-
                 switch (Data.operationType)
                 {
                     case ERepeatNodeOperationType.Repeat:

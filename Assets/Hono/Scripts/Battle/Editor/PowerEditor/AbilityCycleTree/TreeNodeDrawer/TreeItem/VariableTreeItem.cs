@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Editor.AbilityEditor.TreeItemWindow;
-using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
-using Hono.Scripts.Battle.Base;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities.Editor;
-using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem

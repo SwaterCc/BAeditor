@@ -52,6 +52,11 @@ namespace Hono.Scripts.Battle
         public AbilityController Abilities { get; }
 
         /// <summary>
+        /// 动作系统
+        /// </summary>
+        public ActionSystem ActionSystem { get; }
+        
+        /// <summary>
         /// 配置id
         /// </summary>
         public int ConfigId => GetAttr(EAttrType.AttrConfigId);
@@ -132,7 +137,7 @@ namespace Hono.Scripts.Battle
         public void Init(int uid, EActorType actorType)
         {
             Uid = uid;
-            SetAttr(EAttrType.AttrUid, uid, false);
+            SetAttr(EAttrType.AttrUid, uid);
             ActorType = actorType;
         }
 

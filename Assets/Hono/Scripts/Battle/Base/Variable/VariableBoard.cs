@@ -8,7 +8,7 @@ using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle.Base
+namespace Hono.Scripts.Battle
 {
     /// <summary>
     /// 变量黑板，值类型单独存储，引用类型统一存储在object字典中,key值唯一
@@ -167,7 +167,7 @@ namespace Hono.Scripts.Battle.Base
                 if (!_refCollection.Remove(key, out var obj)) return;
                 if (obj is IAPoolObject poolObject)
                 {
-                    ObjectPoolManager.Instance.RecycleAObject(poolObject);
+                    APoolManager.Instance.RecycleAObject(poolObject);
                 }
             }
             else
@@ -184,7 +184,7 @@ namespace Hono.Scripts.Battle.Base
             {
                 if (obj is IAPoolObject poolObject)
                 {
-                    ObjectPoolManager.Instance.RecycleAObject(poolObject);
+                    APoolManager.Instance.RecycleAObject(poolObject);
                 }
             }
 

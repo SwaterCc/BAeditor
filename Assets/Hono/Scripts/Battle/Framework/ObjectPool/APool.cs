@@ -30,7 +30,7 @@ namespace Hono.Scripts.Battle
             --_refCount;
             if (_refCount <= 0)
             {
-                ObjectPoolManager.Instance.RecycleAObject(_poolObject);
+                APoolManager.Instance.RecycleAObject(_poolObject);
                 _poolObject = null;
             }
         }
@@ -96,7 +96,7 @@ namespace Hono.Scripts.Battle
             _tempPool = new Queue<T>(15);
 
             Debug.Log($"New Pool<{typeof(T)}> Create");
-            ObjectPoolManager.Instance.RegisterPool(this);
+            APoolManager.Instance.RegisterPool(this);
         }
 
         public T Rent()

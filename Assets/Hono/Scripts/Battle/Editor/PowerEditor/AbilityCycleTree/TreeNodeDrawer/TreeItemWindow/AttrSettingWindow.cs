@@ -39,7 +39,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
             }
 
             _value?.Draw();
-            TempData.modifyEffectType = (EAttrModifyEffectType)SirenixEditorFields.EnumDropdown("属性修改方式：", TempData.modifyEffectType);
+            TempData.commandType = (EAbilityCommandType)SirenixEditorFields.EnumDropdown("属性修改方式：", TempData.commandType);
             SirenixEditorGUI.EndBox();
         }
     }

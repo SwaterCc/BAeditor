@@ -114,9 +114,12 @@ namespace Hono.Scripts.Battle
         {
             if (!_target.Logic.TryGetComponent(out BeHurtComp beHurtComp)) return;
             hitCounter(beHurtComp);
-            var hitInfo = _damage.MakeDamage(1, _hitCountDict[beHurtComp], _hitBoxData.CriticalFlag);
-            EventManager.Instance.TriggerActorEvent(_attacker.Uid, EEventType.OnHit, hitInfo);
-            beHurtComp.OnBeHurt(hitInfo);
+            var hitDamageInfo = _damage.MakeDamage(1, _hitCountDict[beHurtComp], _hitBoxData.CriticalFlag);
+            var vb = APool<VariableBoard>.Pool.Rent();
+            vb.InitByHitDamageInfo(hitDamageInfo);
+            EventManager.Instance.FireEvent(EEventType.OnHit, _attacker.Uid, vb);
+            APool<VariableBoard>.Pool.Recycle(vb);
+            beHurtComp.OnBeHurt(hitDamageInfo);
         }
 
         private void aoeHit()
@@ -126,7 +129,7 @@ namespace Hono.Scripts.Battle
 
             if (_aoeTargetIds.Count == 0)
             {
-                ActorManager.Instance.RemoveActor(this.Uid);
+                ActorManager.Instance.RemoveActor(Uid);
                 return;
             }
 
@@ -143,9 +146,12 @@ namespace Hono.Scripts.Battle
             foreach (var beHurtComp in _hurtComps)
             {
                 hitCounter(beHurtComp);
-                var hitInfo = _damage.MakeDamage(_hurtComps.Count, _hitCountDict[beHurtComp], _hitBoxData.CriticalFlag);
-                EventManager.Instance.TriggerActorEvent(_attacker.Uid, EEventType.OnHit, hitInfo);
-                beHurtComp.OnBeHurt(hitInfo);
+                var hitDamageInfo = _damage.MakeDamage(_hurtComps.Count, _hitCountDict[beHurtComp], _hitBoxData.CriticalFlag);
+                var vb = APool<VariableBoard>.Pool.Rent();
+                vb.InitByHitDamageInfo(hitDamageInfo);
+                EventManager.Instance.FireEvent(EEventType.OnHit, _attacker.Uid, vb);
+                APool<VariableBoard>.Pool.Recycle(vb);
+                beHurtComp.OnBeHurt(hitDamageInfo);
             }
         }
 

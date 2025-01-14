@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using Hono.Scripts.Battle.Base;
 using UnityEngine;
 
@@ -15,12 +16,22 @@ namespace Hono.Scripts.Battle.AbilitySystem
             {
                 int attrValue = ParseInt(Data.value);
 
-                /*if (Data.IsPersistent)
+                switch (Data.commandType)
                 {
-                    AContext.AddCommand(new AttrCommand(AContext.Actor.GetAttrNoParse(Data.attrType), attrValue));
-                }*/
-                
-                DoChildrenJob();
+                    case EAbilityCommandType.Permanent:
+                        AContext.Actor.SetAttr(Data.attrType, attrValue);
+                        break;
+                    case EAbilityCommandType.UndoWhenAbilityEndCycle:
+                        var cycleCmd = APool<AttrCommand>.Pool.Rent();
+                        cycleCmd.SetAttr(AContext.Actor,Data.attrType,attrValue);
+                        AContext._cycleCmdCollection.DoCommand(cycleCmd);
+                        break;
+                    case EAbilityCommandType.UndoWhenAbilityRemove:
+                        var abilityCmd = APool<AttrCommand>.Pool.Rent();
+                        abilityCmd.SetAttr(AContext.Actor,Data.attrType,attrValue);
+                        AContext._cycleCmdCollection.DoCommand(abilityCmd);
+                        break;
+                }
             }
 
             public override void Recycle()

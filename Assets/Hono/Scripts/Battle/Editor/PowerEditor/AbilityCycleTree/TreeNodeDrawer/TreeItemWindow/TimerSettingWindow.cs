@@ -12,9 +12,9 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
         protected override void Init()
         {
-            _first = new AParamsField(TreeItem,    TempData.FirstInterval, "第一次触发间隔",      typeof(RefFloat));
-            _interval = new AParamsField(TreeItem, TempData.Interval,      "触发间隔",         typeof(RefFloat));
-            _maxCount = new AParamsField(TreeItem, TempData.MaxCount,      "触发次数(-1为无限次)", typeof(RefInt));
+            _first = new AParamsField(TreeItem,    TempData.firstInterval, "第一次触发间隔",      typeof(RefFloat));
+            _interval = new AParamsField(TreeItem, TempData.interval,      "触发间隔",         typeof(RefFloat));
+            _maxCount = new AParamsField(TreeItem, TempData.maxCount,      "触发次数(-1为无限次)", typeof(RefInt));
         }
 
         protected override void Draw()

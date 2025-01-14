@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using UnityEngine.Profiling;
-
 #endregion
 
 namespace Hono.Scripts.Battle

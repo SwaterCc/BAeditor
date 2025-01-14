@@ -84,6 +84,7 @@ namespace Editor.AbilityEditor
             addMenu("添加节点/Attr",         ERightClickOperationType.AddAttrChild,        new AttrModifyNodeData());
             addMenu("添加节点/Variable",     ERightClickOperationType.AddVariableChild,    new VariableNodeData());
             addMenu("添加节点/GroupSwitch",  ERightClickOperationType.AddGroupSwitchChild, new GroupSwitchNodeData());
+            addMenu("添加节点/SendMsg",      ERightClickOperationType.AddMsgSendChild,     new MsgSendNodeData());
             //基础操作
             addMenu("复制",   ERightClickOperationType.Copy,       null);
             addMenu("粘贴",   ERightClickOperationType.Paste,      Node);
@@ -127,6 +128,7 @@ namespace Editor.AbilityEditor
                 case ERightClickOperationType.AddVariableChild:
                 case ERightClickOperationType.AddAttrChild:
                 case ERightClickOperationType.AddGroupSwitchChild:
+                case ERightClickOperationType.AddMsgSendChild:
                     rightMenuInfo.Function += data =>
                     {
                         Node.AddChild(new AEditorTreeNode((AbilityNodeData)data));

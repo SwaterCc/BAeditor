@@ -108,6 +108,7 @@ namespace Hono.Scripts.Battle
                 dead();
             }
         }
+        
 
         protected override void onTick(float dt)
         {
@@ -126,11 +127,18 @@ namespace Hono.Scripts.Battle
         private void onHit(int targetUid)
         {
             var target = ActorManager.Instance.GetActor(targetUid);
-            if (target == null) return;
-            if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) return;
-
+            if (target == null) 
+                return;
+            
+            if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp)) 
+                return;
+            
             var hitDamageInfo = _damage.MakeDamage(1, 1, false);
-            EventManager.Instance.TriggerActorEvent(Self.Uid, EEventType.OnHit, hitDamageInfo);
+            
+            var vb = APool<VariableBoard>.Pool.Rent();
+            vb.InitByHitDamageInfo(hitDamageInfo);
+            EventManager.Instance.FireEvent(EEventType.OnHit, Self.Uid, vb);
+            APool<VariableBoard>.Pool.Recycle(vb);
 
             beHurtComp.OnBeHurt(hitDamageInfo);
         }

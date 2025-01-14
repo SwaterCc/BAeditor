@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
     public partial class Ability
     {
         /// <summary>
-        /// 时间节点的子节点不可以有时间节点
+        /// 计时器节点，每次触发都会重新执行该定时器
         /// </summary>
         private class ATimerNode : ANode<TimerNodeData>, IAPoolObject, ITickANode
         {
@@ -22,17 +22,37 @@ namespace Hono.Scripts.Battle.AbilitySystem
             private int _count;
             private bool _isFirst;
 
+            /// <summary>
+            /// 计时器是否正在运行
+            /// </summary>
+            private bool _isRunning;
+
+            /// <summary>
+            /// 监听获取的信息黑板
+            /// </summary>
+            public VariableBoard ListenerBoard { get; private set; }
+            
             public override void DoJob()
             {
                 _duration = 0;
                 _count = 0;
                 _isFirst = true;
 
-                _firstInterval = ParseFloat(Data.FirstInterval);
-                _interval = ParseFloat(Data.Interval);
-                _maxCount = ParseInt(Data.MaxCount);
+                _firstInterval = ParseFloat(Data.firstInterval);
+                _interval = ParseFloat(Data.interval);
+                _maxCount = ParseInt(Data.maxCount);
 
-                ACycles.RegisterTick(this);
+                if (!_isRunning)
+                {
+                    ACycles.RegisterTick(this);
+                    _isRunning = true;
+                }
+
+                if (TryGetParent<AListenerNode>(out var listenerNode))
+                {
+                    ListenerBoard = listenerNode.Board;
+                    ListenerBoard.RefCount.AddReference();
+                }
             }
 
             public void Tick(float dt)
@@ -84,6 +104,10 @@ namespace Hono.Scripts.Battle.AbilitySystem
                 _maxCount = 0;
                 _interval = 0;
                 _firstInterval = 0;
+                _isRunning = false;
+                
+                ListenerBoard?.RefCount.RemoveReference();
+                ListenerBoard = null;
             }
 
             public override void Recycle()

@@ -235,6 +235,33 @@ namespace Hono.Scripts.Battle.AbilitySystem
             }
 
             #endregion
+
+            #region 工具函数
+            /// <summary>
+            /// 获取指定类型的父节点
+            /// </summary>
+            /// <param name="result"></param>
+            /// <typeparam name="TNodeType"></typeparam>
+            /// <returns></returns>
+            public bool TryGetParent<TNodeType>(out TNodeType result) where TNodeType : ANode
+            {
+                result = null;
+                var parent = Parent;
+                while (parent != null)
+                {
+                    if (parent is TNodeType tNode)
+                    {
+                        result = tNode;
+                        return true;
+                    }
+
+                    parent = parent.Parent;
+                }
+
+                return false;
+            }
+
+            #endregion
         }
 
         private abstract class ANode<TNodeData> : ANode where TNodeData : AbilityNodeData
