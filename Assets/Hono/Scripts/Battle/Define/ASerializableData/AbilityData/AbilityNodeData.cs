@@ -19,10 +19,12 @@ namespace Hono.Scripts.Battle
         public int belongGroupId = -1;
 
         public List<int> childrenIndexes = new();
-
+        
+        //TODO:调试相关数据后续将其拆分为编辑器独立数据中，目前该字段无效（因为其不属于拷贝数据）
+        /// <summary>
+        /// 节点描述
+        /// </summary>
         public string desc = "";
-
-        //TODO:调试相关数据后续将其拆分为编辑器独立数据中
         /// <summary>
         /// 跳过执行
         /// </summary>
@@ -91,6 +93,7 @@ namespace Hono.Scripts.Battle
             copy.isModify = isModify;
             copy.value = new AParams(value);
             copy.value = value;
+            copy.operationType = operationType;
             return copy;
         }
     }

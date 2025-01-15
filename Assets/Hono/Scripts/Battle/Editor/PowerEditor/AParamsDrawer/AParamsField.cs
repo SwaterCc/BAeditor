@@ -63,8 +63,11 @@ namespace Editor.AbilityEditor
             EditorGUILayout.BeginHorizontal();
             var old = EditorGUIUtility.labelWidth;
 
-            EditorGUILayout.LabelField(new GUIContent(_label, _label), GUILayout.Width(100));
-
+            if (!string.IsNullOrEmpty(_label))
+            {
+                EditorGUILayout.LabelField(new GUIContent(_label, _label), GUILayout.Width(100));
+            }
+            
             //绘制类型转换按钮
             drawParamCast();
 
@@ -247,9 +250,10 @@ namespace Editor.AbilityEditor
 
         private void attrDraw()
         {
-            if (SirenixEditorGUI.Button("使用属性 : " + _params.attrType, ButtonSizes.Medium))
+            string attrText = _params.attrType == 0 ? "未选择属性" : "使用属性: " + _params.attrType;
+            if (SirenixEditorGUI.Button(attrText, ButtonSizes.Medium))
             {
-                var dropdown = new AttrDropdown(_params);
+                var dropdown = new AParamAttrDropdown(_params);
                 dropdown.Show(GUILayoutUtility.GetRect(300, 300, 100, 400));
             }
         }

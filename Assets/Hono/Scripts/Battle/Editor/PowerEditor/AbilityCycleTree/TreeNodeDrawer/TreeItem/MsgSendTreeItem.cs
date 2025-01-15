@@ -1,5 +1,6 @@
 ﻿using Editor.AbilityEditor.TreeItemWindow;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.AbilitySystem;
 using UnityEngine;
 
 namespace Editor.AbilityEditor.TreeItem
@@ -36,13 +37,14 @@ namespace Editor.AbilityEditor.TreeItem
             string key = string.IsNullOrEmpty(Data.msgKey) ? "未设置" : Data.msgKey;
 
             string msgParams = "";
-            
-            foreach (var param in Data.values)
+
+            for (var index = 0; index < Data.values.Count; index++)
             {
-                msgParams += param + ",";
+                AParams param = Data.values[index];
+                msgParams +=  Data.msgParamKeys[index]+":" + param + "|" ;
             }
 
-            return $"SendMsg {key} to actor:{Data.actorUid}, param:{msgParams}";
+            return $"发送Msg Key:{key} 给ActorUid:{Data.actorUid}, 参数列表| {msgParams}";
         }
 
         protected override void OnBtnClicked(Rect btnRect)

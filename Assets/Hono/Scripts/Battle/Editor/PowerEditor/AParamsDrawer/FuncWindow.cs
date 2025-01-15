@@ -82,14 +82,7 @@ namespace Editor.AbilityEditor
             for (var index = 0; index < funcInfo.ParamInfos.Count; index++)
             {
                 var paramInfo = funcInfo.ParamInfos[index];
-
-                var funcParam = index < _function.funcParams.Count
-                    ? _function.funcParams[index]
-                    : new AParams() { paramType = EParamType.Simple };
-
-                var field = new AParamsField(_treeItem, funcParam, paramInfo.ParamName, paramInfo.ParamType);
-
-                _function.funcParams.Add(funcParam);
+                var field = new AParamsField(_treeItem, _function.funcParams[index], paramInfo.ParamName, paramInfo.ParamType);
                 _parameterFields.Add(field);
             }
         }

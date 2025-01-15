@@ -17,7 +17,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
         protected override void Init()
         {
             _value = new AParamsField(TreeItem, TempData.value, "修改属性值：", typeof(RefInt));
-            _attrDropdown = new AttrDropdown(TempData.value);
+            _attrDropdown = new AttrDropdown((type => TempData.attrType = type));
         }
 
         protected override void Draw()
@@ -38,7 +38,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
                 _attrDropdown.Show(GUILayoutUtility.GetRect(100,100,300,300));
             }
 
-            _value?.Draw();
+            _value.Draw();
             TempData.commandType = (EAbilityCommandType)SirenixEditorFields.EnumDropdown("属性修改方式：", TempData.commandType);
             SirenixEditorGUI.EndBox();
         }

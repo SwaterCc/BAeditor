@@ -91,11 +91,12 @@ ability编辑器优化：
 任务
 
 1.ActionSystem，指定方向速度
-2.Ability节点功能补全repeat 
+
 3.Actor Json组件装配，属性初始化流程改变，能从外部传入，属性初始化改到外部（？）
 4.Skill运行态，Buff运行态，Bullet运行态
 5ABility命令模式（完成）
 
+6.Power编辑器功能优化，variable提示，事件提示，消息提示，foreach提示，编辑器数据生产
 
 3.池对象List，池对象Dictionary
 

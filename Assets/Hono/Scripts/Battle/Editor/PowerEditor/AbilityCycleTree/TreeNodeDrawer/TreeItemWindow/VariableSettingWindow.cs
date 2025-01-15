@@ -23,6 +23,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
         {
             _operation = (int)TempData.operationType;
 
+            _varField = new AParamsField(TreeItem, TempData.value, "自定义变量值:",  typeof(object));
             _curSelectVarType = typeof(object);
             if (!string.IsNullOrEmpty(TempData.value.paramCastType))
             {
@@ -34,7 +35,6 @@ namespace Editor.AbilityEditor.TreeItemWindow
             }
 
             _modifyBtnText = string.IsNullOrEmpty(TempData.key) && _curSelectVarType != null ? "选择变量" : TempData.key + $"({_curSelectVarType.Name})";
-            _varField = new AParamsField(TreeItem, TempData.value, "自定义变量值:", _curSelectVarType);
         }
 
         protected override void Draw()

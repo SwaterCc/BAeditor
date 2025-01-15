@@ -123,7 +123,9 @@ namespace Hono.Scripts.Battle.AbilitySystem
                         break;
                     }
 
-                    if (Value.GetType().IsValueType || Value.GetType().BaseType == typeof(ARef))
+                    if (Value.GetType().IsValueType || 
+                        Value.GetType().BaseType == typeof(ARef) ||
+                        Value is string)
                     {
                         desc = Value.ToString();
                         break;

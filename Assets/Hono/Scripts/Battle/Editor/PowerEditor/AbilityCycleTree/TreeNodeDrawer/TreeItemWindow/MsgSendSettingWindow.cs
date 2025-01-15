@@ -39,7 +39,9 @@ namespace Editor.AbilityEditor.TreeItemWindow
             if (SirenixEditorGUI.Button("添加参数",ButtonSizes.Medium))
             {
                 TempData.msgParamKeys.Add("");
-                _paramsFields.Add(new AParamsField(TreeItem, new AParams(), "", typeof(object)));
+                var msgParam = new AParams();
+                TempData.values.Add(msgParam);
+                _paramsFields.Add(new AParamsField(TreeItem, msgParam, "", typeof(object)));
             }
 
             SirenixEditorGUI.BeginVerticalList();
