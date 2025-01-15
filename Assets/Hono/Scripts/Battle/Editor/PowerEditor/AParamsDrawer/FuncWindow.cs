@@ -31,7 +31,7 @@ namespace Editor.AbilityEditor
         private List<AParamsField> _parameterFields;
         private SearchField _searchField;
         private string _curTab;
-        private AParamFiledFilter _filters;
+        private FuncWindowFilter _filters;
 
         private float _windowWidth;
         private float _windowHeight;
@@ -43,7 +43,7 @@ namespace Editor.AbilityEditor
             _searchField = new SearchField();
             _parameterFields = new List<AParamsField>();
             _curTab = "All";
-            _filters = new AParamFiledFilter();
+            _filters = new FuncWindowFilter();
 
             if (filters != null)
             {

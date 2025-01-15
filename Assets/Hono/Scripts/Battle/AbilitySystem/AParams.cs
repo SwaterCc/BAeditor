@@ -1,9 +1,12 @@
 #region
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Hono.Scripts.Battle.Base;
+using UnityEditor;
 
 #endregion
 
@@ -13,7 +16,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
     /// 编辑器数据
     /// </summary>
     [Serializable]
-    public class AParams 
+    public class AParams
     {
         /// <summary>
         /// 参数类型
@@ -39,7 +42,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         /// 属性类型
         /// </summary>
         public EAttrType attrType;
-        
+
         /// <summary>
         /// 基础类型需要包装
         /// </summary>
@@ -49,7 +52,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         /// 参数最终转换类型字符串
         /// </summary>
         public string paramCastType;
-        
+
         public AParams() { }
 
         /// <summary>
@@ -79,12 +82,14 @@ namespace Hono.Scripts.Battle.AbilitySystem
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
                     BinaryFormatter formatter = new();
-                    formatter.Serialize(memoryStream,  aParams.Value);
+                    formatter.Serialize(memoryStream, aParams.Value);
                     memoryStream.Seek(0, SeekOrigin.Begin);
-                    Value = formatter.Deserialize(memoryStream);;
+                    Value = formatter.Deserialize(memoryStream);
+                    ;
                 }
             }
-          
+
+            paramCastType = aParams.paramCastType;
             variableName = aParams.variableName;
             attrType = aParams.attrType;
         }
@@ -102,6 +107,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
             Value = temp.Value;
             variableName = temp.variableName;
             attrType = temp.attrType;
+            paramCastType = temp.paramCastType;
         }
 
         public override string ToString()
@@ -111,7 +117,37 @@ namespace Hono.Scripts.Battle.AbilitySystem
             switch (paramType)
             {
                 case EParamType.Simple:
-                    desc = Value == null ? "null" : Value.ToString().Split(".")[^1];
+                    if (Value == null)
+                    {
+                        desc = "null";
+                        break;
+                    }
+
+                    if (Value.GetType().IsValueType || Value.GetType().BaseType == typeof(ARef))
+                    {
+                        desc = Value.ToString();
+                        break;
+                    }
+                    
+                    if (Value.GetType().IsClass)
+                    {
+                        if (Value is IList list)
+                        {
+                            for (var index = 0; index < list.Count; index++)
+                            {
+                                var obj = list[index];
+                                desc += obj;
+                                if (index != list.Count - 1)
+                                {
+                                    desc +=",";
+                                }
+                            }
+                        }
+                        else
+                        {
+                            desc = Value.GetType().Name;
+                        }
+                    }
                     break;
                 case EParamType.Function:
                     if (string.IsNullOrEmpty(funcName))
@@ -142,5 +178,27 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             return desc;
         }
+
+        #region Type缓存
+
+        private static readonly Dictionary<string, Type> TypeCache = new();
+
+        public Type GetParamType()
+        {
+            if (TypeCache.TryGetValue(paramCastType, out Type cachedType))
+            {
+                return cachedType;
+            }
+
+            Type type = Type.GetType(paramCastType);
+            if (type != null)
+            {
+                TypeCache[paramCastType] = type;
+            }
+
+            return type;
+        }
+
+        #endregion
     }
 }

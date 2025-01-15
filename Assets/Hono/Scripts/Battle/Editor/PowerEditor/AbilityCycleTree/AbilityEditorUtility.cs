@@ -70,6 +70,8 @@ namespace Editor.AbilityEditor
                     return new GroupSwitchTreeItem(tree, node);
                 case VariableNodeData:
                     return new VariableTreeItem(tree, node);
+                case MsgSendNodeData:
+                    return new MsgSendTreeItem(tree, node);
             }
 
             throw new SwitchExpressionException("不存在该类型的节点");

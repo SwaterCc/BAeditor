@@ -14,7 +14,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
                 var board = APool<VariableBoard>.Pool.Rent();
                 for (int i = 0; i < Data.values.Count; i++)
                 {
-                    var type = Type.GetType(Data.values[i].paramCastType);
+                    var type = Data.values[i].GetParamType();
                     if (type == null)
                     {
                         return;

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.AbilitySystem;
 using Hono.Scripts.Battle.Base;
 using UnityEditor;
 using UnityEngine;
 
 namespace Editor.AbilityEditor
 {
-    public static class AParamsFieldConfig
+    public static class AParamsFieldSetting
     {
         /// <summary>
         /// 允许转换类型字典
@@ -17,6 +18,7 @@ namespace Editor.AbilityEditor
             { typeof(RefFloat), new() { typeof(RefInt) } },
             { typeof(RefInt), new() { typeof(RefFloat) } },
             { typeof(object), new() { typeof(RefInt), typeof(RefFloat), typeof(RefBoolean), typeof(RefVector3) } },
+            { typeof(IList), new() { typeof(List<int>), typeof(List<float>), typeof(List<bool>) } },
         };
 
         /// <summary>
@@ -24,6 +26,39 @@ namespace Editor.AbilityEditor
         /// </summary>
         public static readonly Dictionary<Type, EditorWindow> SerializeWindow = new()
             { };
+
+        public static string GetTypeName(Type type)
+        {
+            if (type == typeof(List<int>))
+            {
+                return "IntList";
+            }
+            if (type == typeof(List<float>))
+            {
+                return "FloatList";
+            }
+            if (type == typeof(List<bool>))
+            {
+                return "BoolList";
+            }
+            if (type == typeof(RefInt))
+            {
+                return "Int(Ref)";
+            }
+            if (type == typeof(RefFloat))
+            {
+                return "Float(Ref)";
+            }
+            if (type == typeof(RefBoolean))
+            {
+                return "Bool(Ref)";
+            }
+            if (type == typeof(RefVector3))
+            {
+                return "Vec3(Ref)";
+            }
+            return type.Name;
+        }
         
         public static object GetDefaultValue(Type type)
         {
@@ -34,7 +69,12 @@ namespace Editor.AbilityEditor
                 {
                     return null;
                 }
-                
+
+                if (type.IsAbstract || type.IsInterface)
+                {
+                    return null;
+                }
+
                 if (type == typeof(string))
                 {
                     value = "";

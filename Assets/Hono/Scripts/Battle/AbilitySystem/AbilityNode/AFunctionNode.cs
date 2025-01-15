@@ -62,11 +62,6 @@ namespace Hono.Scripts.Battle.AbilitySystem
             {
                 APool<AFunctionNode>.Pool.Recycle(this);
             }
-
-            public new void OnRecycle()
-            {
-                ((ANode)this).OnRecycle();
-            }
         }
     }
 }

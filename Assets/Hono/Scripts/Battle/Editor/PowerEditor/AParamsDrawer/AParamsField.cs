@@ -51,29 +51,74 @@ namespace Editor.AbilityEditor
             _params = aParams;
             _label = label;
 
-            _originType = _castType = ARef.ParseValueTypeToARefType(type);
-            
+            _originType = ARef.ParseValueTypeToARefType(type);
+
+            _castType = string.IsNullOrEmpty(_params.paramCastType) ? _originType : _params.GetParamType();
+
             _paramTypeMenu = new GenericMenu();
+        }
+
+        public void Draw()
+        {
+            EditorGUILayout.BeginHorizontal();
+            var old = EditorGUIUtility.labelWidth;
+
+            EditorGUILayout.LabelField(new GUIContent(_label, _label), GUILayout.Width(100));
+
+            //绘制类型转换按钮
+            drawParamCast();
+
+            //绘制参数来源切换按钮
+            drawParamTypeSwitch();
+
+            switch (_params.paramType)
+            {
+                case EParamType.Simple:
+                    baseDraw();
+                    break;
+                case EParamType.Function:
+                    functionDraw();
+                    break;
+                case EParamType.Variable:
+                    variableDraw();
+                    break;
+                case EParamType.Attr:
+                    attrDraw();
+                    break;
+            }
+
+            EditorGUIUtility.labelWidth = old;
+            EditorGUILayout.EndHorizontal();
         }
 
         private void drawParamCast()
         {
             var castMenu = new GenericMenu();
 
-            var curType = _castType.Name;
+            string curTypeName = AParamsFieldSetting.GetTypeName(_castType);
 
-            if (AParamsFieldConfig.AllowCastConfig.TryGetValue(_castType, out var castList))
+            if (GUILayout.Button(curTypeName, GUILayout.Width(80)))
             {
-                if (GUILayout.Button(curType, GUILayout.Width(80)))
+                if (AParamsFieldSetting.AllowCastConfig.TryGetValue(_castType, out var castList))
                 {
                     foreach (var type in castList)
                     {
-                        castMenu.AddMenuItem(_castType.Name + "→" + type.Name, changeValueType, type);
+                        string castTypeName = AParamsFieldSetting.GetTypeName(type);
+                        castMenu.AddMenuItem(curTypeName + "→" + castTypeName, changeValueType, type);
                     }
-
-                    castMenu.AddMenuItem("重 置", changeValueType, _originType);
-                    castMenu.ShowAsContext();
                 }
+
+                if (_castType != _originType)
+                {
+                    castMenu.AddMenuItem("重 置", (data) =>
+                                         {
+                                             _params.Value = null;
+                                             changeValueType(data);
+                                         },
+                                         _originType);
+                }
+
+                castMenu.ShowAsContext();
             }
         }
 
@@ -85,7 +130,7 @@ namespace Editor.AbilityEditor
                                        () =>
                                        {
                                            _params.paramType = EParamType.Simple;
-                                           _params.Value = AParamsFieldConfig.GetDefaultValue(_castType);
+                                           _params.Value = AParamsFieldSetting.GetDefaultValue(_castType);
                                        });
                 _paramTypeMenu.AddItem(new GUIContent("调用函数"), false,
                                        () =>
@@ -129,44 +174,12 @@ namespace Editor.AbilityEditor
             _params.paramCastType = _castType.AssemblyQualifiedName;
         }
 
-        public void Draw()
-        {
-            EditorGUILayout.BeginHorizontal();
-            var old = EditorGUIUtility.labelWidth;
-
-            EditorGUILayout.LabelField(new GUIContent(_label, _label), GUILayout.Width(100));
-
-            //绘制类型转换按钮
-            drawParamCast();
-
-            //绘制参数来源切换按钮
-            drawParamTypeSwitch();
-
-            switch (_params.paramType)
-            {
-                case EParamType.Simple:
-                    baseDraw();
-                    break;
-                case EParamType.Function:
-                    functionDraw();
-                    break;
-                case EParamType.Variable:
-                    variableDraw();
-                    break;
-                case EParamType.Attr:
-                    attrDraw();
-                    break;
-            }
-
-            EditorGUIUtility.labelWidth = old;
-            EditorGUILayout.EndHorizontal();
-        }
 
         private void baseDraw()
         {
+            _params.Value ??= AParamsFieldSetting.GetDefaultValue(_castType);
             if (_castType.BaseType == typeof(ARef))
             {
-                _params.Value ??= AParamsFieldConfig.GetDefaultValue(_castType);
                 //继承自ARef，自行补充
                 switch (_params.Value)
                 {
@@ -197,7 +210,7 @@ namespace Editor.AbilityEditor
                 if ((SirenixEditorGUI.Button("编辑 " + _castType.Name, ButtonSizes.Medium)))
                 {
                     //可序列化类型
-                    if (AParamsFieldConfig.SerializeWindow.TryGetValue(_castType, out var window))
+                    if (AParamsFieldSetting.SerializeWindow.TryGetValue(_castType, out var window))
                     {
                         window.Show();
                     }

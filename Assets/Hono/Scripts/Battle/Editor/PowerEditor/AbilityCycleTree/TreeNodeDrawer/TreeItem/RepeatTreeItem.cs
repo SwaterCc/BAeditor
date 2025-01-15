@@ -13,14 +13,14 @@ namespace Editor.AbilityEditor.TreeItem
     {
         public RepeatTreeItem(AbilityCycleTree tree, AEditorTreeNode data) : base(tree, data)
         {
-            ButtonBackGroundColor = new Color(2,0.9f,0.1f);
+            ButtonBackGroundColor = new Color(1, 0.5f, 0.1f);
         }
 
         protected override ERightMenuState checkRightMenuState(MenuInfo info)
         {
-            if (info.OperationType is 
-                ERightClickOperationType.AddGroupChild or 
-                ERightClickOperationType.AddListenerChild or 
+            if (info.OperationType is
+                ERightClickOperationType.AddGroupChild or
+                ERightClickOperationType.AddListenerChild or
                 ERightClickOperationType.AddTimerChild)
             {
                 return ERightMenuState.Disable;
@@ -31,17 +31,18 @@ namespace Editor.AbilityEditor.TreeItem
 
         protected override bool checkIsAllowMove(ATreeItem newParent)
         {
-            if (newParent is AttrModifyTreeItem  or FunctionTreeItem or BranchGroupTreeItem)
+            if (newParent is AttrModifyTreeItem or FunctionTreeItem or BranchGroupTreeItem)
             {
                 return false;
             }
 
             return true;
         }
-        
+
         protected override string getButtonText()
         {
-            return "Foreach";
+            string text = Data.operationType == ERepeatNodeOperationType.Repeat ? $"循环执行 {Data.repeatCount} 次" : $"遍历列表  {Data.traverseList}";
+            return text;
         }
 
         protected override void OnBtnClicked(Rect btnRect)

@@ -6,7 +6,7 @@ namespace Editor.AbilityEditor
     /// <summary>
     /// AParam类型显示筛选器
     /// </summary>
-    public class AParamFiledFilter
+    public class FuncWindowFilter
     {
         /// <summary>
         /// 

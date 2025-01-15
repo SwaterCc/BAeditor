@@ -17,7 +17,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         {
             public override void DoJob()
             {
-                var type = Type.GetType(Data.value.paramCastType);
+                var type = Data.value.GetParamType();
 
                 if (type == null)
                 {

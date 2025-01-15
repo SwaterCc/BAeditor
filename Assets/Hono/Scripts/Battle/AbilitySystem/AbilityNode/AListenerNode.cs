@@ -38,14 +38,8 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             public void UnRegisterEvent()
             {
-                if (Data.isEvent)
-                {
-                    AContext.Actor.UnregisterEvtListener(_eventListener);
-                }
-                else
-                {
-                    AContext.Actor.UnregisterMsgListener(_messageListener);
-                }
+                AContext.Actor.UnregisterMsgListener(_messageListener);
+                AContext.Actor.UnregisterEvtListener(_eventListener);
             }
 
             private void OnFire(VariableBoard board)
@@ -60,13 +54,6 @@ namespace Hono.Scripts.Battle.AbilitySystem
             public override void Recycle()
             {
                 APool<AListenerNode>.Pool.Recycle(this);
-            }
-
-            public new void OnRecycle()
-            {
-                _eventListener.Clear();
-                _messageListener.Clear();
-                ((ANode)this).OnRecycle();
             }
         }
     }

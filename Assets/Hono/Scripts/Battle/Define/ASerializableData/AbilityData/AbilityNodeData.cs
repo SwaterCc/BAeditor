@@ -120,7 +120,7 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class MsgSendNodeData : AbilityNodeData
     {
-        public AParams actorUid;
+        public AParams actorUid = new();
         public string msgKey;
         public List<string> msgParamKeys = new(); 
         public List<AParams> values = new();
@@ -195,7 +195,7 @@ namespace Hono.Scripts.Battle
     public class GroupSwitchNodeData : AbilityNodeData
     {
         public bool switchGroupNow;
-        public AParams nextGroupId;
+        public AParams nextGroupId = new();
 
         public override AbilityNodeData DeepCopy()
         {
@@ -227,14 +227,14 @@ namespace Hono.Scripts.Battle
     public class RepeatNodeData : AbilityNodeData
     {
         public ERepeatNodeOperationType operationType;
-        public int repeatCount;
-        public AParams traverseList;
+        public AParams repeatCount = new();
+        public AParams traverseList = new();
 
         public override AbilityNodeData DeepCopy()
         {
             var copy = new RepeatNodeData();
             copy.operationType = operationType;
-            copy.repeatCount = repeatCount;
+            copy.repeatCount = new AParams(repeatCount);
             copy.traverseList = new AParams(traverseList);
             return copy;
         }
