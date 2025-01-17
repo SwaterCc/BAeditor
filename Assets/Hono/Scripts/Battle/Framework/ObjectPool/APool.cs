@@ -46,6 +46,11 @@ namespace Hono.Scripts.Battle
         public APoolRefCount RefCount { get; set; }
     }
 
+    
+    /// <summary>
+    /// A池，逻辑对象池，用于管理代码运行中的逻辑对象
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class APool<T> : IAPool where T : class, IAPoolObject, new()
     {
         /// <summary>

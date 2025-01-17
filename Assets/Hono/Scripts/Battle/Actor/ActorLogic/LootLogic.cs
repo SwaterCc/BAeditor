@@ -37,7 +37,12 @@ namespace Hono.Scripts.Battle
             BattleManager.CurBattle.LootController.CreateRougeCards(actorUid);
         }
 
-        public override void RecycleLogicObject()
+        protected override void onInit()
+        {
+            
+        }
+
+        public override void Recycle()
         {
             APool<LootLogic>.Pool.Recycle(this);
         }

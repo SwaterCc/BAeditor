@@ -1,0 +1,5 @@
+﻿Id,角色名字,描述,角色逻辑原型,角色头像,索敌半径,初始阵营,初始标签,模型表Id,初始化属性模板Id,拥有技能,拥有Buff,拥有的其他Ability,不吃位移控制
+Id,Name,Desc,PrototypeJsonName,RPGIcon,SearchRadiu,Faction,TagList,ModelId,AttrTemplateId,OwnerSkills,OwnerBuffs,ownerOtherAbility,IgnoreOtherMotion
+int,string,string,string,string,float,int,intArray,int,int,intTable,intArray,intTable,int
+1,测试单位,,test,Character/Avatar/avatar_holo_head,2.5,1,,1,1,,,,
+2,玩家控制单位,玩家控制单位,player,,,,,,,,,,

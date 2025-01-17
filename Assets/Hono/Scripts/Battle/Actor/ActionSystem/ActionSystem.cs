@@ -6,6 +6,15 @@
     /// </summary>
     public class ActionSystem
     {
-        
+        private Actor _actor;
+        public ActionSystem(Actor actor)
+        {
+            _actor = actor;
+        }
+
+        public void Clear()
+        {
+            
+        }
     }
 }

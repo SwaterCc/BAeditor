@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
     public partial class Ability
     {
         /// <summary>
-        ///     ActionNode 执行动作
+        ///     AFunctionNode 执行动作
         /// </summary>
         private class AFunctionNode : ANode<FunctionNodeData>, IAPoolObject
         {

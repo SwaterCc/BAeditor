@@ -13,12 +13,7 @@ namespace Hono.Scripts.Battle
 {
     public class ActorModel : MonoBehaviour
     {
-        [Title("基础信息")] 
-        [InfoBox("如果是需要静态创建的Actor且需要指定Uid请给予初始值，该uid全局不变")]
-        public int ActorUid;
-
-        [InfoBox("如果是需要静态创建的Actor需要指定类型")] 
-        public EActorType ActorType;
+        public int actorTableId;
         
         [Title("特效相关")] 
         public List<Transform> EffectPoints = new();
@@ -39,7 +34,7 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        public void Setup(ModelController modelController)
+        public void OnInit(ModelController modelController)
         {
             ModelController = modelController;
             if (ModelController.Self.Logic.TryGetComponent(out _vfxComp))
@@ -60,7 +55,7 @@ namespace Hono.Scripts.Battle
 
 #if UNITY_EDITOR
         [Button("激活")]
-        public void ActorCreate(int configId)
+        public void ActorCreate()
         {
             if (!Application.isPlaying)
             {
@@ -68,7 +63,7 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            ActorManager.Instance.CreateActor(ActorType, configId, this);
+            ActorManager.Factory.CreateActor(this);
         }
 #endif
 
@@ -101,7 +96,7 @@ namespace Hono.Scripts.Battle
 
         public void Recycle()
         {
-            UObjectPool.Instance.Recycle(ModelController.ModelPath, gameObject);
+            UPool.Instance.Recycle(ModelController.ModelPath, gameObject);
         }
 
         private void OnAddVFXObject(VFXObject vfxObject)
@@ -113,13 +108,13 @@ namespace Hono.Scripts.Battle
         {
             if (_vfxDict.Remove(vfxObject.Uid, out GameObject vfx))
             {
-                UObjectPool.Instance.Recycle(vfxObject.Setting.VFXPath, vfx);
+                UPool.Instance.Recycle(vfxObject.Setting.VFXPath, vfx);
             }
         }
 
         private async UniTask loadVfx(VFXObject vfxObject)
         {
-            if (!UObjectPool.Instance.TryGet(vfxObject.Setting.VFXPath, out GameObject vfx))
+            if (!UPool.Instance.TryGet(vfxObject.Setting.VFXPath, out GameObject vfx))
             {
                 try
                 {

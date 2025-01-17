@@ -29,83 +29,45 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// unity中对应的对象
         /// </summary>
-        public ActorModel Model { get; set; }
+        public ActorModel Model { get; private set; }
 
         /// <summary>
-        /// 半径
+        /// 模型配置
         /// </summary>
-        public float Radius { get; set; }
-
-        /// <summary>
-        /// Actor是否需要加载模型
-        /// </summary>
-        public bool ActorNeedLoadModel = true;
-
-        /// <summary>
-        /// 模型是否为预加载模型
-        /// 重写以改变加载流程
-        /// </summary>
-        public bool GameObjectIsPreLoaded = false;
-
-        /// <summary>
-        /// 模型路径
-        /// </summary>
-        public string ModelPath = BattleConstValue.DefaultModel;
+        public ModelTable.ModelRow ModelRow { get; private set; }
 
         public ModelController(Actor actor)
         {
             Self = actor;
         }
 
-        public async void Setup()
+        public async void Init(ActorModel model)
         {
-            //启动加载流程
-            if (Model == null && ActorNeedLoadModel)
+            if (!ConfigManager.Table<ModelTable>().TryGet(Self.ActorTableRow.ModelId, out var modelRow))
             {
-                //先尝试从池中获取
-                if (!UObjectPool.Instance.TryGet(ModelPath, out var gameObject))
-                {
-                    //池中没有则走创建流程
-                    if (GameObjectIsPreLoaded)
-                    {
-                        var instance = GameObjectPreLoadMgr.Instance[ModelPath];
-                        gameObject = Object.Instantiate(instance);
-                    }
-                    else
-                    {
-                        try
-                        {
-                            gameObject = await Addressables.LoadAssetAsync<GameObject>(ModelPath)
-                                .ToUniTask(cancellationToken: MainCancelToken.Token);
-                        }
-                        catch (OperationCanceledException e) { }
-                        catch (Exception e)
-                        {
-                            Debug.LogError(e);
-                        }
-                    }
-                }
-
-                if (Model == null)
-                {
-                    Debug.LogError("Model缺少ActorModel脚本！");
-                    ActorManager.Instance.RemoveActor(Uid);
-                    return;
-                }
-
-                Model = gameObject.GetComponent<ActorModel>();
+                modelRow = ConfigManager.Table<ModelTable>().Get(1);
             }
 
-            Model?.Setup(this);
-            Self.ModelLoadFinishCallback?.Invoke(Self);
-        }
+            ModelRow = modelRow;
+            
+            if (model != null)
+            {
+                Model = model;
+                return;
+            }
 
-        /// <summary>
-        /// ActorModel实例化到场景中
-        /// </summary>
-        public void EnterScene()
-        {
-            Model?.OnEnterScene();
+            var gameObject = await UPool.Instance.Get(ModelRow.ModelPath, MainCancelToken);
+
+            if (gameObject == null)
+            {
+                Self.InitState = EActorInitState.ModelLoadFailed;
+                return;
+            }
+            
+            Model = gameObject.GetComponent<ActorModel>();
+
+            Model?.OnInit(this);
+            Self.ModelLoadFinishCallback?.Invoke(Self);
         }
 
         /// <summary>

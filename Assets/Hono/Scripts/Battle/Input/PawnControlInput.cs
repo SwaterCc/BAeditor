@@ -80,7 +80,7 @@ namespace Hono.Scripts.Battle
 
             if (MoveInputValue.magnitude > 0)
             {
-                Logic.SetAttr(EAttrType.AttrHateTargetUid, -1, false);
+                Logic.Self.SetAttr(EAttrType.AttrHateTargetUid, -1, false);
             }
         }
 

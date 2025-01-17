@@ -10,6 +10,11 @@ namespace Hono.Scripts.Battle
             _vfxComp = addComponent(new VFXComp(this));
         }
 
+        protected override void onInit()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void RecycleLogicObject()
         {
             APool<BattleController>.Pool.Recycle(this);

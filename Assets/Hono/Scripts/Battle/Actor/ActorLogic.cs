@@ -14,7 +14,7 @@ namespace Hono.Scripts.Battle
     /// </summary>
     public abstract partial class ActorLogic
     {
-        public Actor Self { get; private set; }
+        public Actor Self { get; set; }
 
         /// <summary>
         /// Actor的UID
@@ -27,73 +27,27 @@ namespace Hono.Scripts.Battle
         protected VariableBoard Variables => Self.VariableBoard;
 
         /// <summary>
-        /// 输入来源
-        /// </summary>
-        private ActorInput _actorInput;
-
-        /// <summary>
         /// 逻辑组件
         /// </summary>
-        private readonly Dictionary<Type, AComponent> _components;
-
+        private readonly Dictionary<Type, AComponent> _components = new();
+        
         /// <summary>
         /// ActionSystem
         /// </summary>
-        
-        protected ActorLogic()
+        public void Init()
         {
-            _actorInput = new NoInput(this);
-            _components = new Dictionary<Type, AComponent>(10);
-        }
-
-        public void OnSetup(Actor actor)
-        {
-            Self = actor;
-            setupAttrs();
             foreach (var component in _components)
             {
-                component.Value.Init();
+                component.Value.Self = Self;
+                component.Value.onInit();
             }
-
             onInit();
         }
 
         /// <summary>
-        /// 重设Input
-        /// </summary>
-        /// <param name="input"></param>
-        protected void resetInput(ActorInput input)
-        {
-            _actorInput = input;
-        }
-
-        /// <summary>
-        /// 装载属性，先于OnInit
-        /// </summary>
-        protected virtual void setupAttrs() { }
-
-        /// <summary>
         /// 在属性，状态机，组件初始化完成后调用
         /// </summary>
-        protected virtual void onInit() { }
-
-        /// <summary>
-        /// 进入场景时调用
-        /// </summary>
-        public void EnterScene()
-        {
-            foreach (var component in _components)
-            {
-                component.Value.EnterScene();
-            }
-
-            onEnterScene();
-        }
-
-        /// <summary>
-        /// 初始化完成后进入场景时执行
-        /// </summary>
-        protected virtual void onEnterScene() { }
+        protected abstract void onInit();
 
         /// <summary>
         /// 添加组件
@@ -105,7 +59,7 @@ namespace Hono.Scripts.Battle
             {
                 Debug.Log($"{GetType()} 添加组件 {component.GetType()} Failed!");
             }
-
+            
             return component;
         }
 
@@ -146,8 +100,6 @@ namespace Hono.Scripts.Battle
 
         public void Tick(float dt)
         {
-            _actorInput.Tick(dt);
-
             foreach (var component in _components)
             {
                 component.Value.Tick(dt);
@@ -156,7 +108,7 @@ namespace Hono.Scripts.Battle
             onTick(dt);
         }
 
-        public abstract void RecycleLogicObject();
+        public abstract void Recycle();
 
         public void OnRecycle()
         {
@@ -168,20 +120,6 @@ namespace Hono.Scripts.Battle
         }
 
         protected virtual void OnChildRecycle() { }
-
-        #region 对外接口
-
-        public int GetAttr(EAttrType attrType)
-        {
-            return Self.GetAttr(attrType);
-        }
-
-        public void SetAttr(EAttrType attrType, int value, bool temp)
-        {
-            Self.SetAttr(attrType, value, temp);
-        }
-
-        #endregion
     }
 
     public static class ActorLogicEx

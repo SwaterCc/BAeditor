@@ -1,13 +1,12 @@
 namespace Hono.Scripts.Battle.Base
 {
     /// <summary>
-    ///  属性基类
+    ///  属性
     /// </summary>
-    public class Attr : IAPoolObject
+    public class Attr :IAPoolObject
     {
-        private int _dynamicValue;
-        private int _permanentValue;
-        private RefInt _finalValue = new();
+        private AttrCollection _collection;
+        private int _value;
         
         /// <summary>
         /// 获取属性值（指令值和原值的总值）
@@ -15,35 +14,17 @@ namespace Hono.Scripts.Battle.Base
         /// <returns></returns>
         public int Get()
         {
-            return _finalValue.Value;
+            return _value;
         }
 
         /// <summary>
-        /// 获取引用最终值
-        /// </summary>
-        /// <returns></returns>
-        public RefInt GetRef()
-        {
-            return _finalValue;
-        }
-
-        /// <summary>
-        /// 设置属性
+        /// 设置属性，如果属性值发生变化，则会设置脏标记，可以通过参数强制设置脏标记
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="isPermanent"></param>
-        public void Set(int value, bool isPermanent)
+        /// <param name="forceDirty">当属性值并未发送数值上的变化时也可以触发脏标记</param>
+        public void Set(int value, bool forceDirty = false)
         {
-            if (isPermanent)
-            {
-                _dynamicValue += value;
-            }
-            else
-            {
-                _permanentValue = value;
-            }
-
-            _finalValue = _dynamicValue + _permanentValue;
+            _value = value;
         }
 
         #region 运算符重写
@@ -107,9 +88,6 @@ namespace Hono.Scripts.Battle.Base
 
         public void OnRecycle()
         {
-            _finalValue = 0;
-            _dynamicValue = 0;
-            _permanentValue = 0;
         }
     }
 }

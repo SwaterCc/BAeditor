@@ -36,7 +36,7 @@ namespace Hono.Scripts.Battle
         {
             _hitBoxData = Variables.Get<HitBoxData>("hitBoxData");
             //因为是同帧，所以攻击者必然存在
-            _attacker = ActorManager.Instance.GetActor(GetAttr(EAttrType.AttrSourceActorUid));
+            _attacker = ActorManager.Instance.GetActor(Self.GetAttr(EAttrType.AttrSourceActorUid));
             _attacker.ExitSceneCallBack += setHitBoxExpire;
             //打击目标
             var targetUid = Variables.Get<int>("targetUid");
@@ -56,10 +56,7 @@ namespace Hono.Scripts.Battle
             {
                 _damage.Init(_attacker, _target, _hitBoxData.DamageConfigId);
             }
-        }
-
-        protected override void onEnterScene()
-        {
+            
             _curCount = 0;
             _intervalDuration = _hitBoxData.Interval;
             _rangeFilterSetting = _hitBoxData.rangeFilterSetting;
@@ -170,7 +167,7 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        public override void RecycleLogicObject()
+        public override void Recycle()
         {
             APool<HitBoxLogic>.Pool.Recycle(this);
         }

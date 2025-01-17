@@ -6,22 +6,51 @@ using System.Collections.Generic;
 
 namespace Hono.Scripts.Battle.Base
 {
+    public struct AttrSnapshot 
+    {
+        public EAttrType AttrType;
+        public int Value;
+    }
+    
     public class AttrCollection
     {
         private Actor _actor;
-
+        /// <summary>
+        /// 初始化是否完成
+        /// </summary>
+        private bool _initFinish;
         public AttrCollection(Actor actor)
         {
             _actor = actor;
         }
 
         private readonly Dictionary<EAttrType, Attr> _attrs = new(128);
-
-        public bool HasAttr(EAttrType attrType)
+        
+        public bool Init(List<AttrSnapshot> snapshots = null)
         {
-            return _attrs.ContainsKey(attrType);
+            var baseAttrId = _actor.ActorTableRow.AttrTemplateId;
+            if (!ConfigManager.Table<EntityAttrBaseTable>().TryGet(baseAttrId, out var attrRow))
+            {
+                return false;
+            }
+            AttrBaseTableRowParser.AttrInitByTableRow(this,attrRow);
+
+            if (snapshots != null)
+            {
+                foreach (var snapshot in snapshots)
+                {
+                    SetAttr(snapshot.AttrType, snapshot.Value);
+                }
+            }
+            
+            return true;
         }
 
+        public List<AttrSnapshot> GetAttrSnapShots(string rule)
+        {
+            return new List<AttrSnapshot>();
+        }
+        
         public Attr GetAttr(EAttrType attrType)
         {
             if (!_attrs.TryGetValue(attrType, out Attr attr))
@@ -33,7 +62,7 @@ namespace Hono.Scripts.Battle.Base
             return attr;
         }
 
-        public void SetAttr(EAttrType attrType, int value, bool isCommand)
+        public void SetAttr(EAttrType attrType, int value, bool forceDirty = false)
         {
             var attrTypeInt = attrType;
 
@@ -43,9 +72,14 @@ namespace Hono.Scripts.Battle.Base
                 _attrs.Add(attrTypeInt, attr);
             }
 
-            attr.Set(value, isCommand);
+            attr.Set(value, forceDirty);
         }
 
+        public void Clear()
+        {
+            _initFinish = false;
+        }
+        
         /// <summary>
         /// 重新计算复合属性
         /// </summary>

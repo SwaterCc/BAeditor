@@ -41,9 +41,9 @@ namespace Hono.Scripts.Battle
 
         protected override void onInit()
         {
-            _bulletData = AssetManager.Instance.GetData<BulletData>(GetAttr(EAttrType.AttrConfigId));
+            _bulletData = AssetManager.Instance.GetData<BulletData>(Self.GetAttr(EAttrType.AttrConfigId));
             _targetUid = (Variables.Get<RefInt>("targetUid"));
-            _attacker = ActorManager.Instance.GetActor(GetAttr(EAttrType.AttrSourceActorUid));
+            _attacker = ActorManager.Instance.GetActor(Self.GetAttr(EAttrType.AttrSourceActorUid));
             _attacker.ExitSceneCallBack += setBulletExpire;
 
             Actor target = ActorManager.Instance.GetActor(_targetUid);
@@ -57,10 +57,7 @@ namespace Hono.Scripts.Battle
                 target.ExitSceneCallBack += setBulletExpire;
                 _targetPos = target.Pos;
             }
-        }
-
-        protected override void onEnterScene()
-        {
+            
             Self.Rot = _attacker.Rot * Quaternion.AngleAxis(_setting.Angle, Vector3.up);
             Self.Pos = _attacker.Pos + Self.Rot * _setting.Offset;
 
@@ -148,7 +145,7 @@ namespace Hono.Scripts.Battle
             ActorManager.Instance.RemoveActor(Self.Uid);
         }
 
-        public override void RecycleLogicObject()
+        public override void Recycle()
         {
             APool<BulletLogic>.Pool.Recycle(this);
         }

@@ -8,15 +8,17 @@ namespace Hono.Scripts.Battle
 {
     public enum EActorType
     {
-        BattleLevelController,
-        Pawn,
-        Monster,
+        NoInit = 0,
+        Character = 1,
+        Npc,
         Building,
+     
+        //固定类型
+        NoCustomBegin = 1000,
+        BattleLevelController,
         Bullet,
         HitBox,
         Loot,
-        MonsterGenerator,
-        TriggerBox,
     }
 
     /// <summary>
@@ -63,6 +65,22 @@ namespace Hono.Scripts.Battle
         Other,
     }
 
+    /// <summary>
+    /// Actor初始化状态
+    /// </summary>
+    public enum EActorInitState
+    {
+        NoInit = 0,
+        Initializing = 1,
+        Success = 2,
+        
+        FailedFlag = 100,
+        InitConfigFailed,
+        LogicSetupFailed,
+        ModelLoadFailed,
+        OtherFailed,
+    }
+    
     /// <summary>
     ///     战斗玩法状态
     /// </summary>
@@ -447,21 +465,6 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    ///     技能编辑器中配置的临时变量生效范围
-    /// </summary>
-    public enum EVariableRange
-    {
-        //战场全局变量
-        Battleground,
-
-        //仅角色
-        Actor,
-
-        //单个能力
-        Ability,
-    }
-
-    /// <summary>
     ///     打击点类型
     /// </summary>
     public enum EHitType
@@ -591,19 +594,5 @@ namespace Hono.Scripts.Battle
         Skill,
         Buff,
         Bullet,
-    }
-
-    public enum EParamValueType
-    {
-        Any,
-        Int,
-        Float,
-        Bool,
-        String,
-        IntList,
-        Enum,
-        Vector3,
-        Object,
-        Custom,
     }
 }

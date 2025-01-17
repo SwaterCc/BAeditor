@@ -14,12 +14,12 @@ namespace Hono.Scripts.Battle.Tools
     public enum EActorUidRangeType
     {
         /// <summary>
-        ///     低活跃段，但也不是经常存在，如怪物，建筑，集结点
+        /// 低活跃段，但也不是经常存在，如怪物，建筑，集结点
         /// </summary>
         NormalActor,
 
         /// <summary>
-        ///     活跃段（即经常创建，经常销毁的Actor 如：子弹，短期召唤物，打击盒子等）
+        /// 极高活跃段（即经常创建，存活周期非常短的单位，经常销毁的Actor 如：子弹，短期召唤物，打击盒子等）
         /// </summary>
         DynamicActor,
     }
@@ -65,8 +65,8 @@ namespace Hono.Scripts.Battle.Tools
 
         private static readonly Dictionary<EActorUidRangeType, UidRange> UidRanges = new(5)
         {
-            { EActorUidRangeType.NormalActor, new UidRange(100000, 500000) },
-            { EActorUidRangeType.DynamicActor, new UidRange(500000, Int32.MaxValue - 1) },
+            { EActorUidRangeType.DynamicActor, new UidRange(100000, 500000) },
+            { EActorUidRangeType.NormalActor, new UidRange(500000, Int32.MaxValue - 1) },
         };
 
         public static int GenerateUid(EActorUidRangeType uidRangeType)

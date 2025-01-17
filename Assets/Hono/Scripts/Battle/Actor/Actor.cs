@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Message;
@@ -9,7 +10,7 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// Actor 战斗玩法中最基本的单位
     /// </summary>
-    public sealed class Actor : IAPoolObject
+    public sealed partial class Actor : IAPoolObject
     {
         /// <summary>
         /// 运行时唯一ID
@@ -20,7 +21,22 @@ namespace Hono.Scripts.Battle
         /// Actor基础类型
         /// </summary>
         public EActorType ActorType { get; private set; }
-
+        
+        /// <summary>
+        /// Actor逻辑
+        /// </summary>
+        public ActorLogic Logic { get; private set; }
+        
+        /// <summary>
+        /// Actor配置数据
+        /// </summary>
+        public int ConfigId { get; private set; }
+        
+        /// <summary>
+        /// Actor配置数据
+        /// </summary>
+        public ActorTable.ActorRow ActorTableRow { get; private set; }
+        
         /// <summary>
         /// Unity交互层
         /// </summary>
@@ -40,41 +56,37 @@ namespace Hono.Scripts.Battle
         /// Actor属性列表
         /// </summary>
         public AttrCollection Attrs { get; }
-
-        /// <summary>
-        /// Actor逻辑
-        /// </summary>
-        public ActorLogic Logic { get; private set; }
-
+        
         /// <summary>
         /// ability控制器
         /// </summary>
-        public AbilityController Abilities { get; }
+        public AbilityCollection Abilities { get; }
 
         /// <summary>
         /// 动作系统
         /// </summary>
         public ActionSystem ActionSystem { get; }
-        
+
         /// <summary>
-        /// 配置id
+        /// Actor初始化状态
         /// </summary>
-        public int ConfigId => GetAttr(EAttrType.AttrConfigId);
+        /// <returns></returns>
+        public EActorInitState InitState;
 
         /// <summary>
         /// 当前坐标
         /// </summary>
-        public Vector3 Pos { get; set; }
+        public Vector3 Pos;
 
         /// <summary>
         /// 目标坐标
         /// </summary>
-        public Vector3 TargetPos { get; set; }
+        public Vector3 TargetPos;
 
         /// <summary>
         /// 当前旋转
         /// </summary>
-        public Quaternion Rot { get; set; }
+        public Quaternion Rot;
 
         /// <summary>
         /// Actor事件容器
@@ -118,7 +130,8 @@ namespace Hono.Scripts.Battle
         public Actor()
         {
             Attrs = new AttrCollection(this);
-            Abilities = new AbilityController(this);
+            Abilities = new AbilityCollection(this);
+            ActionSystem = new ActionSystem(this);
             VariableBoard = new VariableBoard();
             TagCollection = new TagCollection();
             ModelController = new ModelController(this);
@@ -132,24 +145,24 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 初始化
         /// </summary>
-        /// <param name="uid"></param>
-        /// <param name="actorType"></param>
-        public void Init(int uid, EActorType actorType)
+        public void Init(int uid, int configId, ActorModel actorModel, List<AttrSnapshot> snapshots = null)
         {
+            InitState = EActorInitState.Initializing;
             Uid = uid;
-            SetAttr(EAttrType.AttrUid, uid);
-            ActorType = actorType;
-        }
-
-        /// <summary>
-        /// 组合
-        /// </summary>
-        /// <param name="logic"></param>
-        public void Setup(in ActorLogic logic)
-        {
-            Logic = logic;
-            Logic.OnSetup(this);
-            ModelController.Setup();
+            ConfigId = configId;
+            if (!ConfigManager.Table<ActorTable>().TryGet(ConfigId, out var row))
+            {
+                InitState = EActorInitState.InitConfigFailed;
+                return;
+            }
+            ActorTableRow = row;
+            ActorType = (EActorType)row.ActorType;
+            Attrs.Init(snapshots);
+            ModelController.Init(actorModel);
+            Logic = ActorLogicPrototype.RentLogic(this);
+            
+            EventManager.Instance.AddListenerCollection(_evtListenerCollection);
+            MessageManager.Instance.AddMsgCollection(_messageCollection);
         }
 
         /// <summary>
@@ -157,12 +170,8 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public void EnterScene()
         {
-            Logic.EnterScene();
-            ModelController.EnterScene();
+            
             EnterSceneCallback?.Invoke(this);
-
-            EventManager.Instance.AddListenerCollection(_evtListenerCollection);
-            MessageManager.Instance.AddMsgCollection(_messageCollection);
         }
 
         /// <summary>
@@ -175,10 +184,9 @@ namespace Hono.Scripts.Battle
             Logic.Tick(dt);
             ModelController.Tick(dt);
             Abilities.Tick(dt);
-            AfterTickCallBack?.Invoke(this, dt);
-
             _evtListenerCollection.Tick(dt);
             _messageCollection.Tick(dt);
+            AfterTickCallBack?.Invoke(this, dt);
         }
 
         /// <summary>
@@ -186,8 +194,8 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public void ExitScene()
         {
-            ModelController.ExitScene();
             ExitSceneCallBack?.Invoke(this);
+            ModelController.ExitScene();
             EventManager.Instance.RemoveListenerCollection(_evtListenerCollection);
             MessageManager.Instance.RemoveMsgCollection(_messageCollection);
         }
@@ -207,7 +215,8 @@ namespace Hono.Scripts.Battle
             Abilities.Clear();
             VariableBoard.Clear();
             ModelController.Clear();
-            Logic.RecycleLogicObject();
+            ActionSystem.Clear();
+            Logic.Recycle();
             Logic = null;
 
             _evtListenerCollection.Clear();
@@ -224,9 +233,9 @@ namespace Hono.Scripts.Battle
             return value;
         }
 
-        public void SetAttr(EAttrType attrType, int value, bool isCommand = false)
+        public void SetAttr(EAttrType attrType, int value, bool forceDirty = false)
         {
-            Attrs.SetAttr(attrType, value, isCommand);
+            Attrs.SetAttr(attrType, value, forceDirty);
         }
 
         /// <summary>
@@ -275,7 +284,7 @@ namespace Hono.Scripts.Battle
         {
             _messageCollection.AddListener(messageListener);
         }
-        
+
         /// <summary>
         /// 注册消息监听
         /// </summary>

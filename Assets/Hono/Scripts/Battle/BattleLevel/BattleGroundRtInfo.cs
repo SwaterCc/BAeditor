@@ -134,11 +134,11 @@ namespace Hono.Scripts.Battle
             int factionId = -1;
             switch (actorType)
             {
-                case EActorType.Pawn:
+                case EActorType.Character:
                     var pawnRow = ConfigManager.Table<PawnLogicTable>().Get(configId);
                     factionId = pawnRow.Faction;
                     break;
-                case EActorType.Monster:
+                case EActorType.Npc:
                     var monsterRow = ConfigManager.Table<MonsterLogicTable>().Get(configId);
                     factionId = monsterRow.Faction;
                     break;
