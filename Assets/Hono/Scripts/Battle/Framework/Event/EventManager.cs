@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         /// actor绑定注册列表
         /// </summary>
-        private readonly Dictionary<int, ActorEventListenerCollection> _actorEventListeners = new();
+        private readonly Dictionary<int, UnitEventListenerCollection> _actorEventListeners = new();
         private readonly EventListenerCollection _worldEventListeners = new(20);
 
         public void OnEnterBattle() { }
@@ -40,18 +40,18 @@ namespace Hono.Scripts.Battle.Event
         /// 添加事件容器
         /// </summary>
         /// <param name="collection"></param>
-        public void AddListenerCollection(ActorEventListenerCollection collection)
+        public void AddListenerCollection(UnitEventListenerCollection collection)
         {
-            _actorEventListeners.TryAdd(collection.Actor.Uid,collection);
+            _actorEventListeners.TryAdd(collection.Unit.Uid,collection);
         }
         
         /// <summary>
         /// 删除事件容器
         /// </summary>
         /// <param name="collection"></param>
-        public void RemoveListenerCollection(ActorEventListenerCollection collection)
+        public void RemoveListenerCollection(UnitEventListenerCollection collection)
         {
-            _actorEventListeners.Remove(collection.Actor.Uid);
+            _actorEventListeners.Remove(collection.Unit.Uid);
         }
         
 

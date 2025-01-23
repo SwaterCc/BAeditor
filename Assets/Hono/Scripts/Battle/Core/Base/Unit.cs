@@ -1,0 +1,367 @@
+﻿using System;
+using System.Collections.Generic;
+using Hono.Scripts.Battle.AbilitySystem;
+using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Event;
+using Hono.Scripts.Battle.Message;
+using NUnit.Framework;
+using UnityEngine;
+
+namespace Hono.Scripts.Battle.Core
+{
+    public abstract class Unit
+    {
+        /// <summary>
+        /// 运行时唯一ID
+        /// </summary>
+        public int Uid { get; private set; }
+
+        /// <summary>
+        /// 变量黑板
+        /// </summary>
+        public VariableBoard UnitBoard { get; }
+
+        /// <summary>
+        /// Tags
+        /// </summary>
+        public TagCollection UnitTags { get; }
+
+        /// <summary>
+        /// Actor属性列表
+        /// </summary>
+        public AttrCollection Attrs { get; }
+
+        /// <summary>
+        /// 当前坐标
+        /// </summary>
+        public Vector3 Pos;
+
+        /// <summary>
+        /// 当前旋转
+        /// </summary>
+        public Quaternion Rot;
+
+        /// <summary>
+        /// 动作系统
+        /// </summary>
+        private readonly ActionSystem _actionSystem;
+
+        /// <summary>
+        /// Ability接口
+        /// </summary>
+        private readonly AbilityController _abilityController;
+
+        /// <summary>
+        /// Actor事件容器
+        /// </summary>
+        private readonly UnitEventListenerCollection _evtListenerCollection;
+
+        /// <summary>
+        /// Actor消息容器
+        /// </summary>
+        private readonly MessageCollection _messageCollection;
+
+        /// <summary>
+        /// 逻辑组件
+        /// </summary>
+        private readonly Dictionary<Type, UnitComponent> _components = new();
+
+        /// <summary>
+        /// 进入World后回调
+        /// </summary>
+        public event Action<Unit> InitFinishCallback;
+
+        /// <summary>
+        /// 帧更新前回调
+        /// </summary>
+        public event Action<Unit, float> BeforeTickCallBack;
+        
+        /// <summary>
+        /// 帧更新后回调
+        /// </summary>
+        public event Action<Unit, float> AfterTickCallBack;
+
+        /// <summary>
+        /// 离开World后回调
+        /// </summary>
+        public event Action<Unit> RemoveWorldCallBack;
+
+        /// <summary>
+        /// 父对象
+        /// </summary>
+        private Unit _parent;
+
+        /// <summary>
+        /// 子对象
+        /// </summary>
+        private List<Unit> _children;
+        
+        /// <summary>
+        /// 删除列表
+        /// </summary>
+        private List<Unit> _removeList;
+
+        protected Unit()
+        {
+            _actionSystem = new ActionSystem(this);
+            _abilityController = new AbilityController(this);
+            
+            Attrs = new AttrCollection(this);
+            UnitBoard = new VariableBoard();
+            UnitTags = new TagCollection();
+
+            _evtListenerCollection = new UnitEventListenerCollection(this, 10);
+            _messageCollection = new MessageCollection(this, 10);
+        }
+
+        /// <summary>
+        /// 添加组件
+        /// </summary>
+        /// <param name="component"></param>
+        protected T addComponent<T>(T component) where T : UnitComponent
+        {
+            if (!_components.TryAdd(component.GetType(), component))
+            {
+                Debug.Log($"{GetType()} 添加组件 {component.GetType()} Failed!");
+            }
+
+            return component;
+        }
+
+        protected void Init(int uid)
+        {
+            Uid = uid;
+            EventManager.Instance.AddListenerCollection(_evtListenerCollection);
+            MessageManager.Instance.AddMsgCollection(_messageCollection);
+
+            foreach (var component in _components)
+            {
+                component.Value.Unit = this;
+                component.Value.OnInit();
+            }
+        }
+
+        public void Tick(float dt)
+        {
+            //自身Tick
+            BeforeTickCallBack?.Invoke(this, dt);
+            foreach (var component in _components)
+            {
+                component.Value.Tick(dt);
+            }
+
+            _abilityController.Tick(dt);
+            _actionSystem.Tick(dt);
+            _evtListenerCollection.Tick(dt);
+            _messageCollection.Tick(dt);
+            onTick(dt);
+            AfterTickCallBack?.Invoke(this, dt);
+            //子节点Tick
+        }
+
+        protected abstract void onTick(float dt);
+
+        public void Clear()
+        {
+            foreach (var component in _components)
+            {
+                component.Value.Clear();
+            }
+
+            _components.Clear();
+            _abilityController.Clear();
+            _actionSystem.Clear();
+            
+            Attrs.Clear();
+            UnitTags.Clear();
+            UnitBoard.Clear();
+
+            InitFinishCallback = null;
+            BeforeTickCallBack = null;
+            AfterTickCallBack = null;
+            RemoveWorldCallBack = null;
+
+            _parent = null;
+            _children?.Clear();
+            _removeList?.Clear();
+            
+            _evtListenerCollection.Clear();
+            _messageCollection.Clear();
+            EventManager.Instance.RemoveListenerCollection(_evtListenerCollection);
+            MessageManager.Instance.RemoveMsgCollection(_messageCollection);
+        }
+
+        #region 对外接口
+
+        public void SetParent(Unit parent)
+        {
+            
+        }
+
+        
+        public void AddChild(Unit child)
+        {
+            
+        }
+
+      
+        public void RemoveChild(Unit child)
+        {
+            
+        }
+
+        public void RemoveSelfFormParent()
+        {
+            
+        }
+
+        /// <summary>
+        /// 添加Ability
+        /// </summary>
+        /// <param name="abilityId"></param>
+        public Ability AddAbility(int abilityId)
+        {
+             return _abilityController.AwardAbility(abilityId);
+        }
+
+        /// <summary>
+        /// 删除Ability
+        /// </summary>
+        /// <param name="abilityId"></param>
+        public void RemoveAbility(int abilityId)
+        {
+            _abilityController.RemoveAbility(abilityId);
+        }
+
+        /// <summary>
+        /// 获取组件
+        /// </summary>
+        /// <typeparam name="T">可以通过基类类型获取具体的子类</typeparam>
+        /// <returns>会返回空</returns>
+        public T GetComponent<T>() where T : UnitComponent
+        {
+            if (_components.TryGetValue(typeof(T), out var component))
+                return (T)component;
+
+            foreach (var comp in _components.Values)
+            {
+                if (comp is T unitComponent)
+                {
+                    return unitComponent;
+                }
+            }
+
+            Debug.Log($"{this.GetType()} 获取组件 {typeof(T)} 失败!");
+
+            return null;
+        }
+
+        /// <summary>
+        /// 尝试获取组件
+        /// </summary>
+        /// <param name="comp"></param>
+        /// <typeparam name="T">可以通过基类类型获取具体的子类</typeparam>
+        /// <returns></returns>
+        public bool TryGetComponent<T>(out T comp) where T : UnitComponent
+        {
+            comp = null;
+            if (_components.TryGetValue(typeof(T), out var result))
+            {
+                comp = (T)result;
+                return true;
+            }
+
+            foreach (var unitComp in _components.Values)
+            {
+                if (unitComp is T tComp)
+                {
+                    comp = tComp;
+                    return true;
+                }
+            }
+
+            Debug.Log($"{GetType()} 获取组件 {typeof(T)} 失败!");
+            return false;
+        }
+
+        /// <summary>
+        /// 获取属性
+        /// </summary>
+        /// <param name="attrType"></param>
+        /// <returns></returns>
+        public int GetAttr(EAttrType attrType)
+        {
+            var value = Attrs.GetAttr(attrType);
+            return value;
+        }
+
+        /// <summary>
+        /// 设置属性
+        /// </summary>
+        /// <param name="attrType"></param>
+        /// <param name="value"></param>
+        /// <param name="forceDirty"></param>
+        public void SetAttr(EAttrType attrType, int value, bool forceDirty = false)
+        {
+            Attrs.SetAttr(attrType, value, forceDirty);
+        }
+
+        /// <summary>
+        /// 注册事件
+        /// </summary>
+        /// <param name="eventListener"></param>
+        public void RegisterEvtListener(ActorEventListener eventListener)
+        {
+            _evtListenerCollection.AddListener(eventListener);
+        }
+
+        /// <summary>
+        /// 注册事件
+        /// </summary>
+        /// <param name="eventListener"></param>
+        public void UnregisterEvtListener(ActorEventListener eventListener)
+        {
+            _evtListenerCollection.RemoveListener(eventListener);
+        }
+
+        /// <summary>
+        /// 触发仅限定于本Actor内部的事件监听
+        /// </summary>
+        /// <param name="eventType"></param>
+        /// <param name="board"></param>
+        public void FireEvent(EEventType eventType, VariableBoard board = null)
+        {
+            EventManager.Instance.FireEvent(eventType, Uid, board);
+        }
+
+        /// <summary>
+        /// 触发全局事件
+        /// </summary>
+        /// <param name="eventType"></param>
+        /// <param name="board"></param>
+        public void FireGlobalEvent(EEventType eventType, VariableBoard board = null)
+        {
+            EventManager.Instance.FireEvent(eventType, -1, board);
+        }
+
+        /// <summary>
+        /// 注册消息监听
+        /// </summary>
+        /// <param name="messageListener"></param>
+        public void RegisterMsgListener(MessageListener messageListener)
+        {
+            _messageCollection.AddListener(messageListener);
+        }
+
+        /// <summary>
+        /// 注册消息监听
+        /// </summary>
+        /// <param name="messageListener"></param>
+        public void UnregisterMsgListener(MessageListener messageListener)
+        {
+            _messageCollection.RemoveListener(messageListener);
+        }
+
+        #endregion
+    }
+}

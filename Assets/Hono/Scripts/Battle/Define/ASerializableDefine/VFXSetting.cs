@@ -19,8 +19,6 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class VFXSetting
     {
-        [FilePath(Extensions = "prefab")] public string VFXPath;
-
         public Vector3 Offset;
         public Vector3 Rot;
         public float Scale = 1;

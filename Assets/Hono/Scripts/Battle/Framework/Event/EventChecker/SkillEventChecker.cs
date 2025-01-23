@@ -7,11 +7,6 @@ using Hono.Scripts.Battle.Base;
 
 namespace Hono.Scripts.Battle.Event
 {
-    public static class SkillEventInfo
-    {
-        public const string SkillId = "SkillId";
-    }
-    
     [Serializable]
     public class SkillEventChecker : IEventChecker
     {
@@ -19,7 +14,7 @@ namespace Hono.Scripts.Battle.Event
         
         public bool Check(in VariableBoard board)
         {
-            return board.Get<int>(SkillEventInfo.SkillId) == skillId;
+            return board.Get(SkillEventInfo.SkillId) == skillId;
         }
     }
 }

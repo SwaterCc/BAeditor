@@ -19,19 +19,21 @@ namespace Hono.Scripts.Battle.Event
         /// 来源的伤害Id
         /// </summary>
         public int damageConfigId;
-        
+
         public bool Check(in VariableBoard board)
         {
-            /*if (board.Get<int>())
+            bool res = true;
+            if (abilityId > 0)
             {
-                res = hitInfo.SourceActorId == _abilitySourceUid;
+                res = board.Get(HitDamageInfoKeys.SourceAbilityId) == abilityId;
             }
 
-            if (_damageConfigId > 0)
+            if (damageConfigId > 0)
             {
-                res = res && hitInfo.DamageConfigId == _damageConfigId;
-            }*/
-            return true;
+                res = res && board.Get(HitDamageInfoKeys.DamageConfigId) == damageConfigId;
+            }
+
+            return res;
         }
     }
 }

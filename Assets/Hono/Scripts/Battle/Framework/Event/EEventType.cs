@@ -14,6 +14,7 @@ namespace Hono.Scripts.Battle.Event
     {
         //空占位，说明没有初始化
         NoInit = 0,
+        AttrChanged = 1,
 
         [EventCheckerBinder("GetHitOnceChecker", typeof(HitDamageInfoKeys))]
         OnHit,
@@ -32,10 +33,10 @@ namespace Hono.Scripts.Battle.Event
 
         UseSkill = 20,
 
-        [EventCheckerBinder("GetUseSkillSuccessChecker", typeof(UsedSkillEventInfo))]
+        [EventCheckerBinder("GetUseSkillSuccessChecker", typeof(SkillEventInfo))]
         OnSkillUseSuccess,
 
-        [EventCheckerBinder("GetSkillEndChecker", typeof(UsedSkillEventInfo))]
+        [EventCheckerBinder("GetSkillEndChecker", typeof(SkillEventInfo))]
         OnSkillStop,
         
         OnCallMonsterGenerator = 1000,

@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -69,6 +70,8 @@ namespace Hono.Scripts.Battle
             _factionMain = _luaEnv.Global.GetInPath<LuaFunction>("Faction.GetFaction");
         }
 
+       
+        
         public static DamageResults GetDamageResults(Actor attacker, Actor target, DamageInfo damageInfo,
             DamageConfig config)
         {

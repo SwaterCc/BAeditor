@@ -46,13 +46,13 @@ namespace Hono.Scripts.Battle.Tools
             actorIds.Clear();
             for (int i = 0; i < size; i++)
             {
-                var actorModel = _normalAreaRaycastHit[i].collider.GetComponent<ActorModel>();
+                var actorModel = _normalAreaRaycastHit[i].collider.GetComponent<PerformanceEffectsPlayer>();
                 if (actorModel == null)
                 {
                     continue;
                 }
 
-                actorIds.Add(actorModel.ActorUid);
+                actorIds.Add(actorModel.ModelController.Self.Uid);
             }
 
             return size;

@@ -1,8 +1,7 @@
 ﻿属性id,属性名字,属性名字,属性使用方式（int or float or bool）,属性下限,属性上限,最终值,总值,加值,额外加值,乘值,额外乘值,外显名称,属性说明文本
 Id,EnumName,Name,Type,AttrLowerLimit,AttrUpperLimit,AttrFinal,AttrTotal,AttrAdd,AttrExAdd,AttrPer,AttrExPer,OfficialName,AttrDes
 int,string,string,string,int,int,int,int,int,int,int,int,string,string
-10000,AttrHp,当前HP,int64,0,-1,10000,0,0,0,0,0,生命值,
-10010,AttrMaxHp,MAXHP,int64,0,-1,10010,10011,10012,10013,10014,10015,生命值上限,角色的基础生存能力
+10010,AttrMaxHp,MAXHP,int64,0,0,10010,10011,10012,10013,10014,10015,生命值上限,角色的基础生存能力
 12100,AttrAttack,攻击力,int32,0,999999,12100,12101,12102,12103,12104,12105,攻击力,影响角色造成伤害的基础攻击属性
 12110,AttrDefense,防御力,int32,0,999999,12110,12111,12112,12113,12114,12115,防御力,可减少角色受到伤害量的基础生存属性
 12120,AttrIgnoreDefense,忽视防御,int32,0,999999,12120,12121,12122,12123,12124,12125,忽视防御,代表忽视目标防御的值

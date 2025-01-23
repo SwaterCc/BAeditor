@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Core;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Event
@@ -81,13 +82,13 @@ namespace Hono.Scripts.Battle.Event
         }
     }
 
-    public class ActorEventListenerCollection : EventListenerCollection
+    public class UnitEventListenerCollection : EventListenerCollection
     {
-        public Actor Actor { get; }
+        public Unit Unit { get; }
 
-        public ActorEventListenerCollection(Actor actor, int listenerListCapacity = 8) : base(listenerListCapacity)
+        public UnitEventListenerCollection(Unit unit, int listenerListCapacity = 8) : base(listenerListCapacity)
         {
-            Actor = actor;
+            Unit = unit;
         }
     }
 }

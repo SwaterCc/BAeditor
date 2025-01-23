@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Message;
 using UnityEngine;
 
@@ -14,14 +15,14 @@ namespace Hono.Scripts.Battle
     /// </summary>
     public class MessageCollection
     {
-        public Actor Actor { get; }
+        public Unit Unit { get; }
 
         private readonly Dictionary<string, MessageListener> _messageListeners;
 
 
-        public MessageCollection(Actor actor, int capacity)
+        public MessageCollection(Unit unit, int capacity)
         {
-            Actor = actor;
+            Unit = unit;
             _messageListeners = new Dictionary<string, MessageListener>(capacity);
         }
 
@@ -53,14 +54,14 @@ namespace Hono.Scripts.Battle
             }
 
             //查找缓存是否有未接收的消息
-            if (MessageManager.Instance.TryGetMsgCatchQueue(Actor.Uid, listener.MsgKey, out var cacheQueue))
+            if (MessageManager.Instance.TryGetMsgCatchQueue(Unit.Uid, listener.MsgKey, out var cacheQueue))
             {
                 while (cacheQueue.IsEmpty())
                 {
                     listener.Invoke(cacheQueue.Pop());
                 }
 
-                MessageManager.Instance.RemoveMsgCatchQueue(Actor.Uid, listener.MsgKey);
+                MessageManager.Instance.RemoveMsgCatchQueue(Unit.Uid, listener.MsgKey);
             }
         }
 
@@ -82,7 +83,7 @@ namespace Hono.Scripts.Battle
 
         public void Tick(float dt)
         {
-            if (MessageManager.Instance.TryGetMsgCatchQueues(Actor.Uid, out var messageCacheQueues))
+            if (MessageManager.Instance.TryGetMsgCatchQueues(Unit.Uid, out var messageCacheQueues))
             {
                 foreach (var msgQueue in messageCacheQueues.Values)
                 {

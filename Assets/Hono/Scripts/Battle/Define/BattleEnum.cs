@@ -12,13 +12,6 @@ namespace Hono.Scripts.Battle
         Character = 1,
         Npc,
         Building,
-     
-        //固定类型
-        NoCustomBegin = 1000,
-        BattleLevelController,
-        Bullet,
-        HitBox,
-        Loot,
     }
 
     /// <summary>
@@ -68,17 +61,14 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// Actor初始化状态
     /// </summary>
-    public enum EActorInitState
+    public enum EActorState
     {
-        NoInit = 0,
-        Initializing = 1,
-        Success = 2,
-        
-        FailedFlag = 100,
-        InitConfigFailed,
-        LogicSetupFailed,
-        ModelLoadFailed,
-        OtherFailed,
+        NoActive = 0,
+        Init = 1,
+        Born,
+        Active,
+        Dead,
+        Error,
     }
     
     /// <summary>
@@ -256,7 +246,7 @@ namespace Hono.Scripts.Battle
         /// 能力初始化
         /// </summary>
         Init = 1,
-
+        
         /// <summary>
         /// 预启动
         /// </summary>
@@ -517,8 +507,7 @@ namespace Hono.Scripts.Battle
     public enum EFilterConditionType
     {
         Tag,
-        AbilityID,
-        Faction,
+        Faction,//相对阵营
         ActorType,
     }
 

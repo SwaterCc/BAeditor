@@ -28,15 +28,15 @@ namespace Hono.Scripts.Battle
 
         public void AddMsgCollection(MessageCollection collection)
         {
-            if (_collections.TryAdd(collection.Actor.Uid, collection))
+            if (_collections.TryAdd(collection.Unit.Uid, collection))
             {
-                Debug.LogError($"重复添加MessageCollection Uid:{collection.Actor.Uid}");
+                Debug.LogError($"重复添加MessageCollection Uid:{collection.Unit.Uid}");
             }
         }
 
         public void RemoveMsgCollection(MessageCollection collection)
         {
-            _collections.Remove(collection.Actor.Uid);
+            _collections.Remove(collection.Unit.Uid);
         }
 
         /// <summary>

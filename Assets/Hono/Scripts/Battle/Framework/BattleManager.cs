@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Define;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
@@ -64,17 +65,14 @@ namespace Hono.Scripts.Battle
         
         private Paths _paths;
         private string _formScene;
-        private BattleGround _curGround;
-
-        public static BattleController BattleController => CurBattle.BattleController;
-        public static BattleGround CurBattle => Instance._curGround;
+        
         public static Paths Paths => Instance._paths;
         
         public Action<bool> ExitBattleCallBack { get; set; }
 
         protected void Start()
         {
-            SetupBattleFramework();
+            InitEnv();
         }
 
         #region 框架初始化
@@ -113,22 +111,20 @@ namespace Hono.Scripts.Battle
 
         private void registerAllFrameworks()
         {
-            //register(LuaInterface.Instance);
             register(ConfigManager.Instance);
             //register(AssetManager.Instance);
+            register(LuaInterface.Instance);
             register(EventManager.Instance);
             register(MessageManager.Instance);
-            //register(GameObjectPreLoadMgr.Instance);
-            register(ActorManager.Instance);
         }
 
         /// <summary>
         ///     装载战斗框架
         /// </summary>
-        public async void SetupBattleFramework()
+        public async void InitEnv()
         {
             //反射缓存
-            AbilityFuncPreLoader.InitAbilityFuncCache();
+            //Ability.InitAbilityFuncCache();
 
 #if UNITY_EDITOR
 #else
@@ -194,8 +190,7 @@ namespace Hono.Scripts.Battle
         public void EnterBattle(string fromScene, int battleGroundId)
         {
             _formScene = fromScene;
-            _curGround = new BattleGround(battleGroundId);
-            _curGround.ExitGround();
+            
         }
 
         /// <summary>
@@ -210,7 +205,7 @@ namespace Hono.Scripts.Battle
                 framework.OnExitBattle();
             }
 
-            _curGround.ExitGround();
+           
 
             /*if (LoadingPanel.Exists)
             {
@@ -235,8 +230,6 @@ namespace Hono.Scripts.Battle
             {
                 frameworkTick.Tick(dt);
             }
-            
-            _curGround?.Tick(dt);
         }
 
         private void Update()

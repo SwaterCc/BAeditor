@@ -55,6 +55,6 @@ namespace Hono.Scripts.Battle
         public List<FilterCondition> conditions = new();
 
         [BoxGroup("筛选条件设置", true, true)]
-        public List<AttrCompare> attrCompares = new List<AttrCompare>();
+        public List<AttrCompare> attrCompares = new();
     }
 }
