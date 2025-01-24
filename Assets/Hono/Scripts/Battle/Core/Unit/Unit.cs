@@ -4,18 +4,12 @@ using Hono.Scripts.Battle.AbilitySystem;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Message;
-using NUnit.Framework;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public abstract class Unit
+    public abstract class Unit : WorldNode
     {
-        /// <summary>
-        /// 运行时唯一ID
-        /// </summary>
-        public int Uid { get; private set; }
-
         /// <summary>
         /// 变量黑板
         /// </summary>
@@ -66,41 +60,6 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         private readonly Dictionary<Type, UnitComponent> _components = new();
 
-        /// <summary>
-        /// 进入World后回调
-        /// </summary>
-        public event Action<Unit> InitFinishCallback;
-
-        /// <summary>
-        /// 帧更新前回调
-        /// </summary>
-        public event Action<Unit, float> BeforeTickCallBack;
-        
-        /// <summary>
-        /// 帧更新后回调
-        /// </summary>
-        public event Action<Unit, float> AfterTickCallBack;
-
-        /// <summary>
-        /// 离开World后回调
-        /// </summary>
-        public event Action<Unit> RemoveWorldCallBack;
-
-        /// <summary>
-        /// 父对象
-        /// </summary>
-        private Unit _parent;
-
-        /// <summary>
-        /// 子对象
-        /// </summary>
-        private List<Unit> _children;
-        
-        /// <summary>
-        /// 删除列表
-        /// </summary>
-        private List<Unit> _removeList;
-
         protected Unit()
         {
             _actionSystem = new ActionSystem(this);
@@ -141,10 +100,8 @@ namespace Hono.Scripts.Battle.Core
             }
         }
 
-        public void Tick(float dt)
+        protected override void onTick(float dt)
         {
-            //自身Tick
-            BeforeTickCallBack?.Invoke(this, dt);
             foreach (var component in _components)
             {
                 component.Value.Tick(dt);
@@ -154,12 +111,7 @@ namespace Hono.Scripts.Battle.Core
             _actionSystem.Tick(dt);
             _evtListenerCollection.Tick(dt);
             _messageCollection.Tick(dt);
-            onTick(dt);
-            AfterTickCallBack?.Invoke(this, dt);
-            //子节点Tick
         }
-
-        protected abstract void onTick(float dt);
 
         public void Clear()
         {
@@ -175,15 +127,6 @@ namespace Hono.Scripts.Battle.Core
             Attrs.Clear();
             UnitTags.Clear();
             UnitBoard.Clear();
-
-            InitFinishCallback = null;
-            BeforeTickCallBack = null;
-            AfterTickCallBack = null;
-            RemoveWorldCallBack = null;
-
-            _parent = null;
-            _children?.Clear();
-            _removeList?.Clear();
             
             _evtListenerCollection.Clear();
             _messageCollection.Clear();
@@ -192,29 +135,6 @@ namespace Hono.Scripts.Battle.Core
         }
 
         #region 对外接口
-
-        public void SetParent(Unit parent)
-        {
-            
-        }
-
-        
-        public void AddChild(Unit child)
-        {
-            
-        }
-
-      
-        public void RemoveChild(Unit child)
-        {
-            
-        }
-
-        public void RemoveSelfFormParent()
-        {
-            
-        }
-
         /// <summary>
         /// 添加Ability
         /// </summary>

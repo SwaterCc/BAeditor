@@ -119,7 +119,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         /// </summary>
         public void Stop()
         {
-            _abilityCycle.CycleEnd();
+            _abilityCycle.ForceStop();
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         public void Reload()
         {
             //终止能力运行
-            _abilityCycle.CycleEnd();
+            _abilityCycle.ForceStop();
 
             //指令撤销
             _cycleCmdCollection.Clear();
@@ -178,7 +178,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         public void OnRecycle()
         {
             //周期停止
-            _abilityCycle.CycleEnd();
+            _abilityCycle.ForceStop();
             _abilityCycle.OnRecycle();
             
             //指令撤销

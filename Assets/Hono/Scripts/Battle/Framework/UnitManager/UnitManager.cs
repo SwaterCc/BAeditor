@@ -1,7 +1,6 @@
 #region
 
 using System.Collections.Generic;
-using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
@@ -26,56 +25,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private readonly List<Unit> _removeList = new(400);
         
-        /// <summary>
-        /// 创建Actor
-        /// </summary>
-        public Actor CreateActor(int actorTableId = 0, AttrCollection.AttrSnapshots snapshots = null)
-        {
-            Actor actor = APool<Actor>.Pool.Rent();
-            var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
-            actor.Init(uid, actorTableId, null, snapshots);
-            return actor;
-        }
-
-        /// <summary>
-        /// 创建Actor
-        /// </summary>
-        public Actor CreateActor(PerformanceEffectsPlayer model)
-        {
-            Actor actor = APool<Actor>.Pool.Rent();
-            var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
-            actor.Init(uid, model.actorTableId, model);
-            return actor;
-        }
-
-        /// <summary>
-        /// 召唤Actor
-        /// </summary>
-        public Actor SummonActor(Actor summoner, int actorTableId, string rule, bool fromTopSummer)
-        {
-            Actor summoned = APool<Actor>.Pool.Rent();
-            var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
-            summoned.Init(uid, actorTableId, null, summoner.Attrs.GetAttrSnapShots(rule));
-            summoned.Attrs.InitSummonedAttrs(summoner.Attrs, fromTopSummer);
-            return summoned;
-        }
-
-        /// <summary>
-        /// 创建打击盒子
-        /// </summary>
-        public HitBox CreateHitBox(Actor attacker, HitBoxData data)
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// 创建子弹
-        /// </summary>
-        public Bullet CreateBullet(Actor attacker)
-        {
-            return null;
-        }
-        
+       
         /// <summary>
         /// 创建后的对象添加到场景中
         /// </summary>

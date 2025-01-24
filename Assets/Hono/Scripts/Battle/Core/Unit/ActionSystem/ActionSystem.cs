@@ -12,7 +12,7 @@
             _unit = unit;
         }
 
-        public void PlayAction(IUnitAction action)
+        public void PlayAction(IActionNode action)
         {
             
         }

@@ -8,7 +8,7 @@ namespace Hono.Scripts.Battle.Core
     
     //仅Actor对象存在父子关系
     
-    public class HitBox : Unit
+    public class HitBox : WorldNode
     {
         //什么是hitbox？
         //本质是一次检测 + 伤害计算的流程
@@ -112,6 +112,25 @@ namespace Hono.Scripts.Battle.Core
             }
         }
 
+        protected override void onRemove()
+        {
+            _hitBoxData = null;
+
+            _attacker = null;
+            _target = null;
+
+            _intervalDuration = 0;
+            _curCount = 0;
+
+            _isExpire = false;
+
+            _rangeFilterSetting = null;
+            _aoeTargetIds.Clear();
+            _hitCountDict.Clear();
+            _hurtComps.Clear();
+            _damage.Clear();
+        }
+
         private void onHit()
         {
             for (int i = 0; i < _hitBoxData.OnceHitDamageCount; i++)
@@ -197,25 +216,6 @@ namespace Hono.Scripts.Battle.Core
         public override void Recycle()
         {
             APool<HitBoxLogic>.Pool.Recycle(this);
-        }
-
-        protected override void OnChildRecycle()
-        {
-            _hitBoxData = null;
-
-            _attacker = null;
-            _target = null;
-
-            _intervalDuration = 0;
-            _curCount = 0;
-
-            _isExpire = false;
-
-            _rangeFilterSetting = null;
-            _aoeTargetIds.Clear();
-            _hitCountDict.Clear();
-            _hurtComps.Clear();
-            _damage.Clear();
         }
     }
 }

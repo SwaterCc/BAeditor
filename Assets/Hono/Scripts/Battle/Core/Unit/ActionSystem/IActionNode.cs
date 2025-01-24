@@ -1,6 +1,6 @@
 ﻿namespace Hono.Scripts.Battle.Core
 {
-    public interface IUnitAction
+    public interface IActionNode
     {
         
     }

@@ -1,14 +1,7 @@
-#region
-
-using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-
-#endregion
 
 namespace Hono.Scripts.Battle
 {
@@ -60,20 +53,6 @@ namespace Hono.Scripts.Battle
 
         protected virtual void onSetupFinish() { }
 
-#if UNITY_EDITOR
-        [Button("激活")]
-        public void ActorCreate()
-        {
-            if (!Application.isPlaying)
-            {
-                Debug.LogError("仅Unity Playing可用");
-                return;
-            }
-
-            UnitManager.Instance.CreateActor(this);
-        }
-#endif
-
         public void OnTick(float dt)
         {
             foreach (KeyValuePair<int, VFXObject> obj in _vfxComp.VFXDict)
@@ -99,7 +78,7 @@ namespace Hono.Scripts.Battle
 
         public void Recycle()
         {
-            UPool.Instance.Recycle(ModelController.ModelRow.ModelPath, gameObject);
+            UPool.Instance.Recycle(ModelController.PETemplate.model, gameObject);
         }
 
         private void OnAddVFXObject(VFXObject vfxObject)

@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Hono.Scripts.Battle.Base
+namespace Hono.Scripts.Battle.ObjectPool
 {
+    /// <summary>
+    /// 池化list
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class AList<T> : IAPoolObject, IEnumerable
     {
         private readonly List<T> _list = new(8);
 
         public int Count => _list.Count;
+        
+        public T this[int idx] => _list[idx];
         
         public static implicit operator List<T>(AList<T> list)
         {
@@ -17,9 +22,9 @@ namespace Hono.Scripts.Battle.Base
         
         public IEnumerator<T> GetEnumerator()
         {
-            foreach (var num in _list)
+            foreach (var item in _list)
             {
-                yield return num;
+                yield return item;
             }
         }
 

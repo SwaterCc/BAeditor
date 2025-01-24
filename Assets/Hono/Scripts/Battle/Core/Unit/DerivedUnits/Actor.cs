@@ -6,7 +6,7 @@ namespace Hono.Scripts.Battle.Core
     /// <summary>
     /// Actor 战斗玩法中有交互的单位
     /// </summary>
-    public sealed class Actor : Unit, IAPoolObject
+    public sealed class Actor : Unit
     {
         /// <summary>
         /// Json类型
@@ -17,11 +17,6 @@ namespace Hono.Scripts.Battle.Core
         /// Actor基础类型
         /// </summary>
         public EActorType ActorType { get; private set; }
-
-        /// <summary>
-        /// Actor配置数据
-        /// </summary>
-        public int ConfigId { get; private set; }
 
         /// <summary>
         /// Actor配置数据
@@ -57,9 +52,8 @@ namespace Hono.Scripts.Battle.Core
         public void Init(int uid, int configId, PerformanceEffectsPlayer performanceEffectsPlayer, AttrCollection.AttrSnapshots snapshot = null)
         {
             base.Init(uid);
-
-            ConfigId = configId;
-            if (!ConfigManager.Table<ActorTable>().TryGet(ConfigId, out var row))
+            
+            if (!ConfigManager.Table<ActorTable>().TryGet(configId, out var row))
             {
                 State = EActorState.Error;
                 return;
@@ -78,6 +72,14 @@ namespace Hono.Scripts.Battle.Core
         }
 
         /// <summary>
+        /// 设置召唤者，设置之后会变成召唤物
+        /// </summary>
+        public void SetSummoner()
+        {
+            
+        }
+        
+        /// <summary>
         /// 逻辑帧
         /// </summary>
         /// <param name="dt"></param>
@@ -86,29 +88,13 @@ namespace Hono.Scripts.Battle.Core
             PEController.Tick(dt);
         }
 
-        /// <summary>
-        /// 离开场景，此时会更改layer层级保证不会再被攻击打中，以及不会再被选为目标
-        /// </summary>
-        public override void ExitWorld()
-        {
-            if (TryGetComponent<DeadComp>(out var bornComp))
-            {
-                bornComp.OnDead();
-            }
-
-            base.ExitWorld();
-        }
-
-        /// <summary>
-        /// 删除前调用
-        /// </summary>
-        public void OnRecycle()
+        protected override void onRemove()
         {
             ModelLoadFinishCallback = null;
             PEController.Clear();
             Clear();
+            //回收自己
         }
-
         #endregion
     }
 }

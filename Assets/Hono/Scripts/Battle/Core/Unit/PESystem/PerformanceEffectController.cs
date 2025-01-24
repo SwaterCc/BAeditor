@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 模型配置
         /// </summary>
-        public PETemplate ModelRow { get; private set; }
+        public PETemplate PETemplate { get; private set; }
 
         /// <summary>
         /// Performance Effect Templates 演出效果模板
@@ -42,7 +42,7 @@ namespace Hono.Scripts.Battle.Core
                 return;
             }
 
-            var gameObject = await UPool.Instance.Get(ModelRow.ModelPath, MainCancelToken);
+            var gameObject = await UPool.Instance.Get(PETemplate.model, MainCancelToken);
 
             if (gameObject == null)
             {
