@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Hono.Scripts.Battle.Core;
 using UnityEngine;
 
 #endregion
@@ -34,14 +35,14 @@ namespace Hono.Scripts.Battle
                 switch (buffData.AddRule)
                 {
                     case EApplicationRequirement.HasTags:
-                        if (buffData.FilterTags.Any(tag => !Unit.UnitTags.HasTag(tag, ETagSearchRange.All)))
+                        if (buffData.FilterTags.Any(tag => !Unit.Tags.HasTag(tag, ETagSearchRange.All)))
                         {
                             return;
                         }
 
                         break;
                     case EApplicationRequirement.NoTags:
-                        if (buffData.FilterTags.Any(tag => Unit.UnitTags.HasTag(tag, ETagSearchRange.All)))
+                        if (buffData.FilterTags.Any(tag => Unit.Tags.HasTag(tag, ETagSearchRange.All)))
                         {
                             return;
                         }
@@ -52,7 +53,7 @@ namespace Hono.Scripts.Battle
 
             if (!Buffs.TryGetValue(buffConfigId, out var buff))
             {
-                buff = APool<Buff>.Pool.Rent();
+                buff = GPool<Buff>.Pool.Rent();
                 buff.OnRent(Unit, sourceActorId, buffData);
                 Buffs.Add(buff.ConfigId, buff);
             }
@@ -60,8 +61,8 @@ namespace Hono.Scripts.Battle
             {
                 if (CheckReplace(buff, buffData, sourceActorId))
                 {
-                    APool<Buff>.Pool.Recycle(buff);
-                    buff = APool<Buff>.Pool.Rent();
+                    GPool<Buff>.Pool.Recycle(buff);
+                    buff = GPool<Buff>.Pool.Rent();
                     buff.OnRent(Unit, sourceActorId, buffData);
                     Buffs[buffConfigId] = buff;
                 }
@@ -107,7 +108,7 @@ namespace Hono.Scripts.Battle
             if (Buffs.TryGetValue(buffConfigId, out var buff))
             {
                 Buffs.Remove(buffConfigId);
-                APool<Buff>.Pool.Recycle(buff);
+                GPool<Buff>.Pool.Recycle(buff);
             }
         }
 

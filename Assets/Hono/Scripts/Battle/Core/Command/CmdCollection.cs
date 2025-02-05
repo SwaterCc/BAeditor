@@ -37,7 +37,7 @@ namespace Hono.Scripts.Battle
                 }
             }
 
-            APoolManager.Instance.RecycleAObject(command);
+            GPoolManager.Instance.RecycleAObject(command);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Hono.Scripts.Battle
                     command.Undo();
                 }
 
-                APoolManager.Instance.RecycleAObject(command);
+                GPoolManager.Instance.RecycleAObject(command);
             }
 
             _commands.Clear();

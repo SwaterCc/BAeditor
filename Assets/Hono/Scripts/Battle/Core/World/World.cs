@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Event;
 
 namespace Hono.Scripts.Battle.Core
 {
@@ -17,23 +19,57 @@ namespace Hono.Scripts.Battle.Core
         protected override void onRemove() { }
     }
 
+    public interface IWorldSystem
+    {
+        public void EnterWorld();
+        public void Tick(float dt);
+        public void ExitWorld();
+    }
+
     /// <summary>
     /// 当前运行的世界
     /// </summary>
-    public class World
+    public partial class World
     {
+        /// <summary>
+        /// 世界最大Actor数量
+        /// </summary>
+        private const int MaxActorCount = 1000;
+        
         //世界的构成
-        //网格地图数据
-        //地图管理，单位坐标更新，打击点结算，网格运行时数据更新
-        //节点管理，
-
-        public WorldNodeRoot Root { get; private set; }
+        //静态网格地图数据（可行区域，地图网格对应坐标区域）
+        //运行时动态网格数据（网格上的单位数据，寻路数据，单位坐标更新（最后帧））
+        private readonly Dictionary<Type, IWorldSystem> _systems = new()
+        {
+            { typeof(EventManager), new EventManager() },
+            { typeof(MessageManager), new MessageManager() },
+        };
 
         /// <summary>
-        /// 世界级下的节点
+        /// 根节点
         /// </summary>
-        private readonly List<WorldNode> _nodes = new(1000);
+        private readonly WorldNodeRoot _worldNodeRoot = new();
 
+        /// <summary>
+        /// Actor搜索器
+        /// </summary>
+        public readonly ActorSearcher Searcher = new();
+
+        /// <summary>
+        /// 当前世界流程
+        /// </summary>
+        private EWorldState _state;
+
+        /// <summary>
+        /// 场景数据Id(场景id，静态地图网格)
+        /// </summary>
+        private int _worldSceneKey;
+
+        /// <summary>
+        /// 世界对象数据（触发器，场景对象，场景事件，场景流程）
+        /// </summary>
+        private int _worldInfoKey;
+        
         #region 周期
 
         /// <summary>
@@ -41,7 +77,15 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         public void Start()
         {
-            Root = new WorldNodeRoot();
+            //地图网格初始化
+            //搜索器初始化
+            foreach (var system in _systems.Values)
+            {
+                system.EnterWorld();
+            }
+            
+            //进入加载状态
+            _state = EWorldState.Loading;
         }
 
         /// <summary>
@@ -50,17 +94,41 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="dt"></param>
         public void Tick(float dt)
         {
-            Root.Tick(dt);
-
-            //架构更新
-
-            //
+            switch (_state)
+            {
+                case EWorldState.Loading:
+                    
+                    break;
+                case EWorldState.Process1:
+                    
+                    break;
+                case EWorldState.Process2_1:
+                    //
+                    break;
+                case EWorldState.Process2_2:
+                    
+                    break;
+                case EWorldState.Score:
+                    break;
+            }
+            
+            _worldNodeRoot.Tick(dt);
+            foreach (var system in _systems.Values)
+            {
+                system.Tick(dt);
+            }
         }
 
         /// <summary>
         /// 离开世界
         /// </summary>
-        public void Exit() { }
+        public void Exit()
+        {
+            foreach (var system in _systems.Values)
+            {
+                system.ExitWorld();
+            }
+        }
 
         #endregion
 
@@ -85,14 +153,6 @@ namespace Hono.Scripts.Battle.Core
             summoned.Init(uid, actorTableId, null, summoner.Attrs.GetAttrSnapShots(rule));
             summoned.Attrs.InitSummonedAttrs(summoner.Attrs, fromTopSummer);
             return summoned;
-        }
-
-        /// <summary>
-        /// 创建打击盒子
-        /// </summary>
-        public HitBox CreateHitBox(Actor attacker, HitBoxData data)
-        {
-            return null;
         }
 
         /// <summary>

@@ -18,8 +18,7 @@ namespace Hono.Scripts.Battle
         /// 池
         /// </summary>
         private readonly Dictionary<string, Queue<GameObject>> _gameObjectCache = new(50);
-
-
+        
         public async UniTask<GameObject> Get(string path, CancellationTokenSource cancelSource)
         {
             return await Get(path, null, Vector3.zero, Vector3.one, Quaternion.identity, true, cancelSource);

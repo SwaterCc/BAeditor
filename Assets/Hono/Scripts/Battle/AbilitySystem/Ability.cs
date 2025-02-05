@@ -61,6 +61,11 @@ namespace Hono.Scripts.Battle.AbilitySystem
         private readonly CmdCollection _abilityCmdCollection;
 
         /// <summary>
+        /// Ability执行结束时触发的事件
+        /// </summary>
+        public event Action ExecuteEndCallBack;
+        
+        /// <summary>
         /// 逻辑帧时间缩放系数
         /// </summary>
         public float TimeScaleFactory { get; set; }
@@ -100,18 +105,24 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             Id = Data.id;
             TimeScaleFactory = 1;
-            TagCollection.SetParent(actor.UnitTags);
+            TagCollection.SetParent(actor.Tags);
 
             _abilityCycle.Init();
             return true;
         }
 
         /// <summary>
-        /// 运行，当帧执行
+        /// 执行Ability的逻辑
         /// </summary>
-        public void Execute(Action endCallback)
+        /// <param name="isReplay"></param>
+        public void Execute(bool isReplay)
         {
-            _abilityCycle.Execute(endCallback);
+            if (_abilityCycle.CurState == EAbilityCycle.Executing)
+            {//正在执行中
+                if(isReplay)
+                    _abilityCycle.ForceStop();
+            }
+            _abilityCycle.Execute();
         }
         
         /// <summary>

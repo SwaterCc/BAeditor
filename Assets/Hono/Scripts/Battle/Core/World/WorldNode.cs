@@ -12,6 +12,7 @@ namespace Hono.Scripts.Battle.Core
         /// 运行时唯一ID
         /// </summary>
         public int Uid { get; protected set; }
+
         /// <summary>
         /// 所处世界
         /// </summary>
@@ -24,6 +25,10 @@ namespace Hono.Scripts.Battle.Core
         /// 子节点
         /// </summary>
         private List<WorldNode> _children;
+        /// <summary>
+        /// 下一帧删除的Node
+        /// </summary>
+        private List<WorldNode> _nextTickRemoveChildren;
         /// <summary>
         /// 第一次Tick
         /// </summary>
@@ -53,7 +58,7 @@ namespace Hono.Scripts.Battle.Core
         {
             _root = root;
         }
-        
+
         /// <summary>
         /// 设置父节点，如果传入null则会将层级设置为世界之下（顶层）
         /// </summary>
@@ -75,7 +80,11 @@ namespace Hono.Scripts.Battle.Core
                 parent.AddChild(this);
             }
         }
-        
+
+        /// <summary>
+        /// 添加子节点
+        /// </summary>
+        /// <param name="child"></param>
         public void AddChild(WorldNode child)
         {
             if (child == null)
@@ -97,6 +106,10 @@ namespace Hono.Scripts.Battle.Core
             _children.Add(child);
         }
 
+        /// <summary>
+        /// 删除子节点,会先递归删除该子节点的所有子节点，然后执行自身的删除
+        /// </summary>
+        /// <param name="child"></param>
         public void RemoveChild(WorldNode child)
         {
             if (_children == null)
@@ -110,13 +123,13 @@ namespace Hono.Scripts.Battle.Core
             }
 
             RemoveCallBack?.Invoke(this);
-            child.onRemove();
-            child.reset();
-            child._parent = null;
-            _children.Remove(child);
-
+            
+            _nextTickRemoveChildren ??= new List<WorldNode>(10);
+            _nextTickRemoveChildren.Add(child);
+            
             if (child._children is not { Count: > 0 })
                 return;
+            
             foreach (var childChild in child._children)
             {
                 child.RemoveChild(childChild);
@@ -133,6 +146,12 @@ namespace Hono.Scripts.Battle.Core
             RemoveCallBack = null;
         }
 
+        /// <summary>
+        /// 节点的tick，
+        /// 当帧创建的node会在当前帧tick，
+        /// 当帧被删除的node，会在当前帧所有node的tick执行完后被删除
+        /// </summary>
+        /// <param name="dt"></param>
         public void Tick(float dt)
         {
             BeforeTickCallBack?.Invoke(this, dt);
@@ -142,22 +161,35 @@ namespace Hono.Scripts.Battle.Core
                 FirstTickCallback?.Invoke(this);
                 isFirstTick = false;
             }
-            
+
             onTick(dt);
 
             if (_children is not { Count: > 0 })
                 return;
-            
-            foreach (var child in _children)
+
+            int i = 0;
+            while (i < _children.Count)
             {
+                WorldNode child = _children[i++];
                 child.Tick(dt);
             }
 
             AfterTickCallBack?.Invoke(this, dt);
+            
+            if (_nextTickRemoveChildren is not { Count: > 0 })
+                return;
+            
+            foreach (var removeChild in _nextTickRemoveChildren)
+            {
+                removeChild.onRemove();
+                removeChild.reset();
+                removeChild._parent = null;
+                _children.Remove(removeChild);
+            }
         }
 
         protected abstract void onTick(float dt);
-        
+
         /// <summary>
         /// 被删除时调用
         /// </summary>

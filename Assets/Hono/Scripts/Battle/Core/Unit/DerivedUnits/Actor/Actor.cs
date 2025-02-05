@@ -29,18 +29,21 @@ namespace Hono.Scripts.Battle.Core
         public PerformanceEffectController PEController { get; }
 
         /// <summary>
-        /// Actor初始化状态
+        /// Actor状态标签
         /// </summary>
         /// <returns></returns>
         public EActorState State { get; private set; }
 
-        /// <summary>
-        /// 模型加载完成后调用
-        /// </summary>
-        public event Action<Actor> ModelLoadFinishCallback;
-
-        public Actor()
+        public Actor(string jsonKey)
         {
+            JsonKey = jsonKey;
+            
+            var info = ActorJsonAssembler.GetActorAssembleInfo(jsonKey);
+            foreach (var factory in info.Factories)
+            {
+                addComponent(factory.CreateComponent());
+            }
+            
             PEController = new PerformanceEffectController(this);
         }
 
@@ -55,7 +58,6 @@ namespace Hono.Scripts.Battle.Core
             
             if (!ConfigManager.Table<ActorTable>().TryGet(configId, out var row))
             {
-                State = EActorState.Error;
                 return;
             }
 
@@ -90,7 +92,6 @@ namespace Hono.Scripts.Battle.Core
 
         protected override void onRemove()
         {
-            ModelLoadFinishCallback = null;
             PEController.Clear();
             Clear();
             //回收自己

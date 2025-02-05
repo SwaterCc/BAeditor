@@ -1,15 +1,12 @@
 ﻿using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
-using Unity.VisualScripting;
+
 
 namespace Hono.Scripts.Battle.Core
 {
     public class Bullet : Unit
     {
         private BulletData _bulletData;
-
-        private Battle.Unit.MotionComp _motionComp;
-        private Battle.Unit.VFXComp _vfxComp;
 
         private int _hitCount;
         private float _duration;
@@ -126,10 +123,10 @@ namespace Hono.Scripts.Battle.Core
 
             var hitDamageInfo = _damage.MakeDamage(1, 1, false);
 
-            var vb = APool<VariableBoard>.Pool.Rent();
+            var vb = GPool<VariableBoard>.Pool.Rent();
             vb.InitByHitDamageInfo(hitDamageInfo);
             EventManager.Instance.FireEvent(EEventType.OnHit, Self.Uid, vb);
-            APool<VariableBoard>.Pool.Recycle(vb);
+            GPool<VariableBoard>.Pool.Recycle(vb);
 
             beHurtComp.OnBeHurt(hitDamageInfo);
         }
@@ -141,7 +138,7 @@ namespace Hono.Scripts.Battle.Core
 
         public override void Recycle()
         {
-            APool<BulletLogic>.Pool.Recycle(this);
+            GPool<BulletLogic>.Pool.Recycle(this);
         }
     }
 }

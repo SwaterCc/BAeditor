@@ -1,5 +1,6 @@
 ﻿using System;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Core;
 
 namespace Hono.Scripts.Battle.AbilitySystem
 {
@@ -11,7 +12,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
             {
                 var msgKey = Data.msgKey;
                 var actorUid = ParseInt(Data.actorUid);
-                var board = APool<VariableBoard>.Pool.Rent();
+                var board = GPool<VariableBoard>.Pool.Rent();
                 for (int i = 0; i < Data.values.Count; i++)
                 {
                     var type = Data.values[i].GetParamType();
@@ -26,7 +27,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
                 }
 
                 MessageManager.Instance.SendMessage(actorUid, msgKey, board);
-                APool<VariableBoard>.Pool.Recycle(board);
+                GPool<VariableBoard>.Pool.Recycle(board);
             }
 
             private void setVariable(Type varType, VariableBoard board, string key, AParams aParams)
@@ -61,7 +62,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             public override void Recycle()
             {
-                APool<AMsgSendNode>.Pool.Recycle(this);
+                GPool<AMsgSendNode>.Pool.Recycle(this);
             }
         }
     }

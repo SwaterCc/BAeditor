@@ -22,12 +22,12 @@ namespace Hono.Scripts.Battle.AbilitySystem
                         AContext.Actor.SetAttr(Data.attrType, attrValue);
                         break;
                     case EAbilityCommandType.UndoWhenAbilityEndCycle:
-                        var cycleCmd = APool<AttrCommand>.Pool.Rent();
+                        var cycleCmd = GPool<AttrCommand>.Pool.Rent();
                         cycleCmd.InitCommand(AContext.Actor, Data.attrType, attrValue);
                         AContext._cycleCmdCollection.DoCommand(cycleCmd);
                         break;
                     case EAbilityCommandType.UndoWhenAbilityRemove:
-                        var abilityCmd = APool<AttrCommand>.Pool.Rent();
+                        var abilityCmd = GPool<AttrCommand>.Pool.Rent();
                         abilityCmd.InitCommand(AContext.Actor, Data.attrType, attrValue);
                         AContext._cycleCmdCollection.DoCommand(abilityCmd);
                         break;
@@ -36,7 +36,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             public override void Recycle()
             {
-                APool<AAttrNode>.Pool.Recycle(this);
+                GPool<AAttrNode>.Pool.Recycle(this);
             }
         }
     }

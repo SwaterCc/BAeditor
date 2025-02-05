@@ -1,6 +1,6 @@
 ﻿namespace Hono.Scripts.Battle.Core
 {
-    public class HitSystem
+    public class ActorPool
     {
         
     }

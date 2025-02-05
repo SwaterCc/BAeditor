@@ -15,7 +15,7 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
         {
             var scene = SceneManager.GetActiveScene();
 
-            BattleManager.Instance.EnterBattle(scene.path, SceneConfigId);
+            //BattleManager.Instance.GameStart(scene.path, SceneConfigId);
         }
     }
 }

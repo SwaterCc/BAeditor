@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle.Core
 {
     
     //仅Actor对象存在父子关系
-    
+    //其实是两种打击系统，瞬时打击和延时打击,子弹是打击点的包装，继承？
     public class HitBox : WorldNode
     {
         //什么是hitbox？
@@ -25,7 +25,7 @@ namespace Hono.Scripts.Battle.Core
         
         //攻击盒子变大，本质是下次检测的缩放值发生了变化
         //HitBox是否应该是一个Unit？应该不是
-        
+        //但是可以是一个Node，有坐标
         //子弹呢，子弹是一个Unit吗，是，HitBox不是是因为他更像一个流程，子弹则是一个单独的对象
         //邻域同理
         
@@ -58,7 +58,7 @@ namespace Hono.Scripts.Battle.Core
         {
             _damage = new Damage(this);
         }
-
+        
         public void Init(Actor attacker, Vector3 target, HitBoxData hitBoxData)
         {
             _hitBoxData = hitBoxData;
@@ -158,10 +158,10 @@ namespace Hono.Scripts.Battle.Core
             if (!_target.Logic.TryGetComponent(out BeHurtComp beHurtComp)) return;
             hitCounter(beHurtComp);
             var hitDamageInfo = _damage.MakeDamage(1, _hitCountDict[beHurtComp], _hitBoxData.CriticalFlag);
-            var vb = APool<VariableBoard>.Pool.Rent();
+            var vb = GPool<VariableBoard>.Pool.Rent();
             vb.InitByHitDamageInfo(hitDamageInfo);
             EventManager.Instance.FireEvent(EEventType.OnHit, _attacker.Uid, vb);
-            APool<VariableBoard>.Pool.Recycle(vb);
+            GPool<VariableBoard>.Pool.Recycle(vb);
             beHurtComp.OnBeHurt(hitDamageInfo);
         }
 
@@ -190,10 +190,10 @@ namespace Hono.Scripts.Battle.Core
             {
                 hitCounter(beHurtComp);
                 var hitDamageInfo = _damage.MakeDamage(_hurtComps.Count, _hitCountDict[beHurtComp], _hitBoxData.CriticalFlag);
-                var vb = APool<VariableBoard>.Pool.Rent();
+                var vb = GPool<VariableBoard>.Pool.Rent();
                 vb.InitByHitDamageInfo(hitDamageInfo);
                 EventManager.Instance.FireEvent(EEventType.OnHit, _attacker.Uid, vb);
-                APool<VariableBoard>.Pool.Recycle(vb);
+                GPool<VariableBoard>.Pool.Recycle(vb);
                 beHurtComp.OnBeHurt(hitDamageInfo);
             }
         }
@@ -215,7 +215,7 @@ namespace Hono.Scripts.Battle.Core
 
         public override void Recycle()
         {
-            APool<HitBoxLogic>.Pool.Recycle(this);
+            GPool<HitBoxLogic>.Pool.Recycle(this);
         }
     }
 }

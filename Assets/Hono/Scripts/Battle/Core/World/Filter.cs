@@ -15,12 +15,18 @@ namespace Hono.Scripts.Battle.Core
         /// actor索引字典
         /// </summary>
         private readonly Dictionary<int, Actor> _searchDict = new(2000);
+        
         private readonly List<Actor> _filterActors = new(32);
         private List<int> _checkBoxResult = new(32);
         private RangeFilterSetting _rangeFilterSetting;
         private Actor _filterUser;
         private Vector3 _searchCenterPos;
-
+        
+        public Actor GetUnit(int uid)
+        {
+            return null;
+        }
+        
         public void SearchUnits(Actor user, Vector3 centerPos, RangeFilterSetting setting, ref List<int> result)
         {
             if (setting == null)
@@ -65,7 +71,7 @@ namespace Hono.Scripts.Battle.Core
                     checkResult = (int)actor.ActorType == condition.value;
                     break;
                 case EFilterConditionType.Tag:
-                    checkResult = actor.UnitTags.HasTag(condition.value, ETagSearchRange.Actor);
+                    checkResult = actor.Tags.HasTag(condition.value, ETagSearchRange.Actor);
                     break;
                 case EFilterConditionType.Faction:
                     var f1 = _filterUser.GetAttr(EAttrType.AttrFaction);

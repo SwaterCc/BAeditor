@@ -64,7 +64,7 @@ namespace Hono.Scripts.Battle.Base
 
             _allowDirty = true;
 
-            APool<AttrSnapshots>.Pool.Recycle(snapshots);
+            GPool<AttrSnapshots>.Pool.Recycle(snapshots);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Hono.Scripts.Battle.Base
         /// <returns></returns>
         public AttrSnapshots GetAttrSnapShots(string rule, int param1 = 0, int param2 = 0, int param3 = 0, int param4 = 0)
         {
-            var snapshot = APool<AttrSnapshots>.Pool.Rent();
+            var snapshot = GPool<AttrSnapshots>.Pool.Rent();
             snapshot.Init(this);
             snapshot.AddParam(param1);
             snapshot.AddParam(param2);
@@ -108,7 +108,7 @@ namespace Hono.Scripts.Battle.Base
         {
             if (!_attrs.TryGetValue(attrType, out Attr attr))
             {
-                attr = APool<Attr>.Pool.Rent();
+                attr = GPool<Attr>.Pool.Rent();
                 _attrs.Add(attrType, attr);
             }
 
@@ -121,7 +121,7 @@ namespace Hono.Scripts.Battle.Base
 
             if (!_attrs.TryGetValue(attrTypeInt, out var attr))
             {
-                attr = APool<Attr>.Pool.Rent();
+                attr = GPool<Attr>.Pool.Rent();
                 _attrs.Add(attrTypeInt, attr);
             }
 
@@ -136,11 +136,11 @@ namespace Hono.Scripts.Battle.Base
             if (_allowDirty)
             {
                 _dirtyList.Add((attrType, value));
-                var board = APool<VariableBoard>.Pool.Rent();
+                var board = GPool<VariableBoard>.Pool.Rent();
                 board.Set(AttrChangedEventInfo.AttrType, attrType);
                 board.Set(AttrChangedEventInfo.Value,    value);
                 EventManager.Instance.FireEvent(EEventType.AttrChanged, _unit.Uid, board);
-                APool<VariableBoard>.Pool.Recycle(board);
+                GPool<VariableBoard>.Pool.Recycle(board);
             }
 
             //查找该属性关联的其他属性

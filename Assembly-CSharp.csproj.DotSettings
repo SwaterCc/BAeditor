@@ -96,6 +96,7 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cframework_005Cevent_005Ceventchecker/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cframework_005Cmessage/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cframework/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cmap/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cmessage/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cmodelcontroller/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cpesystem/@EntryIndexedValue">True</s:Boolean>
@@ -109,15 +110,21 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cunit_005Cability_005Cabilitynode_005Caparamsparser/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cunit_005Cability_005Cabilitynode/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cunit_005Cactionsystem/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cunit_005Cactor/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cunit_005Cderivedunits/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cunit_005Cderivedunits_005Cactor/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cunit_005Cmodelcontroller/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cunit_005Cpesystem/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cvariable/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Ceventmanager_005Ceventchecker/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Ceventmanager_005Ceventinfo/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Ceventsystem_005Ceventchecker/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Ceventsystem_005Ceventinfo/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cevent_005Ceventchecker/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cevent_005Ceventinfo/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cmessage/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cmessagemanager/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cmessagesystem/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cdamage/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cdefine/@EntryIndexedValue">True</s:Boolean>

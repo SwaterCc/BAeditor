@@ -42,7 +42,7 @@ namespace Hono.Scripts.Battle.Tools.DebugTools
 
         public void ExitBattleClick()
         {
-            BattleManager.Instance.ExitBattle();
+            //BattleManager.Instance.GameExit();
         }
     }
 }

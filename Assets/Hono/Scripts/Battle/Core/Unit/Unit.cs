@@ -13,12 +13,12 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 变量黑板
         /// </summary>
-        public VariableBoard UnitBoard { get; }
+        public VariableBoard VariableBoard { get; }
 
         /// <summary>
         /// Tags
         /// </summary>
-        public TagCollection UnitTags { get; }
+        public TagCollection Tags { get; }
 
         /// <summary>
         /// Actor属性列表
@@ -26,15 +26,25 @@ namespace Hono.Scripts.Battle.Core
         public AttrCollection Attrs { get; }
 
         /// <summary>
-        /// 当前坐标
+        /// 当前位置信息
         /// </summary>
         public Vector3 Pos;
 
         /// <summary>
-        /// 当前旋转
+        /// 当前朝向
         /// </summary>
         public Quaternion Rot;
 
+        /// <summary>
+        /// 单位缩放系数
+        /// </summary>
+        public Vector3 Scale;
+
+        /// <summary>
+        /// 单位体型半径（队伍中应该有队伍半径）
+        /// </summary>
+        public float Radius;
+        
         /// <summary>
         /// 动作系统
         /// </summary>
@@ -66,8 +76,8 @@ namespace Hono.Scripts.Battle.Core
             _abilityController = new AbilityController(this);
             
             Attrs = new AttrCollection(this);
-            UnitBoard = new VariableBoard();
-            UnitTags = new TagCollection();
+            VariableBoard = new VariableBoard();
+            Tags = new TagCollection();
 
             _evtListenerCollection = new UnitEventListenerCollection(this, 10);
             _messageCollection = new MessageCollection(this, 10);
@@ -125,8 +135,8 @@ namespace Hono.Scripts.Battle.Core
             _actionSystem.Clear();
             
             Attrs.Clear();
-            UnitTags.Clear();
-            UnitBoard.Clear();
+            Tags.Clear();
+            VariableBoard.Clear();
             
             _evtListenerCollection.Clear();
             _messageCollection.Clear();

@@ -65,6 +65,11 @@ namespace Hono.Scripts.Battle
         /// 必定暴击标志
         /// </summary>
         public bool CriticalFlag;
+
+        /// <summary>
+        /// 禁止事件发送
+        /// </summary>
+        public bool DisableEventFire;
         
         [LabelText("Aoe二次筛选配置")]
         [ShowIf("HitType", EHitType.Aoe)]

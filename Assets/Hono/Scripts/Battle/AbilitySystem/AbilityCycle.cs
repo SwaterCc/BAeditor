@@ -86,43 +86,43 @@ namespace Hono.Scripts.Battle.AbilitySystem
                 switch (data)
                 {
                     case CycleNodeData:
-                        node = APool<ACycleNode>.Pool.Rent();
+                        node = GPool<ACycleNode>.Pool.Rent();
                         break;
                     case BranchGroupNodeData:
-                        node = APool<ABranchGroupNode>.Pool.Rent();
+                        node = GPool<ABranchGroupNode>.Pool.Rent();
                         break;
                     case BranchNodeData:
-                        node = APool<ABranchNode>.Pool.Rent();
+                        node = GPool<ABranchNode>.Pool.Rent();
                         break;
                     case RepeatNodeData:
-                        node = APool<ARepeatNode>.Pool.Rent();
+                        node = GPool<ARepeatNode>.Pool.Rent();
                         break;
                     case FunctionNodeData:
-                        node = APool<AFunctionNode>.Pool.Rent();
+                        node = GPool<AFunctionNode>.Pool.Rent();
                         break;
                     case AttrModifyNodeData:
-                        node = APool<AAttrNode>.Pool.Rent();
+                        node = GPool<AAttrNode>.Pool.Rent();
                         break;
                     case GroupNodeData:
-                        node = APool<AGroupNode>.Pool.Rent();
+                        node = GPool<AGroupNode>.Pool.Rent();
                         AGroupNode groupNode = (AGroupNode)node;
                         Groups.Add(groupNode.Data.groupId, groupNode);
                         break;
                     case GroupSwitchNodeData:
-                        node = APool<AGroupSwitchNode>.Pool.Rent();
+                        node = GPool<AGroupSwitchNode>.Pool.Rent();
                         break;
                     case TimerNodeData:
-                        node = APool<ATimerNode>.Pool.Rent();
+                        node = GPool<ATimerNode>.Pool.Rent();
                         break;
                     case ListenerNodeData:
-                        node = APool<AListenerNode>.Pool.Rent();
+                        node = GPool<AListenerNode>.Pool.Rent();
                         _eventNodeList.Add((AListenerNode)node);
                         break;
                     case MsgSendNodeData:
-                        node = APool<AMsgSendNode>.Pool.Rent();
+                        node = GPool<AMsgSendNode>.Pool.Rent();
                         break;
                     case VariableNodeData:
-                        node = APool<AVariableNode>.Pool.Rent();
+                        node = GPool<AVariableNode>.Pool.Rent();
                         break;
                     default:
                         throw new InvalidCastException($"使用了不存在的Node类型 NodeType{data.GetType()}");
@@ -183,11 +183,9 @@ namespace Hono.Scripts.Battle.AbilitySystem
             /// <summary>
             /// 执行Ability
             /// </summary>
-            public void Execute(Action endCallback)
+            public void Execute()
             {
                 AContext.Log("Execute");
-                //退出上一个执行
-                cycleEnd();
                 //预执行
                 doCycle(EAbilityCycle.PreExecute);
                 //运行
@@ -313,7 +311,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
             /// 非自然停止，强制停止，需要清理上一个ability的状态
             /// 然后执行end阶段
             /// </summary>
-            private void cycleEnd(Action endCallback)
+            private void cycleEnd()
             {
                 //结束Group
                 CurGroup?.GroupExit();
@@ -322,14 +320,16 @@ namespace Hono.Scripts.Battle.AbilitySystem
                 _ticks.Clear();
                 //执行结束阶段
                 doCycle(EAbilityCycle.EndExecute);
-                endCallback?.Invoke();
+                
+                AContext.ExecuteEndCallBack?.Invoke();
+                
                 //重置到Init状态
                 CurState = EAbilityCycle.Init;
             }
 
             public void ForceStop()
             {
-                cycleEnd(null);
+                cycleEnd();
             }
             
             public void OnRecycle()

@@ -139,7 +139,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             public override void Recycle()
             {
-                APool<AVariableNode>.Pool.Recycle(this);
+                GPool<AVariableNode>.Pool.Recycle(this);
             }
         }
     }

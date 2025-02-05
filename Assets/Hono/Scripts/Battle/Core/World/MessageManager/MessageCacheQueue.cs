@@ -67,7 +67,7 @@ namespace Hono.Scripts.Battle
         {
             foreach (var board in _catchQueue)
             {
-                APool<VariableBoard>.Pool.Recycle(board);
+                GPool<VariableBoard>.Pool.Recycle(board);
             }
             _catchQueue.Clear();
         }

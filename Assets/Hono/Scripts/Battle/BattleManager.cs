@@ -70,6 +70,9 @@ namespace Hono.Scripts.Battle
         
         public Action<bool> ExitBattleCallBack { get; set; }
 
+        private World _currentWorld;
+        public static World World => Instance._currentWorld;
+
         protected void Start()
         {
             InitEnv();
@@ -112,10 +115,8 @@ namespace Hono.Scripts.Battle
         private void registerAllFrameworks()
         {
             register(ConfigManager.Instance);
-            //register(AssetManager.Instance);
+            register(AssetManager.Instance);
             register(LuaInterface.Instance);
-            register(EventManager.Instance);
-            register(MessageManager.Instance);
         }
 
         /// <summary>
@@ -187,26 +188,41 @@ namespace Hono.Scripts.Battle
 
         #region 战斗玩法流程
 
-        public void EnterBattle(string fromScene, int battleGroundId)
+        /// <summary>
+        /// 进入战争玩法
+        /// </summary>
+        /// <param name="fromScene"></param>
+        /// <param name="battleGroundId"></param>
+        public void WarGameStart(string fromScene, int battleGroundId)
         {
             _formScene = fromScene;
-            
+            _currentWorld = new World();
+            _currentWorld.Start();
         }
 
+        
+        private void Update()
+        {
+            if (_battleDataLoadState != EBattleDataLoadState.LoadFinish)
+            {
+                Debug.Log($"战斗数据未准备完成 当前状态 {_battleDataLoadState}");
+                return;
+            }
+
+            foreach (var frameworkTick in _frameworkTicks)
+            {
+                frameworkTick.Tick(Time.deltaTime);
+            }
+        }
+        
         /// <summary>
         ///     退出战斗玩法返回主界面
         /// </summary>
-        public void ExitBattle()
+        public void WarGameExit()
         {
             Debug.Log("[BattleManager] ExitBattle");
-
-            foreach (var framework in _frameworkEnterExits)
-            {
-                framework.OnExitBattle();
-            }
-
-           
-
+            _currentWorld.Exit();
+            
             /*if (LoadingPanel.Exists)
             {
                 LoadingPanel.Instance.Show(() =>
@@ -217,26 +233,6 @@ namespace Hono.Scripts.Battle
                 });
             }*/
         }
-
-        private void Tick(float dt)
-        {
-            if (_battleDataLoadState != EBattleDataLoadState.LoadFinish)
-            {
-                Debug.Log($"战斗数据未准备完成 当前状态 {_battleDataLoadState}");
-                return;
-            }
-
-            foreach (var frameworkTick in _frameworkTicks)
-            {
-                frameworkTick.Tick(dt);
-            }
-        }
-
-        private void Update()
-        {
-            Tick(Time.deltaTime);
-        }
-
         #endregion
     }
 }

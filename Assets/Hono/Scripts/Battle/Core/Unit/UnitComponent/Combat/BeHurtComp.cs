@@ -1,5 +1,6 @@
 ﻿#region
 
+using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 

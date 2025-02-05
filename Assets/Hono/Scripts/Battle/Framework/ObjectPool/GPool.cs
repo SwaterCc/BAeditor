@@ -30,7 +30,7 @@ namespace Hono.Scripts.Battle
             --_refCount;
             if (_refCount <= 0)
             {
-                APoolManager.Instance.RecycleAObject(_poolObject);
+                GPoolManager.Instance.RecycleAObject(_poolObject);
                 _poolObject = null;
             }
         }
@@ -48,10 +48,10 @@ namespace Hono.Scripts.Battle
 
     
     /// <summary>
-    /// A池，逻辑对象池，用于管理代码运行中的逻辑对象
+    /// G池，通用对象池，用于管理代码运行中的逻辑对象
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class APool<T> : IAPool where T : class, IAPoolObject, new()
+    public class GPool<T> : IAPool where T : class, IAPoolObject, new()
     {
         /// <summary>
         /// 稳定池
@@ -79,29 +79,29 @@ namespace Hono.Scripts.Battle
         private float _duration;
 
         // 泛型类型的单例实例
-        private static APool<T> _instance;
+        private static GPool<T> _instance;
 
         // 获取单例实例的方法
-        public static APool<T> Pool
+        public static GPool<T> Pool
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new APool<T>();
+                    _instance = new GPool<T>();
                 }
 
                 return _instance;
             }
         }
 
-        private APool()
+        private GPool()
         {
             _pool = new Queue<T>(100);
             _tempPool = new Queue<T>(15);
 
             Debug.Log($"New Pool<{typeof(T)}> Create");
-            APoolManager.Instance.RegisterPool(this);
+            GPoolManager.Instance.RegisterPool(this);
         }
 
         public T Rent()

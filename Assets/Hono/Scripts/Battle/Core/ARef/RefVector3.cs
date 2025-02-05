@@ -114,7 +114,7 @@ namespace Hono.Scripts.Battle.Base
 
         public override ARef DeepCopy()
         {
-            var vec3 = APool<RefVector3>.Pool.Rent();
+            var vec3 = GPool<RefVector3>.Pool.Rent();
             vec3.x = x;
             vec3.y = y;
             vec3.z = z;
@@ -123,7 +123,7 @@ namespace Hono.Scripts.Battle.Base
 
         public override void ARefRecycle()
         {
-            APool<RefVector3>.Pool.Recycle(this);
+            GPool<RefVector3>.Pool.Recycle(this);
         }
 
         public void OnRecycle()

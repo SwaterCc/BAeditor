@@ -18,7 +18,7 @@
 
             public override void Recycle()
             {
-                APool<AGroupSwitchNode>.Pool.Recycle(this);
+                GPool<AGroupSwitchNode>.Pool.Recycle(this);
             }
         }
     }

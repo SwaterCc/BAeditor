@@ -1,6 +1,4 @@
-using Hono.Scripts.Battle.Core;
-
-namespace Hono.Scripts.Battle
+namespace Hono.Scripts.Battle.Core
 {
     public abstract class UnitComponent
     {

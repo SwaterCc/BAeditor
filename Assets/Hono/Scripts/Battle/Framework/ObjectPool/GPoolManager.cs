@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle
         public void Tick(float dt);
         public void Recycle(IAPoolObject poolObject);
     }
-    public class APoolManager : Singleton<APoolManager>, IBattleFrameworkTick
+    public class GPoolManager : Singleton<GPoolManager>, IBattleFrameworkTick
     {
         private readonly List<IAPool> _aObjectPools = new(32);
         private readonly Dictionary<Type, IAPool> _typePoolSearch = new(32);

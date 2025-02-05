@@ -29,7 +29,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             public override void Recycle()
             {
-                APool<ABranchGroupNode>.Pool.Recycle(this);
+                GPool<ABranchGroupNode>.Pool.Recycle(this);
             }
         }
     }

@@ -2,8 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using Hono.Scripts.Battle.Base;
-using Hono.Scripts.Battle.Tools;
+using Hono.Scripts.Battle.Core;
 using UnityEngine;
 
 #endregion
@@ -17,7 +16,7 @@ namespace Hono.Scripts.Battle.Event
     /// 事件是一种即使的通知，触发者和接收者是一对多的关系
     /// </para>
     /// </summary>
-    public class EventManager : Singleton<EventManager>, IBattleFrameworkEnterExit, IBattleFrameworkTick
+    public class EventManager : World.WorldSingleton<EventManager>, IWorldSystem
     {
         /// <summary>
         /// actor绑定注册列表
@@ -25,16 +24,23 @@ namespace Hono.Scripts.Battle.Event
         private readonly Dictionary<int, UnitEventListenerCollection> _actorEventListeners = new();
         private readonly EventListenerCollection _worldEventListeners = new(20);
 
-        public void OnEnterBattle() { }
+        public void EnterWorld() { }
 
-        public void OnExitBattle()
+        public void Tick(float dt)
+        {
+            _worldEventListeners.Tick(dt);
+        }
+
+        public void ExitWorld()
         {
             _worldEventListeners.Clear();
             foreach (var listeners in _actorEventListeners.Values)
             {
                 listeners.Clear();
             }
+            _actorEventListeners.Clear();
         }
+
 
         /// <summary>
         /// 添加事件容器
@@ -42,9 +48,9 @@ namespace Hono.Scripts.Battle.Event
         /// <param name="collection"></param>
         public void AddListenerCollection(UnitEventListenerCollection collection)
         {
-            _actorEventListeners.TryAdd(collection.Unit.Uid,collection);
+            _actorEventListeners.TryAdd(collection.Unit.Uid, collection);
         }
-        
+
         /// <summary>
         /// 删除事件容器
         /// </summary>
@@ -53,7 +59,7 @@ namespace Hono.Scripts.Battle.Event
         {
             _actorEventListeners.Remove(collection.Unit.Uid);
         }
-        
+
 
         /// <summary>
         /// 注册全局事件监听
@@ -99,12 +105,7 @@ namespace Hono.Scripts.Battle.Event
 #endif
             _worldEventListeners.RemoveListener(listener);
         }
-        
-        public void Tick(float dt)
-        {
-            _worldEventListeners.Tick(dt);
-        }
-        
+
         /// <summary>
         /// 触发事件
         /// </summary>
@@ -120,17 +121,18 @@ namespace Hono.Scripts.Battle.Event
             if (isGlobalEvent)
             {
                 //全局事件 通知actor Listener中监听全局事件的listener
-                foreach (var collection in  _actorEventListeners.Values)
+                foreach (var collection in _actorEventListeners.Values)
                 {
                     collection.FireEvent(eventType, board);
                 }
+
                 //然后通知世界监听者
-                _worldEventListeners.FireEvent(eventType,board);
+                _worldEventListeners.FireEvent(eventType, board);
             }
             else
             {
                 //Actor事件，仅通知给对应的Actor
-                if(_actorEventListeners.TryGetValue(actorUid,out var collection))
+                if (_actorEventListeners.TryGetValue(actorUid, out var collection))
                 {
                     collection.FireEvent(eventType, board);
                 }

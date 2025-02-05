@@ -98,10 +98,7 @@ namespace Hono.Scripts.Battle
 
             foreach (var targetUid in targetUids)
             {
-                if (!UnitManager.Instance.TryGetActor(targetUid, out var target))
-                {
-                    continue;
-                }
+               
             }
         }
 

@@ -57,47 +57,46 @@ namespace Hono.Scripts.Battle
         GameMode,
         Other,
     }
-
+    
     /// <summary>
     /// Actor初始化状态
     /// </summary>
+    [Flags]
     public enum EActorState
     {
-        NoActive = 0,
-        Init = 1,
-        Born,
-        Active,
-        Dead,
-        Error,
+        Empty = 0,
+        Move = 1,
+        Attack = 2,
+        Stiff = 4,
     }
     
     /// <summary>
-    ///     战斗玩法状态
+    /// 世界状态
     /// </summary>
-    public enum EBattleStateType
+    public enum EWorldState
     {
         /// <summary>
-        ///     未在游玩,
+        /// 数据加载
         /// </summary>
-        NoGaming,
+        Loading = 1,
 
         /// <summary>
-        ///     编队
+        /// 战略定制状态（第一次大地图展开）
         /// </summary>
-        BuildTeams,
+        Process1,
 
         /// <summary>
-        ///     加载战场
+        /// 俯视角游玩状态
         /// </summary>
-        LoadBattleGround,
-
+        Process2_1,
+        
         /// <summary>
-        ///     游玩
+        /// 战略地图布置状态
         /// </summary>
-        Playing,
-
+        Process2_2,
+        
         /// <summary>
-        ///     结算
+        /// 结算
         /// </summary>
         Score,
     }

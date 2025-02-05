@@ -103,14 +103,14 @@ namespace Hono.Scripts.Battle.Base
 
         public override ARef DeepCopy()
         {
-            RefFloat rInt = APool<RefFloat>.Pool.Rent();
+            RefFloat rInt = GPool<RefFloat>.Pool.Rent();
             rInt.Value = Value;
             return rInt;
         }
 
         public override void ARefRecycle()
         {
-            APool<RefFloat>.Pool.Recycle(this);
+            GPool<RefFloat>.Pool.Recycle(this);
         }
 
         public void OnRecycle()

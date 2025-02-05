@@ -112,7 +112,7 @@ namespace Hono.Scripts.Battle.Base
 
         public override ARef DeepCopy()
         {
-            RefInt rInt = APool<RefInt>.Pool.Rent();
+            RefInt rInt = GPool<RefInt>.Pool.Rent();
             rInt.Value = Value;
             return rInt;
         }
@@ -124,7 +124,7 @@ namespace Hono.Scripts.Battle.Base
 
         public override void ARefRecycle()
         {
-            APool<RefInt>.Pool.Recycle(this);
+            GPool<RefInt>.Pool.Recycle(this);
         }
 
         public void OnRecycle()

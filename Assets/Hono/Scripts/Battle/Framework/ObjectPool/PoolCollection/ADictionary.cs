@@ -136,7 +136,7 @@ namespace Hono.Scripts.Battle.ObjectPool
                 }
                 else if (item is IAPoolObject poolObject)
                 {
-                    APoolManager.Instance.RecycleAObject(poolObject);
+                    GPoolManager.Instance.RecycleAObject(poolObject);
                 }
             }
 
@@ -148,7 +148,7 @@ namespace Hono.Scripts.Battle.ObjectPool
                 }
                 else if (item is IAPoolObject poolObject)
                 {
-                    APoolManager.Instance.RecycleAObject(poolObject);
+                    GPoolManager.Instance.RecycleAObject(poolObject);
                 }
             }
 

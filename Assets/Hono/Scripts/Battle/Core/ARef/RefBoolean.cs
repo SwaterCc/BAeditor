@@ -31,14 +31,14 @@ namespace Hono.Scripts.Battle.Base
         
         public override ARef DeepCopy()
         {
-            RefBoolean rInt = APool<RefBoolean>.Pool.Rent();
+            RefBoolean rInt = GPool<RefBoolean>.Pool.Rent();
             rInt.Value = Value;
             return rInt;
         }
 
         public override void ARefRecycle()
         {
-            APool<RefBoolean>.Pool.Recycle(this);
+            GPool<RefBoolean>.Pool.Recycle(this);
         }
 
         // 隐式转换到 bool

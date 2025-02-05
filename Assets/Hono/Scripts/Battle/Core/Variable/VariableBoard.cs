@@ -167,7 +167,7 @@ namespace Hono.Scripts.Battle
                 if (!_refCollection.Remove(key, out var obj)) return;
                 if (obj is IAPoolObject poolObject)
                 {
-                    APoolManager.Instance.RecycleAObject(poolObject);
+                    GPoolManager.Instance.RecycleAObject(poolObject);
                 }
             }
             else
@@ -184,7 +184,7 @@ namespace Hono.Scripts.Battle
             {
                 if (obj is IAPoolObject poolObject)
                 {
-                    APoolManager.Instance.RecycleAObject(poolObject);
+                    GPoolManager.Instance.RecycleAObject(poolObject);
                 }
             }
 

@@ -41,7 +41,7 @@ namespace Hono.Scripts.Battle
             }
             else
             {
-                actor = UnitManager.Instance.GetActor(actorUid);
+                actor = BattleManager.World.Searcher.GetUnit(actorUid);
             }
 
             return actor != null;

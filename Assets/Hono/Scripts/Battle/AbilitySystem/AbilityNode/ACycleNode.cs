@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 
             public override void Recycle()
             {
-                APool<ACycleNode>.Pool.Recycle(this);
+                GPool<ACycleNode>.Pool.Recycle(this);
             }
         }
     }

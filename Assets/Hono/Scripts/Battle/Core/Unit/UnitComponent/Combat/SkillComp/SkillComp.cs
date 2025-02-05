@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,7 +38,7 @@ namespace Hono.Scripts.Battle
 
             foreach (KeyValuePair<int, Skill> skill in Skills)
             {
-                APool<Skill>.Pool.Recycle(skill.Value);
+                GPool<Skill>.Pool.Recycle(skill.Value);
             }
 
             Skills.Clear();
@@ -55,7 +56,7 @@ namespace Hono.Scripts.Battle
 
             foreach (KeyValuePair<int, Skill> skill in Skills)
             {
-                APool<Skill>.Pool.Recycle(skill.Value);
+                GPool<Skill>.Pool.Recycle(skill.Value);
             }
 
             Skills.Clear();
@@ -87,7 +88,7 @@ namespace Hono.Scripts.Battle
         /// <param name="level"></param>
         public void LearnSkill(int skillId, int level)
         {
-            Skill skill = APool<Skill>.Pool.Rent();
+            Skill skill = GPool<Skill>.Pool.Rent();
             skill.OnRent(Unit, skillId, level);
             if (!Skills.TryAdd(skillId, skill))
             {
@@ -103,7 +104,7 @@ namespace Hono.Scripts.Battle
         {
             if (Skills.Remove(skillId, out Skill skill))
             {
-                APool<Skill>.Pool.Recycle(skill);
+                GPool<Skill>.Pool.Recycle(skill);
             }
         }
 

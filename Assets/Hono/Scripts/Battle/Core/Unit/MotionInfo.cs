@@ -4,16 +4,14 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    
     /// <summary>
     /// 地图块更新原型
     /// </summary>
-    
     public struct MotionInfo
     {
-        public int GridIndex;
-        public Vector3 Pos;
-        public Vector3 Velocity;
+        public Vector2 GridIndex; 
+        public Vector3 Pos; 
+        public Vector3 Velocity; 
     }
 
     public readonly struct MotionInfoProxy
@@ -53,8 +51,9 @@ namespace Hono.Scripts.Battle.Core
             var proxy = new Span<MotionInfo>(_aTransforms);
             for (var index = 0; index < proxy.Length; index++)
             {
-                MotionInfo trans = proxy[index];
-                //trans.Update(dt);
+                var trans = proxy[index];
+                trans.Pos += trans.Velocity * dt;
+                trans.Velocity = Vector3.zero;
             }
         }
     }

@@ -70,7 +70,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
             
             public override void Recycle()
             {
-                APool<ARepeatNode>.Pool.Recycle(this);
+                GPool<ARepeatNode>.Pool.Recycle(this);
             }
         }
     }
