@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Core;
+using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
 #endregion
@@ -16,7 +17,7 @@ namespace Hono.Scripts.Battle.Event
     /// 事件是一种即使的通知，触发者和接收者是一对多的关系
     /// </para>
     /// </summary>
-    public class EventManager : World.WorldSingleton<EventManager>, IWorldSystem
+    public class EventManager : Singleton<EventManager>, IWorldSystemWhenTickCalled, IWorldSystemWhenExitCalled
     {
         /// <summary>
         /// actor绑定注册列表
@@ -24,23 +25,21 @@ namespace Hono.Scripts.Battle.Event
         private readonly Dictionary<int, UnitEventListenerCollection> _actorEventListeners = new();
         private readonly EventListenerCollection _worldEventListeners = new(20);
 
-        public void EnterWorld() { }
-
-        public void Tick(float dt)
+        public void OnWorldTick(float dt)
         {
             _worldEventListeners.Tick(dt);
         }
 
-        public void ExitWorld()
+        public void OnWorldExit()
         {
             _worldEventListeners.Clear();
             foreach (var listeners in _actorEventListeners.Values)
             {
                 listeners.Clear();
             }
+
             _actorEventListeners.Clear();
         }
-
 
         /// <summary>
         /// 添加事件容器
@@ -66,7 +65,7 @@ namespace Hono.Scripts.Battle.Event
         /// </summary>
         /// <param name="listener"></param>
         /// <exception cref="Exception"></exception>
-        public void RegisterGlobalListener(GlobalEventListener listener)
+        public void RegisterWorldListener(WorldEventListener listener)
         {
 #if UNITY_EDITOR
             if (listener == null)
@@ -89,7 +88,7 @@ namespace Hono.Scripts.Battle.Event
             _worldEventListeners.AddListener(listener);
         }
 
-        public void UnregisterGlobalListener(GlobalEventListener listener)
+        public void UnregisterWorldListener(WorldEventListener listener)
         {
 #if UNITY_EDITOR
             if (listener == null)

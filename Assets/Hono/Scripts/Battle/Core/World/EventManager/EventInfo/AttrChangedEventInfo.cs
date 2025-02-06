@@ -1,4 +1,6 @@
-﻿namespace Hono.Scripts.Battle.Event
+﻿using Hono.Scripts.Battle.Core;
+
+namespace Hono.Scripts.Battle.Event
 {
     public static class AttrChangedEventInfo
     {

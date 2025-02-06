@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Hono.Scripts.Battle
+﻿namespace Hono.Scripts.Battle.Core
 {
 //Auto::AttrMaker
     public enum EAttrType

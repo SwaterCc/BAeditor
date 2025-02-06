@@ -2,7 +2,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 {
     public partial class Ability
     {
-        private class ACycleNode : ANode, IAPoolObject
+        private class ACycleNode : ANode, ICPoolObject
         {
             public override void DoJob()
             {

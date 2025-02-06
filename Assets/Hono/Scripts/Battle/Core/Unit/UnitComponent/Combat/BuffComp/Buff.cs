@@ -3,7 +3,7 @@ using Hono.Scripts.Battle.Core;
 
 namespace Hono.Scripts.Battle
 {
-    public class Buff : IAPoolObject
+    public class Buff : ICPoolObject
     {
         public Unit Logic { get; private set; }
         public BuffData BuffData { get; private set; }

@@ -136,6 +136,14 @@ namespace Hono.Scripts.Battle.Core
             }
         }
 
+        /// <summary>
+        /// 从父代移除自己
+        /// </summary>
+        protected void RemoveSelfFromParent()
+        {
+            
+        }
+        
         private void reset()
         {
             _root = null;

@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-      public class Skill : IAPoolObject
+      public class Skill : ICPoolObject
         {
             /// <summary>
             /// 技能Id

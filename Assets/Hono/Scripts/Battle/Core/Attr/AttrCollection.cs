@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Hono.Scripts.Battle.Core;
+using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle.Base
+namespace Hono.Scripts.Battle.Core
 {
     public partial class AttrCollection
     {
@@ -64,7 +64,7 @@ namespace Hono.Scripts.Battle.Base
 
             _allowDirty = true;
 
-            GPool<AttrSnapshots>.Pool.Recycle(snapshots);
+            GPool<AttrCollection.AttrSnapshots>.Pool.Recycle(snapshots);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Hono.Scripts.Battle.Base
         /// <param name="param3"></param>
         /// <param name="param4"></param>
         /// <returns></returns>
-        public AttrSnapshots GetAttrSnapShots(string rule, int param1 = 0, int param2 = 0, int param3 = 0, int param4 = 0)
+        public AttrCollection.AttrSnapshots GetAttrSnapShots(string rule, int param1 = 0, int param2 = 0, int param3 = 0, int param4 = 0)
         {
             var snapshot = GPool<AttrSnapshots>.Pool.Rent();
             snapshot.Init(this);
@@ -104,7 +104,7 @@ namespace Hono.Scripts.Battle.Base
             return snapshot;
         }
 
-        public Attr GetAttr(EAttrType attrType)
+        public int GetAttr(EAttrType attrType)
         {
             if (!_attrs.TryGetValue(attrType, out Attr attr))
             {
@@ -139,7 +139,7 @@ namespace Hono.Scripts.Battle.Base
                 var board = GPool<VariableBoard>.Pool.Rent();
                 board.Set(AttrChangedEventInfo.AttrType, attrType);
                 board.Set(AttrChangedEventInfo.Value,    value);
-                EventManager.Instance.FireEvent(EEventType.AttrChanged, _unit.Uid, board);
+                EventManager.Instance.FireEvent(EEventType.OnAttrChanged, _unit.Uid, board);
                 GPool<VariableBoard>.Pool.Recycle(board);
             }
 

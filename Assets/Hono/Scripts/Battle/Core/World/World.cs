@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
+using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
@@ -19,11 +20,21 @@ namespace Hono.Scripts.Battle.Core
         protected override void onRemove() { }
     }
 
-    public interface IWorldSystem
+    public interface IWorldSystem { }
+
+    public interface IWorldSystemWhenEnterCalled : IWorldSystem
     {
-        public void EnterWorld();
-        public void Tick(float dt);
-        public void ExitWorld();
+        public void OnWorldEnter(World world);
+    }
+
+    public interface IWorldSystemWhenTickCalled : IWorldSystem
+    {
+        public void OnWorldTick(float dt);
+    }
+
+    public interface IWorldSystemWhenExitCalled : IWorldSystem
+    {
+        public void OnWorldExit();
     }
 
     /// <summary>
@@ -34,31 +45,42 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 世界最大Actor数量
         /// </summary>
-        private const int MaxActorCount = 1000;
-        
+        public const int MaxActorCount = 2000;
+        /// <summary>
+        /// 最大Unit的数量
+        /// </summary>
+        public const int MaxUnitCount = MaxActorCount + 3000;
+
         //世界的构成
         //静态网格地图数据（可行区域，地图网格对应坐标区域）
         //运行时动态网格数据（网格上的单位数据，寻路数据，单位坐标更新（最后帧））
-        private readonly Dictionary<Type, IWorldSystem> _systems = new()
-        {
-            { typeof(EventManager), new EventManager() },
-            { typeof(MessageManager), new MessageManager() },
-        };
-
+        private readonly List<IWorldSystemWhenEnterCalled> _mgrsEnter = new();
+        private readonly List<IWorldSystemWhenTickCalled> _mgrsTick = new();
+        private readonly List<IWorldSystemWhenExitCalled> _mgrsExit = new();
         /// <summary>
         /// 根节点
         /// </summary>
         private readonly WorldNodeRoot _worldNodeRoot = new();
 
         /// <summary>
-        /// Actor搜索器
+        /// Unit搜索器
         /// </summary>
-        public readonly ActorSearcher Searcher = new();
+        public readonly UnitSearcher Searcher = new();
 
         /// <summary>
         /// 当前世界流程
         /// </summary>
-        private EWorldState _state;
+        private EWorldState _currentState;
+
+        /// <summary>
+        /// 下一个世界流程
+        /// </summary>
+        private EWorldState _nextState;
+
+        /// <summary>
+        /// 状态集合
+        /// </summary>
+        private Dictionary<EWorldState, WorldState> _worldStates;
 
         /// <summary>
         /// 场景数据Id(场景id，静态地图网格)
@@ -69,23 +91,69 @@ namespace Hono.Scripts.Battle.Core
         /// 世界对象数据（触发器，场景对象，场景事件，场景流程）
         /// </summary>
         private int _worldInfoKey;
-        
+
+        /// <summary>
+        /// 数据配置
+        /// </summary>
+        private BattleSceneTable.BattleSceneRow _sceneRow;
+
         #region 周期
+
+        public World(int sceneTableId)
+        {
+            register(HitManager.Instance);
+            register(EventManager.Instance);
+            register(MessageManager.Instance);
+
+            _sceneRow = ConfigManager.Table<BattleSceneTable>().Get(sceneTableId);
+
+            _worldStates = new Dictionary<EWorldState, WorldState>()
+            {
+                { EWorldState.Loading, new LoadingState(this) },
+                { EWorldState.Ready, new ReadyState(this) },
+                { EWorldState.Gaming, new GamingState(this) },
+                { EWorldState.StrategicMap, new StrategicMapState(this) },
+                { EWorldState.Score, new ScoreState(this) },
+            };
+
+            _currentState = _nextState = EWorldState.NoInit;
+        }
+
+        private void register(IWorldSystem system)
+        {
+            if (system is IWorldSystemWhenEnterCalled enterCalled && !_mgrsEnter.Contains(enterCalled))
+            {
+                _mgrsEnter.Add(enterCalled);
+            }
+
+            if (system is IWorldSystemWhenTickCalled tickCalled && !_mgrsTick.Contains(tickCalled))
+            {
+                _mgrsTick.Add(tickCalled);
+            }
+
+            if (system is IWorldSystemWhenExitCalled exitCalled && !_mgrsExit.Contains(exitCalled))
+            {
+                _mgrsExit.Add(exitCalled);
+            }
+        }
 
         /// <summary>
         /// 启动！
         /// </summary>
-        public void Start()
+        public void Enter()
         {
-            //地图网格初始化
-            //搜索器初始化
-            foreach (var system in _systems.Values)
-            {
-                system.EnterWorld();
-            }
+            //主动GC一下
+            GC.Collect();
+
+            //特定池创建指定数量缓存
             
+            foreach (var system in _mgrsEnter)
+            {
+                system.OnWorldEnter(this);
+            }
+
             //进入加载状态
-            _state = EWorldState.Loading;
+            _nextState = EWorldState.Loading;
         }
 
         /// <summary>
@@ -94,28 +162,18 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="dt"></param>
         public void Tick(float dt)
         {
-            switch (_state)
+            if (_currentState != _nextState)
             {
-                case EWorldState.Loading:
-                    
-                    break;
-                case EWorldState.Process1:
-                    
-                    break;
-                case EWorldState.Process2_1:
-                    //
-                    break;
-                case EWorldState.Process2_2:
-                    
-                    break;
-                case EWorldState.Score:
-                    break;
+                _worldStates[_currentState]?.Exit();
+                _worldStates[_nextState]?.Enter(_currentState);
+                _currentState = _nextState;
             }
+
+            _worldStates[_currentState]?.Tick(dt);
             
-            _worldNodeRoot.Tick(dt);
-            foreach (var system in _systems.Values)
+            foreach (var system in _mgrsTick)
             {
-                system.Tick(dt);
+                system.OnWorldTick(dt);
             }
         }
 
@@ -124,10 +182,13 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         public void Exit()
         {
-            foreach (var system in _systems.Values)
+            foreach (var system in _mgrsExit)
             {
-                system.ExitWorld();
+                system.OnWorldExit();
             }
+
+            //退出后主动GC下
+            GC.Collect();
         }
 
         #endregion
@@ -161,6 +222,62 @@ namespace Hono.Scripts.Battle.Core
         public Bullet CreateBullet(Actor attacker)
         {
             return null;
+        }
+
+        public void OpenStrategicMap()
+        {
+            if (_currentState == EWorldState.Gaming && (EBattleModeType)_sceneRow.BattleType == EBattleModeType.War)
+            {
+                _nextState = EWorldState.StrategicMap;
+            }
+        }
+
+        public void CloseStrategicMap()
+        {
+            if (_currentState == EWorldState.StrategicMap)
+            {
+                _nextState = EWorldState.Gaming;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 世界状态
+    /// </summary>
+    public partial class World
+    {
+        private abstract class WorldState
+        {
+            public readonly EWorldState State;
+            public readonly World World;
+
+            protected WorldState(World world, EWorldState worldState)
+            {
+                State = worldState;
+                World = world;
+            }
+
+            public void Enter(EWorldState beforeState)
+            {
+                Debug.Log($"[WorldState] before {beforeState}  Switch To {State}");
+                OnEnter();
+            }
+
+            protected abstract void OnEnter();
+
+            public void Tick(float dt)
+            {
+                OnTick(dt);
+            }
+
+            protected abstract void OnTick(float dt);
+
+            public void Exit()
+            {
+                OnExit();
+            }
+
+            protected abstract void OnExit();
         }
     }
 }

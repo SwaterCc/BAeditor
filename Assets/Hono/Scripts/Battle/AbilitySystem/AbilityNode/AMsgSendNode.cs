@@ -6,7 +6,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 {
     public partial class Ability
     {
-        private class AMsgSendNode : ANode<MsgSendNodeData>, IAPoolObject
+        private class AMsgSendNode : ANode<MsgSendNodeData>, ICPoolObject
         {
             public override void DoJob()
             {

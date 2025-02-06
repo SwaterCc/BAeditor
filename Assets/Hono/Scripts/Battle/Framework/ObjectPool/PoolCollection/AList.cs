@@ -7,7 +7,7 @@ namespace Hono.Scripts.Battle.ObjectPool
     /// 池化list
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class AList<T> : IAPoolObject, IEnumerable
+    public class AList<T> : ICPoolObject, IEnumerable
     {
         private readonly List<T> _list = new(8);
 
@@ -50,7 +50,7 @@ namespace Hono.Scripts.Battle.ObjectPool
             {
                 refCount.RefCount.RemoveReference();
             }
-            else if (item is IAPoolObject poolObject)
+            else if (item is ICPoolObject poolObject)
             {
                 GPoolManager.Instance.RecycleAObject(poolObject);
             }
@@ -64,7 +64,7 @@ namespace Hono.Scripts.Battle.ObjectPool
                 {
                     refCount.RefCount.RemoveReference();
                 }
-                else if(item is IAPoolObject poolObject)
+                else if(item is ICPoolObject poolObject)
                 {
                     GPoolManager.Instance.RecycleAObject(poolObject);
                 }

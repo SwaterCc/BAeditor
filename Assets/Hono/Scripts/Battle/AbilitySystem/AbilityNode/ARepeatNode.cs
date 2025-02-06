@@ -15,7 +15,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         /// 重复执行节点，默认会记录循环次数
         /// 如果是遍历列表则会额外记录遍历对象
         /// </summary>
-        private class ARepeatNode : ANode<RepeatNodeData>, IAPoolObject
+        private class ARepeatNode : ANode<RepeatNodeData>, ICPoolObject
         {
             public const string LoopCountKey = "__LoopCount__";
             public const string LoopValueKey = "__LoopValue__";

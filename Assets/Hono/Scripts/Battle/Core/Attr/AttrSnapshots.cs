@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
-namespace Hono.Scripts.Battle.Base
+namespace Hono.Scripts.Battle.Core
 {
     public partial class AttrCollection
     {
-        public class AttrSnapshots : IAPoolObject, IEnumerable<KeyValuePair<EAttrType, int>>
+        public class AttrSnapshots : ICPoolObject, IEnumerable<KeyValuePair<EAttrType, int>>
         {
             private readonly Dictionary<EAttrType, int> _snapshot = new(128);
             private readonly List<int> _param = new(5);
@@ -36,6 +37,11 @@ namespace Hono.Scripts.Battle.Base
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
+            }
+
+            public int GetAttr(EAttrType attrType)
+            {
+                return _snapshot.GetValueOrDefault(attrType, Int32.MinValue);
             }
 
             public void OnRecycle()

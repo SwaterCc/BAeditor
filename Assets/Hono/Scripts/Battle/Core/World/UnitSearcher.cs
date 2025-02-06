@@ -7,14 +7,16 @@ using UnityEngine.Profiling;
 namespace Hono.Scripts.Battle.Core
 {
     /// <summary>
-    /// Actor检索器，用于快速搜索符合条件的Actor
+    /// Unit检索器，用于快速搜索符合条件的Unit
     /// </summary>
-    public class ActorSearcher
+    public class UnitSearcher
     {
+        public World World { get; private set; }
+        
         /// <summary>
         /// actor索引字典
         /// </summary>
-        private readonly Dictionary<int, Actor> _searchDict = new(2000);
+        private readonly Dictionary<int, Unit> _searchDict = new(2000);
         
         private readonly List<Actor> _filterActors = new(32);
         private List<int> _checkBoxResult = new(32);
@@ -22,10 +24,16 @@ namespace Hono.Scripts.Battle.Core
         private Actor _filterUser;
         private Vector3 _searchCenterPos;
         
-        public Actor GetUnit(int uid)
+        public Unit GetUnit(int uid)
         {
             return null;
         }
+        
+        public bool TryGetUnit(int uid,out Unit unit)
+        {
+            return _searchDict.TryGetValue(uid,out unit);
+        }
+
         
         public void SearchUnits(Actor user, Vector3 centerPos, RangeFilterSetting setting, ref List<int> result)
         {

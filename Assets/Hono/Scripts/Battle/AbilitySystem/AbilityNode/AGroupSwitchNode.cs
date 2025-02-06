@@ -2,7 +2,7 @@
 {
     public partial class Ability
     {
-        private class AGroupSwitchNode : ANode<GroupSwitchNodeData>, IAPoolObject
+        private class AGroupSwitchNode : ANode<GroupSwitchNodeData>, ICPoolObject
         {
             public override void DoJob()
             {

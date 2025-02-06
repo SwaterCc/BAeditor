@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 {
     public partial class Ability
     {
-        private class AListenerNode : ANode<ListenerNodeData>, IAPoolObject
+        private class AListenerNode : ANode<ListenerNodeData>, ICPoolObject
         {
             private readonly ActorEventListener _eventListener = new();
             private readonly MessageListener _messageListener = new();

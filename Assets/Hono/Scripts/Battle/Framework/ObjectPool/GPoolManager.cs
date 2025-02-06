@@ -8,7 +8,7 @@ namespace Hono.Scripts.Battle
     {
         public Type GetPoolType();
         public void Tick(float dt);
-        public void Recycle(IAPoolObject poolObject);
+        public void Recycle(ICPoolObject poolObject);
     }
     public class GPoolManager : Singleton<GPoolManager>, IBattleFrameworkTick
     {
@@ -21,7 +21,7 @@ namespace Hono.Scripts.Battle
             _typePoolSearch.Add(pool.GetPoolType(), pool);
         }
 
-        public void RecycleAObject(IAPoolObject poolObject)
+        public void RecycleAObject(ICPoolObject poolObject)
         {
            var poolType = poolObject.GetType();
            if (_typePoolSearch.TryGetValue(poolType, out var pool))

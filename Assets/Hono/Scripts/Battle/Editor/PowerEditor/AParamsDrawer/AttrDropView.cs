@@ -1,6 +1,7 @@
 ﻿using System;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.AbilitySystem;
+using Hono.Scripts.Battle.Core;
 using UnityEditor.IMGUI.Controls;
 
 namespace Editor.AbilityEditor

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Core;
 using UnityEditor;
 
 #endregion

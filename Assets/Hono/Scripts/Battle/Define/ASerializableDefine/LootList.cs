@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Core;
 using Sirenix.OdinInspector;
 using UnityEngine.Serialization;
 

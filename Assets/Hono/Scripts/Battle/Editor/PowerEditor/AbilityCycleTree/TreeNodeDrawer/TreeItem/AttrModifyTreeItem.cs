@@ -5,6 +5,7 @@ using Editor.AbilityEditor.TreeItemWindow;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Core;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;

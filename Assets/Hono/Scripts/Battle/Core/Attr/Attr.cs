@@ -1,9 +1,9 @@
-namespace Hono.Scripts.Battle.Base
+namespace Hono.Scripts.Battle.Core
 {
     /// <summary>
     ///  属性
     /// </summary>
-    public class Attr :IAPoolObject
+    public class Attr :ICPoolObject
     {
         private int _value;
         

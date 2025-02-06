@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         /// <summary>
         ///  变量节点，执行变量创建或者指定变量修改
         /// </summary>
-        private class AVariableNode : ANode<VariableNodeData>, IAPoolObject
+        private class AVariableNode : ANode<VariableNodeData>, ICPoolObject
         {
             public override void DoJob()
             {

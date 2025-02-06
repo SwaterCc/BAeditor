@@ -13,15 +13,12 @@ namespace Hono.Scripts.Battle.Core
     /// 对于消息的定义 消息的发送者和接收者是一对一的关系，消息会在一定时间内缓存消息，是有序的
     /// 消息key值在Actor域内唯一
     /// </summary>
-    public class MessageManager : Singleton<MessageManager>, IWorldSystem
+    public class MessageManager : Singleton<MessageManager>, IWorldSystemWhenExitCalled
     {
         private readonly Dictionary<int, MessageCollection> _collections = new(128);
         private readonly Dictionary<int, Dictionary<string, MessageCacheQueue>> _messageCaches = new(128);
-        public void EnterWorld() { }
 
-        public void Tick(float dt) { }
-
-        public void ExitWorld()
+        public void OnWorldExit()
         {
             _collections.Clear();
             _messageCaches.Clear();

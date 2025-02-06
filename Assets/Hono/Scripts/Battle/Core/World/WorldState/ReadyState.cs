@@ -1,0 +1,38 @@
+﻿using Hono.Scripts.Battle.Event;
+
+namespace Hono.Scripts.Battle.Core
+{
+    public partial class World
+    {
+        private class ReadyState : WorldState
+        {
+            private readonly WorldEventListener _eventListener = new WorldEventListener(EEventType.WarBegin);
+            public ReadyState(World world) : base(world, EWorldState.Ready) { }
+
+            protected override void OnEnter()
+            {
+                if ((EBattleModeType)World._sceneRow.BattleType != EBattleModeType.War)
+                {
+                    World._nextState = EWorldState.Gaming;
+                    return;
+                }
+
+                //打开布阵地图
+                UIManager.Instance.SetBattleFieldMap(true);
+                EventManager.Instance.RegisterWorldListener(_eventListener);
+            }
+
+            protected override void OnTick(float dt)
+            {
+                //点击进入游戏后，加载主角，小兵等对象
+                //加载完成后
+                World._nextState = EWorldState.Gaming;
+            }
+
+            protected override void OnExit()
+            {
+                EventManager.Instance.UnregisterWorldListener(_eventListener);
+            }
+        }
+    }
+}

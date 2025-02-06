@@ -14,7 +14,7 @@ namespace Hono.Scripts.Battle.Event
     {
         //空占位，说明没有初始化
         NoInit = 0,
-        AttrChanged = 1,
+        OnAttrChanged = 1,
 
         [EventCheckerBinder("GetHitOnceChecker", typeof(HitDamageInfoKeys))]
         OnHit,
@@ -43,5 +43,8 @@ namespace Hono.Scripts.Battle.Event
 
         [EventCheckerBinder("GetMonsterAllDeadChecker", typeof(MonsterGenRtEventInfo))]
         OnMonsterGeneratorAllDead = 1001,
+        
+        WorldEvent = 100000,
+        WarBegin,
     }
 }

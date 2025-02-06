@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ namespace Hono.Scripts.Battle.Base
             /// </summary>
             private EAttrType _subEx;
            
-            public void UpdateLink(AttrCollection collection)
+            public void UpdateLink(Core.AttrCollection collection)
             {
                 var add = collection.GetAttr(_add);
                 var exAdd = collection.GetAttr(_addEx);
@@ -62,7 +63,7 @@ namespace Hono.Scripts.Battle.Base
             return _attrLinks.TryGetValue(attrType, out link);
         }
         
-        public void InitByTableRow(AttrCollection collection,EntityAttrBaseTable.EntityAttrBaseRow row)
+        public void InitByTableRow(Core.AttrCollection collection,EntityAttrBaseTable.EntityAttrBaseRow row)
         {
            
         }

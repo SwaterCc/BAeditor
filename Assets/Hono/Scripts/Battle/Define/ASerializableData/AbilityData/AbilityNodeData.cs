@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.AbilitySystem;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Event;
 using Sirenix.Serialization;
 using UnityEngine;

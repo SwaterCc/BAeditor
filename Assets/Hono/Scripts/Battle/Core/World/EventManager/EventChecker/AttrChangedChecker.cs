@@ -1,4 +1,5 @@
 ﻿using System;
+using Hono.Scripts.Battle.Core;
 
 namespace Hono.Scripts.Battle.Event
 {

@@ -1,50 +1,24 @@
 using System.Collections.Generic;
-using Hono.Scripts.Battle.Core;
+using Hono.Scripts.Battle.Tools;
 
-namespace Hono.Scripts.Battle
+namespace Hono.Scripts.Battle.Core
 {
-    public class Damage
+    /// <summary>
+    /// 伤害流程
+    /// </summary>
+    public class DamageManager : Singleton<DamageManager>
     {
-        private int _damageConfigId;
-        private readonly DamageInfo _damageInfo;
-        private readonly DamageConfig _damageConfig;
-        private DamageTable.DamageRow _damageRow;
-        private readonly List<DamageFuncInfo> _recyclePools;
-        private readonly HitBox _binder;
-        private Actor _attacker;
-        private Actor _target;
-        private bool _hasError;
-
-        public Damage(HitBox bindActor)
-        {
-            _binder = bindActor;
-            _damageInfo = new DamageInfo();
-            _damageConfig = new DamageConfig();
-            _recyclePools = new List<DamageFuncInfo>(30);
-        }
-
         /// <summary>
-        /// 初始化打击点
+        /// 造成伤害
         /// </summary>
-        public void Init(Actor attacker, Actor target, int damageConfigId)
+        /// <param name="attrSnapshots">攻击者的属性快照</param>
+        /// <param name="hurtTarget">受击者的属性</param>
+        /// <param name="damageSetting"></param>
+        public void MakeDamage(AttrCollection.AttrSnapshots attrSnapshots, Unit hurtTarget, DamageSetting damageSetting)
         {
-            _attacker = attacker;
-            _target = target;
-
-            if (_attacker == null || _target == null)
-            {
-                _hasError = true;
-            }
-
-            _damageConfigId = damageConfigId;
-            _hasError = ConfigManager.Table<DamageTable>().TryGet(_damageConfigId, out _damageRow);
-
-            if (_hasError)
-                return;
-
-            initDamageInfo();
-            initDamageConfig();
+            
         }
+
 
         /// <summary>
         /// 初始化伤害信息
@@ -91,24 +65,6 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        /// <summary>
-        /// 造成伤害(单线程)
-        /// </summary>
-        /// <param name="hitActorNumber">命中Actor的数量</param>
-        /// <param name="hitCount">第几次命中</param>
-        /// <param name="criticalFlag">必定暴击</param>
-        /// <returns>返回伤害数据</returns>
-        public HitDamageInfo MakeDamage(int hitActorNumber, int hitCount, bool criticalFlag)
-        {
-            if (_hasError) return default;
-
-            _damageInfo.HitCount = hitActorNumber;
-            _damageInfo.HitNumberCount = hitCount;
-            _damageInfo.IsCriticalOnce = criticalFlag;
-            var results = LuaInterface.GetDamageResults(_attacker, _target, _damageInfo, _damageConfig);
-            //BattlePanel.ShowDamage(_target.Pos, results);
-            return makeHitInfo(results);
-        }
 
         /// <summary>
         /// 生成HitDamageInfo

@@ -123,9 +123,11 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Ceventsystem_005Ceventinfo/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cevent_005Ceventchecker/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cevent_005Ceventinfo/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Chitmanager/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cmessage/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cmessagemanager/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cmessagesystem/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Ccore_005Cworld_005Cworldstate/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cdamage/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cdefine/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Chono_005Cscripts_005Cbattle_005Cdefine_005Cactordata/@EntryIndexedValue">True</s:Boolean>

@@ -76,6 +76,11 @@ namespace Hono.Scripts.Battle
     public enum EWorldState
     {
         /// <summary>
+        /// 
+        /// </summary>
+        NoInit = 0,
+        
+        /// <summary>
         /// 数据加载
         /// </summary>
         Loading = 1,
@@ -83,17 +88,17 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 战略定制状态（第一次大地图展开）
         /// </summary>
-        Process1,
+        Ready,
 
         /// <summary>
         /// 俯视角游玩状态
         /// </summary>
-        Process2_1,
+        Gaming,
         
         /// <summary>
         /// 战略地图布置状态
         /// </summary>
-        Process2_2,
+        StrategicMap,
         
         /// <summary>
         /// 结算
@@ -458,8 +463,14 @@ namespace Hono.Scripts.Battle
     /// </summary>
     public enum EHitType
     {
+        /// <summary>
+        /// 针对目标的检测
+        /// </summary>
+        Target,
+        /// <summary>
+        /// 针对范围的检测
+        /// </summary>
         Aoe,
-        Single,
     }
 
     public enum ECheckBoxShapeType

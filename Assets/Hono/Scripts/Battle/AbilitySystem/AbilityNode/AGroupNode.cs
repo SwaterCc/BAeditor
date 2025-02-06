@@ -9,7 +9,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         /// Group相当于Ability中的轻量级的小状态，Group在Ability中是以状态机的小状态来运行的，无自动流转状态机，除非手动勾选了AutoNext或者使用切换节点否则不会停止
         /// Group是在Ability运行后的下一帧执行的
         /// </summary>
-        private class AGroupNode : ANode<GroupNodeData>, IAPoolObject, ITickANode
+        private class AGroupNode : ANode<GroupNodeData>, ICPoolObject, ITickANode
         {
             /// <summary>
             /// 隶属Group的Timer节点

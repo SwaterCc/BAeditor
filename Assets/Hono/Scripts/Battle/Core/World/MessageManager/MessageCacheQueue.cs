@@ -3,7 +3,7 @@ using Hono.Scripts.Battle.Base;
 
 namespace Hono.Scripts.Battle
 {
-    public class MessageCacheQueue : IAPoolObject
+    public class MessageCacheQueue : ICPoolObject
     {
         /// <summary>
         /// 消息最大存留时长

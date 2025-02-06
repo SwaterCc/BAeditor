@@ -4,7 +4,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 {
     public partial class Ability
     {
-        private class ABranchGroupNode : ANode<BranchGroupNodeData>, IAPoolObject
+        private class ABranchGroupNode : ANode<BranchGroupNodeData>, ICPoolObject
         {
             /// <summary>
             /// 子节点中任意一个branch通过

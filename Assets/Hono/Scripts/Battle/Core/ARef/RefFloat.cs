@@ -8,7 +8,7 @@ using System.Globalization;
 namespace Hono.Scripts.Battle.Base
 {
     [Serializable]
-    public class RefFloat : ARef, IAPoolObject
+    public class RefFloat : ARef, ICPoolObject
     {
         public float Value;
 

@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle.Core
         private int _hitCount;
         private float _duration;
 
-        private Damage _damage;
+        private DamageManager _damageManager;
         private Actor _attacker;
         private int _targetUid;
         private Vector3 _targetPos;
@@ -121,7 +121,7 @@ namespace Hono.Scripts.Battle.Core
             if (!target.Logic.TryGetComponent<BeHurtComp>(out var beHurtComp))
                 return;
 
-            var hitDamageInfo = _damage.MakeDamage(1, 1, false);
+            var hitDamageInfo = _damageManager.MakeDamage(1, 1, false);
 
             var vb = GPool<VariableBoard>.Pool.Rent();
             vb.InitByHitDamageInfo(hitDamageInfo);

@@ -2,6 +2,7 @@
 using System.Linq;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Core;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;

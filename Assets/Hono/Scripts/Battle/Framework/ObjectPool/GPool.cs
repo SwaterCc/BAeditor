@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public interface IAPoolObject
+    public interface ICPoolObject
     {
         public void OnRecycle();
     }
@@ -12,9 +12,9 @@ namespace Hono.Scripts.Battle
     public struct APoolRefCount
     {
         private int _refCount;
-        private IAPoolObject _poolObject;
+        private ICPoolObject _poolObject;
 
-        public APoolRefCount(IAPoolObject poolObject, int refCount = 0)
+        public APoolRefCount(ICPoolObject poolObject, int refCount = 0)
         {
             _poolObject = poolObject;
             _refCount = refCount;
@@ -41,7 +41,7 @@ namespace Hono.Scripts.Battle
         }
     }
 
-    public interface IAPoolRefCount : IAPoolObject
+    public interface IAPoolRefCount : ICPoolObject
     {
         public APoolRefCount RefCount { get; set; }
     }
@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle
     /// G池，通用对象池，用于管理代码运行中的逻辑对象
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class GPool<T> : IAPool where T : class, IAPoolObject, new()
+    public class GPool<T> : IAPool where T : class, ICPoolObject, new()
     {
         /// <summary>
         /// 稳定池
@@ -125,7 +125,7 @@ namespace Hono.Scripts.Battle
             return obj;
         }
 
-        public void Recycle(IAPoolObject obj)
+        public void Recycle(ICPoolObject obj)
         {
             Recycle((T)obj);
         }

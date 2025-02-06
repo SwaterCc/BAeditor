@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         /// <summary>
         ///     AFunctionNode 执行动作
         /// </summary>
-        private class AFunctionNode : ANode<FunctionNodeData>, IAPoolObject
+        private class AFunctionNode : ANode<FunctionNodeData>, ICPoolObject
         {
             public override void DoJob()
             {

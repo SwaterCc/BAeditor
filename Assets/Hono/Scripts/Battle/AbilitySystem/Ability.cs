@@ -13,7 +13,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
     /// <summary>
     /// 这个Ability代表了运行时流程管理
     /// </summary>
-    public sealed partial class Ability : IAPoolObject
+    public sealed partial class Ability : ICPoolObject
     {
         /// <summary>
         /// 基础数据配置Id

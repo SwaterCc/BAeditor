@@ -10,7 +10,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 {
     public partial class Ability
     {
-        private class AAttrNode : ANode<AttrModifyNodeData>, IAPoolObject
+        private class AAttrNode : ANode<AttrModifyNodeData>, ICPoolObject
         {
             public override void DoJob()
             {

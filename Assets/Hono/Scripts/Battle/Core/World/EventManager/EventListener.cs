@@ -168,12 +168,12 @@ namespace Hono.Scripts.Battle.Event
     /// <summary>
     /// 全局Listener，不会像ActorEventListener一样在回收时失效，不建议在Actor内部使用
     /// </summary>
-    public class GlobalEventListener : EventListener
+    public class WorldEventListener : EventListener
     {
-        public GlobalEventListener() { }
-        public GlobalEventListener(EEventType eventType, Action<VariableBoard> callback) : base(eventType, true, callback) { }
+        public WorldEventListener() { }
+        public WorldEventListener(EEventType eventType, Action<VariableBoard> callback) : base(eventType, true, callback) { }
 
-        public GlobalEventListener(EEventType bindEventType = EEventType.NoInit,
+        public WorldEventListener(EEventType bindEventType = EEventType.NoInit,
             float eventTriggerInterval = 0,
             IEventChecker eventChecker = null,
             Action<VariableBoard> eventFireCallback = null) : base(bindEventType, true, eventTriggerInterval, eventChecker, eventFireCallback) { }

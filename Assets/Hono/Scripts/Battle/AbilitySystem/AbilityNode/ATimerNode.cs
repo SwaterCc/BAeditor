@@ -12,7 +12,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
         /// <summary>
         /// 计时器节点，每次触发都会重新执行该定时器
         /// </summary>
-        private class ATimerNode : ANode<TimerNodeData>, IAPoolObject, ITickANode
+        private class ATimerNode : ANode<TimerNodeData>, ICPoolObject, ITickANode
         {
             private int _maxCount;
             private float _interval;

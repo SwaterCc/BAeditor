@@ -9,7 +9,7 @@ namespace Hono.Scripts.Battle.AbilitySystem
 {
     public partial class Ability
     {
-        private class ABranchNode : ANode<BranchNodeData>, IAPoolObject
+        private class ABranchNode : ANode<BranchNodeData>, ICPoolObject
         {
             public override void DoJob()
             {

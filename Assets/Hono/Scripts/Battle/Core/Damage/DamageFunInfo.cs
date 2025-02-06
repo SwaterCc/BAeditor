@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Hono.Scripts.Battle
 {
-    public class DamageFuncInfo : IAPoolObject
+    public class DamageFuncInfo : ICPoolObject
     {
         public List<int> ConditionIds;
         public List<List<int>> ConditionParams;

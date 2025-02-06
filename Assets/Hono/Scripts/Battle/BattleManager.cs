@@ -120,7 +120,7 @@ namespace Hono.Scripts.Battle
         }
 
         /// <summary>
-        ///     装载战斗框架
+        /// 装载战斗框架重要资源
         /// </summary>
         public async void InitEnv()
         {
@@ -196,10 +196,9 @@ namespace Hono.Scripts.Battle
         public void WarGameStart(string fromScene, int battleGroundId)
         {
             _formScene = fromScene;
-            _currentWorld = new World();
-            _currentWorld.Start();
+            _currentWorld = new World(battleGroundId);
+            _currentWorld.Enter();
         }
-
         
         private void Update()
         {
@@ -209,10 +208,7 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            foreach (var frameworkTick in _frameworkTicks)
-            {
-                frameworkTick.Tick(Time.deltaTime);
-            }
+            World?.Tick(Time.deltaTime);
         }
         
         /// <summary>

@@ -1,11 +1,8 @@
-#region
-
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Core;
 using Sirenix.OdinInspector;
-using UnityEngine.Serialization;
-
-#endregion
+using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
@@ -16,63 +13,45 @@ namespace Hono.Scripts.Battle
     public class HitBoxData
     {
         /// <summary>
-        ///     伤害盒子类型
+        /// 脱手打击
+        /// </summary>
+        [Tooltip("脱手打击盒会保存盒子创建时的属性快照，即时攻击者已经死亡仍然可以造成伤害")]
+        [LabelText("是否为脱手打击盒")]
+        public bool isOffHand;
+        
+        /// <summary>
+        /// 伤害盒子类型
         /// </summary>
         [LabelText("打击类型")]
-        public EHitType HitType;
+        public EHitType hitType;
 
-        /// <summary>
-        ///     打击点最大检测次数
-        /// </summary>
-        [LabelText("打击点检测次数")]
-        public int MaxCount = 1;
-
-        /// <summary>
-        ///     打击点对单个目标最大有效次数
-        /// </summary>
-        [LabelText("打击点对单个目标最大有效次数")]
-        public int ValidCount = 1;
-
-        /// <summary>
-        ///     第一次触发时间
-        /// </summary>
-        [LabelText("第一次触发时间")]
-        public float FirstInterval;
-
-        /// <summary>
-        ///     打击点检测间隔
-        /// </summary>
-        [LabelText("打击点检测间隔")]
-        public float Interval;
-
-        /// <summary>
-        ///     单次打击造成几次伤害
-        /// </summary>
-        [LabelText("单次打击造成几次伤害")]
-        public int OnceHitDamageCount = 1;
-
-        /// <summary>
-        ///     伤害数据
-        /// </summary>
-        public int DamageConfigId;
-
-        /// <summary>
-        /// 额外的Ability
-        /// </summary>
-        public List<int> AbilityIds = new();
-
-        /// <summary>
-        /// 必定暴击标志
-        /// </summary>
-        public bool CriticalFlag;
-
-        /// <summary>
-        /// 禁止事件发送
-        /// </summary>
-        public bool DisableEventFire;
+        [LabelText("Aoe筛选配置")]
+        [ShowIf("hitType", EHitType.Aoe)]
+        public ConditionFilterSetting rangeFilterSetting = new();
         
-        [LabelText("Aoe二次筛选配置")]
-        [ShowIf("HitType", EHitType.Aoe)]
-        public RangeFilterSetting rangeFilterSetting = new();
+        [ShowIf("isOffHand")]
+        public int maxHitCount;
+        
+        [ShowIf("isOffHand")]
+        public float firstDelay;
+        
+        [ShowIf("isOffHand")]
+        public float interval;
+        
+        /// <summary>
+        /// 屏蔽命中事件
+        /// </summary>
+        public bool disableHitEvent;
+        
+        /// <summary>
+        /// 仅检测
+        /// </summary>
+        public bool onlyHitCheck;
+        
+        /// <summary>
+        /// 伤害设定
+        /// </summary>
+        [ShowIf("onlyHitCheck")]
+        public DamageSetting damageSetting;
     }
 }
