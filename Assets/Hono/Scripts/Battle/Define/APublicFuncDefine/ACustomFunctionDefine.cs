@@ -48,7 +48,7 @@ namespace Hono.Scripts.Battle
         }
 
         [AbilityFunction("HitBox")]
-        public void CreateHitBox(int attackUid, int targetUid, HitBoxData hitData, bool fromTopSummer = false)
+        public void CreateHitBox(int attackUid, int targetUid, AoeHitSetting aoeHitSetting, bool fromTopSummer = false)
         {
             if (!tryGetActor(attackUid, out var attack))
             {
@@ -64,7 +64,7 @@ namespace Hono.Scripts.Battle
         [AbilityFunction("HitBox")]
         public void CreateHitBoxes(int attackUid,
             List<int> targetUids,
-            HitBoxData hitData,
+            AoeHitSetting aoeHitSetting,
             bool fromTopSummer = false)
         {
             //返回打击点的Uid
@@ -86,7 +86,7 @@ namespace Hono.Scripts.Battle
 
         [AbilityFunction("HitBox")]
         [AbilityFunctionDesc("创建打击盒子攻击指定目标", "无返回值", "打击盒子信息")]
-        public void CreateHitBoxToTargets(HitBoxData hitData)
+        public void CreateHitBoxToTargets(AoeHitSetting aoeHitSetting)
         {
             //返回打击点的Uid
             var targetUids = new List<int>();

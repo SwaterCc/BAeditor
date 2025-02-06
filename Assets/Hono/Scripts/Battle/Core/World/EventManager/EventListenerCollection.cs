@@ -10,21 +10,21 @@ namespace Hono.Scripts.Battle.Event
     /// </summary>
     public class EventListenerCollection
     {
-        private readonly Dictionary<EEventType, List<EventListener>> _eventListeners;
         private readonly int _listenerListCapacity;
+        protected readonly Dictionary<EEventType, List<EventListener>> EventListeners;
 
         public EventListenerCollection(int listenerListCapacity = 8)
         {
-            _eventListeners = new Dictionary<EEventType, List<EventListener>>(10);
+            EventListeners = new Dictionary<EEventType, List<EventListener>>(10);
             _listenerListCapacity = listenerListCapacity;
         }
 
         public void AddListener(EventListener listener)
         {
-            if (!_eventListeners.TryGetValue(listener.EventType, out var list))
+            if (!EventListeners.TryGetValue(listener.EventType, out var list))
             {
                 list = new List<EventListener>(_listenerListCapacity);
-                _eventListeners.Add(listener.EventType, list);
+                EventListeners.Add(listener.EventType, list);
             }
             else
             {
@@ -40,7 +40,7 @@ namespace Hono.Scripts.Battle.Event
 
         public void FireEvent(EEventType eventType, VariableBoard board = null)
         {
-            if (!_eventListeners.TryGetValue(eventType, out var listeners))
+            if (!EventListeners.TryGetValue(eventType, out var listeners))
                 return;
 
             foreach (var listener in listeners)
@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle.Event
 
         public void RemoveListener(EventListener listener)
         {
-            if (_eventListeners.TryGetValue(listener.EventType, out var list))
+            if (EventListeners.TryGetValue(listener.EventType, out var list))
             {
                 list.Remove(listener);
             }
@@ -59,12 +59,12 @@ namespace Hono.Scripts.Battle.Event
 
         public bool Contains(EventListener listener)
         {
-            return _eventListeners.TryGetValue(listener.EventType, out var listeners) && listeners.Contains(listener);
+            return EventListeners.TryGetValue(listener.EventType, out var listeners) && listeners.Contains(listener);
         }
 
         public void Tick(float dt)
         {
-            foreach (var listeners in _eventListeners.Values)
+            foreach (var listeners in EventListeners.Values)
             {
                 foreach (var listener in listeners)
                 {
@@ -75,7 +75,7 @@ namespace Hono.Scripts.Battle.Event
 
         public void Clear()
         {
-            foreach (var listeners in _eventListeners.Values)
+            foreach (var listeners in EventListeners.Values)
             {
                 listeners.Clear();
             }
@@ -89,6 +89,20 @@ namespace Hono.Scripts.Battle.Event
         public UnitEventListenerCollection(Unit unit, int listenerListCapacity = 8) : base(listenerListCapacity)
         {
             Unit = unit;
+        }
+
+        public void FireWorldEvent(EEventType eventType, VariableBoard board = null)
+        {
+            if (!EventListeners.TryGetValue(eventType, out var listeners))
+                return;
+
+            foreach (var listener in listeners)
+            {
+                if (listener.IsGlobalListener)
+                {
+                    listener.OnEventFired(board);
+                }
+            }
         }
     }
 }

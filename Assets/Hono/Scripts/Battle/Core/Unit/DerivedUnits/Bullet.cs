@@ -125,7 +125,7 @@ namespace Hono.Scripts.Battle.Core
 
             var vb = GPool<VariableBoard>.Pool.Rent();
             vb.InitByHitDamageInfo(hitDamageInfo);
-            EventManager.Instance.FireEvent(EEventType.OnHit, Self.Uid, vb);
+            EventManager.Instance.FireWorldEvent(EEventType.OnHit, Self.Uid, vb);
             GPool<VariableBoard>.Pool.Recycle(vb);
 
             beHurtComp.OnBeHurt(hitDamageInfo);

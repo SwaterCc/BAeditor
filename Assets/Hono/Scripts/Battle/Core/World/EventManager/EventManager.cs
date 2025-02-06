@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         /// actor绑定注册列表
         /// </summary>
-        private readonly Dictionary<int, UnitEventListenerCollection> _actorEventListeners = new();
+        private readonly Dictionary<int, UnitEventListenerCollection> _unitEventListeners = new();
         private readonly EventListenerCollection _worldEventListeners = new(20);
 
         public void OnWorldTick(float dt)
@@ -33,12 +33,12 @@ namespace Hono.Scripts.Battle.Event
         public void OnWorldExit()
         {
             _worldEventListeners.Clear();
-            foreach (var listeners in _actorEventListeners.Values)
+            foreach (var listeners in _unitEventListeners.Values)
             {
                 listeners.Clear();
             }
 
-            _actorEventListeners.Clear();
+            _unitEventListeners.Clear();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Hono.Scripts.Battle.Event
         /// <param name="collection"></param>
         public void AddListenerCollection(UnitEventListenerCollection collection)
         {
-            _actorEventListeners.TryAdd(collection.Unit.Uid, collection);
+            _unitEventListeners.TryAdd(collection.Unit.Uid, collection);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Hono.Scripts.Battle.Event
         /// <param name="collection"></param>
         public void RemoveListenerCollection(UnitEventListenerCollection collection)
         {
-            _actorEventListeners.Remove(collection.Unit.Uid);
+            _unitEventListeners.Remove(collection.Unit.Uid);
         }
 
 
@@ -106,36 +106,36 @@ namespace Hono.Scripts.Battle.Event
         }
 
         /// <summary>
-        /// 触发事件
+        /// 发送全局事件，会触发所有WorldListener和ActorListener中GlobalListener被设置为true的监听
         /// </summary>
         /// <param name="eventType">事件类型</param>
-        /// <param name="actorUid">如果小于0则该事件为全局事件，会通知所有全局监听，大于0则会通知对于Actor内的监听</param>
+        /// <param name="unitUid">发送者的Uid</param>
         /// <param name="board">事件信息</param>
-        public void FireEvent(EEventType eventType,
-            int actorUid = -1,
-            VariableBoard board = null)
+        public void FireWorldEvent(EEventType eventType, int unitUid = -1, VariableBoard board = null)
         {
-            bool isGlobalEvent = actorUid > 0;
-
-            if (isGlobalEvent)
+            if (unitUid > 0 && board != null)
             {
-                //全局事件 通知actor Listener中监听全局事件的listener
-                foreach (var collection in _actorEventListeners.Values)
-                {
-                    collection.FireEvent(eventType, board);
-                }
+                board.Set("FireEventUnitUid", unitUid);
+            }
 
-                //然后通知世界监听者
-                _worldEventListeners.FireEvent(eventType, board);
-            }
-            else
+            FireWorldEvent(eventType, board);
+        }
+        
+        /// <summary>
+        /// 发送全局事件，会触发所有WorldListener和ActorListener中GlobalListener被设置为true的监听
+        /// </summary>
+        /// <param name="eventType">事件类型</param>
+        /// <param name="board">事件信息</param>
+        public void FireWorldEvent(EEventType eventType, VariableBoard board = null)
+        {
+            //Actor事件，仅通知给对应的Actor
+            foreach (var unitListener in _unitEventListeners.Values)
             {
-                //Actor事件，仅通知给对应的Actor
-                if (_actorEventListeners.TryGetValue(actorUid, out var collection))
-                {
-                    collection.FireEvent(eventType, board);
-                }
+                unitListener.FireWorldEvent(eventType, board);
             }
+
+            //然后通知世界监听者
+            _worldEventListeners.FireEvent(eventType, board);
         }
     }
 }

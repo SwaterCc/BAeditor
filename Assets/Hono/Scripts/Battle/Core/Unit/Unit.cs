@@ -44,7 +44,7 @@ namespace Hono.Scripts.Battle.Core
         /// 单位体型半径（队伍中应该有队伍半径）
         /// </summary>
         public float Radius;
-        
+
         /// <summary>
         /// 动作系统
         /// </summary>
@@ -74,7 +74,7 @@ namespace Hono.Scripts.Battle.Core
         {
             _actionSystem = new ActionSystem(this);
             _abilityController = new AbilityController(this);
-            
+
             Attrs = new AttrCollection(this);
             VariableBoard = new VariableBoard();
             Tags = new TagCollection();
@@ -133,11 +133,11 @@ namespace Hono.Scripts.Battle.Core
             _components.Clear();
             _abilityController.Clear();
             _actionSystem.Clear();
-            
+
             Attrs.Clear();
             Tags.Clear();
             VariableBoard.Clear();
-            
+
             _evtListenerCollection.Clear();
             _messageCollection.Clear();
             EventManager.Instance.RemoveListenerCollection(_evtListenerCollection);
@@ -145,13 +145,14 @@ namespace Hono.Scripts.Battle.Core
         }
 
         #region 对外接口
+
         /// <summary>
         /// 添加Ability
         /// </summary>
         /// <param name="abilityId"></param>
         public Ability AddAbility(int abilityId)
         {
-             return _abilityController.AwardAbility(abilityId);
+            return _abilityController.AwardAbility(abilityId);
         }
 
         /// <summary>
@@ -261,7 +262,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="board"></param>
         public void FireEvent(EEventType eventType, VariableBoard board = null)
         {
-            EventManager.Instance.FireEvent(eventType, Uid, board);
+            _evtListenerCollection.FireEvent(eventType, board);
         }
 
         /// <summary>
@@ -269,9 +270,9 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         /// <param name="eventType"></param>
         /// <param name="board"></param>
-        public void FireGlobalEvent(EEventType eventType, VariableBoard board = null)
+        public void FireWorldEvent(EEventType eventType, VariableBoard board = null)
         {
-            EventManager.Instance.FireEvent(eventType, -1, board);
+            EventManager.Instance.FireWorldEvent(eventType, Uid, board);
         }
 
         /// <summary>

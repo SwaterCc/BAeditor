@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
 {
@@ -64,18 +65,5 @@ namespace Hono.Scripts.Battle
         /// 关联的Ability
         /// </summary>
         public int abilityId;
-        ////////////////////////////////简单技能模式//////////////////////////////
-        /// <summary>
-        /// 使用简单技能模式
-        /// </summary>
-        public bool useSimpleSkillMode;
-        /// <summary>
-        /// 攻击时间
-        /// </summary>
-        public float attackTime;
-        /// <summary>
-        /// 伤害盒子配置
-        /// </summary>
-        public HitBoxData hitBoxData;
     }
 }

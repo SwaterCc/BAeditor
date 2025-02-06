@@ -26,7 +26,8 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// Unity交互层
         /// </summary>
-        public PerformanceEffectController PEController { get; }
+        
+        public ActorModelController ModelController { get; }
 
         /// <summary>
         /// Actor状态标签
@@ -44,7 +45,7 @@ namespace Hono.Scripts.Battle.Core
                 addComponent(factory.CreateComponent());
             }
             
-            PEController = new PerformanceEffectController(this);
+            ModelController = new ActorModelController();
         }
 
         #region 周期函数
@@ -70,7 +71,7 @@ namespace Hono.Scripts.Battle.Core
                 Attrs.SetAttrsBySnapshot(snapshot, true);
             }
 
-            PEController.Init(performanceEffectsPlayer);
+            ModelController.Init(performanceEffectsPlayer);
         }
 
         /// <summary>
@@ -87,12 +88,12 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="dt"></param>
         protected override void onTick(float dt)
         {
-            PEController.Tick(dt);
+            ModelController.Tick(dt);
         }
 
         protected override void onRemove()
         {
-            PEController.Clear();
+            ModelController.Clear();
             Clear();
             //回收自己
         }

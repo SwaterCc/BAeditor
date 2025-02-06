@@ -18,6 +18,11 @@ namespace Hono.Scripts.Battle.Core
         {
             
         }
+        
+        public void MakeDamage(AttrCollection attrs, Unit hurtTarget, DamageSetting damageSetting)
+        {
+            
+        }
 
 
         /// <summary>

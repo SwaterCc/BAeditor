@@ -18,10 +18,10 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         private readonly Dictionary<int, Unit> _searchDict = new(2000);
         
-        private readonly List<Actor> _filterActors = new(32);
+        private readonly List<Unit> _filterActors = new(32);
         private List<int> _checkBoxResult = new(32);
         private RangeFilterSetting _rangeFilterSetting;
-        private Actor _filterUser;
+        private Unit _filterUser;
         private Vector3 _searchCenterPos;
         
         public Unit GetUnit(int uid)
@@ -35,7 +35,7 @@ namespace Hono.Scripts.Battle.Core
         }
 
         
-        public void SearchUnits(Actor user, Vector3 centerPos, RangeFilterSetting setting, ref List<int> result)
+        public void SearchUnits(Unit user, Vector3 centerPos, RangeFilterSetting setting, ref List<int> result)
         {
             if (setting == null)
             {
@@ -57,33 +57,35 @@ namespace Hono.Scripts.Battle.Core
             getResults(ref result);
         }
 
-        public bool CheckActorPassFilter(Actor filterUser, int checkActorUid, ConditionFilterSetting setting)
+        public bool CheckActorPassFilter(Unit filterUser, int checkActorUid, ConditionFilterSetting setting)
         {
-            if (!_searchDict.TryGetValue(checkActorUid, out var actor))
+            if (!_searchDict.TryGetValue(checkActorUid, out var unit))
             {
                 return false;
             }
 
             _filterUser = filterUser;
-            bool result = checkActorPass(actor, setting);
+            bool result = checkActorPass(unit, setting);
             _filterUser = null;
             return result;
         }
 
-        private bool rangeCheck(Actor actor, in FilterCondition condition)
+        private bool rangeCheck(Unit unit, in FilterCondition condition)
         {
             bool checkResult = false;
             switch (condition.conditionType)
             {
                 case EFilterConditionType.ActorType:
+                    if (unit is not Actor actor)
+                        return false;
                     checkResult = (int)actor.ActorType == condition.value;
                     break;
                 case EFilterConditionType.Tag:
-                    checkResult = actor.Tags.HasTag(condition.value, ETagSearchRange.Actor);
+                    checkResult = unit.Tags.HasTag(condition.value, ETagSearchRange.Actor);
                     break;
                 case EFilterConditionType.Faction:
                     var f1 = _filterUser.GetAttr(EAttrType.AttrFaction);
-                    var f2 = actor.GetAttr(EAttrType.AttrFaction);
+                    var f2 = unit.GetAttr(EAttrType.AttrFaction);
                     checkResult = LuaInterface.GetFaction(f1, f2) == condition.value;
                     break;
                 default:
@@ -116,11 +118,11 @@ namespace Hono.Scripts.Battle.Core
             return true;
         }
 
-        private bool checkActorPass(Actor actor, ConditionFilterSetting conditionFilterSetting)
+        private bool checkActorPass(Unit unit, ConditionFilterSetting conditionFilterSetting)
         {
             foreach (var condition in conditionFilterSetting.conditions)
             {
-                if (!rangeCheck(actor, condition))
+                if (!rangeCheck(unit, condition))
                 {
                     return false;
                 }
@@ -128,7 +130,7 @@ namespace Hono.Scripts.Battle.Core
 
             foreach (var compare in conditionFilterSetting.attrCompares)
             {
-                var left = actor.GetAttr(compare.attrType);
+                var left = unit.GetAttr(compare.attrType);
                 int res = left.CompareTo((int)compare.compareValue);
                 if (!getCompareRes(compare.compareResType, res))
                 {
