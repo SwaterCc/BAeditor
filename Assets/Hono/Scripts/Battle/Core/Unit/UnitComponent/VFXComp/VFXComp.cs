@@ -26,7 +26,7 @@ namespace Hono.Scripts.Battle
         public Action<VFXInfo> VFXAdd;
         public Action<VFXInfo> VFXRemove;
 
-        public override void OnInit() { }
+        public override void Init() { }
 
         public int AddVFXObject(string vfxKey, VFXSetting setting)
         {
@@ -36,8 +36,8 @@ namespace Hono.Scripts.Battle
             switch (setting.VFXBindType)
             {
                 case EVFXType.InWorld:
-                    vfxObj.Pos = Unit.UnitTransform.Pos + Unit.UnitTransform.Rot * setting.Offset;
-                    vfxObj.Rot = Unit.UnitTransform.Rot * Quaternion.Euler(setting.Rot);
+                    vfxObj.Pos = Unit.UnitTransform.Pos + Unit.UnitTransform.YAxisAngle * setting.Offset;
+                    vfxObj.Rot = Quaternion.AngleAxis(Unit.UnitTransform.YAxisAngle,Vector3.up) * Quaternion.Euler(setting.Rot);
                     break;
                 case EVFXType.FollowActor:
                     vfxObj.Pos = Unit.UnitTransform.Pos + (Vector3)setting.Offset;

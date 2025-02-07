@@ -8,11 +8,6 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Base
 {
-    public class TagsSnapshot
-    {
-        
-    }
-    
     /// <summary>
     /// TAG 标识系统
     /// </summary>
@@ -39,6 +34,21 @@ namespace Hono.Scripts.Battle.Base
 
             _tags[tag] -= 1;
             _tags[tag] = Mathf.Min(0, _tags[tag]);
+        }
+
+        /// <summary>
+        /// 产生快照
+        /// </summary>
+        /// <param name="tags"></param>
+        public void GetSnapshot(ref HashSet<int> tags)
+        {
+            foreach (var pair in _tags)
+            {
+                if (pair.Value > 0)
+                {
+                    tags.Add(pair.Key);
+                }
+            }   
         }
         
         public void Clear()

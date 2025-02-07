@@ -98,7 +98,7 @@ namespace Hono.Scripts.Battle.Core
             foreach (var component in _components)
             {
                 component.Value.Unit = this;
-                component.Value.OnInit();
+                component.Value.Init();
             }
         }
 

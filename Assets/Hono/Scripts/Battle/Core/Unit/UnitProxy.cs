@@ -1,0 +1,134 @@
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Hono.Scripts.Battle.Core
+{
+    public class UnitProxy : ICPoolObject
+    {
+        /// <summary>
+        /// 非代理模式直接保存Unit对象
+        /// </summary>
+        private Unit _unit;
+
+        /// <summary>
+        /// 属性快照
+        /// </summary>
+        private Dictionary<EAttrType, int> _attrSnapshot = new(256);
+
+        /// <summary>
+        /// Tag快照
+        /// </summary>
+        private HashSet<int> _tagsSnapshot = new(256);
+
+        /// <summary>
+        /// 位置快照
+        /// </summary>
+        private UnitTransform _unitTransformSnapShot;
+
+        /// <summary>
+        /// 状态位快照
+        /// </summary>
+        private EUnitFlag _state;
+
+        /// <summary>
+        /// 战斗组件快照
+        /// </summary>
+        private Dictionary<int, CombatComp.BuffRT> _buffRts = new(10);
+
+        /// <summary>
+        /// 战斗组件快照
+        /// </summary>
+        private Dictionary<int, CombatComp.SkillRT> _skillRts = new(10);
+
+        /// <summary>
+        /// 坐标
+        /// </summary>
+        public Vector3 Pos => _unitTransformSnapShot.Pos;
+
+        /// <summary>
+        /// Y轴角度
+        /// </summary>
+        public float YAxisAngle => _unitTransformSnapShot.YAxisAngle;
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <param name="unit">被代理的Unit</param>
+        /// <param name="isSnapshot">是否存储快照</param>
+        public void Init(Unit unit, bool isSnapshot)
+        {
+            if (!isSnapshot)
+            {
+                _unit = unit;
+                return;
+            }
+
+            unit.Attrs.GetAttrSnapShots(ref _attrSnapshot);
+            unit.Tags.GetSnapshot(ref _tagsSnapshot);
+            _unitTransformSnapShot = unit.UnitTransform;
+            _state = unit.State;
+        }
+
+        public int GetAttr(EAttrType attrType)
+        {
+            if (_unit != null)
+            {
+                return _unit.GetAttr(attrType);
+            }
+
+            return _attrSnapshot.GetValueOrDefault(attrType, 0);
+        }
+
+        public bool HasTag(int tag)
+        {
+            if (_unit != null)
+            {
+                return _unit.Tags.HasTag(tag);
+            }
+
+            if (_tagsSnapshot.Contains(tag))
+            {
+                return true;
+            }
+
+            foreach (var item in _tagsSnapshot)
+            {
+                if (TagTreeHelper.HasParent(tag, item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public CombatComp.SkillRT GetSkillRt(int skillId)
+        {
+            if (_unit != null)
+            {
+                return _unit.GetComponent<CombatComp>().GetSkillRt(skillId);
+            }
+            return _skillRts.GetValueOrDefault(skillId, null);
+        }
+
+        public CombatComp.BuffRT GetBuffRT(int buffId)
+        {
+            if (_unit != null)
+            {
+                return _unit.GetComponent<CombatComp>().GetBuffRT(buffId);
+            }
+            return _buffRts.GetValueOrDefault(buffId, null);
+        }
+
+        public void OnRecycle()
+        {
+            _unit = null;
+            _attrSnapshot.Clear();
+            _tagsSnapshot.Clear();
+            _unitTransformSnapShot = default;
+            _skillRts.Clear();
+            _buffRts.Clear();
+        }
+    }
+}

@@ -24,7 +24,7 @@ namespace Editor.BattleEditor.TagEditor {
 
 			EditorGUILayout.Space(1);
 			if (SirenixEditorGUI.Button("确定", ButtonSizes.Medium)) {
-				var parent = _tagTree.TagTreeData.root.FindTag(_removeItem.TagTreeItem.parent);
+				var parent = _tagTree.TagTreeData.root.FindTag(_removeItem.TagTreeItem.parent.tag);
 				parent.children.Remove(_removeItem.TagTreeItem);
 				_tagTree.RemoveTagInfo(_removeItem.TagTreeItem.tag);
 				foreach (var tagTreeItem in _removeItem.TagTreeItem.children) {

@@ -6,7 +6,7 @@ namespace Hono.Scripts.Battle.Core
         
         public Unit Unit { get; set; }
 
-        public abstract void OnInit();
+        public abstract void Init();
 
         public void Tick(float dt)
         {

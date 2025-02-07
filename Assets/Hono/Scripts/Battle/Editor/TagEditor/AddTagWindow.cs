@@ -45,7 +45,7 @@ namespace Editor.BattleEditor.TagEditor {
 					_tagTree.TagTreeData.root.children.Add(item);
 				}
 				else {
-					item.parent = _parent.tag;
+					item.parent = _parent;
 					_parent.children.Add(item);
 				}
 

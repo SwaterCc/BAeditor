@@ -14,19 +14,19 @@ namespace Hono.Scripts.Battle.Core
     {
         private struct OffHandInfo
         {
-            public AttrCollection.AttrSnapshot AttrSnapshot { get; }
+            public UnitProxy UnitProxy { get; }
             public HitSetting HitSetting { get; }
             public int CurrentHitCount;
             public float WaitTime;
 
             public OffHandInfo(int currentHitCount,
                 float waitTime,
-                AttrCollection.AttrSnapshot attrSnapshot,
+                UnitProxy attrSnapshot,
                 HitSetting hitSetting)
             {
                 CurrentHitCount = currentHitCount;
                 WaitTime = waitTime;
-                AttrSnapshot = attrSnapshot;
+                UnitProxy = attrSnapshot;
                 HitSetting = hitSetting;
             }
         }
@@ -43,19 +43,19 @@ namespace Hono.Scripts.Battle.Core
             //是否为脱手打击点
             if (aoeHitData.isOffHand)
             {
-                var info = new OffHandInfo(0, 0, attacker.Attrs.GetAttrSnapShots(null), aoeHitData);
-                _offHandHitInfos.Add(info);
+                
+                //_offHandHitInfos.Add(info);
             }
             else
             {
                 attacker.FireWorldEvent(EEventType.OnHit);
-                DamageManager.Instance.MakeDamage();
+                //DamageManager.Instance.MakeDamage();
             }
         }
 
         public void CreateAoeHit(AoeHitSetting aoeHitSetting, Unit attacker, Vector3 worldPos, Vector3 worldRot)
         {
-            BattleManager.World.Searcher.SearchUnits();
+            //BattleManager.World.Searcher.SearchUnits();
         }
 
         private void targetHit() { }
@@ -67,7 +67,7 @@ namespace Hono.Scripts.Battle.Core
             //处理脱手打击
             for (var index = 0; index < _offHandHitInfos.Count; index++)
             {
-                _offHandHitInfos[index];
+                //_offHandHitInfos[index];
             }
         }
 

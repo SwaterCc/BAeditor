@@ -8,6 +8,7 @@ namespace Hono.Scripts.Battle.Core
     public partial class AttrCollection
     {
         private readonly Unit _unit;
+
         /// <summary>
         /// 允许记录脏标记
         /// </summary>
@@ -18,11 +19,6 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         private readonly Dictionary<EAttrType, Attr> _attrs = new(128);
 
-        /// <summary>
-        /// 脏属性列表
-        /// </summary>
-        private readonly List<(EAttrType, int)> _dirtyList = new(128);
-
         public AttrCollection(Unit unit)
         {
             _unit = unit;
@@ -31,30 +27,27 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 通过表来设置属性
         /// </summary>
-        public void Init(int attrTableConfigId, AttrSnapshot snapshot)
+        public void Init(int attrTableConfigId)
         {
             if (!ConfigManager.Table<EntityAttrBaseTable>().TryGet(attrTableConfigId, out var attrRow))
             {
                 Debug.LogError($"AttrTable找不到指定Id:{attrTableConfigId}");
                 return;
             }
-            
+
             _allowDirty = false;
             AttrHelper.Instance.InitByTableRow(this, attrRow);
-            foreach (var item in snapshot)
-            {
-                SetAttr(item.Key, item.Value);
-            }
             _allowDirty = true;
         }
-        
+
         /// <summary>
         /// 执行召唤物相关属性流程初始化
         /// </summary>
         /// <param name="summoner"></param>
-        /// <param name="fromTopSummer"></param>
-        public void SetSummoned(AttrCollection summoner, bool fromTopSummer)
+        /// <param name="fromTopSummer">基础来源是否来自</param>
+        public void SetSummoned(Unit summoner, bool fromTopSummer)
         {
+            _allowDirty = false;
             SetAttr(EAttrType.AttrIsSummoned, 1);
             var sourceUid = fromTopSummer
                 ? summoner.GetAttr(EAttrType.AttrTopSourceActorUid)
@@ -62,27 +55,27 @@ namespace Hono.Scripts.Battle.Core
             SetAttr(EAttrType.AttrSourceActorUid,    sourceUid);
             SetAttr(EAttrType.AttrTopSourceActorUid, summoner.GetAttr(EAttrType.AttrTopSourceActorUid));
             SetAttr(EAttrType.AttrFaction,           summoner.GetAttr(EAttrType.AttrFaction));
+            _allowDirty = true;
         }
+
+        /// <summary>
+        /// 继承属性
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="summonSetting"></param>
+        public void InheritAttrs(AttrCollection parent, World.SummonSetting summonSetting) { }
 
         /// <summary>
         /// 获取属性快照
         /// </summary>
-        /// <param name="rule"></param>
-        /// <param name="param1"></param>
-        /// <param name="param2"></param>
-        /// <param name="param3"></param>
-        /// <param name="param4"></param>
-        /// <returns></returns>
-        public AttrSnapshot GetAttrSnapShots(string rule, int param1 = 0, int param2 = 0, int param3 = 0, int param4 = 0)
+        public void GetAttrSnapShots(ref Dictionary<EAttrType, int> snapshot)
         {
-            var snapshot = GPool<AttrSnapshot>.Pool.Rent();
-            snapshot.Init(this);
-            snapshot.AddParam(param1);
-            snapshot.AddParam(param2);
-            snapshot.AddParam(param3);
-            snapshot.AddParam(param4);
-            snapshot.Process(rule);
-            return snapshot;
+            snapshot ??= new Dictionary<EAttrType, int>(_attrs.Count);
+            snapshot.Clear();
+            foreach (var pair in _attrs)
+            {
+                snapshot.Add(pair.Key, pair.Value);
+            }
         }
 
         public int GetAttr(EAttrType attrType)
@@ -94,6 +87,18 @@ namespace Hono.Scripts.Battle.Core
             }
 
             return attr;
+        }
+
+        /// <summary>
+        /// 初始化属性，不会触发dirty
+        /// </summary>
+        /// <param name="attrType"></param>
+        /// <param name="value"></param>
+        public void InitAttr(EAttrType attrType, int value)
+        {
+            _allowDirty = true;
+            SetAttr(attrType, value);
+            _allowDirty = false;
         }
 
         public void SetAttr(EAttrType attrType, int value, bool forceDirty = false)
@@ -116,7 +121,6 @@ namespace Hono.Scripts.Battle.Core
         {
             if (_allowDirty)
             {
-                _dirtyList.Add((attrType, value));
                 var board = GPool<VariableBoard>.Pool.Rent();
                 board.Set(AttrChangedEventInfo.AttrType, attrType);
                 board.Set(AttrChangedEventInfo.Value,    value);

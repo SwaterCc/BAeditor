@@ -17,7 +17,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public Dictionary<int, Skill> Skills { get; } = new();
 
-        public override void OnInit()
+        public override void Init()
         {
             AssetManager.Instance.AddReloadHandle(this);
         }

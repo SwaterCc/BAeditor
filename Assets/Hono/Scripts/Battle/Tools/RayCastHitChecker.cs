@@ -1,6 +1,7 @@
 #region
 
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Core;
 using UnityEngine;
 
 #endregion
@@ -46,13 +47,13 @@ namespace Hono.Scripts.Battle.Tools
             actorIds.Clear();
             for (int i = 0; i < size; i++)
             {
-                var actorModel = _normalAreaRaycastHit[i].collider.GetComponent<PerformanceEffectsPlayer>();
+                var actorModel = _normalAreaRaycastHit[i].collider.GetComponent<ActorModel>();
                 if (actorModel == null)
                 {
                     continue;
                 }
 
-                actorIds.Add(actorModel.ModelController.Self.Uid);
+                actorIds.Add(actorModel.Actor.Uid);
             }
 
             return size;

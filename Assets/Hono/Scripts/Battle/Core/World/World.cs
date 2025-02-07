@@ -195,11 +195,11 @@ namespace Hono.Scripts.Battle.Core
         #endregion
 
         /// <summary>
-        /// 创建Actor
-        ///  玩家角色(士兵)的属性来自养成转换
-        ///  地图其他单位的属性来自静态配置，地图参数，等级影响等
+        /// 创建玩家角色
         /// </summary>
-        public Actor CreateActor(int actorTableId, AttrCollection.AttrSnapshot attrSnapshot = null, WorldNode parent = null)
+        /// <param name="actorTableId"></param>
+        /// <returns></returns>
+        public Actor CreatePlayerCharacter(int actorTableId)
         {
             if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
             {
@@ -209,7 +209,35 @@ namespace Hono.Scripts.Battle.Core
             Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
             var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
 
-            actor.Attrs.Init(actorTableId, attrSnapshot);
+            //设置初始值
+            actor.Attrs.Init(actorTableId);
+
+            //从外部获取养成数据
+            //actro.Attrs.InitAttr();
+
+            actor.Init(uid, row);
+
+            _worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
+
+            return actor;
+        }
+
+        /// <summary>
+        /// 创建Actor
+        ///  玩家角色(士兵)的属性来自养成转换
+        ///  地图其他单位的属性来自静态配置，地图参数，等级影响等
+        /// </summary>
+        public Actor CreateActor(int actorTableId, WorldNode parent = null)
+        {
+            if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
+            {
+                return null;
+            }
+
+            Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
+            var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
+
+            actor.Attrs.Init(actorTableId);
 
             actor.Init(uid, row);
 
@@ -225,10 +253,25 @@ namespace Hono.Scripts.Battle.Core
             return actor;
         }
 
+        public struct SummonSetting
+        {
+            public bool FromTopSummer;
+            public bool LifeWithSummoner;
+            public string Rule;
+            public int Param1;
+            public int Param2;
+            public int Param3;
+            public int Param4;
+        }
+
         /// <summary>
         /// 召唤Actor
         /// </summary>
-        public Actor SummonActor(Actor summoner, int actorTableId, bool fromTopSummer, WorldNode parent, string rule)
+        /// <param name="summoner"></param>
+        /// <param name="actorTableId"></param>
+        /// <param name="summonSetting"></param>
+        /// <returns></returns>
+        public Actor SummonActor(Actor summoner, int actorTableId, SummonSetting summonSetting)
         {
             if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
             {
@@ -238,17 +281,18 @@ namespace Hono.Scripts.Battle.Core
             Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
             var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
 
-            actor.Attrs.Init(actorTableId, summoner.Attrs.GetAttrSnapShots(rule));
-            actor.Attrs.SetSummoned(summoner.Attrs, fromTopSummer);
+            actor.Attrs.Init(actorTableId);
+            actor.Attrs.SetSummoned(summoner, summonSetting.FromTopSummer);
+            actor.Attrs.InheritAttrs(summoner.Attrs, summonSetting);
             actor.Init(uid, row);
 
-            if (parent == null)
+            if (!summonSetting.LifeWithSummoner)
             {
                 _worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
             }
             else
             {
-                parent.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
+                summoner.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
             }
 
             return actor;

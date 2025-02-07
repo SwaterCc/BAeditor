@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle
         private const int MpRecBehit = 1000;
         private const int MpRecKilled = 400;
 
-        public override void OnInit()
+        public override void Init()
         {
             /*_useSkillChecker =
                 new UseSkillChecker(EEventType.OnSkillUseSuccess, Self, -1, AttackChangeMp);

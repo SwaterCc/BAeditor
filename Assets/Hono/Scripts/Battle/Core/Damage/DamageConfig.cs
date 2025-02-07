@@ -53,5 +53,10 @@ namespace Hono.Scripts.Battle
             ElementType = 0;
             DamageType = 0;
         }
+
+        public void OnRecycle()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -12,20 +12,19 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 造成伤害
         /// </summary>
-        /// <param name="attrSnapshots">攻击者的属性快照</param>
+        /// <param name="attackProxy">攻击者代理</param>
         /// <param name="hurtTarget">受击者的属性</param>
         /// <param name="damageSetting"></param>
-        public void MakeDamage(AttrCollection.AttrSnapshot attrSnapshot, Unit hurtTarget, DamageSetting damageSetting)
+        public void MakeDamage(UnitProxy attackProxy, Unit hurtTarget, DamageSetting damageSetting)
         {
-            
-        }
-        
-        public void MakeDamage(AttrCollection attrs, Unit hurtTarget, DamageSetting damageSetting)
-        {
-            
+            if (attackProxy == null || hurtTarget == null || damageSetting == null)
+            {
+                return;
+            }
         }
 
 
+        /*
         /// <summary>
         /// 初始化伤害信息
         /// </summary>
@@ -111,6 +110,6 @@ namespace Hono.Scripts.Battle.Core
             }
 
             _recyclePools.Clear();
-        }
+        }*/
     }
 }

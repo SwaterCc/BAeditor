@@ -1,29 +1,25 @@
-﻿
-
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public class UnitTransform
+    public struct UnitTransform
     {
-        /// <summary>
-        /// 当前位置信息
-        /// </summary>
-        public Vector3 Pos;
-
         /// <summary>
         /// 当前朝向
         /// </summary>
-        public Quaternion Rot;
-
-        /// <summary>
-        /// 单位缩放系数
-        /// </summary>
-        public Vector3 Scale;
-
+        public float YAxisAngle;
         /// <summary>
         /// 半径
         /// </summary>
         public float Radius;
+        /// <summary>
+        /// 当前位置信息
+        /// </summary>
+        public Vector3 Pos;
+        /// <summary>
+        /// 单位缩放系数
+        /// </summary>
+        public Vector3 Scale;
     }
 }

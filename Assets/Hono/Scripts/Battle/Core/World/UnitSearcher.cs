@@ -153,7 +153,7 @@ namespace Hono.Scripts.Battle.Core
             if (_rangeFilterSetting.OpenBoxCheck)
             {
                 var pos = _filterUser.UnitTransform.Pos;
-                var rot = _filterUser.UnitTransform.Rot;
+                var rot = Quaternion.AngleAxis(_filterUser.UnitTransform.YAxisAngle, Vector3.up);
 
                 if (CommonUtility.HitRayCast(_rangeFilterSetting.BoxData, pos, rot, ref _checkBoxResult))
                 {

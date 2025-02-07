@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle
     {
         public Dictionary<int, Buff> Buffs { get; } = new(30);
 
-        public override void OnInit() { }
+        public override void Init() { }
 
         public override void onClear() { }
 

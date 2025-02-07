@@ -19,7 +19,7 @@ namespace Hono.Scripts.Battle
             private bool _isReturnTeam;
             private List<int> _hateUids = new(32);
 
-            public override void OnInit()
+            public override void Init()
             {
                 _setting = new RangeFilterSetting()
                 {
