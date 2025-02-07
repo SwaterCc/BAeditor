@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace Hono.Scripts.Battle.Core
 
         protected override void onTick(float dt) { }
 
-        protected override void onRemove() { }
+        protected override void OnRemove() { }
     }
 
     public interface IWorldSystem { }
@@ -146,7 +147,7 @@ namespace Hono.Scripts.Battle.Core
             GC.Collect();
 
             //特定池创建指定数量缓存
-            
+
             foreach (var system in _mgrsEnter)
             {
                 system.OnWorldEnter(this);
@@ -170,7 +171,7 @@ namespace Hono.Scripts.Battle.Core
             }
 
             _worldStates[_currentState]?.Tick(dt);
-            
+
             foreach (var system in _mgrsTick)
             {
                 system.OnWorldTick(dt);
@@ -195,25 +196,62 @@ namespace Hono.Scripts.Battle.Core
 
         /// <summary>
         /// 创建Actor
+        ///  玩家角色(士兵)的属性来自养成转换
+        ///  地图其他单位的属性来自静态配置，地图参数，等级影响等
         /// </summary>
-        public Actor CreateActor(int actorTableId, AttrCollection.AttrSnapshots snapshots, WorldNode parent)
+        public Actor CreateActor(int actorTableId, AttrCollection.AttrSnapshot attrSnapshot = null, WorldNode parent = null)
         {
-            Actor actor = new();
+            if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
+            {
+                return null;
+            }
+
+            Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
             var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
-            actor.Init(uid, actorTableId, null, snapshots);
+
+            actor.Attrs.Init(actorTableId, attrSnapshot);
+
+            actor.Init(uid, row);
+
+            if (parent == null)
+            {
+                _worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
+            }
+            else
+            {
+                parent.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
+            }
+
             return actor;
         }
 
         /// <summary>
         /// 召唤Actor
         /// </summary>
-        public Actor SummonActor(Actor summoner, int actorTableId, string rule, bool fromTopSummer, WorldNode parent)
+        public Actor SummonActor(Actor summoner, int actorTableId, bool fromTopSummer, WorldNode parent, string rule)
         {
-            Actor summoned = new();
+            if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
+            {
+                return null;
+            }
+
+            Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
             var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
-            summoned.Init(uid, actorTableId, null, summoner.Attrs.GetAttrSnapShots(rule));
-            summoned.Attrs.InitSummonedAttrs(summoner.Attrs, fromTopSummer);
-            return summoned;
+
+            actor.Attrs.Init(actorTableId, summoner.Attrs.GetAttrSnapShots(rule));
+            actor.Attrs.SetSummoned(summoner.Attrs, fromTopSummer);
+            actor.Init(uid, row);
+
+            if (parent == null)
+            {
+                _worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
+            }
+            else
+            {
+                parent.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
+            }
+
+            return actor;
         }
 
         /// <summary>

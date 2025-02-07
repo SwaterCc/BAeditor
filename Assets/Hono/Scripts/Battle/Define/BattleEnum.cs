@@ -62,7 +62,7 @@ namespace Hono.Scripts.Battle
     /// Actor初始化状态
     /// </summary>
     [Flags]
-    public enum EActorState
+    public enum EUnitFlag
     {
         Empty = 0,
         Move = 1,

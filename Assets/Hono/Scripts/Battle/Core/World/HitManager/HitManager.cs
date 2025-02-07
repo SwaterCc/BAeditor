@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
@@ -13,19 +14,19 @@ namespace Hono.Scripts.Battle.Core
     {
         private struct OffHandInfo
         {
-            public AttrCollection.AttrSnapshots AttrSnapshots { get; }
+            public AttrCollection.AttrSnapshot AttrSnapshot { get; }
             public HitSetting HitSetting { get; }
             public int CurrentHitCount;
             public float WaitTime;
 
             public OffHandInfo(int currentHitCount,
                 float waitTime,
-                AttrCollection.AttrSnapshots attrSnapshots,
+                AttrCollection.AttrSnapshot attrSnapshot,
                 HitSetting hitSetting)
             {
                 CurrentHitCount = currentHitCount;
                 WaitTime = waitTime;
-                AttrSnapshots = attrSnapshots;
+                AttrSnapshot = attrSnapshot;
                 HitSetting = hitSetting;
             }
         }

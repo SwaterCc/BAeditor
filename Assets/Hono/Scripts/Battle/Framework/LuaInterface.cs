@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Core;
+using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using UnityEngine.AddressableAssets;

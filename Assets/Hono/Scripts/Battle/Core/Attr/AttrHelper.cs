@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Hono.Scripts.Battle.Core;
+using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
@@ -63,11 +64,9 @@ namespace Hono.Scripts.Battle.Base
             return _attrLinks.TryGetValue(attrType, out link);
         }
         
-        public void InitByTableRow(Core.AttrCollection collection,EntityAttrBaseTable.EntityAttrBaseRow row)
+        public void InitByTableRow(AttrCollection collection,EntityAttrBaseTable.EntityAttrBaseRow row)
         {
-           
+           //直接一个手写
         }
-
-        
     }
 }

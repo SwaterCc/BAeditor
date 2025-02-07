@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Tools;
 using Unity.Mathematics;
 using UnityEngine;
@@ -123,6 +124,11 @@ namespace Hono.Scripts.Battle
 
         public bool Recycle(string path, GameObject obj)
         {
+            if (obj == null)
+            {
+                return false;
+            }
+            
             if (!_gameObjectCache.ContainsKey(path))
             {
                 Debug.LogError("回池路径错误！");

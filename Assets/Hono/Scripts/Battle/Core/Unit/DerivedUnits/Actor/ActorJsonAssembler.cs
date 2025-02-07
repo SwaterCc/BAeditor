@@ -7,6 +7,7 @@ namespace Hono.Scripts.Battle.Core
     /// </summary>
     public class ActorAssembleInfo
     {
+        public readonly bool AllowControl;
         /// <summary>
         /// 组件工厂对象
         /// </summary>
@@ -14,7 +15,7 @@ namespace Hono.Scripts.Battle.Core
 
         public ActorAssembleInfo(string json)
         {
-            
+            AllowControl = false;
         }
     }
     

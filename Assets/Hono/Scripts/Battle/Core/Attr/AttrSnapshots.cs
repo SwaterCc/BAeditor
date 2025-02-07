@@ -6,7 +6,7 @@ namespace Hono.Scripts.Battle.Core
 {
     public partial class AttrCollection
     {
-        public class AttrSnapshots : ICPoolObject, IEnumerable<KeyValuePair<EAttrType, int>>
+        public class AttrSnapshot : ICPoolObject, IEnumerable<KeyValuePair<EAttrType, int>>
         {
             private readonly Dictionary<EAttrType, int> _snapshot = new(128);
             private readonly List<int> _param = new(5);

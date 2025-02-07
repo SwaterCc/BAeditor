@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using Hono.Scripts.Battle.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -9,89 +11,164 @@ namespace Hono.Scripts.Battle
     /// 演出效果播放器
     /// 内置 模型对象
     /// 内置 模型对象挂点管理
-    /// 内置 动画状态机
+    /// 内置 动画播放器
     /// 内置 特效管理器
     /// 内置 音效管理器
     /// </summary>
-    public class PerformanceEffectsPlayer : MonoBehaviour
+    public partial class PerformanceEffectsPlayer : MonoBehaviour
     {
-        [Title("特效相关")] 
-        public List<Transform> EffectPoints = new();
-        public Transform HeadPoint;
-        public Transform CenterPoint;
-
-        private readonly Dictionary<int, GameObject> _vfxDict = new();
-        private readonly Dictionary<string, Transform> _effectPoints = new(20);
-        private VFXComp _vfxComp;
-        public PerformanceEffectController ModelController { get; private set; }
-        protected bool SetupFinish { get; private set; } = false;
-
-        private void Awake()
+        public enum EPeType
         {
-            foreach (var point in EffectPoints)
+            VFX,
+            Anim,
+            Audio
+        }
+        
+        public GameObject model;
+        
+        public PEModelHandler ModelHandler { get; private set; }
+
+        /// <summary>
+        /// 基础模板
+        /// </summary>
+        private PETemplate _baseTemplate;
+
+        /// <summary>
+        /// 复写模板
+        /// </summary>
+        private PETemplate _overrideTemplate;
+        private ActorModelController _modelController;
+        /// <summary>
+        /// 特效播放器
+        /// </summary>
+        private VFXPlayer _vfxPlayer;
+
+        public async void LoadPE(ActorModelController modelController)
+        {
+            _modelController = modelController;
+            
+            //加载模型
+            model = await UPool.Instance.Get(GetPEModelPath(), modelController.MainCancelToken);
+            if (model != null)
             {
-                _effectPoints.Add(point.name, point);
+                ModelHandler = model.GetComponent<PEModelHandler>();
+                _vfxPlayer ??= new VFXPlayer(this);
+                _vfxPlayer.BindVFXComp();
             }
         }
 
-        public void OnInit(PerformanceEffectController modelController)
+        public void SetModelActive(bool active)
         {
-            ModelController = modelController;
-            if (ModelController.Self.TryGetComponent(out _vfxComp))
+            model?.SetActive(active);
+        }
+        
+        public void SetBasePETemplate(PETemplate tpl)
+        {
+            _baseTemplate = tpl;
+        }
+
+        public void SetOverridePETemplate(PETemplate tpl)
+        {
+            _overrideTemplate = tpl;
+        }
+
+        public string GetPEModelPath()
+        {
+            return _overrideTemplate == null ? _baseTemplate.model : _overrideTemplate.model;
+        }
+
+        public string GetTplPath(string key, EPeType type)
+        {
+            Dictionary<string, string> dict = null;
+            switch (type)
             {
-                _vfxComp.VFXAdd += OnAddVFXObject;
-                _vfxComp.VFXRemove += OnRemoveVFXObject;
-                foreach (var vfxObject in _vfxComp.VFXDict)
-                {
-                   
-                }
+                case EPeType.VFX:
+                    dict = _overrideTemplate == null ? _baseTemplate.vfxs : _overrideTemplate.vfxs;
+                    break;
+                case EPeType.Anim:
+                    dict = _overrideTemplate == null ? _baseTemplate.anims : _overrideTemplate.anims;
+                    break;
+                case EPeType.Audio:
+                    dict = _overrideTemplate == null ? _baseTemplate.audios : _overrideTemplate.audios;
+                    break;
             }
 
-            onSetupFinish();
-            SetupFinish = true;
-        }
+            if (dict == null)
+                return null;
 
-        protected virtual void onSetupFinish() { }
-
-        public void OnTick(float dt)
-        {
-            foreach (KeyValuePair<int, VFXObject> obj in _vfxComp.VFXDict)
+            if (dict.TryGetValue(key, out var path))
             {
-                if (obj.Value.Setting.VFXBindType != EVFXType.FollowActor)
-                {
-                    continue;
-                }
-
-                if (!_vfxDict.TryGetValue(obj.Key, out GameObject vfx))
-                {
-                    continue;
-                }
-
-                if (vfx == null)
-                {
-                    continue;
-                }
-
-                vfx.transform.position = obj.Value.Pos;
+                return path;
             }
-        }
 
-        public void Recycle()
-        {
-            UPool.Instance.Recycle(ModelController.PETemplate.model, gameObject);
-        }
-
-        private void OnAddVFXObject(VFXObject vfxObject)
-        {
-           
-        }
-
-        private void OnRemoveVFXObject(VFXObject vfxObject)
-        {
-            if (_vfxDict.Remove(vfxObject.Uid, out GameObject vfx))
+            switch (type)
             {
-               // UPool.Instance.Recycle(vfxObject.Setting.VFXPath, vfx);
+                case EPeType.VFX:
+                    dict = _baseTemplate.vfxs;
+                    break;
+                case EPeType.Anim:
+                    dict = _baseTemplate.anims;
+                    break;
+                case EPeType.Audio:
+                    dict = _baseTemplate.audios;
+                    break;
             }
+
+            if (dict.TryGetValue(key, out path))
+            {
+                return path;
+            }
+
+
+            return null;
+        }
+
+        public void OnTick(float dt) { }
+
+        public void Clear()
+        {
+          
         }
     }
+
+    public partial class PerformanceEffectsPlayer
+    {
+        public class VFXPlayer
+        {
+            public PerformanceEffectsPlayer PEPlayer { get; }
+
+            private VFXComp _vfxComp;
+            
+            public VFXPlayer(PerformanceEffectsPlayer pePlayer)
+            {
+                PEPlayer = pePlayer;
+            }
+
+            public void BindVFXComp()
+            {
+                PEPlayer._modelController.Self.TryGetComponent(out _vfxComp);
+                _vfxComp.VFXAdd += onVFXAdd;
+                _vfxComp.VFXRemove += onVFXRemove;
+                foreach (var VARIABLE in _vfxComp.VFXDict)
+                {
+                    
+                }
+            }
+
+            private void onVFXAdd(VFXInfo vfxInfo)
+            {
+                
+            }
+
+            private void onVFXRemove(VFXInfo vfxInfo)
+            {
+                
+            }
+            
+            public void Tick(float dt)
+            {
+            
+            }
+        }
+    } 
 }

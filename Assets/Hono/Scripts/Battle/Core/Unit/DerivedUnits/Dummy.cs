@@ -3,10 +3,10 @@
     /// <summary>
     /// 虚拟体
     /// </summary>
-    public class Dummy : Unit
+    public class WorldRootDummy : Unit
     {
         
-        protected override void onRemove()
+        protected override void OnRemove()
         {
             
         }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Core;
+using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Define;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
@@ -64,15 +65,15 @@ namespace Hono.Scripts.Battle
         private readonly List<IBattleFrameworkTick> _frameworkTicks = new(16);
         
         private Paths _paths;
-        private string _formScene;
+        private TagTreeRoot _tagTree;
         
         public static Paths Paths => Instance._paths;
+        public static TagTreeRoot TagTree => Instance._tagTree;
         
         public Action<bool> ExitBattleCallBack { get; set; }
-
         private World _currentWorld;
         public static World World => Instance._currentWorld;
-
+        private string _formScene;
         protected void Start()
         {
             InitEnv();

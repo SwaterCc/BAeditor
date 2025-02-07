@@ -87,16 +87,16 @@ namespace Hono.Scripts.Battle
             public float ModelRadius { get; private set; }
             
             /// <summary>
-            /// 模型路径
+            /// 模型半径
             /// </summary>
-            public string ModelPath { get; private set; }
+            public float ModelHeight { get; private set; }
             
             /// <summary>
-            /// 动画模板
+            /// 模型路径
             /// </summary>
-            public string AnimTemplateId { get; private set; }
+            public string PETplPath { get; private set; }
             
-
+            
             public ModelRow()
             {
                 Parser = new ModelRowCSVParser(this);
@@ -118,9 +118,9 @@ namespace Hono.Scripts.Battle
             
                     _row.ModelRadius = parseNumber(line[2]);
             
-                    _row.ModelPath = parseString(line[3]);
+                    _row.PETplPath = parseString(line[3]);
             
-                    _row.AnimTemplateId = parseString(line[4]);
+                   
             
                 }
             }

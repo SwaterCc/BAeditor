@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Tools;
 
 namespace Hono.Scripts.Battle

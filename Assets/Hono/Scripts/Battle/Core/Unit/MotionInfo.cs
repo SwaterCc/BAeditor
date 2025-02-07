@@ -1,4 +1,5 @@
 ﻿using System;
+using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 

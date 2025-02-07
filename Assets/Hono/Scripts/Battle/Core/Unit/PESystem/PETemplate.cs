@@ -9,31 +9,24 @@ namespace Hono.Scripts.Battle.Core
     [Serializable]
     public class PETemplate
     {
-        [Serializable]
-        public struct KeyPathPair
-        {
-            public string key;
-            public string path;
-        }
-        
         /// <summary>
         /// 模型路径
         /// </summary>
         public string model;
-        
+
         /// <summary>
         /// 特效替换位
         /// </summary>
-        public List<KeyPathPair> vfxs = new();
-        
+        public Dictionary<string, string> vfxs = new();
+
         /// <summary>
         /// 音频替换位
         /// </summary>
-        public List<KeyPathPair> audios = new();
-        
+        public Dictionary<string, string> audios = new();
+
         /// <summary>
         /// 动画替换位
         /// </summary>
-        public List<KeyPathPair> anims = new();
+        public Dictionary<string, string> anims = new();
     }
 }

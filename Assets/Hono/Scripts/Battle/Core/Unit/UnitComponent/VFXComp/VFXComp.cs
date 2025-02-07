@@ -18,29 +18,29 @@ namespace Hono.Scripts.Battle
         //特效组件的唯一Id生成器
         private static readonly CommonUtility.IdGenerator IDGenerator = CommonUtility.GetIdGenerator();
 
-        private readonly Dictionary<int, VFXObject> _vfxes = new(32);
-        public Dictionary<int, VFXObject> VFXDict => _vfxes;
+        private readonly Dictionary<int, VFXInfo> _vfxes = new(32);
+        public Dictionary<int, VFXInfo> VFXDict => _vfxes;
 
-        private readonly List<VFXObject> _removeList = new(32);
+        private readonly List<VFXInfo> _removeList = new(32);
 
-        public Action<VFXObject> VFXAdd;
-        public Action<VFXObject> VFXRemove;
+        public Action<VFXInfo> VFXAdd;
+        public Action<VFXInfo> VFXRemove;
 
         public override void OnInit() { }
 
         public int AddVFXObject(string vfxKey, VFXSetting setting)
         {
-            var vfxObj = GPool<VFXObject>.Pool.Rent();
+            var vfxObj = GPool<VFXInfo>.Pool.Rent();
             vfxObj.OnRent(IDGenerator.GenerateId(), setting);
 
             switch (setting.VFXBindType)
             {
                 case EVFXType.InWorld:
-                    vfxObj.Pos = Unit.Pos + Unit.Rot * setting.Offset;
-                    vfxObj.Rot = Unit.Rot * Quaternion.Euler(setting.Rot);
+                    vfxObj.Pos = Unit.UnitTransform.Pos + Unit.UnitTransform.Rot * setting.Offset;
+                    vfxObj.Rot = Unit.UnitTransform.Rot * Quaternion.Euler(setting.Rot);
                     break;
                 case EVFXType.FollowActor:
-                    vfxObj.Pos = Unit.Pos + (Vector3)setting.Offset;
+                    vfxObj.Pos = Unit.UnitTransform.Pos + (Vector3)setting.Offset;
                     vfxObj.Rot = Quaternion.Euler(setting.Rot);
                     break;
                 case EVFXType.BindActorBone:
@@ -61,7 +61,7 @@ namespace Hono.Scripts.Battle
             return vfxObj.Uid;
         }
 
-        protected void AddVFXToList(VFXObject vfxObj)
+        protected void AddVFXToList(VFXInfo vfxObj)
         {
             _vfxes.Add(vfxObj.Uid, vfxObj);
             VFXAdd?.Invoke(vfxObj);
@@ -75,10 +75,10 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        protected void onRemove(VFXObject obj)
+        protected void onRemove(VFXInfo obj)
         {
             _vfxes.Remove(obj.Uid);
-            GPool<VFXObject>.Pool.Recycle(obj);
+            GPool<VFXInfo>.Pool.Recycle(obj);
             VFXRemove?.Invoke(obj);
         }
 
@@ -93,7 +93,7 @@ namespace Hono.Scripts.Battle
 
                 if (obj.Value.Setting.VFXBindType == EVFXType.FollowActor)
                 {
-                    obj.Value.Pos = Unit.Pos + (Vector3)obj.Value.Setting.Offset;
+                    obj.Value.Pos = Unit.UnitTransform.Pos + (Vector3)obj.Value.Setting.Offset;
                 }
 
                 obj.Value.OnTick(dt);

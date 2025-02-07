@@ -25,6 +25,8 @@ namespace Hono.Scripts.Battle.Core
             protected override void OnTick(float dt)
             {
                 //点击进入游戏后，加载主角，小兵等对象
+                
+                
                 //加载完成后
                 World._nextState = EWorldState.Gaming;
             }

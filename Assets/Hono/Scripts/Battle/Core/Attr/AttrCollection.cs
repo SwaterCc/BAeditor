@@ -31,48 +31,29 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 通过表来设置属性
         /// </summary>
-        /// <param name="attrTableConfigId"></param>
-        /// <param name="isInit">如果是初始化流程，则不会触发属性修改事件</param>
-        public void SetAttrsByTable(int attrTableConfigId, bool isInit)
+        public void Init(int attrTableConfigId, AttrSnapshot snapshot)
         {
             if (!ConfigManager.Table<EntityAttrBaseTable>().TryGet(attrTableConfigId, out var attrRow))
             {
                 Debug.LogError($"AttrTable找不到指定Id:{attrTableConfigId}");
                 return;
             }
-
-            _allowDirty = !isInit;
+            
+            _allowDirty = false;
             AttrHelper.Instance.InitByTableRow(this, attrRow);
-            _allowDirty = true;
-        }
-
-        /// <summary>
-        /// 通过快照来修改属性
-        /// </summary>
-        /// <param name="snapshots"></param>
-        /// <param name="isInit"></param>
-        public void SetAttrsBySnapshot(AttrSnapshots snapshots, bool isInit)
-        {
-            if (snapshots == null)
-                return;
-
-            _allowDirty = !isInit;
-            foreach (var snapshot in snapshots)
+            foreach (var item in snapshot)
             {
-                SetAttr(snapshot.Key, snapshot.Value);
+                SetAttr(item.Key, item.Value);
             }
-
             _allowDirty = true;
-
-            GPool<AttrCollection.AttrSnapshots>.Pool.Recycle(snapshots);
         }
-
+        
         /// <summary>
         /// 执行召唤物相关属性流程初始化
         /// </summary>
         /// <param name="summoner"></param>
         /// <param name="fromTopSummer"></param>
-        public void InitSummonedAttrs(AttrCollection summoner, bool fromTopSummer)
+        public void SetSummoned(AttrCollection summoner, bool fromTopSummer)
         {
             SetAttr(EAttrType.AttrIsSummoned, 1);
             var sourceUid = fromTopSummer
@@ -92,9 +73,9 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="param3"></param>
         /// <param name="param4"></param>
         /// <returns></returns>
-        public AttrCollection.AttrSnapshots GetAttrSnapShots(string rule, int param1 = 0, int param2 = 0, int param3 = 0, int param4 = 0)
+        public AttrSnapshot GetAttrSnapShots(string rule, int param1 = 0, int param2 = 0, int param3 = 0, int param4 = 0)
         {
-            var snapshot = GPool<AttrSnapshots>.Pool.Rent();
+            var snapshot = GPool<AttrSnapshot>.Pool.Rent();
             snapshot.Init(this);
             snapshot.AddParam(param1);
             snapshot.AddParam(param2);

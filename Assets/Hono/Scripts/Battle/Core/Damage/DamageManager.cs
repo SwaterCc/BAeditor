@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Tools;
 
 namespace Hono.Scripts.Battle.Core
@@ -14,7 +15,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="attrSnapshots">攻击者的属性快照</param>
         /// <param name="hurtTarget">受击者的属性</param>
         /// <param name="damageSetting"></param>
-        public void MakeDamage(AttrCollection.AttrSnapshots attrSnapshots, Unit hurtTarget, DamageSetting damageSetting)
+        public void MakeDamage(AttrCollection.AttrSnapshot attrSnapshot, Unit hurtTarget, DamageSetting damageSetting)
         {
             
         }

@@ -1,4 +1,5 @@
-﻿using Hono.Scripts.Battle.Tools;
+﻿using Hono.Scripts.Battle.Core.Base;
+using Hono.Scripts.Battle.Tools;
 
 namespace Hono.Scripts.Battle
 {
@@ -9,6 +10,11 @@ namespace Hono.Scripts.Battle
         /// </summary>
         /// <typeparam name="T"></typeparam>
         public void SendDataToUIPanel<T>()
+        {
+            
+        }
+
+        public void SetLoadingUI(bool isShow)
         {
             
         }

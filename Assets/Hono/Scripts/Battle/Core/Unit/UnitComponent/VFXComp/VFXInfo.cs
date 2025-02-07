@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public class VFXObject : ICPoolObject
+    public class VFXInfo : ICPoolObject
     {
         /// <summary>
         /// 特效Uid,全局共享同一个Id生成器

@@ -4,7 +4,7 @@ using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle.Tools
+namespace Hono.Scripts.Battle.Core.Base
 {
     public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {

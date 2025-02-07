@@ -1,4 +1,4 @@
-namespace Hono.Scripts.Battle.Tools
+namespace Hono.Scripts.Battle.Core.Base
 {
     public class Singleton<T> where T : class, new()
     {

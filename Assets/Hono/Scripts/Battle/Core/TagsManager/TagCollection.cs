@@ -1,87 +1,49 @@
 #region
 
 using System.Collections.Generic;
-using Hono.Scripts.Battle.Tools;
+using Hono.Scripts.Battle.Core.Base;
 using UnityEngine;
 
 #endregion
 
 namespace Hono.Scripts.Battle.Base
 {
+    public class TagsSnapshot
+    {
+        
+    }
+    
     /// <summary>
-    ///     TAG 标识系统
-    ///     目前一个最多支持256个tag
+    /// TAG 标识系统
     /// </summary>
     public class TagCollection
     {
-        private readonly HashSet<int> _tags = new(256);
+        private readonly Dictionary<int,int> _tags = new(256);
 
-        private readonly List<int> _tagsList = new(256);
-
-        //关系映射
-        private TagCollection _parent;
-        private readonly List<TagCollection> _children = new(10);
-
-        public void SetParent(TagCollection parent)
+        public bool HasTag(int tag)
         {
-            if (parent == null)
-            {
-                if (_parent == null)
-                    return;
-                _parent.RemoveChild(this);
-            }
-
-            _parent = parent;
-
-            if (_parent != null && _parent._children.Contains(this))
-            {
-                _parent.AddChild(this);
-            }
-        }
-
-        public void AddChild(TagCollection child)
-        {
-            if (_children.Contains(child))
-            {
-                Debug.LogError("子节点已存在！");
-                return;
-            }
-
-            if (child._parent != this)
-            {
-                child.SetParent(this);
-            }
-
-            _children.Add(child);
-        }
-
-        public void RemoveChild(TagCollection child)
-        {
-            _children.RemoveSwapBack(child);
+            return _tags.GetValueOrDefault(tag, 0) > 0;
         }
 
         public void Add(int tag)
         {
-            _tags.Add(tag);
-            _tagsList.Add(tag);
+            _tags[tag] = _tags.GetValueOrDefault(tag, 0) + 1;
         }
-
-        public bool HasTag(int tag, ETagSearchRange searchRange)
-        {
-            return _tags.Contains(tag);
-        }
-
+        
         public void Remove(int tag)
         {
-            _tags.Remove(tag);
-            _tagsList.Remove(tag);
-        }
+            if (!_tags.ContainsKey(tag))
+            {
+                return;
+            }
 
-        public List<int> GetAllTag()
+            _tags[tag] -= 1;
+            _tags[tag] = Mathf.Min(0, _tags[tag]);
+        }
+        
+        public void Clear()
         {
-            return _tagsList;
+            _tags.Clear();
         }
-
-        public void Clear() { }
     }
 }

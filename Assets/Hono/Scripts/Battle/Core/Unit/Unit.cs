@@ -28,23 +28,14 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 当前位置信息
         /// </summary>
-        public Vector3 Pos;
+        public UnitTransform UnitTransform { get; }
 
         /// <summary>
-        /// 当前朝向
+        /// 状态标签
         /// </summary>
-        public Quaternion Rot;
-
-        /// <summary>
-        /// 单位缩放系数
-        /// </summary>
-        public Vector3 Scale;
-
-        /// <summary>
-        /// 单位体型半径（队伍中应该有队伍半径）
-        /// </summary>
-        public float Radius;
-
+        /// <returns></returns>
+        public EUnitFlag State { get; private set; }
+        
         /// <summary>
         /// 动作系统
         /// </summary>
@@ -75,6 +66,7 @@ namespace Hono.Scripts.Battle.Core
             _actionSystem = new ActionSystem(this);
             _abilityController = new AbilityController(this);
 
+            UnitTransform = new UnitTransform();
             Attrs = new AttrCollection(this);
             VariableBoard = new VariableBoard();
             Tags = new TagCollection();

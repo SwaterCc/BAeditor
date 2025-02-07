@@ -14,6 +14,11 @@ namespace Hono.Scripts.Battle.Core
         public string JsonKey { get; }
 
         /// <summary>
+        /// 允许玩家操控
+        /// </summary>
+        public bool AllowPlayerControl { get; }
+
+        /// <summary>
         /// Actor基础类型
         /// </summary>
         public EActorType ActorType { get; private set; }
@@ -24,64 +29,35 @@ namespace Hono.Scripts.Battle.Core
         public ActorTable.ActorRow ActorTableRow { get; private set; }
 
         /// <summary>
-        /// Unity交互层
+        /// Unity模型管理
         /// </summary>
-        
         public ActorModelController ModelController { get; }
-
-        /// <summary>
-        /// Actor状态标签
-        /// </summary>
-        /// <returns></returns>
-        public EActorState State { get; private set; }
 
         public Actor(string jsonKey)
         {
             JsonKey = jsonKey;
-            
+
             var info = ActorJsonAssembler.GetActorAssembleInfo(jsonKey);
+
+            AllowPlayerControl = info.AllowControl;
             foreach (var factory in info.Factories)
             {
                 addComponent(factory.CreateComponent());
             }
-            
-            ModelController = new ActorModelController();
+
+            ModelController = new ActorModelController(this);
+        }
+
+        public void Init(int uid, ActorTable.ActorRow actorRow)
+        {
+            base.Init(uid);
+            ActorTableRow = actorRow;
+            ActorType = (EActorType)ActorTableRow.ActorType;
+            ModelController.Load();
         }
 
         #region 周期函数
 
-        /// <summary>
-        /// 初始化
-        /// </summary>
-        public void Init(int uid, int configId, PerformanceEffectsPlayer performanceEffectsPlayer, AttrCollection.AttrSnapshots snapshot = null)
-        {
-            base.Init(uid);
-            
-            if (!ConfigManager.Table<ActorTable>().TryGet(configId, out var row))
-            {
-                return;
-            }
-
-            ActorTableRow = row;
-            ActorType = (EActorType)row.ActorType;
-            Attrs.SetAttrsByTable(row.AttrTemplateId, true);
-
-            if (snapshot != null)
-            {
-                Attrs.SetAttrsBySnapshot(snapshot, true);
-            }
-
-            ModelController.Init(performanceEffectsPlayer);
-        }
-
-        /// <summary>
-        /// 设置召唤者，设置之后会变成召唤物
-        /// </summary>
-        public void SetSummoner()
-        {
-            
-        }
-        
         /// <summary>
         /// 逻辑帧
         /// </summary>
@@ -91,12 +67,20 @@ namespace Hono.Scripts.Battle.Core
             ModelController.Tick(dt);
         }
 
-        protected override void onRemove()
+        /// <summary>
+        /// ActorPool回收时调用
+        /// </summary>
+        public void OnRecycle()
         {
             ModelController.Clear();
             Clear();
-            //回收自己
         }
+
+        protected override void OnRemove()
+        {
+            ActorPool.Instance.Recycle(this);
+        }
+
         #endregion
     }
 }

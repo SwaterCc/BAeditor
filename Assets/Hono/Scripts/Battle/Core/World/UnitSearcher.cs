@@ -81,7 +81,7 @@ namespace Hono.Scripts.Battle.Core
                     checkResult = (int)actor.ActorType == condition.value;
                     break;
                 case EFilterConditionType.Tag:
-                    checkResult = unit.Tags.HasTag(condition.value, ETagSearchRange.Actor);
+                    checkResult = unit.Tags.HasTag(condition.value);
                     break;
                 case EFilterConditionType.Faction:
                     var f1 = _filterUser.GetAttr(EAttrType.AttrFaction);
@@ -152,8 +152,8 @@ namespace Hono.Scripts.Battle.Core
 
             if (_rangeFilterSetting.OpenBoxCheck)
             {
-                var pos = _filterUser.Pos;
-                var rot = _filterUser.Rot;
+                var pos = _filterUser.UnitTransform.Pos;
+                var rot = _filterUser.UnitTransform.Rot;
 
                 if (CommonUtility.HitRayCast(_rangeFilterSetting.BoxData, pos, rot, ref _checkBoxResult))
                 {
@@ -232,9 +232,9 @@ namespace Hono.Scripts.Battle.Core
                 case EFilterFunctionType.Far:
                     result.Sort((aUid, bUid) =>
                     {
-                        var aPos = _searchDict[aUid].Pos;
-                        var bPos = _searchDict[bUid].Pos;
-                        var selfPos = _filterUser.Pos;
+                        var aPos = _searchDict[aUid].UnitTransform.Pos;
+                        var bPos = _searchDict[bUid].UnitTransform.Pos;
+                        var selfPos = _filterUser.UnitTransform.Pos;
 
                         var aDis = Math.Abs(Vector3.Distance(aPos, selfPos));
                         var bDis = Math.Abs(Vector3.Distance(bPos, selfPos));
@@ -244,9 +244,9 @@ namespace Hono.Scripts.Battle.Core
                 case EFilterFunctionType.Near:
                     result.Sort((aUid, bUid) =>
                     {
-                        var aPos = _searchDict[aUid].Pos;
-                        var bPos = _searchDict[bUid].Pos;
-                        var selfPos = _filterUser.Pos;
+                        var aPos = _searchDict[aUid].UnitTransform.Pos;
+                        var bPos = _searchDict[bUid].UnitTransform.Pos;
+                        var selfPos = _filterUser.UnitTransform.Pos;
 
                         var aDis = Math.Abs(Vector3.Distance(aPos, selfPos));
                         var bDis = Math.Abs(Vector3.Distance(bPos, selfPos));
