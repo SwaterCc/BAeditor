@@ -52,7 +52,7 @@ namespace Hono.Scripts.Battle
         public void Refresh()
         {
             FuncDict.Clear();
-            Type type = typeof(AFunctionDefine);
+            Type type = typeof(AbilityFramework.AFunctionDefine);
 
             MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
 

@@ -48,9 +48,9 @@ namespace Hono.Scripts.Battle.Core
             ModelController = new ActorModelController(this);
         }
 
-        public void Init(int uid, ActorTable.ActorRow actorRow)
+        public void Init(ActorTable.ActorRow actorRow)
         {
-            base.Init(uid);
+            base.Init();
             ActorTableRow = actorRow;
             ActorType = (EActorType)ActorTableRow.ActorType;
             ModelController.Load();

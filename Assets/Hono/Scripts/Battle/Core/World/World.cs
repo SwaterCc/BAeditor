@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
@@ -37,7 +36,7 @@ namespace Hono.Scripts.Battle.Core
     {
         public void OnWorldExit();
     }
-
+    
     /// <summary>
     /// 当前运行的世界
     /// </summary>
@@ -51,23 +50,32 @@ namespace Hono.Scripts.Battle.Core
         /// 最大Unit的数量
         /// </summary>
         public const int MaxUnitCount = MaxActorCount + 3000;
-
+        /// <summary>
+        /// Unit搜索器
+        /// </summary>
+        public static readonly WorldSearcher Searcher = new();
+        
+        private static class WorldInstance
+        {
+            public static World World;
+        }
         //世界的构成
         //静态网格地图数据（可行区域，地图网格对应坐标区域）
         //运行时动态网格数据（网格上的单位数据，寻路数据，单位坐标更新（最后帧））
         private readonly List<IWorldSystemWhenEnterCalled> _mgrsEnter = new();
         private readonly List<IWorldSystemWhenTickCalled> _mgrsTick = new();
         private readonly List<IWorldSystemWhenExitCalled> _mgrsExit = new();
+        
         /// <summary>
         /// 根节点
         /// </summary>
         private readonly WorldNodeRoot _worldNodeRoot = new();
-
+        
         /// <summary>
-        /// Unit搜索器
+        /// Id生成器
         /// </summary>
-        public readonly UnitSearcher Searcher = new();
-
+        private  readonly IdAllocator _idAllocator = new();
+        
         /// <summary>
         /// 当前世界流程
         /// </summary>
@@ -81,7 +89,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 状态集合
         /// </summary>
-        private Dictionary<EWorldState, WorldState> _worldStates;
+        private readonly Dictionary<EWorldState, WorldState> _worldStates;
 
         /// <summary>
         /// 场景数据Id(场景id，静态地图网格)
@@ -96,8 +104,8 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 数据配置
         /// </summary>
-        private BattleSceneTable.BattleSceneRow _sceneRow;
-
+        private readonly BattleSceneTable.BattleSceneRow _sceneRow;
+        
         #region 周期
 
         public World(int sceneTableId)
@@ -147,6 +155,9 @@ namespace Hono.Scripts.Battle.Core
             GC.Collect();
 
             //特定池创建指定数量缓存
+            
+            //设置单例
+            WorldInstance.World = this;
 
             foreach (var system in _mgrsEnter)
             {
@@ -188,18 +199,32 @@ namespace Hono.Scripts.Battle.Core
                 system.OnWorldExit();
             }
 
+            //设置单例
+            WorldInstance.World = null;
+            
             //退出后主动GC下
             GC.Collect();
         }
 
         #endregion
 
+        #region Unit创建
+
+        /// <summary>
+        /// 获取这个World唯一Id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetUid()
+        {
+            return WorldInstance.World._idAllocator.Allocate();
+        }
+        
         /// <summary>
         /// 创建玩家角色
         /// </summary>
         /// <param name="actorTableId"></param>
         /// <returns></returns>
-        public Actor CreatePlayerCharacter(int actorTableId)
+        public static Actor CreatePlayerCharacter(int actorTableId)
         {
             if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
             {
@@ -207,7 +232,6 @@ namespace Hono.Scripts.Battle.Core
             }
 
             Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
-            var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
 
             //设置初始值
             actor.Attrs.Init(actorTableId);
@@ -215,9 +239,9 @@ namespace Hono.Scripts.Battle.Core
             //从外部获取养成数据
             //actro.Attrs.InitAttr();
 
-            actor.Init(uid, row);
+            actor.Init(row);
 
-            _worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
+            WorldInstance.World._worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
 
             return actor;
         }
@@ -227,7 +251,7 @@ namespace Hono.Scripts.Battle.Core
         ///  玩家角色(士兵)的属性来自养成转换
         ///  地图其他单位的属性来自静态配置，地图参数，等级影响等
         /// </summary>
-        public Actor CreateActor(int actorTableId, WorldNode parent = null)
+        public static Actor CreateActor(int actorTableId, WorldNode parent = null)
         {
             if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
             {
@@ -235,15 +259,14 @@ namespace Hono.Scripts.Battle.Core
             }
 
             Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
-            var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
 
             actor.Attrs.Init(actorTableId);
 
-            actor.Init(uid, row);
+            actor.Init(row);
 
             if (parent == null)
             {
-                _worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
+                WorldInstance.World._worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
             }
             else
             {
@@ -271,7 +294,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="actorTableId"></param>
         /// <param name="summonSetting"></param>
         /// <returns></returns>
-        public Actor SummonActor(Actor summoner, int actorTableId, SummonSetting summonSetting)
+        public static Actor SummonActor(Actor summoner, int actorTableId, SummonSetting summonSetting)
         {
             if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
             {
@@ -279,16 +302,15 @@ namespace Hono.Scripts.Battle.Core
             }
 
             Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
-            var uid = UnitUidGenerator.GenerateUid(EUnitUidRangeType.NormalActor);
 
             actor.Attrs.Init(actorTableId);
             actor.Attrs.SetSummoned(summoner, summonSetting.FromTopSummer);
             actor.Attrs.InheritAttrs(summoner.Attrs, summonSetting);
-            actor.Init(uid, row);
+            actor.Init(row);
 
             if (!summonSetting.LifeWithSummoner)
             {
-                _worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
+                WorldInstance.World._worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
             }
             else
             {
@@ -305,6 +327,8 @@ namespace Hono.Scripts.Battle.Core
         {
             return null;
         }
+
+        #endregion
 
         public void OpenStrategicMap()
         {

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Hono.Scripts.Battle
 {
-    public class DamageConfig : ICPoolObject
+    public class DamageConfig : IGPoolObject
     {
         /// <summary>
         ///     加值类型

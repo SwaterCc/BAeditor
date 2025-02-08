@@ -59,6 +59,16 @@ namespace Hono.Scripts.Battle
     }
     
     /// <summary>
+    /// 技能修改逻辑
+    /// </summary>
+    public enum ESkillModifyType
+    {
+        SkillLevel = 1,
+        SkillAttr = 2,
+        SkillTag = 3,
+    }
+    
+    /// <summary>
     /// Actor初始化状态
     /// </summary>
     [Flags]
@@ -442,15 +452,15 @@ namespace Hono.Scripts.Battle
         //同源叠加，非同源替换
         SameSourceAdd,
 
-        //全叠加，仅保留第一个buff
+        //全叠加
         Add,
 
-        //仅保留最后一个buff无叠加
+        //仅保留第一个buff
         OnlyOne,
     }
 
     /// <summary>
-    ///     添加规则
+    /// 添加规则
     /// </summary>
     public enum EApplicationRequirement
     {
@@ -458,6 +468,14 @@ namespace Hono.Scripts.Battle
         NoTags,
     }
 
+    /// <summary>
+    /// buff移除逻辑
+    /// </summary>
+    public enum EBuffRemoveType
+    {
+        
+    }
+    
     /// <summary>
     ///     打击点类型
     /// </summary>

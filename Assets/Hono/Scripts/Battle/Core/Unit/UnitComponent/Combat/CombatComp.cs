@@ -1,57 +1,145 @@
-﻿using Hono.Scripts.Battle.Base;
-using Hono.Scripts.Battle.Core;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
-namespace Hono.Scripts.Battle
+namespace Hono.Scripts.Battle.Core
 {
     /// <summary>
     /// 战斗组件
     /// </summary>
     public class CombatComp : UnitComponent
     {
-        public enum ECombatRTType
-        {
-            SkillId = 1,
-
-            BuffId = 100000,
-        }
-
         /// <summary>
-        /// 战斗数据运行时，类似属性
+        /// 技能列表
         /// </summary>
-        public abstract class CombatRT { }
-
-        public class SkillRT : CombatRT
-        {
-            public int SkillLevel;
-
-            public TagCollection TagCollection;
-        }
-
-        public class BuffRT : CombatRT
-        {
-            public int BuffLayer;
-        }
-
-        /// <summary>
-        /// 战斗组件的快照
-        /// </summary>
-        public class CombatCompSnapshot
-        {
-            //技能运行时数据快照
-            //Buff运行时数据快照
-        }
-        public override void Init() { }
-
-        protected override void onClear() { }
+        public Dictionary<int, Skill> Skills { get; } = new(10);
         
-        public SkillRT GetSkillRt(int skillId)
+        /// <summary>
+        /// Buff列表
+        /// </summary>
+        public Dictionary<int> Buffs { get; } = new(10);
+        
+        void GetBuffLayer(Unit unit,int buffId,)
+
+        public override void Init()
         {
-            return null;
+            
+        }
+        
+        #region Buff接口
+        public void AddBuff(int sourceActorId, int buffConfigId, int buffLayer = 1)
+        {
+            var buffData = AssetManager.Instance.GetData<BuffData>(buffConfigId);
+
+            if (buffData == null)
+            {
+                Debug.LogError($"Id {buffConfigId} BuffData is null");
+                return;
+            }
+
+            if (buffData.FilterTags.Count > 0)
+            {
+                switch (buffData.AddRule)
+                {
+                    case EApplicationRequirement.HasTags:
+                        if (buffData.FilterTags.Any(tag => !Unit.Tags.HasTag(tag)))
+                        {
+                            return;
+                        }
+
+                        break;
+                    case EApplicationRequirement.NoTags:
+                        if (buffData.FilterTags.Any(tag => Unit.Tags.HasTag(tag)))
+                        {
+                            return;
+                        }
+
+                        break;
+                }
+            }
+
+            if (!Buffs.TryGetValue(buffConfigId, out var buff))
+            {
+                buff = GPool<Buff>.Pool.Rent();
+                buff.OnRent(Unit, sourceActorId, buffData);
+                Buffs.Add(buff.ConfigId, buff);
+            }
+            else
+            {
+                if (CheckReplace(buff, buffData, sourceActorId))
+                {
+                    GPool<Buff>.Pool.Recycle(buff);
+                    buff = GPool<Buff>.Pool.Rent();
+                    buff.OnRent(Unit, sourceActorId, buffData);
+                    Buffs[buffConfigId] = buff;
+                }
+                else
+                {
+                    buff.AddLayer(buffLayer);
+                }
+            }
         }
 
-        public BuffRT GetBuffRT(int buffId)
+        private bool CheckReplace(Buff oldBuff, BuffData newBuffData, int sourceId)
         {
-            return null;
+            switch (newBuffData.ReplaceRule)
+            {
+                case EBuffReplaceRule.SameSourceReplace:
+                {
+                    //同源替换
+                    return oldBuff.SourceActorUid == sourceId;
+                }
+                case EBuffReplaceRule.SameSourceAdd:
+                {
+                    //非同源替换
+                    return oldBuff.SourceActorUid != sourceId;
+                }
+                case EBuffReplaceRule.Add:
+                {
+                    //不替换
+                    return false;
+                }
+                case EBuffReplaceRule.OnlyOne:
+                {
+                    //全替换
+                    return true;
+                }
+            }
+
+            Debug.LogError("不应该走到这里");
+            return false;
         }
+
+        public void RemoveBuff(int buffConfigId)
+        {
+            if (Buffs.TryGetValue(buffConfigId, out var buff))
+            {
+                Buffs.Remove(buffConfigId);
+                GPool<Buff>.Pool.Recycle(buff);
+            }
+        }
+
+        public int GetBuffLayer(int configId)
+        {
+            if (!Buffs.TryGetValue(configId, out var buff))
+            {
+                return -1;
+            }
+
+            return buff.LayerCount;
+        }
+
+        public int GetBuffSource(int configId)
+        {
+            if (!Buffs.TryGetValue(configId, out var buff))
+            {
+                return -1;
+            }
+
+            return buff.SourceActorUid;
+        }
+        #endregion
+        
+        protected override void onClear() { }
     }
 }

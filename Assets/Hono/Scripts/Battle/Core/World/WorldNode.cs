@@ -114,7 +114,7 @@ namespace Hono.Scripts.Battle.Core
             {
                 _root._children.Remove(child);
             }
-
+            
             child._parent = this;
             _children ??= new List<WorldNode>(10);
             _children.Add(child);

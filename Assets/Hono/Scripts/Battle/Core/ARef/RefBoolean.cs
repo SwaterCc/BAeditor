@@ -7,7 +7,7 @@ using System;
 namespace Hono.Scripts.Battle.Base
 {
     [Serializable]
-    public class RefBoolean : ARef, ICPoolObject
+    public class RefBoolean : ARef, IGPoolObject
     {
         public bool Value;
         private int _refCount;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hono.Scripts.Battle.AbilitySystem;
+using Hono.Scripts.Battle.AbilityFramework;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Message;
@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public abstract class Unit : WorldNode
+    public abstract class Unit : WorldNode, IAbilityHandle
     {
         /// <summary>
         /// 变量黑板
@@ -35,16 +35,11 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         /// <returns></returns>
         public EUnitFlag State { get; private set; }
-        
+
         /// <summary>
         /// 动作系统
         /// </summary>
         private readonly ActionSystem _actionSystem;
-
-        /// <summary>
-        /// Ability接口
-        /// </summary>
-        private readonly AbilityController _abilityController;
 
         /// <summary>
         /// Actor事件容器
@@ -64,7 +59,6 @@ namespace Hono.Scripts.Battle.Core
         protected Unit()
         {
             _actionSystem = new ActionSystem(this);
-            _abilityController = new AbilityController(this);
 
             UnitTransform = new UnitTransform();
             Attrs = new AttrCollection(this);
@@ -89,9 +83,9 @@ namespace Hono.Scripts.Battle.Core
             return component;
         }
 
-        protected void Init(int uid)
+        protected void Init()
         {
-            Uid = uid;
+            Uid = World.GetUid();
             EventManager.Instance.AddListenerCollection(_evtListenerCollection);
             MessageManager.Instance.AddMsgCollection(_messageCollection);
 
@@ -109,7 +103,6 @@ namespace Hono.Scripts.Battle.Core
                 component.Value.Tick(dt);
             }
 
-            _abilityController.Tick(dt);
             _actionSystem.Tick(dt);
             _evtListenerCollection.Tick(dt);
             _messageCollection.Tick(dt);
@@ -123,7 +116,6 @@ namespace Hono.Scripts.Battle.Core
             }
 
             _components.Clear();
-            _abilityController.Clear();
             _actionSystem.Clear();
 
             Attrs.Clear();
@@ -144,7 +136,8 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="abilityId"></param>
         public Ability AddAbility(int abilityId)
         {
-            return _abilityController.AwardAbility(abilityId);
+            //return _abilityController.AwardAbility(abilityId);
+            return null;
         }
 
         /// <summary>
@@ -153,7 +146,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="abilityId"></param>
         public void RemoveAbility(int abilityId)
         {
-            _abilityController.RemoveAbility(abilityId);
+            //_abilityController.RemoveAbility(abilityId);
         }
 
         /// <summary>

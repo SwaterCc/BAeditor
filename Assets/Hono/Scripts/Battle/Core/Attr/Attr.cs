@@ -3,7 +3,7 @@ namespace Hono.Scripts.Battle.Core
     /// <summary>
     ///  属性
     /// </summary>
-    public class Attr :ICPoolObject
+    public class Attr :IGPoolObject
     {
         private int _value;
         

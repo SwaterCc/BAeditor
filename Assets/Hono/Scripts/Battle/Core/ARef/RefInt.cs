@@ -7,7 +7,7 @@ using System;
 namespace Hono.Scripts.Battle.Base
 {
     [Serializable]
-    public class RefInt : ARef, ICPoolObject
+    public class RefInt : ARef, IGPoolObject
     {
         public int Value;
 

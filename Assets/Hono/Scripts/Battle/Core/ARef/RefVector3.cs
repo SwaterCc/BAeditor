@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Hono.Scripts.Battle.Base
 {
     [Serializable]
-    public class RefVector3 : ARef , ICPoolObject
+    public class RefVector3 : ARef , IGPoolObject
     {
         public float x;
         public float y;

@@ -1,16 +1,15 @@
 #region
 
 using System.Collections.Generic;
-using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Core;
-using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
 using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle
+// ReSharper disable once CheckNamespace
+namespace Hono.Scripts.Battle.AbilityFramework
 {
     public partial class AFunctionDefine
     {
@@ -19,7 +18,7 @@ namespace Hono.Scripts.Battle
         {
             if (tryGetActor(actorUid, out Actor actor))
             {
-                if (actor.TryGetComponent<BuffComp>(out var comp))
+                if (actor.TryGetComponent<BuffCollection>(out var comp))
                 {
                     return comp.GetBuffLayer(buffId);
                 }
@@ -96,10 +95,7 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            foreach (var targetUid in targetUids)
-            {
-               
-            }
+            foreach (var targetUid in targetUids) { }
         }
 
         [AbilityFunction("Bullet")]
@@ -123,7 +119,7 @@ namespace Hono.Scripts.Battle
 
             if (target.TryGetComponent<VFXComp>(out var vfxComp))
             {
-               // return vfxComp.AddVFXObject(setting);
+                // return vfxComp.AddVFXObject(setting);
             }
 
             Debug.LogError("创建VFX失败，目标没有特效组件");
@@ -144,7 +140,7 @@ namespace Hono.Scripts.Battle
                 {
                     if (target.TryGetComponent<VFXComp>(out var vfxComp))
                     {
-                       // vfxComp.AddVFXObject(setting);
+                        // vfxComp.AddVFXObject(setting);
                     }
                 }
             }
@@ -203,14 +199,12 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            if (target.TryGetComponent<BuffComp>(out var comp))
-            {
-                var sourceActor = Actor;
-                var sourceUid = topSourceActor
-                    ? sourceActor.GetAttr(EAttrType.AttrSourceActorUid)
-                    : sourceActor.GetAttr(EAttrType.AttrTopSourceActorUid);
-                comp.AddBuff(sourceUid, buffId, buffLayer);
-            }
+            var sourceActor = Actor;
+            var sourceUid = topSourceActor
+                ? sourceActor.GetAttr(EAttrType.AttrSourceActorUid)
+                : sourceActor.GetAttr(EAttrType.AttrTopSourceActorUid);
+
+            BuffSystem.Instance.AddBuff(sourceUid, targetUid, buffId, buffLayer);
         }
 
         [AbilityFunction]
@@ -224,36 +218,31 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            foreach (var actorUid in targetUids)
+            foreach (var targetUid in targetUids)
             {
-                if (!tryGetActor(actorUid, out var actor))
+                if (!tryGetActor(targetUid, out var actor))
                 {
                     return;
                 }
 
-                if (actor.TryGetComponent<BuffComp>(out var comp))
-                {
-                    var sourceActor = Actor;
-                    var sourceUid = topSourceActor
-                        ? sourceActor.GetAttr(EAttrType.AttrSourceActorUid)
-                        : sourceActor.GetAttr(EAttrType.AttrTopSourceActorUid);
-                    comp.AddBuff(sourceUid, buffId, buffLayer);
-                }
+                var sourceActor = Actor;
+                var sourceUid = topSourceActor
+                    ? sourceActor.GetAttr(EAttrType.AttrSourceActorUid)
+                    : sourceActor.GetAttr(EAttrType.AttrTopSourceActorUid);
+
+                BuffSystem.Instance.AddBuff(sourceUid, targetUid, buffId, buffLayer);
             }
         }
 
         [AbilityFunction]
-        public void RemoveBuff(int buffOwnerActorUid, int buffId, int buffLayer = 1)
+        public void RemoveBuff(int targetUid, int buffId, int buffLayer = 1)
         {
-            if (!tryGetActor(buffOwnerActorUid, out var actor))
+            if (!tryGetActor(targetUid, out var actor))
             {
                 return;
             }
 
-            if (actor.TryGetComponent<BuffComp>(out var comp))
-            {
-                comp.RemoveBuff(buffId);
-            }
+            BuffSystem.Instance.RemoveBuff(actor.Uid, buffId);
         }
 
         [AbilityFunction]
@@ -271,22 +260,14 @@ namespace Hono.Scripts.Battle
                     return;
                 }
 
-                if (actor.TryGetComponent<BuffComp>(out var comp))
-                {
-                    comp.RemoveBuff(buffId);
-                }
+                BuffSystem.Instance.RemoveBuff(actor.Uid, buffId);
             }
         }
 
         [AbilityFunction]
         public int GetBuffSoruce(int buffId)
         {
-            if (Actor.TryGetComponent<BuffComp>(out var comp))
-            {
-                return comp.GetBuffSource(buffId);
-            }
-
-            return -1;
+            return BuffSystem.Instance.GetBuffSource(Actor.Uid, buffId);;
         }
 
         [AbilityFunction]
@@ -297,7 +278,7 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            if (actor.TryGetComponent<SkillComp>(out var comp))
+            if (actor.TryGetComponent<SkillCollection>(out var comp))
             {
                 if (comp.TryGetSkill(skillId, out var skill))
                 {

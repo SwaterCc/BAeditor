@@ -9,7 +9,7 @@ namespace Hono.Scripts.Battle.ObjectPool
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
-    public class ADictionary<TKey, TValue> : ICPoolObject, IEnumerable<KeyValuePair<TKey, TValue>>
+    public class ADictionary<TKey, TValue> : IGPoolObject, IEnumerable<KeyValuePair<TKey, TValue>>
     {
         private readonly Dictionary<TKey, TValue> _dictionary = new();
 
@@ -134,7 +134,7 @@ namespace Hono.Scripts.Battle.ObjectPool
                 {
                     refCount.RefCount.RemoveReference();
                 }
-                else if (item is ICPoolObject poolObject)
+                else if (item is IGPoolObject poolObject)
                 {
                     GPoolManager.Instance.RecycleAObject(poolObject);
                 }
@@ -146,7 +146,7 @@ namespace Hono.Scripts.Battle.ObjectPool
                 {
                     refCount.RefCount.RemoveReference();
                 }
-                else if (item is ICPoolObject poolObject)
+                else if (item is IGPoolObject poolObject)
                 {
                     GPoolManager.Instance.RecycleAObject(poolObject);
                 }

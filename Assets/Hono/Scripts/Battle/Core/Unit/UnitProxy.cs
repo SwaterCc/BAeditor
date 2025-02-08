@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public class UnitProxy : ICPoolObject
+    public class UnitProxy : IGPoolObject
     {
         /// <summary>
         /// 非代理模式直接保存Unit对象
@@ -31,15 +31,15 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         private EUnitFlag _state;
 
-        /// <summary>
+        /*/// <summary>
         /// 战斗组件快照
         /// </summary>
-        private Dictionary<int, CombatComp.BuffRT> _buffRts = new(10);
+        private Dictionary<int, CombatComp.BuffRuntimeData> _buffRts = new(10);
 
         /// <summary>
         /// 战斗组件快照
         /// </summary>
-        private Dictionary<int, CombatComp.SkillRT> _skillRts = new(10);
+        private Dictionary<int, CombatComp.SkillRuntimeData> _skillRts = new(10);*/
 
         /// <summary>
         /// 坐标
@@ -74,7 +74,7 @@ namespace Hono.Scripts.Battle.Core
         {
             if (_unit != null)
             {
-                return _unit.GetAttr(attrType);
+                return _unit.GetAttr(attrType) ;
             }
 
             return _attrSnapshot.GetValueOrDefault(attrType, 0);
@@ -102,33 +102,13 @@ namespace Hono.Scripts.Battle.Core
 
             return false;
         }
-
-        public CombatComp.SkillRT GetSkillRt(int skillId)
-        {
-            if (_unit != null)
-            {
-                return _unit.GetComponent<CombatComp>().GetSkillRt(skillId);
-            }
-            return _skillRts.GetValueOrDefault(skillId, null);
-        }
-
-        public CombatComp.BuffRT GetBuffRT(int buffId)
-        {
-            if (_unit != null)
-            {
-                return _unit.GetComponent<CombatComp>().GetBuffRT(buffId);
-            }
-            return _buffRts.GetValueOrDefault(buffId, null);
-        }
-
+        
         public void OnRecycle()
         {
             _unit = null;
             _attrSnapshot.Clear();
             _tagsSnapshot.Clear();
             _unitTransformSnapShot = default;
-            _skillRts.Clear();
-            _buffRts.Clear();
         }
     }
 }

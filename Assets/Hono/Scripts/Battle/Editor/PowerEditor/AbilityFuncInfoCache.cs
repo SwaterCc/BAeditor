@@ -8,6 +8,7 @@ using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools.CustomAttribute;
 using UnityEngine;
+using AFunctionDefine = Hono.Scripts.Battle.AbilityFramework.AFunctionDefine;
 
 namespace Editor.BattleEditor.AbilityEditor
 {

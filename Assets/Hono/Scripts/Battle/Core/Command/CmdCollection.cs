@@ -2,7 +2,7 @@
 
 namespace Hono.Scripts.Battle
 {
-    public interface ICommand : ICPoolObject
+    public interface ICommand : IGPoolObject
     {
         void Do();
         void Undo();
