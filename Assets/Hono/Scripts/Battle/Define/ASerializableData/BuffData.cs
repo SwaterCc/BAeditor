@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 #endregion
 
@@ -9,35 +10,66 @@ namespace Hono.Scripts.Battle
 {
     public class BuffData : ASerializableData
     {
-        /// <summary>
-        /// 同Id Buff行为
-        /// </summary>
-        public EBuffReplaceRule ReplaceRule;
+        public struct BuffAddBehaveInfo
+        {
+            public int Id;
+            public int Count;
+        }
         /// <summary>
         /// Buff添加规则
         /// </summary>
-        public EApplicationRequirement AddRule;
+        public EBuffAddBlockRule blockRule;
         /// <summary>
-        /// Buff删除规则
+        /// 阻断tag
         /// </summary>
-        public EBuffRemoveType RemoveType;
-        public List<int> FilterTags = new List<int>();
-        public int MaxLayerNumber;
-        public float MaxDuration;
+        public List<int> blockTags = new();
+        /// <summary>
+        /// 阻断id
+        /// </summary>
+        public List<int> blockBuffIds = new();
+        /// <summary>
+        /// 同Id Buff添加规则
+        /// </summary>
+        public EBuffAddRule addRule;
+        /// <summary>
+        /// 添加成功的规则
+        /// </summary>
+        public EBuffAddSuccessBehave addSuccessBehave;
+        /// <summary>
+        /// 清理指定tag的buff数量
+        /// </summary>
+        public List<int> removeBuffByTags = new();
+        /// <summary>
+        /// id删除数量（-1为全部）
+        /// </summary>
+        public int tagRemoveCount;
+        /// <summary>
+        /// 清理指定id的buff数量
+        /// </summary>
+        public List<int> removeBuffByIds = new();
+        /// <summary>
+        /// id删除数量（-1为全部）
+        /// </summary>
+        public int idRemoveCount;
+        /// <summary>
+        /// 最大buff层数
+        /// </summary>
+        public int maxLayerNumber;
+        /// <summary>
+        /// 持续时间(-1为跟随Unit生命周期)
+        /// </summary>
+        public float duration;
+        /// <summary>
+        /// 叠层时再次执行逻辑
+        /// </summary>
+        public bool runAgainWhenLayering;
+        /// <summary>
+        /// 叠层时叠加持续时长
+        /// </summary>
+        public bool lifeAddWhenLayering;
+        /// <summary>
+        /// buff本身拥有的Tag
+        /// </summary>
+        public List<int> buffTags = new();
     }
-    
-    
-    
-    //1.添加相同buff时检测
-        //无限制
-        //存在相同Id时允许添加
-        //存在不相Id时允许添加
-        //存在相同Tag时允许添加
-        //存在不同Tag时允许添加
-        //存在相同来源时允许添加
-        //存在不同来源时允许添加
-        
-    //2.添加后的行为
-        //1.叠层
-        //2.替换
 }

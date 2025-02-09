@@ -17,6 +17,8 @@ namespace Hono.Scripts.Battle
     {
         [ReadOnly]
         public TagTreeItem root = new();
+        [LabelText("快速索引")]
+        public Dictionary<int, TagTreeItem> searchDict = new();
     }
 
     public static class TagTreeHelper

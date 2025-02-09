@@ -42,6 +42,11 @@ namespace Hono.Scripts.Battle.Core
         private readonly ActionSystem _actionSystem;
 
         /// <summary>
+        /// ability控制器
+        /// </summary>
+        private readonly AbilityController _abilityController;
+
+        /// <summary>
         /// Actor事件容器
         /// </summary>
         private readonly UnitEventListenerCollection _evtListenerCollection;
@@ -136,8 +141,26 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="abilityId"></param>
         public Ability AddAbility(int abilityId)
         {
-            //return _abilityController.AwardAbility(abilityId);
+            return _abilityController.AwardAbility(abilityId);
             return null;
+        }
+        
+        /// <summary>
+        /// 执行Ability
+        /// </summary>
+        /// <param name="abilityId"></param>
+        public void ExecuteAbility(int abilityId)
+        {
+            _abilityController.ExecuteAbility(abilityId);
+        }
+        
+        /// <summary>
+        /// 停止Ability
+        /// </summary>
+        /// <param name="abilityId"></param>
+        public void StopAbility(int abilityId)
+        {
+            _abilityController.StopAbility(abilityId);
         }
 
         /// <summary>
@@ -146,7 +169,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="abilityId"></param>
         public void RemoveAbility(int abilityId)
         {
-            //_abilityController.RemoveAbility(abilityId);
+            _abilityController.RemoveAbility(abilityId);
         }
 
         /// <summary>

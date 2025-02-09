@@ -63,8 +63,22 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// </summary>
         public float TimeScaleFactory { get; set; }
 
+        public static void InitEnv()
+        {
+            if (!AbilityEnv.IsEnvInit)
+            {
+                AbilityEnv.InitEnv();
+            }
+        }
+        
         public Ability()
         {
+            if (!AbilityEnv.IsEnvInit)
+            {
+                Debug.LogWarning("AbilityEnv not init When Game Begin");
+                AbilityEnv.InitEnv();
+            }
+            
             _abilityCycle = new AbilityCycle(this);
             _functionDefine = new AFunctionDefine(this);
             _cycleCmdCollection = new CmdCollection();

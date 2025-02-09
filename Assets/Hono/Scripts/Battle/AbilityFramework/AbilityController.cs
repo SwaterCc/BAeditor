@@ -10,20 +10,12 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.AbilityFramework
 {
-    public class AbilitySystem : Singleton<AbilitySystem>
+    public class AbilityController
     {
-        private readonly Dictionary<int, Dictionary<int, Ability>> _searchDict = new(30);
+        private readonly Dictionary<int, Ability> _searchDict = new(30);
         private readonly List<Ability> _runningList = new(30);
         private readonly List<Ability> _removeList = new(10);
-        
-        public static void InitEnv()
-        {
-            if (!Ability.AbilityEnv.IsEnvInit)
-            {
-                Ability.AbilityEnv.InitEnv();
-            }
-        }
-        
+
         /// <summary>
         /// 是否存在某个Ability
         /// </summary>
@@ -31,15 +23,13 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// <returns></returns>
         public bool HasAbility(int id)
         {
-            
             return false;
         }
 
         /// <summary>
         /// 赋予Ability
         /// </summary>
-       
-        public Ability AwardAbility(Unit unit,int id)
+        public Ability AwardAbility(Unit unit, int id)
         {
             if (id <= 0)
             {
@@ -74,18 +64,23 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 _runningList[i].OnTick(dt);
             }
 
-            foreach (var id in _removeList)
+            foreach (var ability in _removeList)
             {
-                if (!_searchDict.Remove(id, out Ability ability))
-                {
-                    continue;
-                }
-
                 _runningList.RemoveSwapBack(ability);
                 GPool<Ability>.Pool.Recycle(ability);
             }
 
             _removeList.Clear();
+        }
+
+        public void ExecuteAbility(int configId)
+        {
+            _searchDict[configId].Execute(true);
+        }
+        
+        public void StopAbility(int configId)
+        {
+            _searchDict[configId].Execute(true);
         }
 
         /// <summary>
@@ -94,9 +89,9 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// <param name="configId"></param>
         public void RemoveAbility(int configId)
         {
-            if (_searchDict.ContainsKey(configId))
+            if (_searchDict.TryGetValue(configId, out var ability))
             {
-                _removeList.Add(configId);
+                _removeList.Add(ability);
             }
         }
 

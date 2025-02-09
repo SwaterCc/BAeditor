@@ -235,56 +235,30 @@ namespace Hono.Scripts.Battle.AbilityFramework
         }
 
         [AbilityFunction]
-        public void RemoveBuff(int targetUid, int buffId, int buffLayer = 1)
+        public void RemoveBuff(int buffUid)
         {
-            if (!tryGetActor(targetUid, out var actor))
-            {
-                return;
-            }
-
-            BuffSystem.Instance.RemoveBuff(actor.Uid, buffId);
+            BuffSystem.Instance.RemoveBuff(buffUid);
         }
 
         [AbilityFunction]
-        public void RemoveTargetsBuff(List<int> targetUids, int buffId, int buffLayer = 1)
+        public void RemoveTargetsBuff(List<int> buffUids)
         {
-            if (targetUids is not { Count: > 0 })
+            foreach (var buffUid in buffUids)
             {
-                return;
-            }
-
-            foreach (var actorUid in targetUids)
-            {
-                if (!tryGetActor(actorUid, out var actor))
-                {
-                    return;
-                }
-
-                BuffSystem.Instance.RemoveBuff(actor.Uid, buffId);
+                BuffSystem.Instance.RemoveBuff(buffUid);
             }
         }
 
         [AbilityFunction]
         public int GetBuffSoruce(int buffId)
         {
-            return BuffSystem.Instance.GetBuffSource(Actor.Uid, buffId);;
+            return -1;//BuffSystem.Instance.GetBuffSource(Actor.Uid, buffId);;
         }
 
         [AbilityFunction]
         public void LessSkillCD(int skillId, int lessValue)
         {
-            if (!tryGetActor(0, out var actor))
-            {
-                return;
-            }
-
-            if (actor.TryGetComponent<SkillCollection>(out var comp))
-            {
-                if (comp.TryGetSkill(skillId, out var skill))
-                {
-                    skill.LessCd(lessValue / 10000f);
-                }
-            }
+            
         }
 
         [AbilityFunction]

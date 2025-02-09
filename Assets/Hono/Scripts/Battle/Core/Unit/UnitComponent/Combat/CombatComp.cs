@@ -25,6 +25,9 @@ namespace Hono.Scripts.Battle.Core
         {
             
         }
+        //技能不做目标选择，技能仅接受目标，目标的选择来自上层传入，选择的方式由技能配置（方向（子弹用），坐标（AOE），目标(单体技能或AOE)，无（逻辑里自选））
+        //提供接口获取目标返回坐标，获取目标返回UID，获取目标返回方向向量
+        //
         
         #region Buff接口
         public void AddBuff(int sourceActorId, int buffConfigId, int buffLayer = 1)
@@ -41,14 +44,14 @@ namespace Hono.Scripts.Battle.Core
             {
                 switch (buffData.AddRule)
                 {
-                    case EApplicationRequirement.HasTags:
+                    case EAddBlockRule.HasTags:
                         if (buffData.FilterTags.Any(tag => !Unit.Tags.HasTag(tag)))
                         {
                             return;
                         }
 
                         break;
-                    case EApplicationRequirement.NoTags:
+                    case EAddBlockRule.NoTags:
                         if (buffData.FilterTags.Any(tag => Unit.Tags.HasTag(tag)))
                         {
                             return;
@@ -87,12 +90,12 @@ namespace Hono.Scripts.Battle.Core
                 case EBuffReplaceRule.SameSourceReplace:
                 {
                     //同源替换
-                    return oldBuff.SourceActorUid == sourceId;
+                    return oldBuff.SourceUnitUid == sourceId;
                 }
                 case EBuffReplaceRule.SameSourceAdd:
                 {
                     //非同源替换
-                    return oldBuff.SourceActorUid != sourceId;
+                    return oldBuff.SourceUnitUid != sourceId;
                 }
                 case EBuffReplaceRule.Add:
                 {

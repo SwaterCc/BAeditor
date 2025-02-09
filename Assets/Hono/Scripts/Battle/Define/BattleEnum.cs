@@ -57,7 +57,7 @@ namespace Hono.Scripts.Battle
         GameMode,
         Other,
     }
-    
+
     /// <summary>
     /// 技能修改逻辑
     /// </summary>
@@ -67,7 +67,7 @@ namespace Hono.Scripts.Battle
         SkillAttr = 2,
         SkillTag = 3,
     }
-    
+
     /// <summary>
     /// Actor初始化状态
     /// </summary>
@@ -79,7 +79,7 @@ namespace Hono.Scripts.Battle
         Attack = 2,
         Stiff = 4,
     }
-    
+
     /// <summary>
     /// 世界状态
     /// </summary>
@@ -89,7 +89,7 @@ namespace Hono.Scripts.Battle
         /// 
         /// </summary>
         NoInit = 0,
-        
+
         /// <summary>
         /// 数据加载
         /// </summary>
@@ -104,12 +104,12 @@ namespace Hono.Scripts.Battle
         /// 俯视角游玩状态
         /// </summary>
         Gaming,
-        
+
         /// <summary>
         /// 战略地图布置状态
         /// </summary>
         StrategicMap,
-        
+
         /// <summary>
         /// 结算
         /// </summary>
@@ -208,7 +208,7 @@ namespace Hono.Scripts.Battle
         Normal,
         Dead,
     }
-    
+
     /// <summary>
     /// ability 指令类型
     /// </summary>
@@ -245,7 +245,7 @@ namespace Hono.Scripts.Battle
         Repeat,
         ETraverseList,
     }
-    
+
     /// <summary>
     ///     Ability可编辑周期
     /// </summary>
@@ -260,7 +260,7 @@ namespace Hono.Scripts.Battle
         /// 能力初始化
         /// </summary>
         Init = 1,
-        
+
         /// <summary>
         /// 预启动
         /// </summary>
@@ -442,40 +442,52 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    ///     buff重复添加规则（替换or叠层）
+    /// 添加阻断规则
+    /// 当该buff存在的时候会阻止指定的buff再次添加
     /// </summary>
-    public enum EBuffReplaceRule
+    public enum EBuffAddBlockRule
     {
-        //同源替换，非同源叠加
-        SameSourceReplace,
-
-        //同源叠加，非同源替换
-        SameSourceAdd,
-
-        //全叠加
-        Add,
-
-        //仅保留第一个buff
-        OnlyOne,
+        BlockByTags,
+        BlockById,
     }
 
     /// <summary>
-    /// 添加规则
+    /// buff重复添加规则（替换or叠层）
     /// </summary>
-    public enum EApplicationRequirement
+    public enum EBuffAddRule
     {
-        HasTags,
-        NoTags,
+        /// <summary>
+        /// 同源同IdBuff覆盖
+        /// </summary>
+        SameSourceOverride,
+
+        /// <summary>
+        /// 同源同IdBuff叠加
+        /// </summary>
+        SameSourceLayering,
+
+        /// <summary>
+        /// 同Id全叠加
+        /// </summary>
+        AllLayering,
+
+        /// <summary>
+        /// 同Id全覆盖
+        /// </summary>
+        AllOverride,
     }
 
     /// <summary>
-    /// buff移除逻辑
+    /// 添加成功后的行为
+    /// 移除指定tag的buff
+    /// 移除指定id的buff
     /// </summary>
-    public enum EBuffRemoveType
+    public enum EBuffAddSuccessBehave
     {
-        
+        RemoveBuffsByTag,
+        RemoveBuffsById
     }
-    
+
     /// <summary>
     ///     打击点类型
     /// </summary>
@@ -535,7 +547,7 @@ namespace Hono.Scripts.Battle
     public enum EFilterConditionType
     {
         Tag,
-        Faction,//相对阵营
+        Faction, //相对阵营
         ActorType,
     }
 
@@ -551,7 +563,7 @@ namespace Hono.Scripts.Battle
         Near,
         ControlPlayer = 40,
     }
-    
+
     /// <summary>
     ///     阵营关系
     /// </summary>

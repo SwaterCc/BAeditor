@@ -10,14 +10,14 @@ namespace Editor.AbilityEditor
         public override void Draw()
         {
             SirenixEditorGUI.BeginBox("Buff数据");
-            Data.AddRule = (EApplicationRequirement)SirenixEditorFields.EnumDropdown("Buff添加规则", Data.AddRule);
-            if (Data.AddRule == EApplicationRequirement.HasTags || Data.AddRule == EApplicationRequirement.NoTags)
+            Data.AddRule = (EAddBlockRule)SirenixEditorFields.EnumDropdown("Buff添加规则", Data.AddRule);
+            if (Data.AddRule == EAddBlockRule.HasTags || Data.AddRule == EAddBlockRule.NoTags)
             {
+                //接入tag生态
 	           // AbilityEditorTools.DrawIntList(_data.FilterTags,"筛选tag",50);
             }
             Data.ReplaceRule = (EBuffReplaceRule)SirenixEditorFields.EnumDropdown("Buff替换规则", Data.ReplaceRule);
-            Data.InitLayer = SirenixEditorFields.IntField("Buff初始层数",Data.InitLayer);
-            Data.BuffDamageBasePer = SirenixEditorFields.IntField("Buff基础伤害万分比",Data.BuffDamageBasePer);
+            Data.MaxLayerNumber = SirenixEditorFields.IntField("Buff最大层数",       Data.MaxLayerNumber);
             SirenixEditorGUI.EndBox();
         }
     }

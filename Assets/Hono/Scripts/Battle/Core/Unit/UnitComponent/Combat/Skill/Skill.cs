@@ -45,9 +45,7 @@ namespace Hono.Scripts.Battle
             /// 技能是否能够释放
             /// </summary>
             public bool IsEnable => (!_isDisable) && (_curCdPercent <= 0) && (!_isExecuting);
-
-          
-
+            
             /// <summary>
             /// 当前CD比例
             /// </summary>
