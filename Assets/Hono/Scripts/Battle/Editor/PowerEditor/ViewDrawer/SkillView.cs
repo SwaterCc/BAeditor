@@ -124,15 +124,15 @@ namespace Editor.AbilityEditor
             PowerEditorUIHelper.DrawSimpleField(ref Data.skillTargetType, "目标选择类型", "指向性技能与非指向性技能",
                                                 Data.skillTargetType, true);
             EditorGUILayout.LabelField("一级过滤：对当前技能选出的目标进行筛选，指向性技能会在选择时生效，aoe技能则会影响存入的技能目标列表");
-            PowerEditorUIHelper.DrawSimpleField(ref Data.hitCeiling, "命中数量上限", "会随技能等级表成长", Data.hitCeiling, true);
+            //PowerEditorUIHelper.DrawSimpleField(ref Data.hitCeiling, "命中数量上限", "会随技能等级表成长", Data.hitCeiling, true);
             PowerEditorUIHelper.DrawSimpleField(ref Data.castRange, "允许释放范围", "会随技能等级表成长", Data.castRange, true);
-            if (Data.skillTargetType == ESkillTargetSelectType.NoTargetedSkill)
+            /*if (Data.skillTargetType == ESkillTargetSelectType.NoTargetedSkill)
             {
                 EditorGUILayout.LabelField("非指向技能选择范围配置");
-            }
+            }*/
 
-            PowerEditorUIHelper.DrawSimpleField(ref Data.speedOfRotateToTarget, "转向释放方向的速度",
-                                                Data.speedOfRotateToTarget, true);
+            /*PowerEditorUIHelper.DrawSimpleField(ref Data.speedOfRotateToTarget, "转向释放方向的速度",
+                                                Data.speedOfRotateToTarget, true);*/
             SirenixEditorGUI.EndVerticalList();
             SirenixEditorGUI.EndBox();
 
@@ -146,7 +146,7 @@ namespace Editor.AbilityEditor
             SirenixEditorGUI.BeginBox("冷却时间");
             SirenixEditorGUI.BeginVerticalList();
             drawResList(Data.skillResCheck, "资源检查");
-            PowerEditorUIHelper.DrawSimpleField(ref Data.costTimingType, "资源扣除时机", Data.costTimingType, true);
+            //PowerEditorUIHelper.DrawSimpleField(ref Data.costTimingType, "资源扣除时机", Data.costTimingType, true);
             drawResList(Data.skillResCost, "资源扣除");
             SirenixEditorGUI.EndVerticalList();
             SirenixEditorGUI.EndBox();

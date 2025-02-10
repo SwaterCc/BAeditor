@@ -53,6 +53,22 @@ namespace Hono.Scripts.Battle.Core
             base.Init();
             ActorTableRow = actorRow;
             ActorType = (EActorType)ActorTableRow.ActorType;
+            
+            if (TryGetComponent(out CombatComp combatComp))
+            {
+                //学习技能
+                foreach (var pSkill in ActorTableRow.OwnerSkills)
+                {
+                    combatComp.LearnSkill(pSkill[0]);
+                }
+                
+                //添加buff
+                foreach (var buffId in ActorTableRow.OwnerBuffs)
+                {
+                    combatComp.AddBuff(buffId, Uid);
+                }
+            }
+            
             ModelController.Load();
         }
 

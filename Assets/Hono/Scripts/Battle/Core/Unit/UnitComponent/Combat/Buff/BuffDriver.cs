@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// buff容器，管理单位身上的buff
         /// </summary>
-        private class BuffController
+        private class BuffDriver
         {
             /// <summary>
             /// Uid分配器 全Buff共享
@@ -42,7 +42,7 @@ namespace Hono.Scripts.Battle.Core
             /// </summary>
             private readonly CombatComp _combatComp;
 
-            public BuffController(CombatComp combatComp, int capacity = 30)
+            public BuffDriver(CombatComp combatComp, int capacity = 30)
             {
                 _combatComp = combatComp;
                 _buffs = new Buff[capacity];                  // 初始化数组
@@ -198,6 +198,7 @@ namespace Hono.Scripts.Battle.Core
                 {
                     Uid = UidAllocator.Allocate(),
                     Id = buffData.id,
+                    AbilityId = buffData.abilityId,
                     LayerCount = (short)buffLayer,
                     SourceUnitUid = sourceId,
                     BelongActorUid = _combatComp.Unit.Uid,
@@ -229,7 +230,7 @@ namespace Hono.Scripts.Battle.Core
                     _blockIds.Add(tag);
                 }
 
-                _combatComp.onBuffAdd(ref buff);
+                _combatComp.Unit.ExecuteAbility(buffData.abilityId);
 
                 doAddBehave(buffData);
 
@@ -240,7 +241,6 @@ namespace Hono.Scripts.Battle.Core
             /// 覆盖buff
             /// </summary>
             /// <param name="sourceId"></param>
-            /// <param name="target"></param>
             /// <param name="buffLayer"></param>
             /// <param name="buffData"></param>
             /// <param name="index"></param>
@@ -251,6 +251,7 @@ namespace Hono.Scripts.Battle.Core
                 {
                     Uid = UidAllocator.Allocate(),
                     Id = buffData.id,
+                    AbilityId = buffData.abilityId,
                     LayerCount = buffLayer,
                     SourceUnitUid = sourceId,
                     BelongActorUid = _combatComp.Unit.Uid,
@@ -259,7 +260,7 @@ namespace Hono.Scripts.Battle.Core
                 };
 
                 _buffs[index] = overrideBuff;
-                _combatComp.onBuffOverride(ref overrideBuff);
+                _combatComp.Unit.ExecuteAbility(buffData.abilityId);
 
                 return overrideBuff.Uid;
             }
@@ -283,7 +284,7 @@ namespace Hono.Scripts.Battle.Core
 
                 if (buffData.runAgainWhenLayering)
                 {
-                    _combatComp.onBuffLayering(ref buff);
+                    _combatComp.Unit.ExecuteAbility(buffData.abilityId);
                 }
 
                 return Int32.MinValue;
@@ -494,7 +495,7 @@ namespace Hono.Scripts.Battle.Core
 
                 _lookup.Remove(buff.Uid);
                 _buffCount--;
-                _combatComp.onBuffRemove(ref buff);
+                _combatComp.Unit.StopAbility(buff.AbilityId);
                 UidAllocator.Recycle(buff.Uid);
             }
 

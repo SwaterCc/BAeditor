@@ -10,70 +10,191 @@ namespace Hono.Scripts.Battle.Core
     public partial class CombatComp : UnitComponent
     {
         /// <summary>
-        /// 技能控制器
+        /// 每个技能的修改器
         /// </summary>
-        private readonly SkillDriver _skillDriver;
+        private readonly Dictionary<int, Skill> _skills;
+
+        /// <summary>
+        /// 当前正在运行的唯一技能
+        /// </summary>
+        private Skill _curExclusiveSkill;
+
         /// <summary>
         /// buff控制器
         /// </summary>
-        private readonly BuffController _buffController;
+        private readonly BuffDriver _buffDriver;
+
         /// <summary>
         /// 战斗资源管理
         /// </summary>
-        private readonly CombatResourceCtrl _resourceCtrl;
-        
+        private readonly CombatEnergyCtrl _energyCtrl;
+
         public CombatComp()
         {
-            _skillDriver = new SkillDriver(this);
-            _buffController = new BuffController(this);
+            _skills = new Dictionary<int, Skill>();
+            _buffDriver = new BuffDriver(this);
+            _energyCtrl = new CombatEnergyCtrl(Unit);
         }
 
         public override void Init()
         {
-            //添加buff
-            //添加技能
-            //运行被动技能
+            _energyCtrl.Init();
         }
+
 
         protected override void onTick(float dt)
         {
-            _skillDriver.Tick(dt);
-            _buffController.Tick(dt);
-            _resourceCtrl.Tick(dt);
+            _buffDriver.Tick(dt);
+            _energyCtrl.Tick(dt);
         }
 
         protected override void onClear()
         {
-            _skillDriver.Clear();
-            _buffController.Clear();
-            _resourceCtrl.Clear();
+            foreach (var skill in _skills)
+            {
+                GPool<Skill>.Pool.Recycle(skill.Value);
+            }
+
+            _skills.Clear();
+            _buffDriver.Clear();
+            _energyCtrl.Clear();
         }
-        //技能不做目标选择，技能仅接受目标，目标的选择来自上层传入，选择的方式由技能配置（方向（子弹用），坐标（AOE），目标(单体技能或AOE)，无（逻辑里自选））
-        //提供接口获取目标返回坐标，获取目标返回UID，获取目标返回方向向量
-        //
 
         #region Skill
+
+        public void LearnSkill(int skillId)
+        {
+            if (!_skills.ContainsKey(skillId))
+            {
+                Debug.LogError($"重复学习技能 {skillId}");
+                return;
+            }
+
+            if (!AssetManager.Instance.TryGetData<SkillData>(skillId, out var skillData))
+            {
+                Debug.LogError($"找不到对应的技能 {skillId} 的配置");
+                return;
+            }
+
+            Skill skill = GPool<Skill>.Pool.Rent();
+            skill.OnRent(this, skillData);
+            _skills.Add(skillId, skill);
+
+            if (skill.SkillData.skillType == ESkillType.PassiveSkill)
+            {
+                skill.Play();
+            }
+        }
+
+        /// <summary>
+        /// 忘记技能
+        /// </summary>
+        /// <param name="skillId"></param>
+        public void ForgetSkill(int skillId)
+        {
+            if (_skills.Remove(skillId, out Skill skill))
+            {
+                GPool<Skill>.Pool.Recycle(skill);
+            }
+        }
 
         /// <summary>
         /// 使用技能
         /// </summary>
-        public void UseSkill(int skillId)
+        public bool TryUseSkill(int skillId, out Skill skill)
         {
-            _skillDriver.TryUseSkill(skillId);
+            if (!_skills.TryGetValue(skillId, out skill))
+            {
+                Debug.LogError($"Unit:{Unit} 未学会该技能");
+                return false;
+            }
+
+            if (skill.IsExecuting)
+            {
+                return false;
+            }
+
+            if (skill.SkillData.isExclusive && _curExclusiveSkill != null)
+            {
+                return false;
+            }
+
+            if (!checkSkillResourceEnough(skill.SkillData))
+            {
+                return false;
+            }
+
+            if (skill.SkillData) { }
+
+
+            return true;
         }
 
-        /*public Skill GetSkill()
+        /// <summary>
+        /// 资源检测
+        /// </summary>
+        private bool checkSkillResourceEnough(SkillData skillData)
         {
-            
-        }*/
+            if (skillData.skillResCheck.Count == 0)
+            {
+                return true;
+            }
+
+            bool _resEnough = false;
+            foreach (var resItems in skillData.skillResCheck)
+            {
+                foreach (var resItem in resItems.Items)
+                {
+                    bool flag = true;
+                    switch (resItem.ResourceType)
+                    {
+                        case EBattleResourceType.Energy:
+                            flag = _energyCtrl.CheckEnergyEnough(resItem.ResId, resItem.Value);
+                            break;
+                        case EBattleResourceType.Buff:
+
+                            break;
+                        case EBattleResourceType.Hp:
+                            break;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 资源消耗
+        /// </summary>
+        private void costResource(SkillData skillData)
+        {
+            foreach (var resItems in skillData.skillResCost)
+            {
+                //组检测
+                foreach (var resItem in resItems.Items)
+                {
+                    //单项检测
+                    switch (resItem.ResourceType)
+                    {
+                        case EBattleResourceType.Energy:
+                            var mp = Unit.GetAttr((EAttrType)resItem.ResId);
+                            Unit.SetAttr((EAttrType)resItem.ResId, mp - resItem.Value, false);
+                            break;
+                        case EBattleResourceType.Hp:
+                            break;
+                        case EBattleResourceType.Buff:
+                            break;
+                    }
+                }
+            }
+        }
 
         #endregion
-        
 
 
         #region Buff
 
-        public void AddBuff(int buffId,int sourceUnitUid,  int buffLayer = 1)
+        public void AddBuff(int buffId, int sourceUnitUid, int buffLayer = 1)
         {
             if (!AssetManager.Instance.TryGetData<BuffData>(buffId, out var buffData))
             {
@@ -81,29 +202,18 @@ namespace Hono.Scripts.Battle.Core
                 return;
             }
 
-            _buffController.AddBuff(sourceUnitUid, buffId, buffLayer, buffData);
+            _buffDriver.AddBuff(sourceUnitUid, buffId, buffLayer, buffData);
         }
-        
+
         public int GetBuffLayer(int buffId, int sourceUnitUid = -1)
         {
-            return _buffController.GetBuffLayer(sourceUnitUid, buffId);
+            return _buffDriver.GetBuffLayer(sourceUnitUid, buffId);
         }
-        
+
         public void RemoveBuff(int buffId, int sourceUnitUid)
         {
-            _buffController.RemoveBuff(sourceUnitUid, buffId);
+            _buffDriver.RemoveBuff(sourceUnitUid, buffId);
         }
-
-        /// <summary>
-        /// 执行buff ability
-        /// </summary>
-        private void onBuffAdd(ref Buff buff) { }
-
-        private void onBuffOverride(ref Buff buff) { }
-
-        private void onBuffLayering(ref Buff buff) { }
-
-        private void onBuffRemove(ref Buff buff) { }
 
         #endregion
     }

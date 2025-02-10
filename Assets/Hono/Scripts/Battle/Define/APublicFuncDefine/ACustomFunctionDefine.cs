@@ -204,7 +204,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 ? sourceActor.GetAttr(EAttrType.AttrSourceActorUid)
                 : sourceActor.GetAttr(EAttrType.AttrTopSourceActorUid);
 
-            BuffSystem.Instance.AddBuff(sourceUid, targetUid, buffId, buffLayer);
+            if (target.TryGetComponent(out CombatComp combatComp))
+            {
+                combatComp.AddBuff(buffId, sourceUid, buffLayer);
+            }
         }
 
         [AbilityFunction]
@@ -220,7 +223,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
             foreach (var targetUid in targetUids)
             {
-                if (!tryGetActor(targetUid, out var actor))
+                if (!tryGetActor(targetUid, out var target))
                 {
                     return;
                 }
@@ -230,36 +233,35 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     ? sourceActor.GetAttr(EAttrType.AttrSourceActorUid)
                     : sourceActor.GetAttr(EAttrType.AttrTopSourceActorUid);
 
-                BuffSystem.Instance.AddBuff(sourceUid, targetUid, buffId, buffLayer);
+                if (target.TryGetComponent(out CombatComp combatComp))
+                {
+                    combatComp.AddBuff(buffId, sourceUid, buffLayer);
+                }
             }
         }
 
         [AbilityFunction]
-        public void RemoveBuff(int buffUid)
+        public void RemoveBuff(int targetUid, int buffId, int buffSourceUid)
         {
-            BuffSystem.Instance.RemoveBuff(buffUid);
-        }
-
-        [AbilityFunction]
-        public void RemoveTargetsBuff(List<int> buffUids)
-        {
-            foreach (var buffUid in buffUids)
+            if (!tryGetActor(targetUid, out var target))
             {
-                BuffSystem.Instance.RemoveBuff(buffUid);
+                return;
+            }
+
+            if (target.TryGetComponent(out CombatComp combatComp))
+            {
+                combatComp.RemoveBuff(buffId, buffSourceUid);
             }
         }
 
         [AbilityFunction]
         public int GetBuffSoruce(int buffId)
         {
-            return -1;//BuffSystem.Instance.GetBuffSource(Actor.Uid, buffId);;
+            return -1; //BuffSystem.Instance.GetBuffSource(Actor.Uid, buffId);;
         }
 
         [AbilityFunction]
-        public void LessSkillCD(int skillId, int lessValue)
-        {
-            
-        }
+        public void LessSkillCD(int skillId, int lessValue) { }
 
         [AbilityFunction]
         public int GetListCount(List<int> list)

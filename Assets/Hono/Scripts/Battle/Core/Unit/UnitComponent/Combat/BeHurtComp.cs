@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle.Core
      public class BeHurtComp : UnitComponent
         {
             public override void Init() { }
-            public override void onClear() { }
+            protected override void onClear() { }
 
             public void OnBeHurt(HitDamageInfo hitDamageInfo)
             {

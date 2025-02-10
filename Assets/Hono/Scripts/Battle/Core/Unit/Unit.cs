@@ -96,6 +96,7 @@ namespace Hono.Scripts.Battle.Core
         protected void Init()
         {
             Uid = World.GetUid();
+            
             EventManager.Instance.AddListenerCollection(_evtListenerCollection);
             MessageManager.Instance.AddMsgCollection(_messageCollection);
 
@@ -149,7 +150,6 @@ namespace Hono.Scripts.Battle.Core
         public Ability AddAbility(int abilityId)
         {
             return _abilityDriver.AwardAbility(abilityId);
-            return null;
         }
         
         /// <summary>

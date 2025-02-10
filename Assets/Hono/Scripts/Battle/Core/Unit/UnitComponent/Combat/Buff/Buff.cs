@@ -11,6 +11,10 @@
         /// </summary>
         public int Id;
         /// <summary>
+        /// 关联的Ability
+        /// </summary>
+        public int AbilityId;
+        /// <summary>
         /// 标记当前 Buff 是否有效
         /// </summary>
         public bool IsValid;
@@ -34,8 +38,7 @@
         /// 永久buff（跟随buff持有者的全程生命周期）
         /// </summary>
         public bool IsPermanent;
-
-
+        
         public static bool operator ==(Buff a, Buff b)
         {
             return a.Id == b.Id && a.SourceUnitUid == b.SourceUnitUid &&

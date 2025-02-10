@@ -82,7 +82,7 @@ namespace Hono.Scripts.Battle.Core
 
         public void UpdateHateTarget()
         {
-            UnitManager.Filter.SearchUnit(Unit, _setting, ref _hateUids);
+           
             if (_hateUids.Count == 0)
             {
                 _hateUid = -1;
@@ -93,7 +93,7 @@ namespace Hono.Scripts.Battle.Core
             }
         }
 
-        public override void onClear()
+        protected override void onClear()
         {
             _hateUids.Clear();
             _duration = 0;

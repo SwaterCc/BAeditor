@@ -450,6 +450,23 @@ namespace Hono.Scripts.Battle
         Hp,
     }
 
+    public enum ECombatEnergyField
+    {
+        CurrentValue,
+
+        MaxValueAdd,
+        MaxValuePCTPer,
+
+        EnergyGetWhenSkillHitAdd,
+        EnergyGetWhenSkillHitPCTPer,
+
+        EnergyGetWhenBeHitAdd,
+        EnergyGetWhenBeHitPCTPer,
+
+        EnergyGetWhenIdleAdd,
+        EnergyGetWhenIdlePCTPer,
+    }
+    
     /// <summary>
     /// 添加阻断规则
     /// 当该buff存在的时候会阻止指定的buff再次添加

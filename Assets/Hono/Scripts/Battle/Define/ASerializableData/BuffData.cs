@@ -10,11 +10,6 @@ namespace Hono.Scripts.Battle
 {
     public class BuffData : ASerializableData
     {
-        public struct BuffAddBehaveInfo
-        {
-            public int Id;
-            public int Count;
-        }
         /// <summary>
         /// Buff添加规则
         /// </summary>
@@ -59,6 +54,10 @@ namespace Hono.Scripts.Battle
         /// 持续时间(-1为跟随Unit生命周期)
         /// </summary>
         public float duration;
+        /// <summary>
+        /// 关联的abilityId
+        /// </summary>
+        public int abilityId;
         /// <summary>
         /// 叠层时再次执行逻辑
         /// </summary>
