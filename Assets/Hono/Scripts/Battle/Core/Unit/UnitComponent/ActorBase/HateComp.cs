@@ -6,10 +6,10 @@ using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle
+namespace Hono.Scripts.Battle.Core
 {
     /// <summary>
-    ///     仇恨对象选择器，选不到默认返回-1
+    /// 仇恨组件，产生仇恨目标
     /// </summary>
     public class HateComp : UnitComponent
     {

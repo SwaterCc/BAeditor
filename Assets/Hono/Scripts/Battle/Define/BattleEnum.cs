@@ -315,10 +315,6 @@ namespace Hono.Scripts.Battle
         /// 被动技能
         /// </summary>
         PassiveSkill,
-        /// <summary>
-        /// 效果技能（定义暂时不明，没有和被动技能做出区别）
-        /// </summary>
-        EffectSkill,
     }
 
     /// <summary>
@@ -389,13 +385,25 @@ namespace Hono.Scripts.Battle
     public enum ESkillTargetSelectType
     {
         /// <summary>
-        /// 指向技能
+        /// 自定义
         /// </summary>
-        TargetedSkill,
+        Custom,
         /// <summary>
-        /// 非指向技能
+        /// 面向方向
         /// </summary>
-        NoTargetedSkill,
+        Front,
+        /// <summary>
+        /// 自定义方向
+        /// </summary>
+        Direction,
+        /// <summary>
+        /// 目标
+        /// </summary>
+        Targeted,
+        /// <summary>
+        /// 坐标
+        /// </summary>
+        Position,
     }
 
     /// <summary>
@@ -439,6 +447,7 @@ namespace Hono.Scripts.Battle
         Energy,
         Item,
         Buff,
+        Hp,
     }
 
     /// <summary>

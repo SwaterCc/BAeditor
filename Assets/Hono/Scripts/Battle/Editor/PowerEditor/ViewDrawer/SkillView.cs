@@ -125,7 +125,7 @@ namespace Editor.AbilityEditor
                                                 Data.skillTargetType, true);
             EditorGUILayout.LabelField("一级过滤：对当前技能选出的目标进行筛选，指向性技能会在选择时生效，aoe技能则会影响存入的技能目标列表");
             PowerEditorUIHelper.DrawSimpleField(ref Data.hitCeiling, "命中数量上限", "会随技能等级表成长", Data.hitCeiling, true);
-            PowerEditorUIHelper.DrawSimpleField(ref Data.skillRange, "允许释放范围", "会随技能等级表成长", Data.skillRange, true);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.castRange, "允许释放范围", "会随技能等级表成长", Data.castRange, true);
             if (Data.skillTargetType == ESkillTargetSelectType.NoTargetedSkill)
             {
                 EditorGUILayout.LabelField("非指向技能选择范围配置");

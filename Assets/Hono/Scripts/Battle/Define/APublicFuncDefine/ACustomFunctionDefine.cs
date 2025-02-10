@@ -18,7 +18,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         {
             if (tryGetActor(actorUid, out Actor actor))
             {
-                if (actor.TryGetComponent<BuffCollection>(out var comp))
+                if (actor.TryGetComponent<CombatComp>(out var comp))
                 {
                     return comp.GetBuffLayer(buffId);
                 }

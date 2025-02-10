@@ -44,7 +44,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// ability控制器
         /// </summary>
-        private readonly AbilityController _abilityController;
+        private readonly AbilityDriver _abilityDriver;
 
         /// <summary>
         /// Actor事件容器
@@ -63,15 +63,20 @@ namespace Hono.Scripts.Battle.Core
 
         protected Unit()
         {
-            _actionSystem = new ActionSystem(this);
-
             UnitTransform = new UnitTransform();
             Attrs = new AttrCollection(this);
             VariableBoard = new VariableBoard();
             Tags = new TagCollection();
 
+            _actionSystem = new ActionSystem(this);
+            _abilityDriver = new AbilityDriver(this);
             _evtListenerCollection = new UnitEventListenerCollection(this, 10);
             _messageCollection = new MessageCollection(this, 10);
+        }
+
+        public override string ToString()
+        {
+            return Uid.ToString();
         }
 
         /// <summary>
@@ -109,6 +114,7 @@ namespace Hono.Scripts.Battle.Core
             }
 
             _actionSystem.Tick(dt);
+            _abilityDriver.Tick(dt);
             _evtListenerCollection.Tick(dt);
             _messageCollection.Tick(dt);
         }
@@ -122,13 +128,14 @@ namespace Hono.Scripts.Battle.Core
 
             _components.Clear();
             _actionSystem.Clear();
-
+            _abilityDriver.Clear();
+            _evtListenerCollection.Clear();
+            _messageCollection.Clear();
+            
             Attrs.Clear();
             Tags.Clear();
             VariableBoard.Clear();
-
-            _evtListenerCollection.Clear();
-            _messageCollection.Clear();
+            
             EventManager.Instance.RemoveListenerCollection(_evtListenerCollection);
             MessageManager.Instance.RemoveMsgCollection(_messageCollection);
         }
@@ -141,7 +148,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="abilityId"></param>
         public Ability AddAbility(int abilityId)
         {
-            return _abilityController.AwardAbility(abilityId);
+            return _abilityDriver.AwardAbility(abilityId);
             return null;
         }
         
@@ -151,7 +158,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="abilityId"></param>
         public void ExecuteAbility(int abilityId)
         {
-            _abilityController.ExecuteAbility(abilityId);
+            _abilityDriver.ExecuteAbility(abilityId);
         }
         
         /// <summary>
@@ -160,7 +167,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="abilityId"></param>
         public void StopAbility(int abilityId)
         {
-            _abilityController.StopAbility(abilityId);
+            _abilityDriver.StopAbility(abilityId);
         }
 
         /// <summary>
@@ -169,7 +176,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="abilityId"></param>
         public void RemoveAbility(int abilityId)
         {
-            _abilityController.RemoveAbility(abilityId);
+            _abilityDriver.RemoveAbility(abilityId);
         }
 
         /// <summary>

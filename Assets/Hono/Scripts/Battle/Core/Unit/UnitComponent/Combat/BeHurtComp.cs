@@ -6,7 +6,7 @@ using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle
+namespace Hono.Scripts.Battle.Core
 {
      public class BeHurtComp : UnitComponent
         {

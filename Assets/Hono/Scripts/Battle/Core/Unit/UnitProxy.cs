@@ -31,15 +31,15 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         private EUnitFlag _state;
 
-        /*/// <summary>
+        /// <summary>
         /// 战斗组件快照
         /// </summary>
-        private Dictionary<int, CombatComp.BuffRuntimeData> _buffRts = new(10);
+        private Dictionary<int, int> _buffLayer = new(10);
 
         /// <summary>
         /// 战斗组件快照
         /// </summary>
-        private Dictionary<int, CombatComp.SkillRuntimeData> _skillRts = new(10);*/
+        private SkillModifier _skillRts = new();
 
         /// <summary>
         /// 坐标

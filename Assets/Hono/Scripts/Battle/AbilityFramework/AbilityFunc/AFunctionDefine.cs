@@ -18,7 +18,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// <summary>
         /// Ability所属的Actor
         /// </summary>
-        private Actor Actor => AContext.Unit;
+        private Unit Actor => AContext.Unit;
 
         internal AFunctionDefine(Ability ability)
         {

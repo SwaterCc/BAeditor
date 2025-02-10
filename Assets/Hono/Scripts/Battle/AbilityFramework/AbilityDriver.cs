@@ -10,12 +10,19 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.AbilityFramework
 {
-    public class AbilityController
+    public class AbilityDriver
     {
+        private readonly Unit _unit;
+        
         private readonly Dictionary<int, Ability> _searchDict = new(30);
         private readonly List<Ability> _runningList = new(30);
         private readonly List<Ability> _removeList = new(10);
 
+        public AbilityDriver(Unit unit)
+        {
+            _unit = unit;
+        }
+        
         /// <summary>
         /// 是否存在某个Ability
         /// </summary>
@@ -29,7 +36,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// <summary>
         /// 赋予Ability
         /// </summary>
-        public Ability AwardAbility(Unit unit, int id)
+        public Ability AwardAbility(int id)
         {
             if (id <= 0)
             {
@@ -38,7 +45,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
             }
 
             Ability ability = GPool<Ability>.Pool.Rent();
-            if (!ability.Init(unit, id))
+            if (!ability.Init(_unit, id))
             {
                 Debug.LogError($"Ability {id} Init failed!");
                 GPool<Ability>.Pool.Recycle(ability);
@@ -73,14 +80,14 @@ namespace Hono.Scripts.Battle.AbilityFramework
             _removeList.Clear();
         }
 
-        public void ExecuteAbility(int configId)
+        public void ExecuteAbility(int abilityId)
         {
-            _searchDict[configId].Execute(true);
+            _searchDict[abilityId].Execute(true);
         }
         
-        public void StopAbility(int configId)
+        public void StopAbility(int abilityId)
         {
-            _searchDict[configId].Execute(true);
+            _searchDict[abilityId].Stop();
         }
 
         /// <summary>

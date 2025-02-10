@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public class SkillModifyData : IGPoolObject
+    public class SkillModifier : IGPoolObject
     {
         private int _level;
         /// <summary>
