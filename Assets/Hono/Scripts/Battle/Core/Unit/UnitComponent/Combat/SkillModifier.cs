@@ -36,6 +36,16 @@ namespace Hono.Scripts.Battle.Core
         private readonly Dictionary<EAttrType, int> _attrModify = new(16);
 
         /// <summary>
+        /// 技能能量消耗加值
+        /// </summary>
+        private readonly Dictionary<int, int> _energyCostAdd = new(5);
+        
+        /// <summary>
+        /// 技能能量消耗乘值
+        /// </summary>
+        private readonly Dictionary<int, int> _energyCostPCT = new(5);
+        
+        /// <summary>
         /// 运行时添加的Tag
         /// </summary>
         private readonly TagCollection _tags = new();
@@ -59,6 +69,12 @@ namespace Hono.Scripts.Battle.Core
                 case ESkillModifyType.SkillTag:
                     _tags.Add(param1);
                     break;
+                case ESkillModifyType.SkillEnergyCostAdd:
+                    _energyCostAdd[param1] += param2;
+                    break;
+                case ESkillModifyType.SkillEnergyCostPCT:
+                    _energyCostPCT[param1] += param2;
+                    break;
             }
         }
 
@@ -67,9 +83,21 @@ namespace Hono.Scripts.Battle.Core
             return _attrModify.GetValueOrDefault(attrType, 0);
         }
 
+        public int GetEnergyAdd(int energyId)
+        {
+            return _energyCostAdd[energyId];
+        }
+
+        public float GetEnergyPCT(int energyId)
+        {
+            return _energyCostPCT[energyId];
+        }
+
         public void OnRecycle()
         {
-            throw new NotImplementedException();
+            _level = 1;
+            _tags.Clear();
+            _attrModify.Clear();
         }
     }
 }

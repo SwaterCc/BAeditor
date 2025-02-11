@@ -374,6 +374,31 @@ namespace Hono.Scripts.Battle.Core
                 return false;
             }
 
+            public bool HasBuff(int buffId, int sourceUnitUid)
+            {
+                for (int index = 0; index < _buffs.Length; index++)
+                {
+                    ref Buff buff = ref _buffs[index];
+
+                    if (buff.Id != buffId || !buff.IsValid)
+                        continue;
+
+                    if (sourceUnitUid == -1)
+                    {
+                        return true;
+                    }
+
+                    if (buff.SourceUnitUid == sourceUnitUid)
+                    {
+                        return true;
+                    }
+
+                    break;
+                }
+
+                return false;
+            }
+
             /// <summary>
             /// 获取指定Buff的数量
             /// </summary>

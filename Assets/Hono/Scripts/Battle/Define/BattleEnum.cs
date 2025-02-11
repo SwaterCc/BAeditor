@@ -66,8 +66,25 @@ namespace Hono.Scripts.Battle
         SkillLevel = 1,
         SkillAttr = 2,
         SkillTag = 3,
+        SkillEnergyCostAdd = 4,
+        SkillEnergyCostPCT = 5,
     }
 
+    /// <summary>
+    /// 当前技能状态
+    /// </summary>
+    [Flags]
+    public enum ESkillFlag
+    {
+        Empty = 0,
+        NoLearn = 1,
+        Executing = 2,
+        Disable = 4,
+        EnergyNotEnough = 8,
+        CD = 16,
+        Occupied = 32,
+    }
+    
     /// <summary>
     /// Actor初始化状态
     /// </summary>
@@ -424,7 +441,7 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// cd模式
     /// </summary>
-    public enum EEnterCdType
+    public enum EEnterCDType
     {
         BeforeExecute,
         AfterExecute
@@ -447,7 +464,6 @@ namespace Hono.Scripts.Battle
         Energy,
         Item,
         Buff,
-        Hp,
     }
 
     public enum ECombatEnergyField
@@ -455,16 +471,19 @@ namespace Hono.Scripts.Battle
         CurrentValue,
 
         MaxValueAdd,
-        MaxValuePCTPer,
-
+        MaxValuePCT,
+        
+        EnergyGetWhenKillEnemyAdd,
+        EnergyGetWhenKillEnemyPCT,
+        
         EnergyGetWhenSkillHitAdd,
-        EnergyGetWhenSkillHitPCTPer,
+        EnergyGetWhenSkillHitPCT,
 
         EnergyGetWhenBeHitAdd,
-        EnergyGetWhenBeHitPCTPer,
+        EnergyGetWhenBeHitPCT,
 
         EnergyGetWhenIdleAdd,
-        EnergyGetWhenIdlePCTPer,
+        EnergyGetWhenIdlePCT,
     }
     
     /// <summary>

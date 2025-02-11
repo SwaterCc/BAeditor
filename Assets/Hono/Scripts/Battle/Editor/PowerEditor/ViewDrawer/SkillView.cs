@@ -62,12 +62,12 @@ namespace Editor.AbilityEditor
                     }
 
                     EditorGUIUtility.labelWidth = 70;
-                    item.ResourceType =
-                        (EBattleResourceType)SirenixEditorFields.EnumDropdown("消耗资源类型", item.ResourceType,
+                    item.resourceType =
+                        (EBattleResourceType)SirenixEditorFields.EnumDropdown("消耗资源类型", item.resourceType,
                                                                               GUILayout.Width(180));
                     EditorGUIUtility.labelWidth = 50;
-                    item.ResId = SirenixEditorFields.IntField("资源Id", item.ResId);
-                    item.Value = SirenixEditorFields.IntField("消耗数量", item.Value);
+                    /*item.ResId = SirenixEditorFields.IntField("资源Id", item.ResId);
+                    item.Value = SirenixEditorFields.IntField("消耗数量", item.Value);*/
                     EditorGUILayout.EndHorizontal();
                 }
 
@@ -145,9 +145,9 @@ namespace Editor.AbilityEditor
 
             SirenixEditorGUI.BeginBox("冷却时间");
             SirenixEditorGUI.BeginVerticalList();
-            drawResList(Data.skillResCheck, "资源检查");
+            //drawResList(Data.skillResCheck, "资源检查");
             //PowerEditorUIHelper.DrawSimpleField(ref Data.costTimingType, "资源扣除时机", Data.costTimingType, true);
-            drawResList(Data.skillResCost, "资源扣除");
+            //drawResList(Data.skillResCost, "资源扣除");
             SirenixEditorGUI.EndVerticalList();
             SirenixEditorGUI.EndBox();
 

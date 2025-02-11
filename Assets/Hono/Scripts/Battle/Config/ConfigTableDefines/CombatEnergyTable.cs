@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle
 {
-    public partial class ModelTable : ITableHelper
+    public partial class CombatEnergyTable : ITableHelper
     {
-        private readonly Dictionary<int, ModelRow> _tableData = new();
+        private readonly Dictionary<int, CombatEnergyRow> _tableData = new();
 
         public bool LoadCSV(string csvFile)
         {
@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle
                         {
                             continue;
                         }
-                        var row = Activator.CreateInstance<ModelRow>();
+                        var row = Activator.CreateInstance<CombatEnergyRow>();
                         row.Parser.Parse(line);
                         addRow(row.Id, row);
                     }
@@ -47,68 +47,78 @@ namespace Hono.Scripts.Battle
             return null;
         }
 
-        private void addRow(int id, ModelRow row)
+        private void addRow(int id, CombatEnergyRow row)
         {
             if (!_tableData.TryAdd(id, row))
             {
-                Debug.LogError($"{typeof(ModelRow)} TryAdd {id} id重复");
+                Debug.LogError($"{typeof(CombatEnergyRow)} TryAdd {id} id重复");
             }
         }
 
-        public ModelRow Get(int id)
+        public CombatEnergyRow Get(int id)
         {
             return _tableData[id];
         }
 
-        public bool TryGet(int id, out ModelRow data)
+        public bool TryGet(int id, out CombatEnergyRow data)
         {
             return _tableData.TryGetValue(id, out data);
         }
 
-         public Dictionary<int, ModelRow> GetTable()
+         public Dictionary<int, CombatEnergyRow> GetTable()
          {
              return _tableData;
          }
     }
 
-    public partial class ModelTable
+    public partial class CombatEnergyTable
     {
-        public class ModelRow : TableRow
+        public class CombatEnergyRow : TableRow
         {
            
             /// <summary>
-            /// 描述
+            /// 能量类型描述
             /// </summary>
             public string Desc { get; private set; }
             
             /// <summary>
-            /// PE模板路径
+            /// 能量初始值
             /// </summary>
-            public string ModelPath { get; private set; }
+            public int InitValue { get; private set; }
             
             /// <summary>
-            /// 模型半径
+            /// 能量自然增长值每秒
             /// </summary>
-            public float Radius { get; private set; }
+            public int IdleGetValue { get; private set; }
             
             /// <summary>
-            /// 模型高
+            /// 受击获取值
             /// </summary>
-            public float Height { get; private set; }
+            public int BehitGetValue { get; private set; }
+            
+            /// <summary>
+            /// 攻击获取值
+            /// </summary>
+            public int AttackGetValue { get; private set; }
+            
+            /// <summary>
+            /// 能量上限
+            /// </summary>
+            public int EnergyMax { get; private set; }
             
 
-            public ModelRow()
+            public CombatEnergyRow()
             {
-                Parser = new ModelRowCSVParser(this);
+                Parser = new CombatEnergyRowCSVParser(this);
             }
 
-            private class ModelRowCSVParser : CSVParser
+            private class CombatEnergyRowCSVParser : CSVParser
             {
-                private ModelRow _row;
+                private CombatEnergyRow _row;
 
-                public ModelRowCSVParser(ModelRow row) : base(row)
+                public CombatEnergyRowCSVParser(CombatEnergyRow row) : base(row)
                 {
-                    _row = (ModelRow)base._row;
+                    _row = (CombatEnergyRow)base._row;
                 }
 
                 protected override void onParse(string[] line)
@@ -116,11 +126,15 @@ namespace Hono.Scripts.Battle
                     
                     _row.Desc = parseString(line[1]);
             
-                    _row.ModelPath = parseString(line[2]);
+                    _row.InitValue = parseInt(line[2]);
             
-                    _row.Radius = parseNumber(line[3]);
+                    _row.IdleGetValue = parseInt(line[3]);
             
-                    _row.Height = parseNumber(line[4]);
+                    _row.BehitGetValue = parseInt(line[4]);
+            
+                    _row.AttackGetValue = parseInt(line[5]);
+            
+                    _row.EnergyMax = parseInt(line[6]);
             
                 }
             }

@@ -30,7 +30,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// <returns></returns>
         public bool HasAbility(int id)
         {
-            return false;
+            return _searchDict.ContainsKey(id);
         }
 
         /// <summary>

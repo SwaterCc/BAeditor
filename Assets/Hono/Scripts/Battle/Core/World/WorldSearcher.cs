@@ -22,6 +22,11 @@ namespace Hono.Scripts.Battle.Core
         private Unit _filterUser;
         private Vector3 _searchCenterPos;
 
+        public void RemoveUnitLookup(Unit unit)
+        {
+            _searchDict.Remove(unit.Uid);
+        }
+        
         public Unit GetUnit(int uid)
         {
             return null;

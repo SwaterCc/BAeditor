@@ -8,10 +8,10 @@ using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle
+namespace Hono.Scripts.Battle.Core
 {
     /// <summary>
-    ///     视觉特效
+    /// 视觉特效
     /// </summary>
     public class VFXComp : UnitComponent
     {
@@ -26,6 +26,8 @@ namespace Hono.Scripts.Battle
         public Action<VFXInfo> VFXAdd;
         public Action<VFXInfo> VFXRemove;
 
+        public VFXComp(ComponentCtorParams ctorParams) : base(ctorParams) { }
+        
         public override void Init() { }
 
         public int AddVFXObject(string vfxKey, VFXSetting setting)

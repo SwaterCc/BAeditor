@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle.Core
             private readonly Unit _unit;
             private readonly ActorEventListener _attackListener = new(EEventType.OnSkillUseSuccess);
             private readonly ActorEventListener _beHitListener = new(EEventType.OnBeHit);
-
+            private readonly ActorEventListener _killEnemyListener = new(EEventType.OnHit, true);
             public CombatEnergyCtrl(Unit unit)
             {
                 _unit = unit;
@@ -35,7 +35,7 @@ namespace Hono.Scripts.Battle.Core
                 _unit.RegisterEvtListener(_attackListener);
                 _unit.RegisterEvtListener(_beHitListener);
             }
-            
+
             public void Tick(float dt)
             {
                 foreach (var energyInfo in _combatEnergy.Values)
@@ -49,7 +49,7 @@ namespace Hono.Scripts.Battle.Core
                 _unit.UnregisterEvtListener(_attackListener);
                 _unit.UnregisterEvtListener(_beHitListener);
             }
-            
+
             /// <summary>
             /// 添加新的能量类型
             /// </summary>
@@ -80,7 +80,7 @@ namespace Hono.Scripts.Battle.Core
             /// <param name="energyTypeId"></param>
             /// <param name="fieldType"></param>
             /// <param name="value"></param>
-            public void SetEnergyValue(int energyTypeId, ECombatEnergyField fieldType, float value)
+            public void SetEnergyValue(int energyTypeId, ECombatEnergyField fieldType, int value)
             {
                 if (!_combatEnergy.TryGetValue(energyTypeId, out var energyInfo))
                 {
@@ -118,17 +118,17 @@ namespace Hono.Scripts.Battle.Core
             /// </summary>
             /// <param name="id"></param>
             /// <param name="value"></param>
-            public void CostEnergy(int id, float value)
+            public void CostEnergy(int id, int value)
             {
                 if (!_combatEnergy.TryGetValue(id, out var energyInfo))
                 {
                     Debug.LogError("该能量不存在，扣除失败");
-                    return ;
+                    return;
                 }
 
                 energyInfo.AddCurrentValue(-value);
             }
-            
+
             private void onAttack(VariableBoard board)
             {
                 foreach (var energyInfo in _combatEnergy.Values)
@@ -136,7 +136,7 @@ namespace Hono.Scripts.Battle.Core
                     energyInfo.AddCurrentValue(energyInfo.EnergyGetWhenSkillHit);
                 }
             }
-            
+
             private void onBeHit(VariableBoard board)
             {
                 foreach (var energyInfo in _combatEnergy.Values)

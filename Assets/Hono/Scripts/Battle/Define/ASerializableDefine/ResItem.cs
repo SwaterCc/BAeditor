@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 #endregion
 
@@ -14,10 +15,10 @@ namespace Hono.Scripts.Battle
     }
 
     [Serializable]
-    public struct ResItem
+    public class ResItem
     {
-        public EBattleResourceType ResourceType;
-        public int ResId;
-        public int Value;
+        public EBattleResourceType resourceType;
+        public int param1;
+        public int param2;
     }
 }

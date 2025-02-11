@@ -19,6 +19,8 @@ namespace Hono.Scripts.Battle.Core
         private bool _isReturnTeam;
         private List<int> _hateUids = new(32);
 
+        public HateComp(ComponentCtorParams ctorParams) : base(ctorParams) { }
+        
         public override void Init()
         {
             _setting = new RangeFilterSetting()

@@ -120,6 +120,12 @@ namespace Hono.Scripts.Battle.Core
             _messageCollection.Tick(dt);
         }
 
+        public void RemoveSelfFromParent()
+        {
+            World.Searcher.RemoveUnitLookup(this);
+            base.RemoveSelfFromParent();
+        }
+        
         public void Clear()
         {
             foreach (var component in _components)

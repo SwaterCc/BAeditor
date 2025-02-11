@@ -102,6 +102,21 @@ namespace Hono.Scripts.Battle
             public int ElementType { get; private set; }
             
             /// <summary>
+            /// 额外异常积蓄倍率(异常标签=异常积蓄值)
+            /// </summary>
+            public IntArray ElementsDamage { get; private set; }
+            
+            /// <summary>
+            /// 禁用元素爆炸
+            /// </summary>
+            public bool DisableElementBoom { get; private set; }
+            
+            /// <summary>
+            /// 伤害Tag
+            /// </summary>
+            public IntArray Tags { get; private set; }
+            
+            /// <summary>
             /// 冲击力
             /// </summary>
             public int ImpactValue { get; private set; }
@@ -149,13 +164,19 @@ namespace Hono.Scripts.Battle
             
                     _row.ElementType = parseInt(line[5]);
             
-                    _row.ImpactValue = parseInt(line[6]);
+                    _row.ElementsDamage = parseIntArray(line[6]);
             
-                    _row.AdditiveId = parseIntArray(line[7]);
+                    _row.DisableElementBoom = parseBool(line[7]);
             
-                    _row.MultiplyId = parseIntArray(line[8]);
+                    _row.Tags = parseIntArray(line[8]);
             
-                    _row.BeHitVFXPath = parseString(line[9]);
+                    _row.ImpactValue = parseInt(line[9]);
+            
+                    _row.AdditiveId = parseIntArray(line[10]);
+            
+                    _row.MultiplyId = parseIntArray(line[11]);
+            
+                    _row.BeHitVFXPath = parseString(line[12]);
             
                 }
             }

@@ -162,7 +162,7 @@ namespace Editor.BattleEditor.CSVConfig
             catch (Exception e)
             {
                 classCode = null;
-                Debug.LogError(e);
+                Debug.LogError($"tableName {tableName}" + e);
             }
 
 

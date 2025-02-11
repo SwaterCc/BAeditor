@@ -4,13 +4,21 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
+    public class CombatCompCtorParams : ComponentCtorParams
+    {
+        /// <summary>
+        /// 允许产生异常伤害效果
+        /// </summary>
+        public bool AllowElementEffect;
+    }
+
     /// <summary>
     /// 战斗组件
     /// </summary>
     public partial class CombatComp : UnitComponent
     {
         /// <summary>
-        /// 每个技能的修改器
+        /// 技能列表
         /// </summary>
         private readonly Dictionary<int, Skill> _skills;
 
@@ -29,8 +37,27 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         private readonly CombatEnergyCtrl _energyCtrl;
 
-        public CombatComp()
+        /// <summary>
+        /// 元素异常关系链
+        /// </summary>
+        private readonly static List<ElementLink> ElementLinks = new()
         {
+            new(EAttrType.AttrWaterElementStackAdd, EAttrType.AttrWaterElementHp, EAttrType.AttrWaterElementMaxHp,
+                1),
+            new(EAttrType.AttrFireElementStackAdd, EAttrType.AttrFireElementHp, EAttrType.AttrFireElementMaxHp, 203201),
+            new(EAttrType.AttrWindElementStackAdd, EAttrType.AttrWindElementHp, EAttrType.AttrWindElementMaxHp, 1),
+            new(EAttrType.AttrRockElementStackAdd, EAttrType.AttrRockElementHp, EAttrType.AttrRockElementMaxHp, 1),
+            new(EAttrType.AttrLightElementStackAdd, EAttrType.AttrLightElementHp, EAttrType.AttrLightElementMaxHp,
+                1),
+            new(EAttrType.AttrDarkElementStackAdd, EAttrType.AttrDarkElementHp, EAttrType.AttrDarkElementMaxHp, 1),
+        };
+
+
+        public CombatComp(ComponentCtorParams ctorParams) : base(ctorParams)
+        {
+            var combatParams = (ComponentCtorParams)ctorParams;
+
+
             _skills = new Dictionary<int, Skill>();
             _buffDriver = new BuffDriver(this);
             _energyCtrl = new CombatEnergyCtrl(Unit);
@@ -41,18 +68,22 @@ namespace Hono.Scripts.Battle.Core
             _energyCtrl.Init();
         }
 
-
         protected override void onTick(float dt)
         {
+            foreach (var skill in _skills.Values)
+            {
+                skill.OnTick(dt);
+            }
+
             _buffDriver.Tick(dt);
             _energyCtrl.Tick(dt);
         }
 
         protected override void onClear()
         {
-            foreach (var skill in _skills)
+            foreach (var skill in _skills.Values)
             {
-                GPool<Skill>.Pool.Recycle(skill.Value);
+                GPool<Skill>.Pool.Recycle(skill);
             }
 
             _skills.Clear();
@@ -101,96 +132,96 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 使用技能
         /// </summary>
-        public bool TryUseSkill(int skillId, out Skill skill)
+        public ESkillFlag TryUseSkill(int skillId, out Skill skill)
         {
             if (!_skills.TryGetValue(skillId, out skill))
             {
                 Debug.LogError($"Unit:{Unit} 未学会该技能");
-                return false;
+                return ESkillFlag.NoLearn;
             }
 
-            if (skill.IsExecuting)
-            {
-                return false;
-            }
-
+            //技能为独占技能且当前已经有在运行的独占技能
             if (skill.SkillData.isExclusive && _curExclusiveSkill != null)
             {
-                return false;
+                return ESkillFlag.Occupied;
             }
 
-            if (!checkSkillResourceEnough(skill.SkillData))
+            //技能是否正在运行中或者被禁用
+            if (skill.Flag != 0)
             {
-                return false;
+                return skill.Flag;
             }
 
-            if (skill.SkillData) { }
+            skill.Play();
 
-
-            return true;
+            return skill.Flag;
         }
 
         /// <summary>
         /// 资源检测
         /// </summary>
-        private bool checkSkillResourceEnough(SkillData skillData)
+        private bool checkSkillResourceEnough(Skill skill)
         {
+            var skillData = skill.SkillData;
+
             if (skillData.skillResCheck.Count == 0)
             {
                 return true;
             }
 
-            bool _resEnough = false;
-            foreach (var resItems in skillData.skillResCheck)
+            foreach (var resItem in skillData.skillResCheck)
             {
-                foreach (var resItem in resItems.Items)
+                switch (resItem.resourceType)
                 {
-                    bool flag = true;
-                    switch (resItem.ResourceType)
-                    {
-                        case EBattleResourceType.Energy:
-                            flag = _energyCtrl.CheckEnergyEnough(resItem.ResId, resItem.Value);
-                            break;
-                        case EBattleResourceType.Buff:
+                    case EBattleResourceType.Energy:
+                        var modifier = skill.Modifier;
+                        var energyType = resItem.param1;
+                        var energyCostValue = resItem.param2;
+                        var realValue = (energyCostValue + modifier.GetEnergyAdd(energyType)) *
+                                        (int)(1 + modifier.GetEnergyPCT(energyType) / 10000f);
+                        if (!_energyCtrl.CheckEnergyEnough(energyType, realValue))
+                        {
+                            return false;
+                        }
 
-                            break;
-                        case EBattleResourceType.Hp:
-                            break;
-                    }
+                        break;
+                    case EBattleResourceType.Buff:
+                        var buffId = resItem.param1;
+                        var layerCount = resItem.param2;
+                        if (_buffDriver.GetBuffLayer(buffId, Unit.Uid) < layerCount)
+                        {
+                            return false;
+                        }
+
+                        break;
                 }
             }
 
-            return false;
+            return true;
         }
 
         /// <summary>
         /// 资源消耗
         /// </summary>
-        private void costResource(SkillData skillData)
+        private void costEnergy(Skill skill)
         {
-            foreach (var resItems in skillData.skillResCost)
+            var skillData = skill.SkillData;
+            foreach (var resItem in skillData.skillResCost)
             {
-                //组检测
-                foreach (var resItem in resItems.Items)
+                //目前只有能量消耗流程
+                if (resItem.resourceType == EBattleResourceType.Energy)
                 {
-                    //单项检测
-                    switch (resItem.ResourceType)
-                    {
-                        case EBattleResourceType.Energy:
-                            var mp = Unit.GetAttr((EAttrType)resItem.ResId);
-                            Unit.SetAttr((EAttrType)resItem.ResId, mp - resItem.Value, false);
-                            break;
-                        case EBattleResourceType.Hp:
-                            break;
-                        case EBattleResourceType.Buff:
-                            break;
-                    }
+                    var modifier = skill.Modifier;
+                    var energyType = resItem.param1;
+                    var energyCostValue = resItem.param2;
+                    var realValue = (energyCostValue + modifier.GetEnergyAdd(energyType)) *
+                                    (int)(1 + modifier.GetEnergyPCT(energyType) / 10000f);
+                    _energyCtrl.CostEnergy(energyType, realValue);
                 }
             }
         }
 
         #endregion
-
 
         #region Buff
 
@@ -210,9 +241,31 @@ namespace Hono.Scripts.Battle.Core
             return _buffDriver.GetBuffLayer(sourceUnitUid, buffId);
         }
 
+        public bool HasBuff(int buffId, int sourceUnitUid = -1)
+        {
+            return _buffDriver.HasBuff(sourceUnitUid, buffId);
+        }
+
         public void RemoveBuff(int buffId, int sourceUnitUid)
         {
             _buffDriver.RemoveBuff(sourceUnitUid, buffId);
+        }
+
+        #endregion
+
+        #region ElementEffect
+        public void CumulativeElementValue(UnitProxy attacker, HitDamageInfo hitDamageInfo, DamageTable.DamageRow damageRow)
+        {
+            //无元素类型不处理
+            if (damageRow.ElementsDamage.Count != 2)
+            {
+                return;
+            }
+            
+            foreach (var link in ElementLinks)
+            {
+                link.Process(attacker, this, damageRow);
+            }
         }
 
         #endregion

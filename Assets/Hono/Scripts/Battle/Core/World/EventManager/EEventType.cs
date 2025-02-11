@@ -21,6 +21,11 @@ namespace Hono.Scripts.Battle.Event
 
         [EventCheckerBinder("GetBeHitChecker", typeof(HitDamageInfoKeys))]
         OnBeHit,
+        
+        /// <summary>
+        /// Unit死亡事件
+        /// </summary>
+        OnDead,
 
         [EventCheckerBinder("GetMotionBeginChecker", typeof(MotionEventInfo))]
         OnMotionBegin = 10,
@@ -31,6 +36,11 @@ namespace Hono.Scripts.Battle.Event
         [EventCheckerBinder("GetMotionEndChecker", typeof(MotionEventInfo))]
         OnMotionEnd,
 
+        /// <summary>
+        /// 触发了锁血
+        /// </summary>
+        OnTriggerHpLock,
+        
         UseSkill = 20,
 
         [EventCheckerBinder("GetUseSkillSuccessChecker", typeof(SkillEventInfo))]

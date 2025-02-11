@@ -68,10 +68,10 @@ namespace Hono.Scripts.Battle.Core
 
             //初始化模型体型
 
-            CharCtrl.height = ModelRow.ModelHeight;
-            CharCtrl.radius = ModelRow.ModelRadius;
+            CharCtrl.height = ModelRow.Height;
+            CharCtrl.radius = ModelRow.Radius;
 
-            CharCtrl.center = Vector3.up * (ModelRow.ModelHeight < ModelRow.ModelRadius * 2 ? ModelRow.ModelRadius : ModelRow.ModelHeight / 2);
+            CharCtrl.center = Vector3.up * (ModelRow.Height < ModelRow.Radius * 2 ? ModelRow.Radius : ModelRow.Height / 2);
 
             LoadedFinish = true;
             

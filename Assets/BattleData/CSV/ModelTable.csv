@@ -1,6 +1,6 @@
 ﻿Id,描述,PE模板路径,模型半径,模型高
-Id,Desc,ModelPath,,
-int,string,string,,
+Id,Desc,ModelPath,Radius,Height
+int,string,string,float,float
 1,测试Pawn,Assets/BattleData/GameTestRes/TestModel/modelTest.prefab,,
 2,测试Monster,Assets/BattleData/GameTestRes/TestModel/Monster.prefab,,
 3,测试用怪,Assets/BattleRes/Model/BattleArmy/TT_Heavy_Infantry.prefab,,

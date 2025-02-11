@@ -2,23 +2,40 @@
 
 namespace Hono.Scripts.Battle.Core
 {
+    public abstract class UnitComponentFactory
+    {
+        public abstract UnitComponent CreateComponent();
+    }
+
+    public class UnitComponentFactory<T> : UnitComponentFactory where T : UnitComponent, new()
+    {
+        public override UnitComponent CreateComponent()
+        {
+            return new T();
+        }
+    }
+
     /// <summary>
     /// 解析出的结构数据
     /// </summary>
     public class ActorAssembleInfo
     {
+        /// <summary>
+        /// 是否允许被玩家控制
+        /// </summary>
         public readonly bool AllowControl;
+        
         /// <summary>
         /// 组件工厂对象
         /// </summary>
-        public readonly List<IUnitComponentFactory> Factories = new();
+        public readonly List<UnitComponentFactory> Factories = new();
 
         public ActorAssembleInfo(string json)
         {
             AllowControl = false;
         }
     }
-    
+
     /// <summary>
     /// 组装器
     /// </summary>
@@ -34,7 +51,7 @@ namespace Hono.Scripts.Battle.Core
         /// 打包时json数据会写为静态数据
         /// </summary>
         private static string[] _jsonText = { };
-        
+
         /// <summary>
         /// 初始化解析器
         /// </summary>
@@ -43,10 +60,10 @@ namespace Hono.Scripts.Battle.Core
             for (int i = 0; i < _jsonName.Length; i++)
             {
                 var assemble = new ActorAssembleInfo(_jsonText[i]);
-                JsonParseInfos.Add(_jsonName[i],assemble);
+                JsonParseInfos.Add(_jsonName[i], assemble);
             }
         }
-        
+
         public static ActorAssembleInfo GetActorAssembleInfo(string jsonKey)
         {
             return JsonParseInfos[jsonKey];

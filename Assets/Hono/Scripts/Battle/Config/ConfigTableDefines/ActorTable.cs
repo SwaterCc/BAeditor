@@ -92,7 +92,12 @@ namespace Hono.Scripts.Battle
             public string PrototypeJsonName { get; private set; }
             
             /// <summary>
-            /// 角色逻辑原型
+            /// 模型表Id
+            /// </summary>
+            public int ModelId { get; private set; }
+            
+            /// <summary>
+            /// ActorType
             /// </summary>
             public int ActorType { get; private set; }
             
@@ -115,11 +120,6 @@ namespace Hono.Scripts.Battle
             /// 初始标签
             /// </summary>
             public IntArray TagList { get; private set; }
-            
-            /// <summary>
-            /// 模型表Id
-            /// </summary>
-            public int ModelId { get; private set; }
             
             /// <summary>
             /// 初始化属性模板Id
@@ -170,25 +170,27 @@ namespace Hono.Scripts.Battle
             
                     _row.PrototypeJsonName = parseString(line[3]);
             
-                    _row.RPGIcon = parseString(line[4]);
+                    _row.ModelId = parseInt(line[4]);
             
-                    _row.SearchRadiu = parseNumber(line[5]);
+                    _row.ActorType = parseInt(line[5]);
             
-                    _row.Faction = parseInt(line[6]);
+                    _row.RPGIcon = parseString(line[6]);
             
-                    _row.TagList = parseIntArray(line[7]);
+                    _row.SearchRadiu = parseNumber(line[7]);
             
-                    _row.ModelId = parseInt(line[8]);
+                    _row.Faction = parseInt(line[8]);
             
-                    _row.AttrTemplateId = parseInt(line[9]);
+                    _row.TagList = parseIntArray(line[9]);
             
-                    _row.OwnerSkills = parseIntTable(line[10]);
+                    _row.AttrTemplateId = parseInt(line[10]);
             
-                    _row.OwnerBuffs = parseIntArray(line[11]);
+                    _row.OwnerSkills = parseIntTable(line[11]);
             
-                    _row.ownerOtherAbility = parseIntTable(line[12]);
+                    _row.OwnerBuffs = parseIntArray(line[12]);
             
-                    _row.IgnoreOtherMotion = parseInt(line[13]);
+                    _row.ownerOtherAbility = parseIntTable(line[13]);
+            
+                    _row.IgnoreOtherMotion = parseInt(line[14]);
             
                 }
             }

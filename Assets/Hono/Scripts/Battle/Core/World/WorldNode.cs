@@ -42,7 +42,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 第一次Tick
         /// </summary>
-        private bool isFirstTick = true;
+        private bool _isFirstTick = true;
 
         /// <summary>
         /// 运行第一帧回调
@@ -213,7 +213,7 @@ namespace Hono.Scripts.Battle.Core
         {
             _root = null;
             _parent = null;
-            isFirstTick = true;
+            _isFirstTick = true;
             FirstTickCallback = null;
             BeforeTickCallBack = null;
             AfterTickCallBack = null;
@@ -230,10 +230,10 @@ namespace Hono.Scripts.Battle.Core
         {
             BeforeTickCallBack?.Invoke(this, dt);
 
-            if (isFirstTick)
+            if (_isFirstTick)
             {
                 FirstTickCallback?.Invoke(this);
-                isFirstTick = false;
+                _isFirstTick = false;
             }
 
             onTick(dt);

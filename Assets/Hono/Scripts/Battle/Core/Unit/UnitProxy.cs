@@ -12,6 +12,11 @@ namespace Hono.Scripts.Battle.Core
         private Unit _unit;
 
         /// <summary>
+        /// 来源
+        /// </summary>
+        public int Uid;
+        
+        /// <summary>
         /// 属性快照
         /// </summary>
         private Dictionary<EAttrType, int> _attrSnapshot = new(256);
@@ -64,6 +69,7 @@ namespace Hono.Scripts.Battle.Core
                 return;
             }
 
+            Uid = unit.Uid;
             unit.Attrs.GetAttrSnapShots(ref _attrSnapshot);
             unit.Tags.GetSnapshot(ref _tagsSnapshot);
             _unitTransformSnapShot = unit.UnitTransform;

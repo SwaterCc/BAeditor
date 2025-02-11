@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 进入cd时机
         /// </summary>
-        public EEnterCdType enterCdType;
+        public EEnterCDType enterCdType;
         /// <summary>
         /// 技能Cd
         /// </summary>
@@ -24,11 +24,11 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 释放时资源检测列表
         /// </summary>
-        public List<ResItems> skillResCheck = new();
+        public List<ResItem> skillResCheck = new();
         /// <summary>
         /// 释放时资源消耗列表
         /// </summary>
-        public List<ResItems> skillResCost = new();
+        public List<ResItem> skillResCost = new();
         /// <summary>
         /// 是否转向技能方向
         /// </summary>

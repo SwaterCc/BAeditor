@@ -11,56 +11,61 @@ namespace Hono.Scripts.Battle.Core
         public class CombatEnergyInfo : IGPoolObject
         {
             /// <summary>
-            /// 当前值
+            /// 当前值()
             /// </summary>
-            public float CurrentValue { get; private set; }
+            public int CurrentValue { get; private set; }
 
             /// <summary>
             /// 最大值上限
             /// </summary>
-            public float MaxValue => _energyFields[ECombatEnergyField.MaxValueAdd] *
-                                     _energyFields[ECombatEnergyField.MaxValuePCTPer];
-
+            public int MaxValue => _energyFields[ECombatEnergyField.MaxValueAdd] * (int)(1 + _energyFields[ECombatEnergyField.MaxValuePCT] / 10000f);
+            
             /// <summary>
             /// 攻击回复值最终值
             /// </summary>
-            public float EnergyGetWhenSkillHit => _energyFields[ECombatEnergyField.EnergyGetWhenSkillHitAdd] *
-                                                  _energyFields[ECombatEnergyField.EnergyGetWhenSkillHitPCTPer];
+            public int EnergyGetWhenSkillHit =>
+                _energyFields[ECombatEnergyField.EnergyGetWhenSkillHitAdd] * (int)(1 + _energyFields[ECombatEnergyField.EnergyGetWhenSkillHitPCT] / 10000f);
 
+            /// <summary>
+            /// 击杀回复
+            /// </summary>
+            public int EnergyGetWhenKillEnemy =>
+                _energyFields[ECombatEnergyField.EnergyGetWhenKillEnemyAdd] * (int)(1 + _energyFields[ECombatEnergyField.EnergyGetWhenKillEnemyPCT] / 10000f);
+            
             /// <summary>
             /// 受击回复值最终值
             /// </summary>
-            public float EnergyGetWhenBeHit => _energyFields[ECombatEnergyField.EnergyGetWhenBeHitAdd] *
-                                               _energyFields[ECombatEnergyField.EnergyGetWhenBeHitPCTPer];
+            public int EnergyGetWhenBeHit => _energyFields[ECombatEnergyField.EnergyGetWhenBeHitAdd] * (int)(1 + _energyFields[ECombatEnergyField.EnergyGetWhenBeHitPCT] / 10000f);
 
             /// <summary>
             /// 自然回复值最终值
             /// </summary>
-            public float EnergyGetWhenIdle => _energyFields[ECombatEnergyField.EnergyGetWhenIdleAdd] *
-                                              _energyFields[ECombatEnergyField.EnergyGetWhenIdlePCTPer];
+            public int EnergyGetWhenIdle => _energyFields[ECombatEnergyField.EnergyGetWhenIdleAdd] * (int)(1 + _energyFields[ECombatEnergyField.EnergyGetWhenIdlePCT] / 10000f);
 
             /// <summary>
             /// 属性字段
             /// </summary>
-            private readonly Dictionary<ECombatEnergyField, float> _energyFields = new()
+            private readonly Dictionary<ECombatEnergyField, int> _energyFields = new()
             {
                 { ECombatEnergyField.MaxValueAdd, 0 },
-                { ECombatEnergyField.MaxValuePCTPer, 1 },
+                { ECombatEnergyField.MaxValuePCT, 0 },
+                { ECombatEnergyField.EnergyGetWhenKillEnemyAdd, 0 },
+                { ECombatEnergyField.EnergyGetWhenKillEnemyPCT, 0 },
                 { ECombatEnergyField.EnergyGetWhenSkillHitAdd, 0 },
-                { ECombatEnergyField.EnergyGetWhenSkillHitPCTPer, 1 },
+                { ECombatEnergyField.EnergyGetWhenSkillHitPCT, 0 },
                 { ECombatEnergyField.EnergyGetWhenBeHitAdd, 0 },
-                { ECombatEnergyField.EnergyGetWhenBeHitPCTPer, 1 },
+                { ECombatEnergyField.EnergyGetWhenBeHitPCT, 0 },
                 { ECombatEnergyField.EnergyGetWhenIdleAdd, 0 },
-                { ECombatEnergyField.EnergyGetWhenIdlePCTPer, 1 },
+                { ECombatEnergyField.EnergyGetWhenIdlePCT, 0 },
             };
 
-            public void AddCurrentValue(float value)
+            public void AddCurrentValue(int value)
             {
                 CurrentValue = Mathf.Clamp(CurrentValue + value, 0, MaxValue);
             }
 
 
-            public void SetField(ECombatEnergyField field, float value)
+            public void SetField(ECombatEnergyField field, int value)
             {
                 _energyFields[field] += value;
             }

@@ -17,61 +17,44 @@ namespace Hono.Scripts.Battle.Core
             /// 技能Id
             /// </summary>
             public int Id { get; private set; }
-
             /// <summary>
             /// 技能数据
             /// </summary>
             public SkillData SkillData { get; private set; }
-
             /// <summary>
             /// 技能数据修改器
             /// </summary>
             public SkillModifier Modifier { get; } = new();
-
             /// <summary>
             /// 技能是否在执行中
             /// </summary>
-            public bool IsExecuting { get; private set; }
-
-            /// <summary>
-            /// 技能是否被禁用
-            /// </summary>
-            public bool IsDisable;
-
-
-            /// <summary>
-            /// 真实CD，受技能等级，属性影响
-            /// </summary>
-            private float _realCd;
-
+            public ESkillFlag Flag { get; private set; }
             /// <summary>
             /// 当前CD比例
             /// </summary>
             public float CdPercent { get; private set; }
-
-            /// <summary>
-            /// 战斗资源是否足够释放技能
-            /// </summary>
-            private bool _resEnough;
-
             /// <summary>
             /// 绑定的Ability
             /// </summary>
             private Ability _ability;
-
             /// <summary>
             /// 战斗组件
             /// </summary>
             private CombatComp _combatComp;
-
+            
             public void OnRent(CombatComp combatComp, SkillData data)
             {
                 SkillData = data;
                 CdPercent = 0;
-                IsDisable = false;
-                IsExecuting = false;
+                Flag = 0;
+                
                 _ability = combatComp.Unit.AddAbility(SkillData.abilityId);
                 _ability.ExecuteEndCallBack += onAbilityEnd;
+
+                if (!_combatComp.checkSkillResourceEnough(this))
+                {
+                    AddFlag(ESkillFlag.EnergyNotEnough);
+                }
             }
 
             /// <summary>
@@ -80,68 +63,47 @@ namespace Hono.Scripts.Battle.Core
             public void Play()
             {
                 _ability.Execute(false);
-                IsExecuting = true;
-                if (SkillData.enterCdType == EEnterCdType.BeforeExecute)
+                AddFlag(ESkillFlag.Executing);
+                if (SkillData.enterCdType == EEnterCDType.BeforeExecute)
                 {
                     CdBegin();
                 }
 
-                _combatComp.costResource(SkillData);
+                _combatComp.costEnergy(this);
             }
 
             private void onAbilityEnd()
             {
-                IsExecuting = false;
-
-                if (SkillData.enterCdType == EEnterCdType.AfterExecute)
+                RemoveFlag(ESkillFlag.Executing);
+                if (SkillData.enterCdType == EEnterCDType.AfterExecute)
                 {
                     CdBegin();
                 }
             }
 
-            /// <summary>
-            /// 后续改成UI跳字
-            /// </summary>
-            public void SendFailedMsg()
+            public void AddFlag(ESkillFlag flag)
             {
-                if (IsDisable)
-                {
-                    Debug.Log("被禁止使用");
-                }
-
-                if (!_resEnough)
-                {
-                    Debug.Log("能量不足");
-                }
-
-                if (CdPercent != 0)
-                {
-                    Debug.Log("Cd中！");
-                }
-
-                if (IsExecuting)
-                {
-                    Debug.Log("技能释放中！");
-                }
+                Flag |= flag;
             }
 
+            public bool HasFlag(ESkillFlag flag)
+            {
+                return (Flag & flag) == flag;
+            }
+            
+            public void RemoveFlag(ESkillFlag flag)
+            {
+                Flag = (Flag & ~flag);
+            }
+            
             #region CD
-
-            /// <summary>
-            /// 计算真实CD
-            /// </summary>
-            private void calculateCd()
-            {
-                // _realCd = SkillData.skillCD;
-            }
-
             /// <summary>
             /// cd开始
             /// </summary>
             private void CdBegin()
             {
-                calculateCd();
                 CdPercent = 1;
+                AddFlag(ESkillFlag.CD);
             }
 
             /// <summary>
@@ -150,6 +112,7 @@ namespace Hono.Scripts.Battle.Core
             private void CdEnd()
             {
                 CdPercent = 0;
+                RemoveFlag(ESkillFlag.CD);
             }
 
             /// <summary>
@@ -157,8 +120,7 @@ namespace Hono.Scripts.Battle.Core
             /// </summary>
             public void LessCd(float second)
             {
-                var percent = second / _realCd;
-
+                var percent = second / SkillData.skillCd;
                 CdPercent -= percent;
                 CdPercent = Math.Clamp(CdPercent, 0, 1);
             }
@@ -173,11 +135,20 @@ namespace Hono.Scripts.Battle.Core
                     var finalCdPct = ((_combatComp.Unit.GetAttr(EAttrType.AttrSkillCDPCT) +
                                        Modifier.GetAttrModify(EAttrType.AttrSkillCDPCT)) / 10000f + 1);
                     if (finalCdPct < 0) finalCdPct = 0;
-                    CdPercent -= ((dt / _realCd) * finalCdPct);
+                    CdPercent -= ((dt / SkillData.skillCd) * finalCdPct);
 
                     if (CdPercent <= 0)
                     {
                         CdEnd();
+                    }
+                }
+                
+                //能量检测
+                if (HasFlag(ESkillFlag.EnergyNotEnough))
+                {
+                    if (_combatComp.checkSkillResourceEnough(this))
+                    {
+                        RemoveFlag(ESkillFlag.EnergyNotEnough);
                     }
                 }
 
@@ -189,21 +160,13 @@ namespace Hono.Scripts.Battle.Core
                 _ability.TimeScaleFactory = attackSpeed;
             }
 
-            public void SetDisable(bool value)
-            {
-                IsDisable = value;
-            }
-
             public void OnRecycle()
             {
                 Id = 0;
                 SkillData = null;
-                _combatComp = null;
-                IsDisable = false;
-                IsExecuting = false;
                 CdPercent = 0;
-                _resEnough = false;
-                _realCd = 0;
+                Flag = 0;
+                _combatComp = null;
                 _ability.Stop();
                 _ability = null;
             }
