@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public abstract class Unit : WorldNode, IAbilityHandle
+    public abstract class Unit : WorldNode
     {
         /// <summary>
         /// 变量黑板

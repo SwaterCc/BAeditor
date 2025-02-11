@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: TagTree
   m_EditorClassIdentifier: Assembly-CSharp:Hono.Scripts.Battle:TagTreeRoot
   root:
-    parent: 0
     tag: 0
-    children: []
+    children:
+    - tag: 1231
+      children:
+      - tag: 12311
+        children: []
+    - tag: 123123
+      children: []

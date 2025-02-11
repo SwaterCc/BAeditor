@@ -110,7 +110,6 @@ namespace Hono.Scripts.Battle.Core
 
         public World(int sceneTableId)
         {
-            register(HitManager.Instance);
             register(EventManager.Instance);
             register(MessageManager.Instance);
 

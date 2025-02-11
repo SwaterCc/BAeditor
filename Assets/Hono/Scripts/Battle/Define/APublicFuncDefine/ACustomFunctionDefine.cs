@@ -47,7 +47,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         }
 
         [AbilityFunction("HitBox")]
-        public void CreateHitBox(int attackUid, int targetUid, AoeHitSetting aoeHitSetting, bool fromTopSummer = false)
+        public void CreateHitBox(int attackUid, int targetUid, HitParams aoeHitSetting, bool fromTopSummer = false)
         {
             if (!tryGetActor(attackUid, out var attack))
             {

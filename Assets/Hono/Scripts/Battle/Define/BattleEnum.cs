@@ -533,21 +533,6 @@ namespace Hono.Scripts.Battle
         RemoveBuffsById
     }
 
-    /// <summary>
-    ///     打击点类型
-    /// </summary>
-    public enum EHitType
-    {
-        /// <summary>
-        /// 针对目标的检测
-        /// </summary>
-        Target,
-        /// <summary>
-        /// 针对范围的检测
-        /// </summary>
-        Aoe,
-    }
-
     public enum ECheckBoxShapeType
     {
         /// <summary>

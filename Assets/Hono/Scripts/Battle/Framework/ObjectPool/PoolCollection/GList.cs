@@ -7,19 +7,29 @@ namespace Hono.Scripts.Battle.ObjectPool
     /// 池化list
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class AList<T> : IGPoolObject, IEnumerable
+    public class GList<T> : IGPoolObject, IEnumerable
     {
-        private readonly List<T> _list = new(8);
+        private readonly List<T> _list;
 
         public int Count => _list.Count;
-        
+
+        public GList()
+        {
+            _list = new(10);
+        }
+
+        public GList(int capacity = 10)
+        {
+            _list = new(capacity);
+        }
+
         public T this[int idx] => _list[idx];
-        
-        public static implicit operator List<T>(AList<T> list)
+
+        public static implicit operator List<T>(GList<T> list)
         {
             return list._list;
         }
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             foreach (var item in _list)
@@ -32,7 +42,7 @@ namespace Hono.Scripts.Battle.ObjectPool
         {
             return GetEnumerator();
         }
-        
+
         public void Add(T item)
         {
             _list.Add(item);
@@ -45,7 +55,7 @@ namespace Hono.Scripts.Battle.ObjectPool
         public void Remove(T item)
         {
             _list.Remove(item);
-            
+
             if (item is IAPoolRefCount refCount)
             {
                 refCount.RefCount.RemoveReference();
@@ -55,7 +65,7 @@ namespace Hono.Scripts.Battle.ObjectPool
                 GPoolManager.Instance.RecycleAObject(poolObject);
             }
         }
-        
+
         public void Clear()
         {
             foreach (var item in _list)
@@ -64,14 +74,15 @@ namespace Hono.Scripts.Battle.ObjectPool
                 {
                     refCount.RefCount.RemoveReference();
                 }
-                else if(item is IGPoolObject poolObject)
+                else if (item is IGPoolObject poolObject)
                 {
                     GPoolManager.Instance.RecycleAObject(poolObject);
                 }
             }
+
             _list.Clear();
         }
-        
+
         public void OnRecycle()
         {
             Clear();

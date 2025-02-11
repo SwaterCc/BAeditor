@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.ObjectPool;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
@@ -39,7 +40,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 战斗组件快照
         /// </summary>
-        private Dictionary<int, int> _buffLayer = new(10);
+        private GDictionary<int, GList<BuffSnapshot>> _buffSnapshots = new(10);
 
         /// <summary>
         /// 战斗组件快照

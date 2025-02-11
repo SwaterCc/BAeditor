@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Core;
-using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 

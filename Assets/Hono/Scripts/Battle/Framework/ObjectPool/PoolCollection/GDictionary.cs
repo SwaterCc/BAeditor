@@ -9,11 +9,21 @@ namespace Hono.Scripts.Battle.ObjectPool
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
-    public class ADictionary<TKey, TValue> : IGPoolObject, IEnumerable<KeyValuePair<TKey, TValue>>
+    public class GDictionary<TKey, TValue> : IGPoolObject, IEnumerable<KeyValuePair<TKey, TValue>>
     {
-        private readonly Dictionary<TKey, TValue> _dictionary = new();
+        private readonly Dictionary<TKey, TValue> _dictionary;
 
         public int Count => _dictionary.Count;
+
+        public GDictionary()
+        {
+            _dictionary = new(8);
+        }
+        
+        public GDictionary(int capacity = 8)
+        {
+            _dictionary = new(capacity);
+        }
 
         public void Add(TKey key, TValue value)
         {
@@ -108,7 +118,7 @@ namespace Hono.Scripts.Battle.ObjectPool
 
         public TValue this[TKey key] => _dictionary[key];
 
-        public static implicit operator Dictionary<TKey, TValue>(ADictionary<TKey, TValue> dictionary)
+        public static implicit operator Dictionary<TKey, TValue>(GDictionary<TKey, TValue> dictionary)
         {
             return dictionary._dictionary;
         }

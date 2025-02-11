@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hono.Scripts.Battle.Core.Base;
+using Hono.Scripts.Battle.ObjectPool;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core

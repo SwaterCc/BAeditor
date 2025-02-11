@@ -91,6 +91,27 @@ namespace Hono.Scripts.Battle.Core
             _energyCtrl.Clear();
         }
 
+        #region HitCheck
+        public void HitSingle(HitParams hitParams, Unit target)
+        {
+            if (target != null)
+            {
+               
+            }
+        }
+
+        public void HitAoe(HitParams hitParams, Vector3 aoeCenterPos)
+        {
+            //BattleManager.World.Searcher.SearchUnits();
+        }
+
+        public void HitByDirection(HitParams hitParams, Vector3 dir)
+        {
+            //BattleManager.World.Searcher.SearchUnits();
+        }
+
+        #endregion
+        
         #region Skill
 
         public void LearnSkill(int skillId)
