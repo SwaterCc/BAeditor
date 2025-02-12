@@ -3,7 +3,7 @@
 --- Created by shirui.
 --- DateTime: 2024/9/5 下午4:43
 ---
-
+--废弃了
 Faction = Faction or {}
 
 local EFactionType = {

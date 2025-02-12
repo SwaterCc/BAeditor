@@ -10,8 +10,6 @@ namespace Hono.Scripts.Battle.Core
     /// </summary>
     public abstract class UnitComponent
     {
-        private bool _isFirst = true;
-
         public Unit Unit { get; set; }
 
         protected ComponentCtorParams CtorParams { get; }
@@ -25,25 +23,18 @@ namespace Hono.Scripts.Battle.Core
 
         public void Tick(float dt)
         {
-            if (_isFirst)
-            {
-                beforeTick();
-                _isFirst = false;
-            }
-
             onTick(dt);
         }
 
         /// <summary>
-        /// 第一次Tick之前运行
+        /// 第一次Tick之前运行,父类为空函数
         /// </summary>
-        protected virtual void beforeTick() { }
+        public virtual void BeforeTick() { }
 
         protected virtual void onTick(float dt) { }
 
         public void Clear()
         {
-            _isFirst = true;
             onClear();
         }
 

@@ -1,10 +1,10 @@
 ﻿namespace Hono.Scripts.Battle.Core
 {
-    public partial class World
+    public partial class WorldInstance
     {
         private class GamingState : WorldState
         {
-            public GamingState(World world) : base(world, EWorldState.Gaming) { }
+            public GamingState(WorldInstance worldInstance) : base(worldInstance, EWorldState.Gaming) { }
 
             protected override void OnEnter()
             {
@@ -13,7 +13,7 @@
 
             protected override void OnTick(float dt)
             {
-                World._worldNodeRoot.Tick(dt);
+                WorldInstance._worldNodeRoot.Tick(dt);
             }
 
             protected override void OnExit()

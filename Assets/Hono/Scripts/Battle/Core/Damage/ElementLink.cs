@@ -26,7 +26,7 @@ namespace Hono.Scripts.Battle.Core
             _mainBuff = mainBuff;
         }
 
-        public void Process(UnitProxy attacker, CombatComp target, DamageTable.DamageRow damageRow)
+        public void Process(Unit attacker, CombatComp target, DamageTable.DamageRow damageRow)
         {
             //该伤害是否为对应元素
             if (damageRow.ElementsDamage[0] != _linkTag)
@@ -50,7 +50,7 @@ namespace Hono.Scripts.Battle.Core
 
             var lastHp = hp - atk;
             if (lastHp <= 0 && !damageRow.DisableElementBoom)
-            {
+            {//元素过载
                 Debug.LogError($"element {_elementHp} boom");
                 target.AddBuff(attacker.Uid, _mainBuff);
                 target.Unit.SetAttr(_elementHp, maxHp);

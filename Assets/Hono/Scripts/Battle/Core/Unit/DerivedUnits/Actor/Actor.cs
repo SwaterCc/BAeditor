@@ -6,7 +6,7 @@ namespace Hono.Scripts.Battle.Core
     /// <summary>
     /// Actor 战斗玩法中有交互的单位
     /// </summary>
-    public sealed class Actor : Unit
+    public sealed class Actor : Unit , Unit.ILoadableUnit
     {
         /// <summary>
         /// Json类型
@@ -22,6 +22,13 @@ namespace Hono.Scripts.Battle.Core
         /// Actor基础类型
         /// </summary>
         public EActorType ActorType { get; private set; }
+        
+        /// <summary>
+        /// 是否加载完成
+        /// </summary>
+        public bool IsLoadFinish => ModelController.LoadedFinish;
+
+        public bool HasLoadError => ModelController.HasLoadError;
 
         /// <summary>
         /// Actor配置数据
@@ -63,12 +70,24 @@ namespace Hono.Scripts.Battle.Core
                 }
                 
                 //添加buff
-                foreach (var buffId in ActorTableRow.OwnerBuffs)
+                foreach (var buffInfo in ActorTableRow.OwnerBuffs)
                 {
-                    combatComp.AddBuff(buffId, Uid);
+                    combatComp.AddBuff(buffInfo[0], Uid, buffInfo[1]);
                 }
             }
-            
+
+            foreach (var abilityInfo in ActorTableRow.ownerOtherAbility)
+            {
+                var ability = AddAbility(abilityInfo[0]);
+                if (abilityInfo[1] > 0)
+                {
+                    ability.Execute(false);
+                }
+            }
+        }
+        
+        public void Load()
+        {
             ModelController.Load();
         }
 
@@ -83,20 +102,19 @@ namespace Hono.Scripts.Battle.Core
             ModelController.Tick(dt);
         }
 
+        public override void Recycle()
+        {
+            ActorPool.Instance.Recycle(this);
+        }
+
         /// <summary>
         /// ActorPool回收时调用
         /// </summary>
         public void OnRecycle()
         {
             ModelController.Clear();
-            Clear();
         }
-
-        protected override void OnRemove()
-        {
-            ActorPool.Instance.Recycle(this);
-        }
-
+        
         #endregion
     }
 }

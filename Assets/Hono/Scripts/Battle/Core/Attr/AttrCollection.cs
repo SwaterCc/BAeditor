@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public partial class AttrCollection
+    public class AttrCollection
     {
         private readonly Unit _unit;
 
@@ -63,7 +63,7 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="summonSetting"></param>
-        public void InheritAttrs(AttrCollection parent, World.SummonSetting summonSetting) { }
+        public void InheritAttrs(AttrCollection parent, WorldInstance.SummonSetting summonSetting) { }
 
         /// <summary>
         /// 获取属性快照

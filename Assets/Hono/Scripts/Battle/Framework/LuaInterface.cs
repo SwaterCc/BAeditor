@@ -68,22 +68,22 @@ namespace Hono.Scripts.Battle
 
         private static void loadFactionFunc()
         {
-            _factionMain = _luaEnv.Global.GetInPath<LuaFunction>("Faction.GetFaction");
+            //_factionMain = _luaEnv.Global.GetInPath<LuaFunction>("Faction.GetFaction");
         }
 
        
         
         public static DamageResults GetDamageResults(Actor attacker, Actor target, DamageInfo damageInfo,
-            DamageConfig config)
+            DamageData data)
         {
-            return Instance.getDamageResults(attacker, target, damageInfo, config);
+            return Instance.getDamageResults(attacker, target, damageInfo, data);
         }
 
         private DamageResults getDamageResults(Actor attacker, Actor target, DamageInfo damageInfo,
-            DamageConfig config)
+            DamageData data)
         {
             //TODO：临时做法，会有性能开销，后续导出
-            var rets = _damageProcessMain.Call(attacker, target, damageInfo, config, typeof(DamageResults));
+            var rets = _damageProcessMain.Call(attacker, target, damageInfo, data, typeof(DamageResults));
             if (rets is { Length: > 0 } && rets[0] is DamageResults results)
             {
                 return results;

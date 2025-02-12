@@ -39,6 +39,11 @@ namespace Hono.Scripts.Battle.Core
         /// 加载完成
         /// </summary>
         public bool LoadedFinish { get; private set; }
+        
+        /// <summary>
+        /// 加载有错误
+        /// </summary>
+        public bool HasLoadError { get; private set; }
 
         /// <summary>
         /// model加载完成
@@ -56,7 +61,8 @@ namespace Hono.Scripts.Battle.Core
 
             if (gameObject == null)
             {
-                throw new Exception("模型加载失败!");
+                HasLoadError = true;
+                return;
             }
 
             ActorModel = gameObject.GetComponent<ActorModel>();

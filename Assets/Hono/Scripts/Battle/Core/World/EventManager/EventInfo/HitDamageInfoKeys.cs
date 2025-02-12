@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Hono.Scripts.Battle.ObjectPool;
+
 namespace Hono.Scripts.Battle.Event
 {
     public static class HitDamageInfoKeys
@@ -5,7 +8,7 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         /// 伤害来源Actor
         /// </summary>
-        public static readonly EvtInfoField<int> SourceActorId = new();
+        public static readonly EvtInfoField<int> AttackerUid = new();
 
         /// <summary>
         /// 伤害来源Ability
@@ -25,7 +28,7 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         /// 命中目标的Uid;
         /// </summary>
-        public static readonly EvtInfoField<int> HitTargetUid = new();
+        public static readonly EvtInfoField<GList<int>> HitTargetUid = new();
 
         /// <summary>
         /// 最终伤害

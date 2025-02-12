@@ -90,27 +90,6 @@ namespace Hono.Scripts.Battle.Core
             _buffDriver.Clear();
             _energyCtrl.Clear();
         }
-
-        #region HitCheck
-        public void HitSingle(HitParams hitParams, Unit target)
-        {
-            if (target != null)
-            {
-               
-            }
-        }
-
-        public void HitAoe(HitParams hitParams, Vector3 aoeCenterPos)
-        {
-            //BattleManager.World.Searcher.SearchUnits();
-        }
-
-        public void HitByDirection(HitParams hitParams, Vector3 dir)
-        {
-            //BattleManager.World.Searcher.SearchUnits();
-        }
-
-        #endregion
         
         #region Skill
 
@@ -275,8 +254,13 @@ namespace Hono.Scripts.Battle.Core
         #endregion
 
         #region ElementEffect
-        public void CumulativeElementValue(UnitProxy attacker, HitDamageInfo hitDamageInfo, DamageTable.DamageRow damageRow)
+        public void CumulativeElementValue(Unit attacker, int damageId)
         {
+            if (!ConfigManager.Table<DamageTable>().TryGet(damageId, out var damageRow))
+            {
+                return;
+            }
+            
             //无元素类型不处理
             if (damageRow.ElementsDamage.Count != 2)
             {

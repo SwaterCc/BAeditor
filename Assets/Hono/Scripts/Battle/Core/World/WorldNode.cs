@@ -4,6 +4,19 @@ using Unity.Collections;
 
 namespace Hono.Scripts.Battle.Core
 {
+    public class WorldNodeRoot :WorldNode
+    {
+        protected override void OnRemove()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void onTick(float dt)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    
     /// <summary>
     /// 世界节点
     /// 世界节点存在逻辑上的父子关系管理
@@ -13,12 +26,7 @@ namespace Hono.Scripts.Battle.Core
     public abstract class WorldNode
     {
         public delegate bool AddChildCondition(WorldNode arg);
-
-        /// <summary>
-        /// 运行时唯一ID
-        /// </summary>
-        public int Uid { get; protected set; }
-
+        
         /// <summary>
         /// 所处世界
         /// </summary>

@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-   
     public class HpCompCtorParams : ComponentCtorParams
     {
         /// <summary>
@@ -17,7 +16,7 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         public bool AllowBeHurt;
     }
-    
+
     /// <summary>
     /// 生命值管理组件，负责处理当前生命值变化
     /// </summary>
@@ -29,17 +28,19 @@ namespace Hono.Scripts.Battle.Core
             public float HpPCT;
             public bool TriggerEvent;
         }
-
-        private int _lockCount = 1;
-        private readonly List<HpLock> _hpLocks = new(5);
+        
         private int _currentHp;
+        private int _lockCount = 1;
+        private readonly List<HpLock> _hpLocks;
+        private DamagePipLine
+        
         public bool IsAlive => _currentHp > 0;
 
         public HpComp(ComponentCtorParams ctorParams) : base(ctorParams)
         {
-            
+            _hpLocks = new(5);
         }
-        
+
         public override void Init()
         {
             //初始化血量等于最大HP
@@ -52,7 +53,7 @@ namespace Hono.Scripts.Battle.Core
             if (_currentHp <= 0)
             {
                 //单位死亡,从父节点删除
-                Unit.RemoveSelfFromParent();
+                World.Current.RemoveUnit(Unit);
                 //死亡特效播放
             }
         }
@@ -107,23 +108,34 @@ namespace Hono.Scripts.Battle.Core
         {
             for (int i = 0; i < _hpLocks.Count; i++)
             {
-                if (_hpLocks[i].Id != id) 
+                if (_hpLocks[i].Id != id)
                     continue;
                 _hpLocks.RemoveAt(i);
                 break;
             }
         }
-        
+
+        /// <summary>
+        /// 伤害id
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <param name="sourceType"></param>
+        /// <param name="damageId"></param>
+        public void MakeDamage(Unit attacker, int damageId, EDamageSourceType sourceType)
+        {
+            //收集攻击者
+        }
+
         /// <summary>
         /// 受伤
         /// </summary>
         /// <param name="damageInfo"></param>
         /// <param name="damageRow"></param>
-        public void BeHurt(HitDamageInfo damageInfo, DamageTable.DamageRow damageRow)
+        private void BeHurt(HitDamageInfo damageInfo, DamageTable.DamageRow damageRow)
         {
             //伤害是负值
             //回血是正值
-            
+
             //FIX:目前还是反的
             var curShield = Unit.GetAttr(EAttrType.AttrShield);
             switch ((EDamageType)(damageRow.DamageType))
@@ -136,7 +148,8 @@ namespace Hono.Scripts.Battle.Core
 
                     var lastShield = curShield + damageInfo.FinalDamageValue;
                     if (lastShield > 0)
-                    {//护盾抗住了伤害
+                    {
+                        //护盾抗住了伤害
                         curShield = lastShield;
                         //播放护盾抵挡特效
                         playHurtVFX("beHurt");
@@ -149,11 +162,13 @@ namespace Hono.Scripts.Battle.Core
                         //播放受击特效
                         playHurtVFX("beHurt");
                     }
+
                     break;
                 case EDamageType.Health:
                     modifyHp(damageInfo.FinalDamageValue);
                     break;
             }
+
             Unit.SetAttr(EAttrType.AttrShield, curShield);
 
             Debug.Log($"当前血量{Unit.GetAttr(EAttrType.AttrHp)}");
@@ -171,7 +186,7 @@ namespace Hono.Scripts.Battle.Core
                 comp.AddVFXObject(key, setting);
             }
         }
-        
+
         protected override void onClear()
         {
             _currentHp = 0;

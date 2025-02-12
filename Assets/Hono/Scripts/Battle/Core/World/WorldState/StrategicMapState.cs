@@ -1,10 +1,10 @@
 ﻿namespace Hono.Scripts.Battle.Core
 {
-    public partial class World
+    public partial class WorldInstance
     {
         private class StrategicMapState : WorldState
         {
-            public StrategicMapState(World world) : base(world, EWorldState.StrategicMap) { }
+            public StrategicMapState(WorldInstance worldInstance) : base(worldInstance, EWorldState.StrategicMap) { }
             protected override void OnEnter()
             {
                 UIManager.Instance.SetStrategicMap(true);

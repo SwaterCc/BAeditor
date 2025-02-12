@@ -9,27 +9,27 @@ namespace Hono.Scripts.Battle.Core
     /// <summary>
     /// Unit检索器，用于快速搜索符合条件的Unit
     /// </summary>
-    public class WorldSearcher
+    public class WorldQuery
     {
+        private WorldInstance _worldInstance;
         /// <summary>
         /// Unit索引字典
         /// </summary>
         private readonly Dictionary<int, Unit> _searchDict = new(2000);
-        private readonly Dictionary<int, Actor> _actorSearchDict = new(2000);
         private readonly List<Unit> _filterActors = new(32);
         private List<int> _checkBoxResult = new(32);
         private RangeFilterSetting _rangeFilterSetting;
         private Unit _filterUser;
         private Vector3 _searchCenterPos;
 
-        public void RemoveUnitLookup(Unit unit)
+        public WorldQuery(WorldInstance worldInstance)
         {
-            _searchDict.Remove(unit.Uid);
+            _worldInstance = worldInstance;
         }
-        
+
         public Unit GetUnit(int uid)
         {
-            return null;
+            return _searchDict.GetValueOrDefault(uid, null);
         }
 
         public bool TryGetUnit(int uid, out Unit unit)
@@ -37,16 +37,26 @@ namespace Hono.Scripts.Battle.Core
             return _searchDict.TryGetValue(uid, out unit);
         }
 
-        public Actor GetActor(int uid)
+        public bool ContainsUnit(int unitUid)
         {
-            return null;
+            return _searchDict.ContainsKey(unitUid);
         }
 
-        public bool TryGetActor(int uid, out Actor unit)
+        public void AddUnitLookup(Unit unit)
         {
-            return _actorSearchDict.TryGetValue(uid, out unit);
+            _searchDict.Add(unit.Uid, unit);
         }
-        
+
+        public bool TryAddUnitLookup(Unit unit)
+        {
+            return _searchDict.TryAdd(unit.Uid, unit);
+        }
+
+        public void RemoveUnitLookup(Unit unit)
+        {
+            _searchDict.Remove(unit.Uid);
+        }
+
         public void SearchUnits(Unit user, Vector3 centerPos, RangeFilterSetting setting, ref List<int> result)
         {
             if (setting == null)
@@ -69,7 +79,7 @@ namespace Hono.Scripts.Battle.Core
             getResults(ref result);
         }
 
-        public bool CheckActorPassFilter(Unit filterUser, int checkActorUid, ConditionFilterSetting setting)
+        public bool ConditionFilter(Unit filterUser, int checkActorUid, ConditionFilterSetting setting)
         {
             if (!_searchDict.TryGetValue(checkActorUid, out var unit))
             {
@@ -96,9 +106,7 @@ namespace Hono.Scripts.Battle.Core
                     checkResult = unit.Tags.HasTag(condition.value);
                     break;
                 case EFilterConditionType.Faction:
-                    var f1 = _filterUser.GetAttr(EAttrType.AttrFaction);
-                    var f2 = unit.GetAttr(EAttrType.AttrFaction);
-                    checkResult = LuaInterface.GetFaction(f1, f2) == condition.value;
+                    checkResult = Faction.IsSpecialRelationship(_filterUser, unit, (EFactionRelationship)condition.value);
                     break;
                 default:
                     Debug.LogError($"使用了未实现的范围筛选 settingId {_filterUser.Uid} type {condition.conditionType}");

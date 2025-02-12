@@ -2,29 +2,16 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Event;
+using Unity.Collections;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public class WorldNodeRoot : WorldNode
-    {
-        public WorldNodeRoot()
-        {
-            SetRoot(this);
-        }
-
-        private new void SetParent(WorldNode parent) { }
-
-        protected override void onTick(float dt) { }
-
-        protected override void OnRemove() { }
-    }
-
     public interface IWorldSystem { }
 
     public interface IWorldSystemWhenEnterCalled : IWorldSystem
     {
-        public void OnWorldEnter(World world);
+        public void OnWorldEnter(WorldInstance worldInstance);
     }
 
     public interface IWorldSystemWhenTickCalled : IWorldSystem
@@ -36,11 +23,29 @@ namespace Hono.Scripts.Battle.Core
     {
         public void OnWorldExit();
     }
-    
+
     /// <summary>
-    /// 当前运行的世界
+    /// 语法糖，快速访问当前World
     /// </summary>
-    public partial class World
+    public static class World
+    {
+        private static WorldInstance _instance;
+        public static WorldInstance Current => _instance;
+        public static WorldQuery Query => _instance.Query;
+
+        public static void SetWorld(WorldInstance instance)
+        {
+            if (instance != null)
+            {
+                _instance = instance;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 世界实例对象
+    /// </summary>
+    public partial class WorldInstance
     {
         /// <summary>
         /// 世界最大Actor数量
@@ -50,32 +55,29 @@ namespace Hono.Scripts.Battle.Core
         /// 最大Unit的数量
         /// </summary>
         public const int MaxUnitCount = MaxActorCount + 3000;
-        /// <summary>
-        /// Unit搜索器
-        /// </summary>
-        public static readonly WorldSearcher Searcher = new();
         
-        private static class WorldInstance
-        {
-            public static World World;
-        }
+        /// <summary>
+        /// 搜索器,集合了查找过滤的API
+        /// </summary>
+        public readonly WorldQuery Query;
+
         //世界的构成
         //静态网格地图数据（可行区域，地图网格对应坐标区域）
         //运行时动态网格数据（网格上的单位数据，寻路数据，单位坐标更新（最后帧））
         private readonly List<IWorldSystemWhenEnterCalled> _mgrsEnter = new();
         private readonly List<IWorldSystemWhenTickCalled> _mgrsTick = new();
         private readonly List<IWorldSystemWhenExitCalled> _mgrsExit = new();
-        
+
         /// <summary>
-        /// 根节点
+        /// 世界单位
         /// </summary>
-        private readonly WorldNodeRoot _worldNodeRoot = new();
-        
+        private readonly WorldInstanceUnit _worldNodeRoot = new();
+
         /// <summary>
         /// Id生成器
         /// </summary>
-        private  readonly IdAllocator _idAllocator = new();
-        
+        private readonly IdAllocator _idAllocator = new();
+
         /// <summary>
         /// 当前世界流程
         /// </summary>
@@ -105,10 +107,25 @@ namespace Hono.Scripts.Battle.Core
         /// 数据配置
         /// </summary>
         private readonly BattleSceneTable.BattleSceneRow _sceneRow;
-        
+
+        /// <summary>
+        /// 正在运行的Unit列表
+        /// </summary>
+        private readonly List<Unit> _runningActorList = new(2048);
+
+        /// <summary>
+        /// Actor待加载列表
+        /// </summary>
+        private readonly List<Unit.ILoadableUnit> _loadingCaches = new(1024);
+
+        /// <summary>
+        /// 待删除列表
+        /// </summary>
+        private readonly List<Unit> _removeList = new(16);
+
         #region 周期
 
-        public World(int sceneTableId)
+        public WorldInstance(int sceneTableId)
         {
             register(EventManager.Instance);
             register(MessageManager.Instance);
@@ -125,6 +142,8 @@ namespace Hono.Scripts.Battle.Core
             };
 
             _currentState = _nextState = EWorldState.NoInit;
+
+            Query = new WorldQuery(this);
         }
 
         private void register(IWorldSystem system)
@@ -154,9 +173,9 @@ namespace Hono.Scripts.Battle.Core
             GC.Collect();
 
             //特定池创建指定数量缓存
-            
+
             //设置单例
-            WorldInstance.World = this;
+            World.SetWorld(this);
 
             foreach (var system in _mgrsEnter)
             {
@@ -173,6 +192,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="dt"></param>
         public void Tick(float dt)
         {
+            //世界更新
             if (_currentState != _nextState)
             {
                 _worldStates[_currentState]?.Exit();
@@ -182,10 +202,50 @@ namespace Hono.Scripts.Battle.Core
 
             _worldStates[_currentState]?.Tick(dt);
 
+            //系统更新
             foreach (var system in _mgrsTick)
             {
                 system.OnWorldTick(dt);
             }
+
+            //单位更新
+            int i = 0;
+            while (i < _loadingCaches.Count)
+            {
+                Unit.ILoadableUnit loadable = _loadingCaches[i++];
+
+                if (loadable.IsLoadFinish)
+                {
+                    _runningActorList.Add((Unit)loadable);
+                }
+
+                if (loadable.HasLoadError)
+                {
+                    _removeList.Add((Unit)loadable);
+                }
+            }
+
+            i = 0;
+            while (i < _loadingCaches.Count)
+            {
+                Unit unit = _runningActorList[i++];
+                unit.Tick(dt);
+            }
+
+            if (_removeList is not { Count: > 0 })
+                return;
+
+            foreach (var unit in _removeList)
+            {
+                //回收
+                unit.Recycle();
+                //父类清理
+                unit.BaseClear();
+                //从运行队列删除
+                _runningActorList.RemoveSwapBack(unit);
+            }
+
+            _removeList.Clear();
         }
 
         /// <summary>
@@ -199,31 +259,74 @@ namespace Hono.Scripts.Battle.Core
             }
 
             //设置单例
-            WorldInstance.World = null;
-            
+            World.SetWorld(null);
+
             //退出后主动GC下
             GC.Collect();
         }
 
         #endregion
 
-        #region Unit创建
+        #region Unit接口
+
+        /// <summary>
+        /// Unit添加到世界
+        /// </summary>
+        private void addUnitToWorld(Unit unit)
+        {
+            if (unit is Unit.ILoadableUnit loadableUnit)
+            {
+                loadableUnit.Load();
+
+                if (loadableUnit.IsLoadFinish)
+                {
+                    addUnitToRunningList(unit);
+                    return;
+                }
+
+                if (loadableUnit.HasLoadError)
+                {
+                    _removeList.Add(unit);
+                    return;
+                }
+
+                _loadingCaches.Add(loadableUnit);
+            }
+            else
+            {
+                addUnitToRunningList(unit);
+            }
+        }
+
+        /// <summary>
+        /// 添加到运行队列
+        /// </summary>
+        /// <param name="unit"></param>
+        private void addUnitToRunningList(Unit unit)
+        {
+            if (!Query.TryAddUnitLookup(unit))
+            {
+                throw new Exception("UID重复！！！！！");
+            }
+
+            _runningActorList.Add(unit);
+        }
 
         /// <summary>
         /// 获取这个World唯一Id
         /// </summary>
         /// <returns></returns>
-        public static int GetUid()
+        public int GetUid()
         {
-            return WorldInstance.World._idAllocator.Allocate();
+            return _idAllocator.Allocate();
         }
-        
+
         /// <summary>
         /// 创建玩家角色
         /// </summary>
         /// <param name="actorTableId"></param>
         /// <returns></returns>
-        public static Actor CreatePlayerCharacter(int actorTableId)
+        public Actor CreatePlayerCharacter(int actorTableId)
         {
             if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
             {
@@ -231,26 +334,21 @@ namespace Hono.Scripts.Battle.Core
             }
 
             Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
-
             //设置初始值
             actor.Attrs.Init(actorTableId);
-
             //从外部获取养成数据
             //actro.Attrs.InitAttr();
-
             actor.Init(row);
-
-            WorldInstance.World._worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
-
+            addUnitToWorld(actor);
             return actor;
         }
 
         /// <summary>
-        /// 创建Actor
+        ///  创建Actor
         ///  玩家角色(士兵)的属性来自养成转换
         ///  地图其他单位的属性来自静态配置，地图参数，等级影响等
         /// </summary>
-        public static Actor CreateActor(int actorTableId, WorldNode parent = null)
+        public Actor CreateActor(int actorTableId)
         {
             if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
             {
@@ -258,20 +356,9 @@ namespace Hono.Scripts.Battle.Core
             }
 
             Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
-
             actor.Attrs.Init(actorTableId);
-
             actor.Init(row);
-
-            if (parent == null)
-            {
-                WorldInstance.World._worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
-            }
-            else
-            {
-                parent.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
-            }
-
+            addUnitToWorld(actor);
             return actor;
         }
 
@@ -293,7 +380,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="actorTableId"></param>
         /// <param name="summonSetting"></param>
         /// <returns></returns>
-        public static Actor SummonActor(Actor summoner, int actorTableId, SummonSetting summonSetting)
+        public Actor SummonActor(Actor summoner, int actorTableId, SummonSetting summonSetting)
         {
             if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
             {
@@ -306,15 +393,7 @@ namespace Hono.Scripts.Battle.Core
             actor.Attrs.SetSummoned(summoner, summonSetting.FromTopSummer);
             actor.Attrs.InheritAttrs(summoner.Attrs, summonSetting);
             actor.Init(row);
-
-            if (!summonSetting.LifeWithSummoner)
-            {
-                WorldInstance.World._worldNodeRoot.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
-            }
-            else
-            {
-                summoner.AddChildWhenSuccess(actor, node => ((Actor)node).ModelController.LoadedFinish);
-            }
+            addUnitToWorld(actor);
 
             return actor;
         }
@@ -322,12 +401,54 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 创建子弹
         /// </summary>
-        public Bullet CreateBullet(Actor attacker)
+        public Bullet CreateBullet(Unit attacker)
         {
-            return null;
+            var bullet = GPool<Bullet>.Pool.Rent();
+            //属性全拷贝X 直接拥有攻击者对象
+            addUnitToWorld(bullet);
+            return bullet;
+        }
+
+        /// <summary>
+        /// 创建脱手打击盒
+        /// </summary>
+        public HitBox CreateHitBox(Unit attacker)
+        {
+            var hitBox = GPool<HitBox>.Pool.Rent();
+            addUnitToWorld(hitBox);
+            return hitBox;
+        }
+
+        /// <summary>
+        /// 删除Unit
+        /// </summary>
+        /// <param name="unit"></param>
+        public void RemoveUnit(Unit unit)
+        {
+            if (!Query.ContainsUnit(unit.Uid))
+                return;
+            //加入删除队列
+            _removeList.Add(unit);
+            //立刻从搜索队列中移除
+            Query.RemoveUnitLookup(unit);
+        }
+
+        /// <summary>
+        /// 删除Unit
+        /// </summary>
+        /// <param name="unitUid"></param>
+        public void RemoveUnit(int unitUid)
+        {
+            if (!Query.TryGetUnit(unitUid, out var unit))
+                return;
+            //加入删除队列
+            _removeList.Add(unit);
+            //立刻从搜索队列中移除
+            Query.RemoveUnitLookup(unit);
         }
 
         #endregion
+
 
         public void OpenStrategicMap()
         {
@@ -349,17 +470,17 @@ namespace Hono.Scripts.Battle.Core
     /// <summary>
     /// 世界状态
     /// </summary>
-    public partial class World
+    public partial class WorldInstance
     {
         private abstract class WorldState
         {
             public readonly EWorldState State;
-            public readonly World World;
+            public readonly WorldInstance WorldInstance;
 
-            protected WorldState(World world, EWorldState worldState)
+            protected WorldState(WorldInstance worldInstance, EWorldState worldState)
             {
                 State = worldState;
-                World = world;
+                WorldInstance = worldInstance;
             }
 
             public void Enter(EWorldState beforeState)

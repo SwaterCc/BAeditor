@@ -466,6 +466,20 @@ namespace Hono.Scripts.Battle
         Buff,
     }
 
+    /// <summary>
+    /// 伤害来源标记
+    /// </summary>
+    public enum EDamageSourceType
+    {
+        /// <summary>
+        /// 无来源，说明是直接调用了伤害接口
+        /// </summary>
+        None = 0,
+        Skill = 1,
+        Buff = 2,
+        Bullet = 4,
+    }
+
     public enum ECombatEnergyField
     {
         CurrentValue,
@@ -597,7 +611,7 @@ namespace Hono.Scripts.Battle
     /// <summary>
     ///     阵营关系
     /// </summary>
-    public enum EFactionType
+    public enum EFactionRelationship
     {
         /// <summary>
         ///     中立

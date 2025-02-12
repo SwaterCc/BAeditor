@@ -134,10 +134,10 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// 拥有Buff
             /// </summary>
-            public IntArray OwnerBuffs { get; private set; }
+            public IntTable OwnerBuffs { get; private set; }
             
             /// <summary>
-            /// 拥有的其他Ability
+            /// 拥有的其他Ability (id = 是否执行)
             /// </summary>
             public IntTable ownerOtherAbility { get; private set; }
             
@@ -186,7 +186,7 @@ namespace Hono.Scripts.Battle
             
                     _row.OwnerSkills = parseIntTable(line[11]);
             
-                    _row.OwnerBuffs = parseIntArray(line[12]);
+                    _row.OwnerBuffs = parseIntTable(line[12]);
             
                     _row.ownerOtherAbility = parseIntTable(line[13]);
             

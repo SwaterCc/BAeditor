@@ -1,10 +1,10 @@
 ﻿namespace Hono.Scripts.Battle.Core
 {
-    public partial class World
+    public partial class WorldInstance
     {
         private class ScoreState : WorldState
         {
-            public ScoreState(World world) : base(world, EWorldState.Score) { }
+            public ScoreState(WorldInstance worldInstance) : base(worldInstance, EWorldState.Score) { }
             protected override void OnEnter()
             {
                 UIManager.Instance.SetScoreUI(true);

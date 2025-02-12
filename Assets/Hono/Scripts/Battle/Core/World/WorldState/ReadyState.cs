@@ -2,18 +2,18 @@
 
 namespace Hono.Scripts.Battle.Core
 {
-    public partial class World
+    public partial class WorldInstance
     {
         private class ReadyState : WorldState
         {
             private readonly WorldEventListener _eventListener = new WorldEventListener(EEventType.WarBegin);
-            public ReadyState(World world) : base(world, EWorldState.Ready) { }
+            public ReadyState(WorldInstance worldInstance) : base(worldInstance, EWorldState.Ready) { }
 
             protected override void OnEnter()
             {
-                if ((EBattleModeType)World._sceneRow.BattleType != EBattleModeType.War)
+                if ((EBattleModeType)WorldInstance._sceneRow.BattleType != EBattleModeType.War)
                 {
-                    World._nextState = EWorldState.Gaming;
+                    WorldInstance._nextState = EWorldState.Gaming;
                     return;
                 }
 
@@ -28,7 +28,7 @@ namespace Hono.Scripts.Battle.Core
                 
                 
                 //加载完成后
-                World._nextState = EWorldState.Gaming;
+                WorldInstance._nextState = EWorldState.Gaming;
             }
 
             protected override void OnExit()

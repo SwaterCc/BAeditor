@@ -71,8 +71,8 @@ namespace Hono.Scripts.Battle
         public static TagTreeRoot TagTree => Instance._tagTree;
         
         public Action<bool> ExitBattleCallBack { get; set; }
-        private World _currentWorld;
-        public static World World => Instance._currentWorld;
+        private WorldInstance _currentWorldInstance;
+        public static WorldInstance WorldInstance => Instance._currentWorldInstance;
         private string _formScene;
         protected void Start()
         {
@@ -197,8 +197,8 @@ namespace Hono.Scripts.Battle
         public void WarGameStart(string fromScene, int battleGroundId)
         {
             _formScene = fromScene;
-            _currentWorld = new World(battleGroundId);
-            _currentWorld.Enter();
+            _currentWorldInstance = new WorldInstance(battleGroundId);
+            _currentWorldInstance.Enter();
         }
         
         private void Update()
@@ -209,7 +209,7 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            World?.Tick(Time.deltaTime);
+            WorldInstance?.Tick(Time.deltaTime);
         }
         
         /// <summary>
@@ -218,7 +218,7 @@ namespace Hono.Scripts.Battle
         public void WarGameExit()
         {
             Debug.Log("[BattleManager] ExitBattle");
-            _currentWorld.Exit();
+            _currentWorldInstance.Exit();
             
             /*if (LoadingPanel.Exists)
             {

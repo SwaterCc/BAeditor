@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Core.Base;
-using Hono.Scripts.Battle.Tools;
+
 
 namespace Hono.Scripts.Battle.Core
 {
@@ -12,15 +12,9 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 造成伤害
         /// </summary>
-        /// <param name="attackProxy">攻击者代理</param>
-        /// <param name="hurtTarget">受击者的属性</param>
-        /// <param name="damageSetting"></param>
-        public void MakeDamage(UnitProxy attackProxy, Unit hurtTarget, DamageSetting damageSetting)
+        public void MakeDamage(Unit attacker, Unit target, int damageId, ref VariableBoard damageReturn)
         {
-            if (attackProxy == null || hurtTarget == null || damageSetting == null)
-            {
-                return;
-            }
+            
         }
 
 

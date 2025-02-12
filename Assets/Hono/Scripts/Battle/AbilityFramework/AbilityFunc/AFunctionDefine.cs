@@ -40,7 +40,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
             }
             else
             {
-                actor = World.Searcher.GetUnit(actorUid) as Actor;
+                actor = World.Query.GetUnit(actorUid) as Actor;
             }
 
             return actor != null;

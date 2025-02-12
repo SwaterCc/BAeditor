@@ -4,7 +4,7 @@ using Hono.Scripts.Battle.Event;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public class Bullet : Unit
+    public class Bullet : Unit , IGPoolObject
     {
         private BulletData _bulletData;
 
@@ -75,9 +75,9 @@ namespace Hono.Scripts.Battle.Core
             }
         }
 
-        protected override void OnRemove()
+        public override void Recycle()
         {
-            
+            GPool<Bullet>.Pool.Recycle(this);
         }
 
         private void onHit(int targetUid)
@@ -87,6 +87,11 @@ namespace Hono.Scripts.Battle.Core
         private void dead()
         {
        
+        }
+
+        public void OnRecycle()
+        {
+            BaseClear();
         }
     }
 }

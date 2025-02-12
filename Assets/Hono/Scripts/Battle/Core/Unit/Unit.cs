@@ -8,8 +8,16 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public abstract class Unit : WorldNode
+    /// <summary>
+    /// World中运行的基本单位
+    /// </summary>
+    public abstract partial class Unit
     {
+        /// <summary>
+        /// 运行时唯一ID
+        /// </summary>
+        public int Uid { get; protected set; }
+
         /// <summary>
         /// 变量黑板
         /// </summary>
@@ -33,8 +41,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 状态标签
         /// </summary>
-        /// <returns></returns>
-        public EUnitFlag State { get; private set; }
+        public EUnitFlag State { get; protected set; }
 
         /// <summary>
         /// 动作系统
@@ -60,6 +67,31 @@ namespace Hono.Scripts.Battle.Core
         /// 逻辑组件
         /// </summary>
         private readonly Dictionary<Type, UnitComponent> _components = new();
+
+        /// <summary>
+        /// 运行第一帧前回调
+        /// </summary>
+        public event Action<Unit> BeforeFirstTickCallback;
+
+        /// <summary>
+        /// 帧更新前回调
+        /// </summary>
+        public event Action<Unit, float> BeforeTickCallBack;
+
+        /// <summary>
+        /// 帧更新后回调
+        /// </summary>
+        public event Action<Unit, float> AfterTickCallBack;
+
+        /// <summary>
+        /// 删除前回调
+        /// </summary>
+        public event Action<Unit> RecycleCallBack;
+
+        /// <summary>
+        /// 是否第一次Tick
+        /// </summary>
+        private bool _firstTick;
 
         protected Unit()
         {
@@ -95,8 +127,8 @@ namespace Hono.Scripts.Battle.Core
 
         protected void Init()
         {
-            Uid = World.GetUid();
-            
+            Uid = World.Current.GetUid();
+
             EventManager.Instance.AddListenerCollection(_evtListenerCollection);
             MessageManager.Instance.AddMsgCollection(_messageCollection);
 
@@ -107,8 +139,26 @@ namespace Hono.Scripts.Battle.Core
             }
         }
 
-        protected override void onTick(float dt)
+        /// <summary>
+        /// 第一次Tick之前被调用
+        /// </summary>
+        protected virtual void onBeforeFirstTick() { }
+
+        public void Tick(float dt)
         {
+            if (_firstTick)
+            {
+                foreach (var component in _components)
+                {
+                    component.Value.BeforeTick();
+                }
+
+                onBeforeFirstTick();
+                BeforeFirstTickCallback?.Invoke(this);
+                _firstTick = false;
+            }
+
+            BeforeTickCallBack?.Invoke(this, dt);
             foreach (var component in _components)
             {
                 component.Value.Tick(dt);
@@ -118,16 +168,16 @@ namespace Hono.Scripts.Battle.Core
             _abilityDriver.Tick(dt);
             _evtListenerCollection.Tick(dt);
             _messageCollection.Tick(dt);
+            onTick(dt);
+            AfterTickCallBack?.Invoke(this, dt);
         }
 
-        public void RemoveSelfFromParent()
+        protected abstract void onTick(float dt);
+
+        public void BaseClear()
         {
-            World.Searcher.RemoveUnitLookup(this);
-            base.RemoveSelfFromParent();
-        }
-        
-        public void Clear()
-        {
+            RecycleCallBack?.Invoke(this);
+
             foreach (var component in _components)
             {
                 component.Value.Clear();
@@ -138,14 +188,19 @@ namespace Hono.Scripts.Battle.Core
             _abilityDriver.Clear();
             _evtListenerCollection.Clear();
             _messageCollection.Clear();
-            
+
             Attrs.Clear();
             Tags.Clear();
             VariableBoard.Clear();
-            
+
             EventManager.Instance.RemoveListenerCollection(_evtListenerCollection);
             MessageManager.Instance.RemoveMsgCollection(_messageCollection);
         }
+
+        /// <summary>
+        /// 子类实现回收函数
+        /// </summary>
+        public abstract void Recycle();
 
         #region 对外接口
 
@@ -157,7 +212,7 @@ namespace Hono.Scripts.Battle.Core
         {
             return _abilityDriver.AwardAbility(abilityId);
         }
-        
+
         /// <summary>
         /// 执行Ability
         /// </summary>
@@ -166,7 +221,7 @@ namespace Hono.Scripts.Battle.Core
         {
             _abilityDriver.ExecuteAbility(abilityId);
         }
-        
+
         /// <summary>
         /// 停止Ability
         /// </summary>
@@ -313,6 +368,59 @@ namespace Hono.Scripts.Battle.Core
         {
             _messageCollection.RemoveListener(messageListener);
         }
+
+        #region HitCheck
+
+        /// <summary>
+        /// 单体打击点，直接Hit目标
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="disableEventTrigger"></param>
+        /// <param name="damageId"></param>
+        public void SingleHit(Unit target, bool disableEventTrigger = false, int damageId = 0)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            if (!disableEventTrigger)
+            {
+                var board = GPool<VariableBoard>.Pool.Rent();
+                EventManager.Instance.FireWorldEvent(EEventType.OnHit, board);
+                GPool<VariableBoard>.Pool.Recycle(board);
+            }
+
+            var damageResult = GPool<VariableBoard>.Pool.Rent();
+            
+            if (target.TryGetComponent(out HpComp hpComp))
+            {
+                hpComp.MakeDamage();
+            }
+            
+            if (target.TryGetComponent(out CombatComp combatComp))
+            {
+                combatComp.CumulativeElementValue();
+            }
+            
+            if (!disableEventTrigger)
+            {
+                EventManager.Instance.FireWorldEvent(EEventType.OnHitMakeDamage, damageResult);
+            }
+            GPool<VariableBoard>.Pool.Recycle(damageResult);
+        }
+
+        public void AreaHit(Vector3 aoeCenterPos, RangeFilterSetting aoeSetting, bool disableHitEvent = false, int damageId = 0)
+        {
+            //BattleManager.World.Searcher.SearchUnits();
+        }
+
+        public void DirectionHit(Vector3 dir, RangeFilterSetting aoeSetting, bool disableHitEvent = false, int damageId = 0)
+        {
+            //BattleManager.World.Searcher.SearchUnits();
+        }
+
+        #endregion
 
         #endregion
     }

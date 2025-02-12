@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Tools;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Base
 {
-    public class AttrHelper : Singleton<AttrHelper>,IBattleFrameworkInit
+    public class AttrHelper : Singleton<AttrHelper>, IBattleFrameworkInit
     {
         public class AttrLink
         {
@@ -14,28 +15,92 @@ namespace Hono.Scripts.Battle.Base
             /// 属性分量最终值，只读
             /// </summary>
             private EAttrType _final;
+
             /// <summary>
             /// 属性分量最终修订值，当为0时取公式结果，有值时 _final = _total
             /// </summary>
             private EAttrType _total;
+
             /// <summary>
             /// 加值
             /// </summary>
             private EAttrType _add;
+
             /// <summary>
             /// 额外加值
             /// </summary>
             private EAttrType _addEx;
+
             /// <summary>
             /// 乘值
             /// </summary>
             private EAttrType _sub;
+
             /// <summary>
             /// 额外乘值
             /// </summary>
             private EAttrType _subEx;
-           
-            public void UpdateLink(Core.AttrCollection collection)
+
+            /// <summary>
+            /// 最终值下限
+            /// </summary>
+            private int _finalLower;
+
+            /// <summary>
+            /// 最终值上限
+            /// </summary>
+            private int _finalUpper;
+
+            public bool Init(AttrTable.AttrRow attrRow)
+            {
+                if (setField(ref _final, attrRow.AttrFinal))
+                {
+                    return false;
+                }
+
+                if (setField(ref _total, attrRow.AttrTotal))
+                {
+                    return false;
+                }
+
+                if (setField(ref _add, attrRow.AttrAdd))
+                {
+                    return false;
+                }
+
+                if (setField(ref _addEx, attrRow.AttrExAdd))
+                {
+                    return false;
+                }
+
+                if (setField(ref _sub, attrRow.AttrPer))
+                {
+                    return false;
+                }
+
+                if (setField(ref _subEx, attrRow.AttrExPer))
+                {
+                    return false;
+                }
+
+                _finalLower = Mathf.Clamp(attrRow.AttrLowerLimit, Int32.MinValue, attrRow.AttrLowerLimit);
+                _finalUpper = attrRow.AttrUpperLimit <= 0 ? Int32.MaxValue : attrRow.AttrUpperLimit;
+                return true;
+            }
+
+            private bool setField(ref EAttrType field, int rowField)
+            {
+                if (!Enum.IsDefined(typeof(EAttrType), rowField))
+                {
+                    Debug.LogError($"attrTable id {rowField} 该属性不存在");
+                    return false;
+                }
+
+                field = (EAttrType)rowField;
+                return true;
+            }
+
+            public void UpdateLink(AttrCollection collection)
             {
                 var add = collection.GetAttr(_add);
                 var exAdd = collection.GetAttr(_addEx);
@@ -43,30 +108,65 @@ namespace Hono.Scripts.Battle.Base
                 var finalPer = Mathf.Clamp(((10000 + per) / 10000f), 0f, float.MaxValue - 1);
                 var total = collection.GetAttr(_total);
                 int final = total == 0 ? (int)(add * finalPer + exAdd) : total;
+                final = Mathf.Clamp(final, _finalLower, _finalUpper);
                 collection.SetAttr(_final, final);
             }
         }
 
         private static readonly Dictionary<EAttrType, AttrLink> _attrLinks = new();
-        
-        
+
+
         public void Init()
         {
             //初始化属性关联
             foreach (var attrRow in ConfigManager.Table<AttrTable>().GetTable())
             {
-                
+                if (!Enum.IsDefined(typeof(EAttrType), attrRow.Key))
+                {
+                    Debug.LogError($"attrTable id {attrRow.Key} 该属性不存在");
+                    continue;
+                }
+
+                var link = new AttrLink();
+                if (!link.Init(attrRow.Value))
+                {
+                    continue;
+                }
+
+                _attrLinks.Add((EAttrType)attrRow.Key, link);
             }
         }
 
-        public bool TryGetLink(EAttrType attrType,out AttrLink link)
+        public bool TryGetLink(EAttrType attrType, out AttrLink link)
         {
             return _attrLinks.TryGetValue(attrType, out link);
         }
-        
-        public void InitByTableRow(AttrCollection collection,EntityAttrBaseTable.EntityAttrBaseRow row)
+
+        public void InitByTableRow(AttrCollection collection, EntityAttrBaseTable.EntityAttrBaseRow attrRow)
         {
-           //直接一个手写
+            collection.SetAttr(EAttrType.AttrEntityLevel,              attrRow.AttrEntityLevel,              false);
+            collection.SetAttr(EAttrType.AttrBaseSpeed,                attrRow.AttrBaseSpeed,                false);
+            collection.SetAttr(EAttrType.AttrMoveSpeedPCTAdd,          attrRow.AttrMoveSpeedPCTAdd,          false);
+            collection.SetAttr(EAttrType.AttrMaxHpAdd,                 attrRow.AttrMaxHpAdd,                 false);
+            collection.SetAttr(EAttrType.AttrAttackAdd,                attrRow.AttrAttackAdd,                false);
+            collection.SetAttr(EAttrType.AttrCritAdd,                  attrRow.AttrCritAdd,                  false);
+            collection.SetAttr(EAttrType.AttrDefenseAdd,               attrRow.AttrDefenseAdd,               false);
+            collection.SetAttr(EAttrType.AttrHealAdd,                  attrRow.AttrHealAdd,                  false);
+            collection.SetAttr(EAttrType.AttrHealedAdd,                attrRow.AttrHealedAdd,                false);
+            collection.SetAttr(EAttrType.AttrCritDamageAdd,            attrRow.AttrCritDamageAdd,            false);
+            collection.SetAttr(EAttrType.AttrDmgAAdd,                  attrRow.AttrDmgAAdd,                  false);
+            collection.SetAttr(EAttrType.AttrDmgRedAdd,                attrRow.AttrDmgRedAdd,                false);
+            collection.SetAttr(EAttrType.AttrHealIntensityAdd,         attrRow.AttrHealIntensityAdd,         false);
+            collection.SetAttr(EAttrType.AttrIgnoreDefenseAdd,         attrRow.AttrIgnoreDefenseAdd,         false);
+            collection.SetAttr(EAttrType.AttrAttackSpeedPCTAdd,        attrRow.AttrAttackSpeedPCTAdd,        false);
+            collection.SetAttr(EAttrType.AttrElementPenPCTAdd,         attrRow.AttrElementPenPCTAdd,         false);
+            collection.SetAttr(EAttrType.AttrElementMagicRedPCTAdd,    attrRow.AttrElementMagicRedPCTAdd,    false);
+            collection.SetAttr(EAttrType.AttrElementPhysicalPenPCTAdd, attrRow.AttrElementPhysicalPenPCTAdd, false);
+            collection.SetAttr(EAttrType.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd, false);
+            collection.SetAttr(EAttrType.AttrMpRecAllAdd,              attrRow.AttrMpRecAllAdd,              false);
+            collection.SetAttr(EAttrType.AttrMpRecAllPer,              attrRow.AttrMpRecAllPer,              false);
+            collection.SetAttr(EAttrType.AttrMpRecKilledAdd,           attrRow.AttrMpRecKilledAdd,           false);
+            collection.SetAttr(EAttrType.AttrMpRecBehitPer,            attrRow.AttrMpRecBehitPer,            false);
         }
     }
 }

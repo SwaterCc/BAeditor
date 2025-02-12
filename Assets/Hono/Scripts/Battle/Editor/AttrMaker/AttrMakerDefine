@@ -31,15 +31,6 @@ int AttrMaxHpAdd   10012
 int AttrMaxHpExAdd   10013 
 int AttrMaxHpPer   10014 
 int AttrMaxHpExPer   10015 
- #MP
-int AttrMp   10020  //��ǰMP
-int AttrMpPer   10021 
-int AttrMaxMp   10030 
-int AttrMaxMpTotal   10031 
-int AttrMaxMpAdd   10032 
-int AttrMaxMpExAdd   10033 
-int AttrMaxMpPer   10034 
-int AttrMaxMpExPer   10035 
  #����
 int AttrShield   10040 
 int AttrShieldPer   10041 

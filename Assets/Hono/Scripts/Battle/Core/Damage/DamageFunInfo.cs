@@ -15,9 +15,9 @@ namespace Hono.Scripts.Battle
 
         public void OnRecycle()
         {
-            ConditionIds = null;
-            ConditionParams = null;
-            ValueParams = null;
+            ConditionIds.Clear();
+            ConditionParams.Clear();
+            ValueParams.Clear();
             ValueFuncName = "normal";
         }
     }
