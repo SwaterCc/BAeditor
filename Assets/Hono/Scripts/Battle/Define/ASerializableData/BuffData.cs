@@ -55,10 +55,6 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public float duration;
         /// <summary>
-        /// 关联的abilityId
-        /// </summary>
-        public int abilityId;
-        /// <summary>
         /// 叠层时再次执行逻辑
         /// </summary>
         public bool runAgainWhenLayering;
@@ -70,5 +66,25 @@ namespace Hono.Scripts.Battle
         /// buff本身拥有的Tag
         /// </summary>
         public List<int> buffTags = new();
+        /// <summary>
+        /// 子弹Ability数据
+        /// </summary>
+        [SerializeField]
+        private AbilityData buffAbility;
+        public AbilityData BuffAbility => buffAbility;
+        
+        private void OnEnable()
+        {
+            if (buffAbility == null)
+            {
+                buffAbility = CreateInstance<AbilityData>();
+                buffAbility.name = "buffAbility" + id; // 设置子资产名称
+#if UNITY_EDITOR
+                UnityEditor.AssetDatabase.AddObjectToAsset(buffAbility, this);
+                UnityEditor.EditorUtility.SetDirty(this);
+                UnityEditor.AssetDatabase.SaveAssets();
+#endif
+            }
+        }
     }
 }

@@ -16,14 +16,19 @@ namespace Hono.Scripts.Battle.Core
         
         private bool _hasError;
         
-        public void Init(BulletData bulletData,)
+        public void LockTargetBullet(BulletData bulletData)
         {
            
         }
 
+        public void DirectionBullet(BulletData bulletData)
+        {
+            
+        }
+
         protected override void onTick(float dt)
         {
-            if (_hasError || _isExpire)
+            if (_hasError )
             {
                 return;
             }
@@ -31,13 +36,18 @@ namespace Hono.Scripts.Battle.Core
             _duration += dt;
             if (_duration > _bulletData.BulletLifeTime)
             {
-                dead();
+              
+            }
+
+            if (_hitCount > _bulletData.MaxHitCount)
+            {
+                
             }
         }
         
         private void onBulletCollision(int uid)
         {
-            if (_hasError || _isExpire)
+            if (_hasError )
             {
                 return;
             }
@@ -50,7 +60,7 @@ namespace Hono.Scripts.Battle.Core
             if (_bulletData.IsHitPathActor)
             {
                 ++_hitCount;
-                onHit(uid);
+                onHit();
 
                 if (_hitCount >= _bulletData.MaxHitCount || uid == _targetUid)
                 {
@@ -61,11 +71,20 @@ namespace Hono.Scripts.Battle.Core
             {
                 if (uid != _targetUid) return;
 
-                onHit(_targetUid);
+                onHit();
                 dead();
             }
         }
-        
+
+        private void onHit()
+        {
+            
+        }
+
+        private void dead()
+        {
+            
+        }
        
 
         public override void Recycle()

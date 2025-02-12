@@ -53,7 +53,9 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 技能Ability数据
         /// </summary>
-        public AbilityData skillAbility = CreateInstance<AbilityData>();
+        [SerializeField]
+        private AbilityData skillAbility;
+        public AbilityData SkillAbility => skillAbility;
         ///////////////////////////指示器相关///////////////////////////
         
         /// <summary>
@@ -72,5 +74,19 @@ namespace Hono.Scripts.Battle
         /// 非指向技能选择范围配置（指示器）
         /// </summary>
         public CheckBoxData selectRangeShape = new();
+        
+        private void OnEnable()
+        {
+            if (skillAbility == null)
+            {
+                skillAbility = CreateInstance<AbilityData>();
+                skillAbility.name = "skillAbility" + id; // 设置子资产名称
+#if UNITY_EDITOR
+                UnityEditor.AssetDatabase.AddObjectToAsset(skillAbility, this);
+                UnityEditor.EditorUtility.SetDirty(this);
+                UnityEditor.AssetDatabase.SaveAssets();
+#endif
+            }
+        }
     }
 }

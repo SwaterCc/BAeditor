@@ -438,9 +438,6 @@ namespace Hono.Scripts.Battle
 
         //环绕
         Around,
-
-        //抛物线
-        Parabola,
     }
 
     /// <summary>

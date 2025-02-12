@@ -32,25 +32,7 @@ namespace Hono.Scripts.Battle
         ///     不响应输入
         /// </summary>
         [LabelText("不响应输入")] public bool DisableMoveInput;
-
-        /// <summary>
-        ///     初速度(环绕模式下是y轴角度)
-        /// </summary>
-        [LabelText("初速度(环绕模式下是y轴角度)")] [HideIf("MoveType", EBulletMotionType.Parabola)]
-        public float Speed;
-
-        /// <summary>
-        ///     加速度(环绕模式下是角加速度)
-        /// </summary>
-        [LabelText("加速度(环绕模式下是角加速度)")] [HideIf("MoveType", EBulletMotionType.Parabola)]
-        public float Acceleration;
-
-        /// <summary>
-        ///     曲线名
-        /// </summary>
-        [LabelText("曲线名")] [ShowIf("MoveType", EBulletMotionType.Parabola)]
-        public string CurveName;
-
+        
         /// <summary>
         ///     最大持续时长
         /// </summary>

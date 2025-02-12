@@ -13,7 +13,7 @@ namespace Editor.BattleEditor.AbilityEditor
         public override void Draw()
         {
             SirenixEditorGUI.BeginBox("Buff数据");
-            Data.CustomMotion = EditorGUILayout.Toggle(new GUIContent("自定义位移(默认使用直线位移)"), Data.CustomMotion);
+            /*Data.CustomMotion = EditorGUILayout.Toggle(new GUIContent("自定义位移(默认使用直线位移)"), Data.CustomMotion);
             Data.CloseFollowTarget = EditorGUILayout.Toggle(new GUIContent("关闭追踪目标"), Data.CloseFollowTarget);
             Data.BulletSpeed = SirenixEditorFields.FloatField("子弹速度",Data.BulletSpeed);
             //_data.Offset = SirenixEditorFields.Vector3Field("子弹相对于召唤者的偏移", _data.Offset);
@@ -25,7 +25,7 @@ namespace Editor.BattleEditor.AbilityEditor
             /*if (SirenixEditorGUI.Button("配置子弹命中筛选器",ButtonSizes.Medium))
             {
                 FilterSettingWindow.Open(ref _data.rangeFilterSetting);
-            }*/
+            }#1#*/
             SirenixEditorGUI.EndBox();
         }
         

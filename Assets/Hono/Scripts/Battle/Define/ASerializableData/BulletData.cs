@@ -53,5 +53,26 @@ namespace Hono.Scripts.Battle
         /// 命中时特效
         /// </summary>
         public string HitVFX;
+        
+        /// <summary>
+        /// 子弹Ability数据
+        /// </summary>
+        [SerializeField]
+        private AbilityData bulletAbility;
+        public AbilityData BulletAbility => bulletAbility;
+        
+        private void OnEnable()
+        {
+            if (bulletAbility == null)
+            {
+                bulletAbility = CreateInstance<AbilityData>();
+                bulletAbility.name = "bulletAbility" + id; // 设置子资产名称
+#if UNITY_EDITOR
+                UnityEditor.AssetDatabase.AddObjectToAsset(bulletAbility, this);
+                UnityEditor.EditorUtility.SetDirty(this);
+                UnityEditor.AssetDatabase.SaveAssets();
+#endif
+            }
+        }
     }
 }
