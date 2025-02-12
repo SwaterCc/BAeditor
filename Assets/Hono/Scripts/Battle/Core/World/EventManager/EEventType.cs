@@ -19,7 +19,7 @@ namespace Hono.Scripts.Battle.Event
         [EventCheckerBinder("GetHitOnceChecker", typeof(HitDamageInfoKeys))]
         OnHit,
 
-        OnHitMakeDamage,
+        OnMakeDamage,
         
         [EventCheckerBinder("GetBeHitChecker", typeof(HitDamageInfoKeys))]
         OnBeHit,

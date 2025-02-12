@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         ///     位移类型
         /// </summary>
-        [LabelText("位移类型，目前只有直线")] public EMotionType MoveType;
+        [LabelText("位移类型，目前只有直线")] public EBulletMotionType MoveType;
 
         /// <summary>
         ///     反方向移动(默认是向目标移动)
@@ -36,19 +36,19 @@ namespace Hono.Scripts.Battle
         /// <summary>
         ///     初速度(环绕模式下是y轴角度)
         /// </summary>
-        [LabelText("初速度(环绕模式下是y轴角度)")] [HideIf("MoveType", EMotionType.Parabola)]
+        [LabelText("初速度(环绕模式下是y轴角度)")] [HideIf("MoveType", EBulletMotionType.Parabola)]
         public float Speed;
 
         /// <summary>
         ///     加速度(环绕模式下是角加速度)
         /// </summary>
-        [LabelText("加速度(环绕模式下是角加速度)")] [HideIf("MoveType", EMotionType.Parabola)]
+        [LabelText("加速度(环绕模式下是角加速度)")] [HideIf("MoveType", EBulletMotionType.Parabola)]
         public float Acceleration;
 
         /// <summary>
         ///     曲线名
         /// </summary>
-        [LabelText("曲线名")] [ShowIf("MoveType", EMotionType.Parabola)]
+        [LabelText("曲线名")] [ShowIf("MoveType", EBulletMotionType.Parabola)]
         public string CurveName;
 
         /// <summary>

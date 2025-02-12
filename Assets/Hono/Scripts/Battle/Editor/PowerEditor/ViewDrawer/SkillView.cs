@@ -19,9 +19,9 @@ namespace Editor.AbilityEditor
         public override void Load(string path)
         {
             base.Load(path);
-            if (Data.abilityId > 0)
+            if (Data.id > 0)
             {
-                _abilityView.Load(BattleEditorPath.AbilityRootPath + "/" + Data.abilityId + ".asset");
+                _abilityView.Load(BattleEditorPath.AbilityRootPath + "/" + Data.id + ".asset");
             }
         }
 

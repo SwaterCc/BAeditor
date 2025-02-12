@@ -15,33 +15,32 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class XLuaTestNoGcWrap 
+    public class HonoScriptsBattleCoreDamagePipLineWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(XLuaTest.NoGc);
-			Utils.BeginObjectRegister(type, L, translator, 0, 5, 5, 5);
+			System.Type type = typeof(Hono.Scripts.Battle.Core.DamagePipLine);
+			Utils.BeginObjectRegister(type, L, translator, 0, 6, 8, 0);
 			
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "FloatParamMethod", _m_FloatParamMethod);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Vector3ParamMethod", _m_Vector3ParamMethod);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "StructParamMethod", _m_StructParamMethod);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "EnumParamMethod", _m_EnumParamMethod);
-			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DecimalParamMethod", _m_DecimalParamMethod);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Init", _m_Init);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetAttackerFinalAttr", _m_GetAttackerFinalAttr);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetSkillModifierAttr", _m_GetSkillModifierAttr);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetDamageResult", _m_SetDamageResult);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetDamageResult", _m_GetDamageResult);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Reset", _m_Reset);
 			
 			
-			Utils.RegisterFunc(L, Utils.GETTER_IDX, "a1", _g_get_a1);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "a2", _g_get_a2);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "a3", _g_get_a3);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "a4", _g_get_a4);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "a5", _g_get_a5);
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "DamageSourceType", _g_get_DamageSourceType);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "SourceAbilityId", _g_get_SourceAbilityId);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "HitUnitCount", _g_get_HitUnitCount);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "FormulaName", _g_get_FormulaName);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "DamageRatio", _g_get_DamageRatio);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "DamageType", _g_get_DamageType);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "AddiTypes", _g_get_AddiTypes);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "MultiTypes", _g_get_MultiTypes);
             
-			Utils.RegisterFunc(L, Utils.SETTER_IDX, "a1", _s_set_a1);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "a2", _s_set_a2);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "a3", _s_set_a3);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "a4", _s_set_a4);
-            Utils.RegisterFunc(L, Utils.SETTER_IDX, "a5", _s_set_a5);
-            
+			
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
@@ -65,7 +64,7 @@ namespace XLua.CSObjectWrap
 				if(LuaAPI.lua_gettop(L) == 1)
 				{
 					
-					var gen_ret = new XLuaTest.NoGc();
+					var gen_ret = new Hono.Scripts.Battle.Core.DamagePipLine();
 					translator.Push(L, gen_ret);
                     
 					return 1;
@@ -75,7 +74,7 @@ namespace XLua.CSObjectWrap
 			catch(System.Exception gen_e) {
 				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
 			}
-            return LuaAPI.luaL_error(L, "invalid arguments to XLuaTest.NoGc constructor!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Hono.Scripts.Battle.Core.DamagePipLine constructor!");
             
         }
         
@@ -87,22 +86,50 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_FloatParamMethod(RealStatePtr L)
+        static int _m_Init(RealStatePtr L)
         {
 		    try {
             
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
             
             
                 
                 {
-                    float _p = (float)LuaAPI.lua_tonumber(L, 2);
+                    Hono.Scripts.Battle.Core.HitInfo _hitInfo;translator.Get(L, 2, out _hitInfo);
                     
-                        var gen_ret = gen_to_be_invoked.FloatParamMethod( _p );
-                        LuaAPI.lua_pushnumber(L, gen_ret);
+                    gen_to_be_invoked.Init( _hitInfo );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetAttackerFinalAttr(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    Hono.Scripts.Battle.Core.EAttrType _attrType;translator.Get(L, 2, out _attrType);
+                    
+                        var gen_ret = gen_to_be_invoked.GetAttackerFinalAttr( _attrType );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
                     
                     
                     
@@ -116,22 +143,22 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_Vector3ParamMethod(RealStatePtr L)
+        static int _m_GetSkillModifierAttr(RealStatePtr L)
         {
 		    try {
             
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
             
             
                 
                 {
-                    UnityEngine.Vector3 _p;translator.Get(L, 2, out _p);
+                    Hono.Scripts.Battle.Core.EAttrType _attrType;translator.Get(L, 2, out _attrType);
                     
-                        var gen_ret = gen_to_be_invoked.Vector3ParamMethod( _p );
-                        translator.PushUnityEngineVector3(L, gen_ret);
+                        var gen_ret = gen_to_be_invoked.GetSkillModifierAttr( _attrType );
+                        LuaAPI.xlua_pushinteger(L, gen_ret);
                     
                     
                     
@@ -145,22 +172,49 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_StructParamMethod(RealStatePtr L)
+        static int _m_SetDamageResult(RealStatePtr L)
         {
 		    try {
             
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
             
             
                 
                 {
-                    XLuaTest.MyStruct _p;translator.Get(L, 2, out _p);
+                    Hono.Scripts.Battle.Core.DamageResult _result;translator.Get(L, 2, out _result);
                     
-                        var gen_ret = gen_to_be_invoked.StructParamMethod( _p );
-                        translator.PushXLuaTestMyStruct(L, gen_ret);
+                    gen_to_be_invoked.SetDamageResult( _result );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetDamageResult(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    
+                        var gen_ret = gen_to_be_invoked.GetDamageResult(  );
+                        translator.Push(L, gen_ret);
                     
                     
                     
@@ -174,55 +228,24 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_EnumParamMethod(RealStatePtr L)
+        static int _m_Reset(RealStatePtr L)
         {
 		    try {
             
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
             
             
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
             
             
                 
                 {
-                    XLuaTest.MyEnum _p;translator.Get(L, 2, out _p);
                     
-                        var gen_ret = gen_to_be_invoked.EnumParamMethod( _p );
-                        translator.PushXLuaTestMyEnum(L, gen_ret);
+                    gen_to_be_invoked.Reset(  );
                     
                     
                     
-                    return 1;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_DecimalParamMethod(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-            
-            
-                
-                {
-                    decimal _p;translator.Get(L, 2, out _p);
-                    
-                        var gen_ret = gen_to_be_invoked.DecimalParamMethod( _p );
-                        translator.PushDecimal(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
+                    return 0;
                 }
                 
             } catch(System.Exception gen_e) {
@@ -235,13 +258,13 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_a1(RealStatePtr L)
+        static int _g_get_DamageSourceType(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.a1);
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.DamageSourceType);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -249,13 +272,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_a2(RealStatePtr L)
+        static int _g_get_SourceAbilityId(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.a2);
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.SourceAbilityId);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -263,13 +286,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_a3(RealStatePtr L)
+        static int _g_get_HitUnitCount(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.a3);
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.HitUnitCount);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -277,13 +300,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_a4(RealStatePtr L)
+        static int _g_get_FormulaName(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.a4);
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushstring(L, gen_to_be_invoked.FormulaName);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -291,13 +314,55 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_a5(RealStatePtr L)
+        static int _g_get_DamageRatio(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.a5);
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.DamageRatio);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_DamageType(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.DamageType);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_AddiTypes(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.AddiTypes);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_MultiTypes(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked.MultiTypes);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -305,81 +370,6 @@ namespace XLua.CSObjectWrap
         }
         
         
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_a1(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.a1 = (double[])translator.GetObject(L, 2, typeof(double[]));
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_a2(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.a2 = (UnityEngine.Vector3[])translator.GetObject(L, 2, typeof(UnityEngine.Vector3[]));
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_a3(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.a3 = (XLuaTest.MyStruct[])translator.GetObject(L, 2, typeof(XLuaTest.MyStruct[]));
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_a4(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.a4 = (XLuaTest.MyEnum[])translator.GetObject(L, 2, typeof(XLuaTest.MyEnum[]));
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_a5(RealStatePtr L)
-        {
-		    try {
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			
-                XLuaTest.NoGc gen_to_be_invoked = (XLuaTest.NoGc)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.a5 = (decimal[])translator.GetObject(L, 2, typeof(decimal[]));
-            
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            return 0;
-        }
         
 		
 		

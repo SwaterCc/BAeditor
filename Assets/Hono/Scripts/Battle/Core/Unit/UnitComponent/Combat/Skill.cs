@@ -48,7 +48,7 @@ namespace Hono.Scripts.Battle.Core
                 CdPercent = 0;
                 Flag = 0;
                 
-                _ability = combatComp.Unit.AddAbility(SkillData.abilityId);
+                _ability = combatComp.Unit.AddAbility(SkillData.id);
                 _ability.ExecuteEndCallBack += onAbilityEnd;
 
                 if (!_combatComp.checkSkillResourceEnough(this))

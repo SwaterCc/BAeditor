@@ -7,13 +7,6 @@ using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
 {
-    public class BulletSetting
-    {
-        public Vector3 Offset;
-        public float Angle;
-        public float Speed;
-    }
-
     public class BulletData : ASerializableData
     {
         /// <summary>
@@ -24,30 +17,31 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 位移类型
         /// </summary>
-        public EMotionType MotionType = EMotionType.Liner;
+        public EBulletMotionType bulletMotionType = EBulletMotionType.Liner;
 
         /// <summary>
         /// 关闭跟随，默认为跟随目标
         /// </summary>
-        public bool CloseFollowTarget;
-
-        /// <summary>
-        /// 速度，废弃，移动到setting中
-        /// </summary>
-        public float BulletSpeed;
-
+        public bool FollowTarget;
+        
         /// <summary>
         /// 是否命中路径中的Actor
         /// </summary>
         public bool IsHitPathActor;
-
+        
         /// <summary>
-        /// 伤害id
+        /// 子弹生命时长
         /// </summary>
-        public int DamageConfigId;
-
         public float BulletLifeTime;
 
+        /// <summary>
+        /// 最小命中间隔
+        /// </summary>
+        public float MinHitInterval;
+        
+        /// <summary>
+        /// 最大命中次数
+        /// </summary>
         public int MaxHitCount;
 
         /// <summary>
@@ -59,6 +53,5 @@ namespace Hono.Scripts.Battle
         /// 命中时特效
         /// </summary>
         public string HitVFX;
-        
     }
 }

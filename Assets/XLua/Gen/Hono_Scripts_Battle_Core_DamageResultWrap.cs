@@ -15,20 +15,21 @@ using System.Collections.Generic;
 namespace XLua.CSObjectWrap
 {
     using Utils = XLua.Utils;
-    public class UnityEngineBehaviourWrap 
+    public class HonoScriptsBattleCoreDamageResultWrap 
     {
         public static void __Register(RealStatePtr L)
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-			System.Type type = typeof(UnityEngine.Behaviour);
-			Utils.BeginObjectRegister(type, L, translator, 0, 0, 2, 1);
+			System.Type type = typeof(Hono.Scripts.Battle.Core.DamageResult);
+			Utils.BeginObjectRegister(type, L, translator, 0, 0, 2, 2);
 			
 			
 			
-			Utils.RegisterFunc(L, Utils.GETTER_IDX, "enabled", _g_get_enabled);
-            Utils.RegisterFunc(L, Utils.GETTER_IDX, "isActiveAndEnabled", _g_get_isActiveAndEnabled);
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "DamageValue", _g_get_DamageValue);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "IsCritical", _g_get_IsCritical);
             
-			Utils.RegisterFunc(L, Utils.SETTER_IDX, "enabled", _s_set_enabled);
+			Utils.RegisterFunc(L, Utils.SETTER_IDX, "DamageValue", _s_set_DamageValue);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "IsCritical", _s_set_IsCritical);
             
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
@@ -50,20 +51,18 @@ namespace XLua.CSObjectWrap
             
 			try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-				if(LuaAPI.lua_gettop(L) == 1)
+				
+				if (LuaAPI.lua_gettop(L) == 1)
 				{
-					
-					var gen_ret = new UnityEngine.Behaviour();
-					translator.Push(L, gen_ret);
-                    
-					return 1;
+				    translator.Push(L, default(Hono.Scripts.Battle.Core.DamageResult));
+			        return 1;
 				}
 				
 			}
 			catch(System.Exception gen_e) {
 				return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
 			}
-            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Behaviour constructor!");
+            return LuaAPI.luaL_error(L, "invalid arguments to Hono.Scripts.Battle.Core.DamageResult constructor!");
             
         }
         
@@ -78,13 +77,13 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_enabled(RealStatePtr L)
+        static int _g_get_DamageValue(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                UnityEngine.Behaviour gen_to_be_invoked = (UnityEngine.Behaviour)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.enabled);
+                Hono.Scripts.Battle.Core.DamageResult gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                LuaAPI.xlua_pushinteger(L, gen_to_be_invoked.DamageValue);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -92,13 +91,13 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _g_get_isActiveAndEnabled(RealStatePtr L)
+        static int _g_get_IsCritical(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                UnityEngine.Behaviour gen_to_be_invoked = (UnityEngine.Behaviour)translator.FastGetCSObj(L, 1);
-                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.isActiveAndEnabled);
+                Hono.Scripts.Battle.Core.DamageResult gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.IsCritical);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
@@ -108,13 +107,32 @@ namespace XLua.CSObjectWrap
         
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _s_set_enabled(RealStatePtr L)
+        static int _s_set_DamageValue(RealStatePtr L)
         {
 		    try {
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
-                UnityEngine.Behaviour gen_to_be_invoked = (UnityEngine.Behaviour)translator.FastGetCSObj(L, 1);
-                gen_to_be_invoked.enabled = LuaAPI.lua_toboolean(L, 2);
+                Hono.Scripts.Battle.Core.DamageResult gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                gen_to_be_invoked.DamageValue = LuaAPI.xlua_tointeger(L, 2);
+            
+                translator.Update(L, 1, gen_to_be_invoked);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_IsCritical(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Hono.Scripts.Battle.Core.DamageResult gen_to_be_invoked;translator.Get(L, 1, out gen_to_be_invoked);
+                gen_to_be_invoked.IsCritical = LuaAPI.lua_toboolean(L, 2);
+            
+                translator.Update(L, 1, gen_to_be_invoked);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);

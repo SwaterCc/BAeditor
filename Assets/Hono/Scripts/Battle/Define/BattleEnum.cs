@@ -1,6 +1,7 @@
 #region
 
 using System;
+using XLua;
 
 #endregion
 
@@ -216,6 +217,7 @@ namespace Hono.Scripts.Battle
         Normal = 1,
         Percent,
         Dot,
+        
         Health,
     }
 
@@ -426,8 +428,11 @@ namespace Hono.Scripts.Battle
     /// <summary>
     ///     位移类型
     /// </summary>
-    public enum EMotionType
+    public enum EBulletMotionType
     {
+        //跟随目标
+        Follow,
+        
         //直线
         Liner,
 
@@ -466,9 +471,11 @@ namespace Hono.Scripts.Battle
         Buff,
     }
 
+  
     /// <summary>
     /// 伤害来源标记
     /// </summary>
+    [LuaCallCSharp]
     public enum EDamageSourceType
     {
         /// <summary>

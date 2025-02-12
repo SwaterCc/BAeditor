@@ -10,26 +10,31 @@ namespace Hono.Scripts.Battle.Core
 
         private int _hitCount;
         private float _duration;
-
-        private DamageManager _damageManager;
+        
         private Actor _attacker;
         private int _targetUid;
-       
-        private bool _isExpire;
+        
         private bool _hasError;
-        private BulletSetting _setting;
-
-        private void setBulletExpire(Actor actor)
-        {
-            _isExpire = true;
-          
-        }
-
-        public void Init()
+        
+        public void Init(BulletData bulletData,)
         {
            
         }
 
+        protected override void onTick(float dt)
+        {
+            if (_hasError || _isExpire)
+            {
+                return;
+            }
+
+            _duration += dt;
+            if (_duration > _bulletData.BulletLifeTime)
+            {
+                dead();
+            }
+        }
+        
         private void onBulletCollision(int uid)
         {
             if (_hasError || _isExpire)
@@ -61,37 +66,17 @@ namespace Hono.Scripts.Battle.Core
             }
         }
         
-        protected override void onTick(float dt)
-        {
-            if (_hasError || _isExpire)
-            {
-                return;
-            }
-
-            _duration += dt;
-            if (_duration > _bulletData.BulletLifeTime)
-            {
-                dead();
-            }
-        }
+       
 
         public override void Recycle()
         {
             GPool<Bullet>.Pool.Recycle(this);
         }
-
-        private void onHit(int targetUid)
-        {
-        }
-
-        private void dead()
-        {
-       
-        }
+        
 
         public void OnRecycle()
         {
-            BaseClear();
+           
         }
     }
 }

@@ -10,6 +10,11 @@ namespace Hono.Scripts.Battle.Core
         /// 允许产生异常伤害效果
         /// </summary>
         public bool AllowElementEffect;
+
+        /// <summary>
+        /// 禁用buff
+        /// </summary>
+        public bool DisableBuffAdd;
     }
 
     /// <summary>
@@ -90,7 +95,7 @@ namespace Hono.Scripts.Battle.Core
             _buffDriver.Clear();
             _energyCtrl.Clear();
         }
-        
+
         #region Skill
 
         public void LearnSkill(int skillId)
@@ -127,6 +132,28 @@ namespace Hono.Scripts.Battle.Core
             {
                 GPool<Skill>.Pool.Recycle(skill);
             }
+        }
+
+        public bool TryGetSkillModifier(int skillId, out SkillModifier skillModifier)
+        {
+            skillModifier = null;
+            if (_skills.TryGetValue(skillId, out var skill))
+            {
+                skillModifier = skill.Modifier;
+                return true;
+            }
+
+            return false;
+        }
+
+        public SkillModifier GetSkillModifier(int skillId)
+        {
+            if (_skills.TryGetValue(skillId, out var skill))
+            {
+                return skill.Modifier;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -254,19 +281,15 @@ namespace Hono.Scripts.Battle.Core
         #endregion
 
         #region ElementEffect
-        public void CumulativeElementValue(Unit attacker, int damageId)
+
+        public void CumulativeElementValue(Unit attacker, DamageTable.DamageRow damageRow)
         {
-            if (!ConfigManager.Table<DamageTable>().TryGet(damageId, out var damageRow))
-            {
-                return;
-            }
-            
             //无元素类型不处理
             if (damageRow.ElementsDamage.Count != 2)
             {
                 return;
             }
-            
+
             foreach (var link in ElementLinks)
             {
                 link.Process(attacker, this, damageRow);

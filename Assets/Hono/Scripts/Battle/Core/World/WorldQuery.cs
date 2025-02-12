@@ -11,16 +11,17 @@ namespace Hono.Scripts.Battle.Core
     /// </summary>
     public class WorldQuery
     {
-        private WorldInstance _worldInstance;
+        private readonly WorldInstance _worldInstance;
         /// <summary>
         /// Unit索引字典
         /// </summary>
-        private readonly Dictionary<int, Unit> _searchDict = new(2000);
+        private readonly Dictionary<int, Unit> _lookup = new(2000);
         private readonly List<Unit> _filterActors = new(32);
         private List<int> _checkBoxResult = new(32);
         private RangeFilterSetting _rangeFilterSetting;
         private Unit _filterUser;
-        private Vector3 _searchCenterPos;
+        private Vector3 _centerPos;
+        private float _yAxisAngle;
 
         public WorldQuery(WorldInstance worldInstance)
         {
@@ -29,35 +30,47 @@ namespace Hono.Scripts.Battle.Core
 
         public Unit GetUnit(int uid)
         {
-            return _searchDict.GetValueOrDefault(uid, null);
+            return _lookup.GetValueOrDefault(uid, null);
         }
 
         public bool TryGetUnit(int uid, out Unit unit)
         {
-            return _searchDict.TryGetValue(uid, out unit);
+            return _lookup.TryGetValue(uid, out unit);
         }
 
         public bool ContainsUnit(int unitUid)
         {
-            return _searchDict.ContainsKey(unitUid);
+            return _lookup.ContainsKey(unitUid);
         }
 
         public void AddUnitLookup(Unit unit)
         {
-            _searchDict.Add(unit.Uid, unit);
+            _lookup.Add(unit.Uid, unit);
         }
 
         public bool TryAddUnitLookup(Unit unit)
         {
-            return _searchDict.TryAdd(unit.Uid, unit);
+            return _lookup.TryAdd(unit.Uid, unit);
         }
 
         public void RemoveUnitLookup(Unit unit)
         {
-            _searchDict.Remove(unit.Uid);
+            _lookup.Remove(unit.Uid);
         }
 
-        public void SearchUnits(Unit user, Vector3 centerPos, RangeFilterSetting setting, ref List<int> result)
+        /// <summary>
+        /// 搜索符合条件的Unit
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="centerPos">搜索区域中心坐标</param>
+        /// <param name="yAxisAngle">搜索区域朝向</param>
+        /// <param name="setting"></param>
+        /// <param name="result"></param>
+        public void SearchUnits(Unit user,
+            Vector3 centerPos,
+            float yAxisAngle,
+            RangeFilterSetting setting,
+            ref List<int> result)
         {
             if (setting == null)
             {
@@ -72,16 +85,22 @@ namespace Hono.Scripts.Battle.Core
             }
 
             _filterUser = user;
-            _searchCenterPos = centerPos;
+            _centerPos = centerPos;
+            _yAxisAngle = yAxisAngle;
             _rangeFilterSetting = setting;
             result.Clear();
-
+            
             getResults(ref result);
+            
+            _filterUser = null;
+            _centerPos = Vector3.zero;
+            _yAxisAngle = 0;
+            _rangeFilterSetting = null;
         }
 
         public bool ConditionFilter(Unit filterUser, int checkActorUid, ConditionFilterSetting setting)
         {
-            if (!_searchDict.TryGetValue(checkActorUid, out var unit))
+            if (!_lookup.TryGetValue(checkActorUid, out var unit))
             {
                 return false;
             }
@@ -106,7 +125,8 @@ namespace Hono.Scripts.Battle.Core
                     checkResult = unit.Tags.HasTag(condition.value);
                     break;
                 case EFilterConditionType.Faction:
-                    checkResult = Faction.IsSpecialRelationship(_filterUser, unit, (EFactionRelationship)condition.value);
+                    checkResult =
+                        Faction.IsSpecialRelationship(_filterUser, unit, (EFactionRelationship)condition.value);
                     break;
                 default:
                     Debug.LogError($"使用了未实现的范围筛选 settingId {_filterUser.Uid} type {condition.conditionType}");
@@ -172,17 +192,16 @@ namespace Hono.Scripts.Battle.Core
 
             if (_rangeFilterSetting.OpenBoxCheck)
             {
-                var pos = _filterUser.UnitTransform.Pos;
                 var rot = Quaternion.AngleAxis(_filterUser.UnitTransform.YAxisAngle, Vector3.up);
-
-                if (CommonUtility.HitRayCast(_rangeFilterSetting.BoxData, pos, rot, ref _checkBoxResult))
+                
+                if (CommonUtility.HitRayCast(_rangeFilterSetting.BoxData, _centerPos, rot, ref _checkBoxResult))
                 {
                     foreach (var uid in _checkBoxResult)
                     {
                         var unSelectable =
-                            _searchDict[uid].GetAttr(EAttrType.AttrUnselectable) != 0;
+                            _lookup[uid].GetAttr(EAttrType.AttrUnselectable) != 0;
                         if (unSelectable) continue;
-                        _filterActors.Add(_searchDict[uid]);
+                        _filterActors.Add(_lookup[uid]);
                     }
 
                     _checkBoxResult.Clear();
@@ -190,7 +209,7 @@ namespace Hono.Scripts.Battle.Core
             }
             else
             {
-                _filterActors.AddRange(_searchDict.Values);
+                _filterActors.AddRange(_lookup.Values);
             }
 
             if (!_rangeFilterSetting.includeSelf && _filterActors.Contains(_filterUser))
@@ -220,40 +239,40 @@ namespace Hono.Scripts.Battle.Core
                 case EFilterFunctionType.LeastHp:
                     result.Sort((aUid, bUid) =>
                     {
-                        int aHp = _searchDict[aUid].GetAttr(EAttrType.AttrHp);
-                        int bHp = _searchDict[bUid].GetAttr(EAttrType.AttrHp);
+                        int aHp = _lookup[aUid].GetAttr(EAttrType.AttrHp);
+                        int bHp = _lookup[bUid].GetAttr(EAttrType.AttrHp);
                         return aHp.CompareTo(bHp);
                     });
                     break;
                 case EFilterFunctionType.HighestHp:
                     result.Sort((aUid, bUid) =>
                     {
-                        int aHp = _searchDict[aUid].GetAttr(EAttrType.AttrHp);
-                        int bHp = _searchDict[bUid].GetAttr(EAttrType.AttrHp);
+                        int aHp = _lookup[aUid].GetAttr(EAttrType.AttrHp);
+                        int bHp = _lookup[bUid].GetAttr(EAttrType.AttrHp);
                         return aHp.CompareTo(bHp) * -1;
                     });
                     break;
                 case EFilterFunctionType.LeastMp:
                     result.Sort((aUid, bUid) =>
                     {
-                        int aMp = _searchDict[aUid].GetAttr(EAttrType.AttrMp);
-                        int bMp = _searchDict[bUid].GetAttr(EAttrType.AttrMp);
+                        int aMp = _lookup[aUid].GetAttr(EAttrType.AttrMp);
+                        int bMp = _lookup[bUid].GetAttr(EAttrType.AttrMp);
                         return aMp.CompareTo(bMp);
                     });
                     break;
                 case EFilterFunctionType.HighestMp:
                     result.Sort((aUid, bUid) =>
                     {
-                        int aMp = _searchDict[aUid].GetAttr(EAttrType.AttrMp);
-                        int bMp = _searchDict[bUid].GetAttr(EAttrType.AttrMp);
+                        int aMp = _lookup[aUid].GetAttr(EAttrType.AttrMp);
+                        int bMp = _lookup[bUid].GetAttr(EAttrType.AttrMp);
                         return aMp.CompareTo(bMp) * -1;
                     });
                     break;
                 case EFilterFunctionType.Far:
                     result.Sort((aUid, bUid) =>
                     {
-                        var aPos = _searchDict[aUid].UnitTransform.Pos;
-                        var bPos = _searchDict[bUid].UnitTransform.Pos;
+                        var aPos = _lookup[aUid].UnitTransform.Pos;
+                        var bPos = _lookup[bUid].UnitTransform.Pos;
                         var selfPos = _filterUser.UnitTransform.Pos;
 
                         var aDis = Math.Abs(Vector3.Distance(aPos, selfPos));
@@ -264,8 +283,8 @@ namespace Hono.Scripts.Battle.Core
                 case EFilterFunctionType.Near:
                     result.Sort((aUid, bUid) =>
                     {
-                        var aPos = _searchDict[aUid].UnitTransform.Pos;
-                        var bPos = _searchDict[bUid].UnitTransform.Pos;
+                        var aPos = _lookup[aUid].UnitTransform.Pos;
+                        var bPos = _lookup[bUid].UnitTransform.Pos;
                         var selfPos = _filterUser.UnitTransform.Pos;
 
                         var aDis = Math.Abs(Vector3.Distance(aPos, selfPos));

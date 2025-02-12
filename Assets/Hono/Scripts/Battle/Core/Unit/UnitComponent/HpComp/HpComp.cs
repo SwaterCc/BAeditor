@@ -28,17 +28,18 @@ namespace Hono.Scripts.Battle.Core
             public float HpPCT;
             public bool TriggerEvent;
         }
-        
+
         private int _currentHp;
         private int _lockCount = 1;
         private readonly List<HpLock> _hpLocks;
-        private DamagePipLine
-        
+        private DamagePipLine _damagePipLine;
+
         public bool IsAlive => _currentHp > 0;
 
         public HpComp(ComponentCtorParams ctorParams) : base(ctorParams)
         {
             _hpLocks = new(5);
+            _damagePipLine = new DamagePipLine();
         }
 
         public override void Init()
@@ -116,29 +117,38 @@ namespace Hono.Scripts.Battle.Core
         }
 
         /// <summary>
-        /// 伤害id
+        /// 执行伤害流程
         /// </summary>
-        /// <param name="attacker"></param>
-        /// <param name="sourceType"></param>
-        /// <param name="damageId"></param>
-        public void MakeDamage(Unit attacker, int damageId, EDamageSourceType sourceType)
+        public void MakeDamage(HitInfo hitInfo)
         {
-            //收集攻击者
+            _damagePipLine.Init(hitInfo);
+            LuaInterface.Instance.CalcDamageResults(hitInfo.Attacker, Unit, _damagePipLine);
+            beHurt(_damagePipLine.GetDamageResult().DamageValue, (EDamageType)hitInfo.DamageRow.DamageType);
         }
 
         /// <summary>
-        /// 受伤
+        /// 造成固定伤害
         /// </summary>
-        /// <param name="damageInfo"></param>
-        /// <param name="damageRow"></param>
-        private void BeHurt(HitDamageInfo damageInfo, DamageTable.DamageRow damageRow)
+        /// <param name="damageValue"></param>
+        /// <param name="damageType"></param>
+        public void MakeFixDamageValue(int damageValue, EDamageType damageType)
+        {
+            beHurt(damageValue, damageType);
+        }
+
+        /// <summary>
+        /// 受伤扣血流程
+        /// </summary>
+        /// <param name="damageValue"></param>
+        /// <param name="damageType"></param>
+        private void beHurt(int damageValue, EDamageType damageType)
         {
             //伤害是负值
             //回血是正值
 
             //FIX:目前还是反的
             var curShield = Unit.GetAttr(EAttrType.AttrShield);
-            switch ((EDamageType)(damageRow.DamageType))
+            switch (damageType)
             {
                 case EDamageType.Normal:
                 case EDamageType.Percent:
@@ -146,7 +156,7 @@ namespace Hono.Scripts.Battle.Core
                     if (Unit.GetAttr(EAttrType.AttrInvincible) > 0)
                         return;
 
-                    var lastShield = curShield + damageInfo.FinalDamageValue;
+                    var lastShield = curShield + damageValue;
                     if (lastShield > 0)
                     {
                         //护盾抗住了伤害
@@ -156,16 +166,16 @@ namespace Hono.Scripts.Battle.Core
                     }
                     else
                     {
-                        var damageValue = -lastShield;
+                        var lastDamageValue = -lastShield;
                         curShield = 0;
-                        modifyHp(damageValue);
+                        modifyHp(lastDamageValue);
                         //播放受击特效
                         playHurtVFX("beHurt");
                     }
 
                     break;
                 case EDamageType.Health:
-                    modifyHp(damageInfo.FinalDamageValue);
+                    modifyHp(damageValue);
                     break;
             }
 

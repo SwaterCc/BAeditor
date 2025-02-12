@@ -70,26 +70,11 @@ namespace Hono.Scripts.Battle
         {
             //_factionMain = _luaEnv.Global.GetInPath<LuaFunction>("Faction.GetFaction");
         }
-
-       
         
-        public static DamageResults GetDamageResults(Actor attacker, Actor target, DamageInfo damageInfo,
-            DamageData data)
-        {
-            return Instance.getDamageResults(attacker, target, damageInfo, data);
-        }
-
-        private DamageResults getDamageResults(Actor attacker, Actor target, DamageInfo damageInfo,
-            DamageData data)
+        public void CalcDamageResults(Unit attacker, Unit target, DamagePipLine data)
         {
             //TODO：临时做法，会有性能开销，后续导出
-            var rets = _damageProcessMain.Call(attacker, target, damageInfo, data, typeof(DamageResults));
-            if (rets is { Length: > 0 } && rets[0] is DamageResults results)
-            {
-                return results;
-            }
-
-            throw new Exception("伤害计算函数返回失败");
+            _damageProcessMain.Call(attacker, target, data);
         }
 
         public static int GetFaction(int factionId1, int factionId2)

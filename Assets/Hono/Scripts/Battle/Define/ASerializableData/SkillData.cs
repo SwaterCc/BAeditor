@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
@@ -38,10 +39,6 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public float skillDuration;
         /// <summary>
-        /// 关联的Ability
-        /// </summary>
-        public int abilityId;
-        /// <summary>
         /// 技能的Tag
         /// </summary>
         public List<int> tags = new();
@@ -53,7 +50,10 @@ namespace Hono.Scripts.Battle
         /// 禁用移动（仅输入移动，Action移动不受影响）
         /// </summary>
         public bool disableMoveInput;
-        
+        /// <summary>
+        /// 技能Ability数据
+        /// </summary>
+        public AbilityData skillAbility = CreateInstance<AbilityData>();
         ///////////////////////////指示器相关///////////////////////////
         
         /// <summary>
