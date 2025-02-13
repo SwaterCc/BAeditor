@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Hono.Scripts.Battle
 {
 //Auto::AttrMaker
-    public enum ELogicAttr
+    public enum EAttrType
     {
         @EnumAttrDefine
     }

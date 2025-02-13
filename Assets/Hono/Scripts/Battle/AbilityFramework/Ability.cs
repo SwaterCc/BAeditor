@@ -46,12 +46,12 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// <summary>
         /// 周期结束时指令缓存
         /// </summary>
-        private readonly CmdCollection _cycleCmdCollection;
+        private readonly CmdCollection<AttrCommand> _cycleCmdCollection;
 
         /// <summary>
         /// 周期结束时指令缓存
         /// </summary>
-        private readonly CmdCollection _abilityCmdCollection;
+        private readonly CmdCollection<AttrCommand> _abilityCmdCollection;
 
         /// <summary>
         /// Ability执行结束时触发的事件
@@ -81,8 +81,8 @@ namespace Hono.Scripts.Battle.AbilityFramework
             
             _abilityCycle = new AbilityCycle(this);
             _functionDefine = new AFunctionDefine(this);
-            _cycleCmdCollection = new CmdCollection();
-            _abilityCmdCollection = new CmdCollection();
+            _cycleCmdCollection = new CmdCollection<AttrCommand>();
+            _abilityCmdCollection = new CmdCollection<AttrCommand>();
 
             VariableBoard = new VariableBoard();
         }

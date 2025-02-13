@@ -1,12 +1,9 @@
-﻿using Hono.Scripts.Battle.Base;
-using Hono.Scripts.Battle.Core;
-
-namespace Hono.Scripts.Battle
+﻿namespace Hono.Scripts.Battle.Core
 {
     /// <summary>
     /// Attr指令
     /// </summary>
-    public class AttrCommand : ICommand
+    public struct AttrCommand : ICommand
     {
         private int _value;
         private EAttrType _attrType;
@@ -27,13 +24,6 @@ namespace Hono.Scripts.Battle
         public void Undo()
         {
             _unit.SetAttr(_attrType, -_value);
-        }
-
-        public void OnRecycle()
-        {
-            _unit = null;
-            _attrType = 0;
-            _value = 0;
         }
     }
 }

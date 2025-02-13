@@ -10,57 +10,56 @@ namespace Hono.Scripts.Battle
     public class BulletData : ASerializableData
     {
         /// <summary>
-        /// 使用Ability自定义位移类型
+        /// 子弹有效半径
         /// </summary>
-        public bool CustomMotion;
-
+        public int hitRadius;
         /// <summary>
-        /// 位移类型
+        /// 忽略所有不是target的对象
         /// </summary>
-        public EBulletMotionType bulletMotionType = EBulletMotionType.Liner;
-
+        public bool ignoreAllNotTarget;
         /// <summary>
-        /// 关闭跟随，默认为跟随目标
+        /// 非目标碰撞条件
         /// </summary>
-        public bool FollowTarget;
-        
+        public ConditionFilterSetting notTargetHitCondition = new();
         /// <summary>
-        /// 是否命中路径中的Actor
+        /// 速度
         /// </summary>
-        public bool IsHitPathActor;
-        
+        public float speed;
+        /// <summary>
+        /// 加速度
+        /// </summary>
+        public float acceleration;
+        /// <summary>
+        /// 转向速度(-1为秒转)
+        /// </summary>
+        public float rotSpeed;
         /// <summary>
         /// 子弹生命时长
         /// </summary>
-        public float BulletLifeTime;
-
+        public float lifeTime;
         /// <summary>
         /// 最小命中间隔
         /// </summary>
-        public float MinHitInterval;
-        
+        public float minHitInterval;
         /// <summary>
         /// 最大命中次数
         /// </summary>
-        public int MaxHitCount;
-
+        public int maxHitCount;
         /// <summary>
         /// 飞行时特效
         /// </summary>
-        public string FlyVFX;
-
+        public string flyVFXKey;
         /// <summary>
-        /// 命中时特效
+        /// 子弹销毁时特效
         /// </summary>
-        public string HitVFX;
-        
+        public string hitVFXKey;
         /// <summary>
         /// 子弹Ability数据
         /// </summary>
         [SerializeField]
         private AbilityData bulletAbility;
         public AbilityData BulletAbility => bulletAbility;
-        
+
         private void OnEnable()
         {
             if (bulletAbility == null)

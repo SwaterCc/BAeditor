@@ -84,6 +84,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
             _searchDict[abilityId].Execute(true);
         }
         
+        
         public void StopAbility(int abilityId)
         {
             _searchDict[abilityId].Stop();

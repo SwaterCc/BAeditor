@@ -252,22 +252,6 @@ namespace Hono.Scripts.Battle.Core
                         return aHp.CompareTo(bHp) * -1;
                     });
                     break;
-                case EFilterFunctionType.LeastMp:
-                    result.Sort((aUid, bUid) =>
-                    {
-                        int aMp = _lookup[aUid].GetAttr(EAttrType.AttrMp);
-                        int bMp = _lookup[bUid].GetAttr(EAttrType.AttrMp);
-                        return aMp.CompareTo(bMp);
-                    });
-                    break;
-                case EFilterFunctionType.HighestMp:
-                    result.Sort((aUid, bUid) =>
-                    {
-                        int aMp = _lookup[aUid].GetAttr(EAttrType.AttrMp);
-                        int bMp = _lookup[bUid].GetAttr(EAttrType.AttrMp);
-                        return aMp.CompareTo(bMp) * -1;
-                    });
-                    break;
                 case EFilterFunctionType.Far:
                     result.Sort((aUid, bUid) =>
                     {

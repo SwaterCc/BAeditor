@@ -3,26 +3,26 @@ int AttrUid 1
 int AttrConfigId 2
 int AttrModelId 3
 int AttrIsSummoned 4
-int AttrActorState 5
+int AttrUnitFlag 5
+int AttrIsPlayerCtrl 6
+int AttrFaction  7
+int AttrUnitLevel  8 
+
 int AttrTopSourceActorUid 10
 int AttrSourceActorUid 11
-int AttrSourceAbilityConfigId 12
+int AttrSourceAbilityId 12
 int SourceAbilityType 13
-int AttrBaseSpeed 16
-int AttrMoveTargetUid 18
-int AttrFaction  19
 int AttrUnselectable 20  
 int AttrInvincible 21   
 int AttrHateTargetUid 22    
 int AttrLeaderUid 23
-int AttrCantBeHatredTarget 47 
 int AttrCantNormalSkill 48  
 int AttrCantMove 49  
 int AttrStunned 50  
 int AttrSA 51  
 int AttrIgnoreOtherMotion 52  
-int AttrEntityLevel  60010 
- #HP
+
+#HP
 int AttrHp   10000  //��ǰHP
 int AttrHpPer   10001 
 int AttrMaxHp   10010 
@@ -31,44 +31,26 @@ int AttrMaxHpAdd   10012
 int AttrMaxHpExAdd   10013 
 int AttrMaxHpPer   10014 
 int AttrMaxHpExPer   10015 
- #����
-int AttrShield   10040 
-int AttrShieldPer   10041 
- #�ƶ��ٶȼӳ���ֱ�
-int AttrMoveSpeedPCT   10100 
-int AttrMoveSpeedPCTTotal   10101 
-int AttrMoveSpeedPCTAdd   10102 
-int AttrMoveSpeedPCTExAdd   10103 
-int AttrMoveSpeedPCTPer   10104 
-int AttrMoveSpeedPCTExPer   10105 
- #ȫ�ֻ���Ч����ֱ�
-int AttrMpRecAll  10110 
-int AttrMpRecAllTotal   10111 
-int AttrMpRecAllAdd   10112 
-int AttrMpRecAllExAdd   10113 
-int AttrMpRecAllPer   10114 
-int AttrMpRecAllExPer   10115 
- #�ͷŷǰ��弼�ܣ���ɫ������ֱ�
-int AttrMpRecCast   10120 
-int AttrMpRecCastTotal   10121 
-int AttrMpRecCastAdd   10122 
-int AttrMpRecCastExAdd   10123 
-int AttrMpRecCastPer   10124 
-int AttrMpRecCastExPer   10125 
- #�ܻ�������ֱ�
-int AttrMpRecBehit   10130 
-int AttrMpRecBehitTotal   10131 
-int AttrMpRecBehitAdd   10132 
-int AttrMpRecBehitExAdd   10133 
-int AttrMpRecBehitPer   10134 
-int AttrMpRecBehitExPer   10135 
- #��ɱ������ֱ�
-int AttrMpRecKilled   10140 
-int AttrMpRecKilledTotal   10141 
-int AttrMpRecKilledAdd   10142 
-int AttrMpRecKilledExAdd   10143 
-int AttrMpRecKilledPer   10144 
-int AttrMpRecKilledExPer   10145 
+#护盾
+int AttrShield   10020 
+int AttrShieldPer   10021 
+
+#移动速度万分比数值
+int AttrMoveSpeedPCT   10040 
+int AttrMoveSpeedPCTTotal   10041 
+int AttrMoveSpeedPCTAdd   10042 
+int AttrMoveSpeedPCTExAdd   10043 
+int AttrMoveSpeedPCTPer   10044 
+int AttrMoveSpeedPCTExPer   10045 
+
+#转向速度万分比数值
+int AttrRotSpeedPCT   10050 
+int AttrRotSpeedPCTTotal   10051 
+int AttrRotSpeedPCTAdd   10052 
+int AttrRotSpeedPCTExAdd   10053 
+int AttrRotSpeedPCTPer   10054 
+int AttrRotSpeedPCTExPer   10055 
+
  #������
 int AttrAttack   12100 
 int AttrAttackTotal   12101 
@@ -188,7 +170,6 @@ int AttrElementMagicRedPCTAdd   14052
 int AttrElementMagicRedPCTExAdd   14053 
 int AttrElementMagicRedPCTPer   14054 
 int AttrElementMagicRedPCTExPer   14055 
-
  #�˺����� %[x]
 int   AttrDmgA  15000
 int   AttrDmgATotal  15001
@@ -196,7 +177,6 @@ int   AttrDmgAAdd  15002
 int   AttrDmgAExAdd  15003
 int   AttrDmgAPer  15004
 int   AttrDmgAExPer  15005
-
  #ֱ�Ӽ���
 int AttrDmgRed   15300 
 int AttrDmgRedTotal   15301 

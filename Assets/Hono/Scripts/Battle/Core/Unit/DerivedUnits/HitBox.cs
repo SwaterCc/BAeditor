@@ -184,7 +184,7 @@ namespace Hono.Scripts.Battle.Core
             _disableEventTrigger = disableEventTrigger;
             _damageId = damageId;
             UnitTransform.Pos = worldPos;
-            UnitTransform.YAxisAngle = yAngle;
+            UnitTransform.Forward = Quaternion.AngleAxis(yAngle, Vector3.up) * Vector3.forward;
             _attacker.RecycleCallBack += onAttackerRecycle;
         }
 

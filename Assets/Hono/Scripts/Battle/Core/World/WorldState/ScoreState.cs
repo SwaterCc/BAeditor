@@ -18,7 +18,7 @@
             protected override void OnExit()
             {
                 UIManager.Instance.SetScoreUI(false);
-                BattleManager.Instance.WarGameExit();
+                BattleManager.Instance.ExitWorld();
             }
         }
     }

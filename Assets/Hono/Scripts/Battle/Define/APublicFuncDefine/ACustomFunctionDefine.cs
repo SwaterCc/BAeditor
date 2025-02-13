@@ -324,23 +324,9 @@ namespace Hono.Scripts.Battle.AbilityFramework
         }
 
         [AbilityFunction]
-        public void AddBattleResource(int resourceValue, bool isPer)
+        public void AddFightRes(int resourceValue, bool isPer)
         {
-            //resourceValue -> 万分比
-            var maxMp = Actor.GetAttr(EAttrType.AttrMaxMp);
-            var curMp = Actor.GetAttr(EAttrType.AttrMp);
-            var value = resourceValue;
-            if (isPer)
-            {
-                curMp = (int)(curMp * ((10000f + value) / 10000f));
-            }
-            else
-            {
-                curMp += (int)value;
-            }
-
-            curMp = Mathf.Clamp(curMp, 0, maxMp);
-            Actor.SetAttr(EAttrType.AttrMp, curMp, false);
+            
         }
 
         [AbilityFunction]

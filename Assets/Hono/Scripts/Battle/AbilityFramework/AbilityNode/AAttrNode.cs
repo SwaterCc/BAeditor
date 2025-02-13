@@ -2,6 +2,8 @@
 
 #endregion
 
+using Hono.Scripts.Battle.Core;
+
 namespace Hono.Scripts.Battle.AbilityFramework
 {
     public partial class Ability
@@ -18,12 +20,12 @@ namespace Hono.Scripts.Battle.AbilityFramework
                         AContext.Unit.SetAttr(Data.attrType, attrValue);
                         break;
                     case EAbilityCommandType.UndoWhenAbilityEndCycle:
-                        var cycleCmd = GPool<AttrCommand>.Pool.Rent();
+                        var cycleCmd = new AttrCommand();
                         cycleCmd.InitCommand(AContext.Unit, Data.attrType, attrValue);
                         AContext._cycleCmdCollection.DoCommand(cycleCmd);
                         break;
                     case EAbilityCommandType.UndoWhenAbilityRemove:
-                        var abilityCmd = GPool<AttrCommand>.Pool.Rent();
+                        var abilityCmd = new AttrCommand();
                         abilityCmd.InitCommand(AContext.Unit, Data.attrType, attrValue);
                         AContext._cycleCmdCollection.DoCommand(abilityCmd);
                         break;

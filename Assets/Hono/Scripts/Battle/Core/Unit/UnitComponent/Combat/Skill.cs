@@ -17,22 +17,27 @@ namespace Hono.Scripts.Battle.Core
             /// 技能Id
             /// </summary>
             public int Id { get; private set; }
+
             /// <summary>
             /// 技能数据
             /// </summary>
             public SkillData SkillData { get; private set; }
+
             /// <summary>
             /// 技能数据修改器
             /// </summary>
             public SkillModifier Modifier { get; } = new();
+
             /// <summary>
             /// 技能是否在执行中
             /// </summary>
             public ESkillFlag Flag { get; private set; }
+
             /// <summary>
             /// 当前CD比例
             /// </summary>
             public float CdPercent { get; private set; }
+
             /// <summary>
             /// 绑定的Ability
             /// </summary>
@@ -41,13 +46,33 @@ namespace Hono.Scripts.Battle.Core
             /// 战斗组件
             /// </summary>
             private CombatComp _combatComp;
+
+            /// <summary>
+            /// 选中的世界坐标
+            /// </summary>
+            private Vector3 _selectWorldPos;
+
+            /// <summary>
+            /// 选中的单体目标
+            /// </summary>
+            private Unit _selectSingleTarget;
+
+            /// <summary>
+            /// 选中的方向
+            /// </summary>
+            private float _selectYAxisAngle;
             
+            /// <summary>
+            /// 范围筛选的所有目标uid
+            /// </summary>
+            private List<int> _selectUnitInArea = new(30); 
+
             public void OnRent(CombatComp combatComp, SkillData data)
             {
                 SkillData = data;
                 CdPercent = 0;
                 Flag = 0;
-                
+
                 _ability = combatComp.Unit.AddAbility(SkillData.id);
                 _ability.ExecuteEndCallBack += onAbilityEnd;
 
@@ -79,6 +104,11 @@ namespace Hono.Scripts.Battle.Core
                 {
                     CdBegin();
                 }
+
+                _selectSingleTarget = null;
+                _selectWorldPos = Vector3.zero;
+                _selectYAxisAngle = 0;
+                _selectUnitInArea.Clear();
             }
 
             public void AddFlag(ESkillFlag flag)
@@ -90,13 +120,14 @@ namespace Hono.Scripts.Battle.Core
             {
                 return (Flag & flag) == flag;
             }
-            
+
             public void RemoveFlag(ESkillFlag flag)
             {
                 Flag = (Flag & ~flag);
             }
-            
+
             #region CD
+
             /// <summary>
             /// cd开始
             /// </summary>
@@ -142,7 +173,7 @@ namespace Hono.Scripts.Battle.Core
                         CdEnd();
                     }
                 }
-                
+
                 //能量检测
                 if (HasFlag(ESkillFlag.EnergyNotEnough))
                 {

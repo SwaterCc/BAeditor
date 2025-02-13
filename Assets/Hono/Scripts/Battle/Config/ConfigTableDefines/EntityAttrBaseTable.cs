@@ -107,9 +107,9 @@ namespace Hono.Scripts.Battle
             public int AttrDefenseAdd { get; private set; }
             
             /// <summary>
-            /// 基础移动速度
+            /// 转向速度万分比
             /// </summary>
-            public int AttrBaseSpeed { get; private set; }
+            public int AttrRotSpeedPCTAdd { get; private set; }
             
             /// <summary>
             /// 移动速度万分比
@@ -251,7 +251,7 @@ namespace Hono.Scripts.Battle
             
                     _row.AttrDefenseAdd = parseInt(line[6]);
             
-                    _row.AttrBaseSpeed = parseInt(line[7]);
+                    _row.AttrRotSpeedPCTAdd = parseInt(line[7]);
             
                     _row.AttrMoveSpeedPCTAdd = parseInt(line[8]);
             

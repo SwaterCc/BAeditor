@@ -159,29 +159,35 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 使用技能
         /// </summary>
-        public ESkillFlag TryUseSkill(int skillId, out Skill skill)
+        public void UseSkill(int skillId)
         {
-            if (!_skills.TryGetValue(skillId, out skill))
+            if (!_skills.TryGetValue(skillId, out var skill))
             {
                 Debug.LogError($"Unit:{Unit} 未学会该技能");
-                return ESkillFlag.NoLearn;
+                return;
             }
 
             //技能为独占技能且当前已经有在运行的独占技能
             if (skill.SkillData.isExclusive && _curExclusiveSkill != null)
             {
-                return ESkillFlag.Occupied;
+                return;
             }
 
             //技能是否正在运行中或者被禁用
             if (skill.Flag != 0)
             {
-                return skill.Flag;
+                return;
             }
 
-            skill.Play();
-
-            return skill.Flag;
+            if (Unit.Uid == World.Current.PlayerCtrlUnit.Uid)
+            {
+                //玩家操控，创建技能筛选器
+                SkillIndicator.Instance.Show(skill);
+            }
+            else
+            {
+                SimpleSkillAICtrl.Instance.UseSkill(Unit, skill);
+            }
         }
 
         /// <summary>

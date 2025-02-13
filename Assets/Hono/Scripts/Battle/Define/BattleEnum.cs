@@ -430,9 +430,6 @@ namespace Hono.Scripts.Battle
     /// </summary>
     public enum EBulletMotionType
     {
-        //跟随目标
-        Follow,
-        
         //直线
         Liner,
 
@@ -605,8 +602,6 @@ namespace Hono.Scripts.Battle
         Random = 1,
         HighestHp = 10,
         LeastHp,
-        HighestMp = 20,
-        LeastMp,
         Far = 30,
         Near,
         ControlPlayer = 40,

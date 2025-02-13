@@ -116,7 +116,7 @@ namespace Hono.Scripts.Battle
         private void registerAllFrameworks()
         {
             register(ConfigManager.Instance);
-            register(AssetManager.Instance);
+            //register(AssetManager.Instance);
             register(LuaInterface.Instance);
         }
 
@@ -194,7 +194,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         /// <param name="fromScene"></param>
         /// <param name="battleGroundId"></param>
-        public void WarGameStart(string fromScene, int battleGroundId)
+        public void EnterWorld(string fromScene, int battleGroundId)
         {
             _formScene = fromScene;
             _currentWorldInstance = new WorldInstance(battleGroundId);
@@ -215,7 +215,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         ///     退出战斗玩法返回主界面
         /// </summary>
-        public void WarGameExit()
+        public void ExitWorld()
         {
             Debug.Log("[BattleManager] ExitBattle");
             _currentWorldInstance.Exit();

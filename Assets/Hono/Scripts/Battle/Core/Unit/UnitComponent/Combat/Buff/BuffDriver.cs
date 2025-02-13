@@ -199,7 +199,6 @@ namespace Hono.Scripts.Battle.Core
                 {
                     Uid = UidAllocator.Allocate(),
                     Id = buffData.id,
-                    AbilityId = buffData.abilityId,
                     LayerCount = (short)buffLayer,
                     SourceUnitUid = sourceId,
                     BelongActorUid = _combatComp.Unit.Uid,
@@ -231,7 +230,7 @@ namespace Hono.Scripts.Battle.Core
                     _blockIds.Add(tag);
                 }
 
-                _combatComp.Unit.ExecuteAbility(buffData.abilityId);
+                _combatComp.Unit.ExecuteAbility(buffData.id);
 
                 doAddBehave(buffData);
 
@@ -252,7 +251,6 @@ namespace Hono.Scripts.Battle.Core
                 {
                     Uid = UidAllocator.Allocate(),
                     Id = buffData.id,
-                    AbilityId = buffData.abilityId,
                     LayerCount = buffLayer,
                     SourceUnitUid = sourceId,
                     BelongActorUid = _combatComp.Unit.Uid,
@@ -261,7 +259,7 @@ namespace Hono.Scripts.Battle.Core
                 };
 
                 _buffs[index] = overrideBuff;
-                _combatComp.Unit.ExecuteAbility(buffData.abilityId);
+                _combatComp.Unit.ExecuteAbility(buffData.id);
 
                 return overrideBuff.Uid;
             }
@@ -285,7 +283,7 @@ namespace Hono.Scripts.Battle.Core
 
                 if (buffData.runAgainWhenLayering)
                 {
-                    _combatComp.Unit.ExecuteAbility(buffData.abilityId);
+                    _combatComp.Unit.ExecuteAbility(buffData.id);
                 }
 
                 return Int32.MinValue;
@@ -521,7 +519,7 @@ namespace Hono.Scripts.Battle.Core
 
                 _lookup.Remove(buff.Uid);
                 _buffCount--;
-                _combatComp.Unit.StopAbility(buff.AbilityId);
+                _combatComp.Unit.StopAbility(buff.Id);
                 UidAllocator.Recycle(buff.Uid);
             }
 

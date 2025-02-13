@@ -11,10 +11,6 @@
         /// </summary>
         public int Id;
         /// <summary>
-        /// 关联的Ability
-        /// </summary>
-        public int AbilityId;
-        /// <summary>
         /// 标记当前 Buff 是否有效
         /// </summary>
         public bool IsValid;

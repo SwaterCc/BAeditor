@@ -218,7 +218,16 @@ namespace Hono.Scripts.Battle.Core
         {
             return _abilityDriver.AwardAbility(abilityId);
         }
-
+        
+        /*/// <summary>
+        /// 执行Ability
+        /// </summary>
+        /// <param name="abilityData"></param>
+        public void AddAbility(AbilityData abilityData)
+        {
+            return _abilityDriver.AwardAbility(abilityId);
+        }*/
+        
         /// <summary>
         /// 执行Ability
         /// </summary>
@@ -227,7 +236,7 @@ namespace Hono.Scripts.Battle.Core
         {
             _abilityDriver.ExecuteAbility(abilityId);
         }
-
+        
         /// <summary>
         /// 停止Ability
         /// </summary>

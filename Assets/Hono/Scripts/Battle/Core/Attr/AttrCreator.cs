@@ -1,4 +1,8 @@
-﻿namespace Hono.Scripts.Battle.Core
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Hono.Scripts.Battle.Core
 {
 //Auto::AttrMaker
     public enum EAttrType
@@ -22,7 +26,19 @@
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrActorState = 5,
+        AttrUnitFlag = 5,
+        /// <summary>
+        /// 属性类型 int
+        /// </summary>
+        AttrIsPlayerCtrl = 6,
+        /// <summary>
+        /// 属性类型 int
+        /// </summary>
+        AttrFaction = 7,
+        /// <summary>
+        /// 属性类型 int
+        /// </summary>
+        AttrUnitLevel = 8,
         /// <summary>
         /// 属性类型 int
         /// </summary>
@@ -34,23 +50,11 @@
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrSourceAbilityConfigId = 12,
+        AttrSourceAbilityId = 12,
         /// <summary>
         /// 属性类型 int
         /// </summary>
         SourceAbilityType = 13,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrBaseSpeed = 16,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMoveTargetUid = 18,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrFaction = 19,
         /// <summary>
         /// 属性类型 int
         /// </summary>
@@ -70,15 +74,11 @@
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrCantBeHatredTarget = 47,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
         AttrCantNormalSkill = 48,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrCantMove = 49,
+        DisableInputMove = 49,
         /// <summary>
         /// 属性类型 int
         /// </summary>
@@ -91,10 +91,6 @@
         /// 属性类型 int
         /// </summary>
         AttrIgnoreOtherMotion = 52,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrEntityLevel = 60010,
         /// <summary>
         /// 属性类型 int
         /// </summary>
@@ -130,163 +126,59 @@
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMp = 10020,
+        AttrShield = 10020,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMpPer = 10021,
+        AttrShieldPer = 10021,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMaxMp = 10030,
+        AttrMoveSpeedPCT = 10040,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMaxMpTotal = 10031,
+        AttrMoveSpeedPCTTotal = 10041,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMaxMpAdd = 10032,
+        AttrMoveSpeedPCTAdd = 10042,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMaxMpExAdd = 10033,
+        AttrMoveSpeedPCTExAdd = 10043,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMaxMpPer = 10034,
+        AttrMoveSpeedPCTPer = 10044,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMaxMpExPer = 10035,
+        AttrMoveSpeedPCTExPer = 10045,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrShield = 10040,
+        AttrRotSpeedPCT = 10050,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrShieldPer = 10041,
+        AttrRotSpeedPCTTotal = 10051,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMoveSpeedPCT = 10100,
+        AttrRotSpeedPCTAdd = 10052,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMoveSpeedPCTTotal = 10101,
+        AttrRotSpeedPCTExAdd = 10053,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMoveSpeedPCTAdd = 10102,
+        AttrRotSpeedPCTPer = 10054,
         /// <summary>
         /// 属性类型 int
         /// </summary>
-        AttrMoveSpeedPCTExAdd = 10103,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMoveSpeedPCTPer = 10104,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMoveSpeedPCTExPer = 10105,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecAll = 10110,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecAllTotal = 10111,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecAllAdd = 10112,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecAllExAdd = 10113,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecAllPer = 10114,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecAllExPer = 10115,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecCast = 10120,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecCastTotal = 10121,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecCastAdd = 10122,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecCastExAdd = 10123,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecCastPer = 10124,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecCastExPer = 10125,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecBehit = 10130,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecBehitTotal = 10131,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecBehitAdd = 10132,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecBehitExAdd = 10133,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecBehitPer = 10134,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecBehitExPer = 10135,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecKilled = 10140,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecKilledTotal = 10141,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecKilledAdd = 10142,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecKilledExAdd = 10143,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecKilledPer = 10144,
-        /// <summary>
-        /// 属性类型 int
-        /// </summary>
-        AttrMpRecKilledExPer = 10145,
+        AttrRotSpeedPCTExPer = 10055,
         /// <summary>
         /// 属性类型 int
         /// </summary>

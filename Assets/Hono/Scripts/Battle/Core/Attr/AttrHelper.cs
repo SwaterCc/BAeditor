@@ -144,9 +144,9 @@ namespace Hono.Scripts.Battle.Base
 
         public void InitByTableRow(AttrCollection collection, EntityAttrBaseTable.EntityAttrBaseRow attrRow)
         {
-            collection.SetAttr(EAttrType.AttrEntityLevel,              attrRow.AttrEntityLevel,              false);
-            collection.SetAttr(EAttrType.AttrBaseSpeed,                attrRow.AttrBaseSpeed,                false);
+            collection.SetAttr(EAttrType.AttrUnitLevel,                attrRow.AttrEntityLevel,              false);
             collection.SetAttr(EAttrType.AttrMoveSpeedPCTAdd,          attrRow.AttrMoveSpeedPCTAdd,          false);
+            collection.SetAttr(EAttrType.AttrRotSpeedPCTAdd,           attrRow.AttrRotSpeedPCTAdd,           false);
             collection.SetAttr(EAttrType.AttrMaxHpAdd,                 attrRow.AttrMaxHpAdd,                 false);
             collection.SetAttr(EAttrType.AttrAttackAdd,                attrRow.AttrAttackAdd,                false);
             collection.SetAttr(EAttrType.AttrCritAdd,                  attrRow.AttrCritAdd,                  false);
@@ -163,10 +163,6 @@ namespace Hono.Scripts.Battle.Base
             collection.SetAttr(EAttrType.AttrElementMagicRedPCTAdd,    attrRow.AttrElementMagicRedPCTAdd,    false);
             collection.SetAttr(EAttrType.AttrElementPhysicalPenPCTAdd, attrRow.AttrElementPhysicalPenPCTAdd, false);
             collection.SetAttr(EAttrType.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd, false);
-            collection.SetAttr(EAttrType.AttrMpRecAllAdd,              attrRow.AttrMpRecAllAdd,              false);
-            collection.SetAttr(EAttrType.AttrMpRecAllPer,              attrRow.AttrMpRecAllPer,              false);
-            collection.SetAttr(EAttrType.AttrMpRecKilledAdd,           attrRow.AttrMpRecKilledAdd,           false);
-            collection.SetAttr(EAttrType.AttrMpRecBehitPer,            attrRow.AttrMpRecBehitPer,            false);
         }
     }
 }

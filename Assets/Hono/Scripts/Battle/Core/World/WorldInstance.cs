@@ -55,7 +55,7 @@ namespace Hono.Scripts.Battle.Core
         /// 最大Unit的数量
         /// </summary>
         public const int MaxUnitCount = MaxActorCount + 3000;
-        
+
         /// <summary>
         /// 搜索器,集合了查找过滤的API
         /// </summary>
@@ -122,6 +122,11 @@ namespace Hono.Scripts.Battle.Core
         /// 待删除列表
         /// </summary>
         private readonly List<Unit> _removeList = new(16);
+        
+        /// <summary>
+        /// 当前玩家控制的单位
+        /// </summary>
+        public Unit PlayerCtrlUnit { get; private set; }
 
         #region 周期
 
@@ -325,8 +330,9 @@ namespace Hono.Scripts.Battle.Core
         /// 创建玩家角色
         /// </summary>
         /// <param name="actorTableId"></param>
+        /// <param name="isPlayerCtrl"></param>
         /// <returns></returns>
-        public Actor CreatePlayerCharacter(int actorTableId)
+        public Actor CreatePlayerCharacter(int actorTableId, bool isPlayerCtrl)
         {
             if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
             {
@@ -391,7 +397,7 @@ namespace Hono.Scripts.Battle.Core
 
             actor.Attrs.Init(actorTableId);
             actor.Attrs.SetSummoned(summoner, summonSetting.FromTopSummer);
-            actor.Attrs.InheritAttrs(summoner.Attrs, summonSetting);
+            //actor.Attrs.InheritAttrs(summoner.Attrs, summonSetting);
             actor.Init(row);
             addUnitToWorld(actor);
 

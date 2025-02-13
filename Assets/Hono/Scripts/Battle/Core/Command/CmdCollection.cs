@@ -2,21 +2,21 @@
 
 namespace Hono.Scripts.Battle
 {
-    public interface ICommand : IGPoolObject
+    public interface ICommand
     {
         void Do();
         void Undo();
     }
 
-    public class CmdCollection
+    public class CmdCollection<T> where T : struct , ICommand
     {
-        private readonly List<ICommand> _commands = new(10);
+        private readonly List<T> _commands = new(10);
 
         /// <summary>
         /// 执行指令
         /// </summary>
         /// <param name="command"></param>
-        public void DoCommand(ICommand command)
+        public void DoCommand(T command)
         {
             command.Do();
             _commands.Add(command);
@@ -27,7 +27,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         /// <param name="command"></param>
         /// <param name="notUndo">仅执行清理，指令不会撤销</param>
-        public void UndoCommand(ICommand command, bool notUndo = false)
+        public void UndoCommand(T command, bool notUndo = false)
         {
             if (_commands.Remove(command))
             {
@@ -36,8 +36,6 @@ namespace Hono.Scripts.Battle
                     command.Undo();
                 }
             }
-
-            GPoolManager.Instance.RecycleAObject(command);
         }
 
         /// <summary>
@@ -52,8 +50,6 @@ namespace Hono.Scripts.Battle
                 {
                     command.Undo();
                 }
-
-                GPoolManager.Instance.RecycleAObject(command);
             }
 
             _commands.Clear();
