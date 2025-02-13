@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Hono.Scripts.Battle.Core;
+using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
@@ -190,10 +191,13 @@ namespace Hono.Scripts.Battle.Core
             {
                 var setting = new VFXSetting()
                 {
-                    VFXBindType = EVFXType.InWorld, Duration = 3, Offset = new Vector3(0, 0.5f, 0)
+                    vfxKey = key,
+                    vfxBindType = EVFXType.InWorld, 
+                    duration = 3, 
+                    offset = new SerializableVec3(0, 0.5f, 0)
                 };
 
-                comp.AddVFXObject(key, setting);
+                //comp.AddVFX(setting);
             }
         }
 

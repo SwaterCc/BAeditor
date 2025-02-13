@@ -23,9 +23,9 @@ namespace Hono.Scripts.Battle
             Anim,
             Audio
         }
-        
+
         public GameObject model;
-        
+
         public PEModelHandler ModelHandler { get; private set; }
 
         /// <summary>
@@ -37,18 +37,18 @@ namespace Hono.Scripts.Battle
         /// 复写模板
         /// </summary>
         private PETemplate _overrideTemplate;
-        private ActorModelController _modelController;
+        private ModelControllerComp _modelControllerComp;
         /// <summary>
         /// 特效播放器
         /// </summary>
         private VFXPlayer _vfxPlayer;
 
-        public async void LoadPE(ActorModelController modelController)
+        public async void LoadPE(ModelControllerComp modelControllerComp)
         {
-            _modelController = modelController;
-            
+            _modelControllerComp = modelControllerComp;
+
             //加载模型
-            model = await UPool.Instance.Get(GetPEModelPath(), modelController.MainCancelToken);
+            model = await UPool.Instance.Get(GetPEModelPath(), modelControllerComp.MainCancelToken);
             if (model != null)
             {
                 ModelHandler = model.GetComponent<PEModelHandler>();
@@ -59,9 +59,14 @@ namespace Hono.Scripts.Battle
 
         public void SetModelActive(bool active)
         {
-            model?.SetActive(active);
+            if (model == null)
+            {
+                return;
+            }
+
+            model.SetActive(active);
         }
-        
+
         public void SetBasePETemplate(PETemplate tpl)
         {
             _baseTemplate = tpl;
@@ -77,6 +82,12 @@ namespace Hono.Scripts.Battle
             return _overrideTemplate == null ? _baseTemplate.model : _overrideTemplate.model;
         }
 
+        /// <summary>
+        /// 获取模板中key值对应的资源路径
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public string GetTplPath(string key, EPeType type)
         {
             Dictionary<string, string> dict = null;
@@ -125,10 +136,7 @@ namespace Hono.Scripts.Battle
 
         public void OnTick(float dt) { }
 
-        public void Clear()
-        {
-          
-        }
+        public void Clear() { }
     }
 
     public partial class PerformanceEffectsPlayer
@@ -138,7 +146,7 @@ namespace Hono.Scripts.Battle
             public PerformanceEffectsPlayer PEPlayer { get; }
 
             private VFXComp _vfxComp;
-            
+
             public VFXPlayer(PerformanceEffectsPlayer pePlayer)
             {
                 PEPlayer = pePlayer;
@@ -146,29 +154,22 @@ namespace Hono.Scripts.Battle
 
             public void BindVFXComp()
             {
-                PEPlayer._modelController.Self.TryGetComponent(out _vfxComp);
+                PEPlayer._modelControllerComp.Unit.TryGetComponent(out _vfxComp);
                 _vfxComp.VFXAdd += onVFXAdd;
                 _vfxComp.VFXRemove += onVFXRemove;
-                foreach (var VARIABLE in _vfxComp.VFXDict)
-                {
-                    
-                }
+                foreach (var VARIABLE in _vfxComp.VFXDict) { }
             }
 
-            private void onVFXAdd(VFXInfo vfxInfo)
-            {
-                
-            }
+            private void onVFXAdd(VFXInfo vfxInfo) { }
 
-            private void onVFXRemove(VFXInfo vfxInfo)
+            private void onVFXRemove(VFXInfo vfxInfo) { }
+
+            public void Tick(float dt) { }
+
+            public void onClear()
             {
                 
-            }
-            
-            public void Tick(float dt)
-            {
-            
             }
         }
-    } 
+    }
 }

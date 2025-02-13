@@ -11,62 +11,62 @@ using UnityEngine;
 namespace Hono.Scripts.Battle.Core
 {
     /// <summary>
-    /// 视觉特效
+    /// 视觉特效逻辑层记录
     /// </summary>
     public class VFXComp : UnitComponent
     {
         //特效组件的唯一Id生成器
-        private static readonly CommonUtility.IdGenerator IDGenerator = CommonUtility.GetIdGenerator();
+        private static readonly CommonUtility.IdGenerator VFXIdGenerator = CommonUtility.GetIdGenerator();
 
         private readonly Dictionary<int, VFXInfo> _vfxes = new(32);
         public Dictionary<int, VFXInfo> VFXDict => _vfxes;
 
         private readonly List<VFXInfo> _removeList = new(32);
 
-        public Action<VFXInfo> VFXAdd;
-        public Action<VFXInfo> VFXRemove;
+        public event Action<VFXInfo> VFXAdd;
+        
+        public event Action<VFXInfo> VFXRemove;
 
         public VFXComp(ComponentCtorParams ctorParams) : base(ctorParams) { }
         
         public override void Init() { }
 
-        public int AddVFXObject(string vfxKey, VFXSetting setting)
+        /// <summary>
+        /// 添加特效
+        /// </summary>
+        /// <param name="setting"></param>
+        /// <returns></returns>
+        public int AddVFXByKey(VFXSetting setting)
         {
-            var vfxObj = GPool<VFXInfo>.Pool.Rent();
-            vfxObj.OnRent(IDGenerator.GenerateId(), setting);
+            
+            var vfxInfo = new VFXInfo(VFXIdGenerator.GenerateId(),"", setting);
 
-            switch (setting.VFXBindType)
+            switch (setting.vfxBindType)
             {
                 case EVFXType.InWorld:
-                    vfxObj.Pos = Unit.UnitTransform.Pos + Unit.UnitTransform.YAxisAngle * setting.Offset;
-                    vfxObj.Rot = Quaternion.AngleAxis(Unit.UnitTransform.YAxisAngle,Vector3.up) * Quaternion.Euler(setting.Rot);
+                    vfxInfo.Pos = Unit.UnitTransform.Pos + Unit.UnitTransform.YAxisAngle * (Vector3)setting.offset;
+                    vfxInfo.Rot = Quaternion.AngleAxis(Unit.UnitTransform.YAxisAngle,Vector3.up) * Quaternion.Euler(setting.rot);
                     break;
                 case EVFXType.FollowActor:
-                    vfxObj.Pos = Unit.UnitTransform.Pos + (Vector3)setting.Offset;
-                    vfxObj.Rot = Quaternion.Euler(setting.Rot);
+                    vfxInfo.Pos = Unit.UnitTransform.Pos + setting.offset;
+                    vfxInfo.Rot = Quaternion.Euler(setting.rot);
                     break;
                 case EVFXType.BindActorBone:
-                    vfxObj.Pos = setting.Offset;
-                    vfxObj.Rot = Quaternion.Euler(setting.Rot);
+                    vfxInfo.Pos = setting.offset;
+                    vfxInfo.Rot = Quaternion.Euler(setting.rot);
                     break;
             }
 
-            if (setting.VFXBindType != EVFXType.InWorld)
+            if (setting.vfxBindType != EVFXType.InWorld)
             {
-                AddVFXToList(vfxObj);
+                addInfoToList(vfxInfo);
             }
             else
             {
-                //World.VFXComp.AddVFXToList(vfxObj);
+                World.Current.WorldRoot.VFXComp.addInfoToList(vfxInfo);
             }
 
-            return vfxObj.Uid;
-        }
-
-        protected void AddVFXToList(VFXInfo vfxObj)
-        {
-            _vfxes.Add(vfxObj.Uid, vfxObj);
-            VFXAdd?.Invoke(vfxObj);
+            return vfxInfo.Uid;
         }
 
         public void RemoveVFX(int key)
@@ -76,30 +76,36 @@ namespace Hono.Scripts.Battle.Core
                 onRemove(obj);
             }
         }
-
-        protected void onRemove(VFXInfo obj)
+        
+        private void addInfoToList(VFXInfo vfxObj)
+        {
+            _vfxes.Add(vfxObj.Uid, vfxObj);
+            VFXAdd?.Invoke(vfxObj);
+        }
+        
+        private void onRemove(VFXInfo obj)
         {
             _vfxes.Remove(obj.Uid);
-            GPool<VFXInfo>.Pool.Recycle(obj);
             VFXRemove?.Invoke(obj);
         }
 
         protected override void onTick(float dt)
         {
-            foreach (var obj in _vfxes)
+            /*for (var index = 0; index < _vfxes.Count; index++)
             {
-                if (obj.Value.IsExpired)
+                VFXInfo obj = _vfxes[index];
+                if (obj.IsExpired)
                 {
                     _removeList.Add(obj.Value);
                 }
 
-                if (obj.Value.Setting.VFXBindType == EVFXType.FollowActor)
+                if (obj.Value.Setting.vfxBindType == EVFXType.FollowActor)
                 {
-                    obj.Value.Pos = Unit.UnitTransform.Pos + (Vector3)obj.Value.Setting.Offset;
+                    obj.Value.Pos = Unit.UnitTransform.Pos + (Vector3)obj.Value.Setting.offset;
                 }
 
                 obj.Value.OnTick(dt);
-            }
+            }*/
 
             foreach (var obj in _removeList)
             {

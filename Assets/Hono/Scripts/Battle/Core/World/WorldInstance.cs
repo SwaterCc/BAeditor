@@ -71,8 +71,8 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 世界单位
         /// </summary>
-        private readonly WorldInstanceUnit _worldNodeRoot = new();
-
+        public WorldRoot WorldRoot { get; private set; }
+        
         /// <summary>
         /// Id生成器
         /// </summary>
@@ -116,7 +116,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// Actor待加载列表
         /// </summary>
-        private readonly List<Unit.ILoadableUnit> _loadingCaches = new(1024);
+        private readonly List<Unit> _loadingCaches = new(1024);
 
         /// <summary>
         /// 待删除列表
@@ -217,16 +217,16 @@ namespace Hono.Scripts.Battle.Core
             int i = 0;
             while (i < _loadingCaches.Count)
             {
-                Unit.ILoadableUnit loadable = _loadingCaches[i++];
+                Unit unit = _loadingCaches[i++];
 
-                if (loadable.IsLoadFinish)
+                if (unit.IsLoadFinish)
                 {
-                    _runningActorList.Add((Unit)loadable);
+                    _runningActorList.Add(unit);
                 }
 
-                if (loadable.HasLoadError)
+                if (unit.HasLoadError)
                 {
-                    _removeList.Add((Unit)loadable);
+                    _removeList.Add(unit);
                 }
             }
 
@@ -279,28 +279,21 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         private void addUnitToWorld(Unit unit)
         {
-            if (unit is Unit.ILoadableUnit loadableUnit)
-            {
-                loadableUnit.Load();
+            unit.Load();
 
-                if (loadableUnit.IsLoadFinish)
-                {
-                    addUnitToRunningList(unit);
-                    return;
-                }
-
-                if (loadableUnit.HasLoadError)
-                {
-                    _removeList.Add(unit);
-                    return;
-                }
-
-                _loadingCaches.Add(loadableUnit);
-            }
-            else
+            if (unit.IsLoadFinish)
             {
                 addUnitToRunningList(unit);
+                return;
             }
+
+            if (unit.HasLoadError)
+            {
+                _removeList.Add(unit);
+                return;
+            }
+
+            _loadingCaches.Add(unit);
         }
 
         /// <summary>
@@ -330,9 +323,8 @@ namespace Hono.Scripts.Battle.Core
         /// 创建玩家角色
         /// </summary>
         /// <param name="actorTableId"></param>
-        /// <param name="isPlayerCtrl"></param>
         /// <returns></returns>
-        public Actor CreatePlayerCharacter(int actorTableId, bool isPlayerCtrl)
+        public Actor CreatePlayerCharacter(int actorTableId)
         {
             if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
             {

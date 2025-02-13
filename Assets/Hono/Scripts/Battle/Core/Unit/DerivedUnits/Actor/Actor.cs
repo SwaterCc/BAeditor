@@ -6,7 +6,7 @@ namespace Hono.Scripts.Battle.Core
     /// <summary>
     /// Actor 战斗玩法中有交互的单位
     /// </summary>
-    public sealed class Actor : Unit , Unit.ILoadableUnit
+    public sealed class Actor : Unit
     {
         /// <summary>
         /// Json类型
@@ -22,13 +22,6 @@ namespace Hono.Scripts.Battle.Core
         /// Actor基础类型
         /// </summary>
         public EActorType ActorType { get; private set; }
-        
-        /// <summary>
-        /// 是否加载完成
-        /// </summary>
-        public bool IsLoadFinish => ModelController.LoadedFinish;
-
-        public bool HasLoadError => ModelController.HasLoadError;
 
         /// <summary>
         /// Actor配置数据
@@ -38,7 +31,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// Unity模型管理
         /// </summary>
-        public ActorModelController ModelController { get; }
+        public ModelControllerComp modelControllerComp { get; }
 
         public Actor(string jsonKey)
         {
@@ -52,9 +45,9 @@ namespace Hono.Scripts.Battle.Core
                 addComponent(factory.CreateComponent());
             }
 
-            ModelController = new ActorModelController(this);
+            modelControllerComp = addComponent(new ModelControllerComp(null));
         }
-
+        
         public void Init(ActorTable.ActorRow actorRow)
         {
             base.Init();
@@ -86,11 +79,6 @@ namespace Hono.Scripts.Battle.Core
             }
         }
         
-        public void Load()
-        {
-            ModelController.Load();
-        }
-
         #region 周期函数
 
         /// <summary>
@@ -99,7 +87,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="dt"></param>
         protected override void onTick(float dt)
         {
-            ModelController.Tick(dt);
+            modelControllerComp.Tick(dt);
         }
 
         public override void Recycle()
@@ -112,7 +100,7 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         public void OnRecycle()
         {
-            ModelController.Clear();
+            modelControllerComp.Clear();
         }
         
         #endregion

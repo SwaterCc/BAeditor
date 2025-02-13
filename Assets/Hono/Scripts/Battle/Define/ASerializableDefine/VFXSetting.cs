@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Core.Base;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 #endregion
 
@@ -19,22 +21,14 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class VFXSetting
     {
-        public Vector3 Offset;
-        public Vector3 Rot;
-        public float Scale = 1;
-
-        public EVFXType VFXBindType;
-
-        [ShowIf("VFXBindType", EVFXType.BindActorBone)] [ValueDropdown("GetBindBoneNames")]
-        public string BoneName = "";
-
-        [LabelText("特效持续时长 -1为永久")] public float Duration;
-
-
-        private static IEnumerable<string> GetBindBoneNames()
-        {
-            List<string> BindList = new() { "effect_point" };
-            return BindList;
-        }
+        public string vfxKey;
+        public SerializableVec3 offset;
+        public SerializableVec3 rot;
+        public float scale = 1;
+        public EVFXType vfxBindType;
+        [ShowIf("VFXBindType", EVFXType.BindActorBone)]
+        public string boneName = "";
+        [LabelText("特效持续时长 -1为永久")] 
+        public float duration;
     }
 }

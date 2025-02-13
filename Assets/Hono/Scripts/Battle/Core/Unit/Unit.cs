@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.AbilityFramework;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
@@ -12,7 +13,7 @@ namespace Hono.Scripts.Battle.Core
     /// <summary>
     /// World中运行的基本单位
     /// </summary>
-    public abstract partial class Unit
+    public abstract class Unit
     {
         /// <summary>
         /// 运行时唯一ID
@@ -67,7 +68,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 逻辑组件
         /// </summary>
-        private readonly Dictionary<Type, UnitComponent> _components;
+        private readonly Dictionary<Type, UnitComponent> _components = new(6);
 
         /// <summary>
         /// 运行第一帧前回调
@@ -98,7 +99,22 @@ namespace Hono.Scripts.Battle.Core
         /// 命中的目标
         /// </summary>
         private List<int> _hitTargets = new(50);
+        
+        /// <summary>
+        /// 是否加载完成
+        /// </summary>
+        public bool IsLoadFinish { get; private set; }
+        
+        /// <summary>
+        /// 是否出现加载错误
+        /// </summary>
+        public bool HasLoadError { get; private set; }
 
+        /// <summary>
+        /// 加载任务列表
+        /// </summary>
+        private readonly List<UniTask> _loadTasks = new(5);
+        
         protected Unit()
         {
             UnitTransform = new UnitTransform();
@@ -128,6 +144,11 @@ namespace Hono.Scripts.Battle.Core
                 Debug.Log($"{GetType()} 添加组件 {component.GetType()} Failed!");
             }
 
+            if (component is UnitComponent.IAsyncLoadTask asyncLoadTask)
+            {
+                _loadTasks.Add(asyncLoadTask.LoadTask());
+            }
+            
             return component;
         }
 
@@ -142,6 +163,26 @@ namespace Hono.Scripts.Battle.Core
             {
                 component.Value.Unit = this;
                 component.Value.Init();
+            }
+        }
+        
+        public async void Load()
+        {
+            try
+            {
+                //有加载任务则
+                if (_loadTasks.Count == 0)
+                {
+                    IsLoadFinish = true;
+                    return;
+                }
+                await UniTask.WhenAll(_loadTasks);
+                IsLoadFinish = true;
+            }
+            catch (Exception e)
+            {
+                HasLoadError = true;
+                Debug.LogError(e);
             }
         }
 
@@ -253,6 +294,15 @@ namespace Hono.Scripts.Battle.Core
         public void RemoveAbility(int abilityId)
         {
             _abilityDriver.RemoveAbility(abilityId);
+        }
+
+        /// <summary>
+        /// 获取组件列表
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<Type, UnitComponent> GetComponents()
+        {
+            return _components;
         }
 
         /// <summary>

@@ -1,75 +1,74 @@
 #region
 
+using Unity.Mathematics;
 using UnityEngine;
 
 #endregion
 
 namespace Hono.Scripts.Battle
 {
-    public class VFXInfo : IGPoolObject
+    public struct VFXInfo
     {
         /// <summary>
         /// 特效Uid,全局共享同一个Id生成器
         /// </summary>
-        public int Uid { get; private set; }
+        public readonly int Uid;
 
         /// <summary>
         /// 特效设置
         /// </summary>
-        public VFXSetting Setting { get; private set; }
+        public VFXSetting Setting { get; }
 
         /// <summary>
-        /// 
+        /// VFX的实际路径
+        /// </summary>
+        public string Path;
+
+        /// <summary>
+        /// 是否过期
         /// </summary>
         public bool IsExpired { get; private set; }
 
         /// <summary>
         /// 坐标
         /// </summary>
-        public Vector3 Pos;
+        public Vector3 Pos { get;  set; }
 
         /// <summary>
         /// 旋转
         /// </summary>
-        public Quaternion Rot;
+        public Quaternion Rot { get;  set; }
 
         /// <summary>
         /// 缩放
         /// </summary>
-        public Vector3 Scale;
+        public Vector3 Scale { get;  set; }
 
         /// <summary>
         /// 持续时间
         /// </summary>
         private float _duration;
 
-        public void OnRent(in int uid, in VFXSetting setting)
+        public VFXInfo(int uid, string path, VFXSetting setting)
         {
             Uid = uid;
             Setting = setting;
             IsExpired = false;
-            Scale = setting.Scale * Vector3.one;
+            Pos = Vector3.zero;
+            Rot = quaternion.identity;
+            Scale = setting.scale * Vector3.one;
+            _duration = 0;
+            Path = path;
         }
 
         public void OnTick(float dt)
         {
-            if (Setting.Duration > 0 && Setting.Duration < _duration)
+            if (Setting.duration > 0 && Setting.duration < _duration)
             {
                 IsExpired = true;
             }
 
             _duration += dt;
-        }
-
-        public void OnRecycle()
-        {
-            Uid = 0;
-            _duration = 0;
-            IsExpired = false;
-            Pos = Vector3.zero;
-            Rot = Quaternion.identity;
-            Scale = Vector3.one;
-            Setting = null;
         }
     }
 }

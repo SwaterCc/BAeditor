@@ -13,7 +13,7 @@
 
             protected override void OnTick(float dt)
             {
-                WorldInstance._worldNodeRoot.Tick(dt);
+                WorldInstance.WorldRoot.Tick(dt);
             }
 
             protected override void OnExit()

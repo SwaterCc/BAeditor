@@ -7,14 +7,14 @@ namespace Hono.Scripts.Battle.Core
     [RequireComponent(typeof(CharacterController))]
     public class ActorModel : MonoBehaviour
     {
-        public Actor Actor { get; private set; }
+        public Unit Actor { get; private set; }
 
         /// <summary>
         /// 加载完成时调用
         /// </summary>
-        public void OnLoadFinish(ActorModelController modelController)
+        public void OnLoadFinish(ModelControllerComp modelControllerComp)
         {
-            Actor = modelController.Self;
+            Actor = modelControllerComp.Unit;
             //设置子节点的layer
         }
     }

@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+
 namespace Hono.Scripts.Battle.Core
 {
     /// <summary>
@@ -10,6 +12,17 @@ namespace Hono.Scripts.Battle.Core
     /// </summary>
     public abstract class UnitComponent
     {
+        /// <summary>
+        /// 仅允许应用在UnitComponent及其衍生类上
+        /// </summary>
+        protected internal interface IAsyncLoadTask
+        {
+            /// <summary>
+            /// 加载接口
+            /// </summary>
+            public UniTask LoadTask();
+        }
+        
         public Unit Unit { get; set; }
 
         protected ComponentCtorParams CtorParams { get; }

@@ -6,10 +6,8 @@ using UnityEngine;
 namespace Hono.Scripts.Battle.Core
 {
     //Actor需要一个基础模型，通常是一个Character,如果该单位为部位或者组件，从设计层面上不会主动移动，则会使用Collider为其赋予碰撞体积
-    public class ActorModelController
+    public class ModelControllerComp : UnitComponent , UnitComponent.IAsyncLoadTask,IMovable
     {
-        public Actor Self { get; }
-
         /// <summary>
         /// 模型
         /// </summary>
@@ -36,33 +34,21 @@ namespace Hono.Scripts.Battle.Core
         public CancellationTokenSource MainCancelToken { get; } = new();
 
         /// <summary>
-        /// 加载完成
-        /// </summary>
-        public bool LoadedFinish { get; private set; }
-        
-        /// <summary>
-        /// 加载有错误
-        /// </summary>
-        public bool HasLoadError { get; private set; }
-
-        /// <summary>
         /// model加载完成
         /// </summary>
-        public event Action<Actor> ModelLoadedFinish;
+        public event Action<Unit> ModelLoadedFinish;
 
-        public ActorModelController(Actor actor)
-        {
-            Self = actor;
-        }
+        public ModelControllerComp(ComponentCtorParams ctorParams) : base(ctorParams) { }
 
-        public async void Load()
+        public override void Init() { }
+
+        public async UniTask LoadTask()
         {
             var gameObject = await UPool.Instance.Get("ActorModel", MainCancelToken);
 
             if (gameObject == null)
             {
-                HasLoadError = true;
-                return;
+                throw new Exception("[ModelControllerComp] 模型加载失败");
             }
 
             ActorModel = gameObject.GetComponent<ActorModel>();
@@ -77,23 +63,27 @@ namespace Hono.Scripts.Battle.Core
             CharCtrl.height = ModelRow.Height;
             CharCtrl.radius = ModelRow.Radius;
 
-            CharCtrl.center = Vector3.up * (ModelRow.Height < ModelRow.Radius * 2 ? ModelRow.Radius : ModelRow.Height / 2);
+            CharCtrl.center =
+                Vector3.up * (ModelRow.Height < ModelRow.Radius * 2 ? ModelRow.Radius : ModelRow.Height / 2);
 
-            LoadedFinish = true;
-            
-            ModelLoadedFinish?.Invoke(Self);
+            ModelLoadedFinish?.Invoke(Unit);
         }
-
-        public void Tick(float dt)
+        
+        protected override void onTick(float dt)
         {
             PEPlayer.OnTick(dt);
         }
 
-        public void Clear()
+        protected override void onClear()
         {
             MainCancelToken.Cancel();
             PEPlayer.Clear();
             UPool.Instance.Recycle("ActorModel", ActorModel.gameObject);
+        }
+
+        public void Move(Vector3 velocity)
+        {
+            CharCtrl.SimpleMove(velocity);
         }
     }
 }

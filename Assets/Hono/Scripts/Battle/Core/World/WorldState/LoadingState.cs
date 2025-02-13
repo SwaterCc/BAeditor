@@ -62,6 +62,10 @@ namespace Hono.Scripts.Battle.Core
                
                 //任务流加载
                 
+                //worldRoot放置
+                WorldInstance.WorldRoot = new WorldRoot();
+                WorldInstance.addUnitToWorld(WorldInstance.WorldRoot);
+                
                 //加载主UI
             }
             
