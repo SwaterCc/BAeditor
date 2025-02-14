@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Hono.Scripts.Battle.Core.Base;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
@@ -22,13 +23,12 @@ namespace Hono.Scripts.Battle.Core
     /// <summary>
     /// 移动输入控制组件
     /// </summary>
-    public class MoveComp : UnitComponent
+    [JsonUnitComponent]
+    public partial class MoveComp : UnitComponent
     {
         private IMovable _movable;
 
         private readonly List<IVelocityModifier> _velocityModifiers = new(5);
-
-        public MoveComp(ComponentCtorParams ctorParams) : base(ctorParams) { }
 
         public override void Init()
         {

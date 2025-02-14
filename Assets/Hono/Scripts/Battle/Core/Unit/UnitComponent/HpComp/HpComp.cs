@@ -32,16 +32,10 @@ namespace Hono.Scripts.Battle.Core
 
         private int _currentHp;
         private int _lockCount = 1;
-        private readonly List<HpLock> _hpLocks;
-        private DamagePipLine _damagePipLine;
+        private readonly List<HpLock> _hpLocks = new(5);
+        private readonly DamagePipLine _damagePipLine = new();
 
         public bool IsAlive => _currentHp > 0;
-
-        public HpComp(ComponentCtorParams ctorParams) : base(ctorParams)
-        {
-            _hpLocks = new(5);
-            _damagePipLine = new DamagePipLine();
-        }
 
         public override void Init()
         {
@@ -187,7 +181,7 @@ namespace Hono.Scripts.Battle.Core
 
         private void playHurtVFX(string key)
         {
-            if (Unit.TryGetComponent<VFXComp>(out var comp))
+            /*if (Unit.TryGetComponent<VFXManager>(out var comp))
             {
                 var setting = new VFXSetting()
                 {
@@ -198,7 +192,7 @@ namespace Hono.Scripts.Battle.Core
                 };
 
                 //comp.AddVFX(setting);
-            }
+            }*/
         }
 
         protected override void onClear()

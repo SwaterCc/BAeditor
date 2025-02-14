@@ -23,7 +23,7 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         /// actor绑定注册列表
         /// </summary>
-        private readonly Dictionary<int, UnitEventListenerCollection> _unitEventListeners = new();
+        private readonly Dictionary<int, EventListenerCollection> _unitEventListeners = new();
         private readonly EventListenerCollection _worldEventListeners = new(20);
 
         public void OnWorldTick(float dt)
@@ -45,19 +45,21 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         /// 添加事件容器
         /// </summary>
+        /// <param name="uid"></param>
         /// <param name="collection"></param>
-        public void AddListenerCollection(UnitEventListenerCollection collection)
+        public void AddListenerCollection(int uid, EventListenerCollection collection)
         {
-            _unitEventListeners.TryAdd(collection.Unit.Uid, collection);
+            _unitEventListeners.TryAdd(uid, collection);
         }
 
         /// <summary>
         /// 删除事件容器
         /// </summary>
+        /// <param name="uid"></param>
         /// <param name="collection"></param>
-        public void RemoveListenerCollection(UnitEventListenerCollection collection)
+        public void RemoveListenerCollection(int uid, EventListenerCollection collection)
         {
-            _unitEventListeners.Remove(collection.Unit.Uid);
+            _unitEventListeners.Remove(uid);
         }
 
 
@@ -106,22 +108,6 @@ namespace Hono.Scripts.Battle.Event
             _worldEventListeners.RemoveListener(listener);
         }
 
-        /// <summary>
-        /// 发送全局事件，会触发所有WorldListener和ActorListener中GlobalListener被设置为true的监听
-        /// </summary>
-        /// <param name="eventType">事件类型</param>
-        /// <param name="unitUid">发送者的Uid</param>
-        /// <param name="board">事件信息</param>
-        public void FireWorldEvent(EEventType eventType, int unitUid = -1, VariableBoard board = null)
-        {
-            if (unitUid > 0 && board != null)
-            {
-                board.Set("FireEventUnitUid", unitUid);
-            }
-
-            FireWorldEvent(eventType, board);
-        }
-        
         /// <summary>
         /// 发送全局事件，会触发所有WorldListener和ActorListener中GlobalListener被设置为true的监听
         /// </summary>

@@ -14,11 +14,6 @@ namespace Hono.Scripts.Battle.Core
         public string JsonKey { get; }
 
         /// <summary>
-        /// 允许玩家操控
-        /// </summary>
-        public bool AllowPlayerControl { get; }
-
-        /// <summary>
         /// Actor基础类型
         /// </summary>
         public EActorType ActorType { get; private set; }
@@ -38,14 +33,13 @@ namespace Hono.Scripts.Battle.Core
             JsonKey = jsonKey;
 
             var info = ActorJsonAssembler.GetActorAssembleInfo(jsonKey);
-
-            AllowPlayerControl = info.AllowControl;
+            
             foreach (var factory in info.Factories)
             {
                 addComponent(factory.CreateComponent());
             }
 
-            modelControllerComp = addComponent(new ModelControllerComp(null));
+            modelControllerComp = addComponent(new ModelControllerComp());
         }
         
         public void Init(ActorTable.ActorRow actorRow)

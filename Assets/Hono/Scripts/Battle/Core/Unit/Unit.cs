@@ -59,7 +59,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// Actor事件容器
         /// </summary>
-        private readonly UnitEventListenerCollection _evtListenerCollection;
+        private readonly EventListenerCollection _evtListenerCollection;
 
         /// <summary>
         /// Actor消息容器
@@ -125,7 +125,7 @@ namespace Hono.Scripts.Battle.Core
             MainCancelToken = new CancellationTokenSource();
 
             _abilityDriver = new AbilityDriver(this);
-            _evtListenerCollection = new UnitEventListenerCollection(this);
+            _evtListenerCollection = new EventListenerCollection(10);
             _messageCollection = new MessageCollection(this, 10);
         }
 
@@ -157,7 +157,7 @@ namespace Hono.Scripts.Battle.Core
         {
             Uid = World.Current.GetUid();
 
-            EventManager.Instance.AddListenerCollection(_evtListenerCollection);
+            EventManager.Instance.AddListenerCollection(Uid,_evtListenerCollection);
             MessageManager.Instance.AddMsgCollection(_messageCollection);
 
             foreach (var component in _components)
@@ -240,7 +240,7 @@ namespace Hono.Scripts.Battle.Core
             Tags.Clear();
             VariableBoard.Clear();
 
-            EventManager.Instance.RemoveListenerCollection(_evtListenerCollection);
+            EventManager.Instance.RemoveListenerCollection(Uid, _evtListenerCollection);
             MessageManager.Instance.RemoveMsgCollection(_messageCollection);
         }
 
@@ -403,17 +403,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="board"></param>
         public void FireEvent(EEventType eventType, VariableBoard board = null)
         {
-            _evtListenerCollection.OnFireEventSendBoard(eventType, false, board);
-        }
-
-        /// <summary>
-        /// 触发全局事件
-        /// </summary>
-        /// <param name="eventType"></param>
-        /// <param name="board"></param>
-        public void FireWorldEvent(EEventType eventType, VariableBoard board = null)
-        {
-            EventManager.Instance.FireWorldEventSendBoard(eventType, Uid, board);
+            _evtListenerCollection.FireEvent(eventType, board);
         }
 
         /// <summary>

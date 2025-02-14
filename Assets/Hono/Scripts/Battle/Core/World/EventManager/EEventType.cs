@@ -43,6 +43,9 @@ namespace Hono.Scripts.Battle.Event
         /// </summary>
         OnTriggerHpLock,
         
+        OnAddVFXByKey,
+        OnAddVFXByPath,
+        
         UseSkill = 20,
 
         [EventCheckerBinder("GetUseSkillSuccessChecker", typeof(SkillEventInfo))]

@@ -1,27 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Hono.Scripts.Battle.Core.Base;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public class CombatCompCtorParams : ComponentCtorParams
+    /// <summary>
+    /// 战斗组件
+    /// </summary>
+    [JsonUnitComponent]
+    public partial class CombatComp : UnitComponent
     {
         /// <summary>
         /// 允许产生异常伤害效果
         /// </summary>
+        [JsonUnitComponentParam]
         public bool AllowElementEffect;
 
         /// <summary>
         /// 禁用buff
         /// </summary>
+        [JsonUnitComponentParam]
         public bool DisableBuffAdd;
-    }
-
-    /// <summary>
-    /// 战斗组件
-    /// </summary>
-    public partial class CombatComp : UnitComponent
-    {
         /// <summary>
         /// 技能列表
         /// </summary>
@@ -58,11 +58,8 @@ namespace Hono.Scripts.Battle.Core
         };
 
 
-        public CombatComp(ComponentCtorParams ctorParams) : base(ctorParams)
+        public CombatComp()
         {
-            var combatParams = (ComponentCtorParams)ctorParams;
-
-
             _skills = new Dictionary<int, Skill>();
             _buffDriver = new BuffDriver(this);
             _energyCtrl = new CombatEnergyCtrl(Unit);
@@ -70,6 +67,7 @@ namespace Hono.Scripts.Battle.Core
 
         public override void Init()
         {
+            //var combatParams = (CombatCompCtorParams)CtorParams;
             _energyCtrl.Init();
         }
 

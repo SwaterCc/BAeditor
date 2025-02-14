@@ -1,0 +1,20 @@
+{
+  "componentList": [
+    "CombatComp",
+    "HateComp",
+    "ModelControllerComp",
+    "MoveComp"
+  ],
+  "componentCtor": {
+    "CombatComp": {
+      "AllowElementEffect": "Boolean",
+      "DisableBuffAdd": "Boolean"
+    },
+    "HateComp": {
+      "GetHateTargetType": "Int32"
+    },
+    "ModelControllerComp": {
+      "UnitModelType": "String"
+    }
+  }
+}

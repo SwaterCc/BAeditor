@@ -23,15 +23,14 @@ namespace Hono.Scripts.Battle.Core
             /// </summary>
             public UniTask LoadTask(CancellationTokenSource tokenSource);
         }
-        
+
         public Unit Unit { get; set; }
 
-        protected ComponentCtorParams CtorParams { get; }
+        protected ComponentCtorParams CtorParams { get; private set; }
 
-        protected UnitComponent(ComponentCtorParams ctorParams)
-        {
-            CtorParams = ctorParams;
-        }
+        public virtual void Ctor(ComponentCtorParams ctorParams) { }
+
+        protected virtual void onCtor() { }
 
         public abstract void Init();
 

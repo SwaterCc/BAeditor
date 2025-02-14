@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         private readonly Dictionary<string, Type> _keySearch = new();
         /// <summary>
-        /// 值类型容器
+        /// 值类型容器预定义一些常用类型容器
         /// </summary>
         private readonly Dictionary<Type, IVarCollection> _collections = new()
         {
@@ -39,7 +39,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public APoolRefCount RefCount { get; set; }
 
-        //预定义一些常用类型容器
+        
 
         public T Get<T>(string key)
         {

@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace Hono.Scripts.Battle.Core
 {
     public abstract class UnitComponentFactory
     {
+        public ComponentCtorParams UnCtorParams { get; set; }
         public abstract UnitComponent CreateComponent();
     }
 
@@ -11,29 +14,65 @@ namespace Hono.Scripts.Battle.Core
     {
         public override UnitComponent CreateComponent()
         {
-            return new T();
+            T component = new T();
+            component.Ctor(UnCtorParams);
+            return component;
+        }
+    }
+
+    public interface IComponentParamParser
+    {
+        ComponentCtorParams Parse(JToken token);
+    }
+
+    public static class ActorConfigParser
+    {
+        public static ActorAssembleInfo Parse(string json)
+        {
+            var jsonObject = JObject.Parse(json);
+            var actorData = jsonObject["actor"];
+
+            var assembleInfo = new ActorAssembleInfo();
+
+            // 解析组件列表
+            var componentList = actorData["componentList"] as JArray;
+            foreach (var componentName in componentList)
+            {
+                if (Enum.TryParse(componentName.ToString(), ignoreCase: true, out EUnitComponentKey compKey))
+                {
+                    if (ActorAssembleInfo.ComponentFactories.TryGetValue(compKey, out var factory))
+                    {
+                        assembleInfo.Factories.Add(factory);
+                    }
+                }
+            }
+
+            // 解析组件初始化参数
+            var componentCtor = actorData["componentCtor"] as JObject;
+            foreach (var ctorEntry in componentCtor)
+            {
+                if (Enum.TryParse(ctorEntry.Key, ignoreCase: true, out EUnitComponentKey compKey))
+                {
+                    if (ActorAssembleInfo.ParamParsers.TryGetValue(compKey, out var parser))
+                    {
+                        ActorAssembleInfo.ComponentFactories[compKey].UnCtorParams = parser.Parse(ctorEntry.Value);
+                    }
+                }
+            }
+
+            return assembleInfo;
         }
     }
 
     /// <summary>
     /// 解析出的结构数据
     /// </summary>
-    public class ActorAssembleInfo
+    public partial class ActorAssembleInfo
     {
-        /// <summary>
-        /// 是否允许被玩家控制
-        /// </summary>
-        public readonly bool AllowControl;
-        
         /// <summary>
         /// 组件工厂对象
         /// </summary>
         public readonly List<UnitComponentFactory> Factories = new();
-
-        public ActorAssembleInfo(string json)
-        {
-            AllowControl = false;
-        }
     }
 
     /// <summary>
@@ -59,8 +98,7 @@ namespace Hono.Scripts.Battle.Core
         {
             for (int i = 0; i < _jsonName.Length; i++)
             {
-                var assemble = new ActorAssembleInfo(_jsonText[i]);
-                JsonParseInfos.Add(_jsonName[i], assemble);
+                JsonParseInfos.Add(_jsonName[i], ActorConfigParser.Parse(_jsonText[i]));
             }
         }
 

@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     _eventListener.SetInterval(Data.eventInterval);
                     _eventListener.SetCallback(OnFire);
                     _eventListener.SetupChecker(Data.Checker);
-                    _eventListener.IsGlobalListener = Data.isGlobalEvtListener;
+                    _eventListener.IsWorldListener = Data.isGlobalEvtListener;
                     AContext.Unit.RegisterEvtListener(_eventListener);
                 }
                 else

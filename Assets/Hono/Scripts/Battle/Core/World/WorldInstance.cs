@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Event;
+using Hono.Scripts.Battle.Tools;
 using Unity.Collections;
 using UnityEngine;
+using ListExtensions = Unity.Collections.ListExtensions;
 
 namespace Hono.Scripts.Battle.Core
 {
@@ -76,7 +78,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// Id生成器
         /// </summary>
-        private readonly IdAllocator _idAllocator = new();
+        private readonly CommonUtility.IdGenerator _idGenerator = new();
 
         /// <summary>
         /// 当前世界流程
@@ -247,7 +249,7 @@ namespace Hono.Scripts.Battle.Core
                 //父类清理
                 unit.BaseClear();
                 //从运行队列删除
-                _runningActorList.RemoveSwapBack(unit);
+                ListExtensions.RemoveSwapBack(_runningActorList, unit);
             }
 
             _removeList.Clear();
@@ -316,7 +318,7 @@ namespace Hono.Scripts.Battle.Core
         /// <returns></returns>
         public int GetUid()
         {
-            return _idAllocator.Allocate();
+            return _idGenerator.GenerateId();
         }
 
         /// <summary>

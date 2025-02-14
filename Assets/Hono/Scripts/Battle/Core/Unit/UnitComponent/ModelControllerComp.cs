@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Core.Base;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
     //Actor需要一个基础模型，通常是一个Character,如果该单位为部位或者组件，从设计层面上不会主动移动，则会使用Collider为其赋予碰撞体积
-    public class ModelControllerComp : UnitComponent, UnitComponent.IAsyncLoadTask, IMovable
+    [JsonUnitComponent]
+    public partial class ModelControllerComp : UnitComponent, UnitComponent.IAsyncLoadTask, IMovable
     {
+        [JsonUnitComponentParam]
+        public string UnitModelType;
         /// <summary>
         /// 模型
         /// </summary>
@@ -32,8 +36,6 @@ namespace Hono.Scripts.Battle.Core
         /// model加载完成
         /// </summary>
         public event Action<Unit> ModelLoadedFinish;
-
-        public ModelControllerComp(ComponentCtorParams ctorParams) : base(ctorParams) { }
 
         public override void Init() { }
 

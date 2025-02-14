@@ -149,7 +149,7 @@ namespace Hono.Scripts.Battle.Core
         {
             public PerformanceEffectsPlayer PEPlayer { get; }
 
-            private VFXComp _vfxComp;
+            private VFXComp _vfxManager;
 
             public VFXPlayer(PerformanceEffectsPlayer pePlayer)
             {
@@ -158,10 +158,10 @@ namespace Hono.Scripts.Battle.Core
 
             public void BindVFXComp()
             {
-                PEPlayer._modelControllerComp.Unit.TryGetComponent(out _vfxComp);
-                _vfxComp.VFXAdd += onVFXAdd;
-                _vfxComp.VFXRemove += onVFXRemove;
-                foreach (var VARIABLE in _vfxComp.VFXDict) { }
+                PEPlayer._modelControllerComp.Unit.TryGetComponent(out _vfxManager);
+                _vfxManager.VFXAdd += onVFXAdd;
+                _vfxManager.VFXRemove += onVFXRemove;
+                foreach (var VARIABLE in _vfxManager.VFXLookup) { }
             }
 
             private void onVFXAdd(VFXInfo vfxInfo) { }

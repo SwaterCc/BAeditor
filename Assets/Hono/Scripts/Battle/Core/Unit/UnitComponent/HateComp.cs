@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Core;
+using Hono.Scripts.Battle.Core.Base;
 using UnityEngine;
 
 #endregion
@@ -11,15 +12,16 @@ namespace Hono.Scripts.Battle.Core
     /// <summary>
     /// 仇恨组件，产生仇恨目标
     /// </summary>
-    public class HateComp : UnitComponent
+    [JsonUnitComponent]
+    public partial class HateComp : UnitComponent
     {
+        [JsonUnitComponentParam]
+        public int GetHateTargetType;
         private float _duration;
         private RangeFilterSetting _setting;
         private int _hateUid;
         private bool _isReturnTeam;
         private List<int> _hateUids = new(32);
-
-        public HateComp(ComponentCtorParams ctorParams) : base(ctorParams) { }
         
         public override void Init()
         {

@@ -5,10 +5,10 @@
         /// <summary>
         /// 特效组件
         /// </summary>
-        public VFXComp VFXComp { get; }
+        public VFXComp VFXManager { get; }
         public WorldRoot()
         {
-            VFXComp = addComponent(new VFXComp(null));
+            VFXManager = addComponent(new VFXComp());
         }
         
         protected override void onTick(float dt) { }

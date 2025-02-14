@@ -5,17 +5,15 @@ namespace Hono.Scripts.Battle.Event
 {
     /// <summary>
     /// 事件监听对象
-    /// <para/>
     /// 基础功能为监听指定全局事件或者是某个Actor的事件
-    /// <para/>
     /// 可通过传入检测器来细化事件检测
     /// </summary>
-    public class EventListener
+    public abstract class EventListener
     {
         /// <summary>
         /// 当前监听的事件
         /// </summary>
-        public EEventType EventType { get; private set; }
+        public EEventType EventType { get; protected set; }
 
         /// <summary>
         /// 已等待的间隔时长
@@ -40,7 +38,7 @@ namespace Hono.Scripts.Battle.Event
         /// <summary>
         /// 是否监听全局事件
         /// </summary>
-        public bool IsGlobalListener { get; set; }
+        public bool IsWorldListener { get; set; }
 
         /// <summary>
         /// 是否失效
@@ -49,17 +47,17 @@ namespace Hono.Scripts.Battle.Event
 
         protected EventListener() { }
 
-        protected EventListener(EEventType eventType, bool isGlobalListener, Action<VariableBoard> callback) : this(
-            bindEventType: eventType, isGlobalListener: isGlobalListener, eventFireCallback: callback) { }
+        protected EventListener(EEventType eventType, bool isWorldListener, Action<VariableBoard> callback) : this(
+            bindEventType: eventType, isWorldListener: isWorldListener, eventFireCallback: callback) { }
 
         protected EventListener(EEventType bindEventType = EEventType.NoInit,
-            bool isGlobalListener = false,
+            bool isWorldListener = false,
             float eventTriggerInterval = 0,
             IEventChecker eventChecker = null,
             Action<VariableBoard> eventFireCallback = null)
         {
             EventType = bindEventType;
-            IsGlobalListener = isGlobalListener;
+            IsWorldListener = isWorldListener;
             _triggerInterval = eventTriggerInterval;
             _callback = eventFireCallback;
             _checker = eventChecker;
@@ -147,35 +145,6 @@ namespace Hono.Scripts.Battle.Event
 
     public interface IEventChecker
     {
-        public  bool Check(in VariableBoard board);
-    }
-    
-    /// <summary>
-    /// Actor对象内部使用的EventListener，该Listener会在Actor被回收时失效
-    /// </summary>
-    public class ActorEventListener : EventListener
-    {
-        public ActorEventListener() { }
-        public ActorEventListener(EEventType eventType, bool isGlobalListener, Action<VariableBoard> callback) : base(eventType, isGlobalListener, callback) { }
-
-        public ActorEventListener(EEventType bindEventType = EEventType.NoInit,
-            bool isGlobalListener = false,
-            float eventTriggerInterval = 0,
-            IEventChecker eventChecker = null,
-            Action<VariableBoard> eventFireCallback = null) : base(bindEventType, isGlobalListener, eventTriggerInterval, eventChecker, eventFireCallback) { }
-    }
-
-    /// <summary>
-    /// 全局Listener，不会像ActorEventListener一样在回收时失效，不建议在Actor内部使用
-    /// </summary>
-    public class WorldEventListener : EventListener
-    {
-        public WorldEventListener() { }
-        public WorldEventListener(EEventType eventType, Action<VariableBoard> callback) : base(eventType, true, callback) { }
-
-        public WorldEventListener(EEventType bindEventType = EEventType.NoInit,
-            float eventTriggerInterval = 0,
-            IEventChecker eventChecker = null,
-            Action<VariableBoard> eventFireCallback = null) : base(bindEventType, true, eventTriggerInterval, eventChecker, eventFireCallback) { }
+        public bool Check(in VariableBoard board);
     }
 }
