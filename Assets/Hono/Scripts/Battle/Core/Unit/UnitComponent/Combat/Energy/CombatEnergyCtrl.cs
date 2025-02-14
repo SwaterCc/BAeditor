@@ -20,9 +20,9 @@ namespace Hono.Scripts.Battle.Core
             /// 
             /// </summary>
             private readonly Unit _unit;
-            private readonly ActorEventListener _attackListener = new(EEventType.OnSkillUseSuccess);
-            private readonly ActorEventListener _beHitListener = new(EEventType.OnBeHit);
-            private readonly ActorEventListener _killEnemyListener = new(EEventType.OnHit, true);
+            private readonly UnitEventListener _attackListener = new(EEventType.OnSkillUseSuccess);
+            private readonly UnitEventListener _beHitListener = new(EEventType.OnBeHit);
+            private readonly UnitEventListener _killEnemyListener = new(EEventType.OnHit, true);
             public CombatEnergyCtrl(Unit unit)
             {
                 _unit = unit;

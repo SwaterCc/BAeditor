@@ -47,7 +47,7 @@ namespace Hono.Scripts.Battle.Tools
             actorIds.Clear();
             for (int i = 0; i < size; i++)
             {
-                var actorModel = _normalAreaRaycastHit[i].collider.GetComponent<ActorModel>();
+                var actorModel = _normalAreaRaycastHit[i].collider.GetComponent<UnitModel>();
                 if (actorModel == null)
                 {
                     continue;

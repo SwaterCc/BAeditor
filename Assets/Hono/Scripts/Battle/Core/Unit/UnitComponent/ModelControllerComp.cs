@@ -6,12 +6,12 @@ using UnityEngine;
 namespace Hono.Scripts.Battle.Core
 {
     //Actor需要一个基础模型，通常是一个Character,如果该单位为部位或者组件，从设计层面上不会主动移动，则会使用Collider为其赋予碰撞体积
-    public class ModelControllerComp : UnitComponent , UnitComponent.IAsyncLoadTask,IMovable
+    public class ModelControllerComp : UnitComponent, UnitComponent.IAsyncLoadTask, IMovable
     {
         /// <summary>
         /// 模型
         /// </summary>
-        public ActorModel ActorModel { get; private set; }
+        public UnitModel UnitModel { get; private set; }
 
         /// <summary>
         /// 玩家控制
@@ -29,11 +29,6 @@ namespace Hono.Scripts.Battle.Core
         public ModelTable.ModelRow ModelRow { get; private set; }
 
         /// <summary>
-        /// 加载取消总key
-        /// </summary>
-        public CancellationTokenSource MainCancelToken { get; } = new();
-
-        /// <summary>
         /// model加载完成
         /// </summary>
         public event Action<Unit> ModelLoadedFinish;
@@ -42,20 +37,20 @@ namespace Hono.Scripts.Battle.Core
 
         public override void Init() { }
 
-        public async UniTask LoadTask()
+        public async UniTask LoadTask(CancellationTokenSource tokenSource)
         {
-            var gameObject = await UPool.Instance.Get("ActorModel", MainCancelToken);
+            var gameObject = await UPool.Instance.Get("ActorModel", tokenSource);
 
             if (gameObject == null)
             {
                 throw new Exception("[ModelControllerComp] 模型加载失败");
             }
 
-            ActorModel = gameObject.GetComponent<ActorModel>();
+            UnitModel = gameObject.GetComponent<UnitModel>();
             CharCtrl = gameObject.GetComponent<CharacterController>();
             PEPlayer = gameObject.GetComponent<PerformanceEffectsPlayer>();
 
-            ActorModel.OnLoadFinish(this);
+            UnitModel.OnLoadFinish(this);
             PEPlayer.LoadPE(this);
 
             //初始化模型体型
@@ -68,7 +63,7 @@ namespace Hono.Scripts.Battle.Core
 
             ModelLoadedFinish?.Invoke(Unit);
         }
-        
+
         protected override void onTick(float dt)
         {
             PEPlayer.OnTick(dt);
@@ -76,9 +71,8 @@ namespace Hono.Scripts.Battle.Core
 
         protected override void onClear()
         {
-            MainCancelToken.Cancel();
             PEPlayer.Clear();
-            UPool.Instance.Recycle("ActorModel", ActorModel.gameObject);
+            UPool.Instance.Recycle("ActorModel", UnitModel.gameObject);
         }
 
         public void Move(Vector3 velocity)

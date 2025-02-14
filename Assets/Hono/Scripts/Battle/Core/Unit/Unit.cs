@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.AbilityFramework;
 using Hono.Scripts.Battle.Base;
@@ -46,9 +47,9 @@ namespace Hono.Scripts.Battle.Core
         public EUnitFlag State { get; protected set; }
 
         /// <summary>
-        /// 动作系统
+        /// 加载取消总key
         /// </summary>
-        private readonly ActionSystem _actionSystem;
+        public CancellationTokenSource MainCancelToken { get; }
 
         /// <summary>
         /// ability控制器
@@ -99,12 +100,12 @@ namespace Hono.Scripts.Battle.Core
         /// 命中的目标
         /// </summary>
         private List<int> _hitTargets = new(50);
-        
+
         /// <summary>
         /// 是否加载完成
         /// </summary>
         public bool IsLoadFinish { get; private set; }
-        
+
         /// <summary>
         /// 是否出现加载错误
         /// </summary>
@@ -114,17 +115,17 @@ namespace Hono.Scripts.Battle.Core
         /// 加载任务列表
         /// </summary>
         private readonly List<UniTask> _loadTasks = new(5);
-        
+
         protected Unit()
         {
             UnitTransform = new UnitTransform();
             Attrs = new AttrCollection(this);
             VariableBoard = new VariableBoard();
             Tags = new TagCollection();
+            MainCancelToken = new CancellationTokenSource();
 
-            _actionSystem = new ActionSystem(this);
             _abilityDriver = new AbilityDriver(this);
-            _evtListenerCollection = new UnitEventListenerCollection(this, 10);
+            _evtListenerCollection = new UnitEventListenerCollection(this);
             _messageCollection = new MessageCollection(this, 10);
         }
 
@@ -146,9 +147,9 @@ namespace Hono.Scripts.Battle.Core
 
             if (component is UnitComponent.IAsyncLoadTask asyncLoadTask)
             {
-                _loadTasks.Add(asyncLoadTask.LoadTask());
+                _loadTasks.Add(asyncLoadTask.LoadTask(MainCancelToken));
             }
-            
+
             return component;
         }
 
@@ -165,7 +166,7 @@ namespace Hono.Scripts.Battle.Core
                 component.Value.Init();
             }
         }
-        
+
         public async void Load()
         {
             try
@@ -176,6 +177,7 @@ namespace Hono.Scripts.Battle.Core
                     IsLoadFinish = true;
                     return;
                 }
+
                 await UniTask.WhenAll(_loadTasks);
                 IsLoadFinish = true;
             }
@@ -211,7 +213,6 @@ namespace Hono.Scripts.Battle.Core
                 component.Value.Tick(dt);
             }
 
-            _actionSystem.Tick(dt);
             _abilityDriver.Tick(dt);
             _evtListenerCollection.Tick(dt);
             _messageCollection.Tick(dt);
@@ -224,14 +225,13 @@ namespace Hono.Scripts.Battle.Core
         public void BaseClear()
         {
             RecycleCallBack?.Invoke(this);
-
+            MainCancelToken.Cancel();
             foreach (var component in _components)
             {
                 component.Value.Clear();
             }
 
             _components.Clear();
-            _actionSystem.Clear();
             _abilityDriver.Clear();
             _evtListenerCollection.Clear();
             _messageCollection.Clear();
@@ -259,7 +259,7 @@ namespace Hono.Scripts.Battle.Core
         {
             return _abilityDriver.AwardAbility(abilityId);
         }
-        
+
         /*/// <summary>
         /// 执行Ability
         /// </summary>
@@ -268,7 +268,7 @@ namespace Hono.Scripts.Battle.Core
         {
             return _abilityDriver.AwardAbility(abilityId);
         }*/
-        
+
         /// <summary>
         /// 执行Ability
         /// </summary>
@@ -277,7 +277,7 @@ namespace Hono.Scripts.Battle.Core
         {
             _abilityDriver.ExecuteAbility(abilityId);
         }
-        
+
         /// <summary>
         /// 停止Ability
         /// </summary>
@@ -382,7 +382,7 @@ namespace Hono.Scripts.Battle.Core
         /// 注册事件
         /// </summary>
         /// <param name="eventListener"></param>
-        public void RegisterEvtListener(ActorEventListener eventListener)
+        public void RegisterEvtListener(UnitEventListener eventListener)
         {
             _evtListenerCollection.AddListener(eventListener);
         }
@@ -391,7 +391,7 @@ namespace Hono.Scripts.Battle.Core
         /// 注册事件
         /// </summary>
         /// <param name="eventListener"></param>
-        public void UnregisterEvtListener(ActorEventListener eventListener)
+        public void UnregisterEvtListener(UnitEventListener eventListener)
         {
             _evtListenerCollection.RemoveListener(eventListener);
         }
@@ -403,7 +403,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="board"></param>
         public void FireEvent(EEventType eventType, VariableBoard board = null)
         {
-            _evtListenerCollection.FireEvent(eventType, board);
+            _evtListenerCollection.OnFireEventSendBoard(eventType, false, board);
         }
 
         /// <summary>
@@ -413,7 +413,7 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="board"></param>
         public void FireWorldEvent(EEventType eventType, VariableBoard board = null)
         {
-            EventManager.Instance.FireWorldEvent(eventType, Uid, board);
+            EventManager.Instance.FireWorldEventSendBoard(eventType, Uid, board);
         }
 
         /// <summary>

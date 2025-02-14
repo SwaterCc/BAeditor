@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 
 namespace Hono.Scripts.Battle.Core
@@ -20,7 +21,7 @@ namespace Hono.Scripts.Battle.Core
             /// <summary>
             /// 加载接口
             /// </summary>
-            public UniTask LoadTask();
+            public UniTask LoadTask(CancellationTokenSource tokenSource);
         }
         
         public Unit Unit { get; set; }

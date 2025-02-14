@@ -21,7 +21,7 @@ namespace Hono.Scripts.Battle
     [Serializable]
     public class VFXSetting
     {
-        public string vfxKey;
+        public bool isUsePE;
         public SerializableVec3 offset;
         public SerializableVec3 rot;
         public float scale = 1;

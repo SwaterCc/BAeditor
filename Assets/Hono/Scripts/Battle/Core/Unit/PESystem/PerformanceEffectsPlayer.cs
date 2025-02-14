@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using Hono.Scripts.Battle.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle
+namespace Hono.Scripts.Battle.Core
 {
     /// <summary>
     /// 演出效果播放器
@@ -23,7 +21,8 @@ namespace Hono.Scripts.Battle
             Anim,
             Audio
         }
-
+        
+        [ReadOnly]
         public GameObject model;
 
         public PEModelHandler ModelHandler { get; private set; }
@@ -37,7 +36,12 @@ namespace Hono.Scripts.Battle
         /// 复写模板
         /// </summary>
         private PETemplate _overrideTemplate;
+        
+        /// <summary>
+        /// 模型控制组件
+        /// </summary>
         private ModelControllerComp _modelControllerComp;
+        
         /// <summary>
         /// 特效播放器
         /// </summary>
@@ -48,7 +52,7 @@ namespace Hono.Scripts.Battle
             _modelControllerComp = modelControllerComp;
 
             //加载模型
-            model = await UPool.Instance.Get(GetPEModelPath(), modelControllerComp.MainCancelToken);
+            model = await UPool.Instance.Get(GetPEModelPath(), modelControllerComp.Unit.MainCancelToken);
             if (model != null)
             {
                 ModelHandler = model.GetComponent<PEModelHandler>();
@@ -166,10 +170,7 @@ namespace Hono.Scripts.Battle
 
             public void Tick(float dt) { }
 
-            public void onClear()
-            {
-                
-            }
+            public void onClear() { }
         }
     }
 }

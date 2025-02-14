@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
     {
         private class AListenerNode : ANode<ListenerNodeData>, IGPoolObject
         {
-            private readonly ActorEventListener _eventListener = new();
+            private readonly UnitEventListener _eventListener = new();
             private readonly MessageListener _messageListener = new();
 
             public VariableBoard Board { get; private set; }

@@ -124,7 +124,7 @@ namespace Hono.Scripts.Battle.Core
                 var board = GPool<VariableBoard>.Pool.Rent();
                 board.Set(AttrChangedEventInfo.AttrType, attrType);
                 board.Set(AttrChangedEventInfo.Value,    value);
-                EventManager.Instance.FireWorldEvent(EEventType.OnAttrChanged, _unit.Uid, board);
+                _unit.FireWorldEvent(EEventType.OnAttrChanged, _unit.Uid, board);
                 GPool<VariableBoard>.Pool.Recycle(board);
             }
 

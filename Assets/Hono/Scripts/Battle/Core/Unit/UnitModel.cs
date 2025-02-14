@@ -5,7 +5,7 @@ namespace Hono.Scripts.Battle.Core
 {
     [RequireComponent(typeof(PerformanceEffectsPlayer))]
     [RequireComponent(typeof(CharacterController))]
-    public class ActorModel : MonoBehaviour
+    public class UnitModel : MonoBehaviour
     {
         public Unit Actor { get; private set; }
 

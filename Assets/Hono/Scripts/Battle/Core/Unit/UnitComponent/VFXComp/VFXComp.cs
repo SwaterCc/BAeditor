@@ -32,20 +32,28 @@ namespace Hono.Scripts.Battle.Core
         public override void Init() { }
 
         /// <summary>
+        /// 使用资源路径添加VFX
+        /// </summary>
+        /// <returns></returns>
+        public int AddVFXByResPath()
+        {
+            
+        }
+        
+        /// <summary>
         /// 添加特效
         /// </summary>
         /// <param name="setting"></param>
         /// <returns></returns>
         public int AddVFXByKey(VFXSetting setting)
         {
-            
             var vfxInfo = new VFXInfo(VFXIdGenerator.GenerateId(),"", setting);
 
             switch (setting.vfxBindType)
             {
                 case EVFXType.InWorld:
-                    vfxInfo.Pos = Unit.UnitTransform.Pos + Unit.UnitTransform.YAxisAngle * (Vector3)setting.offset;
-                    vfxInfo.Rot = Quaternion.AngleAxis(Unit.UnitTransform.YAxisAngle,Vector3.up) * Quaternion.Euler(setting.rot);
+                    vfxInfo.Pos = Unit.UnitTransform.Pos + Unit.UnitTransform.Rot * setting.offset;
+                    vfxInfo.Rot = Unit.UnitTransform.Rot * Quaternion.Euler(setting.rot);
                     break;
                 case EVFXType.FollowActor:
                     vfxInfo.Pos = Unit.UnitTransform.Pos + setting.offset;
@@ -59,11 +67,11 @@ namespace Hono.Scripts.Battle.Core
 
             if (setting.vfxBindType != EVFXType.InWorld)
             {
-                addInfoToList(vfxInfo);
+                addVFX(vfxInfo);
             }
             else
             {
-                World.Current.WorldRoot.VFXComp.addInfoToList(vfxInfo);
+                World.Current.WorldRoot.VFXComp.addVFX(vfxInfo);
             }
 
             return vfxInfo.Uid;
@@ -73,43 +81,43 @@ namespace Hono.Scripts.Battle.Core
         {
             if (_vfxes.TryGetValue(key, out var obj))
             {
-                onRemove(obj);
+                removeVFX(obj);
             }
         }
         
-        private void addInfoToList(VFXInfo vfxObj)
+        private void addVFX(VFXInfo vfxObj)
         {
-            _vfxes.Add(vfxObj.Uid, vfxObj);
             VFXAdd?.Invoke(vfxObj);
+            _vfxes.Add(vfxObj.Uid, vfxObj);
         }
         
-        private void onRemove(VFXInfo obj)
+        private void removeVFX(VFXInfo obj)
         {
-            _vfxes.Remove(obj.Uid);
             VFXRemove?.Invoke(obj);
+            _vfxes.Remove(obj.Uid);
         }
 
         protected override void onTick(float dt)
         {
-            /*for (var index = 0; index < _vfxes.Count; index++)
+            for (var index = 0; index < _vfxes.Count; index++)
             {
                 VFXInfo obj = _vfxes[index];
                 if (obj.IsExpired)
                 {
-                    _removeList.Add(obj.Value);
+                    _removeList.Add(obj);
                 }
 
-                if (obj.Value.Setting.vfxBindType == EVFXType.FollowActor)
+                if (obj.Setting.vfxBindType == EVFXType.FollowActor)
                 {
-                    obj.Value.Pos = Unit.UnitTransform.Pos + (Vector3)obj.Value.Setting.offset;
+                    obj.Pos = Unit.UnitTransform.Pos + obj.Setting.offset;
                 }
 
-                obj.Value.OnTick(dt);
-            }*/
+                obj.OnTick(dt);
+            }
 
             foreach (var obj in _removeList)
             {
-                onRemove(obj);
+                removeVFX(obj);
             }
 
             _removeList.Clear();
@@ -120,7 +128,7 @@ namespace Hono.Scripts.Battle.Core
             _removeList.Clear();
             foreach (var obj in _vfxes)
             {
-                onRemove(obj.Value);
+                removeVFX(obj.Value);
             }
 
             _vfxes.Clear();
