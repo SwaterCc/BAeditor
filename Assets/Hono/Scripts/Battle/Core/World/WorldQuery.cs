@@ -192,7 +192,7 @@ namespace Hono.Scripts.Battle.Core
 
             if (_rangeFilterSetting.OpenBoxCheck)
             {
-                var rot = Quaternion.AngleAxis(_filterUser.UnitTransform.YAxisAngle, Vector3.up);
+                var rot = _filterUser.UnitTransform.Rot;
                 
                 if (CommonUtility.HitRayCast(_rangeFilterSetting.BoxData, _centerPos, rot, ref _checkBoxResult))
                 {

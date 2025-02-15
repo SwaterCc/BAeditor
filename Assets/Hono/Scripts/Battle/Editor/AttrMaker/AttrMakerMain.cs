@@ -67,7 +67,7 @@ namespace Hono.Scripts.Battle
             string _attrEnumStr = "";
             string _attrCase = "";
             string _attrDictItem = "";
-            private string _genCShapePath = "Assets/Hono/Scripts/Battle/Core/Attr";
+            private string _genCShapePath = "Assets/Hono/Scripts/Battle/Core/Base/Attr";
 
             public AttrFileProcess()
             {

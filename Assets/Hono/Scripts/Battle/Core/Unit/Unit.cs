@@ -19,13 +19,8 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 运行时唯一ID
         /// </summary>
-        public int Uid { get; protected set; }
-
-        /// <summary>
-        /// 变量黑板
-        /// </summary>
-        public VariableBoard VariableBoard { get; }
-
+        public int Uid { get; private set; }
+        
         /// <summary>
         /// Tags
         /// </summary>
@@ -52,24 +47,30 @@ namespace Hono.Scripts.Battle.Core
         public CancellationTokenSource MainCancelToken { get; }
 
         /// <summary>
-        /// ability控制器
+        /// ability驱动器
         /// </summary>
         private readonly AbilityDriver _abilityDriver;
 
         /// <summary>
-        /// Actor事件容器
+        /// Unit事件容器
         /// </summary>
         private readonly EventListenerCollection _evtListenerCollection;
 
         /// <summary>
-        /// Actor消息容器
+        /// Unit消息容器
         /// </summary>
         private readonly MessageCollection _messageCollection;
 
+        ///Unit组件内部通信结构
         /// <summary>
         /// 逻辑组件
         /// </summary>
         private readonly Dictionary<Type, UnitComponent> _components = new(6);
+
+        /// <summary>
+        /// 加载完成后回调
+        /// </summary>
+        public event Action<Unit> LoadFinishCallBack;
 
         /// <summary>
         /// 运行第一帧前回调
@@ -97,11 +98,6 @@ namespace Hono.Scripts.Battle.Core
         private bool _firstTick;
 
         /// <summary>
-        /// 命中的目标
-        /// </summary>
-        private List<int> _hitTargets = new(50);
-
-        /// <summary>
         /// 是否加载完成
         /// </summary>
         public bool IsLoadFinish { get; private set; }
@@ -120,7 +116,7 @@ namespace Hono.Scripts.Battle.Core
         {
             UnitTransform = new UnitTransform();
             Attrs = new AttrCollection(this);
-            VariableBoard = new VariableBoard();
+            
             Tags = new TagCollection();
             MainCancelToken = new CancellationTokenSource();
 
@@ -144,20 +140,20 @@ namespace Hono.Scripts.Battle.Core
             {
                 Debug.Log($"{GetType()} 添加组件 {component.GetType()} Failed!");
             }
-
-            if (component is UnitComponent.IAsyncLoadTask asyncLoadTask)
-            {
-                _loadTasks.Add(asyncLoadTask.LoadTask(MainCancelToken));
-            }
-
+            
             return component;
+        }
+
+        protected void addLoadTask(UniTask task)
+        {
+            _loadTasks.Add(task);
         }
 
         protected void Init()
         {
             Uid = World.Current.GetUid();
 
-            EventManager.Instance.AddListenerCollection(Uid,_evtListenerCollection);
+            EventManager.Instance.AddListenerCollection(Uid, _evtListenerCollection);
             MessageManager.Instance.AddMsgCollection(_messageCollection);
 
             foreach (var component in _components)
@@ -179,7 +175,9 @@ namespace Hono.Scripts.Battle.Core
                 }
 
                 await UniTask.WhenAll(_loadTasks);
+                _loadTasks.Clear();
                 IsLoadFinish = true;
+                LoadFinishCallBack?.Invoke(this);
             }
             catch (Exception e)
             {
@@ -226,19 +224,25 @@ namespace Hono.Scripts.Battle.Core
         {
             RecycleCallBack?.Invoke(this);
             MainCancelToken.Cancel();
-            foreach (var component in _components)
+            
+            foreach (var component in _components.Values)
             {
-                component.Value.Clear();
+                component.Recycle();
             }
-
             _components.Clear();
+            
             _abilityDriver.Clear();
             _evtListenerCollection.Clear();
             _messageCollection.Clear();
 
             Attrs.Clear();
             Tags.Clear();
-            VariableBoard.Clear();
+
+            LoadFinishCallBack = null;
+            BeforeFirstTickCallback = null;
+            BeforeTickCallBack = null;
+            AfterTickCallBack = null;
+            RecycleCallBack = null;
 
             EventManager.Instance.RemoveListenerCollection(Uid, _evtListenerCollection);
             MessageManager.Instance.RemoveMsgCollection(_messageCollection);
@@ -423,240 +427,6 @@ namespace Hono.Scripts.Battle.Core
         {
             _messageCollection.RemoveListener(messageListener);
         }
-
-        #region HitCheck
-
-        /// <summary>
-        /// 单体打击点，直接Hit目标
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="damageSourceType"></param>
-        /// <param name="sourceAbilityId"></param>
-        /// <param name="disableEventTrigger"></param>
-        /// <param name="damageId"></param>
-        public void SingleHit(Unit target,
-            EDamageSourceType damageSourceType,
-            int sourceAbilityId,
-            bool disableEventTrigger = false,
-            int damageId = 0)
-        {
-            if (target == null)
-            {
-                return;
-            }
-
-            if (!disableEventTrigger)
-            {
-                var board = GPool<VariableBoard>.Pool.Rent();
-                EventManager.Instance.FireWorldEvent(EEventType.OnHit, board);
-                GPool<VariableBoard>.Pool.Recycle(board);
-            }
-
-            var damageResult = GPool<VariableBoard>.Pool.Rent();
-
-            if (damageId == 0)
-            {
-                return;
-            }
-
-            if (!ConfigManager.Table<DamageTable>().TryGet(damageId, out var damageRow))
-            {
-                return;
-            }
-
-            if (target.TryGetComponent(out HpComp hpComp))
-            {
-                var hitInfo = new HitInfo()
-                {
-                    Attacker = this,
-                    DamageRow = damageRow,
-                    DamageSourceType = damageSourceType,
-                    HitCount = 1,
-                    SourceAbilityId = sourceAbilityId
-                };
-                hpComp.MakeDamage(hitInfo);
-            }
-
-            if (target.TryGetComponent(out CombatComp combatComp))
-            {
-                combatComp.CumulativeElementValue(this, damageRow);
-            }
-
-            if (!disableEventTrigger)
-            {
-                EventManager.Instance.FireWorldEvent(EEventType.OnMakeDamage, damageResult);
-            }
-
-            GPool<VariableBoard>.Pool.Recycle(damageResult);
-        }
-
-        /// <summary>
-        /// 对目标单体造成固定伤害
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="damageValue"></param>
-        /// <param name="damageType"></param>
-        /// <param name="disableEventTrigger"></param>
-        public void SingleHitFixDamage(Unit target,
-            int damageValue,
-            EDamageType damageType,
-            bool disableEventTrigger = true)
-        {
-            if (target == null)
-            {
-                return;
-            }
-
-            if (!disableEventTrigger)
-            {
-                var board = GPool<VariableBoard>.Pool.Rent();
-                EventManager.Instance.FireWorldEvent(EEventType.OnHit, board);
-                GPool<VariableBoard>.Pool.Recycle(board);
-            }
-
-            var damageResult = GPool<VariableBoard>.Pool.Rent();
-
-            if (target.TryGetComponent(out HpComp hpComp))
-            {
-                hpComp.MakeFixDamageValue(damageValue, damageType);
-            }
-
-            if (!disableEventTrigger)
-            {
-                EventManager.Instance.FireWorldEvent(EEventType.OnMakeDamage, damageResult);
-            }
-
-            GPool<VariableBoard>.Pool.Recycle(damageResult);
-        }
-
-        /// <summary>
-        /// 对范围敌人Hit
-        /// </summary>
-        /// <param name="aoeCenterPos"></param>
-        /// <param name="yAngle"></param>
-        /// <param name="damageSourceType"></param>
-        /// <param name="sourceAbilityId"></param>
-        /// <param name="aoeSetting"></param>
-        /// <param name="disableEventTrigger"></param>
-        /// <param name="damageId"></param>
-        public void AreaHit(
-            Vector3 aoeCenterPos,
-            float yAngle,
-            EDamageSourceType damageSourceType,
-            int sourceAbilityId,
-            RangeFilterSetting aoeSetting,
-            bool disableEventTrigger = false,
-            int damageId = 0)
-        {
-            World.Query.SearchUnits(this, aoeCenterPos, yAngle, aoeSetting, ref _hitTargets);
-
-            if (_hitTargets.Count == 0)
-            {
-                return;
-            }
-
-            if (!disableEventTrigger)
-            {
-                var board = GPool<VariableBoard>.Pool.Rent();
-                EventManager.Instance.FireWorldEvent(EEventType.OnHit, board);
-                GPool<VariableBoard>.Pool.Recycle(board);
-            }
-
-            var damageResult = GPool<VariableBoard>.Pool.Rent();
-
-            if (damageId == 0)
-            {
-                return;
-            }
-
-            if (!ConfigManager.Table<DamageTable>().TryGet(damageId, out var damageRow))
-            {
-                return;
-            }
-
-            foreach (var targetUid in _hitTargets)
-            {
-                var target = World.Query.GetUnit(targetUid);
-                if (target.TryGetComponent(out HpComp hpComp))
-                {
-                    var hitInfo = new HitInfo()
-                    {
-                        Attacker = this,
-                        DamageRow = damageRow,
-                        DamageSourceType = damageSourceType,
-                        HitCount = _hitTargets.Count,
-                        SourceAbilityId = sourceAbilityId
-                    };
-                    hpComp.MakeDamage(hitInfo);
-                }
-
-                if (target.TryGetComponent(out CombatComp combatComp))
-                {
-                    combatComp.CumulativeElementValue(this, damageRow);
-                }
-            }
-
-            if (!disableEventTrigger)
-            {
-                EventManager.Instance.FireWorldEvent(EEventType.OnMakeDamage, damageResult);
-            }
-
-            GPool<VariableBoard>.Pool.Recycle(damageResult);
-        }
-
-
-        /// <summary>
-        /// 对范围敌人Hit产生固定伤害
-        /// </summary>
-        /// <param name="aoeCenterPos"></param>
-        /// <param name="yAngle"></param>
-        /// <param name="damageValue"></param>
-        /// <param name="damageType"></param>
-        /// <param name="aoeSetting"></param>
-        /// <param name="disableEventTrigger"></param>
-        public void AreaHitMakeFixDamage(
-            Vector3 aoeCenterPos,
-            float yAngle,
-            int damageValue,
-            EDamageType damageType,
-            RangeFilterSetting aoeSetting,
-            bool disableEventTrigger = true)
-        {
-            World.Query.SearchUnits(this, aoeCenterPos, yAngle, aoeSetting, ref _hitTargets);
-
-            if (_hitTargets.Count == 0)
-            {
-                return;
-            }
-
-            if (!disableEventTrigger)
-            {
-                var board = GPool<VariableBoard>.Pool.Rent();
-                EventManager.Instance.FireWorldEvent(EEventType.OnHit, board);
-                GPool<VariableBoard>.Pool.Recycle(board);
-            }
-
-            var damageResult = GPool<VariableBoard>.Pool.Rent();
-
-
-            foreach (var targetUid in _hitTargets)
-            {
-                var target = World.Query.GetUnit(targetUid);
-                if (target.TryGetComponent(out HpComp hpComp))
-                {
-                    hpComp.MakeFixDamageValue(damageValue, damageType);
-                }
-            }
-
-            if (!disableEventTrigger)
-            {
-                EventManager.Instance.FireWorldEvent(EEventType.OnMakeDamage, damageResult);
-            }
-
-            GPool<VariableBoard>.Pool.Recycle(damageResult);
-        }
-
-        #endregion
 
         #endregion
     }

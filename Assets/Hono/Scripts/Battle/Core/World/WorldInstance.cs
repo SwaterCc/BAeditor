@@ -324,23 +324,24 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 创建玩家角色
         /// </summary>
-        /// <param name="actorTableId"></param>
+        /// <param name="actorJsonKey"></param>
         /// <returns></returns>
-        public Actor CreatePlayerCharacter(int actorTableId)
+        public Actor CreatePlayerCharacter(string actorJsonKey)
         {
-            if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
+            try
             {
+                Actor actor = ActorPool.Instance.Get(actorJsonKey);
+                //从外部获取养成数据
+                //actro.Attrs.InitAttr();
+                actor.Init();
+                addUnitToWorld(actor);
+                return actor;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
                 return null;
             }
-
-            Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
-            //设置初始值
-            actor.Attrs.Init(actorTableId);
-            //从外部获取养成数据
-            //actro.Attrs.InitAttr();
-            actor.Init(row);
-            addUnitToWorld(actor);
-            return actor;
         }
 
         /// <summary>
@@ -348,18 +349,20 @@ namespace Hono.Scripts.Battle.Core
         ///  玩家角色(士兵)的属性来自养成转换
         ///  地图其他单位的属性来自静态配置，地图参数，等级影响等
         /// </summary>
-        public Actor CreateActor(int actorTableId)
+        public Actor CreateActor(string actorJsonKey)
         {
-            if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
+            try
             {
+                Actor actor = ActorPool.Instance.Get(actorJsonKey);
+                actor.Init();
+                addUnitToWorld(actor);
+                return actor;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
                 return null;
             }
-
-            Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
-            actor.Attrs.Init(actorTableId);
-            actor.Init(row);
-            addUnitToWorld(actor);
-            return actor;
         }
 
         public struct SummonSetting
@@ -388,11 +391,10 @@ namespace Hono.Scripts.Battle.Core
             }
 
             Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
-
-            actor.Attrs.Init(actorTableId);
+            actor.Init();
             actor.Attrs.SetSummoned(summoner, summonSetting.FromTopSummer);
             //actor.Attrs.InheritAttrs(summoner.Attrs, summonSetting);
-            actor.Init(row);
+            
             addUnitToWorld(actor);
 
             return actor;

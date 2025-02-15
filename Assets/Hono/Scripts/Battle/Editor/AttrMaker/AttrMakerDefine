@@ -17,10 +17,13 @@ int AttrInvincible 21
 int AttrHateTargetUid 22    
 int AttrLeaderUid 23
 int AttrCantNormalSkill 48  
-int AttrCantMove 49  
+int DisableInputMove 49  
 int AttrStunned 50  
 int AttrSA 51  
 int AttrIgnoreOtherMotion 52  
+
+int AttrResReplTplBaseId 53
+int AttrResReplTplOverrideId 54
 
 #HP
 int AttrHp   10000  //��ǰHP
