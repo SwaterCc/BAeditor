@@ -20,7 +20,7 @@ namespace Hono.Scripts.Battle.Core
         /// 运行时唯一ID
         /// </summary>
         public int Uid { get; private set; }
-        
+
         /// <summary>
         /// Tags
         /// </summary>
@@ -61,11 +61,15 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         private readonly MessageCollection _messageCollection;
 
-        ///Unit组件内部通信结构
+        /// <summary>
+        /// 组件位掩码
+        /// </summary>
+        private EUnitComponentKey _componentsBits;
+
         /// <summary>
         /// 逻辑组件
         /// </summary>
-        private readonly Dictionary<Type, UnitComponent> _components = new(6);
+        private readonly Dictionary<EUnitComponentKey, UnitComponent> _components = new(8);
 
         /// <summary>
         /// 加载完成后回调
@@ -116,7 +120,7 @@ namespace Hono.Scripts.Battle.Core
         {
             UnitTransform = new UnitTransform();
             Attrs = new AttrCollection(this);
-            
+
             Tags = new TagCollection();
             MainCancelToken = new CancellationTokenSource();
 
@@ -133,15 +137,55 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 添加组件
         /// </summary>
-        /// <param name="component"></param>
-        protected T addComponent<T>(T component) where T : UnitComponent
+        protected T addComponent<T>(EUnitComponentKey key) where T : UnitComponent, IGPoolObject, new()
         {
-            if (!_components.TryAdd(component.GetType(), component))
+            if ((_componentsBits | key) > 0)
             {
-                Debug.Log($"{GetType()} 添加组件 {component.GetType()} Failed!");
+                Debug.Log($"{GetType()} 添加组件 {typeof(T)} Failed!");
+                return null;
             }
-            
+
+            T component = GPool<T>.Pool.Rent();
+            _components.Add(key, component);
+            _componentsBits |= key;
             return component;
+        }
+        
+        /// <summary>
+        /// 添加组件
+        /// </summary>
+        protected T addComponent<T>() where T : UnitComponent, IGPoolObject, new()
+        {
+            EUnitComponentKey key = EUnitComponentKeyHelper.GetKey<T>();
+            if ((_componentsBits | key) > 0)
+            {
+                Debug.Log($"{GetType()} 添加组件 {typeof(T)} Failed!");
+                return null;
+            }
+
+            T component = GPool<T>.Pool.Rent();
+            _components.Add(key, component);
+            _componentsBits |= key;
+            return component;
+        }
+
+        /// <summary>
+        /// 添加组件
+        /// </summary>
+        protected void addComponents(EUnitComponentKey bits)
+        {
+            _componentsBits = bits;
+            foreach (var key in EUnitComponentKeyHelper.GetList())
+            {
+                if ((bits | key) > 0)
+                {
+                    var component = key.GetComponent();
+                    if (!_components.TryAdd(component.GetKey(), component))
+                    {
+                        Debug.Log($"{GetType()} 添加组件 {component.GetType()} Failed!");
+                    }
+                }
+            }
         }
 
         protected void addLoadTask(UniTask task)
@@ -149,7 +193,7 @@ namespace Hono.Scripts.Battle.Core
             _loadTasks.Add(task);
         }
 
-        protected void Init()
+        public void Init()
         {
             Uid = World.Current.GetUid();
 
@@ -224,13 +268,14 @@ namespace Hono.Scripts.Battle.Core
         {
             RecycleCallBack?.Invoke(this);
             MainCancelToken.Cancel();
-            
+
             foreach (var component in _components.Values)
             {
                 component.Recycle();
             }
+
             _components.Clear();
-            
+
             _abilityDriver.Clear();
             _evtListenerCollection.Clear();
             _messageCollection.Clear();
@@ -304,9 +349,22 @@ namespace Hono.Scripts.Battle.Core
         /// 获取组件列表
         /// </summary>
         /// <returns></returns>
-        public Dictionary<Type, UnitComponent> GetComponents()
+        public Dictionary<EUnitComponentKey, UnitComponent> GetComponents()
         {
             return _components;
+        }
+
+        /// <summary>
+        /// 获取组件
+        /// </summary>
+        /// <returns>会返回空</returns>
+        public UnitComponent GetComponent(EUnitComponentKey key)
+        {
+            if ((_componentsBits | key) > 0)
+                return _components[key];
+
+            Debug.Log($"{GetType()} 获取组件 {key} 失败!");
+            return null;
         }
 
         /// <summary>
@@ -316,16 +374,9 @@ namespace Hono.Scripts.Battle.Core
         /// <returns>会返回空</returns>
         public T GetComponent<T>() where T : UnitComponent
         {
-            if (_components.TryGetValue(typeof(T), out var component))
-                return (T)component;
-
-            foreach (var comp in _components.Values)
-            {
-                if (comp is T unitComponent)
-                {
-                    return unitComponent;
-                }
-            }
+            EUnitComponentKey key = EUnitComponentKeyHelper.GetKey<T>();
+            if ((_componentsBits | key) > 0)
+                return (T)_components[key];
 
             Debug.Log($"{this.GetType()} 获取组件 {typeof(T)} 失败!");
 
@@ -340,20 +391,13 @@ namespace Hono.Scripts.Battle.Core
         /// <returns></returns>
         public bool TryGetComponent<T>(out T comp) where T : UnitComponent
         {
-            comp = null;
-            if (_components.TryGetValue(typeof(T), out var result))
-            {
-                comp = (T)result;
-                return true;
-            }
+            EUnitComponentKey key = EUnitComponentKeyHelper.GetKey<T>();
 
-            foreach (var unitComp in _components.Values)
+            comp = null;
+            if ((_componentsBits | key) > 0)
             {
-                if (unitComp is T tComp)
-                {
-                    comp = tComp;
-                    return true;
-                }
+                comp = (T)_components[key];
+                return true;
             }
 
             Debug.Log($"{GetType()} 获取组件 {typeof(T)} 失败!");

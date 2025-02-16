@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle
     /// G池，通用对象池，用于管理代码运行中的逻辑对象
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class GPool<T> : IAPool where T : class, IGPoolObject, new()
+    public class GPool<T> : IGPool where T : class, IGPoolObject, new()
     {
         /// <summary>
         /// 稳定池

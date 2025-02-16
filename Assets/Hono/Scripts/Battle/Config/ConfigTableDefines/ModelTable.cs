@@ -77,24 +77,49 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
-            /// 描述
+            /// ����
             /// </summary>
             public string Desc { get; private set; }
             
             /// <summary>
-            /// PE模板路径
+            /// UO��������
             /// </summary>
-            public string ModelPath { get; private set; }
+            public int UOProxyType { get; private set; }
             
             /// <summary>
-            /// 模型半径
+            /// ����Layer��
             /// </summary>
-            public float Radius { get; private set; }
+            public int ProxyLayer { get; private set; }
             
             /// <summary>
-            /// 模型高
+            /// ������Դģ��Id
             /// </summary>
-            public float Height { get; private set; }
+            public int ResReplTplId { get; private set; }
+            
+            /// <summary>
+            /// ģ������
+            /// </summary>
+            public float ModelScale { get; private set; }
+            
+            /// <summary>
+            /// P1(���Σ�������뾶��������ĳ�)
+            /// </summary>
+            public float P1 { get; private set; }
+            
+            /// <summary>
+            /// �����壬������ĸ�
+            /// </summary>
+            public float P2 { get; private set; }
+            
+            /// <summary>
+            /// ������Ŀ�
+            /// </summary>
+            public float P3 { get; private set; }
+            
+            /// <summary>
+            /// ColliderCenter
+            /// </summary>
+            public NumberArray ColliderCenter { get; private set; }
             
 
             public ModelRow()
@@ -116,11 +141,21 @@ namespace Hono.Scripts.Battle
                     
                     _row.Desc = parseString(line[1]);
             
-                    _row.ModelPath = parseString(line[2]);
+                    _row.UOProxyType = parseInt(line[2]);
             
-                    _row.Radius = parseNumber(line[3]);
+                    _row.ProxyLayer = parseInt(line[3]);
             
-                    _row.Height = parseNumber(line[4]);
+                    _row.ResReplTplId = parseInt(line[4]);
+            
+                    _row.ModelScale = parseNumber(line[5]);
+            
+                    _row.P1 = parseNumber(line[6]);
+            
+                    _row.P2 = parseNumber(line[7]);
+            
+                    _row.P3 = parseNumber(line[8]);
+            
+                    _row.ColliderCenter = parseNumberArray(line[9]);
             
                 }
             }

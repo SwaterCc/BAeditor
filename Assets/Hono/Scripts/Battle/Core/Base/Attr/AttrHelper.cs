@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Base
 {
-    public class AttrHelper : Singleton<AttrHelper>, IBattleFrameworkInit
+    public class AttrHelper : Singleton<AttrHelper>
     {
         public class AttrLink
         {
@@ -119,7 +119,7 @@ namespace Hono.Scripts.Battle.Base
         public void Init()
         {
             //初始化属性关联
-            foreach (var attrRow in ConfigManager.Table<AttrTable>().GetTable())
+            foreach (var attrRow in ConfigDataBase.Table<AttrTable>().GetTable())
             {
                 if (!Enum.IsDefined(typeof(EAttrType), attrRow.Key))
                 {

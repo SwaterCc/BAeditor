@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public class HpCompCtorParams : ComponentCtorParams
+    public class HpCompCtorParams : UnitCompCtorParams
     {
         /// <summary>
         /// 能否被选中
@@ -122,7 +122,7 @@ namespace Hono.Scripts.Battle.Core
         public void MakeDamage(HitInfo hitInfo)
         {
             _damagePipLine.Init(hitInfo);
-            LuaInterface.Instance.CalcDamageResults(hitInfo.Attacker, Unit, _damagePipLine);
+            LuaBridge.Instance.CalcDamageResults(hitInfo.Attacker, Unit, _damagePipLine);
             beHurt(_damagePipLine.GetDamageResult().DamageValue, (EDamageType)hitInfo.DamageRow.DamageType);
         }
 

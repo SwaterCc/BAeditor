@@ -12,10 +12,10 @@ namespace Editor.BattleEditor.TagEditor {
 			public void ShowRightMenu();
 		}
 		
-		public TagTreeRoot TagTreeData;
+		public TagTree TagTreeData;
 		private TagEditorInfos _tagInfos;
 
-		public TagTreeView(TagTreeRoot tagTreeData, TagEditorInfos infos = null) : base(new TreeViewState()) {
+		public TagTreeView(TagTree tagTreeData, TagEditorInfos infos = null) : base(new TreeViewState()) {
 			TagTreeData = tagTreeData;
 			_tagInfos = infos;
 

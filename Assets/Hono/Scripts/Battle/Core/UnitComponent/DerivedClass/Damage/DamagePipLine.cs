@@ -125,7 +125,7 @@ namespace Hono.Scripts.Battle.Core
 
             foreach (var addiId in _damageRow.AdditiveId)
             {
-                var damageAddi = ConfigManager.Table<DamageAdditiveTable>().Get(addiId);
+                var damageAddi = ConfigDataBase.Table<DamageAdditiveTable>().Get(addiId);
                 var funcInfo = GPool<DamageFuncInfo>.Pool.Rent();
                 funcInfo.ValueFuncName = damageAddi.ApplyFuncName;
                 funcInfo.ConditionIds = damageAddi.ConditionIds;
@@ -136,7 +136,7 @@ namespace Hono.Scripts.Battle.Core
 
             foreach (var multiId in _damageRow.MultiplyId)
             {
-                var damageMultiply = ConfigManager.Table<DamageMultiplyTable>().Get(multiId);
+                var damageMultiply = ConfigDataBase.Table<DamageMultiplyTable>().Get(multiId);
                 var funcInfo = GPool<DamageFuncInfo>.Pool.Rent();
                 funcInfo.ValueFuncName = damageMultiply.ApplyFuncName;
                 funcInfo.ConditionIds = damageMultiply.ConditionIds;

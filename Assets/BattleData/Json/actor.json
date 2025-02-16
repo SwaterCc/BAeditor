@@ -1,0 +1,30 @@
+﻿{
+  "actor":{
+    "ActorType":"Character",
+    "BaseAttrTableId":1,
+    "ModelId":1,
+    "Tags":[
+      123,
+      222
+    ],
+    
+    "AbilityList":[
+      {
+        "abilityId":1222,
+        "execute":false
+      }
+    ],
+    
+    "ComponentList":[
+      "HpComp",
+      "CombatComp"
+    ],
+    
+    "ComponentCtor":{
+      "CombatComp":{
+        "SkillList":[112,3322],
+        "CombatEnergyIds":[222]
+      }
+    }
+  }
+}

@@ -73,7 +73,7 @@ namespace Hono.Scripts.Battle
         private AbilityData buffAbility;
         public AbilityData BuffAbility => buffAbility;
         
-        private void OnEnable()
+        public void AddAbilityData()
         {
             if (buffAbility == null)
             {

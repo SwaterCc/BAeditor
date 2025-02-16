@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d38054bcf4df42db862c858a9f8be945, type: 3}
+  m_Name: 0
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  id: 0
+  fileName: 
+  desc: 
+  path: 
+  skillIcon: 
+  skillType: 0
+  enterCdType: 0
+  skillCd: 0
+  skillResCheck: []
+  skillResCost: []
+  rotToTarget: 0
+  skillDuration: 0
+  tags: 
+  isExclusive: 0
+  disableMoveInput: 0
+  skillAbility: {fileID: 0}
+  castRange: 0
+  skillTargetType: 0
+  targetFilter:
+    conditions: []
+    attrCompares: []
+  selectRangeShape:
+    ShapeType: 0
+    Rot:
+      x: 0
+      y: 0
+      z: 0
+    Offset:
+      x: 0
+      y: 0
+      z: 0
+    Length: 0
+    Width: 0
+    Height: 0
+    Radius: 0

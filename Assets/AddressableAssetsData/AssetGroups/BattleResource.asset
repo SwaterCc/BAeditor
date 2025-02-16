@@ -20,6 +20,34 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 159dc56d17db06a449e5a3d86ace7f22
+    m_Address: Assets/BattleData/Assets/BattleData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - resReplTpl
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 339c15a327a1499a9bd3dcb86e12c974
+    m_Address: Assets/Hono/Scripts/Battle/LuaScript
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - luaScript
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4ce8b646e2db49141ab9c8baccf1b95f
+    m_Address: Assets/BattleModel
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c1105ce11baa1e746a0f1e9c6bf9317d
+    m_Address: Assets/BattleData/Json
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - aJson
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f85c3d35323b0034cb170f794ad7f33d
+    m_Address: Assets/BattleModel/Base
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7656358260d6a194f8b387281fc83166, type: 2}
   m_SchemaSet:

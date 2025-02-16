@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Define;
@@ -28,51 +29,25 @@ namespace Hono.Scripts.Battle
         LoadFinish,
         LoadFailed,
     }
-
-    public interface IBattleFramework { }
-
-    public interface IBattleFrameworkEnterExit : IBattleFramework
-    {
-        public void OnEnterBattle();
-        public void OnExitBattle();
-    }
-
-    public interface IBattleFrameworkInit : IBattleFramework
-    {
-        public void Init();
-    }
-
-    public interface IBattleFrameworkAsyncInit : IBattleFramework
-    {
-        public UniTask AsyncInit();
-    }
-
-    public interface IBattleFrameworkTick : IBattleFramework
-    {
-        public void Tick(float dt);
-    }
-
+    
     #endregion
 
     public class BattleManager : MonoSingleton<BattleManager>
     {
         private EBattleDataLoadState _battleDataLoadState;
 
-        private readonly List<IBattleFramework> _frameworks = new(32);
-        private readonly List<IBattleFrameworkInit> _frameworkInits = new(16);
-        private readonly List<IBattleFrameworkEnterExit> _frameworkEnterExits = new(16);
-        private readonly List<IBattleFrameworkAsyncInit> _frameworkAsyncLoads = new(16);
-        private readonly List<IBattleFrameworkTick> _frameworkTicks = new(16);
+        private readonly List<IBattleFoundation> _foundations = new(32);
+     
         
         private Paths _paths;
-        private TagTreeRoot _tagTree;
+        public TagTree TagTree;
         
         public static Paths Paths => Instance._paths;
-        public static TagTreeRoot TagTree => Instance._tagTree;
+        public static TagTree TagTreeInstance => Instance.TagTree;
         
         public Action<bool> ExitBattleCallBack { get; set; }
+        public event Action OnLateUpdate;
         private WorldInstance _currentWorldInstance;
-        public static WorldInstance WorldInstance => Instance._currentWorldInstance;
         private string _formScene;
         protected void Start()
         {
@@ -81,43 +56,21 @@ namespace Hono.Scripts.Battle
 
         #region 框架初始化
 
-        private void register(IBattleFramework framework)
+        private void register(IBattleFoundation framework)
         {
-            if (!_frameworks.Contains(framework))
+            if (!_foundations.Contains(framework))
             {
-                _frameworks.Add(framework);
-            }
-            else
-            {
-                return;
-            }
-
-            if (framework is IBattleFrameworkInit frameworkInit)
-            {
-                _frameworkInits.Add(frameworkInit);
-            }
-
-            if (framework is IBattleFrameworkAsyncInit frameworkLoad)
-            {
-                _frameworkAsyncLoads.Add(frameworkLoad);
-            }
-
-            if (framework is IBattleFrameworkEnterExit frameworkEnterExit)
-            {
-                _frameworkEnterExits.Add(frameworkEnterExit);
-            }
-
-            if (framework is IBattleFrameworkTick frameworkTick)
-            {
-                _frameworkTicks.Add(frameworkTick);
+                _foundations.Add(framework);
             }
         }
 
         private void registerAllFrameworks()
         {
-            register(ConfigManager.Instance);
-            //register(AssetManager.Instance);
-            register(LuaInterface.Instance);
+            register(ConfigDataBase.Instance);
+            register(AssetManager.Instance);
+            register(LuaBridge.Instance);
+            register(ActorJsonAssemblerFactory.Instance);
+            register(ResReplTplDateBase.Instance);
         }
 
         /// <summary>
@@ -125,54 +78,13 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public async void InitEnv()
         {
-            //反射缓存
-            //Ability.InitAbilityFuncCache();
-
-#if UNITY_EDITOR
-#else
-			 //加载路径资源文件
-            try
-            {
-	            _paths = await Addressables.LoadAssetAsync<Paths>(BattleConstValue.PathFile);
-            }
-            catch (Exception e)
-            {
-	            Debug.LogError("path文件加载失败！战斗环境初始化失败！");
-	            throw;
-            }
-#endif
             //注册所有的框架
             registerAllFrameworks();
-
-            //初始化框架
-            initFramework();
-
-            //加载资源
-            asyncFrameworkLoad();
-        }
-
-        private void initFramework()
-        {
-            foreach (var framework in _frameworkInits)
-            {
-                framework.Init();
-            }
-        }
-
-        private async void asyncFrameworkLoad()
-        {
-            var beginTime = Time.realtimeSinceStartup;
-            _battleDataLoadState = EBattleDataLoadState.Loading;
-            List<UniTask> tasks = new List<UniTask>();
-
-            foreach (var framework in _frameworkAsyncLoads)
-            {
-                tasks.Add(framework.AsyncInit());
-            }
-
+            
             try
             {
-                await UniTask.WhenAll(tasks);
+                //加载资源
+                await asyncFrameworkLoad();
             }
             catch (Exception e)
             {
@@ -181,8 +93,33 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
+            initOtherFoundations();
+            
             _battleDataLoadState = EBattleDataLoadState.LoadFinish;
+        }
+        
+        private async UniTask asyncFrameworkLoad()
+        {
+            var beginTime = Time.realtimeSinceStartup;
+            _battleDataLoadState = EBattleDataLoadState.Loading;
+            List<UniTask> tasks = new List<UniTask>();
+
+            foreach (var foundation in _foundations)
+            {
+                tasks.Add(foundation.AsyncLoad());
+            }
+
+            await UniTask.WhenAll(tasks);
+            
             Debug.Log($"战斗数据加载完成！耗时 {Time.realtimeSinceStartup - beginTime}");
+        }
+
+        private void initOtherFoundations()
+        {
+            //Ability模板加载
+            //Ability.InitAbilityFuncCache();
+            //属性链接初始化
+            AttrHelper.Instance.Init();
         }
 
         #endregion
@@ -209,9 +146,14 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            WorldInstance?.Tick(Time.deltaTime);
+            World.Current?.Tick(Time.deltaTime);
         }
-        
+
+        private void LateUpdate()
+        {
+            OnLateUpdate?.Invoke();
+        }
+
         /// <summary>
         ///     退出战斗玩法返回主界面
         /// </summary>
@@ -219,16 +161,6 @@ namespace Hono.Scripts.Battle
         {
             Debug.Log("[BattleManager] ExitBattle");
             _currentWorldInstance.Exit();
-            
-            /*if (LoadingPanel.Exists)
-            {
-                LoadingPanel.Instance.Show(() =>
-                {
-                    //返回进入时的场景
-                    SceneManager.LoadScene(_formScene);
-                    ExitBattleCallBack?.Invoke(result);
-                });
-            }*/
         }
         #endregion
     }

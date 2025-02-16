@@ -75,7 +75,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public CheckBoxData selectRangeShape = new();
         
-        private void OnEnable()
+        public void AddAbilityData()
         {
             if (skillAbility == null)
             {

@@ -19,24 +19,23 @@ namespace Hono.Scripts.Battle
         /// 代理池子
         /// </summary>
         private readonly Queue<UnityObjectProxy> _proxyPool = new(1000);
-
+        
         /// <summary>
         ///  创建代理
         /// </summary>
         /// <param name="unit"></param>
-        /// <param name="type"></param>
-        public async UniTask CreateUnityObjectProxy(Unit unit, EUnityObjectProxyType type)
+        public async UniTask CreateUnityObjectProxy(Unit unit)
         {
             UnityObjectProxy proxy = null;
             proxy = _proxyPool.Count == 0 ? new UnityObjectProxy() : _proxyPool.Dequeue();
             proxy.BindUnit(unit);
-            await proxy.LoadProxy(type);
+            await proxy.LoadProxy();
         }
 
         /// <summary>
         /// 删除代理
         /// </summary>
-        public void RemoveUnitObjectProxy(int uid, EUnityObjectProxyType type)
+        public void RemoveUnitObjectProxy(int uid)
         {
             if (!_runningProxies.Remove(uid, out var proxy))
             {

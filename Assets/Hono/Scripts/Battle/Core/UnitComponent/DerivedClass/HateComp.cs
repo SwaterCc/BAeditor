@@ -15,7 +15,6 @@ namespace Hono.Scripts.Battle.Core
     [JsonUnitComponent]
     public partial class HateComp : UnitComponent,IGPoolObject
     {
-        [JsonUnitComponentParam]
         public int GetHateTargetType;
         private float _duration;
         private RangeFilterSetting _setting;

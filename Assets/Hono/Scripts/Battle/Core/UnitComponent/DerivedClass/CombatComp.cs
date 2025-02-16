@@ -1,15 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Hono.Scripts.Battle.Core.Base;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
+
+    [JsonUnitCompCtorParams(typeof(CombatComp))]
+    public class CombatCompCtorParams : UnitCompCtorParams
+    {
+        [JsonUnitCompCtorParam("默认拥有的技能列表")]
+        public List<int> SkillList = new();
+        [JsonUnitCompCtorParam("默认拥有的战斗资源")]
+        public List<int> CombatEnergyIds = new();
+    }
+    
     /// <summary>
     /// 战斗组件
     /// </summary>
     [JsonUnitComponent]
-    public partial class CombatComp : UnitComponent,IGPoolObject
+    public partial class CombatComp : UnitComponent, IGPoolObject
     {
         /// <summary>
         /// 技能列表
@@ -32,6 +43,21 @@ namespace Hono.Scripts.Battle.Core
             _energyCtrl = new CombatEnergyCtrl(Unit);
         }
 
+        public override void Ctor(UnitCompCtorParams ctorParams)
+        {
+            var combatCtorParams = (CombatCompCtorParams)ctorParams;
+            
+            foreach (var skillId in combatCtorParams.SkillList)
+            {
+                LearnSkill(skillId);
+            }
+
+            foreach (var energyId in combatCtorParams.CombatEnergyIds)
+            {
+                AddEnergyType(energyId);
+            }
+        }
+
         public override void Init()
         {
             //var combatParams = (CombatCompCtorParams)CtorParams;
@@ -44,6 +70,7 @@ namespace Hono.Scripts.Battle.Core
             {
                 skill.OnTick(dt);
             }
+
             _energyCtrl.Tick(dt);
         }
 
@@ -62,7 +89,7 @@ namespace Hono.Scripts.Battle.Core
             _skills.Clear();
             _energyCtrl.Clear();
         }
-    
+
         public void LearnSkill(int skillId)
         {
             if (!_skills.ContainsKey(skillId))
@@ -156,6 +183,24 @@ namespace Hono.Scripts.Battle.Core
         }
 
         /// <summary>
+        /// 添加能量类型
+        /// </summary>
+        /// <param name="energyId"></param>
+        public void AddEnergyType(int energyId)
+        {
+            _energyCtrl.AddEnergyType(energyId);
+        }
+
+        /// <summary>
+        /// 删除能量类型
+        /// </summary>
+        /// <param name="energyId"></param>
+        public void RemoveEnergyType(int energyId)
+        {
+            _energyCtrl.RemoveEnergyType(energyId);
+        }
+
+        /// <summary>
         /// 资源检测
         /// </summary>
         private bool checkSkillResourceEnough(Skill skill)
@@ -186,7 +231,8 @@ namespace Hono.Scripts.Battle.Core
                     case EBattleResourceType.Buff:
                         var buffId = resItem.param1;
                         var layerCount = resItem.param2;
-                        if (!Unit.TryGetComponent(out BuffComp buffComp) || buffComp.GetBuffLayer(buffId, Unit.Uid) < layerCount)
+                        if (!Unit.TryGetComponent(out BuffComp buffComp) ||
+                            buffComp.GetBuffLayer(buffId, Unit.Uid) < layerCount)
                         {
                             return false;
                         }

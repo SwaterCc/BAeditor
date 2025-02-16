@@ -1,4 +1,6 @@
-﻿namespace Hono.Scripts.Battle.Core
+﻿using UnityEngine;
+
+namespace Hono.Scripts.Battle.Core
 {
     public partial class WorldInstance
     {
@@ -13,13 +15,10 @@
 
             protected override void OnTick(float dt)
             {
-                WorldInstance.WorldRoot.Tick(dt);
+                Debug.Log("Gaming...........");
             }
 
-            protected override void OnExit()
-            {
-                throw new System.NotImplementedException();
-            }
+            protected override void OnExit() { }
         }
     }
 }

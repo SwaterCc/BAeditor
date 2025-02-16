@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
 {
@@ -8,49 +9,94 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 碰撞器
         /// </summary>
-        private Collider _collider;
-        
+        public Collider collider;
+
         /// <summary>
         /// 物理组件
         /// </summary>
-        private Rigidbody _rigidbody;
+        public Rigidbody rigidbody;
 
         /// <summary>
         /// 移动组件
         /// </summary>
-        private CharacterController _characterController;
+        public CharacterController characterController;
 
         public void OnEnable()
         {
-            TryGetComponent(out _rigidbody);
-            TryGetComponent(out _collider);
-            TryGetComponent(out _characterController);
-
-            if (!_rigidbody && !_collider && !_characterController)
+            if (!rigidbody && !collider && !characterController)
             {
                 Debug.LogError("找不到物理组件");
                 return;
             }
 
-            if (_rigidbody != null && !_rigidbody.isKinematic )
+            if (rigidbody != null && !rigidbody.isKinematic)
             {
-                _rigidbody.isKinematic = true;
+                rigidbody.isKinematic = true;
                 Debug.LogError("刚体的 isKinematic 没勾选");
-                return;
+            }
+        }
+
+        public void Set(float p1, float p2, float p3)
+        {
+            if (characterController != null)
+            {
+                characterController.radius = p1;
+                characterController.height = p2;
+            }
+
+            if (collider != null)
+            {
+                switch (collider)
+                {
+                    case SphereCollider sphereCollider:
+                        sphereCollider.radius = p1;
+                        break;
+                    case CapsuleCollider capsuleCollider:
+                        capsuleCollider.radius = p1;
+                        capsuleCollider.height = p2;
+                        break;
+                    case BoxCollider boxCollider:
+                        boxCollider.size = new Vector3(p1, p2, p3);
+                        break;
+                }
+            }
+        }
+
+        public void SetCenter(Vector3 center)
+        {
+            if (characterController != null)
+            {
+                characterController.center = center;
+            }
+
+            if (collider != null)
+            {
+                switch (collider)
+                {
+                    case SphereCollider sphereCollider:
+                        sphereCollider.center = center;
+                        break;
+                    case CapsuleCollider capsuleCollider:
+                        capsuleCollider.center = center;
+                        break;
+                    case BoxCollider boxCollider:
+                        boxCollider.center = center;
+                        break;
+                }
             }
         }
 
         public bool Move(Vector3 velocity)
         {
-            if (_characterController != null)
+            if (characterController != null)
             {
-                _characterController.SimpleMove(velocity);
+                characterController.SimpleMove(velocity);
                 return true;
             }
 
-            if (_rigidbody != null)
+            if (rigidbody != null)
             {
-                _rigidbody.linearVelocity = velocity;
+                rigidbody.linearVelocity = velocity;
                 return true;
             }
 

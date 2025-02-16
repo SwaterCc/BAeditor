@@ -23,9 +23,9 @@ namespace Editor.BattleEditor.TagEditor {
 		}
 
 		private void Init() {
-			var tagTree = AssetDatabase.LoadAssetAtPath<TagTreeRoot>(BattleEditorPath.TagTreePath);
+			var tagTree = AssetDatabase.LoadAssetAtPath<TagTree>(BattleEditorPath.TagTreePath);
 			if (tagTree == null) {
-				tagTree = CreateInstance<TagTreeRoot>();
+				tagTree = CreateInstance<TagTree>();
 				AssetDatabase.CreateAsset(tagTree, BattleEditorPath.TagTreePath);
 			}
 

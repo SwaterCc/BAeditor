@@ -19,7 +19,7 @@ namespace Editor.BattleEditor.CSVConfig
 
 		[MenuItem("Tools/重新加载表")]
 		public static void ReLoad() {
-			ConfigManager.Instance.ReloadAll();
+			ConfigDataBase.Instance.ReloadAll();
 		}
 	}
     

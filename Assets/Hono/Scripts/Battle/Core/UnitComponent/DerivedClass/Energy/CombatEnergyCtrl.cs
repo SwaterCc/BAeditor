@@ -23,6 +23,7 @@ namespace Hono.Scripts.Battle.Core
             private readonly UnitEventListener _attackListener = new(EEventType.OnSkillUseSuccess);
             private readonly UnitEventListener _beHitListener = new(EEventType.OnBeHit);
             private readonly UnitEventListener _killEnemyListener = new(EEventType.OnHit, true);
+
             public CombatEnergyCtrl(Unit unit)
             {
                 _unit = unit;
@@ -57,7 +58,20 @@ namespace Hono.Scripts.Battle.Core
             public void AddEnergyType(int energyTypeId)
             {
                 //读表设置初始值
+                if (!ConfigDataBase.Table<CombatEnergyTable>().TryGet(energyTypeId, out var energyRow))
+                {
+                    Debug.LogError($"找不到对应的资源类型{energyTypeId}");
+                    return;
+                }
+
                 var info = GPool<CombatEnergyInfo>.Pool.Rent();
+
+                info.SetField(ECombatEnergyField.CurrentValue,             energyRow.InitValue);
+                info.SetField(ECombatEnergyField.EnergyGetWhenSkillHitAdd, energyRow.AttackGetValue);
+                info.SetField(ECombatEnergyField.EnergyGetWhenBeHitAdd,    energyRow.BehitGetValue);
+                info.SetField(ECombatEnergyField.EnergyGetWhenIdleAdd,     energyRow.IdleGetValue);
+                info.SetField(ECombatEnergyField.MaxValueAdd,              energyRow.EnergyMax);
+
                 _combatEnergy.Add(energyTypeId, info);
             }
 

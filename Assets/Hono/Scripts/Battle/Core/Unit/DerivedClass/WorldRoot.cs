@@ -9,7 +9,8 @@
 
         public WorldRoot()
         {
-            VFXComp = addComponent(new VFXComp());
+            VFXComp = addComponent<VFXComp>();
+            SetAttr(EAttrType.AttrModelId, 1);
         }
 
         protected override void onTick(float dt) { }

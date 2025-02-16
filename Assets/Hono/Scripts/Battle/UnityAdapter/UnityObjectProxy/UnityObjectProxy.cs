@@ -18,12 +18,12 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 绑定的Unit
         /// </summary>
-        private Unit _unit;
+        public Unit Unit { get; private set; }
 
         /// <summary>
         /// 代理类型
         /// </summary>
-        private EUnityObjectProxyType _proxyType;
+        private EUOProxyType _proxyType;
 
         /// <summary>
         /// 场景对象的代理
@@ -51,34 +51,50 @@ namespace Hono.Scripts.Battle
         private readonly Dictionary<int, VFXGameObject> _vfxCache = new(20);
 
         /// <summary>
+        /// model表数据
+        /// </summary>
+        private ModelTable.ModelRow _modelRow;
+
+        /// <summary>
         /// 绑定Unit
         /// </summary>
         /// <param name="unit"></param>
         public void BindUnit(Unit unit)
         {
-            _unit = unit;
+            Unit = unit;
+            int modelId = Unit.GetAttr(EAttrType.AttrModelId);
+            if (modelId > 0 && ConfigDataBase.Table<ModelTable>().TryGet(modelId, out _modelRow))
+            {
+                throw new Exception("找不到Model配置");
+            }
         }
 
         /// <summary>
         /// 加载资源代理
         /// </summary>
-        public async UniTask LoadProxy(EUnityObjectProxyType proxyType)
+        public async UniTask LoadProxy()
         {
-            _proxyType = proxyType;
-            string path = getProxyPath();
-            _proxy = await UGameObjectPool.Instance.Get(path, _unit.MainCancelToken);
+            _proxyType = (EUOProxyType)_modelRow.UOProxyType;
+            string path = BattleConstValue.GetUOProxyPath(_proxyType);
+            _proxy = await UGameObjectPool.Instance.Get(path, Unit.MainCancelToken);
             if (_proxy == null)
             {
                 throw new Exception($"Load UnityObjectProxy :{path} failed!");
             }
 
-            //初始化位置
-            _proxy.transform.localPosition = _unit.UnitTransform.Pos;
-            _proxy.transform.localRotation = _unit.UnitTransform.Rot;
+            //初始化
+            _proxy.transform.localPosition = Unit.UnitTransform.Pos;
+            _proxy.transform.localRotation = Unit.UnitTransform.Rot;
+            _proxy.transform.localScale = _modelRow.ModelScale * Vector3.one;
 
-            if (!_proxy.TryGetComponent(out _physicsHandler))
+            //初始化层级
+            _proxy.layer = BattleConstValue.GetLayerMask((EUOProxyLayerType)_modelRow.ProxyLayer);
+
+            if (_proxy.TryGetComponent(out _physicsHandler))
             {
-                Debug.Log("找不到物理组件");
+                _physicsHandler.Set(_modelRow.P1, _modelRow.P2, _modelRow.P3);
+                _physicsHandler.SetCenter(new Vector3(_modelRow.ColliderCenter[0], _modelRow.ColliderCenter[1],
+                                                      _modelRow.ColliderCenter[2]));
             }
 
             await loadActorModel();
@@ -89,6 +105,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public void OnRecycle()
         {
+            BattleManager.Instance.OnLateUpdate -= LateUpdate;
             foreach (var vfxGameObject in _vfxCache.Values)
             {
                 UGameObjectPool.Instance.Recycle(vfxGameObject.VFXInfo.Path, vfxGameObject.GameObject);
@@ -106,43 +123,27 @@ namespace Hono.Scripts.Battle
 
             if (_proxy)
             {
-                UGameObjectPool.Instance.Recycle(getProxyPath(), _proxy);
+                UGameObjectPool.Instance.Recycle(BattleConstValue.GetUOProxyPath(_proxyType), _proxy);
             }
-
-            _unit = null;
+           
+            Unit = null;
             _proxy = null;
             _physicsHandler = null;
             _proxyType = 0;
         }
 
-        private string getProxyPath()
-        {
-            string path = "";
-            switch (_proxyType)
-            {
-                case EUnityObjectProxyType.OnlyTransform:
-                    break;
-                case EUnityObjectProxyType.Collider:
-                    break;
-                case EUnityObjectProxyType.Actor:
-                    break;
-            }
-
-            return path;
-        }
-
         private async UniTask loadActorModel()
         {
-            var baseId = _unit.GetAttr(EAttrType.AttrResReplTplBaseId);
-            var overrideId = _unit.GetAttr(EAttrType.AttrResReplTplBaseId);
+            var baseId = Unit.GetAttr(EAttrType.AttrResReplTplBaseId);
+            var overrideId = Unit.GetAttr(EAttrType.AttrResReplTplBaseId);
 
             if (baseId + overrideId == 0)
             {
                 return;
             }
 
-            var baseModelPath = ResReplTplDB.Instance.GetModelPath(baseId);
-            var overrideModelPath = ResReplTplDB.Instance.GetModelPath(overrideId);
+            var baseModelPath = ResReplTplDateBase.Instance.GetModelPath(baseId);
+            var overrideModelPath = ResReplTplDateBase.Instance.GetModelPath(overrideId);
 
             GameObject model = null;
 
@@ -150,16 +151,17 @@ namespace Hono.Scripts.Battle
 
             if (!string.IsNullOrEmpty(_actorModelPath))
             {
-                model = await UGameObjectPool.Instance.Get(_actorModelPath, _unit.MainCancelToken);
+                model = await UGameObjectPool.Instance.Get(_actorModelPath, _proxy.transform, Vector3.zero,
+                                                           Unit.MainCancelToken);
             }
             else
             {
-                Debug.LogError($"Unit:{_unit} 加载ActorModel失败 ");
+                Debug.LogError($"Unit:{Unit} 加载ActorModel失败 ");
             }
 
             if (model == null || !model.TryGetComponent(out _actorModelHandler))
             {
-                Debug.LogError($"Unit:{_unit} 加载ActorModelHandel 失败 ");
+                Debug.LogError($"Unit:{Unit} 加载ActorModelHandel 失败 ");
             }
         }
 
@@ -200,7 +202,7 @@ namespace Hono.Scripts.Battle
             }
 
             var vfx = await UGameObjectPool.Instance.Get(vfxInfo.Path, parent, vfxInfo.Pos, vfxInfo.Rot,
-                                                         _unit.MainCancelToken);
+                                                         Unit.MainCancelToken);
 
             if (vfx == null) return;
 
@@ -209,6 +211,11 @@ namespace Hono.Scripts.Battle
                 vfx.transform.rotation = vfxInfo.Rot;
             }
 
+            if (_vfxCache.Count == 0)
+            {
+                BattleManager.Instance.OnLateUpdate += LateUpdate;
+            }
+            
             _vfxCache.Add(vfxInfo.Uid, new VFXGameObject() { VFXInfo = vfxInfo, GameObject = vfx });
         }
 
@@ -217,6 +224,11 @@ namespace Hono.Scripts.Battle
             if (_vfxCache.Remove(vfxInfo.Uid, out VFXGameObject vfxGO))
             {
                 UGameObjectPool.Instance.Recycle(vfxGO.VFXInfo.Path, vfxGO.GameObject);
+            }
+            
+            if (_vfxCache.Count == 0)
+            {
+                BattleManager.Instance.OnLateUpdate -= LateUpdate;
             }
         }
 

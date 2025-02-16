@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using UnityEngine;
 
 #endregion
@@ -52,5 +53,29 @@ namespace Hono.Scripts.Battle
         public static LayerMask ActorEnemy = 1 << 12;
 
         public static LayerMask ActorLayerMask = ActorPawn | ActorAlly | ActorEnemy;
+
+        
+        public static string GetUOProxyPath(EUOProxyType proxyType)
+        {
+            string path = "";
+            switch (proxyType)
+            {
+          
+            }
+            return path;
+        }
+        
+        public static LayerMask GetLayerMask(EUOProxyLayerType layerType)
+        {
+            switch (layerType)
+            {
+                case EUOProxyLayerType.ActorLayer:
+                    return ActorLayerMask;
+                case EUOProxyLayerType.SceneObject:
+                    return 0;
+            }
+
+            return 0;
+        }
     }
 }

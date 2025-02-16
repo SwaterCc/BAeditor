@@ -18,11 +18,24 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// 场景代理对象类型
     /// </summary>
-    public enum EUnityObjectProxyType
+    public enum EUOProxyType
     {
-        OnlyTransform,
-        Collider,
-        Actor,
+        ActorProxy = 1,
+        TransformProxy = 11,
+        CubeColliderProxy = 12,
+        SphereColliderProxy = 13,
+        CapsuleColliderProxy = 14,
+        CubeTriggerProxy = 101,
+        CylinderTriggerProxy = 102,
+    }
+
+    /// <summary>
+    /// 代理对象的层级
+    /// </summary>
+    public enum EUOProxyLayerType
+    {
+        ActorLayer = 1,
+        SceneObject = 2,
     }
 
     /// <summary>

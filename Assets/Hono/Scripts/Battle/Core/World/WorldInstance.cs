@@ -134,10 +134,11 @@ namespace Hono.Scripts.Battle.Core
 
         public WorldInstance(int sceneTableId)
         {
+            register(GPoolManager.Instance);
             register(EventManager.Instance);
             register(MessageManager.Instance);
-
-            _sceneRow = ConfigManager.Table<BattleSceneTable>().Get(sceneTableId);
+            
+            _sceneRow = ConfigDataBase.Table<BattleSceneTable>().Get(sceneTableId);
 
             _worldStates = new Dictionary<EWorldState, WorldState>()
             {
@@ -281,6 +282,7 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         private void addUnitToWorld(Unit unit)
         {
+            unit.Init();
             unit.Load();
 
             if (unit.IsLoadFinish)
@@ -328,17 +330,18 @@ namespace Hono.Scripts.Battle.Core
         /// <returns></returns>
         public Actor CreatePlayerCharacter(string actorJsonKey)
         {
+            Actor actor = GPool<Actor>.Pool.Rent();
             try
             {
-                Actor actor = ActorPool.Instance.Get(actorJsonKey);
+                ActorJsonAssemblerFactory.Instance.Assemble(actorJsonKey, actor);
                 //从外部获取养成数据
                 //actro.Attrs.InitAttr();
-                actor.Init();
                 addUnitToWorld(actor);
                 return actor;
             }
             catch (Exception e)
             {
+                GPool<Actor>.Pool.Recycle(actor);
                 Debug.LogError(e);
                 return null;
             }
@@ -351,15 +354,18 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         public Actor CreateActor(string actorJsonKey)
         {
+            Actor actor = GPool<Actor>.Pool.Rent();
             try
             {
-                Actor actor = ActorPool.Instance.Get(actorJsonKey);
-                actor.Init();
+                ActorJsonAssemblerFactory.Instance.Assemble(actorJsonKey, actor);
+                //从外部获取养成数据
+                //actro.Attrs.InitAttr();
                 addUnitToWorld(actor);
                 return actor;
             }
             catch (Exception e)
             {
+                GPool<Actor>.Pool.Recycle(actor);
                 Debug.LogError(e);
                 return null;
             }
@@ -380,24 +386,27 @@ namespace Hono.Scripts.Battle.Core
         /// 召唤Actor
         /// </summary>
         /// <param name="summoner"></param>
-        /// <param name="actorTableId"></param>
+        /// <param name="actorJsonKey"></param>
         /// <param name="summonSetting"></param>
         /// <returns></returns>
-        public Actor SummonActor(Actor summoner, int actorTableId, SummonSetting summonSetting)
+        public Actor SummonActor(Actor summoner, string actorJsonKey, SummonSetting summonSetting)
         {
-            if (!ConfigManager.Table<ActorTable>().TryGet(actorTableId, out var row))
+            Actor actor = GPool<Actor>.Pool.Rent();
+            try
             {
+               
+                ActorJsonAssemblerFactory.Instance.Assemble(actorJsonKey, actor);
+                actor.Attrs.SetSummoned(summoner, summonSetting.FromTopSummer);
+                //actor.Attrs.InheritAttrs(summoner.Attrs, summonSetting);
+                addUnitToWorld(actor);
+                return actor;
+            }
+            catch (Exception e)
+            {
+                GPool<Actor>.Pool.Recycle(actor);
+                Debug.LogError(e);
                 return null;
             }
-
-            Actor actor = ActorPool.Instance.Get(row.PrototypeJsonName);
-            actor.Init();
-            actor.Attrs.SetSummoned(summoner, summonSetting.FromTopSummer);
-            //actor.Attrs.InheritAttrs(summoner.Attrs, summonSetting);
-            
-            addUnitToWorld(actor);
-
-            return actor;
         }
 
         /// <summary>

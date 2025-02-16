@@ -74,7 +74,7 @@ namespace Hono.Scripts.Battle.Core
                 ? Unit.GetAttr(EAttrType.AttrResReplTplBaseId)
                 : Unit.GetAttr(EAttrType.AttrResReplTplOverrideId);
 
-            var path = ResReplTplDB.Instance.GetVFXPath(tplId, key);
+            var path = ResReplTplDateBase.Instance.GetVFXPath(tplId, key);
             
             if (string.IsNullOrEmpty(path))
             {

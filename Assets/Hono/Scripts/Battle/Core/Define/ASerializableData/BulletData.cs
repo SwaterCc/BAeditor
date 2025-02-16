@@ -60,7 +60,7 @@ namespace Hono.Scripts.Battle
         private AbilityData bulletAbility;
         public AbilityData BulletAbility => bulletAbility;
 
-        private void OnEnable()
+        public void AddAbilityData()
         {
             if (bulletAbility == null)
             {

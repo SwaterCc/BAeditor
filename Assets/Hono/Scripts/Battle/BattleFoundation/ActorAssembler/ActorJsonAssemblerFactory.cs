@@ -1,80 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Core.Base;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Hono.Scripts.Battle
 {
     /// <summary>
     /// 组装器
     /// </summary>
-    public class ActorJsonAssemblerFactory : Singleton<ActorJsonAssemblerFactory>
+    public class ActorJsonAssemblerFactory : BattleFoundation<ActorJsonAssemblerFactory>
     {
-        private readonly Dictionary<string, ActorCtorConfig> _jsonParseInfos = new();
+        private readonly Dictionary<string, ActorAssembleInfo> _actorAssembleInfos = new();
 
         /// <summary>
-        /// 打包时json数据会写为静态数据
+        /// 运行时加载的json数据内容
         /// </summary>
-        private static string[] _jsonName = { };
+        private static readonly List<string> _jsonName = new();
         /// <summary>
-        /// 打包时json数据会写为静态数据
+        /// 运行时加载的json数据文件名
         /// </summary>
-        private static string[] _jsonText = { };
+        private static readonly List<string> _jsonText = new();
 
+        /// <summary>
+        /// 加载
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        public override async UniTask AsyncLoad()
+        {
+            var jsons = await Addressables.LoadAssetsAsync<TextAsset>("aJson").ToUniTask();
+            foreach (var textAsset in jsons)
+            {
+                _jsonName.Add(textAsset.name);
+                _jsonText.Add(textAsset.text);
+            }
+        }
+        
         /// <summary>
         /// 初始化解析器
         /// </summary>
         public void Init()
         {
-            for (int i = 0; i < _jsonName.Length; i++)
+            //创建解析信息
+            for (int i = 0; i < _jsonName.Count; i++)
             {
-                _jsonParseInfos.Add(_jsonName[i], ActorConfigParser.Parse(_jsonText[i]));
+                _actorAssembleInfos.Add(_jsonName[i], ActorAssembleInfo.Parser.Parse(_jsonText[i]));
             }
         }
-        
-        public ActorCtorConfig GetActorAssembleInfo(string jsonKey)
+
+        public bool Assemble(string jsonKey, Actor actor)
         {
-            return _jsonParseInfos.GetValueOrDefault(jsonKey, null);
+            if (!_actorAssembleInfos.TryGetValue(jsonKey, out var assembleInfo))
+            {
+                return false;
+            }
+
+            actor.Ctor(assembleInfo);
+            return true;
         }
-    }
+
     
-    public static class ActorConfigParser
-    {
-        public static ActorCtorConfig Parse(string json)
-        {
-            var jsonObject = JObject.Parse(json);
-            var actorData = jsonObject["actor"];
-
-            var assembleInfo = new ActorCtorConfig();
-
-            // 解析组件列表
-            var componentList = actorData["componentList"] as JArray;
-            foreach (var componentName in componentList)
-            {
-                if (Enum.TryParse(componentName.ToString(), ignoreCase: true, out EUnitComponentKey compKey))
-                {
-                    if (ActorCtorConfig.ComponentFactories.TryGetValue(compKey, out var factory))
-                    {
-                        assembleInfo.Factories.Add(factory);
-                    }
-                }
-            }
-
-            // 解析组件初始化参数
-            var componentCtor = actorData["componentCtor"] as JObject;
-            foreach (var ctorEntry in componentCtor)
-            {
-                if (Enum.TryParse(ctorEntry.Key, ignoreCase: true, out EUnitComponentKey compKey))
-                {
-                    if (ActorCtorConfig.ParamParsers.TryGetValue(compKey, out var parser))
-                    {
-                        ActorCtorConfig.ComponentFactories[compKey].UnCtorParams = parser.Parse(ctorEntry.Value);
-                    }
-                }
-            }
-
-            return assembleInfo;
-        }
     }
 }
