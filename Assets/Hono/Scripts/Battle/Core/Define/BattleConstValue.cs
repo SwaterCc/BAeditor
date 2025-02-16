@@ -57,12 +57,26 @@ namespace Hono.Scripts.Battle
         
         public static string GetUOProxyPath(EUOProxyType proxyType)
         {
-            string path = "";
             switch (proxyType)
             {
-          
+                case EUOProxyType.ActorProxy:
+                    return "Assets/BattleModel/Prototype/UOProxy/ActorProxy.prefab";
+                case EUOProxyType.TransformProxy:
+                    return "Assets/BattleModel/Prototype/UOProxy/TransformProxy.prefab";
+                case EUOProxyType.CubeColliderProxy:
+                    return "Assets/BattleModel/Prototype/UOProxy/CubeColliderProxy.prefab";
+                case EUOProxyType.SphereColliderProxy:
+                    return "Assets/BattleModel/Prototype/UOProxy/SphereColliderProxy.prefab";
+                case EUOProxyType.CapsuleColliderProxy:
+                    return "Assets/BattleModel/Prototype/UOProxy/CapsuleColliderProxy.prefab";
+                case EUOProxyType.CubeTriggerProxy:
+                    return "Assets/BattleModel/Prototype/UOProxy/CubeTriggerProxy.prefab";
+                case EUOProxyType.CylinderTriggerProxy:
+                    return "Assets/BattleModel/Prototype/UOProxy/CylinderTriggerProxy.prefab";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(proxyType), proxyType, null);
             }
-            return path;
+            return null;
         }
         
         public static LayerMask GetLayerMask(EUOProxyLayerType layerType)
@@ -70,7 +84,7 @@ namespace Hono.Scripts.Battle
             switch (layerType)
             {
                 case EUOProxyLayerType.ActorLayer:
-                    return ActorLayerMask;
+                    return 10;
                 case EUOProxyLayerType.SceneObject:
                     return 0;
             }

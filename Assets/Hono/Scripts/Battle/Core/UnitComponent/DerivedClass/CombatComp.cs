@@ -40,7 +40,7 @@ namespace Hono.Scripts.Battle.Core
         public CombatComp()
         {
             _skills = new Dictionary<int, Skill>();
-            _energyCtrl = new CombatEnergyCtrl(Unit);
+            _energyCtrl = new CombatEnergyCtrl(this);
         }
 
         public override void Ctor(UnitCompCtorParams ctorParams)
@@ -60,7 +60,6 @@ namespace Hono.Scripts.Battle.Core
 
         public override void Init()
         {
-            //var combatParams = (CombatCompCtorParams)CtorParams;
             _energyCtrl.Init();
         }
 
@@ -92,7 +91,7 @@ namespace Hono.Scripts.Battle.Core
 
         public void LearnSkill(int skillId)
         {
-            if (!_skills.ContainsKey(skillId))
+            if (_skills.ContainsKey(skillId))
             {
                 Debug.LogError($"重复学习技能 {skillId}");
                 return;

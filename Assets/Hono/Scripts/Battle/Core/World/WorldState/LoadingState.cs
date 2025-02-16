@@ -37,7 +37,7 @@ namespace Hono.Scripts.Battle.Core
                 //进入加载场景
                 await SceneManager.LoadSceneAsync("BattleLoading");
                 //异步加载游戏场景
-                _asyncOperation = SceneManager.LoadSceneAsync(WorldInstance._sceneRow.ScenePath);
+                _asyncOperation = SceneManager.LoadSceneAsync("BattleDebugScene");
                 if (_asyncOperation == null)
                     throw new NullReferenceException($"加载场景{WorldInstance._sceneRow.ScenePath}失败");
                 _asyncOperation.allowSceneActivation = false;
@@ -121,17 +121,17 @@ namespace Hono.Scripts.Battle.Core
                 //worldRoot放置
                 Debug.Log("WorldRoot放置..");
                 WorldInstance.WorldRoot = new WorldRoot();
+                WorldInstance.WorldRoot.SetAttr(EAttrType.AttrModelId, 1);
                 try
                 {
                     await UnityAdapter.Instance.CreateUnityObjectProxy(WorldInstance.WorldRoot);
-                    WorldInstance.addUnitToWorld(WorldInstance.WorldRoot); 
                 }
                 catch (Exception e)
                 {
                     Debug.LogError("加载世界代理对象失败！");
                     Debug.LogError(e);
-                    WorldInstance.addUnitToWorld(WorldInstance.WorldRoot); 
                 }
+                WorldInstance.addUnitToWorld(WorldInstance.WorldRoot); 
                 
                 _stage = LoadingStage.LoadFinish;
             }

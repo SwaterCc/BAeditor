@@ -63,7 +63,7 @@ namespace Hono.Scripts.Battle
         {
             Unit = unit;
             int modelId = Unit.GetAttr(EAttrType.AttrModelId);
-            if (modelId > 0 && ConfigDataBase.Table<ModelTable>().TryGet(modelId, out _modelRow))
+            if (!ConfigDataBase.Table<ModelTable>().TryGet(modelId, out _modelRow))
             {
                 throw new Exception("找不到Model配置");
             }
@@ -93,8 +93,11 @@ namespace Hono.Scripts.Battle
             if (_proxy.TryGetComponent(out _physicsHandler))
             {
                 _physicsHandler.Set(_modelRow.P1, _modelRow.P2, _modelRow.P3);
-                _physicsHandler.SetCenter(new Vector3(_modelRow.ColliderCenter[0], _modelRow.ColliderCenter[1],
-                                                      _modelRow.ColliderCenter[2]));
+                if (_modelRow.ColliderCenter.Count == 3)
+                {
+                    _physicsHandler.SetCenter(new Vector3(_modelRow.ColliderCenter[0], _modelRow.ColliderCenter[1],
+                                                          _modelRow.ColliderCenter[2]));
+                }
             }
 
             await loadActorModel();

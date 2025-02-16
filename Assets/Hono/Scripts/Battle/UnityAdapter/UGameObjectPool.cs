@@ -88,6 +88,7 @@ namespace Hono.Scripts.Battle
                 try
                 {
                     result = await Addressables.LoadAssetAsync<GameObject>(path).ToUniTask(cancellationToken: cancelSource.Token);
+                    result = Instantiate(result);
                 }
                 catch (OperationCanceledException)
                 {
@@ -104,7 +105,7 @@ namespace Hono.Scripts.Battle
                 result = objectPool.Dequeue();
             }
 
-            result.transform.SetParent(parent);
+            result.transform.SetParent(parent, worldSpace);
             if (worldSpace)
             {
                 result.transform.position = position;

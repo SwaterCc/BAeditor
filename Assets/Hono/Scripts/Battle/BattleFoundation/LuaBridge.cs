@@ -23,19 +23,11 @@ namespace Hono.Scripts.Battle
         public override async UniTask AsyncLoad()
         {
             _luaEnv = new LuaEnv();
-
+            _luaEnv.AddLoader(CustomMyLoader);
             try
             {
-                var bytesList = await Addressables.LoadAssetsAsync<byte[]>("luaScript").ToUniTask();
-
-                foreach (var luaFileByteArray in bytesList)
-                {
-                    var luaFile = System.Text.Encoding.UTF8.GetString(luaFileByteArray);
-                    _luaEnv.DoString(luaFile);
-                }
-
+                await UniTask.RunOnThreadPool((() => _luaEnv.DoString("require 'luaMain'")));
                 loadDamageFunc();
-
                 Debug.Log("LuaInterface Init Finish！");
             }
             catch (Exception e)
@@ -43,7 +35,19 @@ namespace Hono.Scripts.Battle
                 Debug.LogError(e);
             }
         }
-
+        
+        private byte[] CustomMyLoader(ref string fileName)
+        {
+            byte[] byArrayReturn = null; //返回数据
+            //定义lua路径
+            string luaPath = Application.dataPath + "/Hono/Scripts/Battle/LuaScript/" + fileName + ".lua";
+            //读取lua路径中指定lua文件内容
+            string strLuaContent = File.ReadAllText(luaPath);
+            //数据类型转换
+            byArrayReturn = System.Text.Encoding.UTF8.GetBytes(strLuaContent);
+            return byArrayReturn;
+        }
+        
         private void Reload()
         {
             string luaScriptsPath = Application.dataPath + "/Hono/Scripts/Battle/LuaScript";

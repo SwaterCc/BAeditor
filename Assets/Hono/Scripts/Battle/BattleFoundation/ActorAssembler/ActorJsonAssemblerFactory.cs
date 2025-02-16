@@ -19,11 +19,11 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 运行时加载的json数据内容
         /// </summary>
-        private static readonly List<string> _jsonName = new();
+        private static readonly List<string> JsonName = new();
         /// <summary>
         /// 运行时加载的json数据文件名
         /// </summary>
-        private static readonly List<string> _jsonText = new();
+        private static readonly List<string> JsonText = new();
 
         /// <summary>
         /// 加载
@@ -34,9 +34,11 @@ namespace Hono.Scripts.Battle
             var jsons = await Addressables.LoadAssetsAsync<TextAsset>("aJson").ToUniTask();
             foreach (var textAsset in jsons)
             {
-                _jsonName.Add(textAsset.name);
-                _jsonText.Add(textAsset.text);
+                JsonName.Add(textAsset.name);
+                JsonText.Add(textAsset.text);
             }
+
+            Init();
         }
         
         /// <summary>
@@ -45,21 +47,21 @@ namespace Hono.Scripts.Battle
         public void Init()
         {
             //创建解析信息
-            for (int i = 0; i < _jsonName.Count; i++)
+            for (int i = 0; i < JsonName.Count; i++)
             {
-                _actorAssembleInfos.Add(_jsonName[i], ActorAssembleInfo.Parser.Parse(_jsonText[i]));
+                _actorAssembleInfos.Add(JsonName[i], ActorAssembleInfo.Parser.Parse(JsonText[i]));
             }
         }
 
-        public bool Assemble(string jsonKey, Actor actor)
+        public void Assemble(string jsonKey, Actor actor)
         {
             if (!_actorAssembleInfos.TryGetValue(jsonKey, out var assembleInfo))
             {
-                return false;
+                Debug.LogError($"找不到JsonKey {jsonKey}");
+                return;
             }
 
             actor.Ctor(assembleInfo);
-            return true;
         }
 
     

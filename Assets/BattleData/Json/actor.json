@@ -2,7 +2,7 @@
   "actor":{
     "ActorType":"Character",
     "BaseAttrTableId":1,
-    "ModelId":1,
+    "ModelId":2,
     "Tags":[
       123,
       222

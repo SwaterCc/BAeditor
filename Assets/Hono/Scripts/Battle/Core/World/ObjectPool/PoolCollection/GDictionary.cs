@@ -80,14 +80,14 @@ namespace Hono.Scripts.Battle.ObjectPool
         {
             if (_dictionary.Remove(key, out var value))
             {
-                if (key is IAPoolRefCount keyRefCount)
+                if (key is IGPoolObject keyPoolObject)
                 {
-                    keyRefCount.RefCount.RemoveReference();
+                    GPoolManager.Instance.RecycleAObject(keyPoolObject);
                 }
-
-                if (value is IAPoolRefCount valueRefCount)
+                
+                if (value is IGPoolObject valuePoolObject)
                 {
-                    valueRefCount.RefCount.RemoveReference();
+                    GPoolManager.Instance.RecycleAObject(valuePoolObject);
                 }
 
                 return true;
@@ -100,14 +100,14 @@ namespace Hono.Scripts.Battle.ObjectPool
         {
             if (_dictionary.Remove(key, out value))
             {
-                if (key is IAPoolRefCount keyRefCount)
+                if (key is IGPoolObject keyPoolObject)
                 {
-                    keyRefCount.RefCount.RemoveReference();
+                    GPoolManager.Instance.RecycleAObject(keyPoolObject);
                 }
-
-                if (value is IAPoolRefCount valueRefCount)
+                
+                if (value is IGPoolObject valuePoolObject)
                 {
-                    valueRefCount.RefCount.RemoveReference();
+                    GPoolManager.Instance.RecycleAObject(valuePoolObject);
                 }
 
                 return true;
@@ -138,13 +138,9 @@ namespace Hono.Scripts.Battle.ObjectPool
 
         public void Clear()
         {
-            foreach (var item in _dictionary.Values)
+            foreach (var item in _dictionary.Keys)
             {
-                if (item is IAPoolRefCount refCount)
-                {
-                    refCount.RefCount.RemoveReference();
-                }
-                else if (item is IGPoolObject poolObject)
+                if (item is IGPoolObject poolObject)
                 {
                     GPoolManager.Instance.RecycleAObject(poolObject);
                 }
@@ -152,11 +148,7 @@ namespace Hono.Scripts.Battle.ObjectPool
 
             foreach (var item in _dictionary.Values)
             {
-                if (item is IAPoolRefCount refCount)
-                {
-                    refCount.RefCount.RemoveReference();
-                }
-                else if (item is IGPoolObject poolObject)
+                if (item is IGPoolObject poolObject)
                 {
                     GPoolManager.Instance.RecycleAObject(poolObject);
                 }

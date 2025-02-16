@@ -2,4 +2,4 @@ Id,描述,UO代理类型,代理Layer层,基础资源模板Id,模型缩放,P1(球形，胶囊体半径，立方
 Id,Desc,UOProxyType,ProxyLayer,ResReplTplId,ModelScale,P1,P2,P3,ColliderCenter
 int,string,int,int,int,float,float,float,float,floatArray
 1,世界节点,11,2,,1,,,,
-1,测试单位,1,1,1001,1,,,,
+2,测试单位,1,1,1001,1,,,,

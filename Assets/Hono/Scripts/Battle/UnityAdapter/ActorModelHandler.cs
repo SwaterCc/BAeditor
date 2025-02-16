@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
@@ -9,28 +11,38 @@ namespace Hono.Scripts.Battle.Core
     /// </summary>
     public class ActorModelHandler : MonoBehaviour
     {
-        public Animator Animator;
-        public Dictionary<string, Transform> Point = new();
-        public string pointName;
+        public Animator animator;
+        public Dictionary<string, Transform> points = new();
+        
+        [Button("收集组件和挂点")]
         public void Bind()
         {
-            Animator = GetComponent<Animator>();
-            
+            animator = GetComponent<Animator>();
+            foreach (var child in transform)
+            {
+                if (child is Transform childTransform)
+                {
+                    if (childTransform.name == "_point")
+                    {
+                        points.Add(childTransform.name, childTransform);
+                    }
+                }
+            }
         }
 
         public void PlayAnim(string key)
         {
-            Animator?.Play(key);
+            animator?.Play(key);
         }
 
         public Transform GetPoint(string key)
         {
-            return Point.GetValueOrDefault(key, null);
+            return points.GetValueOrDefault(key, null);
         }
         
         public bool TryGetPoint(string key,out Transform point)
         {
-            return Point.TryGetValue(key, out point);
+            return points.TryGetValue(key, out point);
         }
     }
 }

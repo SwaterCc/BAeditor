@@ -142,6 +142,7 @@ namespace Hono.Scripts.Battle.Core
 
             _worldStates = new Dictionary<EWorldState, WorldState>()
             {
+                { EWorldState.Empty, new EmptyState(this) },
                 { EWorldState.Loading, new LoadingState(this) },
                 { EWorldState.Ready, new ReadyState(this) },
                 { EWorldState.Gaming, new GamingState(this) },
@@ -149,7 +150,7 @@ namespace Hono.Scripts.Battle.Core
                 { EWorldState.Score, new ScoreState(this) },
             };
 
-            _currentState = _nextState = EWorldState.NoInit;
+            _currentState = _nextState = EWorldState.Empty;
 
             Query = new WorldQuery(this);
         }
@@ -203,8 +204,8 @@ namespace Hono.Scripts.Battle.Core
             //世界更新
             if (_currentState != _nextState)
             {
-                _worldStates[_currentState]?.Exit();
-                _worldStates[_nextState]?.Enter(_currentState);
+                _worldStates[_currentState].Exit();
+                _worldStates[_nextState].Enter(_currentState);
                 _currentState = _nextState;
             }
 
@@ -352,11 +353,13 @@ namespace Hono.Scripts.Battle.Core
         ///  玩家角色(士兵)的属性来自养成转换
         ///  地图其他单位的属性来自静态配置，地图参数，等级影响等
         /// </summary>
-        public Actor CreateActor(string actorJsonKey)
+        public Actor CreateActor(string actorJsonKey, Vector3 position, Quaternion rot)
         {
             Actor actor = GPool<Actor>.Pool.Rent();
             try
             {
+                actor.UnitTransform.Pos = position;
+                actor.UnitTransform.Rot = rot;
                 ActorJsonAssemblerFactory.Instance.Assemble(actorJsonKey, actor);
                 //从外部获取养成数据
                 //actro.Attrs.InitAttr();

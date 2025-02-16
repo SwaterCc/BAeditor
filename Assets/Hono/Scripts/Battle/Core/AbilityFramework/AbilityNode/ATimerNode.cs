@@ -103,7 +103,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 _firstInterval = 0;
                 _isRunning = false;
 
-                ListenerBoard?.RefCount.RemoveReference();
+                GPool<VariableBoard>.Pool.Recycle(ListenerBoard);
                 ListenerBoard = null;
             }
 

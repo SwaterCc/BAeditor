@@ -35,14 +35,9 @@ namespace Hono.Scripts.Battle
     public class BattleManager : MonoSingleton<BattleManager>
     {
         private EBattleDataLoadState _battleDataLoadState;
-
         private readonly List<IBattleFoundation> _foundations = new(32);
-     
         
-        private Paths _paths;
         public TagTree TagTree;
-        
-        public static Paths Paths => Instance._paths;
         public static TagTree TagTreeInstance => Instance.TagTree;
         
         public Action<bool> ExitBattleCallBack { get; set; }

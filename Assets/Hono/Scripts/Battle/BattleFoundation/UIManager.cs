@@ -18,8 +18,10 @@ namespace Hono.Scripts.Battle
 
         public async UniTask LoadMainCanvas()
         {
-            _mainCanvas =
-                await Addressables.LoadAssetAsync<Canvas>("Assets/BattleModel/Prototype/UI/BattleCanvas.prefab");
+            var go =
+                await Addressables.LoadAssetAsync<GameObject>("Assets/BattleModel/Prototype/UI/MainCanvas.prefab");
+            go = Instantiate(go);
+            _mainCanvas = go.GetComponent<Canvas>();
         }
 
         public void SetLoadingUI(bool isShow)

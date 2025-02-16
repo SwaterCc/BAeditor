@@ -27,12 +27,6 @@ namespace Hono.Scripts.Battle
         
         public override async UniTask AsyncLoad()
         {
-            if (!BattleManager.Paths.paths.TryGetValue(EPathType.CSV, out var paths))
-            {
-                Debug.LogError("获取CSV路径失败");
-                return;
-            }
-            
             var csvList = await Addressables.LoadAssetsAsync<TextAsset>("aCSV");
             foreach (var textAsset in csvList)
             {
@@ -50,10 +44,11 @@ namespace Hono.Scripts.Battle
                 return;
             }
 
-            var classType = Type.GetType(textAsset.name);
+            var className = $"{typeof(ITableHelper).Namespace}.{textAsset.name}";
+            var classType = Type.GetType(className);
             if (classType == null)
             {
-                Debug.LogError($"{textAsset.name} 转换type失败！");
+                Debug.LogError($"{className} 转换type失败！");
                 return;
             }
 

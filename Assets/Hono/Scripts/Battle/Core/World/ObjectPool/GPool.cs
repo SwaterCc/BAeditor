@@ -12,11 +12,9 @@ namespace Hono.Scripts.Battle
     public struct APoolRefCount
     {
         private int _refCount;
-        private IGPoolObject _poolObject;
 
         public APoolRefCount(IGPoolObject poolObject, int refCount = 0)
         {
-            _poolObject = poolObject;
             _refCount = refCount;
         }
 
@@ -28,11 +26,6 @@ namespace Hono.Scripts.Battle
         public void RemoveReference()
         {
             --_refCount;
-            if (_refCount <= 0)
-            {
-                GPoolManager.Instance.RecycleAObject(_poolObject);
-                _poolObject = null;
-            }
         }
 
         public int GetReferenceCount()

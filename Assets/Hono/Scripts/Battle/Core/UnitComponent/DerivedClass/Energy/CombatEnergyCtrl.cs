@@ -19,22 +19,22 @@ namespace Hono.Scripts.Battle.Core
             /// <summary>
             /// 
             /// </summary>
-            private readonly Unit _unit;
+            private readonly CombatComp _combatComp;
             private readonly UnitEventListener _attackListener = new(EEventType.OnSkillUseSuccess);
             private readonly UnitEventListener _beHitListener = new(EEventType.OnBeHit);
             private readonly UnitEventListener _killEnemyListener = new(EEventType.OnHit, true);
 
-            public CombatEnergyCtrl(Unit unit)
+            public CombatEnergyCtrl(CombatComp combatComp)
             {
-                _unit = unit;
+                _combatComp = combatComp;
                 _attackListener.SetCallback(onAttack);
                 _beHitListener.SetCallback(onBeHit);
             }
 
             public void Init()
             {
-                _unit.RegisterEvtListener(_attackListener);
-                _unit.RegisterEvtListener(_beHitListener);
+                _combatComp.Unit.RegisterEvtListener(_attackListener);
+                _combatComp.Unit.RegisterEvtListener(_beHitListener);
             }
 
             public void Tick(float dt)
@@ -47,8 +47,8 @@ namespace Hono.Scripts.Battle.Core
 
             public void Clear()
             {
-                _unit.UnregisterEvtListener(_attackListener);
-                _unit.UnregisterEvtListener(_beHitListener);
+                _combatComp.Unit.UnregisterEvtListener(_attackListener);
+                _combatComp.Unit.UnregisterEvtListener(_beHitListener);
             }
 
             /// <summary>

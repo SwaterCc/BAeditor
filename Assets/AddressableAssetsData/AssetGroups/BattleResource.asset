@@ -37,11 +37,23 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 807619472e4624f42a2209d97367830f
+    m_Address: Assets/BattleData/PowerEditor/GameData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - aSerializableData
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c1105ce11baa1e746a0f1e9c6bf9317d
     m_Address: Assets/BattleData/Json
     m_ReadOnly: 0
     m_SerializedLabels:
     - aJson
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb2254f225de4f13a2810d9ed8eec84f
+    m_Address: Assets/BattleData/CSV
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - aCSV
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f85c3d35323b0034cb170f794ad7f33d
     m_Address: Assets/BattleModel/Base

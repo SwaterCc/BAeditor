@@ -45,7 +45,7 @@ namespace Hono.Scripts.Battle
         {
             if (_catchQueue.TryDequeue(out var board))
             {
-                board.RefCount.RemoveReference();
+                GPool<VariableBoard>.Pool.Recycle(board);
             }
 
             return board;

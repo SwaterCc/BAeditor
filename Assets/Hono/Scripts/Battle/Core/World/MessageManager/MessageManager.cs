@@ -25,17 +25,17 @@ namespace Hono.Scripts.Battle.Core
             _messageCaches.Clear();
         }
 
-        public void AddMsgCollection(MessageCollection collection)
+        public void AddMsgCollection(int uid,MessageCollection collection)
         {
-            if (_collections.TryAdd(collection.Unit.Uid, collection))
+            if (!_collections.TryAdd(uid, collection))
             {
                 Debug.LogError($"重复添加MessageCollection Uid:{collection.Unit.Uid}");
             }
         }
 
-        public void RemoveMsgCollection(MessageCollection collection)
+        public void RemoveMsgCollection(int uid,MessageCollection collection)
         {
-            _collections.Remove(collection.Unit.Uid);
+            _collections.Remove(uid);
         }
 
         /// <summary>

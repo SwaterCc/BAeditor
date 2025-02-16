@@ -1,0 +1,5 @@
+require "Misc"
+require "AffixModifer"
+require "AttrDefine"
+require "AttrRulesOfSuccession"
+require "DamageProcess"

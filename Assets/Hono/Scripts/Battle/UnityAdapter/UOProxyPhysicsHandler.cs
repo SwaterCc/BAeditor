@@ -40,8 +40,8 @@ namespace Hono.Scripts.Battle
         {
             if (characterController != null)
             {
-                characterController.radius = p1;
-                characterController.height = p2;
+                characterController.radius = p1 > 0 ? p1 : characterController.radius;
+                characterController.height = p2 > 0 ? p2 : characterController.height;
             }
 
             if (collider != null)
@@ -49,13 +49,16 @@ namespace Hono.Scripts.Battle
                 switch (collider)
                 {
                     case SphereCollider sphereCollider:
-                        sphereCollider.radius = p1;
+                        sphereCollider.radius = p1 > 0 ? p1 : sphereCollider.radius ;
                         break;
                     case CapsuleCollider capsuleCollider:
-                        capsuleCollider.radius = p1;
-                        capsuleCollider.height = p2;
+                        capsuleCollider.radius = p1 > 0 ? p1 : capsuleCollider.radius;
+                        capsuleCollider.height = p2 > 0 ? p2 : capsuleCollider.height;
                         break;
                     case BoxCollider boxCollider:
+                        p1 = p1 > 0 ? p1 : boxCollider.size.x;
+                        p2 = p2 > 0 ? p2 : boxCollider.size.y;
+                        p3 = p3 > 0 ? p3 : boxCollider.size.z;
                         boxCollider.size = new Vector3(p1, p2, p3);
                         break;
                 }

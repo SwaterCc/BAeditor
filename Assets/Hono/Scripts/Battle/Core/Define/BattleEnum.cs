@@ -129,7 +129,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 
         /// </summary>
-        NoInit = 0,
+        Empty = 0,
 
         /// <summary>
         /// 数据加载

@@ -56,11 +56,7 @@ namespace Hono.Scripts.Battle.ObjectPool
         {
             _list.Remove(item);
 
-            if (item is IAPoolRefCount refCount)
-            {
-                refCount.RefCount.RemoveReference();
-            }
-            else if (item is IGPoolObject poolObject)
+            if (item is IGPoolObject poolObject)
             {
                 GPoolManager.Instance.RecycleAObject(poolObject);
             }
@@ -70,11 +66,7 @@ namespace Hono.Scripts.Battle.ObjectPool
         {
             foreach (var item in _list)
             {
-                if (item is IAPoolRefCount refCount)
-                {
-                    refCount.RefCount.RemoveReference();
-                }
-                else if (item is IGPoolObject poolObject)
+                if (item is IGPoolObject poolObject)
                 {
                     GPoolManager.Instance.RecycleAObject(poolObject);
                 }

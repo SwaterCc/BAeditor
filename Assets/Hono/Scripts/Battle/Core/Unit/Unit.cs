@@ -157,7 +157,7 @@ namespace Hono.Scripts.Battle.Core
         protected T addComponent<T>() where T : UnitComponent, IGPoolObject, new()
         {
             EUnitComponentKey key = EUnitComponentKeyHelper.GetKey<T>();
-            if ((_componentsBits | key) > 0)
+            if ((_componentsBits & key) > 0)
             {
                 Debug.Log($"{GetType()} 添加组件 {typeof(T)} Failed!");
                 return null;
@@ -177,7 +177,7 @@ namespace Hono.Scripts.Battle.Core
             _componentsBits = bits;
             foreach (var key in EUnitComponentKeyHelper.GetList())
             {
-                if ((bits | key) > 0)
+                if ((bits & key) == key)
                 {
                     var component = key.GetComponent();
                     if (!_components.TryAdd(component.GetKey(), component))
@@ -198,7 +198,7 @@ namespace Hono.Scripts.Battle.Core
             Uid = World.Current.GetUid();
 
             EventManager.Instance.AddListenerCollection(Uid, _evtListenerCollection);
-            MessageManager.Instance.AddMsgCollection(_messageCollection);
+            MessageManager.Instance.AddMsgCollection(Uid, _messageCollection);
 
             foreach (var component in _components)
             {
@@ -290,7 +290,7 @@ namespace Hono.Scripts.Battle.Core
             RecycleCallBack = null;
 
             EventManager.Instance.RemoveListenerCollection(Uid, _evtListenerCollection);
-            MessageManager.Instance.RemoveMsgCollection(_messageCollection);
+            MessageManager.Instance.RemoveMsgCollection(Uid, _messageCollection);
         }
 
         /// <summary>
