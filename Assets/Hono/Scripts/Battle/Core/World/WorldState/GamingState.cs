@@ -11,11 +11,12 @@ namespace Hono.Scripts.Battle.Core
             protected override void OnEnter()
             {
                 //任务流程启动
+                Debug.Log("Gaming...........");
             }
 
             protected override void OnTick(float dt)
             {
-                Debug.Log("Gaming...........");
+                
             }
 
             protected override void OnExit() { }

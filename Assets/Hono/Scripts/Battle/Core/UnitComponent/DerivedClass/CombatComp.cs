@@ -113,6 +113,11 @@ namespace Hono.Scripts.Battle.Core
             }
         }
 
+        public bool HasSkill(int skillId)
+        {
+            return _skills.ContainsKey(skillId);
+        }
+        
         /// <summary>
         /// 忘记技能
         /// </summary>
@@ -170,10 +175,10 @@ namespace Hono.Scripts.Battle.Core
                 return;
             }
 
-            if (Unit.Uid == World.Current.PlayerCtrlUnit.Uid)
+            if (Unit.Uid == World.Current.PlayerControlUnit.Uid)
             {
                 //玩家操控，创建技能筛选器
-                SkillIndicator.Instance.Show(skill);
+                SkillIndicator.Instance.Open(Unit, skill);
             }
             else
             {

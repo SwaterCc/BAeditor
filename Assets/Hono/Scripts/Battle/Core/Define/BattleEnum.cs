@@ -429,7 +429,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 目标
         /// </summary>
-        Targeted,
+        Target,
         /// <summary>
         /// 坐标
         /// </summary>

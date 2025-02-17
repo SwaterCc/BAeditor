@@ -108,6 +108,31 @@ namespace Hono.Scripts.Battle.AbilityFramework
             _abilityCycle.Init();
             return true;
         }
+        
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <param name="driver"></param>
+        /// <param name="abilityData"></param>
+        /// <returns></returns>
+        public bool Init(Unit unit, AbilityDriver driver, AbilityData abilityData)
+        {
+            Unit = unit;
+            Driver = driver;
+            Data = abilityData;
+            if (abilityData == null)
+            {
+                Debug.LogError($"加载Ability 传入了空的abilityData 失败");
+                return false;
+            }
+
+            Id = Data.id;
+            TimeScaleFactory = 1;
+            _abilityCycle.Init();
+            return true;
+        }
+        
 
         /// <summary>
         /// 执行Ability的逻辑

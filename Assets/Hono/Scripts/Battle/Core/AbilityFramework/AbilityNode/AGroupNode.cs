@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
+using Unity.Collections;
 
 namespace Hono.Scripts.Battle.AbilityFramework
 {

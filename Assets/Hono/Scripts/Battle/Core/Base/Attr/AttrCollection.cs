@@ -45,13 +45,11 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         /// <param name="summoner"></param>
         /// <param name="fromTopSummer">基础来源是否来自</param>
-        public void SetSummoned(Unit summoner, bool fromTopSummer)
+        public void SetSummoned(Unit summoner)
         {
             _allowDirty = false;
             SetAttr(EAttrType.AttrIsSummoned, 1);
-            var sourceUid = fromTopSummer
-                ? summoner.GetAttr(EAttrType.AttrTopSourceActorUid)
-                : summoner.GetAttr(EAttrType.AttrSourceActorUid);
+            var sourceUid = summoner.GetAttr(EAttrType.AttrSourceActorUid);
             SetAttr(EAttrType.AttrSourceActorUid,    sourceUid);
             SetAttr(EAttrType.AttrTopSourceActorUid, summoner.GetAttr(EAttrType.AttrTopSourceActorUid));
             SetAttr(EAttrType.AttrFaction,           summoner.GetAttr(EAttrType.AttrFaction));
@@ -62,8 +60,8 @@ namespace Hono.Scripts.Battle.Core
         /// 继承属性
         /// </summary>
         /// <param name="parent"></param>
-        /// <param name="summonSetting"></param>
-        public void InheritAttrs(AttrCollection parent, WorldInstance.SummonSetting summonSetting) { }
+        /// <param name="inheritSetting"></param>
+        public void InheritAttrs(Unit parent, WorldInstance.InheritSetting inheritSetting) { }
 
         /// <summary>
         /// 获取属性快照

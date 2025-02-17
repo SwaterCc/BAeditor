@@ -53,32 +53,32 @@ namespace Hono.Scripts.Battle.Base
 
             public bool Init(AttrTable.AttrRow attrRow)
             {
-                if (setField(ref _final, attrRow.AttrFinal))
+                if (!setField(ref _final, attrRow.AttrFinal))
                 {
                     return false;
                 }
 
-                if (setField(ref _total, attrRow.AttrTotal))
+                if (!setField(ref _total, attrRow.AttrTotal))
                 {
                     return false;
                 }
 
-                if (setField(ref _add, attrRow.AttrAdd))
+                if (!setField(ref _add, attrRow.AttrAdd))
                 {
                     return false;
                 }
 
-                if (setField(ref _addEx, attrRow.AttrExAdd))
+                if (!setField(ref _addEx, attrRow.AttrExAdd))
                 {
                     return false;
                 }
 
-                if (setField(ref _sub, attrRow.AttrPer))
+                if (!setField(ref _sub, attrRow.AttrPer))
                 {
                     return false;
                 }
 
-                if (setField(ref _subEx, attrRow.AttrExPer))
+                if (!setField(ref _subEx, attrRow.AttrExPer))
                 {
                     return false;
                 }
@@ -113,7 +113,7 @@ namespace Hono.Scripts.Battle.Base
             }
         }
 
-        private static readonly Dictionary<EAttrType, AttrLink> _attrLinks = new();
+        private static readonly Dictionary<EAttrType, AttrLink> AttrLinks = new();
 
 
         public void Init()
@@ -133,13 +133,13 @@ namespace Hono.Scripts.Battle.Base
                     continue;
                 }
 
-                _attrLinks.Add((EAttrType)attrRow.Key, link);
+                AttrLinks.Add((EAttrType)attrRow.Key, link);
             }
         }
 
         public bool TryGetLink(EAttrType attrType, out AttrLink link)
         {
-            return _attrLinks.TryGetValue(attrType, out link);
+            return AttrLinks.TryGetValue(attrType, out link);
         }
 
         public void InitByTableRow(AttrCollection collection, EntityAttrBaseTable.EntityAttrBaseRow attrRow)
@@ -163,6 +163,11 @@ namespace Hono.Scripts.Battle.Base
             collection.SetAttr(EAttrType.AttrElementMagicRedPCTAdd,    attrRow.AttrElementMagicRedPCTAdd,    false);
             collection.SetAttr(EAttrType.AttrElementPhysicalPenPCTAdd, attrRow.AttrElementPhysicalPenPCTAdd, false);
             collection.SetAttr(EAttrType.AttrElementPhysicalRedPCTAdd, attrRow.AttrElementPhysicalRedPCTAdd, false);
+
+            foreach (var linksValue in AttrLinks.Values)
+            {
+                linksValue.UpdateLink(collection);
+            }
         }
     }
 }

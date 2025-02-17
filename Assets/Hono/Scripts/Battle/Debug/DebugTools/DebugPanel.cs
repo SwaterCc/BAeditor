@@ -7,19 +7,28 @@ namespace Hono.Scripts.Battle
 {
     public class DebugPanel : MonoBehaviour
     {
-        public InputField inputField;
-        public Button button;
+        public InputField createInputField;
+        public Button createButton;
+        
+        public InputField switchInputField;
+        public Button switchButton;
+        
         private bool _isListener;
 
         public void Start()
         {
-            button.onClick.AddListener(OnCreateButtonClick);
+            createButton.onClick.AddListener(OnCreateButtonClick);
+            switchButton.onClick.AddListener(OnSwitchButtonClick);
         }
 
         private void OnCreateButtonClick()
         {
             _isListener = true;
-           
+        }
+
+        private void OnSwitchButtonClick()
+        {
+            World.Current.SwitchPlayerControlUnit(int.Parse(switchInputField.text));
         }
 
         public void Update()
@@ -39,7 +48,7 @@ namespace Hono.Scripts.Battle
                     {
                         // 获取地面坐标
                         Vector3 groundPosition = hit.point;
-                        World.Current.CreateActor(inputField.text, groundPosition,Quaternion.identity);
+                        World.Current.CreateActor(createInputField.text, 1, groundPosition, Quaternion.identity);
 
                         // 关闭监听
                         _isListener = false;

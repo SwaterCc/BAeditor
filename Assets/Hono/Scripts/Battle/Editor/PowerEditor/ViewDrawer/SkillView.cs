@@ -74,17 +74,21 @@ namespace Editor.AbilityEditor
             switch (Data.skillTargetType)
             {
                 case ESkillTargetSelectType.Custom:
-                    EditorGUILayout.LabelField("自定义模式，在Ability中设置选敌逻辑");
+                    EditorGUILayout.LabelField("自定义模式，在Ability中自定义目标");
                     break;
                 case ESkillTargetSelectType.Front:
                 case ESkillTargetSelectType.Direction:
+                    EditorGUILayout.LabelField("方向模式，在Ability中可获取选取的方向");
+                    break;
                 case ESkillTargetSelectType.Position:
+                    EditorGUILayout.LabelField("坐标模式，在Ability中可获取选取的世界坐标，以及范围内选取一瞬间的目标列表");
                     if (SirenixEditorGUI.Button("范围选择形状", ButtonSizes.Large))
                     {
-                        SerializableOdinWindow.Open(Data.selectRangeShape);
+                        SerializableOdinWindow.Open(Data.rangeFilter);
                     }
                     break;
-                case ESkillTargetSelectType.Targeted:
+                case ESkillTargetSelectType.Target:
+                    EditorGUILayout.LabelField("目标模式，在Ability中可获取选取的目标Uid");
                     if (SirenixEditorGUI.Button("目标选择条件配置", ButtonSizes.Large))
                     {
                         SerializableOdinWindow.Open(Data.targetFilter);

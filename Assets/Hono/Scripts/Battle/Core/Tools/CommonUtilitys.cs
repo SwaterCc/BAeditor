@@ -157,7 +157,7 @@ namespace Hono.Scripts.Battle.Tools
 
     public static class ListExtensions
     {
-        /// <summary>
+        /*/// <summary>
         /// 移除列表中第一个匹配的元素，并将其与最后一个元素交换，高效地移除元素。
         /// </summary>
         /// <typeparam name="T">列表中元素的类型</typeparam>
@@ -213,6 +213,6 @@ namespace Hono.Scripts.Battle.Tools
             }
 
             return false;
-        }
+        }*/
     }
 }

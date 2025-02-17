@@ -74,7 +74,7 @@ namespace Hono.Scripts.Battle.Core
         /// 世界单位
         /// </summary>
         public WorldRoot WorldRoot { get; private set; }
-        
+
         /// <summary>
         /// Id生成器
         /// </summary>
@@ -121,14 +121,19 @@ namespace Hono.Scripts.Battle.Core
         private readonly List<Unit> _loadingCaches = new(1024);
 
         /// <summary>
+        /// 加载结束接口
+        /// </summary>
+        private readonly List<Unit> _loadingFinishList = new(1024);
+
+        /// <summary>
         /// 待删除列表
         /// </summary>
         private readonly List<Unit> _removeList = new(16);
-        
+
         /// <summary>
         /// 当前玩家控制的单位
         /// </summary>
-        public Unit PlayerCtrlUnit { get; private set; }
+        public Unit PlayerControlUnit { get; private set; }
 
         #region 周期
 
@@ -137,7 +142,7 @@ namespace Hono.Scripts.Battle.Core
             register(GPoolManager.Instance);
             register(EventManager.Instance);
             register(MessageManager.Instance);
-            
+
             _sceneRow = ConfigDataBase.Table<BattleSceneTable>().Get(sceneTableId);
 
             _worldStates = new Dictionary<EWorldState, WorldState>()
@@ -225,7 +230,7 @@ namespace Hono.Scripts.Battle.Core
 
                 if (unit.IsLoadFinish)
                 {
-                    _runningActorList.Add(unit);
+                    _loadingFinishList.Add(unit);
                 }
 
                 if (unit.HasLoadError)
@@ -234,8 +239,15 @@ namespace Hono.Scripts.Battle.Core
                 }
             }
 
+            foreach (var unit in _loadingFinishList)
+            {
+                _loadingCaches.RemoveSwapBack(unit);
+                addUnitToRunningList(unit);
+            }
+            _loadingFinishList.Clear();
+
             i = 0;
-            while (i < _loadingCaches.Count)
+            while (i < _runningActorList.Count)
             {
                 Unit unit = _runningActorList[i++];
                 unit.Tick(dt);
@@ -251,7 +263,7 @@ namespace Hono.Scripts.Battle.Core
                 //父类清理
                 unit.BaseClear();
                 //从运行队列删除
-                ListExtensions.RemoveSwapBack(_runningActorList, unit);
+                _runningActorList.RemoveSwapBack(unit);
             }
 
             _removeList.Clear();
@@ -284,6 +296,7 @@ namespace Hono.Scripts.Battle.Core
         private void addUnitToWorld(Unit unit)
         {
             unit.Init();
+            
             unit.Load();
 
             if (unit.IsLoadFinish)
@@ -353,7 +366,7 @@ namespace Hono.Scripts.Battle.Core
         ///  玩家角色(士兵)的属性来自养成转换
         ///  地图其他单位的属性来自静态配置，地图参数，等级影响等
         /// </summary>
-        public Actor CreateActor(string actorJsonKey, Vector3 position, Quaternion rot)
+        public Actor CreateActor(string actorJsonKey, int faction, Vector3 position, Quaternion rot)
         {
             Actor actor = GPool<Actor>.Pool.Rent();
             try
@@ -361,8 +374,7 @@ namespace Hono.Scripts.Battle.Core
                 actor.UnitTransform.Pos = position;
                 actor.UnitTransform.Rot = rot;
                 ActorJsonAssemblerFactory.Instance.Assemble(actorJsonKey, actor);
-                //从外部获取养成数据
-                //actro.Attrs.InitAttr();
+                actor.SetAttr(EAttrType.AttrFaction, faction);
                 addUnitToWorld(actor);
                 return actor;
             }
@@ -374,9 +386,8 @@ namespace Hono.Scripts.Battle.Core
             }
         }
 
-        public struct SummonSetting
+        public struct InheritSetting
         {
-            public bool FromTopSummer;
             public bool LifeWithSummoner;
             public string Rule;
             public int Param1;
@@ -390,17 +401,16 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         /// <param name="summoner"></param>
         /// <param name="actorJsonKey"></param>
-        /// <param name="summonSetting"></param>
+        /// <param name="inheritSetting"></param>
         /// <returns></returns>
-        public Actor SummonActor(Actor summoner, string actorJsonKey, SummonSetting summonSetting)
+        public Actor SummonActor(Actor summoner, string actorJsonKey, InheritSetting inheritSetting)
         {
             Actor actor = GPool<Actor>.Pool.Rent();
             try
             {
-               
                 ActorJsonAssemblerFactory.Instance.Assemble(actorJsonKey, actor);
-                actor.Attrs.SetSummoned(summoner, summonSetting.FromTopSummer);
-                //actor.Attrs.InheritAttrs(summoner.Attrs, summonSetting);
+                actor.Attrs.SetSummoned(summoner);
+                actor.Attrs.InheritAttrs(summoner, inheritSetting);
                 addUnitToWorld(actor);
                 return actor;
             }
@@ -463,6 +473,27 @@ namespace Hono.Scripts.Battle.Core
 
         #endregion
 
+        /// <summary>
+        /// 切换玩家控制单位
+        /// </summary>
+        public void SwitchPlayerControlUnit(int unitUid)
+        {
+            if (!Query.TryGetUnit(unitUid, out Unit unit))
+            {
+                Debug.Log($"找不到要操控的单位 {unit}");
+                return;
+            }
+
+            if (unit.DisablePlayerControl)
+            {
+                Debug.Log($"该单位禁止被操控 {unit}");
+                return;
+            }
+
+            PlayerControlUnit?.SetAttr(EAttrType.AttrIsPlayerCtrl, 0);
+            unit.SetAttr(EAttrType.AttrIsPlayerCtrl, 1);
+            PlayerControlUnit = unit;
+        }
 
         public void OpenStrategicMap()
         {

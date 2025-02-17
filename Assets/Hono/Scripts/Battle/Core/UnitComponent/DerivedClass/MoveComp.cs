@@ -48,7 +48,7 @@ namespace Hono.Scripts.Battle.Core
             }
 
             //属性上禁止了输入移动
-            if (Unit.GetAttr(EAttrType.DisableInputMove) == 0)
+            if (Unit.GetAttr(EAttrType.DisableInputMove) > 0)
             {
                 baseVec = Vector3.zero;
             }

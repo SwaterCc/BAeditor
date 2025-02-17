@@ -30,6 +30,7 @@ namespace Hono.Scripts.Battle
             proxy = _proxyPool.Count == 0 ? new UnityObjectProxy() : _proxyPool.Dequeue();
             proxy.BindUnit(unit);
             await proxy.LoadProxy();
+            _runningProxies.Add(unit.Uid, proxy);
         }
 
         /// <summary>

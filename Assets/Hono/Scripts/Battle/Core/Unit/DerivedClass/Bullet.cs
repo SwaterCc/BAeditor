@@ -71,7 +71,8 @@ namespace Hono.Scripts.Battle.Core
         /// 伤害来源类型
         /// </summary>
         private EDamageSourceType _damageSourceType;
-
+        
+        
         /// <summary>
         /// 锁定目标的子弹
         /// </summary>
@@ -82,6 +83,7 @@ namespace Hono.Scripts.Battle.Core
             int hitTargetDamageId,
             int hitNotTargetDamageId = 0)
         {
+            Uid = World.Current.GetUid();
             _attacker = attacker;
             _target = target;
             _bulletData = bulletData;
@@ -92,7 +94,7 @@ namespace Hono.Scripts.Battle.Core
             _target.RecycleCallBack += onTargetRemove;
             _bulletType = EBulletType.LockTargetBullet;
             _hitCountdown = 0;
-            AddAbility(_bulletData.id);
+            AddAbility(_bulletData.BulletAbility);
             _checkBox = new CheckBoxData()
             {
                 ShapeType = ECheckBoxShapeType.Sphere,
@@ -110,6 +112,7 @@ namespace Hono.Scripts.Battle.Core
             int hitTargetDamageId,
             int hitNotTargetDamageId)
         {
+            Uid = World.Current.GetUid();
             _attacker = attacker;
             _bulletData = bulletData;
             _hitTargetDamageId = hitTargetDamageId;
@@ -117,7 +120,7 @@ namespace Hono.Scripts.Battle.Core
             UnitTransform.Rot = Quaternion.AngleAxis(yAxisAngle, Vector3.up);
             _bulletType = EBulletType.DirectionBullet;
             _hitCountdown = 0;
-            AddAbility(_bulletData.id);
+            AddAbility(_bulletData.BulletAbility);
         }
 
         protected override void onBeforeFirstTick()

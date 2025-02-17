@@ -91,6 +91,7 @@ namespace Hono.Scripts.Battle.Core
             bool disableEventTrigger = false,
             int damageId = 0)
         {
+            Uid = World.Current.GetUid();
             _hitBoxType = HitBoxType.LockTargetSingleHit;
             _attacker = attacker;
             _duration = 0;
@@ -130,6 +131,7 @@ namespace Hono.Scripts.Battle.Core
             bool disableEventTrigger = false,
             int damageId = 0)
         {
+            Uid = World.Current.GetUid();
             _hitBoxType = HitBoxType.LockTargetAreaHit;
             _attacker = attacker;
             _duration = 0;

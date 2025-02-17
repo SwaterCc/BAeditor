@@ -98,6 +98,19 @@ namespace Hono.Scripts.Battle.Core
             _rangeFilterSetting = null;
         }
 
+        public bool ConditionFilter(Unit filterUser, Unit checkUnit, ConditionFilterSetting setting)
+        {
+            if (checkUnit == null)
+            {
+                return false;
+            }
+
+            _filterUser = filterUser;
+            bool result = checkActorPass(checkUnit, setting);
+            _filterUser = null;
+            return result;
+        }
+        
         public bool ConditionFilter(Unit filterUser, int checkActorUid, ConditionFilterSetting setting)
         {
             if (!_lookup.TryGetValue(checkActorUid, out var unit))

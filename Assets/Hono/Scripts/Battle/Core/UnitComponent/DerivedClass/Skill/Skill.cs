@@ -50,30 +50,36 @@ namespace Hono.Scripts.Battle.Core
             /// <summary>
             /// 选中的世界坐标
             /// </summary>
-            private Vector3 _selectWorldPos;
+            public Vector3 SelectWorldPos { get; set; }
 
             /// <summary>
             /// 选中的单体目标
             /// </summary>
-            private Unit _selectSingleTarget;
+            public Unit SelectSingleTarget { get; set; }
 
             /// <summary>
             /// 选中的方向
             /// </summary>
-            private float _selectYAxisAngle;
-            
+            public float SelectYAxisAngle { get; set; }
+
+            /// <summary>
+            /// 单体选择的目标
+            /// </summary>
+            public int TargetUid { get; set; }
+
             /// <summary>
             /// 范围筛选的所有目标uid
             /// </summary>
-            private List<int> _selectUnitInArea = new(30); 
+            public List<int> SelectUnitsInArea = new(30);
 
             public void OnRent(CombatComp combatComp, SkillData data)
             {
+                _combatComp = combatComp;
                 SkillData = data;
                 CdPercent = 0;
                 Flag = 0;
 
-                _ability = combatComp.Unit.AddAbility(SkillData.id);
+                _ability = combatComp.Unit.AddAbility(SkillData.SkillAbility);
                 _ability.ExecuteEndCallBack += onAbilityEnd;
 
                 if (!_combatComp.checkSkillResourceEnough(this))
@@ -87,14 +93,26 @@ namespace Hono.Scripts.Battle.Core
             /// </summary>
             public void Play()
             {
-                _ability.Execute(false);
                 AddFlag(ESkillFlag.Executing);
+
+                if (SkillData.isExclusive)
+                {
+                    _combatComp._curExclusiveSkill = this;
+                }
+
+                if (SkillData.disableMoveInput)
+                {
+                    _combatComp.Unit.SetAttr(EAttrType.DisableInputMove,
+                                             _combatComp.Unit.GetAttr(EAttrType.DisableInputMove) + 1);
+                }
+
                 if (SkillData.enterCdType == EEnterCDType.BeforeExecute)
                 {
                     CdBegin();
                 }
-
                 _combatComp.costEnergy(this);
+                
+                _ability.Execute(false);
             }
 
             private void onAbilityEnd()
@@ -104,11 +122,23 @@ namespace Hono.Scripts.Battle.Core
                 {
                     CdBegin();
                 }
+                
+                if (SkillData.isExclusive)
+                {
+                    _combatComp._curExclusiveSkill = null;
+                }
 
-                _selectSingleTarget = null;
-                _selectWorldPos = Vector3.zero;
-                _selectYAxisAngle = 0;
-                _selectUnitInArea.Clear();
+                if (SkillData.disableMoveInput)
+                {
+                    _combatComp.Unit.SetAttr(EAttrType.DisableInputMove,
+                                             _combatComp.Unit.GetAttr(EAttrType.DisableInputMove) - 1);
+                }
+
+                TargetUid = -1;
+                SelectSingleTarget = null;
+                SelectWorldPos = Vector3.zero;
+                SelectYAxisAngle = 0;
+                SelectUnitsInArea.Clear();
             }
 
             public void AddFlag(ESkillFlag flag)
@@ -200,6 +230,11 @@ namespace Hono.Scripts.Battle.Core
                 _combatComp = null;
                 _ability.Stop();
                 _ability = null;
+                TargetUid = -1;
+                SelectSingleTarget = null;
+                SelectWorldPos = Vector3.zero;
+                SelectYAxisAngle = 0;
+                SelectUnitsInArea.Clear();
             }
         }
     }

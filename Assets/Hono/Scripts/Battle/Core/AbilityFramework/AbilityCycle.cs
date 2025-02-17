@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
+using Unity.Collections;
 using UnityEngine;
 
 #endregion
@@ -163,20 +164,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
             private void doCycle(EAbilityCycle cycle)
             {
                 AContext.Log($"Cycle {cycle} DoJob");
-                try
+                CurState = cycle;
+                if (_cycleHeads.TryGetValue(CurState, out var cycleHeadNode))
                 {
-                    CurState = cycle;
-                    if (_cycleHeads.TryGetValue(CurState, out var cycleHeadNode))
-                    {
-                        cycleHeadNode.DoJob();
-                    }
-
-                    CycleCallbacks[CurState]?.Invoke();
-                }
-                catch (Exception e)
-                {
-                    AContext.LogError($"{CurState} Error : " + e);
-                    cycleEnd();
+                    cycleHeadNode.DoJob();
                 }
             }
 
@@ -186,25 +177,34 @@ namespace Hono.Scripts.Battle.AbilityFramework
             public void Execute()
             {
                 AContext.Log("Execute");
-                //预执行
-                doCycle(EAbilityCycle.PreExecute);
-                //运行
-                doCycle(EAbilityCycle.Executing);
-
-                //如果有Group则设置开始GroupID
-                IsAllGroupRunFinish = Groups.Count <= 0;
-                if (CurGroup == null && !IsAllGroupRunFinish)
+                try
                 {
-                    SwitchGroup();
+                    //预执行
+                    doCycle(EAbilityCycle.PreExecute);
+                    //运行
+                    doCycle(EAbilityCycle.Executing);
+
+                    //如果有Group则设置开始GroupID
+                    IsAllGroupRunFinish = Groups.Count <= 0;
+                    if (CurGroup == null && !IsAllGroupRunFinish)
+                    {
+                        SwitchGroup();
+                    }
+
+                    //没有Group且没有计时器，该ability是一帧结束的,
+                    //如果有Group则要等待所有Group全部执行完，如果有计时器要等待所有定时器结束
+                    if (_ticks.Count != 0 || !IsAllGroupRunFinish)
+                    {
+                        return;
+                    }
                 }
-
-                //没有Group且没有计时器，该ability是一帧结束的,
-                //如果有Group则要等待所有Group全部执行完，如果有计时器要等待所有定时器结束
-                if (_ticks.Count != 0 || !IsAllGroupRunFinish)
+                catch (Exception e)
                 {
+                    AContext.LogError($"{CurState} Error : " + e);
+                    cycleEnd();
                     return;
                 }
-
+                
                 //结束
                 cycleEnd();
             }
@@ -230,15 +230,16 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     }
 
                     _tickRemoveList.Clear();
-
-                    if (_ticks.Count == 0)
-                    {
-                        cycleEnd();
-                    }
                 }
                 catch (Exception e)
                 {
                     Debug.LogError("Timer or Group" + e);
+                    cycleEnd();
+                    return;
+                }
+                
+                if (_ticks.Count == 0)
+                {
                     cycleEnd();
                 }
             }
@@ -313,19 +314,26 @@ namespace Hono.Scripts.Battle.AbilityFramework
             /// </summary>
             private void cycleEnd()
             {
-                //结束Group
-                CurGroup?.GroupExit();
-                CurGroup = null;
-                //清理定时器
-                _ticks.Clear();
-                //执行结束阶段
-                doCycle(EAbilityCycle.EndExecute);
+                try
+                {
+                    //结束Group
+                    CurGroup?.GroupExit();
+                    CurGroup = null;
+                    //清理定时器
+                    _ticks.Clear();
+                    //执行结束阶段
+                    doCycle(EAbilityCycle.EndExecute);
 
-                //运行结束回调
-                AContext.ExecuteEndCallBack?.Invoke();
+                    //运行结束回调
+                    AContext.ExecuteEndCallBack?.Invoke();
 
-                //重置到Init状态
-                CurState = EAbilityCycle.Init;
+                    //重置到Init状态
+                    CurState = EAbilityCycle.Init;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Ability {AContext.Id} endExecute 阶段存在错误");
+                }
             }
 
             public void ForceStop()

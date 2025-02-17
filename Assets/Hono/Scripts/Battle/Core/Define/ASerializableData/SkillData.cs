@@ -72,7 +72,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 非指向技能选择范围配置（指示器）
         /// </summary>
-        public CheckBoxData selectRangeShape = new();
+        public RangeFilterSetting rangeFilter = new();
         
         public void AddAbilityData()
         {

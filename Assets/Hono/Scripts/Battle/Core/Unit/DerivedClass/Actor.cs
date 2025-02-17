@@ -12,11 +12,6 @@ namespace Hono.Scripts.Battle.Core
         /// Actor基础类型
         /// </summary>
         public EActorType ActorType;
-        
-        /// <summary>
-        /// 动态赋予的名字
-        /// </summary>
-        public string DynamicName { get; set; }
 
         /// <summary>
         /// model表配置
@@ -29,12 +24,14 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         public void Ctor(ActorAssembleInfo assembleInfo)
         {
+            Uid = World.Current.GetUid();
             ActorType = assembleInfo.ActorType;
-
-            if (assembleInfo.ModelId > 0 && ConfigDataBase.Table<ModelTable>().TryGet(assembleInfo.ModelId, out _modelRow))
+            Attrs.Init(assembleInfo.BaseAttrTableId);
+            if (assembleInfo.ModelId > 0 &&
+                ConfigDataBase.Table<ModelTable>().TryGet(assembleInfo.ModelId, out _modelRow))
             {
-                SetAttr(EAttrType.AttrResReplTplBaseId,_modelRow.ResReplTplId);
-                SetAttr(EAttrType.AttrModelId, assembleInfo.ModelId);
+                SetAttr(EAttrType.AttrResReplTplBaseId, _modelRow.ResReplTplId);
+                SetAttr(EAttrType.AttrModelId,          assembleInfo.ModelId);
                 addLoadTask(UnityAdapter.Instance.CreateUnityObjectProxy(this));
             }
 
@@ -66,7 +63,8 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         public void OnRecycle()
         {
-            DynamicName = null;
+            ActorType = 0;
+            _modelRow = null;
         }
 
         #endregion

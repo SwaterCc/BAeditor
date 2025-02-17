@@ -8,22 +8,18 @@
       222
     ],
     
-    "AbilityList":[
-      {
-        "abilityId":1222,
-        "execute":false
-      }
-    ],
-    
     "ComponentList":[
       "HpComp",
-      "CombatComp"
+      "ElementComp",
+      "BuffComp",
+      "CombatComp",
+      "MoveComp",
+      "VFXComp"
     ],
     
     "ComponentCtor":{
       "CombatComp":{
-        "SkillList":[112,3322],
-        "CombatEnergyIds":[222]
+        "SkillList":[1001]
       }
     }
   }

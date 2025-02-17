@@ -9,6 +9,8 @@ namespace Hono.Scripts.Battle.AbilityFramework
         {
             public static object Parse(Ability ability, ANode node, AParams aParams)
             {
+                if (aParams == null) return null;
+                
                 switch (aParams.paramType)
                 {
                     case EParamType.Simple:

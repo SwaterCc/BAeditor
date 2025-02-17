@@ -9,6 +9,7 @@
 
         public WorldRoot()
         {
+            Uid = World.Current.GetUid();
             VFXComp = addComponent<VFXComp>();
         }
 

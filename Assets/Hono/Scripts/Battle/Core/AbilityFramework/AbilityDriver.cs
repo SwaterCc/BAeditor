@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Tools;
+using Unity.Collections;
 using UnityEngine;
 
 #endregion
@@ -66,13 +67,38 @@ namespace Hono.Scripts.Battle.AbilityFramework
             _runningList.Add(ability);
             return ability;
         }
+        
+        /// <summary>
+        /// 赋予Ability
+        /// </summary>
+        public Ability AwardAbility(AbilityData abilityData)
+        {
+            
+            Ability ability = GPool<Ability>.Pool.Rent();
+            if (!ability.Init(_unit, this, abilityData))
+            {
+                GPool<Ability>.Pool.Recycle(ability);
+                return null;
+            }
+
+            if (!_searchDict.TryAdd(ability.Id, ability))
+            {
+                Debug.LogError($"Ability {ability.Id} Add failed!");
+                GPool<Ability>.Pool.Recycle(ability);
+                return null;
+            }
+
+            _runningList.Add(ability);
+            return ability;
+        }
+        
 
         public void Tick(float dt)
         {
             int i = 0;
-            while (i++ < _runningList.Count)
+            while (i < _runningList.Count)
             {
-                _runningList[i].OnTick(dt);
+                _runningList[i++].OnTick(dt);
             }
 
             foreach (var ability in _removeList)

@@ -96,13 +96,14 @@ namespace Hono.Scripts.Battle
         private void onMove(InputAction.CallbackContext context)
         {
             InputValue = context.ReadValue<Vector2>();
-            InputDirection = new Vector3(-InputValue.y, 0, InputValue.x);
+            InputDirection = new Vector3(InputValue.x, 0, InputValue.y);
             HasMoveInput = true;
         }
 
         private void onMoveEnd(InputAction.CallbackContext context)
         {
             HasMoveInput = false;
+            InputDirection = Vector3.zero;
             InputValue = Vector2.zero;
         }
     }

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.AbilitySystem;
+using Unity.VisualScripting;
 using UnityEngine;
 
 #endregion
@@ -44,7 +45,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
             {
                 AContext = ability;
                 Data = data;
+                onRent();
             }
+
+            protected virtual void onRent() { }
 
             /// <summary>
             /// 构建树，递归补全子节点
@@ -268,9 +272,8 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
         private abstract class ANode<TNodeData> : ANode where TNodeData : AbilityNodeData
         {
-            public new readonly TNodeData Data;
-
-            protected ANode()
+            public new TNodeData Data;
+            protected sealed override void onRent()
             {
                 Data = (TNodeData)base.Data;
             }

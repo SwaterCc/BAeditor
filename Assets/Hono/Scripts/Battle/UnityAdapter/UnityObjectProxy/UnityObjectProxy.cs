@@ -83,6 +83,8 @@ namespace Hono.Scripts.Battle
             }
 
             //初始化
+            var unitName = string.IsNullOrEmpty(Unit.DynamicName) ? "Unit" : Unit.DynamicName;
+            _proxy.name = $"{unitName}:{Unit.Uid}";
             _proxy.transform.localPosition = Unit.UnitTransform.Pos;
             _proxy.transform.localRotation = Unit.UnitTransform.Rot;
             _proxy.transform.localScale = _modelRow.ModelScale * Vector3.one;

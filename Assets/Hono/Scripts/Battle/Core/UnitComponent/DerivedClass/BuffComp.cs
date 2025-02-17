@@ -243,6 +243,7 @@ namespace Hono.Scripts.Battle.Core
                 _blockIds.Add(tag);
             }
 
+            Unit.AddAbility(buffData.BuffAbility);
             Unit.ExecuteAbility(buffData.id);
 
             doAddBehave(buffData);

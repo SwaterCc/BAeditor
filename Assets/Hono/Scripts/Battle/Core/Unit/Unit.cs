@@ -19,8 +19,18 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 运行时唯一ID
         /// </summary>
-        public int Uid { get; private set; }
+        public int Uid { get; protected set; }
 
+        /// <summary>
+        /// 禁止玩家操控
+        /// </summary>
+        public bool DisablePlayerControl { get; private set; }
+
+        /// <summary>
+        /// 动态赋予名字
+        /// </summary>
+        public string DynamicName { get; set; }
+        
         /// <summary>
         /// Tags
         /// </summary>
@@ -148,9 +158,10 @@ namespace Hono.Scripts.Battle.Core
             T component = GPool<T>.Pool.Rent();
             _components.Add(key, component);
             _componentsBits |= key;
+            component.Unit = this;
             return component;
         }
-        
+
         /// <summary>
         /// 添加组件
         /// </summary>
@@ -166,6 +177,7 @@ namespace Hono.Scripts.Battle.Core
             T component = GPool<T>.Pool.Rent();
             _components.Add(key, component);
             _componentsBits |= key;
+            component.Unit = this;
             return component;
         }
 
@@ -183,7 +195,9 @@ namespace Hono.Scripts.Battle.Core
                     if (!_components.TryAdd(component.GetKey(), component))
                     {
                         Debug.Log($"{GetType()} 添加组件 {component.GetType()} Failed!");
+                        continue;
                     }
+                    component.Unit = this;
                 }
             }
         }
@@ -195,14 +209,11 @@ namespace Hono.Scripts.Battle.Core
 
         public void Init()
         {
-            Uid = World.Current.GetUid();
-
             EventManager.Instance.AddListenerCollection(Uid, _evtListenerCollection);
             MessageManager.Instance.AddMsgCollection(Uid, _messageCollection);
 
             foreach (var component in _components)
             {
-                component.Value.Unit = this;
                 component.Value.Init();
             }
         }
@@ -288,7 +299,7 @@ namespace Hono.Scripts.Battle.Core
             BeforeTickCallBack = null;
             AfterTickCallBack = null;
             RecycleCallBack = null;
-
+            DynamicName = null;
             EventManager.Instance.RemoveListenerCollection(Uid, _evtListenerCollection);
             MessageManager.Instance.RemoveMsgCollection(Uid, _messageCollection);
         }
@@ -309,14 +320,14 @@ namespace Hono.Scripts.Battle.Core
             return _abilityDriver.AwardAbility(abilityId);
         }
 
-        /*/// <summary>
+        /// <summary>
         /// 执行Ability
         /// </summary>
         /// <param name="abilityData"></param>
-        public void AddAbility(AbilityData abilityData)
+        public Ability AddAbility(AbilityData abilityData)
         {
-            return _abilityDriver.AwardAbility(abilityId);
-        }*/
+            return _abilityDriver.AwardAbility(abilityData);
+        }
 
         /// <summary>
         /// 执行Ability
