@@ -14,28 +14,24 @@ namespace Hono.Scripts.Battle.Event
     {
         //空占位，说明没有初始化
         NoInit = 0,
-        OnAttrChanged = 1,
-
-        [EventCheckerBinder("GetHitOnceChecker", typeof(HitDamageInfoKeys))]
+        [AbilityEventBind(typeof(AttrChangedEventInfo), typeof(AttrChangedChecker))]
+        OnAttrChanged,
+        [AbilityEventBind(typeof(HitInfoKey), typeof(HitEventChecker))]
         OnHit,
-
+        [AbilityEventBind(typeof(MakeDamageInfoKeys), typeof(HitEventChecker))]
         OnMakeDamage,
-        
-        [EventCheckerBinder("GetBeHitChecker", typeof(HitDamageInfoKeys))]
+        [AbilityEventBind(typeof(MakeDamageInfoKeys), typeof(HitEventChecker))]
         OnBeHit,
         
         /// <summary>
         /// Unit死亡事件
         /// </summary>
         OnDead,
-
-        [EventCheckerBinder("GetMotionBeginChecker", typeof(MotionEventInfo))]
-        OnMotionBegin = 10,
-
-        [EventCheckerBinder("GetMotionCollisionChecker", typeof(MotionEventInfo))]
+        
+        OnMotionBegin,
+        
         OnMoveCollision,
-
-        [EventCheckerBinder("GetMotionEndChecker", typeof(MotionEventInfo))]
+        
         OnMotionEnd,
 
         /// <summary>
@@ -48,15 +44,14 @@ namespace Hono.Scripts.Battle.Event
         
         UseSkill = 20,
 
-        [EventCheckerBinder("GetUseSkillSuccessChecker", typeof(SkillEventInfo))]
+        [AbilityEventBind(typeof(SkillEventInfo), typeof(SkillEventChecker))]
         OnSkillUseSuccess,
 
-        [EventCheckerBinder("GetSkillEndChecker", typeof(SkillEventInfo))]
+        [AbilityEventBind(typeof(SkillEventInfo), typeof(SkillEventChecker))]
         OnSkillStop,
         
         OnCallMonsterGenerator = 1000,
-
-        [EventCheckerBinder("GetMonsterAllDeadChecker", typeof(MonsterGenRtEventInfo))]
+        
         OnMonsterGeneratorAllDead = 1001,
         
         WorldEvent = 100000,

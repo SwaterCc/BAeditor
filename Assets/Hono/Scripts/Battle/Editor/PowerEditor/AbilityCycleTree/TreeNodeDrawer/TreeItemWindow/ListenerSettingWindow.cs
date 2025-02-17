@@ -5,7 +5,9 @@ using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
 using Hono.Scripts.Battle.AbilitySystem;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.Editor.AbilityEditor;
 using Hono.Scripts.Battle.Event;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -21,43 +23,8 @@ namespace Editor.AbilityEditor.TreeItemWindow
         {
             _parameterFields = new List<AParamsField>();
             _curEvent = TempData.eventType;
-
-            if (!AbilityFuncInfoCache.EventCheckerDict.TryGetValue(TempData.eventType, out var value))
-            {
-                return;
-            }
-
-            if (!AbilityFuncInfoCache.TryGetFuncInfo(value.CreateFuncName, out var funcInfo))
-            {
-                return;
-            }
-
-           
         }
 
-        private void initParameter()
-        {
-            if (!AbilityFuncInfoCache.EventCheckerDict.TryGetValue(TempData.eventType, out var value))
-            {
-                return;
-            }
-
-            if (!AbilityFuncInfoCache.TryGetFuncInfo(value.CreateFuncName, out var funcInfo))
-            {
-                return;
-            }
-
-          
-            _parameterFields.Clear();
-            foreach (var paramInfo in funcInfo.ParamInfos)
-            {
-                var parameter = new AParams();
-             
-
-                AParamsField param = new(TreeItem, parameter, paramInfo.ParamName, paramInfo.ParamType);
-                _parameterFields.Add(param);
-            }
-        }
 
         protected override void Draw()
         {
@@ -86,17 +53,31 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
         private void showEvent()
         {
-            TempData.eventType = SirenixEditorFields.Dropdown(new GUIContent("事件类型"),
-                                                              TempData.eventType,
-                                                              AbilityFuncInfoCache.EventCheckerDict.Keys.ToList());
+            TempData.eventType = (EEventType)SirenixEditorFields.EnumDropdown(TempData.eventType);
+            PowerEditorUIHelper.DrawSimpleField(ref TempData.eventInterval, "事件触发间隔", TempData.eventInterval);
+            PowerEditorUIHelper.DrawSimpleField(ref TempData.isGlobalEvtListener, "是否监听世界事件",
+                                                TempData.isGlobalEvtListener);
 
-            if (_curEvent != TempData.eventType)
+            if (TempData.Checker == null)
             {
-                initParameter();
-                _curEvent = TempData.eventType;
-            }
+                if (!AbilityFuncInfoCache.EventBindInfoLookup.TryGetValue(TempData.eventType, out var bind))
+                {
+                    EditorGUILayout.LabelField("该事件没有检查器");
+                    return;
+                }
 
-            
+                if (SirenixEditorGUI.Button("添加检查器", ButtonSizes.Medium))
+                {
+                    TempData.Checker = (IEventChecker)Activator.CreateInstance(bind.CheckerType);
+                }
+            }
+            else
+            {
+                if (SirenixEditorGUI.Button("配置事件检查器", ButtonSizes.Large))
+                {
+                    SerializableOdinWindow.Open(TempData.Checker);
+                }
+            }
         }
     }
 }

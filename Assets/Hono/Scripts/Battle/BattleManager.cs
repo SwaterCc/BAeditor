@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Hono.Scripts.Battle.AbilityFramework;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Core.Base;
@@ -112,7 +113,7 @@ namespace Hono.Scripts.Battle
         private void initOtherFoundations()
         {
             //Ability模板加载
-            //Ability.InitAbilityFuncCache();
+            Ability.AbilityEnv.InitEnv();
             //属性链接初始化
             AttrHelper.Instance.Init();
         }

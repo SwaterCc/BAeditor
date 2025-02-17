@@ -67,21 +67,13 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// 逻辑帧时间缩放系数
         /// </summary>
         public float TimeScaleFactory { get; set; }
-
-        public static void InitEnv()
-        {
-            if (!AbilityEnv.IsEnvInit)
-            {
-                AbilityEnv.InitEnv();
-            }
-        }
-
+        
         public Ability()
         {
             if (!AbilityEnv.IsEnvInit)
             {
                 Debug.LogWarning("AbilityEnv not init When Game Begin");
-                AbilityEnv.InitEnv();
+                return;
             }
 
             _abilityCycle = new AbilityCycle(this);

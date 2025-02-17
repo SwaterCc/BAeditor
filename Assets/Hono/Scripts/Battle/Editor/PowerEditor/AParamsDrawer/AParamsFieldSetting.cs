@@ -75,6 +75,11 @@ namespace Editor.AbilityEditor
                     return null;
                 }
 
+                if (type.IsEnum)
+                {
+                    return new RefInt();
+                }
+
                 if (type == typeof(string))
                 {
                     value = "";

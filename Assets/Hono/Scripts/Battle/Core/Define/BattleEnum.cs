@@ -498,9 +498,9 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 无来源，说明是直接调用了伤害接口
         /// </summary>
-        None = 0,
-        Skill = 1,
-        Buff = 2,
+        None = 1,
+        Skill = 2,
+        Buff = 3,
     }
 
     public enum ECombatEnergyField

@@ -40,9 +40,9 @@ namespace Editor.BattleEditor.AbilityEditor
         /// <summary>
         /// 事件信息
         /// </summary>
-        public class EventEditorInfo
+        public class AbilityEventBindInfo
         {
-            public string CreateFuncName;
+            public Type CheckerType;
             public Type EventInfoType;
         }
 
@@ -60,7 +60,7 @@ namespace Editor.BattleEditor.AbilityEditor
         /// <summary>
         /// 事件字典
         /// </summary>
-        public static readonly Dictionary<EEventType, EventEditorInfo> EventCheckerDict = new();
+        public static readonly Dictionary<EEventType, AbilityEventBindInfo> EventBindInfoLookup = new();
 
         public static FuncInfo GetFuncInfo(string funcName)
         {
@@ -108,18 +108,20 @@ namespace Editor.BattleEditor.AbilityEditor
                 }
             }
             
-            EventCheckerDict.Clear();
+            EventBindInfoLookup.Clear();
             foreach (var field in typeof(EEventType).GetFields())
             {
-                var checkerBinder = field.GetCustomAttribute<EventCheckerBinder>();
+                var checkerBinder = field.GetCustomAttribute<AbilityEventBind>();
                 if (checkerBinder == null) continue;
 
                 var enumValue = (EEventType)field.GetValue(null);
                 // 获取枚举值
-                var eventInfo = new EventEditorInfo();
-                eventInfo.CreateFuncName = checkerBinder.CreateFunc;
-                eventInfo.EventInfoType = checkerBinder.EventInfoType;
-                EventCheckerDict.Add(enumValue, eventInfo);
+                var eventInfo = new AbilityEventBindInfo
+                {
+                    CheckerType = checkerBinder.CheckerType,
+                    EventInfoType = checkerBinder.EventInfoKeyType
+                };
+                EventBindInfoLookup.Add(enumValue, eventInfo);
             }
         }
 

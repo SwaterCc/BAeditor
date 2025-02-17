@@ -67,18 +67,25 @@ namespace Editor.AbilityEditor
             {
                 if (parentItem.Data.isEvent)
                 {
-                    if (AbilityFuncInfoCache.EventCheckerDict.TryGetValue(parentItem.Data.eventType,
+                    if (AbilityFuncInfoCache.EventBindInfoLookup.TryGetValue(parentItem.Data.eventType,
                                                                           out var eventEditorInfo))
                     {
+                        if (eventEditorInfo.EventInfoType == null)
+                        {
+                            return root;
+                        }
                         var fields =
-                            eventEditorInfo.EventInfoType.GetFields(BindingFlags.Public | BindingFlags.Instance);
+                            eventEditorInfo.EventInfoType.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+                        
+                        
                         foreach (var fieldInfo in fields)
                         {
-                            if (filterCheck(fieldInfo.FieldType))
+                            var fieldType = fieldInfo.FieldType.GetGenericArguments()[0]; 
+                            if (filterCheck(fieldType))
                             {
-                                root.AddChild(new VariableDropViewItem(fieldInfo.Name, fieldInfo.FieldType,
+                                root.AddChild(new VariableDropViewItem(fieldInfo.Name, fieldType,
                                                                        "Event:" + fieldInfo.Name +
-                                                                       $"({fieldInfo.FieldType})"));
+                                                                       $"({fieldType})"));
                             }
                         }
                     }

@@ -4,7 +4,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 {
     public partial class Ability
     {
-        public static class AbilityEnv
+        public static partial class AbilityEnv
         {
             /// <summary>
             /// 运行环境是否初始化
@@ -15,7 +15,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
             /// 函数Wrap列表
             /// </summary>
             private static readonly Dictionary<string, IAbilityFunctionWrap> FunctionWraps = new(100);
-
+            
             /// <summary>
             /// 初始化环境
             /// </summary>
@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 if (IsEnvInit)
                     return;
 
-                AbilityFuncWrapInit.__Gen_AFuncWrap_Register();
+                __Gen_AFuncWrap_Register();
                 IsEnvInit = true;
             }
 
@@ -33,7 +33,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
             /// </summary>
             /// <param name="funcName"></param>
             /// <param name="wrap"></param>
-            public static void RegisterWrap(string funcName, IAbilityFunctionWrap wrap)
+            private static void RegisterWrap(string funcName, IAbilityFunctionWrap wrap)
             {
                 FunctionWraps.TryAdd(funcName, wrap);
             }

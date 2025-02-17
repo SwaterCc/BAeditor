@@ -6,10 +6,13 @@ namespace Hono.Scripts.Battle.Event
     [Serializable]
     public class AttrChangedChecker : IEventChecker
     {
+        public int sourceUnitUid;
         public EAttrType checkAttrType;
         public bool Check(in VariableBoard board)
         {
-            return board.Get(AttrChangedEventInfo.AttrType) == checkAttrType;
+            var res = board.Get(AttrChangedEventInfo.SourceUnitUid) == sourceUnitUid;
+            res = res && board.Get(AttrChangedEventInfo.AttrType) == checkAttrType;
+            return res;
         }
     }
 }

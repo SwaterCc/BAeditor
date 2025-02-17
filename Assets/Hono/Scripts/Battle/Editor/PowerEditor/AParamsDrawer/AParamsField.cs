@@ -206,7 +206,8 @@ namespace Editor.AbilityEditor
             }
             else if (_castType.IsEnum)
             {
-                _params.Value = SirenixEditorFields.EnumDropdown((Enum)_params.Value);
+                var enumValue = SirenixEditorFields.EnumDropdown( (Enum)Enum.ToObject(_castType, (RefInt)_params.Value));
+                ((RefInt)(_params.Value)).Value = Convert.ToInt32(enumValue);
             }
             else if (_castType.IsSerializable && _castType != typeof(object))
             {
