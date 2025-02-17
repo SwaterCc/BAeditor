@@ -99,6 +99,7 @@ namespace Editor.BattleEditor.AbilityEditor
             {
                 list.Clear();
             }
+
             foreach (var method in methods)
             {
                 var abilityFunction = method.GetCustomAttribute<AbilityFunction>();
@@ -107,7 +108,7 @@ namespace Editor.BattleEditor.AbilityEditor
                     cacheAbilityFuncInfo(method, abilityFunction);
                 }
             }
-            
+
             EventBindInfoLookup.Clear();
             foreach (var field in typeof(EEventType).GetFields())
             {
@@ -138,15 +139,17 @@ namespace Editor.BattleEditor.AbilityEditor
                 ShowInEditorView = attr.ShowInEditorView,
             };
 
-            if ( string.IsNullOrEmpty(info.FuncReturnDesc))
+            if (string.IsNullOrEmpty(info.FuncReturnDesc))
             {
-                info.FuncReturnDesc = method.ReturnType == typeof(void) ? "无返回值" : info.ReturnType.ToString().Split(".")[^1];
+                info.FuncReturnDesc = method.ReturnType == typeof(void)
+                    ? "无返回值"
+                    : info.ReturnType.ToString().Split(".")[^1];
             }
 
             for (var index = 0; index < method.GetParameters().Length; index++)
             {
                 ParameterInfo parameter = method.GetParameters()[index];
-                
+
 
                 var paramInfo = new ParamInfo()
                 {
@@ -154,7 +157,7 @@ namespace Editor.BattleEditor.AbilityEditor
                     ParamName = parameter.Name,
                 };
 
-                if (desc != null && index < desc.ParamsDesc.Count)
+                if (desc != null && desc.ParamsDesc != null && index < desc.ParamsDesc.Count)
                 {
                     paramInfo.ParamDesc = desc.ParamsDesc[index];
                 }

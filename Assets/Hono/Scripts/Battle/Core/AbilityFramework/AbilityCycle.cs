@@ -274,7 +274,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
             public void RegisterTick(ITickANode tickNode)
             {
                 ANode node = (ANode)tickNode;
-                if (node.Data.belongGroupId == 0)
+                if (node.Data.belongGroupId <= 0)
                 {
                     _ticks.Add(tickNode);
                 }

@@ -186,6 +186,13 @@ namespace Hono.Scripts.Battle.Core
         {
             _damageResults = result;
         }
+        
+        [LuaCallCSharp]
+        public void SetDamageResult(int damageValue,bool isCitlt)
+        {
+            _damageResults.DamageValue = damageValue;
+            _damageResults.IsCritical = isCitlt;
+        }
 
         public DamageResult GetDamageResult()
         {

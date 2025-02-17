@@ -49,9 +49,17 @@ namespace Editor.BattleEditor.AbilityEditor
             PowerEditorUIHelper.DrawSimpleField(ref Data.rotSpeed,     "转向速度(-1为秒转)", Data.rotSpeed,     true);
             PowerEditorUIHelper.DrawSimpleField(ref Data.lifeTime,     "子弹生命时长",      Data.lifeTime,     true);
 
-            Data.flyVFXKey = PowerEditorUIHelper.DrawObjectField<GameObject>("飞行特效", Data.flyVFXKey);
-            Data.hitVFXKey = PowerEditorUIHelper.DrawObjectField<GameObject>("子弹销毁时的特效", Data.hitVFXKey);
-            
+            if (Data.isUseVFXKeyModel)
+            {
+                PowerEditorUIHelper.DrawSimpleField(ref Data.flyVFXStr, "飞行特效Key", Data.flyVFXStr, true);
+                PowerEditorUIHelper.DrawSimpleField(ref Data.hitVFXStr, "子弹销毁时的特效Key", Data.hitVFXStr, true);
+            }
+            else
+            {
+                Data.flyVFXStr = PowerEditorUIHelper.DrawObjectField<GameObject>("飞行特效",     Data.flyVFXStr);
+                Data.hitVFXStr = PowerEditorUIHelper.DrawObjectField<GameObject>("子弹销毁时的特效", Data.hitVFXStr);
+            }
+         
             SirenixEditorGUI.EndBox();
         }
 

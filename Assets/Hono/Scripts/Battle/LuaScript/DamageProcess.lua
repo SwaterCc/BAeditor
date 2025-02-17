@@ -17,7 +17,7 @@ local function ElementDamage(attacker, target, damageInfo, damageConfig, damageA
     local secondaryElementRed = 0
     local allElementPen = damageArgs.ElementPenPCT / 10000
     local allElementRed = damageArgs.ElementRedPCT / 10000
-
+    --[[
     if damageConfig.ElementType == CS.Hono.Scripts.Battle.EDamageElementType.Physical then
         secondaryElementPen = damageArgs.ElementPhysicalPenPCT / 10000
         secondaryElementRed = damageArgs.ElementPhysicalRedPCT / 10000
@@ -25,6 +25,7 @@ local function ElementDamage(attacker, target, damageInfo, damageConfig, damageA
         secondaryElementPen = damageArgs.ElementMagicPenPCT / 10000
         secondaryElementRed = damageArgs.ElementMagicRedPCT / 10000
     end
+    --]]
     local result = (1 - secondaryElementRed + secondaryElementPen) + (allElementPen - allElementRed)
     return result
 end
@@ -413,7 +414,8 @@ DamageProcess.CriticalProcess = function(attacker, target, damageInfo, damageArg
     return true, CriticalAddValue / 10000
 end
 
-DamageProcess.DamageProcessMain = function(attacker, target, damageInfo, damageConfig)
+DamageProcess.DamageProcessMain = function(attacker, target, damageInfo)
+--[[
     --初始化数据
     init(attacker, target, damageInfo, damageConfig)
     --【伤害计算前置流程，获取各项数值和预处理】
@@ -423,10 +425,9 @@ DamageProcess.DamageProcessMain = function(attacker, target, damageInfo, damageC
     --CS.UnityEngine.Debug.Log("伤害ID【"..damageInfo.DamageConfigId.."】：".."<color=#E8FF17>【【最终伤害】】</color>-> " .. finalDamageValue)
 
     --计算冲击
-
+--]]
     --填充伤害结果
-    local damageResult = CS.Hono.Scripts.Battle.DamageResults(finalDamageValue, damageArgs.IsCritical, 999, damageArgs.DamageType, damageArgs.DamageIsBad)
-    return damageResult
+    damageInfo:SetDamageResult(100, false)
 end
 
 --【【【伤害计算】】】=======================================================================================================================================

@@ -182,7 +182,20 @@ namespace XLua.CSObjectWrap
                 Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
             
             
-                
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 3&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& LuaTypes.LUA_TBOOLEAN == LuaAPI.lua_type(L, 3)) 
+                {
+                    int _damageValue = LuaAPI.xlua_tointeger(L, 2);
+                    bool _isCitlt = LuaAPI.lua_toboolean(L, 3);
+                    
+                    gen_to_be_invoked.SetDamageResult( _damageValue, _isCitlt );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 2&& translator.Assignable<Hono.Scripts.Battle.Core.DamageResult>(L, 2)) 
                 {
                     Hono.Scripts.Battle.Core.DamageResult _result;translator.Get(L, 2, out _result);
                     
@@ -196,6 +209,8 @@ namespace XLua.CSObjectWrap
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to Hono.Scripts.Battle.Core.DamagePipLine.SetDamageResult!");
             
         }
         
@@ -264,7 +279,7 @@ namespace XLua.CSObjectWrap
                 ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			
                 Hono.Scripts.Battle.Core.DamagePipLine gen_to_be_invoked = (Hono.Scripts.Battle.Core.DamagePipLine)translator.FastGetCSObj(L, 1);
-                translator.Push(L, gen_to_be_invoked.DamageSourceType);
+                translator.PushHonoScriptsBattleEDamageSourceType(L, gen_to_be_invoked.DamageSourceType);
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }

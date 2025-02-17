@@ -82,6 +82,7 @@ namespace Hono.Scripts.Battle
                 buffAbility.fileName = fileName;
                 buffAbility.id = id;
                 buffAbility.path = path;
+                buffAbility.abilityBelongType = EAbilityBelongType.Buff;
 #if UNITY_EDITOR
                 UnityEditor.AssetDatabase.AddObjectToAsset(buffAbility, this);
                 UnityEditor.EditorUtility.SetDirty(this);

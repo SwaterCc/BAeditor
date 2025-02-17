@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8770078745475551940}
   - component: {fileID: 5116944348537395218}
-  - component: {fileID: 4316306358220988638}
   m_Layer: 0
   m_Name: LootModel
   m_TagString: Untagged
@@ -55,22 +54,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4316306358220988638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 608223563589290855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5669acaba3f44971a52a5bf87df30666, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ActorUid: 0
-  ActorType: 12
-  Trigger: {fileID: 5116944348537395218}
-  Desc: {fileID: 0}
 --- !u!1 &1424218321959414800
 GameObject:
   m_ObjectHideFlags: 0

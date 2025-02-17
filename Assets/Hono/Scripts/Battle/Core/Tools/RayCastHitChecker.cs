@@ -22,7 +22,7 @@ namespace Hono.Scripts.Battle.Tools
             var finalCenterPos = selectCenterPos + finalRot * checkBoxData.Offset;
 
             int size = 0;
-
+            OpenGizmos = true;
             switch (checkBoxData.ShapeType)
             {
                 case ECheckBoxShapeType.Cube:
@@ -47,13 +47,13 @@ namespace Hono.Scripts.Battle.Tools
             actorIds.Clear();
             for (int i = 0; i < size; i++)
             {
-                /*var actorModel = _normalAreaRaycastHit[i].collider.GetComponent<UnitModel>();
+                var actorModel = _normalAreaRaycastHit[i].collider.GetComponent<UOProxyPhysicsHandler>();
                 if (actorModel == null)
                 {
                     continue;
                 }
 
-                actorIds.Add(actorModel.Actor.Uid);*/
+                actorIds.Add(actorModel.Unit.Uid);
             }
 
             return size;

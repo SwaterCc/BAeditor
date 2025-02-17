@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
 {
-
     [JsonUnitCompCtorParams(typeof(CombatComp))]
     public class CombatCompCtorParams : UnitCompCtorParams
     {
@@ -15,7 +14,7 @@ namespace Hono.Scripts.Battle.Core
         [JsonUnitCompCtorParam("默认拥有的战斗资源")]
         public List<int> CombatEnergyIds = new();
     }
-    
+
     /// <summary>
     /// 战斗组件
     /// </summary>
@@ -46,7 +45,7 @@ namespace Hono.Scripts.Battle.Core
         public override void Ctor(UnitCompCtorParams ctorParams)
         {
             var combatCtorParams = (CombatCompCtorParams)ctorParams;
-            
+
             foreach (var skillId in combatCtorParams.SkillList)
             {
                 LearnSkill(skillId);
@@ -117,7 +116,7 @@ namespace Hono.Scripts.Battle.Core
         {
             return _skills.ContainsKey(skillId);
         }
-        
+
         /// <summary>
         /// 忘记技能
         /// </summary>
@@ -151,6 +150,18 @@ namespace Hono.Scripts.Battle.Core
 
             return null;
         }
+
+        public bool TryGetSkill(int skillId, out Skill skill)
+        {
+            skill = null;
+            if (_skills.TryGetValue(skillId, out skill))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
 
         /// <summary>
         /// 使用技能
@@ -202,6 +213,11 @@ namespace Hono.Scripts.Battle.Core
         public void RemoveEnergyType(int energyId)
         {
             _energyCtrl.RemoveEnergyType(energyId);
+        }
+
+        public void AddEnergy(int energyId, int value)
+        {
+            _energyCtrl.SetEnergyValue(energyId, ECombatEnergyField.CurrentValue, value);
         }
 
         /// <summary>

@@ -81,12 +81,12 @@ namespace Hono.Scripts.Battle
             {
                 throw new Exception($"Load UnityObjectProxy :{path} failed!");
             }
-
+            
             //初始化
             var unitName = string.IsNullOrEmpty(Unit.DynamicName) ? "Unit" : Unit.DynamicName;
             _proxy.name = $"{unitName}:{Unit.Uid}";
-            _proxy.transform.localPosition = Unit.UnitTransform.Pos;
-            _proxy.transform.localRotation = Unit.UnitTransform.Rot;
+            _proxy.transform.position = Unit.UnitTransform.Pos;
+            _proxy.transform.rotation = Unit.UnitTransform.Rot;
             _proxy.transform.localScale = _modelRow.ModelScale * Vector3.one;
 
             //初始化层级
@@ -94,6 +94,7 @@ namespace Hono.Scripts.Battle
 
             if (_proxy.TryGetComponent(out _physicsHandler))
             {
+                _physicsHandler.Unit = Unit;
                 _physicsHandler.Set(_modelRow.P1, _modelRow.P2, _modelRow.P3);
                 if (_modelRow.ColliderCenter.Count == 3)
                 {
@@ -182,6 +183,11 @@ namespace Hono.Scripts.Battle
             }
 
             return _proxy.transform.localPosition;
+        }
+
+        public void SyncPosition(in Vector3 pos)
+        {
+            _proxy.transform.localPosition = pos;
         }
 
         public void SyncRot(in Quaternion rot)

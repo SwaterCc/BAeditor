@@ -206,7 +206,7 @@ namespace Hono.Scripts.Battle.Core
             Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, 1000, targetLayer))
             {
-                if (!hit.collider.gameObject.TryGetComponent<UnityObjectProxy>(out var proxy))
+                if (!hit.collider.gameObject.TryGetComponent<UOProxyPhysicsHandler>(out var proxy))
                 {
                     return false;
                 }

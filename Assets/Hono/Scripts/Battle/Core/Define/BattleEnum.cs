@@ -71,15 +71,14 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
-    ///     能力配置的归属类型
+    /// Ability配置的归属类型
     /// </summary>
-    public enum EAbilityType
+    public enum EAbilityBelongType
     {
+        Unit,
         Skill,
         Buff,
         Bullet,
-        GameMode,
-        Other,
     }
 
     /// <summary>
@@ -495,10 +494,8 @@ namespace Hono.Scripts.Battle
     [LuaCallCSharp]
     public enum EDamageSourceType
     {
-        /// <summary>
-        /// 无来源，说明是直接调用了伤害接口
-        /// </summary>
-        None = 1,
+        None,
+        Unit = 1,
         Skill = 2,
         Buff = 3,
     }

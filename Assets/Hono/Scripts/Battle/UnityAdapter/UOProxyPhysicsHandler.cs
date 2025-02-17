@@ -1,4 +1,5 @@
 ﻿using System;
+using Hono.Scripts.Battle.Core;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -6,6 +7,8 @@ namespace Hono.Scripts.Battle
 {
     public class UOProxyPhysicsHandler : MonoBehaviour
     {
+        public Unit Unit { get; set; }
+        
         /// <summary>
         /// 碰撞器
         /// </summary>

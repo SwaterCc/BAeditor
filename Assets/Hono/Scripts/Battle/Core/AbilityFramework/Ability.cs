@@ -244,6 +244,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 #if _ABILITY_DEBUG_
 			Debug.Log(string.Format(AbilityInfo(ability) + pattern, args));
 #endif
+            Debug.Log(string.Format(AbilityInfo(ability) + pattern, args));
         }
 
         public static void LogError(this Ability ability, in string pattern, params object[] args)
@@ -251,6 +252,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 #if _ABILITY_DEBUG_
 			Debug.LogError(string.Format(AbilityInfo(ability) + pattern, args));
 #endif
+            Debug.LogError(string.Format(AbilityInfo(ability) + pattern, args));
         }
     }
 }

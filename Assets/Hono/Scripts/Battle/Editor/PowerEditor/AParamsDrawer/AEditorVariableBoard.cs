@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Editor.BattleEditor.AbilityEditor;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Base;
 using UnityEngine;
 
 namespace Editor.AbilityEditor
@@ -72,7 +73,7 @@ namespace Editor.AbilityEditor
                 var type = Type.GetType(variableNodeData.value.paramCastType);
                 if (type == null)
                     return;
-
+                type = ARef.ParseARefTypeToValueType(type);
                 if (!collection.TryAdd(variableNodeData.key, type))
                 {
                     Debug.LogError($"变量重复添加 key:{variableNodeData.key}");

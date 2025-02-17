@@ -160,6 +160,9 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(XLuaTest.FooExtension), XLuaTestFooExtensionWrap.__Register);
         
         
+            translator.DelayWrapLoader(typeof(Hono.Scripts.Battle.EDamageSourceType), HonoScriptsBattleEDamageSourceTypeWrap.__Register);
+        
+        
             translator.DelayWrapLoader(typeof(Hono.Scripts.Battle.Core.DamageResult), HonoScriptsBattleCoreDamageResultWrap.__Register);
         
         

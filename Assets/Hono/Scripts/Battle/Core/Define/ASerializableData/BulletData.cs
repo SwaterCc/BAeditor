@@ -12,7 +12,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 子弹有效半径
         /// </summary>
-        public int hitRadius;
+        public float hitRadius;
         /// <summary>
         /// 忽略所有不是target的对象
         /// </summary>
@@ -46,13 +46,17 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public int maxHitCount;
         /// <summary>
+        /// 是否用key值
+        /// </summary>
+        public bool isUseVFXKeyModel;
+        /// <summary>
         /// 飞行时特效
         /// </summary>
-        public string flyVFXKey;
+        public string flyVFXStr;
         /// <summary>
         /// 子弹销毁时特效
         /// </summary>
-        public string hitVFXKey;
+        public string hitVFXStr;
         /// <summary>
         /// 子弹Ability数据
         /// </summary>
@@ -69,6 +73,7 @@ namespace Hono.Scripts.Battle
                 bulletAbility.fileName = fileName;
                 bulletAbility.id = id;
                 bulletAbility.path = path;
+                bulletAbility.abilityBelongType = EAbilityBelongType.Bullet;
 #if UNITY_EDITOR
                 UnityEditor.AssetDatabase.AddObjectToAsset(bulletAbility, this);
                 UnityEditor.EditorUtility.SetDirty(this);

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Hono.Scripts.Battle.Base;
-using Hono.Scripts.Battle.Event;
+﻿using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 
@@ -23,6 +20,10 @@ namespace Hono.Scripts.Battle.Core
         /// 攻击者
         /// </summary>
         private Unit _attacker;
+        /// <summary>
+        /// 特效组件
+        /// </summary>
+        private VFXComp _vfxComp;
         /// <summary>
         /// 子弹数据
         /// </summary>
@@ -67,12 +68,12 @@ namespace Hono.Scripts.Battle.Core
         /// 碰撞cd
         /// </summary>
         private float _hitCountdown;
+
         /// <summary>
         /// 伤害来源类型
         /// </summary>
-        private EDamageSourceType _damageSourceType;
-        
-        
+        public EDamageSourceType DamageSourceType { get; private set; }
+
         /// <summary>
         /// 锁定目标的子弹
         /// </summary>
@@ -88,12 +89,14 @@ namespace Hono.Scripts.Battle.Core
             _target = target;
             _bulletData = bulletData;
             _hitTargetDamageId = hitTargetDamageId;
-            _hitNotTargetDamageId = _hitNotTargetDamageId;
+            _hitNotTargetDamageId = hitNotTargetDamageId;
             _attacker.RecycleCallBack += onAttackerRemove;
             _target.AfterTickCallBack += onTargetTick;
             _target.RecycleCallBack += onTargetRemove;
             _bulletType = EBulletType.LockTargetBullet;
+            DamageSourceType = damageSourceType;
             _hitCountdown = 0;
+            UnitTransform.Pos = _attacker.UnitTransform.Pos;
             AddAbility(_bulletData.BulletAbility);
             _checkBox = new CheckBoxData()
             {
@@ -116,18 +119,40 @@ namespace Hono.Scripts.Battle.Core
             _attacker = attacker;
             _bulletData = bulletData;
             _hitTargetDamageId = hitTargetDamageId;
-            _hitNotTargetDamageId = _hitNotTargetDamageId;
+            _hitNotTargetDamageId = hitNotTargetDamageId;
+            DamageSourceType = damageSourceType;
+            UnitTransform.Pos = _attacker.UnitTransform.Pos;
             UnitTransform.Rot = Quaternion.AngleAxis(yAxisAngle, Vector3.up);
             _bulletType = EBulletType.DirectionBullet;
             _hitCountdown = 0;
+         
+        }
+
+        public void Ctor()
+        {
+            SetAttr(EAttrType.AttrModelId, 3);
+            _vfxComp = addComponent<VFXComp>();
+            //设置初始速度
+            SetAttr(EAttrType.AttrMoveSpeedPCTAdd, (int)(_bulletData.speed * 10000));
+            SetAttr(EAttrType.AttrRotSpeedPCTAdd,  (int)(_bulletData.rotSpeed * 10000));
+            
+            addLoadTask(UnityAdapter.Instance.CreateUnityObjectProxy(this));
+            
             AddAbility(_bulletData.BulletAbility);
         }
 
         protected override void onBeforeFirstTick()
         {
-            //设置初始速度
-            SetAttr(EAttrType.AttrMoveSpeedPCTAdd, (int)(_bulletData.speed * 10000));
-            SetAttr(EAttrType.AttrRotSpeedPCTAdd,  (int)(_bulletData.rotSpeed * 10000));
+            if (_bulletData.isUseVFXKeyModel)
+            {
+                _vfxComp.AddVFXByKey(_bulletData.flyVFXStr, new VFXSetting() { duration = -1 });
+            }
+            else
+            {
+                _vfxComp.AddVFXByResPath(_bulletData.flyVFXStr, new VFXSetting() { duration = -1 });
+            }
+
+            
             ExecuteAbility(_bulletData.id);
         }
 
@@ -162,13 +187,14 @@ namespace Hono.Scripts.Battle.Core
                     var dir = (_targetPos - UnitTransform.Pos).normalized;
 
                     //转向角度
-                    var angle = Vector3.SignedAngle(UnitTransform.Forward, dir, Vector3.up) * dt;
+                    var angle = Vector3.SignedAngle(UnitTransform.Forward, dir, Vector3.up);
                     var rotSpeed = (GetAttr(EAttrType.AttrRotSpeedPCT) / 10000f) * dt;
-                    float realRotAngle = rotSpeed < 0 ? angle : Mathf.Min(rotSpeed, angle);
+                    float realRotAngle = rotSpeed <= 0 ? angle : Mathf.Min(rotSpeed, angle);
 
                     //获取移动方向
                     UnitTransform.Rot = Quaternion.AngleAxis(realRotAngle, Vector3.up) * UnitTransform.Rot;
-                    var moveDt = UnitTransform.Forward * ((GetAttr(EAttrType.AttrMoveSpeedPCT) / 10000f) * dt);
+                    //var moveDt = UnitTransform.Forward * ((GetAttr(EAttrType.AttrMoveSpeedPCT) / 10000f) * dt);
+                    var moveDt = UnitTransform.Forward * (_bulletData.speed * dt);
                     UnitTransform.Pos += moveDt;
 
                     if (_target == null) return;
@@ -183,7 +209,7 @@ namespace Hono.Scripts.Battle.Core
                     if (Vector3.Distance(_targetPos, UnitTransform.Pos) < range)
                     {
                         //和目标的距离小于半径和
-                        HitSystem.Instance.SingleHit(_attacker, _target, _damageSourceType, _bulletData.id, false,
+                        HitSystem.Instance.SingleHit(_attacker, _target, DamageSourceType, _bulletData.id, false,
                                                      _hitTargetDamageId);
                     }
 
@@ -197,6 +223,12 @@ namespace Hono.Scripts.Battle.Core
                     }
 
                     break;
+            }
+
+            var proxy = UnityAdapter.Instance.GetUnityObjectProxy(Uid);
+            if (proxy != null)
+            {
+                proxy.SyncPosition(UnitTransform.Pos);
             }
         }
 
@@ -222,7 +254,7 @@ namespace Hono.Scripts.Battle.Core
                     }
 
                     var target = World.Query.GetUnit(uid);
-                    HitSystem.Instance.SingleHit(_attacker, target, _damageSourceType, _bulletData.id, false,
+                    HitSystem.Instance.SingleHit(_attacker, target, DamageSourceType, _bulletData.id, false,
                                                  _hitNotTargetDamageId);
                     _hitCountdown = _bulletData.minHitInterval;
                     ++_curHitNumber;
@@ -261,6 +293,7 @@ namespace Hono.Scripts.Battle.Core
             _target.RecycleCallBack -= onTargetRemove;
 
             _attacker = default;
+            _vfxComp = default;
             _bulletData = default;
             _curHitNumber = default;
             _duration = default;
@@ -271,6 +304,7 @@ namespace Hono.Scripts.Battle.Core
             _bulletType = default;
             _hitCountdown = default;
             _maxHitResul.Clear();
+            UnityAdapter.Instance.RemoveUnitObjectProxy(Uid);
         }
     }
 }

@@ -125,6 +125,11 @@ namespace Hono.Scripts.Battle
 
         public void Recycle(in T obj)
         {
+            if (obj == null)
+            {
+                return;
+            }
+            
             if (obj is IAPoolRefCount refCountObj)
             {
                 refCountObj.RefCount.RemoveReference();

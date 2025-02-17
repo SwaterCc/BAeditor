@@ -48,12 +48,17 @@ namespace Hono.Scripts.Battle.Core
             private CombatComp _combatComp;
 
             /// <summary>
+            /// 当前持续时间
+            /// </summary>
+            private float _duration;
+
+            /// <summary>
             /// 选中的世界坐标
             /// </summary>
             public Vector3 SelectWorldPos { get; set; }
 
             /// <summary>
-            /// 选中的单体目标
+            /// 选中的单体目标(重复字段)
             /// </summary>
             public Unit SelectSingleTarget { get; set; }
 
@@ -117,6 +122,14 @@ namespace Hono.Scripts.Battle.Core
 
             private void onAbilityEnd()
             {
+                if (SkillData.skillDuration <= 0)
+                {
+                    onSkillEnd();
+                }
+            }
+
+            private void onSkillEnd()
+            {
                 RemoveFlag(ESkillFlag.Executing);
                 if (SkillData.enterCdType == EEnterCDType.AfterExecute)
                 {
@@ -134,6 +147,7 @@ namespace Hono.Scripts.Battle.Core
                                              _combatComp.Unit.GetAttr(EAttrType.DisableInputMove) - 1);
                 }
 
+                _duration = SkillData.skillDuration;
                 TargetUid = -1;
                 SelectSingleTarget = null;
                 SelectWorldPos = Vector3.zero;
@@ -219,6 +233,16 @@ namespace Hono.Scripts.Battle.Core
                      Modifier.GetAttrModify(EAttrType.AttrAttackSpeedPCT)) / 10000f + 1;
                 attackSpeed = Mathf.Clamp(attackSpeed, 0.1f, 10);
                 _ability.TimeScaleFactory = attackSpeed;
+                
+                
+                if (SkillData.skillDuration > 0 && HasFlag(ESkillFlag.Executing))
+                {
+                    _duration -= dt;
+                    if (_duration <= 0)
+                    {
+                        onSkillEnd();
+                    }
+                }
             }
 
             public void OnRecycle()

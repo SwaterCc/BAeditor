@@ -14,24 +14,6 @@ namespace Hono.Scripts.Battle.AbilityFramework
     public partial class AFunctionDefine
     {
         [AbilityFunction]
-        public int GetBuffLayer(int actorUid, int buffId,int buffSourceUid)
-        {
-            if (tryGetActor(actorUid, out Actor actor))
-            {
-                if (actor.TryGetComponent<BuffComp>(out var comp))
-                {
-                    return comp.GetBuffLayer(buffId, buffSourceUid);
-                }
-            }
-
-            return -1;
-        }
-
-        [AbilityFunction]
-        [AbilityFunctionDesc("改技能等级", null, "技能id", "技能等级")]
-        public void ChangeSkillLevel(int skillId, int level) { }
-
-        [AbilityFunction]
         public void DebugMessage(string flag, string msg, object p1, object p2, object p3)
         {
 #if UNITY_EDITOR
@@ -46,112 +28,423 @@ namespace Hono.Scripts.Battle.AbilityFramework
 #endif
         }
 
-        [AbilityFunction("HitBox")]
-        public void CreateHitBox(int attackUid, int targetUid, HitParams aoeHitSetting, bool fromTopSummer = false)
+        #region 技能相关
+
+        [AbilityFunction("Skill")]
+        [AbilityFunctionDesc("修改Ability持有者的技能RT", null,
+                             "技能id",
+                             "修改技能等级/修改技能属性  /添加Tag /战斗资源消耗",
+                             "技能等级   /属性类型     /tag     /战斗资源Id",
+                             "-         /属性值      /-        /消耗修改数值"
+        )]
+        public void SkillRTModify(int skillId, ESkillModifyType modifyType, int p1, int p2)
         {
-            if (!tryGetActor(attackUid, out var attack))
+            if (!Unit.TryGetComponent<CombatComp>(out var combatComp))
             {
                 return;
             }
 
-            if (!tryGetActor(targetUid, out var target))
+            if (combatComp.TryGetSkillModifier(skillId, out SkillModifier modifier))
             {
-                return;
+                modifier.Modify(modifyType, p1, p2);
             }
         }
 
-        [AbilityFunction("HitBox")]
-        public void CreateHitBoxes(int attackUid,
-            List<int> targetUids,
-            HitParams aoeHitSetting,
-            bool fromTopSummer = false)
+        [AbilityFunction("Skill")]
+        [AbilityFunctionDesc("减少指定技能的Cd", null, "技能id", "减少值(秒)")]
+        public void LessSkillCD(int skillId, float lessValue)
         {
-            //返回打击点的Uid
-            if (targetUids is not { Count: > 0 }) return;
-
-            if (!tryGetActor(attackUid, out var attack))
+            if (!Unit.TryGetComponent<CombatComp>(out var combatComp))
             {
                 return;
             }
 
-            //返回打击点的Uid
-            if (targetUids is not { Count: > 0 }) return;
-
-            foreach (var targetUid in targetUids)
+            if (combatComp.TryGetSkill(skillId, out var skill))
             {
-                if (targetUid == 0) continue;
+                skill.LessCd(lessValue);
             }
         }
 
-        [AbilityFunction("HitBox")]
-        [AbilityFunctionDesc("创建打击盒子攻击指定目标", "无返回值", "打击盒子信息")]
-        public void CreateHitBoxToTargets(HitParams aoeHitSetting)
+        [AbilityFunction("Skill")]
+        [AbilityFunctionDesc("获取释放中的技能选中的世界坐标", null, "技能id")]
+        public Vector3 GetSkillSelectWorldPos(int skillId)
         {
-            //返回打击点的Uid
-            var targetUids = new List<int>();
-            if (targetUids == null)
+            if (!Unit.TryGetComponent<CombatComp>(out var combatComp))
             {
-                Debug.LogWarning($"form abilityId {AContext.Id}目标列表是空的，未创建打击点！");
+                return Vector3.zero;
+            }
+
+            if (combatComp.TryGetSkill(skillId, out var skill))
+            {
+                return skill.SelectWorldPos;
+            }
+
+            return Vector3.zero;
+        }
+
+        [AbilityFunction("Skill")]
+        [AbilityFunctionDesc("获取释放中的技能选中的单体目标Uid", null, "技能id")]
+        public int GetSkillSelectTargetUid(int skillId)
+        {
+            if (!Unit.TryGetComponent<CombatComp>(out var combatComp))
+            {
+                return -1;
+            }
+
+            if (combatComp.TryGetSkill(skillId, out var skill))
+            {
+                return skill.TargetUid;
+            }
+
+            return -1;
+        }
+
+        [AbilityFunction("Skill")]
+        [AbilityFunctionDesc("获取释放中的技能选中的方向", "返回Y轴的旋转值", "技能id")]
+        public float GetSkillSelectDir(int skillId)
+        {
+            if (!Unit.TryGetComponent<CombatComp>(out var combatComp))
+            {
+                return 0;
+            }
+
+            if (combatComp.TryGetSkill(skillId, out var skill))
+            {
+                return skill.SelectYAxisAngle;
+            }
+
+            return 0;
+        }
+
+        [AbilityFunction("Skill")]
+        [AbilityFunctionDesc("获取释放中的Aoe技能选中的目标", "目标 Uid List", "技能id")]
+        public List<int> GetSkillSelectTargets(int skillId)
+        {
+            if (!Unit.TryGetComponent<CombatComp>(out var combatComp))
+            {
+                return null;
+            }
+
+            if (combatComp.TryGetSkill(skillId, out var skill))
+            {
+                return skill.SelectUnitsInArea;
+            }
+
+            return null;
+        }
+
+        [AbilityFunction("Skill")]
+        [AbilityFunctionDesc("添加战斗资源", null, "战斗资源Id", "数量")]
+        public void AddFightRes(int resId, int value)
+        {
+            if (!Unit.TryGetComponent<CombatComp>(out var combatComp))
+            {
                 return;
             }
 
-            foreach (var targetUid in targetUids) { }
+            combatComp.AddEnergy(resId, value);
+        }
+
+        #endregion
+
+        #region Buff相关
+
+        [AbilityFunction("Buff")]
+        [AbilityFunctionDesc("获取buff层数", "返回buff层数", "buff持有者Uid", "BuffId", "buff来源Uid")]
+        public int GetBuffLayer(int actorUid, int buffId, int buffSourceUid)
+        {
+            if (tryGetUnit(actorUid, out Unit actor))
+            {
+                if (actor.TryGetComponent<BuffComp>(out var comp))
+                {
+                    return comp.GetBuffLayer(buffId, buffSourceUid);
+                }
+            }
+
+            return -1;
+        }
+
+        [AbilityFunction("Buff")]
+        [AbilityFunctionDesc("添加buff", null, "Buff来源的Uid", "添加Buff的目标的Uid", "BuffId", "buff初始层数")]
+        public void AddBuff(int sourceUid, int targetUid, int buffId, int buffLayer)
+        {
+            if (!tryGetUnit(sourceUid, out _))
+            {
+                return;
+            }
+
+            if (!tryGetUnit(targetUid, out var target))
+            {
+                return;
+            }
+
+            if (target.TryGetComponent(out BuffComp combatComp))
+            {
+                combatComp.AddBuff(buffId, sourceUid, buffLayer);
+            }
+        }
+
+        [AbilityFunction("Buff")]
+        [AbilityFunctionDesc("添加多个buff", null, "Buff来源的Uid", "添加Buff的目标Uid列表", "BuffId", "buff初始层数")]
+        public void AddBuffToTargets(int buffSourceUid,
+            List<int> targetUidList,
+            int buffId,
+            int buffLayer = 1)
+        {
+            if (targetUidList is not { Count: > 0 })
+            {
+                return;
+            }
+
+            if (!tryGetUnit(buffSourceUid, out _))
+            {
+                return;
+            }
+
+
+            foreach (var targetUid in targetUidList)
+            {
+                if (!tryGetUnit(targetUid, out var target))
+                {
+                    return;
+                }
+
+                var sourceUid = buffSourceUid;
+
+                if (target.TryGetComponent(out BuffComp combatComp))
+                {
+                    combatComp.AddBuff(buffId, sourceUid, buffLayer);
+                }
+            }
+        }
+
+        [AbilityFunction("Buff")]
+        [AbilityFunctionDesc("删除buff", null, "Buff持有者", "BuffId", "buff来源Uid")]
+        public void RemoveBuff(int targetUid, int buffId, int buffSourceUid)
+        {
+            if (!tryGetUnit(targetUid, out var target))
+            {
+                return;
+            }
+
+            if (target.TryGetComponent(out BuffComp combatComp))
+            {
+                combatComp.RemoveBuff(buffId, buffSourceUid);
+            }
+        }
+
+        #endregion
+
+        #region Hit
+
+        [AbilityFunction("Hit")]
+        [AbilityFunctionDesc("单体Hit", null, "攻击者Uid", "受击者Uid", "伤害Id", "禁止触发事件")]
+        public void SingleHit(int attackUid, int targetUid, int damageId, bool disableFireEvent)
+        {
+            if (!tryGetUnit(attackUid, out var attacker))
+            {
+                return;
+            }
+
+            if (!tryGetUnit(targetUid, out var target))
+            {
+                return;
+            }
+
+            HitSystem.Instance.SingleHit(attacker, target, getDamageSourceType(), AContext.Id, disableFireEvent,
+                                         damageId);
+        }
+
+        [AbilityFunction("Hit")]
+        [AbilityFunctionDesc("范围Hit", null, "攻击者Uid", "指定坐标", "旋转角度", "aoe相关设置", "伤害Id", "禁止触发事件")]
+        public void AreaHit(int attackUid,
+            Vector3 worldPos,
+            float yAxisAngle,
+            RangeFilterSetting aoeSetting,
+            int damageId,
+            bool disableFireEvent)
+        {
+            if (!tryGetUnit(attackUid, out var attacker))
+            {
+                return;
+            }
+
+
+            HitSystem.Instance.AreaHit(attacker, worldPos, yAxisAngle, getDamageSourceType(), AContext.Id, aoeSetting,
+                                       disableFireEvent,
+                                       damageId);
+        }
+
+        [AbilityFunction("Hit")]
+        [AbilityFunctionDesc("脱手单体HitBox", null)]
+        public void LockTargetSingleHitBox(int attackUid,
+            int targetUid,
+            int maxHitNumber,
+            float delayTime,
+            float interval,
+            int damageId,
+            bool disableFireEvent)
+        {
+            if (!tryGetUnit(attackUid, out var attacker))
+            {
+                return;
+            }
+
+            if (!tryGetUnit(targetUid, out var target))
+            {
+                return;
+            }
+
+            World.Current.CreateLockTargetSingleHitBox(attacker, target, getDamageSourceType(), AContext.Id,
+                                                       maxHitNumber, delayTime, interval, disableFireEvent, damageId);
+        }
+
+        [AbilityFunction("Hit")]
+        [AbilityFunctionDesc("脱手锁目标范围HitBox", null)]
+        public void LockTargetAreaHitBox(int attackUid,
+            int targetUid,
+            int maxHitNumber,
+            RangeFilterSetting aoeSetting,
+            float delayTime,
+            float interval,
+            int damageId,
+            bool disableFireEvent)
+        {
+            if (!tryGetUnit(attackUid, out var attacker))
+            {
+                return;
+            }
+
+            if (!tryGetUnit(targetUid, out var target))
+            {
+                return;
+            }
+
+            World.Current.CreateLockTargetAreaHitBox(attacker, target, getDamageSourceType(), AContext.Id,
+                                                     maxHitNumber, aoeSetting, delayTime, interval, disableFireEvent,
+                                                     damageId);
+        }
+
+        [AbilityFunction("Hit")]
+        [AbilityFunctionDesc("脱手范围HitBox", null)]
+        public void AreaHitBox(int attackUid,
+            Vector3 worldPos,
+            float yAxisAngle,
+            int maxHitNumber,
+            RangeFilterSetting aoeSetting,
+            float delayTime,
+            float interval,
+            int damageId,
+            bool disableFireEvent)
+        {
+            if (!tryGetUnit(attackUid, out var attacker))
+            {
+                return;
+            }
+
+
+            World.Current.CreateHitAreaBox(attacker, worldPos, yAxisAngle, getDamageSourceType(), AContext.Id,
+                                           maxHitNumber, aoeSetting, delayTime, interval, disableFireEvent,
+                                           damageId);
+        }
+
+        #endregion
+
+        #region 子弹
+
+        [AbilityFunction("Bullet")]
+        public void CreateLockTargetBullet(
+            int attackUid,
+            int targetUid,
+            int bulletId,
+            int hitTargetDamageId,
+            int hitNotTargetDamageId = 0)
+        {
+            if (!tryGetUnit(attackUid, out var attacker))
+            {
+                return;
+            }
+
+            if (!tryGetUnit(targetUid, out var target))
+            {
+                return;
+            }
+
+            if (!AssetManager.Instance.TryGetData<BulletData>(bulletId, out var bulletData))
+            {
+                return;
+            }
+
+            World.Current.CreateLockTargetBullet(attacker, target, bulletData, getDamageSourceType(), hitTargetDamageId,
+                                                 hitNotTargetDamageId);
         }
 
         [AbilityFunction("Bullet")]
-        public void CreateBullet(int targetUid, int bulletId, bool fromTopSummer = false) { }
-
-        [AbilityFunction("Bullet")]
-        public void CreateBullets(List<int> targetUids, int bulletId, bool fromTopSummer = false)
+        public void CreateDirectionBullet(
+            int attackUid,
+            float yAxisAngle,
+            int bulletId,
+            int hitTargetDamageId,
+            int hitNotTargetDamageId = 0)
         {
-            if (targetUids is not { Count: > 0 }) return;
+            if (!tryGetUnit(attackUid, out var attacker))
+            {
+                return;
+            }
 
-            foreach (var targetUid in targetUids) { }
+            if (!AssetManager.Instance.TryGetData<BulletData>(bulletId, out var bulletData))
+            {
+                return;
+            }
+
+            World.Current.CreateDirectionBullet(attacker, yAxisAngle, bulletData, getDamageSourceType(),
+                                                hitTargetDamageId,
+                                                hitNotTargetDamageId);
         }
 
-        [AbilityFunction("Bullet")]
-        public int AddVFX(VFXSetting setting, int vfxTargetUid = 0)
+        #endregion
+
+        #region 特效
+
+        [AbilityFunction("VFX")]
+        public int AddVFXByKey(int targetUid, string key, VFXSetting setting)
         {
-            if (!tryGetActor(vfxTargetUid, out var target))
+            if (!tryGetUnit(targetUid, out var target))
             {
                 return -1;
             }
 
             if (target.TryGetComponent<VFXComp>(out var vfxComp))
             {
-                // return vfxComp.AddVFXObject(setting);
+                return vfxComp.AddVFXByKey(key, setting);
             }
 
             Debug.LogError("创建VFX失败，目标没有特效组件");
             return -1;
         }
 
-        [AbilityFunction("VfX")]
-        public void AddVFXToTargets(VFXSetting setting, List<int> vfxTargetUids)
+        [AbilityFunction("VFX")]
+        public int AddVFXByPath(int targetUid, string path, VFXSetting setting)
         {
-            if (vfxTargetUids is not { Count: > 0 })
+            if (!tryGetUnit(targetUid, out var target))
             {
-                return;
+                return -1;
             }
 
-            foreach (var actorUid in vfxTargetUids)
+            if (target.TryGetComponent<VFXComp>(out var vfxComp))
             {
-                if (tryGetActor(actorUid, out var target))
-                {
-                    if (target.TryGetComponent<VFXComp>(out var vfxComp))
-                    {
-                        // vfxComp.AddVFXObject(setting);
-                    }
-                }
+                return vfxComp.AddVFXByKey(path, setting);
             }
 
-            return;
+            Debug.LogError("创建VFX失败，目标没有特效组件");
+            return -1;
         }
 
+
         [AbilityFunction("VfX")]
-        public void RemoveVFX(int vfxUid, int vfxTargetUid = 0)
+        public void RemoveVFX(int vfxTargetUid, int vfxUid)
         {
-            if (!tryGetActor(vfxTargetUid, out var target))
+            if (!tryGetUnit(vfxTargetUid, out var target))
             {
                 return;
             }
@@ -162,101 +455,58 @@ namespace Hono.Scripts.Battle.AbilityFramework
             }
         }
 
+        #endregion
 
         [AbilityFunction]
-        public List<int> SelectTargets(int centerActorUid, RangeFilterSetting setting)
+        public float GetUnitYAxisAngle(int unitUid)
         {
-            List<int> actorUids = new();
-            if (tryGetActor(centerActorUid, out var actor))
+            if (tryGetUnit(unitUid, out var unit))
             {
-                //UnitManager.Instance.UseFilter(actor, setting, ref actorUids);
+                return unit.UnitTransform.YAxisAngle;
             }
 
-            return actorUids;
+            return 0;
         }
 
         [AbilityFunction]
-        public bool CheckTalent(string talentKey)
+        public Vector3 GetUnitPosition(int unitUid)
+        {
+            if (tryGetUnit(unitUid, out var unit))
+            {
+                return unit.UnitTransform.Pos;
+            }
+
+            return Vector3.zero;
+        }
+
+        [AbilityFunction]
+        public List<int> SelectTargets(int useFilterUnitUid, Vector3 pos, float yAxisAngle, RangeFilterSetting setting)
+        {
+            if (tryGetUnit(useFilterUnitUid, out var actor))
+            {
+                World.Query.SearchUnits(actor, pos, yAxisAngle, setting, ref _abilitySelectTargetUids);
+            }
+
+            return _abilitySelectTargetUids;
+        }
+
+        [AbilityFunction]
+        public bool CheckTalent(int targetUid, string talentKey)
         {
             return true;
         }
 
         [AbilityFunction]
-        public bool CheckActorTag(int uid, int tagID, bool reverse)
+        public bool CheckTag(int targetUid, int tag, bool reverse)
         {
-            /*if (tryGetActor(uid, out var actor)) {
-                return reverse ? !actor.TagCollection.HasTag(tagID) : actor.TagCollection.HasTag(tagID);
+            if (tryGetUnit(targetUid, out var actor))
+            {
+                return reverse ? !actor.Tags.HasTag(tag) : actor.Tags.HasTag(tag);
             }
-            return false;*/
+
             return false;
         }
 
-        [AbilityFunction]
-        public void AddBuff(int targetUid, int buffId, int buffLayer = 1, bool topSourceActor = false)
-        {
-            if (!tryGetActor(targetUid, out var target))
-            {
-                return;
-            }
-
-            var sourceActor = Actor;
-            var sourceUid = topSourceActor
-                ? sourceActor.GetAttr(EAttrType.AttrSourceActorUid)
-                : sourceActor.GetAttr(EAttrType.AttrTopSourceActorUid);
-
-            if (target.TryGetComponent(out BuffComp combatComp))
-            {
-                combatComp.AddBuff(buffId, sourceUid, buffLayer);
-            }
-        }
-
-        [AbilityFunction]
-        public void AddBuffToTargets(List<int> targetUids,
-            int buffId,
-            int buffLayer = 1,
-            bool topSourceActor = false)
-        {
-            if (targetUids is not { Count: > 0 })
-            {
-                return;
-            }
-
-            foreach (var targetUid in targetUids)
-            {
-                if (!tryGetActor(targetUid, out var target))
-                {
-                    return;
-                }
-
-                var sourceActor = Actor;
-                var sourceUid = topSourceActor
-                    ? sourceActor.GetAttr(EAttrType.AttrSourceActorUid)
-                    : sourceActor.GetAttr(EAttrType.AttrTopSourceActorUid);
-
-                if (target.TryGetComponent(out BuffComp combatComp))
-                {
-                    combatComp.AddBuff(buffId, sourceUid, buffLayer);
-                }
-            }
-        }
-
-        [AbilityFunction]
-        public void RemoveBuff(int targetUid, int buffId, int buffSourceUid)
-        {
-            if (!tryGetActor(targetUid, out var target))
-            {
-                return;
-            }
-
-            if (target.TryGetComponent(out BuffComp combatComp))
-            {
-                combatComp.RemoveBuff(buffId, buffSourceUid);
-            }
-        }
-        
-        
-        [AbilityFunction]
-        public void LessSkillCD(int skillId, int lessValue) { }
 
         [AbilityFunction]
         public int GetListCount(List<int> list)
@@ -318,11 +568,6 @@ namespace Hono.Scripts.Battle.AbilityFramework
             return 0;
         }
 
-        [AbilityFunction]
-        public void AddFightRes(int resourceValue, bool isPer)
-        {
-            
-        }
 
         [AbilityFunction]
         public float CalculateFloat(float left, ECalculateType calculateType, float right)

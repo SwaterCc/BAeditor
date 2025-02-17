@@ -83,6 +83,7 @@ namespace Hono.Scripts.Battle
                 skillAbility.fileName = fileName;
                 skillAbility.id = id;
                 skillAbility.path = path;
+                skillAbility.abilityBelongType = EAbilityBelongType.Skill;
 #if UNITY_EDITOR
                 UnityEditor.AssetDatabase.AddObjectToAsset(skillAbility, this);
                 UnityEditor.EditorUtility.SetDirty(this);

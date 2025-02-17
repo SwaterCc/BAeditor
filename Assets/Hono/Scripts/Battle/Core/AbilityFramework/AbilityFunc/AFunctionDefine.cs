@@ -1,4 +1,6 @@
-﻿using Hono.Scripts.Battle.Core;
+﻿using System;
+using System.Collections.Generic;
+using Hono.Scripts.Battle.Core;
 
 namespace Hono.Scripts.Battle.AbilityFramework
 {
@@ -18,8 +20,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// <summary>
         /// Ability所属的Actor
         /// </summary>
-        private Unit Actor => AContext.Unit;
+        private Unit Unit => AContext.Unit;
 
+        private List<int> _abilitySelectTargetUids = new();
+        
         internal AFunctionDefine(Ability ability)
         {
             AContext = ability;
@@ -31,19 +35,36 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// <param name="actorUid"></param>
         /// <param name="actor"></param>
         /// <returns></returns>
-        private bool tryGetActor(int actorUid, out Actor actor)
+        private bool tryGetUnit(int actorUid, out Unit actor)
         {
             actor = null;
             if (actorUid <= 0)
             {
-                actor = AContext.Unit as Actor;
+                actor = AContext.Unit;
             }
             else
             {
-                actor = World.Query.GetUnit(actorUid) as Actor;
+                actor = World.Query.GetUnit(actorUid);
             }
 
             return actor != null;
+        }
+
+        private EDamageSourceType getDamageSourceType()
+        {
+            switch (AContext.Data.abilityBelongType)
+            {
+                case EAbilityBelongType.Unit:
+                    return EDamageSourceType.Unit;
+                case EAbilityBelongType.Skill:
+                    return EDamageSourceType.Skill;
+                case EAbilityBelongType.Buff:
+                    return EDamageSourceType.Buff;
+                case EAbilityBelongType.Bullet:
+                    return ((Bullet)Unit).DamageSourceType;
+            }
+
+            return EDamageSourceType.None;
         }
     }
 }

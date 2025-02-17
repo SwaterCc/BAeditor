@@ -293,7 +293,8 @@ namespace Hono.Scripts.Battle.Core
 
             Attrs.Clear();
             Tags.Clear();
-
+            
+            _firstTick = true;
             LoadFinishCallBack = null;
             BeforeFirstTickCallback = null;
             BeforeTickCallBack = null;

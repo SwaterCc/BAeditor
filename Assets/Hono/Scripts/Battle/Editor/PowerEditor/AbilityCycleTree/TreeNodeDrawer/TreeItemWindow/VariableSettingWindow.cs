@@ -152,7 +152,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
                                                  new[] { "重设" }, GUILayout.Width(60));
             }
 
-            _varField.CastValueType(_curSelectVarType);
+            _varField.CastValueType(ARef.ParseValueTypeToARefType(_curSelectVarType));
             _varField.Draw();
             TempData.operationType = (EVariableOperationType)_operation;
             EditorGUIUtility.labelWidth = old;

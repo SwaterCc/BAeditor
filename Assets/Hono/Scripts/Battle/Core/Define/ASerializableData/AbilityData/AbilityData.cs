@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine.Serialization;
 
 #endregion
 
@@ -10,6 +11,8 @@ namespace Hono.Scripts.Battle
 {
     public class AbilityData : ASerializableData
     {
+        public EAbilityBelongType abilityBelongType = EAbilityBelongType.Unit;
+        
         /// <summary>
         /// 默认起始Group
         /// </summary>

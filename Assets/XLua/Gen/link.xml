@@ -65,6 +65,7 @@
 		<type fullname="XLuaTest.Foo2Child" preserve="all"/>
 		<type fullname="XLuaTest.Foo" preserve="all"/>
 		<type fullname="XLuaTest.FooExtension" preserve="all"/>
+		<type fullname="Hono.Scripts.Battle.EDamageSourceType" preserve="all"/>
 		<type fullname="Hono.Scripts.Battle.Core.DamageResult" preserve="all"/>
 		<type fullname="Hono.Scripts.Battle.Core.DamagePipLine" preserve="all"/>
 		<type fullname="Tutorial.DerivedClass+TestEnumInner" preserve="all"/>

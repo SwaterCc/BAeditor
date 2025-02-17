@@ -26,7 +26,7 @@ MonoBehaviour:
   desc: 
   path: Assets/BattleData/PowerEditor/GameData/Skill/1001.asset
   skillIcon: 
-  skillDuration: 2
+  skillDuration: -1
   skillType: 1
   enterCdType: 0
   skillCd: 0
@@ -40,9 +40,12 @@ MonoBehaviour:
   disableMoveInput: 1
   skillAbility: {fileID: 7061720356701130126}
   castRange: 5
-  skillTargetType: 1
+  skillTargetType: 0
   targetFilter:
-    conditions: []
+    conditions:
+    - conditionType: 2
+      isReverse: 0
+      value: 1
     attrCompares: []
   rangeFilter:
     OpenBoxCheck: 1
@@ -185,7 +188,7 @@ MonoBehaviour:
       Data: 0
     - Name: parentIndex
       Entry: 3
-      Data: 0
+      Data: -1
     - Name: belongGroupId
       Entry: 3
       Data: -1
@@ -194,7 +197,10 @@ MonoBehaviour:
       Data: 6|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 13
       Data: 
@@ -219,7 +225,89 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 9
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 8|Hono.Scripts.Battle.VariableNodeData, Assembly-CSharp
+    - Name: nodeIndex
+      Entry: 3
+      Data: 1
+    - Name: parentIndex
+      Entry: 3
       Data: 0
+    - Name: belongGroupId
+      Entry: 3
+      Data: -1
+    - Name: childrenIndexes
+      Entry: 7
+      Data: 9|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: desc
+      Entry: 1
+      Data: 
+    - Name: skipExecute
+      Entry: 5
+      Data: false
+    - Name: showLog
+      Entry: 5
+      Data: false
+    - Name: key
+      Entry: 1
+      Data: timeCount
+    - Name: isModify
+      Entry: 5
+      Data: false
+    - Name: value
+      Entry: 7
+      Data: 10|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 11|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 1
+      Data: Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: operationType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -240,7 +328,7 @@ MonoBehaviour:
       Data: 3
     - Name: $v
       Entry: 7
-      Data: 8|Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp
+      Data: 12|Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp
     - Name: nodeIndex
       Entry: 3
       Data: 0
@@ -252,7 +340,7 @@ MonoBehaviour:
       Data: -1
     - Name: childrenIndexes
       Entry: 7
-      Data: 9|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+      Data: 13|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 1
@@ -279,17 +367,17 @@ MonoBehaviour:
       Data: 3
     - Name: SerializableNodeList
       Entry: 7
-      Data: 10|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilityNodeData,
+      Data: 14|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilityNodeData,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 7
     - Name: 
       Entry: 9
-      Data: 8
+      Data: 12
     - Name: 
       Entry: 7
-      Data: 11|Hono.Scripts.Battle.FunctionNodeData, Assembly-CSharp
+      Data: 15|Hono.Scripts.Battle.TimerNodeData, Assembly-CSharp
     - Name: nodeIndex
       Entry: 3
       Data: 1
@@ -301,7 +389,151 @@ MonoBehaviour:
       Data: -1
     - Name: childrenIndexes
       Entry: 7
-      Data: 12|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+      Data: 16|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: desc
+      Entry: 1
+      Data: 
+    - Name: skipExecute
+      Entry: 5
+      Data: false
+    - Name: showLog
+      Entry: 5
+      Data: false
+    - Name: firstInterval
+      Entry: 7
+      Data: 17|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 18|Hono.Scripts.Battle.Base.RefFloat, Assembly-CSharp
+    - Name: Value
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: interval
+      Entry: 7
+      Data: 19|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 20|Hono.Scripts.Battle.Base.RefFloat, Assembly-CSharp
+    - Name: Value
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: maxCount
+      Entry: 7
+      Data: 21|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 22|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 23|Hono.Scripts.Battle.FunctionNodeData, Assembly-CSharp
+    - Name: nodeIndex
+      Entry: 3
+      Data: 2
+    - Name: parentIndex
+      Entry: 3
+      Data: 1
+    - Name: belongGroupId
+      Entry: 3
+      Data: -1
+    - Name: childrenIndexes
+      Entry: 7
+      Data: 24|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 0
@@ -322,7 +554,621 @@ MonoBehaviour:
       Data: false
     - Name: action
       Entry: 7
-      Data: 13|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+      Data: 25|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 1
+    - Name: funcName
+      Entry: 1
+      Data: CreateLockTargetBullet
+    - Name: funcParams
+      Entry: 7
+      Data: 26|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilitySystem.AParams,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 27|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 1
+      Data: GetSkillSelectTargetUid
+    - Name: funcParams
+      Entry: 7
+      Data: 28|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilitySystem.AParams,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 29|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 30|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 1001
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 31|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 32|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 1
+    - Name: funcName
+      Entry: 1
+      Data: GetSkillSelectTargetUid
+    - Name: funcParams
+      Entry: 7
+      Data: 33|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilitySystem.AParams,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 34|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 35|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 1001
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 36|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 37|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 717
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 38|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 39|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 40|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 41|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: returnType
+      Entry: 1
+      Data: System.Void
+    - Name: isCreateVariable
+      Entry: 5
+      Data: false
+    - Name: returnValueKey
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 42|Hono.Scripts.Battle.VariableNodeData, Assembly-CSharp
+    - Name: nodeIndex
+      Entry: 3
+      Data: 3
+    - Name: parentIndex
+      Entry: 3
+      Data: 1
+    - Name: belongGroupId
+      Entry: 3
+      Data: -1
+    - Name: childrenIndexes
+      Entry: 7
+      Data: 43|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: desc
+      Entry: 1
+      Data: 
+    - Name: skipExecute
+      Entry: 5
+      Data: false
+    - Name: showLog
+      Entry: 5
+      Data: false
+    - Name: key
+      Entry: 1
+      Data: timeCount
+    - Name: isModify
+      Entry: 5
+      Data: true
+    - Name: value
+      Entry: 7
+      Data: 44|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 45|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 1
+      Data: Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: operationType
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 46|Hono.Scripts.Battle.BranchGroupNodeData, Assembly-CSharp
+    - Name: nodeIndex
+      Entry: 3
+      Data: 4
+    - Name: parentIndex
+      Entry: 3
+      Data: 1
+    - Name: belongGroupId
+      Entry: 3
+      Data: -1
+    - Name: childrenIndexes
+      Entry: 7
+      Data: 47|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: desc
+      Entry: 1
+      Data: 
+    - Name: skipExecute
+      Entry: 5
+      Data: false
+    - Name: showLog
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 48|Hono.Scripts.Battle.BranchNodeData, Assembly-CSharp
+    - Name: nodeIndex
+      Entry: 3
+      Data: 5
+    - Name: parentIndex
+      Entry: 3
+      Data: 4
+    - Name: belongGroupId
+      Entry: 3
+      Data: -1
+    - Name: childrenIndexes
+      Entry: 7
+      Data: 49|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: desc
+      Entry: 1
+      Data: 
+    - Name: skipExecute
+      Entry: 5
+      Data: false
+    - Name: showLog
+      Entry: 5
+      Data: false
+    - Name: condition
+      Entry: 7
+      Data: 50|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 1
+    - Name: funcName
+      Entry: 1
+      Data: CompareInt
+    - Name: funcParams
+      Entry: 7
+      Data: 51|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilitySystem.AParams,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 52|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 2
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 1
+      Data: timeCount
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 53|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 54|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 55|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+    - Name: paramType
+      Entry: 3
+      Data: 0
+    - Name: funcName
+      Entry: 6
+      Data: 
+    - Name: funcParams
+      Entry: 6
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 7
+      Data: 56|Hono.Scripts.Battle.Base.RefInt, Assembly-CSharp
+    - Name: Value
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: variableName
+      Entry: 6
+      Data: 
+    - Name: attrType
+      Entry: 3
+      Data: 0
+    - Name: Value
+      Entry: 6
+      Data: 
+    - Name: paramCastType
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 57|Hono.Scripts.Battle.FunctionNodeData, Assembly-CSharp
+    - Name: nodeIndex
+      Entry: 3
+      Data: 6
+    - Name: parentIndex
+      Entry: 3
+      Data: 5
+    - Name: belongGroupId
+      Entry: 3
+      Data: -1
+    - Name: childrenIndexes
+      Entry: 7
+      Data: 58|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: desc
+      Entry: 1
+      Data: 
+    - Name: skipExecute
+      Entry: 5
+      Data: false
+    - Name: showLog
+      Entry: 5
+      Data: false
+    - Name: action
+      Entry: 7
+      Data: 59|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
     - Name: paramType
       Entry: 3
       Data: 1
@@ -331,14 +1177,14 @@ MonoBehaviour:
       Data: DebugMessage
     - Name: funcParams
       Entry: 7
-      Data: 14|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilitySystem.AParams,
+      Data: 60|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilitySystem.AParams,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
       Data: 5
     - Name: 
       Entry: 7
-      Data: 15|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+      Data: 61|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
     - Name: paramType
       Entry: 3
       Data: 0
@@ -356,7 +1202,7 @@ MonoBehaviour:
       Data: 0
     - Name: Value
       Entry: 7
-      Data: 16|System.String, mscorlib
+      Data: 62|System.String, mscorlib
     - Name: 
       Entry: 1
       Data: 
@@ -371,7 +1217,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 17|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+      Data: 63|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
     - Name: paramType
       Entry: 3
       Data: 0
@@ -389,10 +1235,10 @@ MonoBehaviour:
       Data: 0
     - Name: Value
       Entry: 7
-      Data: 18|System.String, mscorlib
+      Data: 64|System.String, mscorlib
     - Name: 
       Entry: 1
-      Data: '"fffffffffffffffffffffffffffffffffffffffffffff"'
+      Data: case11111111111111111111111
     - Name: 
       Entry: 8
       Data: 
@@ -404,7 +1250,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 19|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+      Data: 65|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
     - Name: paramType
       Entry: 3
       Data: 0
@@ -431,7 +1277,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 20|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+      Data: 66|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
     - Name: paramType
       Entry: 3
       Data: 0
@@ -458,7 +1304,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 21|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
+      Data: 67|Hono.Scripts.Battle.AbilitySystem.AParams, Assembly-CSharp
     - Name: paramType
       Entry: 3
       Data: 0
@@ -536,7 +1382,7 @@ MonoBehaviour:
       Data: 4
     - Name: $v
       Entry: 7
-      Data: 22|Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp
+      Data: 68|Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp
     - Name: nodeIndex
       Entry: 3
       Data: 0
@@ -548,7 +1394,7 @@ MonoBehaviour:
       Data: -1
     - Name: childrenIndexes
       Entry: 7
-      Data: 23|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+      Data: 69|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
     - Name: 
       Entry: 12
       Data: 0
@@ -572,7 +1418,7 @@ MonoBehaviour:
       Data: 4
     - Name: SerializableNodeList
       Entry: 7
-      Data: 24|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilityNodeData,
+      Data: 70|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilityNodeData,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -599,4 +1445,5 @@ MonoBehaviour:
   fileName: 1001
   desc: 
   path: Assets/BattleData/PowerEditor/GameData/Skill/1001.asset
+  abilityBelongType: 0
   defaultStartGroupId: -1

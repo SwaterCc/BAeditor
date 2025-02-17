@@ -89,6 +89,8 @@ namespace Hono.Scripts.Battle.Core
             _yAxisAngle = yAxisAngle;
             _rangeFilterSetting = setting;
             result.Clear();
+            _filterActors.Clear();
+            _checkBoxResult.Clear();
             
             getResults(ref result);
             

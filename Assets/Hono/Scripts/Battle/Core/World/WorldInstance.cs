@@ -244,6 +244,7 @@ namespace Hono.Scripts.Battle.Core
                 _loadingCaches.RemoveSwapBack(unit);
                 addUnitToRunningList(unit);
             }
+
             _loadingFinishList.Clear();
 
             i = 0;
@@ -296,7 +297,7 @@ namespace Hono.Scripts.Battle.Core
         private void addUnitToWorld(Unit unit)
         {
             unit.Init();
-            
+
             unit.Load();
 
             if (unit.IsLoadFinish)
@@ -423,25 +424,107 @@ namespace Hono.Scripts.Battle.Core
         }
 
         /// <summary>
-        /// 创建子弹
+        /// 创建锁目标子弹
         /// </summary>
-        public Bullet CreateBullet(Unit attacker)
+        public Bullet CreateLockTargetBullet(Unit attacker,
+            Unit target,
+            BulletData bulletData,
+            EDamageSourceType damageSourceType,
+            int hitTargetDamageId,
+            int hitNotTargetDamageId = 0)
         {
             var bullet = GPool<Bullet>.Pool.Rent();
-            //属性全拷贝X 直接拥有攻击者对象
+            bullet.LockTargetBullet(attacker, target, bulletData, damageSourceType, hitTargetDamageId,
+                                    hitNotTargetDamageId);
+            bullet.Ctor();
             addUnitToWorld(bullet);
             return bullet;
         }
 
         /// <summary>
-        /// 创建脱手打击盒
+        /// 创建方向子弹
         /// </summary>
-        public HitBox CreateHitBox(Unit attacker)
+        public Bullet CreateDirectionBullet(Unit attacker,
+            float yAxisAngle,
+            BulletData bulletData,
+            EDamageSourceType damageSourceType,
+            int hitTargetDamageId,
+            int hitNotTargetDamageId)
+        {
+            var bullet = GPool<Bullet>.Pool.Rent();
+            bullet.DirectionBullet(attacker, yAxisAngle, bulletData, damageSourceType, hitTargetDamageId,
+                                   hitNotTargetDamageId);
+            bullet.Ctor();
+            addUnitToWorld(bullet);
+            return bullet;
+        }
+
+        #region 创建打击盒
+
+        /// <summary>
+        /// 创建锁定目标单体打击的打击盒
+        /// </summary>
+        public void CreateLockTargetSingleHitBox(Unit attacker,
+            Unit target,
+            EDamageSourceType damageSourceType,
+            int sourceAbilityId,
+            int maxHitNumber,
+            float delayTime,
+            float interval,
+            bool disableEventTrigger = false,
+            int damageId = 0)
         {
             var hitBox = GPool<HitBox>.Pool.Rent();
+            hitBox.LockTargetSingleHit(attacker, target, damageSourceType, sourceAbilityId, maxHitNumber, delayTime,
+                                       interval, disableEventTrigger, damageId);
             addUnitToWorld(hitBox);
-            return hitBox;
         }
+
+        /// <summary>
+        /// 创建锁定目标范围打击的打击盒
+        /// </summary>
+        public void CreateLockTargetAreaHitBox(Unit attacker,
+            Unit target,
+            EDamageSourceType damageSourceType,
+            int sourceAbilityId,
+            int maxHitNumber,
+            RangeFilterSetting aoeSetting,
+            float delayTime,
+            float interval,
+            bool disableEventTrigger = false,
+            int damageId = 0)
+        {
+            var hitBox = GPool<HitBox>.Pool.Rent();
+            hitBox.LockTargetAreaHit(attacker, target, damageSourceType, sourceAbilityId, maxHitNumber, aoeSetting,
+                                     delayTime,
+                                     interval, disableEventTrigger, damageId);
+            addUnitToWorld(hitBox);
+        }
+
+        /// <summary>
+        /// 创建锁定目标范围打击的打击盒
+        /// </summary>
+        public void CreateHitAreaBox(Unit attacker,
+            Vector3 worldPos,
+            float yAngle,
+            EDamageSourceType damageSourceType,
+            int sourceAbilityId,
+            int maxHitNumber,
+            RangeFilterSetting aoeSetting,
+            float delayTime,
+            float interval,
+            bool disableEventTrigger = false,
+            int damageId = 0)
+        {
+            var hitBox = GPool<HitBox>.Pool.Rent();
+            hitBox.HitArea(attacker, worldPos, yAngle, damageSourceType, sourceAbilityId, maxHitNumber, aoeSetting,
+                           delayTime,
+                           interval, disableEventTrigger, damageId);
+            addUnitToWorld(hitBox);
+        }
+
+        #endregion
+
 
         /// <summary>
         /// 删除Unit

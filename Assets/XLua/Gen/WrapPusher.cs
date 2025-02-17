@@ -39,6 +39,7 @@ namespace XLua
 				translator.RegisterPushAndGetAndUpdate<XLuaTest.PushAsTableStruct>(translator.PushXLuaTestPushAsTableStruct, translator.Get, translator.UpdateXLuaTestPushAsTableStruct);
 				translator.RegisterPushAndGetAndUpdate<Tutorial.TestEnum>(translator.PushTutorialTestEnum, translator.Get, translator.UpdateTutorialTestEnum);
 				translator.RegisterPushAndGetAndUpdate<XLuaTest.MyEnum>(translator.PushXLuaTestMyEnum, translator.Get, translator.UpdateXLuaTestMyEnum);
+				translator.RegisterPushAndGetAndUpdate<Hono.Scripts.Battle.EDamageSourceType>(translator.PushHonoScriptsBattleEDamageSourceType, translator.Get, translator.UpdateHonoScriptsBattleEDamageSourceType);
 				translator.RegisterPushAndGetAndUpdate<Tutorial.DerivedClass.TestEnumInner>(translator.PushTutorialDerivedClassTestEnumInner, translator.Get, translator.UpdateTutorialDerivedClassTestEnumInner);
 			
 			}
@@ -939,6 +940,90 @@ namespace XLua
             }
         }
         
+        int HonoScriptsBattleEDamageSourceType_TypeID = -1;
+		int HonoScriptsBattleEDamageSourceType_EnumRef = -1;
+        
+        public void PushHonoScriptsBattleEDamageSourceType(RealStatePtr L, Hono.Scripts.Battle.EDamageSourceType val)
+        {
+            if (HonoScriptsBattleEDamageSourceType_TypeID == -1)
+            {
+			    bool is_first;
+                HonoScriptsBattleEDamageSourceType_TypeID = getTypeId(L, typeof(Hono.Scripts.Battle.EDamageSourceType), out is_first);
+				
+				if (HonoScriptsBattleEDamageSourceType_EnumRef == -1)
+				{
+				    Utils.LoadCSTable(L, typeof(Hono.Scripts.Battle.EDamageSourceType));
+				    HonoScriptsBattleEDamageSourceType_EnumRef = LuaAPI.luaL_ref(L, LuaIndexes.LUA_REGISTRYINDEX);
+				}
+				
+            }
+			
+			if (LuaAPI.xlua_tryget_cachedud(L, (int)val, HonoScriptsBattleEDamageSourceType_EnumRef) == 1)
+            {
+			    return;
+			}
+			
+            IntPtr buff = LuaAPI.xlua_pushstruct(L, 4, HonoScriptsBattleEDamageSourceType_TypeID);
+            if (!CopyByValue.Pack(buff, 0, (int)val))
+            {
+                throw new Exception("pack fail fail for Hono.Scripts.Battle.EDamageSourceType ,value="+val);
+            }
+			
+			LuaAPI.lua_getref(L, HonoScriptsBattleEDamageSourceType_EnumRef);
+			LuaAPI.lua_pushvalue(L, -2);
+			LuaAPI.xlua_rawseti(L, -2, (int)val);
+			LuaAPI.lua_pop(L, 1);
+			
+        }
+		
+        public void Get(RealStatePtr L, int index, out Hono.Scripts.Battle.EDamageSourceType val)
+        {
+		    LuaTypes type = LuaAPI.lua_type(L, index);
+            if (type == LuaTypes.LUA_TUSERDATA )
+            {
+			    if (LuaAPI.xlua_gettypeid(L, index) != HonoScriptsBattleEDamageSourceType_TypeID)
+				{
+				    throw new Exception("invalid userdata for Hono.Scripts.Battle.EDamageSourceType");
+				}
+				
+                IntPtr buff = LuaAPI.lua_touserdata(L, index);
+				int e;
+                if (!CopyByValue.UnPack(buff, 0, out e))
+                {
+                    throw new Exception("unpack fail for Hono.Scripts.Battle.EDamageSourceType");
+                }
+				val = (Hono.Scripts.Battle.EDamageSourceType)e;
+                
+            }
+            else
+            {
+                val = (Hono.Scripts.Battle.EDamageSourceType)objectCasters.GetCaster(typeof(Hono.Scripts.Battle.EDamageSourceType))(L, index, null);
+            }
+        }
+		
+        public void UpdateHonoScriptsBattleEDamageSourceType(RealStatePtr L, int index, Hono.Scripts.Battle.EDamageSourceType val)
+        {
+		    
+            if (LuaAPI.lua_type(L, index) == LuaTypes.LUA_TUSERDATA)
+            {
+			    if (LuaAPI.xlua_gettypeid(L, index) != HonoScriptsBattleEDamageSourceType_TypeID)
+				{
+				    throw new Exception("invalid userdata for Hono.Scripts.Battle.EDamageSourceType");
+				}
+				
+                IntPtr buff = LuaAPI.lua_touserdata(L, index);
+                if (!CopyByValue.Pack(buff, 0,  (int)val))
+                {
+                    throw new Exception("pack fail for Hono.Scripts.Battle.EDamageSourceType ,value="+val);
+                }
+            }
+			
+            else
+            {
+                throw new Exception("try to update a data with lua type:" + LuaAPI.lua_type(L, index));
+            }
+        }
+        
         int TutorialDerivedClassTestEnumInner_TypeID = -1;
 		int TutorialDerivedClassTestEnumInner_EnumRef = -1;
         
@@ -1112,6 +1197,12 @@ namespace XLua
 				translator.PushXLuaTestMyEnum(L, array[index]);
 				return true;
 			}
+			else if (type == typeof(Hono.Scripts.Battle.EDamageSourceType[]))
+			{
+			    Hono.Scripts.Battle.EDamageSourceType[] array = obj as Hono.Scripts.Battle.EDamageSourceType[];
+				translator.PushHonoScriptsBattleEDamageSourceType(L, array[index]);
+				return true;
+			}
 			else if (type == typeof(Tutorial.DerivedClass.TestEnumInner[]))
 			{
 			    Tutorial.DerivedClass.TestEnumInner[] array = obj as Tutorial.DerivedClass.TestEnumInner[];
@@ -1199,6 +1290,12 @@ namespace XLua
 			else if (type == typeof(XLuaTest.MyEnum[]))
 			{
 			    XLuaTest.MyEnum[] array = obj as XLuaTest.MyEnum[];
+				translator.Get(L, obj_idx, out array[array_idx]);
+				return true;
+			}
+			else if (type == typeof(Hono.Scripts.Battle.EDamageSourceType[]))
+			{
+			    Hono.Scripts.Battle.EDamageSourceType[] array = obj as Hono.Scripts.Battle.EDamageSourceType[];
 				translator.Get(L, obj_idx, out array[array_idx]);
 				return true;
 			}

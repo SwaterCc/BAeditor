@@ -1,0 +1,342 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd1463f66e5440ea590f25350e942f0, type: 3}
+  m_Name: 717
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  id: 717
+  fileName: 717
+  desc: 
+  path: Assets/BattleData/PowerEditor/GameData/Bullet/717.asset
+  hitRadius: 0.5
+  ignoreAllNotTarget: 0
+  notTargetHitCondition:
+    conditions:
+    - conditionType: 1
+      isReverse: 0
+      value: 1
+    attrCompares: []
+  speed: 10
+  acceleration: 1
+  rotSpeed: 0
+  lifeTime: 5
+  minHitInterval: 1
+  maxHitCount: 5
+  isUseVFXKeyModel: 0
+  flyVFXStr: Assets/BattleModel/Prototype/Model/LootModel.prefab
+  hitVFXStr: Assets/BattleModel/Base/BuildArea.prefab
+  bulletAbility: {fileID: 4130809267460278915}
+--- !u!114 &4130809267460278915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdf174ffe5ec4e96827eaf1b0ff576c3, type: 3}
+  m_Name: bulletAbility
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: HeadNodeDict
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Hono.Scripts.Battle.EAbilityCycle,
+        Assembly-CSharp],[Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Hono.Scripts.Battle.EAbilityCycle,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 2|Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp
+    - Name: nodeIndex
+      Entry: 3
+      Data: 0
+    - Name: parentIndex
+      Entry: 3
+      Data: 0
+    - Name: belongGroupId
+      Entry: 3
+      Data: -1
+    - Name: childrenIndexes
+      Entry: 7
+      Data: 3|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: desc
+      Entry: 1
+      Data: 
+    - Name: skipExecute
+      Entry: 5
+      Data: false
+    - Name: showLog
+      Entry: 5
+      Data: false
+    - Name: cycleType
+      Entry: 3
+      Data: 1
+    - Name: SerializableNodeList
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilityNodeData,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: 5|Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp
+    - Name: nodeIndex
+      Entry: 3
+      Data: 0
+    - Name: parentIndex
+      Entry: 3
+      Data: 0
+    - Name: belongGroupId
+      Entry: 3
+      Data: -1
+    - Name: childrenIndexes
+      Entry: 7
+      Data: 6|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: desc
+      Entry: 1
+      Data: 
+    - Name: skipExecute
+      Entry: 5
+      Data: false
+    - Name: showLog
+      Entry: 5
+      Data: false
+    - Name: cycleType
+      Entry: 3
+      Data: 2
+    - Name: SerializableNodeList
+      Entry: 7
+      Data: 7|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilityNodeData,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 7
+      Data: 8|Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp
+    - Name: nodeIndex
+      Entry: 3
+      Data: 0
+    - Name: parentIndex
+      Entry: 3
+      Data: 0
+    - Name: belongGroupId
+      Entry: 3
+      Data: -1
+    - Name: childrenIndexes
+      Entry: 7
+      Data: 9|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: desc
+      Entry: 1
+      Data: 
+    - Name: skipExecute
+      Entry: 5
+      Data: false
+    - Name: showLog
+      Entry: 5
+      Data: false
+    - Name: cycleType
+      Entry: 3
+      Data: 3
+    - Name: SerializableNodeList
+      Entry: 7
+      Data: 10|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilityNodeData,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 7
+      Data: 11|Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp
+    - Name: nodeIndex
+      Entry: 3
+      Data: 0
+    - Name: parentIndex
+      Entry: 3
+      Data: 0
+    - Name: belongGroupId
+      Entry: 3
+      Data: -1
+    - Name: childrenIndexes
+      Entry: 7
+      Data: 12|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: desc
+      Entry: 1
+      Data: 
+    - Name: skipExecute
+      Entry: 5
+      Data: false
+    - Name: showLog
+      Entry: 5
+      Data: false
+    - Name: cycleType
+      Entry: 3
+      Data: 4
+    - Name: SerializableNodeList
+      Entry: 7
+      Data: 13|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilityNodeData,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  id: 717
+  fileName: 717
+  desc: 
+  path: Assets/BattleData/PowerEditor/GameData/Bullet/717.asset
+  abilityBelongType: 3
+  defaultStartGroupId: -1
