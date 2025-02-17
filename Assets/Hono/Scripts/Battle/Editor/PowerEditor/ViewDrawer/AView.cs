@@ -17,13 +17,12 @@ namespace Editor.AbilityEditor
 
     public abstract class AView<T> : AView where T : ASerializableData
     {
-        private T _serializableData;
-        public T Data => _serializableData;
+        public T Data { get; set; }
 
         public override void Load(string path)
         {
-            _serializableData = AssetDatabase.LoadAssetAtPath<T>(path);
-            if (_serializableData == null)
+            Data = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (Data == null)
             {
                 Debug.LogError(path + " Get File is Null");
                 HasError = true;
@@ -43,7 +42,7 @@ namespace Editor.AbilityEditor
         {
             if (HasError) return;
             onSave();
-            EditorUtility.SetDirty(_serializableData);
+            EditorUtility.SetDirty(Data);
             AssetDatabase.SaveAssets();
         }
     }

@@ -108,7 +108,7 @@ namespace Hono.Scripts.Battle
         CD = 16,
         Occupied = 32,
     }
-    
+
     /// <summary>
     /// Actor初始化状态
     /// </summary>
@@ -240,7 +240,7 @@ namespace Hono.Scripts.Battle
         Normal = 1,
         Percent,
         Dot,
-        
+
         Health,
     }
 
@@ -427,9 +427,13 @@ namespace Hono.Scripts.Battle
     public enum ESkillTargetSelectType
     {
         /// <summary>
-        /// 自定义
+        /// 目标
         /// </summary>
-        Custom,
+        Targeted,
+        /// <summary>
+        /// 坐标
+        /// </summary>
+        Position,
         /// <summary>
         /// 面向方向
         /// </summary>
@@ -439,13 +443,9 @@ namespace Hono.Scripts.Battle
         /// </summary>
         Direction,
         /// <summary>
-        /// 目标
+        /// 自定义
         /// </summary>
-        Targeted,
-        /// <summary>
-        /// 坐标
-        /// </summary>
-        Position,
+        Custom,
     }
 
     /// <summary>
@@ -488,7 +488,7 @@ namespace Hono.Scripts.Battle
         Buff,
     }
 
-  
+
     /// <summary>
     /// 伤害来源标记
     /// </summary>
@@ -509,10 +509,10 @@ namespace Hono.Scripts.Battle
 
         MaxValueAdd,
         MaxValuePCT,
-        
+
         EnergyGetWhenKillEnemyAdd,
         EnergyGetWhenKillEnemyPCT,
-        
+
         EnergyGetWhenSkillHitAdd,
         EnergyGetWhenSkillHitPCT,
 
@@ -522,13 +522,14 @@ namespace Hono.Scripts.Battle
         EnergyGetWhenIdleAdd,
         EnergyGetWhenIdlePCT,
     }
-    
+
     /// <summary>
     /// 添加阻断规则
     /// 当该buff存在的时候会阻止指定的buff再次添加
     /// </summary>
     public enum EBuffAddBlockRule
     {
+        None,
         BlockByTags,
         BlockById,
     }

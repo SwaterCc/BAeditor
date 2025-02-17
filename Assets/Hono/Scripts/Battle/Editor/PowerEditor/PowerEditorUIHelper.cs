@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Hono.Scripts.Battle.Editor.AbilityEditor
 {
@@ -45,7 +46,7 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
         {
             DrawColorLabel(new GUIContent(label), fontColor, style);
         }
-        
+
         /// <summary>
         /// 绘制带颜色的Label
         /// </summary>
@@ -62,8 +63,9 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
             }
             else
             {
-                EditorGUILayout.LabelField(content,style);
+                EditorGUILayout.LabelField(content, style);
             }
+
             GUI.contentColor = oldColor;
         }
 
@@ -186,6 +188,29 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
         }
 
         /// <summary>
+        /// 绘制Unity对象
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="path"></param>
+        /// <typeparam name="TObject"></typeparam>
+        /// <returns></returns>
+        public static string DrawObjectField<TObject>(string label, string path)
+            where TObject : Object
+        {
+            // 尝试加载Sprite
+            TObject obj = AssetDatabase.LoadAssetAtPath<TObject>(path);
+
+            // 绘制Sprite选择框
+            obj = (TObject)SirenixEditorFields.UnityObjectField(new GUIContent(label),
+                                                                obj, typeof(TObject), false);
+
+            // 如果选择了新的Sprite，更新路径
+            if (obj == null) return "";
+            string newPath = AssetDatabase.GetAssetPath(obj);
+            return newPath;
+        }
+
+        /// <summary>
         /// GenericMenu添加Item
         /// </summary>
         /// <param name="menu"></param>
@@ -237,7 +262,8 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
         /// <param name="list"></param>
         /// <param name="label"></param>
         /// <param name="labelWidth"></param>
-        public static void DrawIntList(List<int> list, string label, float labelWidth)
+        /// <param name="inputFieldWidth"></param>
+        public static void DrawIntList(List<int> list, string label, float labelWidth, float inputFieldWidth = 60)
         {
             int removeIdx = -1;
             list ??= new List<int> { 0 };
@@ -250,7 +276,7 @@ namespace Hono.Scripts.Battle.Editor.AbilityEditor
                     removeIdx = idx;
                 }
 
-                list[idx] = SirenixEditorFields.IntField(list[idx], GUILayout.Width(30));
+                list[idx] = SirenixEditorFields.IntField(list[idx], GUILayout.Width(inputFieldWidth));
             }
 
             if (removeIdx >= 0)

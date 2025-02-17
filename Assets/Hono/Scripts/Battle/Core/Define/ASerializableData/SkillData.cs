@@ -4,12 +4,16 @@ using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
 {
-    public class SkillData : ASerializableData
+    public class SkillData : ASerializableData,IIncludeAbility
     {
         /// <summary>
         /// 技能icon路径
         /// </summary>
         public string skillIcon;
+        /// <summary>
+        /// 技能的持续时长 -1为跟随ability结束
+        /// </summary>
+        public float skillDuration;
         /// <summary>
         /// 技能类型
         /// </summary>
@@ -25,19 +29,15 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 释放时资源检测列表
         /// </summary>
-        public List<ResItem> skillResCheck = new();
+        public ResItems skillResCheck = new();
         /// <summary>
         /// 释放时资源消耗列表
         /// </summary>
-        public List<ResItem> skillResCost = new();
+        public ResItems skillResCost = new();
         /// <summary>
         /// 是否转向技能方向
         /// </summary>
         public bool rotToTarget;
-        /// <summary>
-        /// 技能的持续时长 -1为跟随ability结束
-        /// </summary>
-        public float skillDuration;
         /// <summary>
         /// 技能的Tag
         /// </summary>
@@ -57,7 +57,6 @@ namespace Hono.Scripts.Battle
         private AbilityData skillAbility;
         public AbilityData SkillAbility => skillAbility;
         ///////////////////////////指示器相关///////////////////////////
-        
         /// <summary>
         /// 技能可释放区域范围（施法范围）
         /// </summary>
@@ -80,7 +79,10 @@ namespace Hono.Scripts.Battle
             if (skillAbility == null)
             {
                 skillAbility = CreateInstance<AbilityData>();
-                skillAbility.name = "skillAbility" + id; // 设置子资产名称
+                skillAbility.name = "skillAbility"; // 设置子资产名称
+                skillAbility.fileName = fileName;
+                skillAbility.id = id;
+                skillAbility.path = path;
 #if UNITY_EDITOR
                 UnityEditor.AssetDatabase.AddObjectToAsset(skillAbility, this);
                 UnityEditor.EditorUtility.SetDirty(this);

@@ -73,7 +73,7 @@ namespace Editor.AbilityEditor
                 new(this, EAbilityCycle.EndExecute) { Label = "结束" },
             };
         }
-
+        
         public override void Draw()
         {
             SirenixEditorGUI.BeginBox("基础数据");

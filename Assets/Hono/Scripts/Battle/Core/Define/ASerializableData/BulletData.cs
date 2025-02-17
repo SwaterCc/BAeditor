@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
 {
-    public class BulletData : ASerializableData
+    public class BulletData : ASerializableData, IIncludeAbility
     {
         /// <summary>
         /// 子弹有效半径
@@ -65,7 +65,10 @@ namespace Hono.Scripts.Battle
             if (bulletAbility == null)
             {
                 bulletAbility = CreateInstance<AbilityData>();
-                bulletAbility.name = "bulletAbility" + id; // 设置子资产名称
+                bulletAbility.name = "bulletAbility"; // 设置子资产名称
+                bulletAbility.fileName = fileName;
+                bulletAbility.id = id;
+                bulletAbility.path = path;
 #if UNITY_EDITOR
                 UnityEditor.AssetDatabase.AddObjectToAsset(bulletAbility, this);
                 UnityEditor.EditorUtility.SetDirty(this);

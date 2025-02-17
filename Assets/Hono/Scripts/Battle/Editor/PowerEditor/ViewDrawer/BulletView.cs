@@ -1,6 +1,7 @@
 ﻿using Editor.AbilityEditor;
 using Editor.AbilityEditor.SimpleWindow;
 using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Editor.AbilityEditor;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -8,27 +9,80 @@ using UnityEngine;
 
 namespace Editor.BattleEditor.AbilityEditor
 {
-    public class BulletView: AView<BulletData>
+    public class BulletView : AView<BulletData>
     {
-        public override void Draw()
-        {
-            SirenixEditorGUI.BeginBox("Buff数据");
-            /*Data.CustomMotion = EditorGUILayout.Toggle(new GUIContent("自定义位移(默认使用直线位移)"), Data.CustomMotion);
-            Data.CloseFollowTarget = EditorGUILayout.Toggle(new GUIContent("关闭追踪目标"), Data.CloseFollowTarget);
-            Data.BulletSpeed = SirenixEditorFields.FloatField("子弹速度",Data.BulletSpeed);
-            //_data.Offset = SirenixEditorFields.Vector3Field("子弹相对于召唤者的偏移", _data.Offset);
-            Data.IsHitPathActor = EditorGUILayout.Toggle(new GUIContent("是否命中路径上的Actor"), Data.IsHitPathActor);
-            Data.DamageConfigId = SirenixEditorFields.IntField("伤害配置Id",Data.DamageConfigId);
-            Data.BulletLifeTime = SirenixEditorFields.FloatField("子弹存在时长",Data.BulletLifeTime);
-            Data.MaxHitCount = SirenixEditorFields.IntField("子弹最大命中数量(如果关闭路径命中，则命中次数不会增长)",Data.MaxHitCount);
+        private bool _isBulletDrawerTab = true;
+        private bool _isAbilityDrawerTab;
 
-            /*if (SirenixEditorGUI.Button("配置子弹命中筛选器",ButtonSizes.Medium))
+        private readonly AbilityView _abilityView = new();
+
+        public override void Load(string path)
+        {
+            base.Load(path);
+            _abilityView.Data = Data.BulletAbility;
+        }
+
+        protected override void onInit()
+        {
+            _abilityView.Init();
+        }
+
+        private void drawBullet()
+        {
+            SirenixEditorGUI.BeginBox("Bullet数据");
+            PowerEditorUIHelper.DrawSimpleField(ref Data.hitRadius, "子弹有效半径", Data.hitRadius, true);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.ignoreAllNotTarget, "忽略所有不是target的对象", Data.ignoreAllNotTarget,
+                                                true);
+            if (!Data.ignoreAllNotTarget)
             {
-                FilterSettingWindow.Open(ref _data.rangeFilterSetting);
-            }#1#*/
+                if (SirenixEditorGUI.Button("非目标对象碰撞条件", ButtonSizes.Large))
+                {
+                    SerializableOdinWindow.Open(Data.notTargetHitCondition);
+                }
+
+                PowerEditorUIHelper.DrawSimpleField(ref Data.minHitInterval, "最小命中间隔", Data.minHitInterval, true);
+                PowerEditorUIHelper.DrawSimpleField(ref Data.maxHitCount,    "最大命中次数", Data.maxHitCount,    true);
+            }
+
+            PowerEditorUIHelper.DrawSimpleField(ref Data.speed,        "速度",          Data.speed,        true);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.acceleration, "加速度",         Data.acceleration, true);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.rotSpeed,     "转向速度(-1为秒转)", Data.rotSpeed,     true);
+            PowerEditorUIHelper.DrawSimpleField(ref Data.lifeTime,     "子弹生命时长",      Data.lifeTime,     true);
+
+            Data.flyVFXKey = PowerEditorUIHelper.DrawObjectField<GameObject>("飞行特效", Data.flyVFXKey);
+            Data.hitVFXKey = PowerEditorUIHelper.DrawObjectField<GameObject>("子弹销毁时的特效", Data.hitVFXKey);
+            
             SirenixEditorGUI.EndBox();
         }
-        
+
+        public override void Draw()
+        {
+            SirenixEditorGUI.BeginHorizontalToolbar();
+            if (SirenixEditorGUI.ToolbarTab(_isBulletDrawerTab, "Bullet配置"))
+            {
+                _isBulletDrawerTab = true;
+                _isAbilityDrawerTab = false;
+            }
+
+            if (SirenixEditorGUI.ToolbarTab(_isAbilityDrawerTab, "Ability"))
+            {
+                _isAbilityDrawerTab = true;
+                _isBulletDrawerTab = false;
+            }
+
+            SirenixEditorGUI.EndHorizontalToolbar();
+
+            if (_isBulletDrawerTab)
+            {
+                drawBullet();
+            }
+
+            if (_isAbilityDrawerTab)
+            {
+                _abilityView?.Draw();
+            }
+        }
+
         public class BulletViewDrawer : AViewDrawer<BulletView> { }
     }
 }

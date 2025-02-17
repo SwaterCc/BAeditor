@@ -9,4 +9,9 @@ namespace Hono.Scripts.Battle
         public string desc;
         public string path;
     }
+
+    public interface IIncludeAbility
+    {
+        public void AddAbilityData();
+    }
 }

@@ -96,8 +96,17 @@ namespace Editor.AbilityEditor.SimpleWindow
                 
                 data.name = id.ToString();
                 data.id = id;
+                data.fileName = id.ToString();
+                data.path = newPath;
 
                 AssetDatabase.CreateAsset(data, newPath);
+                AssetDatabase.SaveAssets();
+
+                if (data is IIncludeAbility includeAbility)
+                {
+                    includeAbility.AddAbilityData();
+                }
+                
                 if (MenuItem is ICollectionMenuItem collectionMenuItem)
                 {
                     collectionMenuItem.AddItem(newPath);

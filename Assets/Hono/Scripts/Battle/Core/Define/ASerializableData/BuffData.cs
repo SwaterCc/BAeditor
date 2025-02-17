@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 
 namespace Hono.Scripts.Battle
 {
-    public class BuffData : ASerializableData
+    public class BuffData : ASerializableData,IIncludeAbility
     {
         /// <summary>
         /// Buff添加规则
@@ -23,11 +23,11 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public List<int> blockBuffIds = new();
         /// <summary>
-        /// 同Id Buff添加规则
+        /// 同Id buff重复添加规则
         /// </summary>
         public EBuffAddRule addRule;
         /// <summary>
-        /// 添加成功的规则
+        /// 添加成功的行为
         /// </summary>
         public EBuffAddSuccessBehave addSuccessBehave;
         /// <summary>
@@ -49,7 +49,7 @@ namespace Hono.Scripts.Battle
         /// <summary>
         /// 最大buff层数
         /// </summary>
-        public int maxLayerNumber;
+        public int maxLayerNumber = 1;
         /// <summary>
         /// 持续时间(-1为跟随Unit生命周期)
         /// </summary>
@@ -78,7 +78,10 @@ namespace Hono.Scripts.Battle
             if (buffAbility == null)
             {
                 buffAbility = CreateInstance<AbilityData>();
-                buffAbility.name = "buffAbility" + id; // 设置子资产名称
+                buffAbility.name = "buffAbility"; // 设置子资产名称
+                buffAbility.fileName = fileName;
+                buffAbility.id = id;
+                buffAbility.path = path;
 #if UNITY_EDITOR
                 UnityEditor.AssetDatabase.AddObjectToAsset(buffAbility, this);
                 UnityEditor.EditorUtility.SetDirty(this);

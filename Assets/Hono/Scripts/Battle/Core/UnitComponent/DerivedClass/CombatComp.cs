@@ -206,12 +206,12 @@ namespace Hono.Scripts.Battle.Core
         {
             var skillData = skill.SkillData;
 
-            if (skillData.skillResCheck.Count == 0)
+            if (skillData.skillResCheck.Items.Count == 0)
             {
                 return true;
             }
 
-            foreach (var resItem in skillData.skillResCheck)
+            foreach (var resItem in skillData.skillResCheck.Items)
             {
                 switch (resItem.resourceType)
                 {
@@ -249,7 +249,7 @@ namespace Hono.Scripts.Battle.Core
         private void costEnergy(Skill skill)
         {
             var skillData = skill.SkillData;
-            foreach (var resItem in skillData.skillResCost)
+            foreach (var resItem in skillData.skillResCost.Items)
             {
                 //目前只有能量消耗流程
                 if (resItem.resourceType == EBattleResourceType.Energy)

@@ -116,7 +116,6 @@ namespace Hono.Scripts.Battle.Core
                     {
                         return Int32.MinValue;
                     }
-
                     break;
             }
 

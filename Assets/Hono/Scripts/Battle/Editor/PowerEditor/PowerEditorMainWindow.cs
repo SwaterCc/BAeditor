@@ -73,11 +73,11 @@ namespace Editor.AbilityEditor
 
             EditorGUILayout.LabelField(selectLabel);
 
-            if (selected.Value is AbilityView abilityView)
+            if (selected.Value is AView aView)
             {
                 if (SirenixEditorGUI.ToolbarButton(new GUIContent("保存")))
                 {
-                    abilityView.Save();
+                    aView.Save();
                 }
             }
 
