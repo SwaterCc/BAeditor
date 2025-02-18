@@ -14,32 +14,21 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 switch (aParams.paramType)
                 {
                     case EParamType.Simple:
-                        if (aParams.Value is RefBoolean refBoolean)
-                        {
-                            return refBoolean;
-                        }
-
-                        break;
+                        return (RefBoolean)aParams.Value;
                     case EParamType.Function:
-                        var wrap = AbilityEnv.GetWrapFunc(aParams.funcName);
-                        if (wrap is IReturnBoolean booleanWarp)
-                        {
-                            return booleanWarp.CallFunc(ability, node, aParams.funcParams);
-                        }
-
-                        break;
+                        var booleanWarp = (IReturnBoolean)AbilityEnv.GetWrapFunc(aParams.funcName);
+                        return booleanWarp.CallFunc(ability, node, aParams.funcParams);
                     case EParamType.Variable:
-                        if (ability.VariableBoard.TryGet(aParams.variableName, out bool value))
+                        if (node.TryGetVariable(aParams.variableName,out bool value))
                         {
                             return value;
                         }
-
                         break;
                     case EParamType.Attr:
                         return ability.Unit.GetAttr(aParams.attrType) > 0;
                 }
 
-                throw new Exception("");
+                return false;
             }
         }
     }

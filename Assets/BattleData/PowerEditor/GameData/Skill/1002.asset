@@ -1562,7 +1562,7 @@ MonoBehaviour:
       Data: 1
     - Name: z
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -1819,6 +1819,15 @@ MonoBehaviour:
       Width: 4
       Height: 4
       Radius: 0
+      warning: "\u8BE5\u7C7B\u578B\u7684\u5C04\u7EBF\u68C0\u6D4B\u6682\u65F6\u53EA\u5728\u7A0B\u5E8F\u5185\u90E8\u4F7F\u7528"
+      capsulePoint1:
+        x: 0
+        y: 0
+        z: 0
+      capsulePoint2:
+        x: 0
+        y: 0
+        z: 0
     maxResultCount: -1
     includeSelf: 0
     conditionFilterSetting:

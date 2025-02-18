@@ -13,45 +13,21 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 switch (aParams.paramType)
                 {
                     case EParamType.Simple:
-                        if (aParams.Value is RefFloat refFloat)
-                        {
-                            return refFloat;
-                        }
-
-                        if (aParams.Value is RefInt refInt)
-                        {
-                            return refInt;
-                        }
-
-                        break;
+                        return (RefFloat)aParams.Value;
                     case EParamType.Function:
-                        var wrap = AbilityEnv.GetWrapFunc(aParams.funcName);
-                        switch (wrap)
-                        {
-                            case IReturnInt intWarp:
-                                return intWarp.CallFunc(ability, node, aParams.funcParams);
-                            case IReturnFloat floatWarp:
-                                return floatWarp.CallFunc(ability, node, aParams.funcParams);
-                        }
-
-                        break;
+                        var wrap = (IReturnFloat)AbilityEnv.GetWrapFunc(aParams.funcName);
+                        return wrap.CallFunc(ability, node, aParams.funcParams);
                     case EParamType.Variable:
-                        if (ability.VariableBoard.TryGet(aParams.variableName, out int value))
+                        if (node.TryGetVariable(aParams.variableName,out float value))
                         {
                             return value;
                         }
-
-                        if (ability.VariableBoard.TryGet(aParams.variableName, out float fvalue))
-                        {
-                            return (int)fvalue;
-                        }
-
                         break;
                     case EParamType.Attr:
                         return ability.Unit.GetAttr(aParams.attrType);
                 }
 
-                throw new Exception("");
+                return Single.MinValue;
             }
         }
     }

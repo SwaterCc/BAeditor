@@ -9,12 +9,11 @@ namespace Hono.Scripts.Battle.AbilityFramework
 {
     public partial class Ability
     {
-        private class AListenerNode : ANode<ListenerNodeData>, IGPoolObject
+        private class AListenerNode : ANode<ListenerNodeData>, IGPoolObject, ILocalVariableBoardHandle
         {
             private readonly UnitEventListener _eventListener = new();
             private readonly MessageListener _messageListener = new();
-
-            public VariableBoard Board { get; private set; }
+            public VariableBoard LocalVariableBoard { get; private set; }
 
             public void RegisterEvent()
             {
@@ -42,9 +41,9 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
             private void OnFire(VariableBoard board)
             {
-                Board = board;
+                LocalVariableBoard = board;
                 DoChildrenJob();
-                Board = null;
+                LocalVariableBoard = null;
             }
 
             public override void DoJob() { }

@@ -37,7 +37,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// 属于Ability的变量
         /// </summary>
         public VariableBoard VariableBoard { get; }
-        
+
         /// <summary>
         /// Ability函数定义
         /// </summary>
@@ -67,7 +67,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// 逻辑帧时间缩放系数
         /// </summary>
         public float TimeScaleFactory { get; set; }
-        
+
         public Ability()
         {
             if (!AbilityEnv.IsEnvInit)
@@ -108,7 +108,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
             _abilityCycle.Init();
             return true;
         }
-        
+
         /// <summary>
         /// 初始化
         /// </summary>
@@ -132,7 +132,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
             _abilityCycle.Init();
             return true;
         }
-        
+
 
         /// <summary>
         /// 执行Ability的逻辑
@@ -191,37 +191,56 @@ namespace Hono.Scripts.Battle.AbilityFramework
             _abilityCycle.Tick(dt * timeFactory);
         }
 
-        public VariableBoard GetRunNodeVariableBoard()
+        public bool TryGetLocalVariable<T>(string key, out T value)
         {
             var curNode = _abilityCycle.CurCallFuncNode;
+            value = default;
             if (curNode == null)
             {
-                return null;
+                return false;
             }
 
-            if (curNode is AListenerNode listenerNode)
+            var node = curNode;
+            while (node is not ACycleNode)
             {
-                return listenerNode.Board;
+                if (node is ILocalVariableBoardHandle variableBoardHandle)
+                {
+                    if (variableBoardHandle.LocalVariableBoard.TryGet(key, out value))
+                    {
+                        return true;
+                    }
+                }
+                node = node.Parent;
             }
 
-            if (curNode is ATimerNode timerNode)
-            {
-                return timerNode.ListenerBoard;
-            }
-
-            if (curNode.TryGetParent(out ATimerNode timerNodeParent))
-            {
-                return timerNodeParent.ListenerBoard;
-            }
-            
-            if (curNode.TryGetParent(out AListenerNode listenerParent))
-            {
-                return listenerParent.Board;
-            }
-
-            return null;
+            return false;
         }
         
+        public bool TryGetLocalVariableRef(string key, out object value)
+        {
+            var curNode = _abilityCycle.CurCallFuncNode;
+            value = default;
+            if (curNode == null)
+            {
+                return false;
+            }
+
+            var node = curNode;
+            while (node is not ACycleNode)
+            {
+                if (node is ILocalVariableBoardHandle variableBoardHandle)
+                {
+                    if (variableBoardHandle.LocalVariableBoard.TryGetRef(key, out value))
+                    {
+                        return true;
+                    }
+                }
+                node = node.Parent;
+            }
+
+            return false;
+        }
+
         public void OnRecycle()
         {
             //周期停止
@@ -255,7 +274,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 #if _ABILITY_DEBUG_
 			Debug.Log(string.Format(AbilityInfo(ability) + pattern, args));
 #endif
-           // Debug.Log(string.Format(AbilityInfo(ability) + pattern, args));
+            // Debug.Log(string.Format(AbilityInfo(ability) + pattern, args));
         }
 
         public static void LogError(this Ability ability, in string pattern, params object[] args)
@@ -263,7 +282,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 #if _ABILITY_DEBUG_
 			Debug.LogError(string.Format(AbilityInfo(ability) + pattern, args));
 #endif
-           // Debug.LogError(string.Format(AbilityInfo(ability) + pattern, args));
+            // Debug.LogError(string.Format(AbilityInfo(ability) + pattern, args));
         }
     }
 }

@@ -430,11 +430,12 @@ namespace Hono.Scripts.Battle.Core
             Unit target,
             BulletData bulletData,
             EDamageSourceType damageSourceType,
+            int sourceAbilityId,
             int hitTargetDamageId,
             int hitNotTargetDamageId = 0)
         {
             var bullet = GPool<Bullet>.Pool.Rent();
-            bullet.LockTargetBullet(attacker, target, bulletData, damageSourceType, hitTargetDamageId,
+            bullet.LockTargetBullet(attacker, target, bulletData, damageSourceType, sourceAbilityId, hitTargetDamageId,
                                     hitNotTargetDamageId);
             bullet.Ctor();
             addUnitToWorld(bullet);
@@ -448,11 +449,13 @@ namespace Hono.Scripts.Battle.Core
             float yAxisAngle,
             BulletData bulletData,
             EDamageSourceType damageSourceType,
+            int sourceAbilityId,
             int hitTargetDamageId,
             int hitNotTargetDamageId)
         {
             var bullet = GPool<Bullet>.Pool.Rent();
-            bullet.DirectionBullet(attacker, yAxisAngle, bulletData, damageSourceType, hitTargetDamageId,
+            bullet.DirectionBullet(attacker, yAxisAngle, bulletData, damageSourceType, sourceAbilityId,
+                                   hitTargetDamageId,
                                    hitNotTargetDamageId);
             bullet.Ctor();
             addUnitToWorld(bullet);

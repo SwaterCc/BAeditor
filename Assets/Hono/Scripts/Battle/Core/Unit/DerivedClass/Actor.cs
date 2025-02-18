@@ -25,6 +25,7 @@ namespace Hono.Scripts.Battle.Core
         public void Ctor(ActorAssembleInfo assembleInfo)
         {
             Uid = World.Current.GetUid();
+            SetAttr(EAttrType.AttrUid, Uid);
             ActorType = assembleInfo.ActorType;
             Attrs.Init(assembleInfo.BaseAttrTableId);
            

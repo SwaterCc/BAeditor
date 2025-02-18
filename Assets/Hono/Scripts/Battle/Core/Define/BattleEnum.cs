@@ -579,6 +579,11 @@ namespace Hono.Scripts.Battle
         ///     球
         /// </summary>
         Sphere,
+        
+        /// <summary>
+        /// 胶囊
+        /// </summary>
+        Capsule,
     }
 
     /// <summary>

@@ -56,19 +56,17 @@ namespace Hono.Scripts.Battle.Core
 
         protected override void onTick(float dt)
         {
-            for (int i = 0; i < _buffCount; i++)
+            for (int i = _buffCount - 1; i >= 0; i--)
             {
                 ref Buff buff = ref _buffs[i];
                 if (!buff.IsValid) continue; // 跳过无效 Buff
 
                 buff.TimeLeft -= dt;
 
-                if (buff.IsPermanent)
-                    continue;
-                if (buff.TimeLeft < 0)
+                if (buff is { IsPermanent: false, TimeLeft: <= 0 })
                 {
+                    Debug.Log($"[BuffComp] Removing expired buff: {buff.Id}");
                     RemoveBuffAt(i); // 移除超时的 Buff
-                    i--;             // 调整索引以避免跳过下一个元素
                 }
             }
         }
@@ -196,10 +194,10 @@ namespace Hono.Scripts.Battle.Core
             if (blockList.Contains(id))
             {
                 Debug.Log($"buff {id} 添加 被阻断了");
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -215,6 +213,7 @@ namespace Hono.Scripts.Battle.Core
                 LayerCount = (short)buffLayer,
                 SourceUnitUid = sourceId,
                 BelongActorUid = Unit.Uid,
+                IsValid = true,
                 TimeLeft = buffData.duration,
                 IsPermanent = buffData.duration < 0
             };
@@ -317,8 +316,7 @@ namespace Hono.Scripts.Battle.Core
                 return false;
 
             buff = ref _buffs[index];
-
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -346,8 +344,6 @@ namespace Hono.Scripts.Battle.Core
                 {
                     return true;
                 }
-
-                break;
             }
 
             return false;
@@ -421,7 +417,7 @@ namespace Hono.Scripts.Battle.Core
             if (_buffs.Length == 0)
                 return buffCount;
 
-            for (var index = 0; index < _buffs.Length; index++)
+            for (var index = 0; index < _buffCount; index++)
             {
                 ref Buff buff = ref _buffs[index];
                 if (buff.IsValid && buff.Id == buffId)
@@ -520,21 +516,28 @@ namespace Hono.Scripts.Battle.Core
         private void RemoveBuffAt(int index)
         {
             ref Buff buff = ref _buffs[index];
-            buff.IsValid = false; // 标记为无效
 
-            // 将最后一个有效 Buff 移动到当前位置
+            // 确保 Buff 被标记为无效
+            buff.IsValid = false;
+
+            // 将最后一个有效 Buff 移动到当前索引位置
             if (index != _buffCount - 1)
             {
                 // 更新字典中的索引
                 _lookup[_buffs[_buffCount - 1].Uid] = index;
 
+                // 移动 Buff
                 _buffs[index] = _buffs[_buffCount - 1];
             }
 
+            // 清理资源
             _lookup.Remove(buff.Uid);
             _buffCount--;
             Unit.StopAbility(buff.Id);
             UidAllocator.Recycle(buff.Uid);
+
+            // 清空最后一个位置（可选）
+            _buffs[_buffCount] = default;
         }
 
         /// <summary>
@@ -544,6 +547,14 @@ namespace Hono.Scripts.Battle.Core
         {
             int newSize = _buffs.Length + 10; // 每次扩容 10
             Array.Resize(ref _buffs, newSize);
+
+            // 重建 _lookup 字典
+            _lookup.Clear();
+            for (int i = 0; i < _buffCount; i++)
+            {
+                _lookup[_buffs[i].Uid] = i;
+            }
+
             Debug.Log($"Buff 数组已扩容至 {newSize} 个元素");
         }
     }

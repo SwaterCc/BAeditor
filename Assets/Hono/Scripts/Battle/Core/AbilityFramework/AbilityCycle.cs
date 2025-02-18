@@ -14,6 +14,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
     {
         public interface ITickANode
         {
+            public void Stop();
             public void Tick(float dt);
         }
 
@@ -231,6 +232,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
                     foreach (ITickANode removeTick in _tickRemoveList)
                     {
+                        removeTick.Stop();
                         _ticks.RemoveSwapBack(removeTick);
                     }
 
@@ -306,6 +308,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
                 if (_ticks.Contains(tickNode))
                 {
+                    tickNode.Stop();
                     _tickRemoveList.Add(tickNode);
                     return;
                 }
@@ -325,6 +328,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     CurGroup?.GroupExit();
                     CurGroup = null;
                     //清理定时器
+                    foreach (var tickANode in _ticks)
+                    {
+                        tickANode.Stop();
+                    }
                     _ticks.Clear();
                     //执行结束阶段
                     doCycle(EAbilityCycle.EndExecute);
@@ -364,7 +371,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 }
 
                 _eventNodeList.Clear();
-
+                
                 _ticks.Clear();
                 _tickRemoveList.Clear();
 

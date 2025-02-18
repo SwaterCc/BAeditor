@@ -135,7 +135,7 @@ namespace Hono.Scripts.Battle.Tools
         }
 
 
-        private static RayCastHitChecker _rayCastHitChecker = new();
+        private static readonly RayCastHitChecker _rayCastHitChecker = new();
 
         public static bool HitRayCast(CheckBoxData data, Vector3 centerPos, Quaternion rot, ref List<int> actorIds,
             bool showGizmos = false)

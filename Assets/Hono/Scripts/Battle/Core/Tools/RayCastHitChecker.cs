@@ -42,6 +42,16 @@ namespace Hono.Scripts.Battle.Tools
                     if (OpenGizmos)
                         GizmosHelper.Instance.DrawSphere(finalCenterPos, checkBoxData.Radius, finalRot, GizmosColor);
                     break;
+                case ECheckBoxShapeType.Capsule:
+                    // 胶囊体检测
+                    var capsulePoint1 = finalCenterPos + finalRot * Vector3.up * (checkBoxData.Height / 2 - checkBoxData.Radius);
+                    var capsulePoint2 = finalCenterPos - finalRot * Vector3.up * (checkBoxData.Height / 2 - checkBoxData.Radius);
+                    size = Physics.CapsuleCastNonAlloc(capsulePoint1, capsulePoint2, checkBoxData.Radius,
+                                                       followAttackerRot * Vector3.forward, _normalAreaRaycastHit, 0.001f,
+                                                       BattleConstValue.ActorLayerMask);
+                    if (OpenGizmos)
+                        GizmosHelper.Instance.DrawCapsule(capsulePoint1, capsulePoint2, checkBoxData.Radius, finalRot, GizmosColor);
+                    break;
             }
 
             actorIds.Clear();

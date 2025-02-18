@@ -12,6 +12,11 @@ namespace Hono.Scripts.Battle.AbilityFramework
 {
     public partial class Ability
     {
+        public interface ILocalVariableBoardHandle
+        {
+            public VariableBoard LocalVariableBoard { get; }
+        }
+        
         private abstract class ANode
         {
             /// <summary>
@@ -32,12 +37,12 @@ namespace Hono.Scripts.Battle.AbilityFramework
             /// <summary>
             /// 父节点
             /// </summary>
-            protected ANode Parent { get; private set; }
+            public ANode Parent { get; private set; }
 
             /// <summary>
             /// 子节点
             /// </summary>
-            protected readonly List<ANode> Children = new(15);
+            public readonly List<ANode> Children = new(15);
 
             #region 节点周期
 
@@ -291,36 +296,16 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 return false;
             }
 
-            public bool TryGetVariable<T>(string key,out T value)
+            public bool TryGetVariable<T>(string key, out T value)
             {
-                if (AContext.VariableBoard.TryGet(key, out value))
-                {
-                    return true;
-                }
-
-                if (AContext.GetRunNodeVariableBoard().TryGet(key, out value))
-                {
-                    return true;
-                }
-
-                return false;
+                return AContext.VariableBoard.TryGet(key, out value) || AContext.TryGetLocalVariable(key, out value);
             }
-            
-            public bool TryGetVariableRef(string key,out object value)
+
+            public bool TryGetVariableRef(string key, out object value)
             {
-                if (AContext.VariableBoard.TryGetRef(key, out value))
-                {
-                    return true;
-                }
-
-                if (AContext.GetRunNodeVariableBoard().TryGetRef(key, out value))
-                {
-                    return true;
-                }
-
-                return false;
+                return AContext.VariableBoard.TryGetRef(key, out value) || AContext.TryGetLocalVariableRef(key, out value);
             }
-            
+
             #endregion
         }
 

@@ -71,6 +71,52 @@ namespace Hono.Scripts.Battle.Tools
             _drawList.Add(sphere);
         }
 
+        public void DrawCapsule(Vector3 point1, Vector3 point2, float radius, Quaternion rotation, Color color)
+        {
+            Gizmos.color = color;
+
+            // 计算胶囊体的方向向量
+            Vector3 direction = (point2 - point1).normalized;
+            float height = Vector3.Distance(point1, point2);
+
+            // 绘制两端的球体
+            Gizmos.DrawSphere(point1, radius);
+            Gizmos.DrawSphere(point2, radius);
+
+            // 绘制中间的圆柱体
+            DrawCylinder(point1 + direction * radius, point2 - direction * radius, radius);
+        }
+
+        private void DrawCylinder(Vector3 start, Vector3 end, float radius)
+        {
+            int segments = 16; // 圆柱体的分段数
+            Vector3 direction = (end - start).normalized;
+            float height = Vector3.Distance(start, end);
+
+            // 构造正交基
+            Vector3 up = direction;
+            Vector3 forward = Vector3.Cross(up,    Vector3.right).normalized;
+            Vector3 right = Vector3.Cross(forward, up).normalized;
+
+            // 绘制顶面和底面的圆
+            for (int i = 0; i < segments; i++)
+            {
+                float angle = i * Mathf.PI * 2f / segments;
+                float nextAngle = (i + 1) * Mathf.PI * 2f / segments;
+
+                Vector3 offset1 = Mathf.Cos(angle) * right + Mathf.Sin(angle) * forward;
+                Vector3 offset2 = Mathf.Cos(nextAngle) * right + Mathf.Sin(nextAngle) * forward;
+
+                // 顶面
+                Gizmos.DrawLine(start + offset1 * radius, start + offset2 * radius);
+                // 底面
+                Gizmos.DrawLine(end + offset1 * radius, end + offset2 * radius);
+
+                // 侧面
+                Gizmos.DrawLine(start + offset1 * radius, end + offset1 * radius);
+            }
+        }
+        
         private void drawCube(GizmosInfo gizmosInfo)
         {
             if (gizmosInfo.Rot.w == 0) return;

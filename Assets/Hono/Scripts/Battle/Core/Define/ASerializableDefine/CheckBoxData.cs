@@ -41,5 +41,13 @@ namespace Hono.Scripts.Battle
         /// </summary>
         [HideIf("ShapeType", ECheckBoxShapeType.Cube)]
         public float Radius;
+
+        [ShowIf("ShapeType", ECheckBoxShapeType.Capsule)]
+        [ReadOnly]
+        public string warning = "该类型的射线检测暂时只在程序内部使用";
+        
+        public RefVector3 capsulePoint1 = new RefVector3();
+        
+        public RefVector3 capsulePoint2 = new RefVector3();
     }
 }

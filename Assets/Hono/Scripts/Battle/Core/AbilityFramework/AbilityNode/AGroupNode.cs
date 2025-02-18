@@ -19,7 +19,12 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
             private readonly List<ITickANode> _tickRemoveList = new(5);
 
-            public override void DoJob() { }
+            private bool _isRunning;
+
+            public override void DoJob()
+            {
+                _isRunning = true;
+            }
 
             public override void Recycle()
             {
@@ -42,8 +47,18 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 _tickRemoveList.Add(node);
             }
 
+            public void Stop()
+            {
+                _isRunning = false;
+            }
+
             public void Tick(float dt)
             {
+                if (!_isRunning)
+                {
+                    return;
+                }
+                
                 foreach (var tickANode in _groupTicks)
                 {
                     tickANode.Tick(dt);
@@ -70,6 +85,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
             public void GroupExit()
             {
+                _isRunning = false;
                 Reset();
             }
 

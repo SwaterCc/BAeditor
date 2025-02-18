@@ -14,19 +14,12 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 switch (aParams.paramType)
                 {
                     case EParamType.Simple:
-                        if (aParams.Value is RefVector3 refV3)
-                        {
-                            return refV3;
-                        }
-
-                        break;
+                        return (RefVector3)aParams.Value;
                     case EParamType.Function:
-                        var wrap = AbilityEnv.GetWrapFunc(aParams.funcName);
-                        if (wrap is IReturnVector3 vector3Warp)
-                            return vector3Warp.CallFunc(ability, node, aParams.funcParams);
-                        break;
+                        var wrap = (IReturnVector3)AbilityEnv.GetWrapFunc(aParams.funcName);
+                        return wrap.CallFunc(ability, node, aParams.funcParams);
                     case EParamType.Variable:
-                        if (ability.VariableBoard.TryGet(aParams.variableName, out Vector3 value))
+                        if (node.TryGetVariable(aParams.variableName, out Vector3 value))
                         {
                             return value;
                         }
@@ -34,7 +27,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
                         break;
                 }
 
-                throw new Exception("");
+                return Vector3.negativeInfinity;
             }
         }
     }

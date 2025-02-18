@@ -81,13 +81,13 @@ namespace Hono.Scripts.Battle
             {
                 throw new Exception($"Load UnityObjectProxy :{path} failed!");
             }
-            
+
             //初始化
             var unitName = string.IsNullOrEmpty(Unit.DynamicName) ? "Unit" : Unit.DynamicName;
             _proxy.name = $"{unitName}:{Unit.Uid}";
             _proxy.transform.position = Unit.UnitTransform.Pos;
             _proxy.transform.rotation = Unit.UnitTransform.Rot;
-            _proxy.transform.localScale = _modelRow.ModelScale * Vector3.one;
+            _proxy.transform.localScale = _modelRow.ModelScale == 0 ? Vector3.one : _modelRow.ModelScale * Vector3.one;
 
             //初始化层级
             _proxy.layer = BattleConstValue.GetLayerMask(_modelRow.ProxyLayer.ToString());
@@ -131,7 +131,7 @@ namespace Hono.Scripts.Battle
             {
                 UGameObjectPool.Instance.Recycle(BattleConstValue.GetUOProxyPath(_proxyType), _proxy);
             }
-           
+
             Unit = null;
             _proxy = null;
             _physicsHandler = null;
@@ -184,7 +184,7 @@ namespace Hono.Scripts.Battle
 
             return _proxy.transform.localPosition;
         }
-        
+
         public void SyncPosition(in Vector3 pos)
         {
             _proxy.transform.localPosition = pos;
@@ -226,7 +226,7 @@ namespace Hono.Scripts.Battle
             {
                 BattleManager.Instance.OnLateUpdate += LateUpdate;
             }
-            
+
             _vfxCache.Add(vfxInfo.Uid, new VFXGameObject() { VFXInfo = vfxInfo, GameObject = vfx });
         }
 
@@ -236,7 +236,7 @@ namespace Hono.Scripts.Battle
             {
                 UGameObjectPool.Instance.Recycle(vfxGO.VFXInfo.Path, vfxGO.GameObject);
             }
-            
+
             if (_vfxCache.Count == 0)
             {
                 BattleManager.Instance.OnLateUpdate -= LateUpdate;

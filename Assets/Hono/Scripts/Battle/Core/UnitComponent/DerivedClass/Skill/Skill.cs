@@ -130,6 +130,7 @@ namespace Hono.Scripts.Battle.Core
 
             private void onSkillEnd()
             {
+                _ability.Stop();
                 RemoveFlag(ESkillFlag.Executing);
                 if (SkillData.enterCdType == EEnterCDType.AfterExecute)
                 {

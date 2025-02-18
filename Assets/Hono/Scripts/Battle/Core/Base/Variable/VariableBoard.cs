@@ -39,7 +39,6 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public APoolRefCount RefCount { get; set; }
 
-        
 
         public T Get<T>(string key)
         {
@@ -92,14 +91,9 @@ namespace Hono.Scripts.Battle
         /// <returns></returns>
         public bool TryGetRef(string key, out object refValue)
         {
-            if (_keySearch.TryGetValue(key, out var type))
-            {
-                Debug.LogError($"key :{key} 该值存在但不是引用类型 is " + type);
-            }
-            
             return _refCollection.TryGetValue(key, out refValue);
         }
-        
+
         /// <summary>
         /// 获取引用对象
         /// </summary>
@@ -157,7 +151,7 @@ namespace Hono.Scripts.Battle
         {
             Set(field.Name, value);
         }
-        
+
         /// <summary>
         /// 获取EventInfo字段
         /// </summary>
@@ -165,7 +159,7 @@ namespace Hono.Scripts.Battle
         /// <typeparam name="T"></typeparam>
         public T GetEvtField<T>(EvtInfoField<T> field)
         {
-           return Get<T>(field.Name);
+            return Get<T>(field.Name);
         }
 
         public void Delete(string key)

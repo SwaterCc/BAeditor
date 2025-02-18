@@ -271,9 +271,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     var p1 = node.ParseInt(@params[1]);
                     var p2 = node.ParseInt(@params[2]);
                     var p3 = node.ParseVector3(@params[3]);
-                    var p4 = node.ParseInt(@params[4]);
+                    var p4 = node.ParseFloat(@params[4]);
                     var p5 = node.ParseInt(@params[5]);
-                    caller._functionDefine.CreateLockTargetBullet(p0, p1, p2, p3, p4, p5);
+                    var p6 = node.ParseInt(@params[6]);
+                    caller._functionDefine.CreateLockTargetBullet(p0, p1, p2, p3, p4, p5, p6);
                 }
             }
 
@@ -324,6 +325,61 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     var p0 = node.ParseInt(@params[0]);
                     var p1 = node.ParseInt(@params[1]);
                     caller._functionDefine.RemoveVFX(p0, p1);
+                }
+            }
+
+
+            private class __Gen_AFuncWrap_GetVariableBoardInt : IReturnInt
+            {
+                public int CallFunc(Ability caller, ANode node, List<AParams> @params)
+                {
+                    var p0 = node.ParseBoolean(@params[0]);
+                    var p1 = (String)node.ParseRef(@params[1]);
+                    return caller._functionDefine.GetVariableBoardInt(p0, p1);
+                }
+            }
+
+
+            private class __Gen_AFuncWrap_GetVariableBoardFloat : IReturnFloat
+            {
+                public float CallFunc(Ability caller, ANode node, List<AParams> @params)
+                {
+                    var p0 = node.ParseBoolean(@params[0]);
+                    var p1 = (String)node.ParseRef(@params[1]);
+                    return caller._functionDefine.GetVariableBoardFloat(p0, p1);
+                }
+            }
+
+
+            private class __Gen_AFuncWrap_GetVariableBoardBool : IReturnBoolean
+            {
+                public bool CallFunc(Ability caller, ANode node, List<AParams> @params)
+                {
+                    var p0 = node.ParseBoolean(@params[0]);
+                    var p1 = (String)node.ParseRef(@params[1]);
+                    return caller._functionDefine.GetVariableBoardBool(p0, p1);
+                }
+            }
+
+
+            private class __Gen_AFuncWrap_GetVariableBoardVec3 : IReturnVector3
+            {
+                public Vector3 CallFunc(Ability caller, ANode node, List<AParams> @params)
+                {
+                    var p0 = node.ParseBoolean(@params[0]);
+                    var p1 = (String)node.ParseRef(@params[1]);
+                    return caller._functionDefine.GetVariableBoardVec3(p0, p1);
+                }
+            }
+
+
+            private class __Gen_AFuncWrap_GetVariableBoardObject : IReturnRef
+            {
+                public object CallFunc(Ability caller, ANode node, List<AParams> @params)
+                {
+                    var p0 = node.ParseBoolean(@params[0]);
+                    var p1 = (String)node.ParseRef(@params[1]);
+                    return caller._functionDefine.GetVariableBoardObject(p0, p1);
                 }
             }
 

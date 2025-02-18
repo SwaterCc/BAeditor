@@ -1,6 +1,7 @@
 #region
 
 using System.Collections.Generic;
+using Hono.Scripts.Battle.ObjectPool;
 
 #endregion
 
@@ -12,10 +13,11 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// 重复执行节点，默认会记录循环次数
         /// 如果是遍历列表则会额外记录遍历对象
         /// </summary>
-        private class ARepeatNode : ANode<RepeatNodeData>, IGPoolObject
+        private class ARepeatNode : ANode<RepeatNodeData>, IGPoolObject, ILocalVariableBoardHandle
         {
-            public const string LoopCountKey = "__LoopCount__";
-            public const string LoopValueKey = "__LoopValue__";
+            public VariableBoard LocalVariableBoard { get; } = new();
+            private const string LoopCountKey = "__LoopCount__";
+            private const string LoopValueKey = "__LoopValue__";
 
             public override void DoJob()
             {
@@ -25,13 +27,13 @@ namespace Hono.Scripts.Battle.AbilityFramework
                         var repeatCount = ParseInt(Data.repeatCount);
                         for (int i = 0; i < repeatCount; i++)
                         {
-                            AContext.VariableBoard.Set(LoopCountKey, i);
-                            AContext.VariableBoard.Set(LoopValueKey, i);
+                            LocalVariableBoard.Set(LoopCountKey, i);
+                            LocalVariableBoard.Set(LoopValueKey, i);
                             DoChildrenJob();
                         }
 
-                        AContext.VariableBoard.Delete(LoopValueKey);
-                        AContext.VariableBoard.Delete(LoopCountKey);
+                        LocalVariableBoard.Delete(LoopValueKey);
+                        LocalVariableBoard.Delete(LoopCountKey);
                         break;
                     case ERepeatNodeOperationType.ETraverseList:
                         if (Data.traverseList.GetParamType() == typeof(List<int>))
@@ -39,13 +41,26 @@ namespace Hono.Scripts.Battle.AbilityFramework
                             var intList = ParseRef<List<int>>(Data.traverseList);
                             for (int i = 0; i < intList.Count; i++)
                             {
-                                AContext.VariableBoard.Set(LoopCountKey, i);
-                                AContext.VariableBoard.Set(LoopValueKey, intList[i]);
+                                LocalVariableBoard.Set(LoopCountKey, i);
+                                LocalVariableBoard.Set(LoopValueKey, intList[i]);
+                                DoChildrenJob();
+                            }
+                            LocalVariableBoard.Delete(LoopValueKey);
+                            LocalVariableBoard.Delete(LoopCountKey);
+                        }
+                        
+                        if (Data.traverseList.GetParamType() == typeof(GList<int>))
+                        {
+                            var intList = ParseRef<GList<int>>(Data.traverseList);
+                            for (int i = 0; i < intList.Count; i++)
+                            {
+                               LocalVariableBoard.Set(LoopCountKey, i);
+                               LocalVariableBoard.Set(LoopValueKey, intList[i]);
                                 DoChildrenJob();
                             }
 
-                            AContext.VariableBoard.Set(LoopCountKey, 0);
-                            AContext.VariableBoard.Delete(LoopCountKey);
+                            LocalVariableBoard.Delete(LoopValueKey);
+                            LocalVariableBoard.Delete(LoopCountKey);
                         }
 
                         if (Data.traverseList.GetParamType() == typeof(List<float>))
@@ -53,13 +68,27 @@ namespace Hono.Scripts.Battle.AbilityFramework
                             var floatList = ParseRef<List<float>>(Data.traverseList);
                             for (int i = 0; i < floatList.Count; i++)
                             {
-                                AContext.VariableBoard.Set(LoopCountKey, i);
-                                AContext.VariableBoard.Set(LoopValueKey, floatList[i]);
+                                LocalVariableBoard.Set(LoopCountKey, i);
+                                LocalVariableBoard.Set(LoopValueKey, floatList[i]);
                                 DoChildrenJob();
                             }
 
-                            AContext.VariableBoard.Set(LoopCountKey, 0);
-                            AContext.VariableBoard.Delete(LoopCountKey);
+                            LocalVariableBoard.Delete(LoopValueKey);
+                            LocalVariableBoard.Delete(LoopCountKey);
+                        }
+                        
+                        if (Data.traverseList.GetParamType() == typeof(GList<float>))
+                        {
+                            var floatList = ParseRef<GList<float>>(Data.traverseList);
+                            for (int i = 0; i < floatList.Count; i++)
+                            {
+                                LocalVariableBoard.Set(LoopCountKey, i);
+                                LocalVariableBoard.Set(LoopValueKey, floatList[i]);
+                                DoChildrenJob();
+                            }
+
+                            LocalVariableBoard.Delete(LoopValueKey);
+                            LocalVariableBoard.Delete(LoopCountKey);
                         }
 
                         break;

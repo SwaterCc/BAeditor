@@ -17,7 +17,7 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         [PrefabPath]
         public string model;
-
+ 
         /// <summary>
         /// 特效替换位
         /// </summary>

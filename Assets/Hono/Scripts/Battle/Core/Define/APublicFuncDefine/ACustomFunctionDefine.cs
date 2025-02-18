@@ -1,5 +1,6 @@
 #region
 
+using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Tools;
@@ -168,7 +169,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         [AbilityFunctionDesc("添加buff", null, "Buff来源的Uid", "添加Buff的目标的Uid", "BuffId", "buff初始层数")]
         public void AddBuff(int sourceUid, int targetUid, int buffId, int buffLayer)
         {
-            if (!tryGetUnit(sourceUid, out _))
+            if (!tryGetUnit(sourceUid, out var source))
             {
                 return;
             }
@@ -180,7 +181,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
             if (target.TryGetComponent(out BuffComp combatComp))
             {
-                combatComp.AddBuff(buffId, sourceUid, buffLayer);
+                combatComp.AddBuff(source.Uid, buffId, buffLayer);
             }
         }
 
@@ -196,7 +197,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 return;
             }
 
-            if (!tryGetUnit(buffSourceUid, out _))
+            if (!tryGetUnit(buffSourceUid, out var source))
             {
                 return;
             }
@@ -209,11 +210,9 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     return;
                 }
 
-                var sourceUid = buffSourceUid;
-
                 if (target.TryGetComponent(out BuffComp combatComp))
                 {
-                    combatComp.AddBuff(buffId, sourceUid, buffLayer);
+                    combatComp.AddBuff(source.Uid, buffId, buffLayer);
                 }
             }
         }
@@ -377,8 +376,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 return;
             }
 
-            var bullet = World.Current.CreateLockTargetBullet(attacker, target, bulletData, getDamageSourceType(), hitTargetDamageId,
-                                                 hitNotTargetDamageId);
+            var bullet = World.Current.CreateLockTargetBullet(attacker, target, bulletData, getDamageSourceType(),
+                                                              AContext.Data.id,
+                                                              hitTargetDamageId,
+                                                              hitNotTargetDamageId);
             bullet.UnitTransform.Pos += offset;
             bullet.UnitTransform.Rot = Quaternion.AngleAxis(yAxisAngle, Vector3.up);
         }
@@ -403,8 +404,9 @@ namespace Hono.Scripts.Battle.AbilityFramework
             }
 
             var bullet = World.Current.CreateDirectionBullet(attacker, yAxisAngle, bulletData, getDamageSourceType(),
-                                                hitTargetDamageId,
-                                                hitNotTargetDamageId);
+                                                             AContext.Data.id,
+                                                             hitTargetDamageId,
+                                                             hitNotTargetDamageId);
             bullet.UnitTransform.Pos += offset;
         }
 
@@ -475,8 +477,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
             if (AContext.VariableBoard.TryGet(key, out int result))
                 return result;
-            var rtBoard = AContext.GetRunNodeVariableBoard();
-            return rtBoard?.Get<int>(key) ?? result;
+            return AContext.TryGetLocalVariable(key, out result) ? result : Int32.MinValue;
         }
 
         [AbilityFunction("Variable")]
@@ -489,8 +490,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
             if (AContext.VariableBoard.TryGet(key, out float result))
                 return result;
-            var rtBoard = AContext.GetRunNodeVariableBoard();
-            return rtBoard?.Get<float>(key) ?? result;
+            return AContext.TryGetLocalVariable(key, out result) ? result : Single.MinValue;
         }
 
         [AbilityFunction("Variable")]
@@ -503,8 +503,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
             if (AContext.VariableBoard.TryGet(key, out bool result))
                 return result;
-            var rtBoard = AContext.GetRunNodeVariableBoard();
-            return rtBoard?.Get<bool>(key) ?? result;
+            return AContext.TryGetLocalVariable(key, out result) && result;
         }
 
         [AbilityFunction("Variable")]
@@ -517,8 +516,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
             if (AContext.VariableBoard.TryGet(key, out Vector3 result))
                 return result;
-            var rtBoard = AContext.GetRunNodeVariableBoard();
-            return rtBoard?.Get<Vector3>(key) ?? result;
+            return AContext.TryGetLocalVariable(key, out result) ? result : Vector3.negativeInfinity;
         }
 
         [AbilityFunction("Variable")]
@@ -531,8 +529,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
             if (AContext.VariableBoard.TryGetRef(key, out object result))
                 return result;
-            var rtBoard = AContext.GetRunNodeVariableBoard();
-            return rtBoard?.GetRef(key) ?? result;
+            return AContext.TryGetLocalVariableRef(key, out result) ? result : null;
         }
 
         #endregion

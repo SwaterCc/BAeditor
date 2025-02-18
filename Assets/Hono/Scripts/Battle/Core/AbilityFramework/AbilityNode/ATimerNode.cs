@@ -9,7 +9,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// <summary>
         /// 计时器节点，每次触发都会重新执行该定时器
         /// </summary>
-        private class ATimerNode : ANode<TimerNodeData>, IGPoolObject, ITickANode
+        private class ATimerNode : ANode<TimerNodeData>, IGPoolObject, ITickANode , ILocalVariableBoardHandle
         {
             private int _maxCount;
             private float _interval;
@@ -27,8 +27,8 @@ namespace Hono.Scripts.Battle.AbilityFramework
             /// <summary>
             /// 监听获取的信息黑板
             /// </summary>
-            public VariableBoard ListenerBoard { get; private set; }
-
+            public VariableBoard LocalVariableBoard { get; private set;}
+            
             public override void DoJob()
             {
                 _duration = 0;
@@ -47,13 +47,23 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
                 if (TryGetParent<AListenerNode>(out var listenerNode))
                 {
-                    ListenerBoard = listenerNode.Board;
-                    ListenerBoard.RefCount.AddReference();
+                    LocalVariableBoard = listenerNode.LocalVariableBoard;
+                    LocalVariableBoard.RefCount.AddReference();
                 }
+            }
+
+            public void Stop()
+            {
+                _isRunning = false;
             }
 
             public void Tick(float dt)
             {
+                if (!_isRunning)
+                {
+                    return;
+                }
+                
                 if (isSchedule())
                 {
                     invoke();
@@ -103,8 +113,8 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 _firstInterval = 0;
                 _isRunning = false;
 
-                GPool<VariableBoard>.Pool.Recycle(ListenerBoard);
-                ListenerBoard = null;
+                GPool<VariableBoard>.Pool.Recycle(LocalVariableBoard);
+                LocalVariableBoard = null;
             }
 
             public override void Recycle()

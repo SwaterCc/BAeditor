@@ -18,13 +18,8 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     case EParamType.Simple:
                         return aParams.Value;
                     case EParamType.Function:
-                        var wrap = AbilityEnv.GetWrapFunc(aParams.funcName);
-                        if (wrap is IReturnRef refWarp)
-                        {
-                            return refWarp.CallFunc(ability, node, aParams.funcParams);
-                        }
-
-                        break;
+                        var wrap = (IReturnRef)AbilityEnv.GetWrapFunc(aParams.funcName);
+                        return wrap.CallFunc(ability, node, aParams.funcParams);
                     case EParamType.Attr:
                         Debug.LogWarning($"aParams getVariable {aParams.attrType} 产生了装箱");
                         return ability.Unit.GetAttr(aParams.attrType);
@@ -70,11 +65,11 @@ namespace Hono.Scripts.Battle.AbilityFramework
                             return value;
                         }
 
-                        Debug.LogError("找不到指定类型的引用变量");
+                        Debug.LogError($"[RefParser] key {aParams.variableName} 找不到指定类型的引用变量");
                         return null;
                 }
 
-                throw new Exception("");
+                return null;
             }
         }
     }
