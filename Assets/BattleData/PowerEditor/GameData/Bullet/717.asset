@@ -33,14 +33,14 @@ MonoBehaviour:
       isReverse: 0
       value: 1
     attrCompares: []
-  speed: 10
+  speed: 2
   acceleration: 1
   rotSpeed: 0
   lifeTime: 5
   minHitInterval: 1
   maxHitCount: 5
   isUseVFXKeyModel: 0
-  flyVFXStr: Assets/BattleModel/Prototype/Model/LootModel.prefab
+  flyVFXStr: Assets/BattleModel/Base/TeamDefaultBrithPoint.prefab
   hitVFXStr: Assets/BattleModel/Base/BuildArea.prefab
   bulletAbility: {fileID: 4130809267460278915}
 --- !u!114 &4130809267460278915

@@ -92,7 +92,22 @@ namespace Hono.Scripts.Battle
         /// <returns></returns>
         public bool TryGetRef(string key, out object refValue)
         {
+            if (_keySearch.TryGetValue(key, out var type))
+            {
+                Debug.LogError($"key :{key} 该值存在但不是引用类型 is " + type);
+            }
+            
             return _refCollection.TryGetValue(key, out refValue);
+        }
+        
+        /// <summary>
+        /// 获取引用对象
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public object GetRef(string key)
+        {
+            return _refCollection.GetValueOrDefault(key, null);
         }
 
         public void Set<T>(string key, T value)
@@ -138,7 +153,7 @@ namespace Hono.Scripts.Battle
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <typeparam name="T"></typeparam>
-        public void Set<T>(EvtInfoField<T> field, T value)
+        public void SetEvtField<T>(EvtInfoField<T> field, T value)
         {
             Set(field.Name, value);
         }
@@ -148,7 +163,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         /// <param name="field"></param>
         /// <typeparam name="T"></typeparam>
-        public T Get<T>(EvtInfoField<T> field)
+        public T GetEvtField<T>(EvtInfoField<T> field)
         {
            return Get<T>(field.Name);
         }

@@ -156,8 +156,7 @@ namespace Hono.Scripts.Battle
         public EEventType eventType;
         public float eventInterval;
         public bool isGlobalEvtListener;
-        [OdinSerialize]
-        public IEventChecker Checker;
+        public AParams getCheckerFunc = new();
 
         public string msgName;
 
@@ -169,7 +168,7 @@ namespace Hono.Scripts.Battle
             {
                 copy.eventType = eventType;
                 copy.eventInterval = eventInterval;
-                copy.Checker = Checker;
+                copy.getCheckerFunc = new AParams(getCheckerFunc);
             }
             else
             {

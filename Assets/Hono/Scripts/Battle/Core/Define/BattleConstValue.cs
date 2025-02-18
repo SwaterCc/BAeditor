@@ -48,7 +48,7 @@ namespace Hono.Scripts.Battle
         public const int WorldEventKey = -999;
 
 
-        public static LayerMask ActorPawn = 1 << 10;
+        public static LayerMask ActorPawn = 1 << 9;
         public static LayerMask ActorAlly = 1 << 11;
         public static LayerMask ActorEnemy = 1 << 12;
 
@@ -79,17 +79,21 @@ namespace Hono.Scripts.Battle
             return null;
         }
         
-        public static LayerMask GetLayerMask(EUOProxyLayerType layerType)
+        public static LayerMask GetLayerMask(string layerType)
         {
             switch (layerType)
             {
-                case EUOProxyLayerType.ActorLayer:
-                    return 10;
-                case EUOProxyLayerType.SceneObject:
-                    return 0;
+              case "SceneUnit":
+                  return 7;
+              case "Character":
+                  return 9;
+              case "Ally":
+                  return 10;
+              case "Enemy":
+                  return 11;
             }
 
-            return 0;
+            return 7;
         }
     }
 }

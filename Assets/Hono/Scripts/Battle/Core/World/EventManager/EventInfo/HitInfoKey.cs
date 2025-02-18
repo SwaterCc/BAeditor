@@ -1,4 +1,5 @@
-﻿using Hono.Scripts.Battle.ObjectPool;
+﻿using System.Collections.Generic;
+using Hono.Scripts.Battle.ObjectPool;
 
 namespace Hono.Scripts.Battle.Event
 {

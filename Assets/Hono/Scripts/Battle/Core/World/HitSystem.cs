@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Event;
+using Hono.Scripts.Battle.ObjectPool;
 using UnityEngine;
 
 namespace Hono.Scripts.Battle.Core
@@ -41,6 +42,15 @@ namespace Hono.Scripts.Battle.Core
             if (!disableEventTrigger)
             {
                 var board = GPool<VariableBoard>.Pool.Rent();
+                board.SetEvtField(HitInfoKey.AttackerUid,      attacker.Uid);
+                board.SetEvtField(HitInfoKey.DamageSourceType, damageSourceType);
+                board.SetEvtField(HitInfoKey.SourceAbilityId,  sourceAbilityId);
+                board.SetEvtField(HitInfoKey.DamageConfigId,   damageId);
+                board.SetEvtField(HitInfoKey.HitBoxHitCount,   1);
+                var gList = GPool<GList<int>>.Pool.Rent();
+                gList.Add(target.Uid);
+                board.SetEvtField(HitInfoKey.HitTargetUid, gList);
+                attacker.FireEvent(EEventType.OnHit, board);
                 EventManager.Instance.FireWorldEvent(EEventType.OnHit, board);
                 GPool<VariableBoard>.Pool.Recycle(board);
             }
@@ -104,6 +114,7 @@ namespace Hono.Scripts.Battle.Core
             if (!disableEventTrigger)
             {
                 var board = GPool<VariableBoard>.Pool.Rent();
+                
                 EventManager.Instance.FireWorldEvent(EEventType.OnHit, board);
                 GPool<VariableBoard>.Pool.Recycle(board);
             }
@@ -158,6 +169,15 @@ namespace Hono.Scripts.Battle.Core
             if (!disableEventTrigger)
             {
                 var board = GPool<VariableBoard>.Pool.Rent();
+                board.SetEvtField(HitInfoKey.AttackerUid,      attacker.Uid);
+                board.SetEvtField(HitInfoKey.DamageSourceType, damageSourceType);
+                board.SetEvtField(HitInfoKey.SourceAbilityId,  sourceAbilityId);
+                board.SetEvtField(HitInfoKey.DamageConfigId,   damageId);
+                board.SetEvtField(HitInfoKey.HitBoxHitCount,   1);
+                var gList = GPool<GList<int>>.Pool.Rent();
+                gList.AddRange(_hitTargets);
+                board.SetEvtField(HitInfoKey.HitTargetUid, gList);
+                attacker.FireEvent(EEventType.OnHit, board);
                 EventManager.Instance.FireWorldEvent(EEventType.OnHit, board);
                 GPool<VariableBoard>.Pool.Recycle(board);
             }

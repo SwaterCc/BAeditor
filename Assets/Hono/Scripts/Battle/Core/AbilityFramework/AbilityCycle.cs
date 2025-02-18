@@ -42,6 +42,11 @@ namespace Hono.Scripts.Battle.AbilityFramework
             public AGroupNode CurGroup;
 
             /// <summary>
+            /// 当前在调用函数的节点
+            /// </summary>
+            public ANode CurCallFuncNode { get; set; }
+
+            /// <summary>
             /// 下一个GroupId
             /// </summary>
             public int NextGroupId;
@@ -323,7 +328,6 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     _ticks.Clear();
                     //执行结束阶段
                     doCycle(EAbilityCycle.EndExecute);
-
                     //运行结束回调
                     AContext.ExecuteEndCallBack?.Invoke();
 
@@ -332,7 +336,11 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Ability {AContext.Id} endExecute 阶段存在错误");
+                    //运行结束回调
+                    AContext.ExecuteEndCallBack?.Invoke();
+                    //重置到Init状态
+                    CurState = EAbilityCycle.Init;
+                    Debug.LogError($"Ability {AContext.Id} endExecute 阶段存在错误 {e}");
                 }
             }
 

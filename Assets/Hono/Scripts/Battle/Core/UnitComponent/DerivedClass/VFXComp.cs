@@ -24,7 +24,7 @@ namespace Hono.Scripts.Battle.Core
         //特效组件的唯一Id生成器
         private static readonly CommonUtility.IdGenerator VFXIdGenerator = CommonUtility.GetIdGenerator();
         private readonly Dictionary<int, VFXInfo> _caches = new(32);
-        private readonly List<VFXInfo> _removeList = new(32);
+        private readonly List<int> _removeList = new(32);
 
 
         public override void Init() { }
@@ -50,13 +50,13 @@ namespace Hono.Scripts.Battle.Core
 
                 vfxInfo.Pos = rootPos + Unit.UnitTransform.Rot * setting.offset;
                 vfxInfo.Rot = rootRot * Quaternion.Euler(setting.rotOffset);
-                addVFX(vfxInfo);
+                World.Current.WorldRoot.VFXComp.addVFX(vfxInfo);
             }
             else
             {
                 vfxInfo.Pos = setting.offset;
                 vfxInfo.Rot = Quaternion.Euler(setting.rotOffset);
-                World.Current.WorldRoot.VFXComp.addVFX(vfxInfo);
+                addVFX(vfxInfo);
             }
 
             return vfxInfo.Uid;
@@ -96,13 +96,13 @@ namespace Hono.Scripts.Battle.Core
 
                 vfxInfo.Pos = rootPos + Unit.UnitTransform.Rot * setting.offset;
                 vfxInfo.Rot = rootRot * Quaternion.Euler(setting.rotOffset);
-                addVFX(vfxInfo);
+                World.Current.WorldRoot.VFXComp.addVFX(vfxInfo);
             }
             else
             {
                 vfxInfo.Pos = setting.offset;
                 vfxInfo.Rot = Quaternion.Euler(setting.rotOffset);
-                World.Current.WorldRoot.VFXComp.addVFX(vfxInfo);
+                addVFX(vfxInfo);
             }
 
             return vfxInfo.Uid;
@@ -111,10 +111,7 @@ namespace Hono.Scripts.Battle.Core
 
         public void RemoveVFX(int key)
         {
-            if (_caches.TryGetValue(key, out var obj))
-            {
-                removeVFX(obj);
-            }
+            removeVFX(key);
         }
 
         private void addVFX(VFXInfo vfxInfo)
@@ -126,9 +123,9 @@ namespace Hono.Scripts.Battle.Core
             }
         }
 
-        private void removeVFX(VFXInfo vfxInfo)
+        private void removeVFX(int index)
         {
-            _caches.Remove(vfxInfo.Uid);
+            _caches.Remove(index, out var vfxInfo);
             if (UnityAdapter.Instance.TryGetUnityObjectProxy(Unit.Uid, out var proxy))
             {
                 proxy.RemoveVFX(vfxInfo);
@@ -137,20 +134,18 @@ namespace Hono.Scripts.Battle.Core
 
         protected override void onTick(float dt)
         {
-            for (var index = 0; index < _caches.Count; index++)
+            foreach (var pair in _caches)
             {
-                VFXInfo obj = _caches[index];
-                if (obj.IsExpired)
+                pair.Value.OnTick(dt);
+                if (pair.Value.IsExpired)
                 {
-                    _removeList.Add(obj);
+                    _removeList.Add(pair.Key);
                 }
-
-                obj.OnTick(dt);
             }
 
-            foreach (var obj in _removeList)
+            foreach (var index in _removeList)
             {
-                removeVFX(obj);
+                removeVFX(index);
             }
 
             _removeList.Clear();
@@ -166,7 +161,10 @@ namespace Hono.Scripts.Battle.Core
             _removeList.Clear();
             foreach (var obj in _caches)
             {
-                removeVFX(obj.Value);
+                if (UnityAdapter.Instance.TryGetUnityObjectProxy(Unit.Uid, out var proxy))
+                {
+                    proxy.RemoveVFX(obj.Value);
+                }
             }
 
             _caches.Clear();

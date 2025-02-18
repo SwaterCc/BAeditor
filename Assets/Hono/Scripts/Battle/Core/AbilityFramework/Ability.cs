@@ -37,7 +37,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// 属于Ability的变量
         /// </summary>
         public VariableBoard VariableBoard { get; }
-
+        
         /// <summary>
         /// Ability函数定义
         /// </summary>
@@ -191,26 +191,37 @@ namespace Hono.Scripts.Battle.AbilityFramework
             _abilityCycle.Tick(dt * timeFactory);
         }
 
-        /// <summary>
-        /// 添加回调
-        /// </summary>
-        /// <param name="cycle"></param>
-        /// <param name="callback"></param>
-        public void AddCycleCallback(EAbilityCycle cycle, Action callback)
+        public VariableBoard GetRunNodeVariableBoard()
         {
-            _abilityCycle.CycleCallbacks[cycle] += callback;
-        }
+            var curNode = _abilityCycle.CurCallFuncNode;
+            if (curNode == null)
+            {
+                return null;
+            }
 
-        /// <summary>
-        /// 清除回调
-        /// </summary>
-        /// <param name="cycle"></param>
-        /// <param name="callback"></param>
-        public void RemoveCycleCallback(EAbilityCycle cycle, Action callback)
-        {
-            _abilityCycle.CycleCallbacks[cycle] -= callback;
-        }
+            if (curNode is AListenerNode listenerNode)
+            {
+                return listenerNode.Board;
+            }
 
+            if (curNode is ATimerNode timerNode)
+            {
+                return timerNode.ListenerBoard;
+            }
+
+            if (curNode.TryGetParent(out ATimerNode timerNodeParent))
+            {
+                return timerNodeParent.ListenerBoard;
+            }
+            
+            if (curNode.TryGetParent(out AListenerNode listenerParent))
+            {
+                return listenerParent.Board;
+            }
+
+            return null;
+        }
+        
         public void OnRecycle()
         {
             //周期停止
@@ -244,7 +255,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 #if _ABILITY_DEBUG_
 			Debug.Log(string.Format(AbilityInfo(ability) + pattern, args));
 #endif
-            Debug.Log(string.Format(AbilityInfo(ability) + pattern, args));
+           // Debug.Log(string.Format(AbilityInfo(ability) + pattern, args));
         }
 
         public static void LogError(this Ability ability, in string pattern, params object[] args)
@@ -252,7 +263,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
 #if _ABILITY_DEBUG_
 			Debug.LogError(string.Format(AbilityInfo(ability) + pattern, args));
 #endif
-            Debug.LogError(string.Format(AbilityInfo(ability) + pattern, args));
+           // Debug.LogError(string.Format(AbilityInfo(ability) + pattern, args));
         }
     }
 }

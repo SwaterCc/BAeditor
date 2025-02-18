@@ -109,7 +109,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 是否第一次Tick
         /// </summary>
-        private bool _firstTick;
+        private bool _firstTick = true;
 
         /// <summary>
         /// 是否加载完成

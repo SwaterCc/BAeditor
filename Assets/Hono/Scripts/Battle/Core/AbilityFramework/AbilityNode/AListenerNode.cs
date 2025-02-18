@@ -23,7 +23,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     _eventListener.BindEvent(Data.eventType);
                     _eventListener.SetInterval(Data.eventInterval);
                     _eventListener.SetCallback(OnFire);
-                    _eventListener.SetupChecker(Data.Checker);
+                    _eventListener.SetupChecker(ParseRef<IEventChecker>(Data.getCheckerFunc));
                     _eventListener.IsWorldListener = Data.isGlobalEvtListener;
                     AContext.Unit.RegisterEvtListener(_eventListener);
                 }

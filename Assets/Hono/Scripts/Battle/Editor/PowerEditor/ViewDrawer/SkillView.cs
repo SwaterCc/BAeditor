@@ -28,6 +28,11 @@ namespace Editor.AbilityEditor
             _abilityView.Init();
         }
 
+        protected override void onSave()
+        {
+            _abilityView.Save();
+        }
+
         private void DrawSkillView()
         {
             float oldWidth = EditorGUIUtility.labelWidth;

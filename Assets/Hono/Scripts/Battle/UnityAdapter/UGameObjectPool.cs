@@ -7,6 +7,7 @@ using Hono.Scripts.Battle.Tools;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 
 namespace Hono.Scripts.Battle
 {
@@ -19,7 +20,12 @@ namespace Hono.Scripts.Battle
         /// 池
         /// </summary>
         private readonly Dictionary<string, Queue<GameObject>> _gameObjectCache = new(50);
-        
+
+        public async UniTask<GameObject> Get(string path, bool worldSpace, CancellationTokenSource cancelSource)
+        {
+            return await Get(path, null, Vector3.zero, Vector3.one, Quaternion.identity, worldSpace, cancelSource);
+        }
+
         public async UniTask<GameObject> Get(string path, CancellationTokenSource cancelSource)
         {
             return await Get(path, null, Vector3.zero, Vector3.one, Quaternion.identity, true, cancelSource);
@@ -63,23 +69,8 @@ namespace Hono.Scripts.Battle
 
             if (!_gameObjectCache.TryGetValue(path, out var objectPool))
             {
-                //找不到对应的key值，先确定路径能加载出对象
-                try
-                {
-                    result = await Addressables.LoadAssetAsync<GameObject>(path).ToUniTask(cancellationToken: cancelSource.Token);
-                    //有对象，路径正确
-                    objectPool = new Queue<GameObject>(10);
-                    _gameObjectCache.Add(path, objectPool);
-                }
-                catch (OperationCanceledException)
-                {
-                    return result;
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e);
-                    return result;
-                }
+                objectPool = new Queue<GameObject>(10);
+                _gameObjectCache.Add(path, objectPool);
             }
 
             if (objectPool.Count == 0)
@@ -89,6 +80,7 @@ namespace Hono.Scripts.Battle
                 {
                     result = await Addressables.LoadAssetAsync<GameObject>(path).ToUniTask(cancellationToken: cancelSource.Token);
                     result = Instantiate(result);
+                    SceneManager.MoveGameObjectToScene(result, gameObject.scene);
                 }
                 catch (OperationCanceledException)
                 {
@@ -104,8 +96,10 @@ namespace Hono.Scripts.Battle
             {
                 result = objectPool.Dequeue();
             }
-
+            result.transform.SetParent(null);
+            SceneManager.MoveGameObjectToScene(result, SceneManager.GetActiveScene());
             result.transform.SetParent(parent, worldSpace);
+
             if (worldSpace)
             {
                 result.transform.position = position;
@@ -114,7 +108,7 @@ namespace Hono.Scripts.Battle
             }
             else
             {
-                result.transform.localScale = position;
+                result.transform.localPosition = position;
                 result.transform.localRotation = rotation;
                 result.transform.localScale = scale;
             }
@@ -129,7 +123,7 @@ namespace Hono.Scripts.Battle
             {
                 return false;
             }
-            
+
             if (!_gameObjectCache.ContainsKey(path))
             {
                 Debug.LogError("回池路径错误！");
@@ -137,7 +131,9 @@ namespace Hono.Scripts.Battle
             }
 
             obj.SetActive(false);
-            obj.transform.parent = transform;
+            obj.transform.SetParent(null);                                    // 回收时解除父级
+            SceneManager.MoveGameObjectToScene(obj, Instance.gameObject.scene); // 移回池场景
+            obj.transform.SetParent(transform);           
             _gameObjectCache[path].Enqueue(obj);
             return true;
         }

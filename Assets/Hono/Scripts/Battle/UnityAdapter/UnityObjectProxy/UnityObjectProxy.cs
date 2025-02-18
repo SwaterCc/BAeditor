@@ -74,7 +74,7 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public async UniTask LoadProxy()
         {
-            _proxyType = (EUOProxyType)_modelRow.UOProxyType;
+            _proxyType = Enum.Parse<EUOProxyType>(_modelRow.UOProxyType, true);
             string path = BattleConstValue.GetUOProxyPath(_proxyType);
             _proxy = await UGameObjectPool.Instance.Get(path, Unit.MainCancelToken);
             if (_proxy == null)
@@ -90,7 +90,7 @@ namespace Hono.Scripts.Battle
             _proxy.transform.localScale = _modelRow.ModelScale * Vector3.one;
 
             //初始化层级
-            _proxy.layer = BattleConstValue.GetLayerMask((EUOProxyLayerType)_modelRow.ProxyLayer);
+            _proxy.layer = BattleConstValue.GetLayerMask(_modelRow.ProxyLayer.ToString());
 
             if (_proxy.TryGetComponent(out _physicsHandler))
             {
@@ -184,7 +184,7 @@ namespace Hono.Scripts.Battle
 
             return _proxy.transform.localPosition;
         }
-
+        
         public void SyncPosition(in Vector3 pos)
         {
             _proxy.transform.localPosition = pos;
@@ -197,7 +197,7 @@ namespace Hono.Scripts.Battle
 
         public async void AddVFX(VFXInfo vfxInfo)
         {
-            if (!string.IsNullOrEmpty(vfxInfo.Path))
+            if (string.IsNullOrEmpty(vfxInfo.Path))
             {
                 return;
             }
@@ -205,7 +205,7 @@ namespace Hono.Scripts.Battle
             Transform parent = null;
             if (!vfxInfo.Setting.isWorldVFX)
             {
-                if (!_actorModelHandler.TryGetPoint(vfxInfo.Setting.boneName, out parent))
+                if (_actorModelHandler == null || !_actorModelHandler.TryGetPoint(vfxInfo.Setting.boneName, out parent))
                 {
                     Debug.LogError("找不到挂点！");
                     parent = _proxy.transform;

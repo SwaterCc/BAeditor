@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         /// 当前运行的Ability
         /// </summary>
         private Ability AContext { get; }
-
+        
         /// <summary>
         /// Ability所属的Actor
         /// </summary>

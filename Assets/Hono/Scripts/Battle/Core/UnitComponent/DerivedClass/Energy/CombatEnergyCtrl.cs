@@ -20,15 +20,16 @@ namespace Hono.Scripts.Battle.Core
             /// 
             /// </summary>
             private readonly CombatComp _combatComp;
-            private readonly UnitEventListener _attackListener = new(EEventType.OnSkillUseSuccess);
+            private readonly UnitEventListener _attackListener = new(EEventType.OnSkillUsed);
             private readonly UnitEventListener _beHitListener = new(EEventType.OnBeHit);
-            private readonly UnitEventListener _killEnemyListener = new(EEventType.OnHit, true);
-
+            private readonly UnitEventListener _killEnemyListener = new(EEventType.OnDead, true);
+           
             public CombatEnergyCtrl(CombatComp combatComp)
             {
                 _combatComp = combatComp;
                 _attackListener.SetCallback(onAttack);
                 _beHitListener.SetCallback(onBeHit);
+                _killEnemyListener.SetCallback(onKill);
             }
 
             public void Init()
@@ -156,6 +157,14 @@ namespace Hono.Scripts.Battle.Core
                 foreach (var energyInfo in _combatEnergy.Values)
                 {
                     energyInfo.AddCurrentValue(energyInfo.EnergyGetWhenBeHit);
+                }
+            }
+
+            private void onKill(VariableBoard board)
+            {
+                foreach (var energyInfo in _combatEnergy.Values)
+                {
+                    energyInfo.AddCurrentValue(energyInfo.EnergyGetWhenKillEnemy);
                 }
             }
         }

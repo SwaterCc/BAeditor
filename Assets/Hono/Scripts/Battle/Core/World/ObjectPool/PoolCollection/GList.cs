@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Hono.Scripts.Battle.ObjectPool
 {
@@ -50,6 +51,19 @@ namespace Hono.Scripts.Battle.ObjectPool
             {
                 refCount.RefCount.AddReference();
             }
+        }
+
+        public void AddRange(IEnumerable<T> enumerable)
+        {
+            foreach (var item in enumerable)
+            {
+                if (item is IAPoolRefCount refCount)
+                {
+                    refCount.RefCount.AddReference();
+                }
+            }
+            
+            _list.AddRange(enumerable);
         }
 
         public void Remove(T item)

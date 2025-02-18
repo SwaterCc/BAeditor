@@ -120,8 +120,8 @@ namespace Hono.Scripts.Battle.Core
             if (_allowDirty)
             {
                 var board = GPool<VariableBoard>.Pool.Rent();
-                board.Set(AttrChangedEventInfo.AttrType, attrType);
-                board.Set(AttrChangedEventInfo.Value,    value);
+                board.SetEvtField(AttrChangedEventInfo.AttrType, attrType);
+                board.SetEvtField(AttrChangedEventInfo.Value,    value);
                 EventManager.Instance.FireWorldEvent(EEventType.OnAttrChanged, board);
                 GPool<VariableBoard>.Pool.Recycle(board);
             }

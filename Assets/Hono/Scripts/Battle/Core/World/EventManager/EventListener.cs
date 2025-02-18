@@ -88,6 +88,10 @@ namespace Hono.Scripts.Battle.Event
 
         public void SetupChecker(IEventChecker checker)
         {
+            if (_checker != null)
+            {
+                GPoolManager.Instance.RecycleAObject(checker);                
+            }
             _checker = checker;
         }
 
@@ -143,7 +147,7 @@ namespace Hono.Scripts.Battle.Event
         }
     }
 
-    public interface IEventChecker
+    public interface IEventChecker : IGPoolObject
     {
         public bool Check(in VariableBoard board);
     }

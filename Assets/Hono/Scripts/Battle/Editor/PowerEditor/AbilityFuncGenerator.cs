@@ -55,6 +55,9 @@ namespace Hono.Scripts.Battle.Editor.PowerEditor
 using System;
 using System.Collections.Generic;
 using Hono.Scripts.Battle.AbilitySystem;
+using Hono.Scripts.Battle.Core;
+using UnityEngine;
+using Object = System.Object;
 
 namespace Hono.Scripts.Battle.AbilityFramework
 {{

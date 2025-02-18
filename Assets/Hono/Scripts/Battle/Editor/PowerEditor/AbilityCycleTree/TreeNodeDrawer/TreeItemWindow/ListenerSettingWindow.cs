@@ -16,16 +16,27 @@ namespace Editor.AbilityEditor.TreeItemWindow
 {
     public class ListenerSettingWindow : ANodeSettingWindow<ListenerNodeData>
     {
-        private List<AParamsField> _parameterFields;
+        private readonly List<AParamsField> _parameterFields = new List<AParamsField>();
         private EEventType _curEvent;
 
         protected override void Init()
         {
-            _parameterFields = new List<AParamsField>();
+            _parameterFields.Clear();
             _curEvent = TempData.eventType;
+
+            if (!string.IsNullOrEmpty(TempData.getCheckerFunc.funcName))
+            {
+                var funcInfo = AbilityFuncInfoCache.EventBindInfoLookup[TempData.eventType].GetCheckerFuncInfo;
+
+                for (var index = 0; index < TempData.getCheckerFunc.funcParams.Count; index++)
+                {
+                    AParams param = TempData.getCheckerFunc.funcParams[index];
+                    var paramInfo = funcInfo.ParamInfos[index];
+                    _parameterFields.Add(new AParamsField(TreeItem, param, paramInfo.ParamName, paramInfo.ParamType));
+                }
+            }
         }
-
-
+        
         protected override void Draw()
         {
             SirenixEditorGUI.BeginBox();
@@ -58,7 +69,7 @@ namespace Editor.AbilityEditor.TreeItemWindow
             PowerEditorUIHelper.DrawSimpleField(ref TempData.isGlobalEvtListener, "是否监听世界事件",
                                                 TempData.isGlobalEvtListener);
 
-            if (TempData.Checker == null)
+            if (string.IsNullOrEmpty(TempData.getCheckerFunc.funcName))
             {
                 if (!AbilityFuncInfoCache.EventBindInfoLookup.TryGetValue(TempData.eventType, out var bind))
                 {
@@ -68,15 +79,30 @@ namespace Editor.AbilityEditor.TreeItemWindow
 
                 if (SirenixEditorGUI.Button("添加检查器", ButtonSizes.Medium))
                 {
-                    TempData.Checker = (IEventChecker)Activator.CreateInstance(bind.CheckerType);
+                    TempData.getCheckerFunc.funcName = bind.GetCheckerFuncInfo.FuncName;
+                    TempData.getCheckerFunc.paramType = EParamType.Function;
+                    TempData.getCheckerFunc.paramCastType = bind.GetCheckerFuncInfo.ReturnType.Name;
+                    foreach (var paramInfo in bind.GetCheckerFuncInfo.ParamInfos)
+                    {
+                        var param = new AParams();
+                        param.paramType = EParamType.Simple;
+                        TempData.getCheckerFunc.funcParams ??= new List<AParams>();
+                        TempData.getCheckerFunc.funcParams.Add(param);
+                        _parameterFields.Add(new AParamsField(TreeItem, param, paramInfo.ParamName, paramInfo.ParamType));
+                    }
                 }
             }
-            else
+            
+            if (_curEvent != TempData.eventType)
             {
-                if (SirenixEditorGUI.Button("配置事件检查器", ButtonSizes.Large))
-                {
-                    SerializableOdinWindow.Open(TempData.Checker);
-                }
+                TempData.getCheckerFunc = new AParams();
+                _parameterFields.Clear();
+                _curEvent = TempData.eventType;
+            }
+            
+            foreach (var field in _parameterFields)
+            {
+                field.Draw();
             }
         }
     }

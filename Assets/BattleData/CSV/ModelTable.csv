@@ -1,6 +1,6 @@
 Id,描述,UO代理类型,代理Layer层,基础资源模板Id,模型缩放,P1(球形，胶囊体半径，立方体的长),胶囊体，立方体的高,立方体的宽,ColliderCenter
 Id,Desc,UOProxyType,ProxyLayer,ResReplTplId,ModelScale,P1,P2,P3,ColliderCenter
-int,string,int,int,int,float,float,float,float,floatArray
-1,世界节点,11,2,,1,,,,
-2,测试单位,1,1,1001,1,,,,
-3,测试子弹,13,2,,,,,,
+int,string,string,string,int,float,float,float,float,floatArray
+1,世界节点,TransformProxy,SceneUnit,,1,,,,
+2,测试单位,ActorProxy,Character,1001,1,,,,
+3,测试子弹,SphereColliderProxy,SceneUnit,,,,,,

@@ -70,6 +70,7 @@ namespace Hono.Scripts.Battle
         {
             _collection.Remove(key);
         }
+        
 
         public void Clear()
         {

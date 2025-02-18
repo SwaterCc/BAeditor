@@ -10,18 +10,18 @@ namespace Hono.Scripts.Battle.Tools.CustomAttribute
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
     public class AbilityEventBind : System.Attribute
     {
-        public Type CheckerType;
+        public readonly string CheckerGetFunc;
 
-        public Type EventInfoKeyType;
+        public readonly Type EventInfoKeyType;
 
         /// <summary>
         /// 事件绑定
         /// </summary>
         /// <param name="eventInfoKeyType">事件EventInfoKey绑定</param>
-        /// <param name="checkerType">检查器绑定</param>
-        public AbilityEventBind(Type eventInfoKeyType, Type checkerType)
+        /// <param name="checkerGetFunc">检查器获取函数</param>
+        public AbilityEventBind(Type eventInfoKeyType, string checkerGetFunc)
         {
-            CheckerType = checkerType;
+            CheckerGetFunc = checkerGetFunc;
             EventInfoKeyType = eventInfoKeyType;
         }
     }

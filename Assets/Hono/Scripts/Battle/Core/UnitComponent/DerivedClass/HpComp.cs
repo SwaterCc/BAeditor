@@ -78,7 +78,7 @@ namespace Hono.Scripts.Battle.Core
                 if (!hpLock.TriggerEvent)
                     continue;
                 var board = GPool<VariableBoard>.Pool.Rent();
-                board.Set(HpLockEventInfo.HpLockId, hpLock.Id);
+                board.SetEvtField(HpLockEventInfo.HpLockId, hpLock.Id);
                 Unit.FireEvent(EEventType.OnAttrChanged, board);
                 GPool<VariableBoard>.Pool.Recycle(board);
                 break;

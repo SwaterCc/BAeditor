@@ -27,11 +27,13 @@ namespace Hono.Scripts.Battle.Core
             Uid = World.Current.GetUid();
             ActorType = assembleInfo.ActorType;
             Attrs.Init(assembleInfo.BaseAttrTableId);
+           
             if (assembleInfo.ModelId > 0 &&
                 ConfigDataBase.Table<ModelTable>().TryGet(assembleInfo.ModelId, out _modelRow))
             {
                 SetAttr(EAttrType.AttrResReplTplBaseId, _modelRow.ResReplTplId);
                 SetAttr(EAttrType.AttrModelId,          assembleInfo.ModelId);
+                UnitTransform.Radius = _modelRow.P1;
                 addLoadTask(UnityAdapter.Instance.CreateUnityObjectProxy(this));
             }
 

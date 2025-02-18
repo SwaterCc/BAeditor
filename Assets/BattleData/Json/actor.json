@@ -19,8 +19,22 @@
     
     "ComponentCtor":{
       "CombatComp":{
-        "SkillList":[1001]
+        "SkillList":[1001,1002]
       }
-    }
+    },
+
+    "GrowCurves":[
+      {
+        "attrType": "AttrMaxHpTotal",
+        "growCurve": "GROW_CURVE_线性"
+      },
+      {
+        "attrType": "AttrAttackTotal",
+        "growCurve": "GROW_CURVE_边际效应递增"
+      },
+      {
+        "attrType": "AttrDefenseTotal",
+        "growCurve": "GROW_CURVE_边际效应递减"
+      }]
   }
 }

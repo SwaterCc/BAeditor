@@ -139,11 +139,15 @@ namespace Hono.Scripts.Battle.AbilityFramework
             {
                 try
                 {
-                    return IntParser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = this;
+                    var res = IntParser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = null;
+                    return res;
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e);
+                    ACycles.CurCallFuncNode = null;
                     return 0;
                 }
             }
@@ -157,11 +161,15 @@ namespace Hono.Scripts.Battle.AbilityFramework
             {
                 try
                 {
-                    return FloatParser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = this;
+                    var res = FloatParser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = null;
+                    return res;
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e);
+                    ACycles.CurCallFuncNode = null;
                     return 0;
                 }
             }
@@ -175,11 +183,15 @@ namespace Hono.Scripts.Battle.AbilityFramework
             {
                 try
                 {
-                    return BooleanParser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = this;
+                    var res = BooleanParser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = null;
+                    return res;
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e);
+                    ACycles.CurCallFuncNode = null;
                     return false;
                 }
             }
@@ -193,11 +205,15 @@ namespace Hono.Scripts.Battle.AbilityFramework
             {
                 try
                 {
-                    return Vector3Parser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = this;
+                    var res = Vector3Parser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = null;
+                    return res;
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e);
+                    ACycles.CurCallFuncNode = null;
                     return Vector3.zero;
                 }
             }
@@ -211,11 +227,15 @@ namespace Hono.Scripts.Battle.AbilityFramework
             {
                 try
                 {
-                    return RefParser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = this;
+                    var res = RefParser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = null;
+                    return res;
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e);
+                    ACycles.CurCallFuncNode = null;
                     return null;
                 }
             }
@@ -230,11 +250,15 @@ namespace Hono.Scripts.Battle.AbilityFramework
             {
                 try
                 {
-                    return (T)RefParser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = this;
+                    var res = (T)RefParser.Parse(AContext, this, aParams);
+                    ACycles.CurCallFuncNode = null;
+                    return res;
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e);
+                    ACycles.CurCallFuncNode = null;
                     return null;
                 }
             }
@@ -267,12 +291,43 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 return false;
             }
 
+            public bool TryGetVariable<T>(string key,out T value)
+            {
+                if (AContext.VariableBoard.TryGet(key, out value))
+                {
+                    return true;
+                }
+
+                if (AContext.GetRunNodeVariableBoard().TryGet(key, out value))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            
+            public bool TryGetVariableRef(string key,out object value)
+            {
+                if (AContext.VariableBoard.TryGetRef(key, out value))
+                {
+                    return true;
+                }
+
+                if (AContext.GetRunNodeVariableBoard().TryGetRef(key, out value))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            
             #endregion
         }
 
         private abstract class ANode<TNodeData> : ANode where TNodeData : AbilityNodeData
         {
             public new TNodeData Data;
+
             protected sealed override void onRent()
             {
                 Data = (TNodeData)base.Data;

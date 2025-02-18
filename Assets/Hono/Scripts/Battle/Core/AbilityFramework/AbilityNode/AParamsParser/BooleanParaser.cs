@@ -10,6 +10,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         {
             public static bool Parse(in Ability ability, ANode node, AParams aParams)
             {
+               
                 switch (aParams.paramType)
                 {
                     case EParamType.Simple:

@@ -72,6 +72,11 @@ namespace Hono.Scripts.Battle.Core
 
         private void move(Vector3 velocity, float dt)
         {
+            if (velocity.magnitude <= 0.0001f)
+            {
+                return;
+            }
+            
             if (UnityAdapter.Instance.TryGetUnityObjectProxy(Unit.Uid, out var proxy))
             {
                 Unit.UnitTransform.Pos = proxy.SyncVelocity(velocity, dt);

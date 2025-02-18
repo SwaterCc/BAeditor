@@ -63,7 +63,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 最大命中数量
         /// </summary>
-        private List<int> _maxHitResul = new(50);
+        private List<int> _maxHitResult = new(50);
         /// <summary>
         /// 碰撞cd
         /// </summary>
@@ -97,7 +97,6 @@ namespace Hono.Scripts.Battle.Core
             DamageSourceType = damageSourceType;
             _hitCountdown = 0;
             UnitTransform.Pos = _attacker.UnitTransform.Pos;
-            AddAbility(_bulletData.BulletAbility);
             _checkBox = new CheckBoxData()
             {
                 ShapeType = ECheckBoxShapeType.Sphere,
@@ -125,7 +124,6 @@ namespace Hono.Scripts.Battle.Core
             UnitTransform.Rot = Quaternion.AngleAxis(yAxisAngle, Vector3.up);
             _bulletType = EBulletType.DirectionBullet;
             _hitCountdown = 0;
-         
         }
 
         public void Ctor()
@@ -206,11 +204,13 @@ namespace Hono.Scripts.Battle.Core
                     }
 
                     var range = _bulletData.hitRadius + _target.UnitTransform.Radius;
+                    Debug.Log($"Bullet : {Uid} Distance {Vector3.Distance(_targetPos, UnitTransform.Pos)}");
                     if (Vector3.Distance(_targetPos, UnitTransform.Pos) < range)
                     {
                         //和目标的距离小于半径和
                         HitSystem.Instance.SingleHit(_attacker, _target, DamageSourceType, _bulletData.id, false,
                                                      _hitTargetDamageId);
+                        World.Current.RemoveUnit(this);
                     }
 
                     break;
@@ -226,17 +226,14 @@ namespace Hono.Scripts.Battle.Core
             }
 
             var proxy = UnityAdapter.Instance.GetUnityObjectProxy(Uid);
-            if (proxy != null)
-            {
-                proxy.SyncPosition(UnitTransform.Pos);
-            }
+            proxy?.SyncPosition(UnitTransform.Pos);
         }
 
         private void checkCollision()
         {
-            if (CommonUtility.HitRayCast(_checkBox, UnitTransform.Pos, UnitTransform.Rot, ref _maxHitResul))
+            if (CommonUtility.HitRayCast(_checkBox, UnitTransform.Pos, UnitTransform.Rot, ref _maxHitResult))
             {
-                foreach (var uid in _maxHitResul)
+                foreach (var uid in _maxHitResult)
                 {
                     if (uid == Uid)
                     {
@@ -303,7 +300,7 @@ namespace Hono.Scripts.Battle.Core
             _targetPos = default;
             _bulletType = default;
             _hitCountdown = default;
-            _maxHitResul.Clear();
+            _maxHitResult.Clear();
             UnityAdapter.Instance.RemoveUnitObjectProxy(Uid);
         }
     }

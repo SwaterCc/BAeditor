@@ -357,6 +357,8 @@ namespace Hono.Scripts.Battle.AbilityFramework
             int attackUid,
             int targetUid,
             int bulletId,
+            Vector3 offset,
+            float yAxisAngle,
             int hitTargetDamageId,
             int hitNotTargetDamageId = 0)
         {
@@ -375,8 +377,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 return;
             }
 
-            World.Current.CreateLockTargetBullet(attacker, target, bulletData, getDamageSourceType(), hitTargetDamageId,
+            var bullet = World.Current.CreateLockTargetBullet(attacker, target, bulletData, getDamageSourceType(), hitTargetDamageId,
                                                  hitNotTargetDamageId);
+            bullet.UnitTransform.Pos += offset;
+            bullet.UnitTransform.Rot = Quaternion.AngleAxis(yAxisAngle, Vector3.up);
         }
 
         [AbilityFunction("Bullet")]
@@ -384,6 +388,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
             int attackUid,
             float yAxisAngle,
             int bulletId,
+            Vector3 offset,
             int hitTargetDamageId,
             int hitNotTargetDamageId = 0)
         {
@@ -397,9 +402,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
                 return;
             }
 
-            World.Current.CreateDirectionBullet(attacker, yAxisAngle, bulletData, getDamageSourceType(),
+            var bullet = World.Current.CreateDirectionBullet(attacker, yAxisAngle, bulletData, getDamageSourceType(),
                                                 hitTargetDamageId,
                                                 hitNotTargetDamageId);
+            bullet.UnitTransform.Pos += offset;
         }
 
         #endregion
@@ -441,7 +447,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
         }
 
 
-        [AbilityFunction("VfX")]
+        [AbilityFunction("VFX")]
         public void RemoveVFX(int vfxTargetUid, int vfxUid)
         {
             if (!tryGetUnit(vfxTargetUid, out var target))
@@ -453,6 +459,80 @@ namespace Hono.Scripts.Battle.AbilityFramework
             {
                 vfxComp.RemoveVFX(vfxUid);
             }
+        }
+
+        #endregion
+
+        #region 变量相关
+
+        [AbilityFunction("Variable")]
+        public int GetVariableBoardInt(bool isGlobal, string key)
+        {
+            if (isGlobal)
+            {
+                return AContext.Driver.VariableBoard.Get<int>(key);
+            }
+
+            if (AContext.VariableBoard.TryGet(key, out int result))
+                return result;
+            var rtBoard = AContext.GetRunNodeVariableBoard();
+            return rtBoard?.Get<int>(key) ?? result;
+        }
+
+        [AbilityFunction("Variable")]
+        public float GetVariableBoardFloat(bool isGlobal, string key)
+        {
+            if (isGlobal)
+            {
+                return AContext.Driver.VariableBoard.Get<float>(key);
+            }
+
+            if (AContext.VariableBoard.TryGet(key, out float result))
+                return result;
+            var rtBoard = AContext.GetRunNodeVariableBoard();
+            return rtBoard?.Get<float>(key) ?? result;
+        }
+
+        [AbilityFunction("Variable")]
+        public bool GetVariableBoardBool(bool isGlobal, string key)
+        {
+            if (isGlobal)
+            {
+                return AContext.Driver.VariableBoard.Get<bool>(key);
+            }
+
+            if (AContext.VariableBoard.TryGet(key, out bool result))
+                return result;
+            var rtBoard = AContext.GetRunNodeVariableBoard();
+            return rtBoard?.Get<bool>(key) ?? result;
+        }
+
+        [AbilityFunction("Variable")]
+        public Vector3 GetVariableBoardVec3(bool isGlobal, string key)
+        {
+            if (isGlobal)
+            {
+                return AContext.Driver.VariableBoard.Get<Vector3>(key);
+            }
+
+            if (AContext.VariableBoard.TryGet(key, out Vector3 result))
+                return result;
+            var rtBoard = AContext.GetRunNodeVariableBoard();
+            return rtBoard?.Get<Vector3>(key) ?? result;
+        }
+
+        [AbilityFunction("Variable")]
+        public object GetVariableBoardObject(bool isGlobal, string key)
+        {
+            if (isGlobal)
+            {
+                return AContext.Driver.VariableBoard.GetRef(key);
+            }
+
+            if (AContext.VariableBoard.TryGetRef(key, out object result))
+                return result;
+            var rtBoard = AContext.GetRunNodeVariableBoard();
+            return rtBoard?.GetRef(key) ?? result;
         }
 
         #endregion

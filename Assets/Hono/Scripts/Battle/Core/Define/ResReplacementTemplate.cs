@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Hono.Scripts.Battle.Core.Base;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 模型路径
         /// </summary>
+        [PrefabPath]
         public string model;
 
         /// <summary>

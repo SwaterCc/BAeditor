@@ -7,14 +7,30 @@ using Hono.Scripts.Battle.Base;
 
 namespace Hono.Scripts.Battle.Event
 {
-    [Serializable]
     public class SkillEventChecker : IEventChecker
     {
-        public int skillId;
-        
+        private int _skillId;
+
+        public SkillEventChecker() { }
+
+        public SkillEventChecker(int skillId)
+        {
+            _skillId = skillId;
+        }
+
+        public void OnRent(int skillId)
+        {
+            _skillId = skillId;
+        }
+
         public bool Check(in VariableBoard board)
         {
-            return board.Get(SkillEventInfo.SkillId) == skillId;
+            return board.GetEvtField(SkillEventInfo.SkillId) == _skillId;
+        }
+
+        public void OnRecycle()
+        {
+            _skillId = 0;
         }
     }
 }

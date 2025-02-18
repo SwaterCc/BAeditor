@@ -84,12 +84,12 @@ namespace Hono.Scripts.Battle
             /// <summary>
             /// UO��������
             /// </summary>
-            public int UOProxyType { get; private set; }
+            public string UOProxyType { get; private set; }
             
             /// <summary>
             /// ����Layer��
             /// </summary>
-            public int ProxyLayer { get; private set; }
+            public string ProxyLayer { get; private set; }
             
             /// <summary>
             /// ������Դģ��Id
@@ -141,9 +141,9 @@ namespace Hono.Scripts.Battle
                     
                     _row.Desc = parseString(line[1]);
             
-                    _row.UOProxyType = parseInt(line[2]);
+                    _row.UOProxyType = parseString(line[2]);
             
-                    _row.ProxyLayer = parseInt(line[3]);
+                    _row.ProxyLayer = parseString(line[3]);
             
                     _row.ResReplTplId = parseInt(line[4]);
             

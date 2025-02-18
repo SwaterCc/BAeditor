@@ -52,7 +52,7 @@ namespace Hono.Scripts.Battle
         /// <returns></returns>
         public UnityObjectProxy GetUnityObjectProxy(int uid)
         {
-            return _runningProxies.TryGetValue(uid, out var proxy) ? proxy : null;
+            return _runningProxies.GetValueOrDefault(uid);
         }
 
         /// <summary>

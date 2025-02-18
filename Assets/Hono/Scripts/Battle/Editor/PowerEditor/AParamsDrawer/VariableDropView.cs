@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Editor.AbilityEditor.TreeItem;
 using Editor.BattleEditor.AbilityEditor;
+using Hono.Scripts.Battle;
 using UnityEditor.IMGUI.Controls;
 
 namespace Editor.AbilityEditor
@@ -63,16 +64,26 @@ namespace Editor.AbilityEditor
                 return root;
             }
 
+            //收集ListenerNode的固定变量
+            addListenerTreeNodeVariable(root);
+
+            //收集父级节点Repeat的参数
+            addRepeatTreeNodeVariable(root);
+            return root;
+        }
+
+        private void addListenerTreeNodeVariable(AdvancedDropdownItem root)
+        {
             if (_treeItem.TryGetFirstParent<ListenerTreeItem>(out var parentItem))
             {
                 if (parentItem.Data.isEvent)
                 {
                     if (AbilityFuncInfoCache.EventBindInfoLookup.TryGetValue(parentItem.Data.eventType,
-                                                                          out var eventEditorInfo))
+                                                                             out var eventEditorInfo))
                     {
                         if (eventEditorInfo.EventInfoType == null)
                         {
-                            return root;
+                            return;
                         }
                         var fields =
                             eventEditorInfo.EventInfoType.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
@@ -90,19 +101,39 @@ namespace Editor.AbilityEditor
                         }
                     }
                 }
-                else
-                {
-                    root.AddChild(new VariableDropViewItem("P1", typeof(object), "Msg:P1"));
-                    root.AddChild(new VariableDropViewItem("P2", typeof(object), "Msg:P2"));
-                    root.AddChild(new VariableDropViewItem("P3", typeof(object), "Msg:P3"));
-                    root.AddChild(new VariableDropViewItem("P4", typeof(object), "Msg:P4"));
-                    root.AddChild(new VariableDropViewItem("P5", typeof(object), "Msg:P5"));
-                }
             }
-
-            return root;
         }
 
+        private void addRepeatTreeNodeVariable(AdvancedDropdownItem root)
+        {
+            if (_treeItem.TryGetFirstParent<RepeatTreeItem>(out var parentItem))
+            {
+                if (parentItem.Data.operationType == ERepeatNodeOperationType.Repeat)
+                { 
+                    if (filterCheck(typeof(int)))
+                    {
+                        root.AddChild(new VariableDropViewItem("__LoopCount__", typeof(int), "__LoopCount__"));
+                        root.AddChild(new VariableDropViewItem("__LoopValue__", typeof(int), "__LoopValue__"));
+                    }
+                }
+                else
+                {
+                    var listType =Type.GetType( parentItem.Data.traverseList.paramCastType);
+                    if (listType == null)
+                        return;
+                    var valueType = listType.GetGenericArguments()[0];
+                    if (filterCheck(typeof(int)))
+                    {
+                        root.AddChild(new VariableDropViewItem("__LoopCount__", typeof(int), "__LoopCount__"));
+                    }
+                    if (filterCheck(valueType))
+                    {
+                        root.AddChild(new VariableDropViewItem("__LoopValue__", typeof(int), "__LoopValue__"));
+                    }
+                }
+            }
+        }
+        
         protected override void ItemSelected(AdvancedDropdownItem item)
         {
             if (item is VariableDropViewItem variableDropViewItem)

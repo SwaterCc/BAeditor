@@ -42,7 +42,7 @@ namespace Editor.BattleEditor.AbilityEditor
         /// </summary>
         public class AbilityEventBindInfo
         {
-            public Type CheckerType;
+            public FuncInfo GetCheckerFuncInfo;
             public Type EventInfoType;
         }
 
@@ -113,13 +113,15 @@ namespace Editor.BattleEditor.AbilityEditor
             foreach (var field in typeof(EEventType).GetFields())
             {
                 var checkerBinder = field.GetCustomAttribute<AbilityEventBind>();
-                if (checkerBinder == null) continue;
+                
+                if (checkerBinder == null) 
+                    continue;
 
                 var enumValue = (EEventType)field.GetValue(null);
                 // 获取枚举值
                 var eventInfo = new AbilityEventBindInfo
                 {
-                    CheckerType = checkerBinder.CheckerType,
+                    GetCheckerFuncInfo = FuncInfoDict[checkerBinder.CheckerGetFunc],
                     EventInfoType = checkerBinder.EventInfoKeyType
                 };
                 EventBindInfoLookup.Add(enumValue, eventInfo);
