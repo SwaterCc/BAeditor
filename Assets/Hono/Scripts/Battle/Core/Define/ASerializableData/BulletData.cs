@@ -54,9 +54,15 @@ namespace Hono.Scripts.Battle
         /// </summary>
         public string flyVFXStr;
         /// <summary>
-        /// 子弹销毁时特效
+        /// 子弹命中时特效
         /// </summary>
         public string hitVFXStr;
+        public float hitVFXDuration = 1;
+        /// <summary>
+        /// 子弹消毁时特效
+        /// </summary>
+        public string deadVFXStr;
+        public float deadVFXDuration = 1;
         /// <summary>
         /// 子弹Ability数据
         /// </summary>

@@ -1,106 +1,111 @@
-﻿using System.Collections.Generic;
+﻿using Hono.Scripts.Battle.ObjectPool;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hono.Scripts.Battle.Event
-{
-    /// <summary>
-    /// 事件容器，
-    /// </summary>
-    public class EventListenerCollection
-    {
-        private readonly int _listenerListCapacity;
-        private readonly Dictionary<EEventType, List<EventListener>> _eventListeners;
-        
-        public EventListenerCollection(int listenerListCapacity = 8)
-        {
-            _eventListeners = new Dictionary<EEventType, List<EventListener>>(10);
-            _listenerListCapacity = listenerListCapacity;
-        }
+namespace Hono.Scripts.Battle.Event {
+	using EventListenerLookUp = Dictionary<EEventType, GList<EventListener>>;
 
-        public void AddListener(EventListener listener)
-        {
-            if (!_eventListeners.TryGetValue(listener.EventType, out var list))
-            {
-                list = new List<EventListener>(_listenerListCapacity);
-                _eventListeners.Add(listener.EventType, list);
-            }
-            else
-            {
-                if (list.Contains(listener))
-                {
-                    Debug.LogError("重复添加相同的listener");
-                    return;
-                }
-            }
+	/// <summary>
+	/// 事件容器，
+	/// </summary>
+	public class EventListenerCollection {
+		private readonly EventListenerLookUp _unitEvtListenerLookup;
+		private readonly EventListenerLookUp _worldEvtListenerLookup;
 
-            list.Add(listener);
-        }
+		public EventListenerCollection(int listenerListCapacity = 8) {
+			_unitEvtListenerLookup = new EventListenerLookUp(listenerListCapacity);
+			_worldEvtListenerLookup = new EventListenerLookUp(listenerListCapacity);
+		}
 
-        /// <summary>
-        /// 触发所有Event
-        /// </summary>
-        /// <param name="eventType"></param>
-        /// <param name="board"></param>
-        public void FireEvent(EEventType eventType, VariableBoard board = null)
-        {
-            if (!_eventListeners.TryGetValue(eventType, out var listeners))
-                return;
+		public void AddListener(EventListener listener, bool isWorldListener) {
+			EventListenerLookUp lookup = isWorldListener ? _worldEvtListenerLookup : _unitEvtListenerLookup;
+			if (!lookup.TryGetValue(listener.EventType, out var list)) {
+				list = GPool<GList<EventListener>>.Pool.Rent();
+				lookup.Add(listener.EventType, list);
+			}
+			else {
+				if (list.Contains(listener)) {
+					Debug.LogError("重复添加相同的listener");
+					return;
+				}
+			}
 
-            foreach (var listener in listeners)
-            {
-                listener.OnEventFired(board);
-            }
-        }
+			list.Add(listener);
+		}
 
-        /// <summary>
-        /// 仅触发监听世界级事件的Event
-        /// </summary>
-        /// <param name="eventType"></param>
-        /// <param name="board"></param>
-        public void FireWorldEvent(EEventType eventType, VariableBoard board = null)
-        {
-            if (!_eventListeners.TryGetValue(eventType, out var listeners))
-                return;
+		public void RemoveListener(EventListener listener) {
+			if (_worldEvtListenerLookup.TryGetValue(listener.EventType, out var list1)) {
+				if (list1.Remove(listener)) {
+					return;
+				}
+			}
 
-            foreach (var listener in listeners)
-            {
-                if (listener.IsWorldListener)
-                {
-                    listener.OnEventFired(board);
-                }
-            }
-        }
-        
-        public void RemoveListener(EventListener listener)
-        {
-            if (_eventListeners.TryGetValue(listener.EventType, out var list))
-            {
-                list.Remove(listener);
-            }
-        }
+			if (_unitEvtListenerLookup.TryGetValue(listener.EventType, out var list2)) {
+				if (list2.Remove(listener)) {
+					return;
+				}
+			}
 
-        public bool Contains(EventListener listener)
-        {
-            return _eventListeners.TryGetValue(listener.EventType, out var listeners) && listeners.Contains(listener);
-        }
+			Debug.LogError("找不到对应的Listener");
+		}
 
-        public void Tick(float dt)
-        {
-            foreach (var listeners in _eventListeners.Values)
-            {
-                foreach (var listener in listeners)
-                {
-                    listener.Tick(dt);
-                }
-            }
-        }
+		/// <summary>
+		/// 触发所有EventListener
+		/// </summary>
+		/// <param name="eventType"></param>
+		/// <param name="board"></param>
+		public void FireEvent(EEventType eventType, VariableBoard board = null) {
+			if (_worldEvtListenerLookup.TryGetValue(eventType, out var worldListeners)) {
+				foreach (var listener in worldListeners) {
+					listener.OnEventFired(board);
+				}
+			}
 
-        public void Clear()
-        {
-            foreach (var listeners in _eventListeners.Values)
-            {
-                listeners.Clear();
-            }
-        }
-    }
+			if (_unitEvtListenerLookup.TryGetValue(eventType, out var unitListeners)) {
+				foreach (var listener in unitListeners) {
+					listener.OnEventFired(board);
+				}
+			}
+		}
+
+		/// <summary>
+		/// 仅触发监听世界级事件的Event
+		/// </summary>
+		/// <param name="eventType"></param>
+		/// <param name="board"></param>
+		public void FireWorldEvent(EEventType eventType, VariableBoard board = null) {
+			if (_worldEvtListenerLookup.TryGetValue(eventType, out var worldListeners)) {
+				foreach (var listener in worldListeners) {
+					listener.OnEventFired(board);
+				}
+			}
+		}
+
+		public void Tick(float dt) {
+			foreach (var listeners in _unitEvtListenerLookup.Values) {
+				foreach (var listener in listeners) {
+					listener.Tick(dt);
+				}
+			}
+
+			foreach (var listeners in _worldEvtListenerLookup.Values) {
+				foreach (var listener in listeners) {
+					listener.Tick(dt);
+				}
+			}
+		}
+
+		public void Clear() {
+			foreach (var listeners in _worldEvtListenerLookup.Values) {
+				GPool<GList<EventListener>>.Pool.Recycle(listeners);
+			}
+
+			_worldEvtListenerLookup.Clear();
+			foreach (var listeners in _unitEvtListenerLookup.Values) {
+				GPool<GList<EventListener>>.Pool.Recycle(listeners);
+			}
+
+			_unitEvtListenerLookup.Clear();
+		}
+	}
 }

@@ -94,6 +94,28 @@ namespace Hono.Scripts.Battle
     }
 
     /// <summary>
+    /// 移动控制器类型
+    /// </summary>
+    public enum EMoveControllerType {
+	    /// <summary>
+	    /// 人形
+	    /// </summary>
+	    Human,
+	    /// <summary>
+	    /// 防御建筑
+	    /// </summary>
+	    Building,
+	    /// <summary>
+	    /// 重型飞行单位
+	    /// </summary>
+	    HeavyFlightUnits,
+	    /// <summary>
+	    /// 重型载具
+	    /// </summary>
+	    HeavyDutyCarrier
+    }
+
+    /// <summary>
     /// 当前技能状态
     /// </summary>
     [Flags]

@@ -17,12 +17,17 @@ namespace Hono.Scripts.Battle.Core
             private readonly Dictionary<int, CombatEnergyInfo> _combatEnergy = new(10);
 
             /// <summary>
+            /// 上次回能时间
+            /// </summary>
+            private float _idleGetEnergyBeforeTime;
+            
+            /// <summary>
             /// 
             /// </summary>
             private readonly CombatComp _combatComp;
-            private readonly UnitEventListener _attackListener = new(EEventType.OnSkillUsed);
-            private readonly UnitEventListener _beHitListener = new(EEventType.OnBeHit);
-            private readonly UnitEventListener _killEnemyListener = new(EEventType.OnDead, true);
+            private readonly EventListener _attackListener = new(EEventType.OnSkillUsed);
+            private readonly EventListener _beHitListener = new(EEventType.OnBeHurt);
+            private readonly EventListener _killEnemyListener = new(EEventType.OnDead);
            
             public CombatEnergyCtrl(CombatComp combatComp)
             {
@@ -34,22 +39,29 @@ namespace Hono.Scripts.Battle.Core
 
             public void Init()
             {
-                _combatComp.Unit.RegisterEvtListener(_attackListener);
-                _combatComp.Unit.RegisterEvtListener(_beHitListener);
+                _combatComp.Unit.AddUnitEvtListener(_attackListener);
+                _combatComp.Unit.AddUnitEvtListener(_beHitListener);
+                _combatComp.Unit.AddWorldEvtListener(_killEnemyListener);
             }
 
             public void Tick(float dt)
             {
+	            if (World.Current.RealWorldTimeSinceStart - _idleGetEnergyBeforeTime < 1) {
+		           return;
+	            }
+	            
                 foreach (var energyInfo in _combatEnergy.Values)
                 {
                     energyInfo.AddCurrentValue(energyInfo.EnergyGetWhenIdle);
                 }
+                
+                _idleGetEnergyBeforeTime = World.Current.RealWorldTimeSinceStart;
             }
 
             public void Clear()
             {
-                _combatComp.Unit.UnregisterEvtListener(_attackListener);
-                _combatComp.Unit.UnregisterEvtListener(_beHitListener);
+                _combatComp.Unit.RemoveUnitEvtListener(_attackListener);
+                _combatComp.Unit.RemoveUnitEvtListener(_beHitListener);
             }
 
             /// <summary>
@@ -66,13 +78,12 @@ namespace Hono.Scripts.Battle.Core
                 }
 
                 var info = GPool<CombatEnergyInfo>.Pool.Rent();
-
-                info.SetField(ECombatEnergyField.CurrentValue,             energyRow.InitValue);
                 info.SetField(ECombatEnergyField.EnergyGetWhenSkillHitAdd, energyRow.AttackGetValue);
                 info.SetField(ECombatEnergyField.EnergyGetWhenBeHitAdd,    energyRow.BehitGetValue);
                 info.SetField(ECombatEnergyField.EnergyGetWhenIdleAdd,     energyRow.IdleGetValue);
                 info.SetField(ECombatEnergyField.MaxValueAdd,              energyRow.EnergyMax);
-
+                info.SetField(ECombatEnergyField.CurrentValue,             energyRow.InitValue);
+                
                 _combatEnergy.Add(energyTypeId, info);
             }
 
@@ -143,6 +154,16 @@ namespace Hono.Scripts.Battle.Core
 
                 energyInfo.AddCurrentValue(-value);
             }
+
+#if UNITY_EDITOR
+	        public void GetEnergyList(ref Dictionary<int,int> list) {
+		        list.Clear();
+		        foreach (var pair in _combatEnergy) {
+			        list.Add(pair.Key,pair.Value.CurrentValue);
+		        }
+	        }
+#endif
+            
 
             private void onAttack(VariableBoard board)
             {

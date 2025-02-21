@@ -33,15 +33,17 @@ MonoBehaviour:
       isReverse: 0
       value: 1
     attrCompares: []
-  speed: 2
+  speed: 30
   acceleration: 1
   rotSpeed: 0
   lifeTime: 5
   minHitInterval: 1
-  maxHitCount: 5
+  maxHitCount: 1
   isUseVFXKeyModel: 0
-  flyVFXStr: Assets/BattleModel/Base/TeamDefaultBrithPoint.prefab
-  hitVFXStr: Assets/BattleModel/Base/BuildArea.prefab
+  flyVFXStr: Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Ice/CFXR3
+    Iceball A + Ice Trail.prefab
+  hitVFXStr: 
+  deadVFXStr: Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_Explosion_Omni_Ice.prefab
   bulletAbility: {fileID: 4130809267460278915}
 --- !u!114 &4130809267460278915
 MonoBehaviour:
@@ -83,7 +85,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 4
+      Data: 3
     - Name: 
       Entry: 7
       Data: 
@@ -98,7 +100,7 @@ MonoBehaviour:
       Data: 0
     - Name: parentIndex
       Entry: 3
-      Data: 0
+      Data: -1
     - Name: belongGroupId
       Entry: 3
       Data: -1
@@ -132,7 +134,10 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 1
+    - Name: 
+      Entry: 9
+      Data: 2
     - Name: 
       Entry: 13
       Data: 
@@ -159,7 +164,7 @@ MonoBehaviour:
       Data: 0
     - Name: parentIndex
       Entry: 3
-      Data: 0
+      Data: -1
     - Name: belongGroupId
       Entry: 3
       Data: -1
@@ -193,7 +198,10 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 1
+    - Name: 
+      Entry: 9
+      Data: 5
     - Name: 
       Entry: 13
       Data: 
@@ -211,7 +219,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 3
-      Data: 3
+      Data: 4
     - Name: $v
       Entry: 7
       Data: 8|Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp
@@ -247,71 +255,10 @@ MonoBehaviour:
       Data: false
     - Name: cycleType
       Entry: 3
-      Data: 3
+      Data: 4
     - Name: SerializableNodeList
       Entry: 7
       Data: 10|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilityNodeData,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 4
-    - Name: $v
-      Entry: 7
-      Data: 11|Hono.Scripts.Battle.CycleNodeData, Assembly-CSharp
-    - Name: nodeIndex
-      Entry: 3
-      Data: 0
-    - Name: parentIndex
-      Entry: 3
-      Data: 0
-    - Name: belongGroupId
-      Entry: 3
-      Data: -1
-    - Name: childrenIndexes
-      Entry: 7
-      Data: 12|System.Collections.Generic.List`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: desc
-      Entry: 1
-      Data: 
-    - Name: skipExecute
-      Entry: 5
-      Data: false
-    - Name: showLog
-      Entry: 5
-      Data: false
-    - Name: cycleType
-      Entry: 3
-      Data: 4
-    - Name: SerializableNodeList
-      Entry: 7
-      Data: 13|System.Collections.Generic.List`1[[Hono.Scripts.Battle.AbilityNodeData,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12

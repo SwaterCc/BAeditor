@@ -13,11 +13,26 @@ namespace Hono.Scripts.Battle.Base
     /// </summary>
     public class TagCollection
     {
-        private readonly Dictionary<int,int> _tags = new(256);
+        private readonly Dictionary<int,int> _tags = new(30);
 
-        public bool HasTag(int tag)
+        public bool HasTag(int tag, bool strict = false)
         {
-            return _tags.GetValueOrDefault(tag, 0) > 0;
+	        if (strict) {
+		        return _tags.GetValueOrDefault(tag, 0) > 0;
+	        }
+
+	        if (_tags.GetValueOrDefault(tag, 0) > 0) {
+		        return true;
+	        }
+	        else {
+		        foreach (var childTag in _tags.Keys) {
+			        if (BattleManager.TagTree.HasParentTag(childTag, tag)) {
+				        return true;
+			        }
+		        }
+	        }
+
+	        return false;
         }
 
         public void Add(int tag)
@@ -40,8 +55,9 @@ namespace Hono.Scripts.Battle.Base
         /// 产生快照
         /// </summary>
         /// <param name="tags"></param>
-        public void GetSnapshot(ref HashSet<int> tags)
+        public void GetSnapshot(ref List<int> tags)
         {
+	        tags.Clear();
             foreach (var pair in _tags)
             {
                 if (pair.Value > 0)

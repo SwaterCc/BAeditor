@@ -557,5 +557,14 @@ namespace Hono.Scripts.Battle.Core
 
             Debug.Log($"Buff 数组已扩容至 {newSize} 个元素");
         }
+
+#if UNITY_EDITOR
+	    public void GetBuffList(ref List<Buff> buffs) {
+		    buffs.Clear();
+		    for (int i = 0; i < _buffCount; i++) {
+			    buffs.Add(_buffs[i]);
+		    }
+	    }
+#endif
     }
 }

@@ -28,7 +28,7 @@ namespace Hono.Scripts.Battle.Tools
                 case ECheckBoxShapeType.Cube:
                     var boxSize = new Vector3(checkBoxData.Length, checkBoxData.Height, checkBoxData.Width);
                     size = Physics.BoxCastNonAlloc(finalCenterPos, boxSize / 2, followAttackerRot * Vector3.forward,
-                        _normalAreaRaycastHit, finalRot, 0.001f, BattleConstValue.ActorLayerMask);
+                        _normalAreaRaycastHit, finalRot, 0.001f, BattleSetting.ActorLayerMask);
                     if (OpenGizmos)
                     {
                         GizmosHelper.Instance.DrawCube(finalCenterPos, boxSize, finalRot, GizmosColor);
@@ -38,7 +38,7 @@ namespace Hono.Scripts.Battle.Tools
                 case ECheckBoxShapeType.Sphere:
                     size = Physics.SphereCastNonAlloc(finalCenterPos, checkBoxData.Radius,
                         followAttackerRot * Vector3.forward, _normalAreaRaycastHit, 0.001f,
-                        BattleConstValue.ActorLayerMask);
+                        BattleSetting.ActorLayerMask);
                     if (OpenGizmos)
                         GizmosHelper.Instance.DrawSphere(finalCenterPos, checkBoxData.Radius, finalRot, GizmosColor);
                     break;
@@ -48,7 +48,7 @@ namespace Hono.Scripts.Battle.Tools
                     var capsulePoint2 = finalCenterPos - finalRot * Vector3.up * (checkBoxData.Height / 2 - checkBoxData.Radius);
                     size = Physics.CapsuleCastNonAlloc(capsulePoint1, capsulePoint2, checkBoxData.Radius,
                                                        followAttackerRot * Vector3.forward, _normalAreaRaycastHit, 0.001f,
-                                                       BattleConstValue.ActorLayerMask);
+                                                       BattleSetting.ActorLayerMask);
                     if (OpenGizmos)
                         GizmosHelper.Instance.DrawCapsule(capsulePoint1, capsulePoint2, checkBoxData.Radius, finalRot, GizmosColor);
                     break;

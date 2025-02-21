@@ -106,6 +106,11 @@ namespace Hono.Scripts.Battle.Core
         private int _worldInfoKey;
 
         /// <summary>
+        /// 世界时间缩放系数
+        /// </summary>
+        private float _worldTimeScale;
+
+        /// <summary>
         /// 数据配置
         /// </summary>
         private readonly BattleSceneTable.BattleSceneRow _sceneRow;
@@ -134,6 +139,26 @@ namespace Hono.Scripts.Battle.Core
         /// 当前玩家控制的单位
         /// </summary>
         public Unit PlayerControlUnit { get; private set; }
+        
+        /// <summary>
+        /// 世界自运行后的持续时长
+        /// </summary>
+        public float RealWorldTimeSinceStart { get; private set; }
+
+        /// <summary>
+        /// 一帧时长
+        /// </summary>
+        public float OnceTickTime { 
+	        get;
+	        private set; }
+
+        /// <summary>
+        /// 世界时间缩放值
+        /// </summary>
+        public float WorldTimeScale {
+	        get => _worldTimeScale;
+	        set => _worldTimeScale = Mathf.Max(0, value);
+        }
 
         #region 周期
 
@@ -142,6 +167,7 @@ namespace Hono.Scripts.Battle.Core
             register(GPoolManager.Instance);
             register(EventManager.Instance);
             register(MessageManager.Instance);
+            register(VFXManager.Instance);
 
             _sceneRow = ConfigDataBase.Table<BattleSceneTable>().Get(sceneTableId);
 
@@ -198,14 +224,22 @@ namespace Hono.Scripts.Battle.Core
 
             //进入加载状态
             _nextState = EWorldState.Loading;
+
+            WorldTimeScale = 1;
+            RealWorldTimeSinceStart = 0;
         }
 
         /// <summary>
         /// Tick入口
         /// </summary>
         /// <param name="dt"></param>
-        public void Tick(float dt)
-        {
+        public void Tick(float dt) {
+	        
+	        //更新一帧时长
+	        OnceTickTime = dt * _worldTimeScale;
+	        //更新世界时长
+	        RealWorldTimeSinceStart += OnceTickTime;
+	        
             //世界更新
             if (_currentState != _nextState)
             {
@@ -254,20 +288,21 @@ namespace Hono.Scripts.Battle.Core
                 unit.Tick(dt);
             }
 
-            if (_removeList is not { Count: > 0 })
-                return;
+            if (_removeList is { Count: > 0 }) {
+	            foreach (var unit in _removeList)
+	            {
+		            //回收
+		            unit.Recycle();
+		            //父类清理
+		            unit.BaseClear();
+		            //从运行队列删除
+		            _runningActorList.RemoveSwapBack(unit);
+	            }
 
-            foreach (var unit in _removeList)
-            {
-                //回收
-                unit.Recycle();
-                //父类清理
-                unit.BaseClear();
-                //从运行队列删除
-                _runningActorList.RemoveSwapBack(unit);
+	            _removeList.Clear();
             }
-
-            _removeList.Clear();
+            
+            UnityAdapter.Instance.SyncProxiesTransform();
         }
 
         /// <summary>
@@ -325,7 +360,7 @@ namespace Hono.Scripts.Battle.Core
             {
                 throw new Exception("UID重复！！！！！");
             }
-
+            
             _runningActorList.Add(unit);
         }
 
@@ -541,6 +576,8 @@ namespace Hono.Scripts.Battle.Core
             _removeList.Add(unit);
             //立刻从搜索队列中移除
             Query.RemoveUnitLookup(unit);
+            //立刻清理其身上的特效
+            VFXManager.Instance.RemoveUnitAllVFX(unit);
         }
 
         /// <summary>

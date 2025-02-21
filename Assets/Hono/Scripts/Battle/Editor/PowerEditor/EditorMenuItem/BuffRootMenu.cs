@@ -16,7 +16,7 @@ namespace Hono.Scripts.Battle.Editor
         
         public override AView GetViewDrawer()
         {
-            return new BuffView();
+            return new BuffEditorView();
         }
     }
 }

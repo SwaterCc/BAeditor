@@ -50,6 +50,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
             return actor != null;
         }
 
+        private int getSkillId(int id) {
+	        return id > 0 ? id : AContext.Id;
+        }
+        
         private EDamageSourceType getDamageSourceType()
         {
             switch (AContext.Data.abilityBelongType)

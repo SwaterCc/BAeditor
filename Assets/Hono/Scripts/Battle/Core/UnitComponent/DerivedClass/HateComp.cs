@@ -3,109 +3,137 @@
 using System.Collections.Generic;
 using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Core.Base;
+using Hono.Scripts.Battle.Event;
 using UnityEngine;
 
 #endregion
 
-namespace Hono.Scripts.Battle.Core
-{
-    /// <summary>
-    /// 仇恨组件，产生仇恨目标
-    /// </summary>
-    [JsonUnitComponent]
-    public partial class HateComp : UnitComponent,IGPoolObject
-    {
-        public int GetHateTargetType;
-        private float _duration;
-        private RangeFilterSetting _setting;
-        private int _hateUid;
-        private bool _isReturnTeam;
-        private List<int> _hateUids = new(32);
-        
-        public override void Init()
-        {
-            _setting = new RangeFilterSetting()
-            {
-                OpenBoxCheck = true,
-                BoxData = new CheckBoxData() { ShapeType = ECheckBoxShapeType.Sphere, Radius = 10, },
-                // Ranges = new List<FilterCondition>() { new() { conditionType = EFilterConditionType.Faction, value = 2 }, },
-                // FilterFunctionType = EFilterFunctionType.Near,
-                maxResultCount = 1,
-            };
-        }
+namespace Hono.Scripts.Battle.Core {
+	[JsonUnitCompCtorParams(typeof(HateComp))]
+	public class HateCompCtorParams : UnitCompCtorParams {
+		/// <summary>
+		/// 主动选择仇恨目标
+		/// </summary>
+		public bool ActiveTargetSelection;
+		/// <summary>
+		/// 主动仇恨半径
+		/// </summary>
+		public float ActiveHateRange;
+		/// <summary>
+		/// 追踪半径
+		/// </summary>
+		public float FollowHateTargetRange;
+		/// <summary>
+		/// 无仇恨目标时选择伤害自身的单位
+		/// </summary>
+		public bool BeHurtHateAttackerWhenNoHateTarget = true;
+		/// <summary>
+		/// 切换仇恨目标最低伤害
+		/// </summary>
+		public int SwitchHateDamageValue;
+	}
 
-        protected override void onTick(float dt)
-        {
-            /*if (_duration < 0.5f)
-            {
-                _duration += dt;
-                return;
-            }
+	/// <summary>
+	/// 仇恨组件，产生仇恨目标
+	/// 主动仇恨，被动仇恨
+	/// </summary>
+	[JsonUnitComponent]
+	public class HateComp : UnitComponent, IGPoolObject {
+		/// <summary>
+		/// 主动选择仇恨目标
+		/// </summary>
+		private bool _activeTargetSelection;
+		/// <summary>
+		/// 无仇恨目标时选择伤害自身的单位
+		/// </summary>
+		private bool _beHurtHateAttackerWhenNoHateTarget = true;
+		/// <summary>
+		/// 切换仇恨目标最低伤害
+		/// </summary>
+		private int _switchHateDamageValue;
+		/// <summary>
+		/// 主动仇恨半径
+		/// </summary>
+		private float _activeHateRange;
+		/// <summary>
+		/// 追踪半径
+		/// </summary>
+		private float _followHateTargetRange;
+		/// <summary>
+		/// 当前仇恨目标
+		/// </summary>
+		private Unit _hateTarget;
+		/// <summary>
+		/// 上次选择目标的时间
+		/// </summary>
+		private float _beforeSelectHateTime;
+		private EventListener _behurtListener;
 
-            if (_hateUid > 0)
-            {
-                if (!World.Instance.HasActor(_hateUid))
-                {
-                    _hateUid = -1;
-                }
+		/// <summary>
+		/// 当前仇恨目标
+		/// </summary>
+		public int HateTargetUid => _hateTarget != null ? _hateTarget.Uid : 0;
 
-                if (Unit.ActorType == EActorType.Character)
-                {
-                    var origin = Unit.TargetPos;
-                    var dis = Vector3.Distance(origin, Unit.Pos);
-                    if (dis > 20.5)
-                    {
-                        _hateUid = -1;
-                        _isReturnTeam = true;
-                    }
-                }
-            }
+		public override void Ctor(UnitCompCtorParams ctorParams) {
+			var hateCtorParams = (HateCompCtorParams)ctorParams;
+			_activeTargetSelection = hateCtorParams.ActiveTargetSelection;
+			_beHurtHateAttackerWhenNoHateTarget = hateCtorParams.BeHurtHateAttackerWhenNoHateTarget;
+			_switchHateDamageValue = hateCtorParams.SwitchHateDamageValue;
+			_activeHateRange = hateCtorParams.ActiveHateRange;
+			_followHateTargetRange = hateCtorParams.FollowHateTargetRange;
+		}
 
-            if (_hateUid <= 0)
-            {
-                if (_isReturnTeam)
-                {
-                    var origin = Unit.TargetPos;
-                    var dis = Vector3.Distance(origin, Unit.Pos);
-                    if (dis < 1f)
-                    {
-                        _isReturnTeam = false;
-                        UpdateHateTarget();
-                    }
-                }
-                else
-                {
-                    UpdateHateTarget();
-                }
-            }
+		public override void Init() {
+			if (_activeTargetSelection) {
+				selectHateTarget();
+				if (_hateTarget != null) {
+					_beforeSelectHateTime = World.Current.RealWorldTimeSinceStart;
+				}
+			}
 
-            Unit.SetAttr(EAttrType.AttrHateTargetUid, _hateUid, false);
-            _duration = 0;*/
-        }
+			_behurtListener = new EventListener(EEventType.OnBeHurt, beHurtHate);
+			Unit.AddUnitEvtListener(_behurtListener);
+		}
 
-        public override void Recycle()
-        {
-           GPool<HateComp>.Pool.Recycle(this);
-        }
+		protected override void onTick(float dt) {
+			//主动选择仇恨
+			if (_activeTargetSelection && _hateTarget == null) {
+				if (World.Current.RealWorldTimeSinceStart - _beforeSelectHateTime < 1f) {
+					//1秒检测间隔
+					return;
+				}
 
-        public void UpdateHateTarget()
-        {
-           
-            if (_hateUids.Count == 0)
-            {
-                _hateUid = -1;
-            }
-            else
-            {
-                _hateUid = _hateUids[0];
-            }
-        }
+				selectHateTarget();
+			}
+		}
 
-        public void OnRecycle()
-        {
-            _hateUids.Clear();
-            _duration = 0;
-            _isReturnTeam = false;
-        }
-    }
+		public override void Recycle() {
+			GPool<HateComp>.Pool.Recycle(this);
+		}
+
+		private void selectHateTarget() {
+			throw new System.NotImplementedException();
+		}
+
+		private void beHurtHate(VariableBoard variableBoard) {
+			if (_hateTarget == null && _beHurtHateAttackerWhenNoHateTarget) {
+				var attacker = variableBoard.GetEvtField(BeHurtInfoKeys.AttackerUid);
+				_hateTarget = World.Query.GetUnit(attacker);
+				return;
+			}
+
+			var damageValue = variableBoard.GetEvtField(BeHurtInfoKeys.FinalDamageValue);
+			if (_hateTarget != null && damageValue > _switchHateDamageValue) {
+				var attacker = variableBoard.GetEvtField(BeHurtInfoKeys.AttackerUid);
+				_hateTarget = World.Query.GetUnit(attacker);
+			}
+		}
+
+		public void OnRecycle() {
+			_hateTarget = null;
+			_activeTargetSelection = false;
+			_beHurtHateAttackerWhenNoHateTarget = true;
+			_switchHateDamageValue = 0;
+		}
+	}
 }

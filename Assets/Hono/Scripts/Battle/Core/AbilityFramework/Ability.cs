@@ -2,6 +2,7 @@
 
 using System;
 using Hono.Scripts.Battle.Core;
+using Hono.Scripts.Battle.Core.AbilityFramework;
 using UnityEngine;
 
 #endregion
@@ -106,6 +107,9 @@ namespace Hono.Scripts.Battle.AbilityFramework
             Id = Data.id;
             TimeScaleFactory = 1;
             _abilityCycle.Init();
+#if UNITY_EDITOR
+            AbilityReloadManager.Instance.Register(this);
+#endif
             return true;
         }
 
@@ -130,6 +134,9 @@ namespace Hono.Scripts.Battle.AbilityFramework
             Id = Data.id;
             TimeScaleFactory = 1;
             _abilityCycle.Init();
+#if UNITY_EDITOR
+            AbilityReloadManager.Instance.Register(this);
+#endif
             return true;
         }
 
@@ -173,14 +180,9 @@ namespace Hono.Scripts.Battle.AbilityFramework
             //清理变量
             VariableBoard.Clear();
 
-            //重新加载数据
-            Data = AssetManager.Instance.GetData<AbilityData>(Id);
-            if (Data == null)
-            {
-                Debug.LogError($"Reload Ability {Id} 失败");
-                return;
-            }
-
+            //清理节点
+            _abilityCycle.OnRecycle();
+            
             //重新加载
             _abilityCycle.Init();
         }
@@ -243,6 +245,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
 
         public void OnRecycle()
         {
+#if UNITY_EDITOR
+	        AbilityReloadManager.Instance.Unregister(this);
+#endif
+	        
             //周期停止
             _abilityCycle.ForceStop();
             _abilityCycle.OnRecycle();

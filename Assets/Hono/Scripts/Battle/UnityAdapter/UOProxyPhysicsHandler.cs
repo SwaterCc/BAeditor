@@ -92,21 +92,19 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        public bool Move(Vector3 velocity)
+        public void Move(UnitTransform unitTransform)
         {
             if (characterController != null)
             {
-                characterController.SimpleMove(velocity);
-                return true;
+	            characterController.SimpleMove(unitTransform.FinalVelocity);
+	            unitTransform.Pos = characterController.transform.localPosition;
+                return;
             }
 
             if (rigidbody != null)
             {
-                rigidbody.linearVelocity = velocity;
-                return true;
+                collider.transform.localPosition = unitTransform.Pos;
             }
-
-            return false;
         }
     }
 }

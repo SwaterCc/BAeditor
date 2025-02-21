@@ -427,7 +427,7 @@ DamageProcess.DamageProcessMain = function(attacker, target, damageInfo)
     --计算冲击
 --]]
     --填充伤害结果
-    damageInfo:SetDamageResult(100, false)
+    damageInfo:SetDamageResult(-100, false)
 end
 
 --【【【伤害计算】】】=======================================================================================================================================

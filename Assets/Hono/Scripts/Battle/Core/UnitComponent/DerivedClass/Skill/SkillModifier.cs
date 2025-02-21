@@ -85,12 +85,12 @@ namespace Hono.Scripts.Battle.Core
 
         public int GetEnergyAdd(int energyId)
         {
-            return _energyCostAdd[energyId];
+            return _energyCostAdd.GetValueOrDefault(energyId);
         }
 
         public float GetEnergyPCT(int energyId)
         {
-            return _energyCostPCT[energyId];
+            return _energyCostPCT.GetValueOrDefault(energyId);
         }
 
         public void OnRecycle()

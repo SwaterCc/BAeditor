@@ -220,6 +220,12 @@ namespace Hono.Scripts.Battle.Core
             _energyCtrl.SetEnergyValue(energyId, ECombatEnergyField.CurrentValue, value);
         }
 
+#if UNITY_EDITOR
+	    public void GetEnergyList(ref Dictionary<int,int> energyList) {
+		    _energyCtrl.GetEnergyList(ref energyList);
+	    }
+#endif
+        
         /// <summary>
         /// 资源检测
         /// </summary>

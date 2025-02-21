@@ -4,7 +4,7 @@
     "BaseAttrTableId":1,
     "ModelId":2,
     "Tags":[
-      123,
+      101101,
       222
     ],
     
@@ -14,12 +14,13 @@
       "BuffComp",
       "CombatComp",
       "MoveComp",
-      "VFXComp"
+      "HateComp"
     ],
     
     "ComponentCtor":{
       "CombatComp":{
-        "SkillList":[1001,1002]
+        "SkillList":[1001,1002],
+        "CombatEnergyIds": [1]
       }
     },
 

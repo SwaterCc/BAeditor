@@ -28,17 +28,17 @@ namespace Hono.Scripts.Battle.Editor {
 			//csv
 			// 获取文件夹中所有 .csv 文件的路径
 			var csvPaths = new List<string>();
-			string[] csvFiles = Directory.GetFiles(BattleConstValue.CSVRoot, "*.csv");
+			string[] csvFiles = Directory.GetFiles(BattleSetting.CSVRoot, "*.csv");
 			foreach (string fullPath in csvFiles)
 			{
 				string fileName = Path.GetFileName(fullPath);
-				string assetPath = BattleConstValue.CSVRoot + "/" + fileName;
+				string assetPath = BattleSetting.CSVRoot + "/" + fileName;
 				csvPaths.Add(assetPath);
 			}
 			_paths.paths.Add(EPathType.CSV,csvPaths);
 			
 			//ability
-			if (TryGetAllAssetPaths(BattleConstValue.AbilityRoot, out var abilityPaths))
+			if (TryGetAllAssetPaths(BattleSetting.AbilityRoot, out var abilityPaths))
 			{
 				_paths.paths.Add(EPathType.Ability,abilityPaths);
 			}
@@ -46,7 +46,7 @@ namespace Hono.Scripts.Battle.Editor {
 				Debug.LogError("Ability收集失败");
 			}
 			
-			if (TryGetAllAssetPaths(BattleConstValue.SkillFolder, out var skillPaths))
+			if (TryGetAllAssetPaths(BattleSetting.SkillFolder, out var skillPaths))
 			{
 				_paths.paths.Add(EPathType.Skill,skillPaths);
 			}
@@ -54,7 +54,7 @@ namespace Hono.Scripts.Battle.Editor {
 				Debug.LogError("Skill收集失败");
 			}
 			
-			if (TryGetAllAssetPaths(BattleConstValue.BuffFolder, out var buffPaths))
+			if (TryGetAllAssetPaths(BattleSetting.BuffFolder, out var buffPaths))
 			{
 				_paths.paths.Add(EPathType.Buff,buffPaths);
 			}
@@ -62,7 +62,7 @@ namespace Hono.Scripts.Battle.Editor {
 				Debug.LogError("Buff收集失败");
 			}
 			
-			if (TryGetAllAssetPaths(BattleConstValue.BulletFolder, out var bulletsPaths))
+			if (TryGetAllAssetPaths(BattleSetting.BulletFolder, out var bulletsPaths))
 			{
 				_paths.paths.Add(EPathType.Bullet,bulletsPaths);
 			}

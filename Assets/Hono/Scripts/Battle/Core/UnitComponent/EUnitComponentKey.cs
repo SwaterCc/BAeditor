@@ -14,10 +14,9 @@ namespace Hono.Scripts.Battle.Core
         CombatComp = 1 << 0,
         HateComp = 1 << 1,
         MoveComp = 1 << 2,
-        VFXComp = 1 << 3,
-        HpComp = 1 << 4,
-        ElementComp = 1 << 5,
-        BuffComp = 1 << 6,
+        HpComp = 1 << 3,
+        ElementComp = 1 << 4,
+        BuffComp = 1 << 5,
     }
 
     public static class EUnitComponentKeyHelper

@@ -44,7 +44,7 @@ namespace Hono.Scripts.Battle
                     RaycastHit hit;
 
                     // 检测射线是否与地面碰撞
-                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 8))
+                    if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                     {
                         // 获取地面坐标
                         Vector3 groundPosition = hit.point;

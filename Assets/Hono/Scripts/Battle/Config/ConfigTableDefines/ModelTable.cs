@@ -77,42 +77,42 @@ namespace Hono.Scripts.Battle
         {
            
             /// <summary>
-            /// ����
+            /// 描述
             /// </summary>
             public string Desc { get; private set; }
             
             /// <summary>
-            /// UO��������
+            /// UO代理类型
             /// </summary>
             public string UOProxyType { get; private set; }
             
             /// <summary>
-            /// ����Layer��
+            /// 代理Layer层
             /// </summary>
             public string ProxyLayer { get; private set; }
             
             /// <summary>
-            /// ������Դģ��Id
+            /// 基础资源模板Id
             /// </summary>
             public int ResReplTplId { get; private set; }
             
             /// <summary>
-            /// ģ������
+            /// 模型缩放
             /// </summary>
             public float ModelScale { get; private set; }
             
             /// <summary>
-            /// P1(���Σ�������뾶��������ĳ�)
+            /// P1(球形，胶囊体半径，立方体的长)
             /// </summary>
             public float P1 { get; private set; }
             
             /// <summary>
-            /// �����壬������ĸ�
+            /// 胶囊体，立方体的高
             /// </summary>
             public float P2 { get; private set; }
             
             /// <summary>
-            /// ������Ŀ�
+            /// 立方体的宽
             /// </summary>
             public float P3 { get; private set; }
             

@@ -188,7 +188,7 @@ namespace Hono.Scripts.Battle.Core
         }
         
         [LuaCallCSharp]
-        public void SetDamageResult(int damageValue,bool isCitlt)
+        public void SetDamageResult(int damageValue, bool isCitlt)
         {
             _damageResults.DamageValue = damageValue;
             _damageResults.IsCritical = isCitlt;

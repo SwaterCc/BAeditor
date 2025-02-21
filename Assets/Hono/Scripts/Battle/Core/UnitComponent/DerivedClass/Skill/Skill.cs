@@ -53,6 +53,12 @@ namespace Hono.Scripts.Battle.Core
             private float _duration;
 
             /// <summary>
+            /// 能量检测开始时间
+            /// </summary>
+            private float _energyCheckBeginTime;
+            private const float _energyCheckInterval = 0.5f;
+            
+            /// <summary>
             /// 选中的世界坐标
             /// </summary>
             public Vector3 SelectWorldPos { get; set; }
@@ -90,6 +96,7 @@ namespace Hono.Scripts.Battle.Core
                 if (!_combatComp.checkSkillResourceEnough(this))
                 {
                     AddFlag(ESkillFlag.EnergyNotEnough);
+                    _energyCheckBeginTime = World.Current.RealWorldTimeSinceStart;
                 }
             }
 
@@ -116,6 +123,11 @@ namespace Hono.Scripts.Battle.Core
                     CdBegin();
                 }
                 _combatComp.costEnergy(this);
+                if(!_combatComp.checkSkillResourceEnough(this))
+                {
+	                AddFlag(ESkillFlag.EnergyNotEnough);
+	                _energyCheckBeginTime = World.Current.RealWorldTimeSinceStart;
+                }
                 
                 _ability.Execute(false);
             }
@@ -220,12 +232,14 @@ namespace Hono.Scripts.Battle.Core
                 }
 
                 //能量检测
-                if (HasFlag(ESkillFlag.EnergyNotEnough))
+                if (HasFlag(ESkillFlag.EnergyNotEnough) && World.Current.RealWorldTimeSinceStart - _energyCheckBeginTime > _energyCheckInterval)
                 {
                     if (_combatComp.checkSkillResourceEnough(this))
                     {
                         RemoveFlag(ESkillFlag.EnergyNotEnough);
                     }
+
+                    _energyCheckBeginTime = World.Current.RealWorldTimeSinceStart;
                 }
 
                 //更新攻速

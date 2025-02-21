@@ -67,6 +67,9 @@ namespace Hono.Scripts.Battle
 
         public void RemoveListener(MessageListener listener)
         {
+	        if (string.IsNullOrEmpty(listener.MsgKey)) {
+		        return;
+	        }
             _messageListeners.Remove(listener.MsgKey);
         }
 

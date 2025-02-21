@@ -21,6 +21,15 @@ namespace Hono.Scripts.Battle
         private readonly Queue<UnityObjectProxy> _proxyPool = new(1000);
         
         /// <summary>
+        /// 同步Transform，同时依靠unity的物理修正坐标
+        /// </summary>
+        public void SyncProxiesTransform() {
+	        foreach (var proxy in _runningProxies.Values) {
+		        proxy.SyncTransform();
+	        }
+        }
+        
+        /// <summary>
         ///  创建代理
         /// </summary>
         /// <param name="unit"></param>

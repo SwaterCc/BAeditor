@@ -15,29 +15,6 @@ namespace Hono.Scripts.Battle
     
     public static class TagTreeHelper
     {
-        public static bool HasParent(int parentTag, int tag)
-        {
-            var treeItem = BattleManager.TagTreeInstance.root.FindTag(tag);
-
-            if (treeItem == null)
-            {
-                return false;
-            }
-
-            var parent = treeItem.parent;
-            while (parent != null)
-            {
-                if (parent.tag == parentTag)
-                {
-                    return true;
-                }
-
-                parent = parent.parent;
-            }
-
-            return false;
-        }
-
         public static TagTreeItem FindTag(this TagTreeItem item, int tag)
         {
             if (item.tag == tag)

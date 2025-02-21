@@ -24,14 +24,14 @@ namespace Editor.BattleEditor.TagEditor {
 
 			EditorGUILayout.Space(1);
 			if (SirenixEditorGUI.Button("确定", ButtonSizes.Medium)) {
-				var parent = _tagTree.TagTreeData.root.FindTag(_removeItem.TagTreeItem.parent.tag);
+				var parent = _tagTree.STagTreeData.root.FindTag(_removeItem.TagTreeItem.parent.tag);
 				parent.children.Remove(_removeItem.TagTreeItem);
 				_tagTree.RemoveTagInfo(_removeItem.TagTreeItem.tag);
 				foreach (var tagTreeItem in _removeItem.TagTreeItem.children) {
 					_tagTree.RemoveTagInfo(tagTreeItem.tag);
 				}
-				EditorUtility.SetDirty(_tagTree.TagTreeData);
-				AssetDatabase.SaveAssetIfDirty(_tagTree.TagTreeData);
+				EditorUtility.SetDirty(_tagTree.STagTreeData);
+				AssetDatabase.SaveAssetIfDirty(_tagTree.STagTreeData);
 				Close();
 				_tagTree.Reload();
 			}

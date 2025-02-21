@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Editor.AbilityEditor;
-using Editor.AbilityEditor.SimpleWindow;
-using Hono.Scripts.Battle.Editor.PowerEditor.SimpleWindow;
+﻿using Editor.AbilityEditor;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 
@@ -19,7 +14,7 @@ namespace Hono.Scripts.Battle.Editor
 
         public override AView GetViewDrawer()
         {
-            return new SkillView();
+            return new SkillEditorView();
         }
     }
 }

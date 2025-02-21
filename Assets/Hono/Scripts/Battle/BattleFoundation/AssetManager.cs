@@ -13,10 +13,7 @@ using UnityEngine.AddressableAssets;
 
 namespace Hono.Scripts.Battle
 {
-    public interface IReloadHandle
-    {
-        public void Reload();
-    }
+    
 
     /// <summary>
     ///     Demo2使用的数据类，用于加载Asset
@@ -24,7 +21,6 @@ namespace Hono.Scripts.Battle
     public class AssetManager : BattleFoundation<AssetManager>
     {
         private readonly Dictionary<Type, IDataHelper> _assetCache = new();
-        private readonly List<IReloadHandle> _reloadHandles = new();
 
         public override async UniTask AsyncLoad()
         {
@@ -81,52 +77,6 @@ namespace Hono.Scripts.Battle
             }
         }
 
-        public void AddReloadHandle(IReloadHandle reloadHandle)
-        {
-            if (_reloadHandles.Contains(reloadHandle))
-            {
-                return;
-            }
-
-            _reloadHandles.Add(reloadHandle);
-        }
-
-        public void CallReloadHandles()
-        {
-            var reloadList = new List<IReloadHandle>(_reloadHandles);
-            foreach (var handle in reloadList)
-            {
-                handle.Reload();
-            }
-        }
-
-        public void RemoveReloadHandle(IReloadHandle reloadHandle)
-        {
-            if (!_reloadHandles.Contains(reloadHandle))
-            {
-                return;
-            }
-
-            _reloadHandles.Remove(reloadHandle);
-        }
-
-        public async UniTask ReloadAsset<T>(int id) where T : ASerializableData
-        {
-#if UNITY_EDITOR
-            if (_assetCache.TryGetValue(typeof(T), out var iHelper) && iHelper is DataHelper<T> dataHelper)
-            {
-                if (dataHelper.TryGetPath(id, out var path))
-                {
-                    dataHelper.Release(id);
-                    /*if (await loadAsset(dataHelper, path))
-                    {
-                        Debug.Log($"ReloadAssset Type{typeof(T)} id {id} success!");
-                        _isLoadFinish = true;
-                    }*/
-                }
-            }
-#endif
-        }
 
         public T GetData<T>(int id) where T : ASerializableData
         {

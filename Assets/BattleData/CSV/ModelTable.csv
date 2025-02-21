@@ -1,6 +1,7 @@
-Id,ÃèÊö,UO´úÀíÀàĞÍ,´úÀíLayer²ã,»ù´¡×ÊÔ´Ä£°åId,Ä£ĞÍËõ·Å,P1(ÇòĞÎ£¬½ºÄÒÌå°ë¾¶£¬Á¢·½ÌåµÄ³¤),½ºÄÒÌå£¬Á¢·½ÌåµÄ¸ß,Á¢·½ÌåµÄ¿í,ColliderCenter
+ï»¿Id,æè¿°,UOä»£ç†ç±»å‹,ä»£ç†Layerå±‚,åŸºç¡€èµ„æºæ¨¡æ¿Id,æ¨¡å‹ç¼©æ”¾,P1(çƒå½¢ï¼Œèƒ¶å›Šä½“åŠå¾„ï¼Œç«‹æ–¹ä½“çš„é•¿),èƒ¶å›Šä½“ï¼Œç«‹æ–¹ä½“çš„é«˜,ç«‹æ–¹ä½“çš„å®½,ColliderCenter
 Id,Desc,UOProxyType,ProxyLayer,ResReplTplId,ModelScale,P1,P2,P3,ColliderCenter
 int,string,string,string,int,float,float,float,float,floatArray
-1,ÊÀ½ç½Úµã,TransformProxy,SceneUnit,,1,,,,
-2,²âÊÔµ¥Î»,ActorProxy,Character,1001,1,,,,
-3,²âÊÔ×Óµ¯,SphereColliderProxy,SceneUnit,,,,,,
+1,ä¸–ç•ŒèŠ‚ç‚¹,TransformProxy,SceneUnit,,1,,,,
+2,æµ‹è¯•å•ä½,ActorProxy,Character,1001,1,,,,
+3,æµ‹è¯•å­å¼¹,TransformProxy,SceneUnit,,,,,,
+100,å¦å…‹,ActorProxy,Character,100,1,,,,

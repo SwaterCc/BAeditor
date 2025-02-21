@@ -3,7 +3,7 @@ using Hono.Scripts.Battle.Core;
 
 namespace Hono.Scripts.Battle.Event
 {
-    public class AttrChangedEventChecker : IEventChecker, IGPoolObject
+    public class AttrChangedEventChecker : IEventChecker
     {
         private int _sourceUnitUid;
         private EAttrType _checkAttrType;

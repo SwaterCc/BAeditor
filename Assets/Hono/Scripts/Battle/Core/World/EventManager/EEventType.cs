@@ -18,10 +18,8 @@ namespace Hono.Scripts.Battle.Event
         OnAttrChanged,
         [AbilityEventBind(typeof(HitInfoKey), "GetHitEventChecker")]
         OnHit,
-        [AbilityEventBind(typeof(MakeDamageInfoKeys), "GetHitEventChecker")]
-        OnMakeDamage,
-        [AbilityEventBind(typeof(MakeDamageInfoKeys), "GetHitEventChecker")]
-        OnBeHit,
+        [AbilityEventBind(typeof(BeHurtInfoKeys), "GetHitEventChecker")]
+        OnBeHurt,
 
         /// <summary>
         /// Unit死亡事件

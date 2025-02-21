@@ -38,6 +38,10 @@ namespace Hono.Scripts.Battle.Core
                 addLoadTask(UnityAdapter.Instance.CreateUnityObjectProxy(this));
             }
 
+            foreach (var tag in assembleInfo.Tags) {
+	            Tags.Add(tag);
+            }
+
             //添加组件
             addComponents(assembleInfo.UnitComponentBits);
 

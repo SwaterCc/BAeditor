@@ -25,6 +25,7 @@ namespace Editor.BattleEditor.TagEditor {
 			foreach (var item in TagTreeItem.children) {
 				var treeItem = new TagTreeViewItem(TreeView, item);
 				children ??= new List<TreeViewItem>();
+				treeItem.parent = this; // 设置父子关系
 				children.Add(treeItem);
 				treeItem.BuildTree();
 			}

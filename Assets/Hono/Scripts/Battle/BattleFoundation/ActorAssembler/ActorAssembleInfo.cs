@@ -16,6 +16,8 @@ namespace Hono.Scripts.Battle.Core
             public int AbilityId;
             public bool Execute;
         }
+
+        public string JsonName;
         
         /// <summary>
         /// Actor基础类型

@@ -47,7 +47,8 @@ namespace Hono.Scripts.Battle.Core
             /// </summary>
             private readonly Dictionary<ECombatEnergyField, int> _energyFields = new()
             {
-                { ECombatEnergyField.MaxValueAdd, 0 },
+				{ ECombatEnergyField.CurrentValue, 0 },
+				{ ECombatEnergyField.MaxValueAdd, 0 },
                 { ECombatEnergyField.MaxValuePCT, 0 },
                 { ECombatEnergyField.EnergyGetWhenKillEnemyAdd, 0 },
                 { ECombatEnergyField.EnergyGetWhenKillEnemyPCT, 0 },
@@ -67,6 +68,10 @@ namespace Hono.Scripts.Battle.Core
 
             public void SetField(ECombatEnergyField field, int value)
             {
+				if(field == ECombatEnergyField.CurrentValue) {
+					AddCurrentValue(value);
+					return;
+				}
                 _energyFields[field] += value;
             }
 

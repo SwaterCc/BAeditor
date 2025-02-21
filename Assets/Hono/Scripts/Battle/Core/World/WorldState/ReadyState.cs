@@ -6,7 +6,7 @@ namespace Hono.Scripts.Battle.Core
     {
         private class ReadyState : WorldState
         {
-            private readonly WorldEventListener _eventListener = new WorldEventListener(EEventType.WarBegin);
+            private readonly EventListener _eventListener = new(EEventType.WarBegin);
             public ReadyState(WorldInstance worldInstance) : base(worldInstance, EWorldState.Ready) { }
 
             protected override void OnEnter()
@@ -19,7 +19,7 @@ namespace Hono.Scripts.Battle.Core
 
                 //打开布阵地图
                 UIManager.Instance.SetBattleFieldMap(true);
-                EventManager.Instance.RegisterWorldListener(_eventListener);
+                EventManager.Instance.AddWorldListener(_eventListener);
             }
 
             protected override void OnTick(float dt)
@@ -33,7 +33,7 @@ namespace Hono.Scripts.Battle.Core
 
             protected override void OnExit()
             {
-                EventManager.Instance.UnregisterWorldListener(_eventListener);
+                EventManager.Instance.RemoveWorldListener(_eventListener);
             }
         }
     }

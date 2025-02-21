@@ -34,7 +34,7 @@ namespace Editor.BattleEditor.TagEditor {
 
 			EditorGUILayout.Space(1);
 			if (SirenixEditorGUI.Button("创建", ButtonSizes.Medium)) {
-				_hasError = !_tagTree.TagTreeData.root.TagIsUnique(_tag);
+				_hasError = !_tagTree.STagTreeData.root.TagIsUnique(_tag);
 				if (_hasError) {
 					return;
 				}
@@ -42,7 +42,7 @@ namespace Editor.BattleEditor.TagEditor {
 				var item = new TagTreeItem() { tag = _tag };
 
 				if (_parent == null) {
-					_tagTree.TagTreeData.root.children.Add(item);
+					_tagTree.STagTreeData.root.children.Add(item);
 				}
 				else {
 					item.parent = _parent;
@@ -52,8 +52,8 @@ namespace Editor.BattleEditor.TagEditor {
 				if (!string.IsNullOrEmpty(_tagName)) {
 					_tagTree.SetTagInfo(_tag, _tagName);
 				}
-				EditorUtility.SetDirty(_tagTree.TagTreeData);
-				AssetDatabase.SaveAssetIfDirty(_tagTree.TagTreeData);
+				EditorUtility.SetDirty(_tagTree.STagTreeData);
+				AssetDatabase.SaveAssetIfDirty(_tagTree.STagTreeData);
 				Close();
 				_tagTree.Reload();
 			}

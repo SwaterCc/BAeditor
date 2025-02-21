@@ -5,18 +5,15 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.AbilityFramework;
 using Hono.Scripts.Battle.Base;
+using Hono.Scripts.Battle.BattleFoundation;
 using Hono.Scripts.Battle.Core;
+using Hono.Scripts.Battle.Core.AbilityFramework;
 using Hono.Scripts.Battle.Core.Base;
 using Hono.Scripts.Battle.Define;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-#if UNITY_EDITOR
-#else
-using UnityEngine.AddressableAssets;
-#endif
-
 #endregion
 
 namespace Hono.Scripts.Battle
@@ -37,9 +34,9 @@ namespace Hono.Scripts.Battle
     {
         private EBattleDataLoadState _battleDataLoadState;
         private readonly List<IBattleFoundation> _foundations = new(32);
-        
-        public TagTree TagTree;
-        public static TagTree TagTreeInstance => Instance.TagTree;
+
+        private TagTree _tree = new();
+        public static TagTree TagTree => Instance._tree;
         
         public Action<bool> ExitBattleCallBack { get; set; }
         public event Action OnLateUpdate;
@@ -116,6 +113,8 @@ namespace Hono.Scripts.Battle
             Ability.AbilityEnv.InitEnv();
             //属性链接初始化
             AttrHelper.Instance.Init();
+            //初始化TagTree
+            _tree.BuildTree();
         }
 
         #endregion

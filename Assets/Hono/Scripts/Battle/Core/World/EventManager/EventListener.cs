@@ -8,7 +8,7 @@ namespace Hono.Scripts.Battle.Event
     /// 基础功能为监听指定全局事件或者是某个Actor的事件
     /// 可通过传入检测器来细化事件检测
     /// </summary>
-    public abstract class EventListener
+    public class EventListener
     {
         /// <summary>
         /// 当前监听的事件
@@ -36,28 +36,21 @@ namespace Hono.Scripts.Battle.Event
         private Action<VariableBoard> _callback;
 
         /// <summary>
-        /// 是否监听全局事件
-        /// </summary>
-        public bool IsWorldListener { get; set; }
-
-        /// <summary>
         /// 是否失效
         /// </summary>
         public bool IsDisable { get; set; }
 
-        protected EventListener() { }
+        public EventListener() { }
 
-        protected EventListener(EEventType eventType, bool isWorldListener, Action<VariableBoard> callback) : this(
-            bindEventType: eventType, isWorldListener: isWorldListener, eventFireCallback: callback) { }
+        public EventListener(EEventType eventType, Action<VariableBoard> callback) : this(
+            bindEventType: eventType, eventFireCallback: callback) { }
 
-        protected EventListener(EEventType bindEventType = EEventType.NoInit,
-            bool isWorldListener = false,
+        public EventListener(EEventType bindEventType = EEventType.NoInit,
             float eventTriggerInterval = 0,
             IEventChecker eventChecker = null,
             Action<VariableBoard> eventFireCallback = null)
         {
             EventType = bindEventType;
-            IsWorldListener = isWorldListener;
             _triggerInterval = eventTriggerInterval;
             _callback = eventFireCallback;
             _checker = eventChecker;

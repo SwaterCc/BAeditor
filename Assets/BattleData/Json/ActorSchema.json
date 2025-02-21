@@ -1,0 +1,73 @@
+{
+  "components": {
+    "type": "array",
+    "description": "可用的组件列表",
+    "items": {
+      "type": "string",
+      "enum": [
+        "CombatComp",
+        "HateComp",
+        "MoveComp"
+      ],
+      "enumDescriptions": [
+        "",
+        "",
+        ""
+      ]
+    }
+  },
+  "componentCtors": {
+    "type": "object",
+    "properties": {
+      "BuffComp": {
+        "type": "object",
+        "description": "BuffComp构造参数",
+        "properties": {}
+      },
+      "CombatComp": {
+        "type": "object",
+        "description": "CombatComp构造参数",
+        "properties": {
+          "SkillList": {
+            "type": "array",
+            "description": "默认拥有的技能列表"
+          },
+          "CombatEnergyIds": {
+            "type": "array",
+            "description": "默认拥有的战斗资源"
+          }
+        }
+      }
+    }
+  },
+  "actorFields": {
+    "type": "object",
+    "description": "ActorAssembleInfo的字段和属性",
+    "properties": {
+      "JsonName": {
+        "type": "string"
+      },
+      "Tags": {
+        "type": "array"
+      },
+      "AbilityList": {
+        "type": "array"
+      },
+      "UnitCompCtorParams": {
+        "type": "object"
+      },
+      "ActorType": {
+        "type": "object"
+      },
+      "BaseAttrTableId": {
+        "type": "integer"
+      },
+      "ModelId": {
+        "type": "integer"
+      },
+      "UnitComponentBits": {
+        "type": "object"
+      }
+    }
+  }
+}

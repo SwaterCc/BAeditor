@@ -11,7 +11,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
     {
         private class AListenerNode : ANode<ListenerNodeData>, IGPoolObject, ILocalVariableBoardHandle
         {
-            private readonly UnitEventListener _eventListener = new();
+            private readonly EventListener _eventListener = new();
             private readonly MessageListener _messageListener = new();
             public VariableBoard LocalVariableBoard { get; private set; }
 
@@ -23,8 +23,12 @@ namespace Hono.Scripts.Battle.AbilityFramework
                     _eventListener.SetInterval(Data.eventInterval);
                     _eventListener.SetCallback(OnFire);
                     _eventListener.SetupChecker(ParseRef<IEventChecker>(Data.getCheckerFunc));
-                    _eventListener.IsWorldListener = Data.isGlobalEvtListener;
-                    AContext.Unit.RegisterEvtListener(_eventListener);
+                    if (Data.isGlobalEvtListener) {
+	                    AContext.Unit.AddWorldEvtListener(_eventListener);
+                    }
+                    else {
+	                    AContext.Unit.AddUnitEvtListener(_eventListener);
+                    }
                 }
                 else
                 {
@@ -36,7 +40,7 @@ namespace Hono.Scripts.Battle.AbilityFramework
             public void UnRegisterEvent()
             {
                 AContext.Unit.UnregisterMsgListener(_messageListener);
-                AContext.Unit.UnregisterEvtListener(_eventListener);
+                AContext.Unit.RemoveUnitEvtListener(_eventListener);
             }
 
             private void OnFire(VariableBoard board)

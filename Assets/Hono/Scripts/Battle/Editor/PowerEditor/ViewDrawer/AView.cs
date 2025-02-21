@@ -1,4 +1,5 @@
 ﻿using Hono.Scripts.Battle;
+using Hono.Scripts.Battle.Core.AbilityFramework;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
@@ -44,6 +45,9 @@ namespace Editor.AbilityEditor
             onSave();
             EditorUtility.SetDirty(Data);
             AssetDatabase.SaveAssets();
+            if (Application.isPlaying) {
+	            AbilityReloadManager.Instance.CallReloadHandles(Data.id);
+            }
         }
     }
 

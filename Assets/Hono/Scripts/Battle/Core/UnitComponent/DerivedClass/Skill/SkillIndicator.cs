@@ -168,18 +168,30 @@ namespace Hono.Scripts.Battle.Core
                         _skill.Play();
                         Close();
                         break;
-                    case IndicatorType.Circle:
-                        _skill.SelectWorldPos = circleIndicator.transform.position;
-                        World.Query.SearchUnits(_user,_skill.SelectWorldPos,0,_skill.SkillData.rangeFilter,ref _skill.SelectUnitsInArea);
-                        _skill.Play();
-                        Close();
-                        break;
-                    case IndicatorType.Rectangle:
-                        _skill.SelectWorldPos = rectangleIndicator.transform.position;
-                        World.Query.SearchUnits(_user,_skill.SelectWorldPos,0,_skill.SkillData.rangeFilter,ref _skill.SelectUnitsInArea);
-                        _skill.Play();
-                        Close();
-                        break;
+                    case IndicatorType.Circle: {
+	                    var selectPos = circleIndicator.transform.position;
+	                    selectPos.y = 0;
+	                    _skill.SelectWorldPos = selectPos;
+	                    var curPos = _user.UnitTransform.Pos;
+	                    curPos.y = 0;
+	                    _skill.SelectYAxisAngle = Vector3.SignedAngle(_user.UnitTransform.Forward, (selectPos - curPos).normalized,Vector3.up);
+	                    World.Query.SearchUnits(_user,_skill.SelectWorldPos,0,_skill.SkillData.rangeFilter,ref _skill.SelectUnitsInArea);
+	                    _skill.Play();
+	                    Close();
+	                    break;
+                    }
+                    case IndicatorType.Rectangle: {
+	                    var selectPos = rectangleIndicator.transform.position;
+	                    selectPos.y = 0;
+	                    _skill.SelectWorldPos = selectPos;
+	                    var curPos = _user.UnitTransform.Pos;
+	                    curPos.y = 0;
+	                    _skill.SelectYAxisAngle = Vector3.SignedAngle(_user.UnitTransform.Forward, (selectPos - curPos).normalized,Vector3.up);
+	                    World.Query.SearchUnits(_user, _skill.SelectWorldPos, 0, _skill.SkillData.rangeFilter, ref _skill.SelectUnitsInArea);
+	                    _skill.Play();
+	                    Close();
+	                    break;
+                    }
                     case IndicatorType.SingleTarget:
                         if (TryGetSingleTarget(out int targetUid))
                         {

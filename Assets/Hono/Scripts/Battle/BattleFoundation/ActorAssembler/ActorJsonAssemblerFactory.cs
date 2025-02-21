@@ -32,27 +32,14 @@ namespace Hono.Scripts.Battle
         public override async UniTask AsyncLoad()
         {
             var jsons = await Addressables.LoadAssetsAsync<TextAsset>("aJson").ToUniTask();
-            foreach (var textAsset in jsons)
-            {
-                JsonName.Add(textAsset.name);
-                JsonText.Add(textAsset.text);
+            foreach (var textAsset in jsons) {
+	           var info = ActorAssembleInfo.Parser.Parse(textAsset.text);
+	           if (info != null) {
+		           _actorAssembleInfos.Add(info.JsonName, info);
+	           }
             }
-
-            Init();
         }
         
-        /// <summary>
-        /// 初始化解析器
-        /// </summary>
-        public void Init()
-        {
-            //创建解析信息
-            for (int i = 0; i < JsonName.Count; i++)
-            {
-                _actorAssembleInfos.Add(JsonName[i], ActorAssembleInfo.Parser.Parse(JsonText[i]));
-            }
-        }
-
         public void Assemble(string jsonKey, Actor actor)
         {
             if (!_actorAssembleInfos.TryGetValue(jsonKey, out var assembleInfo))
@@ -63,7 +50,5 @@ namespace Hono.Scripts.Battle
 
             actor.Ctor(assembleInfo);
         }
-
-    
     }
 }
