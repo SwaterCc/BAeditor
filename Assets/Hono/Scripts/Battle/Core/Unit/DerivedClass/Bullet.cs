@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 
 namespace Hono.Scripts.Battle.Core {
@@ -134,7 +135,7 @@ namespace Hono.Scripts.Battle.Core {
 
 			_attacker.RecycleCallBack += onAttackerRemove;
 
-			Debug.Log($"[Bullet] Bullet Create Uid {Uid} sourceUnit {_attacker} ability {_attacker}");
+			//Debug.Log($"[Bullet] Bullet Create Uid {Uid} sourceUnit {_attacker} ability {_attacker}");
 			SetAttr(EAttrType.AttrUid,             Uid);
 			SetAttr(EAttrType.AttrModelId,         3);
 			SetAttr(EAttrType.AttrMoveSpeedPCTAdd, (int)(_bulletData.speed * 10000));
@@ -174,7 +175,7 @@ namespace Hono.Scripts.Battle.Core {
 			if (_attacker == null) {
 				return;
 			}
-
+         
 			_duration += dt;
 
 			move(dt);
@@ -182,6 +183,7 @@ namespace Hono.Scripts.Battle.Core {
 			if (_duration > _bulletData.lifeTime) {
 				dead();
 			}
+          
 		}
 
 		private void move(float dt) {

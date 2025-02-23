@@ -155,13 +155,14 @@ namespace Hono.Scripts.Battle {
 		}
 
 		public void SyncTransform() {
-			if (_physicsHandler != null) {
+			/*if (_physicsHandler != null) {
 				//使用物理组件前进，
 				_physicsHandler.Move(Unit.UnitTransform);
 			}
 			else {
-				_proxy.transform.localPosition = Unit.UnitTransform.Pos;
-			}
+				
+			}*/
+            _proxy.transform.localPosition = Unit.UnitTransform.Pos;
 			_proxy.transform.localRotation = Unit.UnitTransform.Rot;
 		}
 

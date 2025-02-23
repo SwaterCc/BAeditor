@@ -5,6 +5,7 @@ using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Profiling;
 using ListExtensions = Unity.Collections.ListExtensions;
 
 namespace Hono.Scripts.Battle.Core
@@ -133,7 +134,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 待删除列表
         /// </summary>
-        private readonly List<Unit> _removeList = new(16);
+        private readonly List<Unit> _removeList = new(100);
 
         /// <summary>
         /// 当前玩家控制的单位
@@ -280,7 +281,7 @@ namespace Hono.Scripts.Battle.Core
             }
 
             _loadingFinishList.Clear();
-
+           
             i = 0;
             while (i < _runningActorList.Count)
             {

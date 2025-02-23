@@ -26,7 +26,7 @@ namespace Hono.Scripts.Battle.Core {
 			int sourceAbilityId,
 			bool disableEventTrigger = false,
 			int damageId = 0) {
-			
+			return;
 			if (attacker == null) {
 				return;
 			}
@@ -35,7 +35,7 @@ namespace Hono.Scripts.Battle.Core {
 				return;
 			}
 
-			Debug.Log($"[HitSystem] SingleHit attacker:{attacker} target:{target} damageSource:{damageSourceType} abilityId:{sourceAbilityId} damageId:{damageId}");
+			//Debug.Log($"[HitSystem] SingleHit attacker:{attacker} target:{target} damageSource:{damageSourceType} abilityId:{sourceAbilityId} damageId:{damageId}");
 
 			if (!disableEventTrigger) {
 				var board = GPool<VariableBoard>.Pool.Rent();
@@ -142,7 +142,7 @@ namespace Hono.Scripts.Battle.Core {
 			
 #if UNITY_EDITOR
 			foreach (var hitUid in _hitTargets) {
-				Debug.Log($"[HitSystem] SingleHit attacker:{attacker} target:{hitUid} damageSource:{damageSourceType} abilityId:{sourceAbilityId} damageId:{damageId}");
+				//Debug.Log($"[HitSystem] SingleHit attacker:{attacker} target:{hitUid} damageSource:{damageSourceType} abilityId:{sourceAbilityId} damageId:{damageId}");
 			}
 #endif
 			

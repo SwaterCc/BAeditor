@@ -40,10 +40,11 @@ MonoBehaviour:
   minHitInterval: 1
   maxHitCount: 1
   isUseVFXKeyModel: 0
-  flyVFXStr: Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Ice/CFXR3
-    Iceball A + Ice Trail.prefab
-  hitVFXStr: 
-  deadVFXStr: Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_Explosion_Omni_Ice.prefab
+  flyVFXStr: Assets/BattleModel/Prototype/Model/BulletModel.prefab
+  hitVFXStr: Assets/BattleModel/Prototype/Model/boom.prefab
+  hitVFXDuration: 1
+  deadVFXStr: Assets/BattleModel/Prototype/Model/boom.prefab
+  deadVFXDuration: 1
   bulletAbility: {fileID: 4130809267460278915}
 --- !u!114 &4130809267460278915
 MonoBehaviour:

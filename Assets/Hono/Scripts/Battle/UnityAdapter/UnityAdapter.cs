@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Core;
 using Hono.Scripts.Battle.Core.Base;
+using UnityEngine.Profiling;
 
 namespace Hono.Scripts.Battle
 {
