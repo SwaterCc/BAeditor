@@ -26,7 +26,7 @@ namespace Hono.Scripts.Battle.Core
             _mainBuff = mainBuff;
         }
 
-        public void Process(Unit attacker, Unit target, DamageTable.DamageRow damageRow)
+        public void Process(Unit attacker, Unit target, DamageTableRow damageRow)
         {
             if (!target.TryGetComponent(out BuffComp buffComp))
             {

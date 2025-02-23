@@ -57,7 +57,7 @@ namespace Hono.Scripts.Battle.Core {
 				return;
 			}
 
-			if (!ConfigDataBase.Table<DamageTable>().TryGet(damageId, out var damageRow)) {
+			if (!ConfigDataBase.Table<DamageTable>().TryGetRow(damageId, out var damageRow)) {
 				return;
 			}
 
@@ -166,7 +166,7 @@ namespace Hono.Scripts.Battle.Core {
 				return;
 			}
 
-			if (!ConfigDataBase.Table<DamageTable>().TryGet(damageId, out var damageRow)) {
+			if (!ConfigDataBase.Table<DamageTable>().TryGetRow(damageId, out var damageRow)) {
 				return;
 			}
 

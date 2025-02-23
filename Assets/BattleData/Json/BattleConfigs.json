@@ -1,0 +1,4915 @@
+{
+    "ActorClassTable": {
+        "201": {
+            "Id": 201,
+            "ClassName": "守卫",
+            "Desc": "守卫",
+            "ActorClassType": 0,
+            "Skills": [
+                [
+                    201001,
+                    1
+                ],
+                [
+                    201002,
+                    1
+                ],
+                [
+                    201003,
+                    1
+                ],
+                [
+                    201004,
+                    1
+                ]
+            ],
+            "SubClassSkill": [],
+            "Buffs": []
+        },
+        "202": {
+            "Id": 202,
+            "ClassName": "野蛮人",
+            "Desc": "野蛮人",
+            "ActorClassType": 0,
+            "Skills": [
+                [
+                    202001,
+                    1
+                ],
+                [
+                    202002,
+                    1
+                ],
+                [
+                    202003,
+                    1
+                ],
+                [
+                    202004,
+                    1
+                ]
+            ],
+            "SubClassSkill": [
+                [
+                    202004,
+                    1
+                ]
+            ],
+            "Buffs": [
+                202200
+            ]
+        },
+        "203": {
+            "Id": 203,
+            "ClassName": "火法",
+            "Desc": "火法",
+            "ActorClassType": 0,
+            "Skills": [
+                [
+                    203001,
+                    1
+                ],
+                [
+                    203002,
+                    1
+                ],
+                [
+                    203003,
+                    1
+                ],
+                [
+                    203004,
+                    1
+                ]
+            ],
+            "SubClassSkill": [
+                [
+                    203004,
+                    1
+                ]
+            ],
+            "Buffs": [
+                203200
+            ]
+        },
+        "204": {
+            "Id": 204,
+            "ClassName": "牧师",
+            "Desc": "牧师",
+            "ActorClassType": 0,
+            "Skills": [
+                [
+                    204001,
+                    1
+                ],
+                [
+                    204002,
+                    1
+                ],
+                [
+                    204003,
+                    1
+                ],
+                [
+                    204004,
+                    1
+                ]
+            ],
+            "SubClassSkill": [
+                [
+                    204004,
+                    1
+                ]
+            ],
+            "Buffs": [
+                204200
+            ]
+        },
+        "205": {
+            "Id": 205,
+            "ClassName": "武僧",
+            "Desc": "武僧",
+            "ActorClassType": 0,
+            "Skills": [
+                [
+                    205001,
+                    1
+                ],
+                [
+                    205002,
+                    1
+                ],
+                [
+                    205003,
+                    1
+                ],
+                [
+                    205004,
+                    1
+                ]
+            ],
+            "SubClassSkill": [
+                [
+                    205004,
+                    1
+                ]
+            ],
+            "Buffs": [
+                205200
+            ]
+        },
+        "206": {
+            "Id": 206,
+            "ClassName": "射手",
+            "Desc": "射手",
+            "ActorClassType": 0,
+            "Skills": [
+                [
+                    206001,
+                    1
+                ],
+                [
+                    206002,
+                    1
+                ],
+                [
+                    206003,
+                    1
+                ],
+                [
+                    206004,
+                    1
+                ]
+            ],
+            "SubClassSkill": [
+                [
+                    206004,
+                    1
+                ]
+            ],
+            "Buffs": [
+                206200
+            ]
+        },
+        "207": {
+            "Id": 207,
+            "ClassName": "德鲁伊",
+            "Desc": "德鲁伊",
+            "ActorClassType": 0,
+            "Skills": [
+                [
+                    207001,
+                    1
+                ],
+                [
+                    207002,
+                    1
+                ],
+                [
+                    207003,
+                    1
+                ],
+                [
+                    207004,
+                    1
+                ]
+            ],
+            "SubClassSkill": [
+                [
+                    207004,
+                    1
+                ]
+            ],
+            "Buffs": [
+                207200
+            ]
+        },
+        "208": {
+            "Id": 208,
+            "ClassName": "炼金术士",
+            "Desc": "炼金术士",
+            "ActorClassType": 0,
+            "Skills": [
+                [
+                    208001,
+                    1
+                ],
+                [
+                    208002,
+                    1
+                ],
+                [
+                    208003,
+                    1
+                ],
+                [
+                    208004,
+                    1
+                ]
+            ],
+            "SubClassSkill": [
+                [
+                    208004,
+                    1
+                ]
+            ],
+            "Buffs": [
+                208200
+            ]
+        },
+        "8888": {
+            "Id": 8888,
+            "ClassName": "肉鸽仙人",
+            "Desc": "肉鸽仙人",
+            "ActorClassType": 0,
+            "Skills": [
+                [
+                    999002,
+                    1
+                ],
+                [
+                    999003,
+                    1
+                ],
+                [
+                    999006,
+                    1
+                ],
+                [
+                    999004,
+                    1
+                ]
+            ],
+            "SubClassSkill": [
+                [
+                    999005,
+                    1
+                ]
+            ],
+            "Buffs": []
+        }
+    },
+    "AttrTable": {
+        "10010": {
+            "Id": 10010,
+            "EnumName": "AttrMaxHp",
+            "Name": "MAXHP",
+            "Type": "int64",
+            "AttrLowerLimit": 0,
+            "AttrUpperLimit": 0,
+            "AttrFinal": 10010,
+            "AttrTotal": 10011,
+            "AttrAdd": 10012,
+            "AttrExAdd": 10013,
+            "AttrPer": 10014,
+            "AttrExPer": 10015,
+            "OfficialName": "生命值上限",
+            "AttrDes": "角色的基础生存能力"
+        },
+        "12100": {
+            "Id": 12100,
+            "EnumName": "AttrAttack",
+            "Name": "攻击力",
+            "Type": "int32",
+            "AttrLowerLimit": 0,
+            "AttrUpperLimit": 999999,
+            "AttrFinal": 12100,
+            "AttrTotal": 12101,
+            "AttrAdd": 12102,
+            "AttrExAdd": 12103,
+            "AttrPer": 12104,
+            "AttrExPer": 12105,
+            "OfficialName": "攻击力",
+            "AttrDes": "影响角色造成伤害的基础攻击属性"
+        },
+        "12110": {
+            "Id": 12110,
+            "EnumName": "AttrDefense",
+            "Name": "防御力",
+            "Type": "int32",
+            "AttrLowerLimit": 0,
+            "AttrUpperLimit": 999999,
+            "AttrFinal": 12110,
+            "AttrTotal": 12111,
+            "AttrAdd": 12112,
+            "AttrExAdd": 12113,
+            "AttrPer": 12114,
+            "AttrExPer": 12115,
+            "OfficialName": "防御力",
+            "AttrDes": "可减少角色受到伤害量的基础生存属性"
+        },
+        "12120": {
+            "Id": 12120,
+            "EnumName": "AttrIgnoreDefense",
+            "Name": "忽视防御",
+            "Type": "int32",
+            "AttrLowerLimit": 0,
+            "AttrUpperLimit": 999999,
+            "AttrFinal": 12120,
+            "AttrTotal": 12121,
+            "AttrAdd": 12122,
+            "AttrExAdd": 12123,
+            "AttrPer": 12124,
+            "AttrExPer": 12125,
+            "OfficialName": "忽视防御",
+            "AttrDes": "代表忽视目标防御的值"
+        },
+        "12130": {
+            "Id": 12130,
+            "EnumName": "AttrIgnoreDefensePCT",
+            "Name": "忽视防御万分比",
+            "Type": "int32",
+            "AttrLowerLimit": 0,
+            "AttrUpperLimit": -1,
+            "AttrFinal": 12130,
+            "AttrTotal": 12131,
+            "AttrAdd": 12132,
+            "AttrExAdd": 12133,
+            "AttrPer": 12134,
+            "AttrExPer": 12135,
+            "OfficialName": "忽视防御百分比",
+            "AttrDes": "代表忽视目标防御的比例"
+        },
+        "12140": {
+            "Id": 12140,
+            "EnumName": "AttrCrit",
+            "Name": "暴击率",
+            "Type": "int32",
+            "AttrLowerLimit": 0,
+            "AttrUpperLimit": -1,
+            "AttrFinal": 12140,
+            "AttrTotal": 12141,
+            "AttrAdd": 12142,
+            "AttrExAdd": 12143,
+            "AttrPer": 12144,
+            "AttrExPer": 12145,
+            "OfficialName": "暴击率",
+            "AttrDes": "代表进行攻击时，伤害产生暴击的概率"
+        },
+        "12150": {
+            "Id": 12150,
+            "EnumName": "AttrCritDamage",
+            "Name": "暴击伤害",
+            "Type": "int32",
+            "AttrLowerLimit": 0,
+            "AttrUpperLimit": -1,
+            "AttrFinal": 12150,
+            "AttrTotal": 12151,
+            "AttrAdd": 12152,
+            "AttrExAdd": 12153,
+            "AttrPer": 12154,
+            "AttrExPer": 12155,
+            "OfficialName": "暴击伤害",
+            "AttrDes": "提升伤害暴击时的伤害提升比率"
+        },
+        "10040": {
+            "Id": 10040,
+            "EnumName": "AttrMoveSpeedPCT",
+            "Name": "移动速度万分比",
+            "Type": "int33",
+            "AttrLowerLimit": 0,
+            "AttrUpperLimit": -1,
+            "AttrFinal": 10040,
+            "AttrTotal": 10041,
+            "AttrAdd": 10042,
+            "AttrExAdd": 10043,
+            "AttrPer": 10044,
+            "AttrExPer": 10045,
+            "OfficialName": "移动速度",
+            "AttrDes": ""
+        },
+        "10050": {
+            "Id": 10050,
+            "EnumName": "AttrMoveSpeedPCT",
+            "Name": "移动速度万分比",
+            "Type": "int33",
+            "AttrLowerLimit": 0,
+            "AttrUpperLimit": -1,
+            "AttrFinal": 10050,
+            "AttrTotal": 10051,
+            "AttrAdd": 10052,
+            "AttrExAdd": 10053,
+            "AttrPer": 10054,
+            "AttrExPer": 10055,
+            "OfficialName": "转身速度",
+            "AttrDes": ""
+        }
+    },
+    "BattleSceneTable": {
+        "1": {
+            "Id": 1,
+            "Desc": "战斗测试",
+            "ScenePath": "Hono/Scenes/BattleScene/BattleDebugScene",
+            "TeamCount": 2,
+            "BattleType": 2
+        },
+        "10": {
+            "Id": 10,
+            "Desc": "第一关",
+            "ScenePath": "Hono/Scenes/NormalLevel_910",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "11": {
+            "Id": 11,
+            "Desc": "打动物",
+            "ScenePath": "Hono/Scenes/NormalLevel_911",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "12": {
+            "Id": 12,
+            "Desc": "打山贼",
+            "ScenePath": "Hono/Scenes/NormalLevel_912",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "13": {
+            "Id": 13,
+            "Desc": "拆别人家",
+            "ScenePath": "Hono/Scenes/NormalLevel_913",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "101": {
+            "Id": 101,
+            "Desc": "普通关卡1：剿匪",
+            "ScenePath": "Hono/Scenes/NormalLevel_01",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "102": {
+            "Id": 102,
+            "Desc": "普通关卡2：占领据点",
+            "ScenePath": "Hono/Scenes/NormalLevel_02_Attack",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "103": {
+            "Id": 103,
+            "Desc": "普通关卡3：守护据点",
+            "ScenePath": "Hono/Scenes/NormalLevel_02",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "104": {
+            "Id": 104,
+            "Desc": "普通关卡4：",
+            "ScenePath": "Hono/Scenes/NormalLevel_03",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "105": {
+            "Id": 105,
+            "Desc": "普通关卡5",
+            "ScenePath": "Hono/Scenes/NormalLevel_04",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "106": {
+            "Id": 106,
+            "Desc": "普通关卡6",
+            "ScenePath": "",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "107": {
+            "Id": 107,
+            "Desc": "普通关卡7",
+            "ScenePath": "Hono/Scenes/NormalLevel_10",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "108": {
+            "Id": 108,
+            "Desc": "普通关卡8",
+            "ScenePath": "",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "109": {
+            "Id": 109,
+            "Desc": "普通关卡9",
+            "ScenePath": "",
+            "TeamCount": 1,
+            "BattleType": 1
+        },
+        "900": {
+            "Id": 900,
+            "Desc": "战争1，2队，简单图",
+            "ScenePath": "Hono/Scenes/WarLevel",
+            "TeamCount": 2,
+            "BattleType": 2
+        },
+        "901": {
+            "Id": 901,
+            "Desc": "战争2，4队，难度高。回复塔解毒",
+            "ScenePath": "Hono/Scenes/WarLevel_01",
+            "TeamCount": 4,
+            "BattleType": 2
+        },
+        "1000": {
+            "Id": 1000,
+            "Desc": "肉鸽",
+            "ScenePath": "Hono/Scenes/NormalLevel_11",
+            "TeamCount": 1,
+            "BattleType": 3
+        }
+    },
+    "CombatEnergyTable": {
+        "1": {
+            "Id": 1,
+            "Desc": "测试MP",
+            "InitValue": 101,
+            "IdleGetValue": 10,
+            "BehitGetValue": 0,
+            "AttackGetValue": 0,
+            "EnergyMax": 200
+        }
+    },
+    "DamageAdditiveTable": {
+        "1": {
+            "Id": 1,
+            "ApplyFuncName": "normal",
+            "ConditionIds": [
+                2
+            ],
+            "ConditionParams": [
+                [
+                    2,
+                    102
+                ]
+            ],
+            "DamageValue": [
+                50000
+            ]
+        }
+    },
+    "DamageMultiplyTable": {
+        "222": {
+            "Id": 222,
+            "Desc": "疯狂之心：敌人身上每有一种不同的控制效果，你造成的持续性伤害就会提高[20.0]%[×]。不可阻挡的敌人和跟路的首领受到来自你的持续性伤害改为提高[10-40]%[x]。",
+            "DamageValue": [
+                500,
+                2000,
+                1000,
+                4000
+            ],
+            "ApplyFuncName": "CrazyHeart",
+            "ConditionIds": [
+                0
+            ],
+            "ConditionParams": []
+        },
+        "20700101": {
+            "Id": 20700101,
+            "Desc": "德鲁伊-星涌",
+            "DamageValue": [
+                10000
+            ],
+            "ApplyFuncName": "normal",
+            "ConditionIds": [
+                5
+            ],
+            "ConditionParams": [
+                [
+                    1,
+                    207201
+                ]
+            ]
+        },
+        "20600301": {
+            "Id": 20600301,
+            "Desc": "射手-致命射击",
+            "DamageValue": [
+                5000
+            ],
+            "ApplyFuncName": "normal",
+            "ConditionIds": [
+                8
+            ],
+            "ConditionParams": [
+                [
+                    1,
+                    5
+                ]
+            ]
+        }
+    },
+    "DamageTable": {
+        "1": {
+            "Id": 1,
+            "Desc": "",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 10000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 99998,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "50100101": {
+            "Id": 50100101,
+            "Desc": "Ⅰ箭塔",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 15000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "50200101": {
+            "Id": 50200101,
+            "Desc": "Ⅰ法师塔",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 10000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "50500101": {
+            "Id": 50500101,
+            "Desc": "Ⅱ回复塔",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 7500,
+            "DamageType": 4,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/Hovl Studio/AAA Projectiles Vol 1/Prefabs/Hit 27.prefab"
+        },
+        "50600101": {
+            "Id": 50600101,
+            "Desc": "Ⅱ炮塔假子弹",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 0,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "50600102": {
+            "Id": 50600102,
+            "Desc": "Ⅱ炮塔",
+            "FormulaName": "AttackShare",
+            "DamageRatio": 20000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "50700101": {
+            "Id": 50700101,
+            "Desc": "Ⅲ寒冰塔",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 5000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "50800101": {
+            "Id": 50800101,
+            "Desc": "Ⅲ火焰塔",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 0,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "50800102": {
+            "Id": 50800102,
+            "Desc": "Ⅲ火焰塔-持续燃烧",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 10000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "50900101": {
+            "Id": 50900101,
+            "Desc": "Ⅳ核弹塔子弹",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 0,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "50900102": {
+            "Id": 50900102,
+            "Desc": "Ⅳ核弹塔核爆",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 100000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "100100101": {
+            "Id": 100100101,
+            "Desc": "剑盾-普攻",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 4000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "100200101": {
+            "Id": 100200101,
+            "Desc": "双手剑-普攻",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 8000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "100300101": {
+            "Id": 100300101,
+            "Desc": "法杖-普攻",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 6000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "100400101": {
+            "Id": 100400101,
+            "Desc": "棍-普攻",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 4800,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "100500101": {
+            "Id": 100500101,
+            "Desc": "弓-普攻",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 8000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "100600101": {
+            "Id": 100600101,
+            "Desc": "法典-普攻",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 6000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20100101": {
+            "Id": 20100101,
+            "Desc": "守卫-冲锋",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 12000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Space/Variants/CFXR4 Plasma Shoot (Red).prefab"
+        },
+        "20100201": {
+            "Id": 20100201,
+            "Desc": "守卫-顺劈斩",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 7000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20100301": {
+            "Id": 20100301,
+            "Desc": "守卫-聚爆",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 30000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20200101": {
+            "Id": 20200101,
+            "Desc": "战士-破碎挥砍",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 15000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20200201": {
+            "Id": 20200201,
+            "Desc": "战士-脆弱打击",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 20000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/Hovl Studio/AAA Projectiles Vol 1/Prefabs/Hit 26.prefab"
+        },
+        "20200301": {
+            "Id": 20200301,
+            "Desc": "战士-毁灭斩击",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 45000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20220201": {
+            "Id": 20220201,
+            "Desc": "战士-命中回血",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 2000,
+            "DamageType": 4,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20300101": {
+            "Id": 20300101,
+            "Desc": "火法-火球术",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 25000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Fire/CFXR3 Hit Fire A (Air).prefab"
+        },
+        "20300102": {
+            "Id": 20300102,
+            "Desc": "火法-溅射伤害",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 15000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Fire/CFXR4 Sword Hit FIRE (Cross).prefab"
+        },
+        "20300201": {
+            "Id": 20300201,
+            "Desc": "火法-点燃伤害",
+            "FormulaName": "AttackBuffDot",
+            "DamageRatio": 3500,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Fire/CFXR4 Sword Hit FIRE (Cross).prefab"
+        },
+        "20300301": {
+            "Id": 20300301,
+            "Desc": "火法-炽焰冲击",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 85000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Fire/CFXR3 Hit Fire A (Air).prefab"
+        },
+        "20400101": {
+            "Id": 20400101,
+            "Desc": "牧师-治疗波治疗",
+            "FormulaName": "Heal",
+            "DamageRatio": 10000,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_HealCast.prefab"
+        },
+        "20400102": {
+            "Id": 20400102,
+            "Desc": "牧师-治疗波伤害",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 15000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_HealCast.prefab"
+        },
+        "20400201": {
+            "Id": 20400201,
+            "Desc": "牧师-疗愈",
+            "FormulaName": "Heal",
+            "DamageRatio": 12000,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/Hovl Studio/RPG VFX Bundle/Prefabs/Magic buffs and hits/Heal.prefab"
+        },
+        "20400301": {
+            "Id": 20400301,
+            "Desc": "牧师-神圣赞美诗",
+            "FormulaName": "Heal",
+            "DamageRatio": 7500,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/Hovl Studio/RPG VFX Bundle/Prefabs/Magic buffs and hits/Heal.prefab"
+        },
+        "20500101": {
+            "Id": 20500101,
+            "Desc": "武僧-拨云见日下砸",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 15000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20500102": {
+            "Id": 20500102,
+            "Desc": "武僧-拨云见日重砸",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 40000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20500103": {
+            "Id": 20500103,
+            "Desc": "武僧-拨云见日回血-天赋",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 1500,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20500201": {
+            "Id": 20500201,
+            "Desc": "武僧-护身法相横扫",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 30000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20500202": {
+            "Id": 20500202,
+            "Desc": "武僧-护身法相回血",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 500,
+            "DamageType": 4,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20500401": {
+            "Id": 20500401,
+            "Desc": "武僧-重塑金身回血",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 6000,
+            "DamageType": 4,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20520301": {
+            "Id": 20520301,
+            "Desc": "武僧-天神下凡回血-天赋",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 500,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20520401": {
+            "Id": 20520401,
+            "Desc": "武僧-小天神下凡回血-天赋",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 250,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20600101": {
+            "Id": 20600101,
+            "Desc": "射手-连射",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 12000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20600201": {
+            "Id": 20600201,
+            "Desc": "射手-",
+            "FormulaName": "",
+            "DamageRatio": 0,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20600301": {
+            "Id": 20600301,
+            "Desc": "射手-致命射击",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 75000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [
+                20600301
+            ],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20700101": {
+            "Id": 20700101,
+            "Desc": "德鲁伊-星涌",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 20000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [
+                20700101
+            ],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20700201": {
+            "Id": 20700201,
+            "Desc": "德鲁伊-月火直伤",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 5000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20720101": {
+            "Id": 20720101,
+            "Desc": "德鲁伊-月火Dot",
+            "FormulaName": "AttackBuffDot",
+            "DamageRatio": 9000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20700301": {
+            "Id": 20700301,
+            "Desc": "德鲁伊-雷霆",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 30000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20800101": {
+            "Id": 20800101,
+            "Desc": "药剂师-复合药剂-伤害",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 15000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "20800102": {
+            "Id": 20800102,
+            "Desc": "药剂师-复合药剂-治疗",
+            "FormulaName": "Heal",
+            "DamageRatio": 15000,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20800103": {
+            "Id": 20800103,
+            "Desc": "药剂师-复合药剂-假子弹",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 0,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20800201": {
+            "Id": 20800201,
+            "Desc": "药剂师-增强药剂-治疗",
+            "FormulaName": "Heal",
+            "DamageRatio": 30000,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20800202": {
+            "Id": 20800202,
+            "Desc": "药剂师-增强药剂-受击回复",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 600,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20800203": {
+            "Id": 20800203,
+            "Desc": "药剂师-增强药剂-假子弹",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 0,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20800301": {
+            "Id": 20800301,
+            "Desc": "药剂师-皇家药剂-治疗",
+            "FormulaName": "Heal",
+            "DamageRatio": 15000,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20800302": {
+            "Id": 20800302,
+            "Desc": "药剂师-皇家药剂-伤害",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 15000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "20800303": {
+            "Id": 20800303,
+            "Desc": "药剂师-皇家药剂-假子弹",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 0,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "300100101": {
+            "Id": 300100101,
+            "Desc": "弓兵-普攻",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 4000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "301000101": {
+            "Id": 301000101,
+            "Desc": "轻骑兵-普攻",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 5000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "302100101": {
+            "Id": 302100101,
+            "Desc": "牧师兵-治疗",
+            "FormulaName": "Heal",
+            "DamageRatio": 10000,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_HealCast.prefab"
+        },
+        "9001201": {
+            "Id": 9001201,
+            "Desc": "Boss剧毒",
+            "FormulaName": "AttackTargetPct",
+            "DamageRatio": 1000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "9001202": {
+            "Id": 9001202,
+            "Desc": "Boss点名炸团",
+            "FormulaName": "AttackConstantShare",
+            "DamageRatio": 1500,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "9002001": {
+            "Id": 9002001,
+            "Desc": "BOSS-全场百分比压血",
+            "FormulaName": "AttackTargetPct",
+            "DamageRatio": 7000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "900100301": {
+            "Id": 900100301,
+            "Desc": "BOSS-顺劈",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 9000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "900100401": {
+            "Id": 900100401,
+            "Desc": "BOSS-放屁",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 4000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "900100402": {
+            "Id": 900100402,
+            "Desc": "BOSS-放屁击中回血",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 100,
+            "DamageType": 4,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "90011091": {
+            "Id": 90011091,
+            "Desc": "墓碑-子弹",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 1000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "90011092": {
+            "Id": 90011092,
+            "Desc": "墓碑-给BOSS回血",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 2000,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "90011093": {
+            "Id": 90011093,
+            "Desc": "墓碑-给角色回血",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 5000,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "90011094": {
+            "Id": 90011094,
+            "Desc": "墓碑-打自己2滴血",
+            "FormulaName": "AttackTargetPct",
+            "DamageRatio": 10000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "90011003": {
+            "Id": 90011003,
+            "Desc": "精英怪大招",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 20000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "999101001": {
+            "Id": 999101001,
+            "Desc": "肉鸽碰撞伤害",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 10000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "800600101": {
+            "Id": 800600101,
+            "Desc": "投石车子弹",
+            "FormulaName": "AttackConstantShare",
+            "DamageRatio": 5000,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Sword Trails/Plain/CFXR4 Sword Hit PLAIN (Cross).prefab"
+        },
+        "99920301": {
+            "Id": 99920301,
+            "Desc": "肉鸽-回血",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 3000,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": "Assets/BattleRes/VFX/3rd/Vefects/Anime VFX URP/Shared/Particles/PS_VFX_HealCast.prefab"
+        },
+        "99900601": {
+            "Id": 99900601,
+            "Desc": "肉鸽-大招伤害",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 40000,
+            "DamageType": 1,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "99900201": {
+            "Id": 99900201,
+            "Desc": "肉鸽-近战攻击伤害",
+            "FormulaName": "NormalAttack",
+            "DamageRatio": 12500,
+            "DamageType": 1,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "99920401": {
+            "Id": 99920401,
+            "Desc": "肉鸽-回满血",
+            "FormulaName": "HealTargetPct",
+            "DamageRatio": 10000,
+            "DamageType": 4,
+            "ElementType": 1,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        },
+        "99900701": {
+            "Id": 99900701,
+            "Desc": "肉鸽-自动回血",
+            "FormulaName": "AttackConstantWithSkillLevel",
+            "DamageRatio": 100,
+            "DamageType": 4,
+            "ElementType": 2,
+            "ElementsDamage": [],
+            "DisableElementBoom": false,
+            "Tags": [],
+            "ImpactValue": 0,
+            "AdditiveId": [],
+            "MultiplyId": [],
+            "BeHitVFXPath": ""
+        }
+    },
+    "EntityAttrBaseTable": {
+        "1": {
+            "Id": 1,
+            "Desc": "远程DPS属性",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 750,
+            "AttrMaxMpAdd": 2000,
+            "AttrAttackAdd": 100,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 1000,
+            "AttrCritDamageAdd": 10000,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "2": {
+            "Id": 2,
+            "Desc": "坦克属性",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 1000,
+            "AttrMaxMpAdd": 2000,
+            "AttrAttackAdd": 70,
+            "AttrDefenseAdd": 75,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 1000,
+            "AttrCritDamageAdd": 5000,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 1000,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 2000,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 2000,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3": {
+            "Id": 3,
+            "Desc": "辅助属性",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 750,
+            "AttrMaxMpAdd": 2000,
+            "AttrAttackAdd": 80,
+            "AttrDefenseAdd": 65,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 1000,
+            "AttrCritDamageAdd": 5000,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 2000,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "4": {
+            "Id": 4,
+            "Desc": "近战DPS属性",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 750,
+            "AttrMaxMpAdd": 2000,
+            "AttrAttackAdd": 100,
+            "AttrDefenseAdd": 70,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 1000,
+            "AttrCritDamageAdd": 10000,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 1000,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 2000,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "10": {
+            "Id": 10,
+            "Desc": "测试木桩属性",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 99999999,
+            "AttrMaxMpAdd": 2000,
+            "AttrAttackAdd": 100,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "22": {
+            "Id": 22,
+            "Desc": "测试木桩属性",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 300,
+            "AttrMaxMpAdd": 2000,
+            "AttrAttackAdd": 0,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3001": {
+            "Id": 3001,
+            "Desc": "【弓兵】",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 400,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 80,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3010": {
+            "Id": 3010,
+            "Desc": "【轻骑兵】",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 500,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 80,
+            "AttrDefenseAdd": 55,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3021": {
+            "Id": 3021,
+            "Desc": "【牧师】",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 400,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 50,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3024": {
+            "Id": 3024,
+            "Desc": "【长矛兵】",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 600,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 110,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3025": {
+            "Id": 3025,
+            "Desc": "【剑兵】",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 700,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 90,
+            "AttrDefenseAdd": 60,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3101": {
+            "Id": 3101,
+            "Desc": "【弓兵】2",
+            "AttrEntityLevel": 7,
+            "AttrMaxHpAdd": 400,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 80,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3110": {
+            "Id": 3110,
+            "Desc": "【轻骑兵】2",
+            "AttrEntityLevel": 7,
+            "AttrMaxHpAdd": 500,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 80,
+            "AttrDefenseAdd": 55,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3121": {
+            "Id": 3121,
+            "Desc": "【牧师】2",
+            "AttrEntityLevel": 7,
+            "AttrMaxHpAdd": 400,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 50,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3124": {
+            "Id": 3124,
+            "Desc": "【长矛兵】2",
+            "AttrEntityLevel": 7,
+            "AttrMaxHpAdd": 600,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 110,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3125": {
+            "Id": 3125,
+            "Desc": "【剑兵】2",
+            "AttrEntityLevel": 7,
+            "AttrMaxHpAdd": 700,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 90,
+            "AttrDefenseAdd": 60,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3201": {
+            "Id": 3201,
+            "Desc": "【弓兵】2",
+            "AttrEntityLevel": 15,
+            "AttrMaxHpAdd": 400,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 80,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3210": {
+            "Id": 3210,
+            "Desc": "【轻骑兵】2",
+            "AttrEntityLevel": 15,
+            "AttrMaxHpAdd": 500,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 80,
+            "AttrDefenseAdd": 55,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3221": {
+            "Id": 3221,
+            "Desc": "【牧师】2",
+            "AttrEntityLevel": 15,
+            "AttrMaxHpAdd": 400,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 50,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3224": {
+            "Id": 3224,
+            "Desc": "【长矛兵】2",
+            "AttrEntityLevel": 15,
+            "AttrMaxHpAdd": 600,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 110,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "3225": {
+            "Id": 3225,
+            "Desc": "【剑兵】2",
+            "AttrEntityLevel": 15,
+            "AttrMaxHpAdd": 700,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 90,
+            "AttrDefenseAdd": 60,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 70000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "501": {
+            "Id": 501,
+            "Desc": "一级塔",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 750,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 150,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 0,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 1000,
+            "AttrCritDamageAdd": 10000,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "502": {
+            "Id": 502,
+            "Desc": "二级塔",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 1500,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 200,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 0,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 1000,
+            "AttrCritDamageAdd": 10000,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "503": {
+            "Id": 503,
+            "Desc": "三级塔",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 2250,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 250,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 0,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 1000,
+            "AttrCritDamageAdd": 10000,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "509": {
+            "Id": 509,
+            "Desc": "四级塔",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 3000,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 300,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 0,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 1000,
+            "AttrCritDamageAdd": 10000,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "20001": {
+            "Id": 20001,
+            "Desc": "国王",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 2000,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 100,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 10000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "20002": {
+            "Id": 20002,
+            "Desc": "坏国王",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 7000,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 150,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 10000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": -3000,
+            "AttrMpRecAllAdd": -5000,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "8001": {
+            "Id": 8001,
+            "Desc": "邪恶药剂师",
+            "AttrEntityLevel": 2,
+            "AttrMaxHpAdd": 3600,
+            "AttrMaxMpAdd": 2000,
+            "AttrAttackAdd": 80,
+            "AttrDefenseAdd": 75,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 10000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": -5000,
+            "AttrMpRecAllAdd": -5000,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "8002": {
+            "Id": 8002,
+            "Desc": "邪恶守卫",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 4000,
+            "AttrMaxMpAdd": 2000,
+            "AttrAttackAdd": 120,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 10000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": -5000,
+            "AttrMpRecAllAdd": -5000,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "9001": {
+            "Id": 9001,
+            "Desc": "Boss",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 50000,
+            "AttrMaxMpAdd": 20000,
+            "AttrAttackAdd": 300,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 10000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "90011": {
+            "Id": 90011,
+            "Desc": "墓碑",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 1,
+            "AttrMaxMpAdd": 2000,
+            "AttrAttackAdd": 0,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 10000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "9502": {
+            "Id": 9502,
+            "Desc": "精英怪",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 7500,
+            "AttrMaxMpAdd": 2000,
+            "AttrAttackAdd": 200,
+            "AttrDefenseAdd": 30,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 10000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": -5000,
+            "AttrMpRecAllAdd": -10000,
+            "AttrMpRecAllPer": -10000,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "8005": {
+            "Id": 8005,
+            "Desc": "城门",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 15000,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 0,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 0,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "8006": {
+            "Id": 8006,
+            "Desc": "投石车",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 2000,
+            "AttrMaxMpAdd": 0,
+            "AttrAttackAdd": 100,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 10000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": -5000,
+            "AttrMpRecAllAdd": -10000,
+            "AttrMpRecAllPer": -10000,
+            "AttrMpRecKilledAdd": 0,
+            "AttrMpRecBehitPer": 0
+        },
+        "8888": {
+            "Id": 8888,
+            "Desc": "肉鸽仙人",
+            "AttrEntityLevel": 1,
+            "AttrMaxHpAdd": 1500,
+            "AttrMaxMpAdd": 6000,
+            "AttrAttackAdd": 300,
+            "AttrDefenseAdd": 50,
+            "AttrRotSpeedPCTAdd": -1,
+            "AttrMoveSpeedPCTAdd": 10000,
+            "AttrIgnoreDefenseAdd": 0,
+            "AttrIgnoreDefensePCTAdd": 0,
+            "AttrCritAdd": 0,
+            "AttrCritDamageAdd": 0,
+            "AttrHealIntensityAdd": 0,
+            "AttrHealAdd": 0,
+            "AttrHealedAdd": 0,
+            "AttrAttackSpeedPCTAdd": 0,
+            "AttrElementPenPCTAdd": 0,
+            "AttrElementRedPCTAdd": 0,
+            "AttrElementPhysicalPenPCTAdd": 0,
+            "AttrElementPhysicalRedPCTAdd": 0,
+            "AttrElementMagicPenPCTAdd": 0,
+            "AttrElementMagicRedPCTAdd": 0,
+            "AttrDmgAAdd": 0,
+            "AttrDmgRedAdd": 0,
+            "AttrSkillCDPCTAdd": 0,
+            "AttrMpRecAllAdd": 0,
+            "AttrMpRecAllPer": 0,
+            "AttrMpRecKilledAdd": -390,
+            "AttrMpRecBehitPer": -8000
+        }
+    },
+    "ModelTable": {
+        "1": {
+            "Id": 1,
+            "Desc": "世界节点",
+            "UOProxyType": "TransformProxy",
+            "ProxyLayer": "SceneUnit",
+            "ResReplTplId": 0,
+            "ModelScale": 1.0,
+            "P1": 0,
+            "P2": 0,
+            "P3": 0,
+            "ColliderCenter": []
+        },
+        "2": {
+            "Id": 2,
+            "Desc": "测试单位",
+            "UOProxyType": "ActorProxy",
+            "ProxyLayer": "Character",
+            "ResReplTplId": 1001,
+            "ModelScale": 1.0,
+            "P1": 0,
+            "P2": 0,
+            "P3": 0,
+            "ColliderCenter": []
+        },
+        "3": {
+            "Id": 3,
+            "Desc": "测试子弹",
+            "UOProxyType": "TransformProxy",
+            "ProxyLayer": "SceneUnit",
+            "ResReplTplId": 0,
+            "ModelScale": 0,
+            "P1": 0,
+            "P2": 0,
+            "P3": 0,
+            "ColliderCenter": []
+        },
+        "100": {
+            "Id": 100,
+            "Desc": "坦克",
+            "UOProxyType": "ActorProxy",
+            "ProxyLayer": "Character",
+            "ResReplTplId": 100,
+            "ModelScale": 1.0,
+            "P1": 0,
+            "P2": 0,
+            "P3": 0,
+            "ColliderCenter": []
+        }
+    },
+    "MonsterGenerateTmpTable": {
+        "1": {
+            "Id": 1,
+            "Desc": "6弓兵+骑兵",
+            "MonsterBehave": 0,
+            "DelayTime": 1.0,
+            "Interval": 0.5,
+            "MaxCreationOnce": 3,
+            "MonsterInfos": [
+                [
+                    3001,
+                    6
+                ],
+                [
+                    3010,
+                    3
+                ],
+                [
+                    3021,
+                    3
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 100,
+            "ExTags": []
+        },
+        "2": {
+            "Id": 2,
+            "Desc": "",
+            "MonsterBehave": 0,
+            "DelayTime": 1.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 10,
+            "MonsterInfos": [
+                [
+                    22,
+                    5
+                ],
+                [
+                    1,
+                    5
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "3": {
+            "Id": 3,
+            "Desc": "",
+            "MonsterBehave": 0,
+            "DelayTime": 1.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 1,
+            "MonsterInfos": [
+                [
+                    9001,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "4": {
+            "Id": 4,
+            "Desc": "",
+            "MonsterBehave": 0,
+            "DelayTime": 1.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 1,
+            "MonsterInfos": [
+                [
+                    8001,
+                    1
+                ],
+                [
+                    8002,
+                    1
+                ],
+                [
+                    3001,
+                    6
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10101": {
+            "Id": 10101,
+            "Desc": "1级的【3弓兵+4骑兵】",
+            "MonsterBehave": 0,
+            "DelayTime": 1.0,
+            "Interval": 0.5,
+            "MaxCreationOnce": 10,
+            "MonsterInfos": [
+                [
+                    3001,
+                    3
+                ],
+                [
+                    3010,
+                    4
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 100,
+            "ExTags": []
+        },
+        "10102": {
+            "Id": 10102,
+            "Desc": "7级的【2牧师+2剑兵】",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 5,
+            "MonsterInfos": [
+                [
+                    3121,
+                    4
+                ],
+                [
+                    3125,
+                    4
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10202": {
+            "Id": 10202,
+            "Desc": "Atk",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.5,
+            "MaxCreationOnce": 10,
+            "MonsterInfos": [
+                [
+                    3001,
+                    3
+                ],
+                [
+                    3010,
+                    3
+                ],
+                [
+                    3024,
+                    2
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10203": {
+            "Id": 10203,
+            "Desc": "Atk",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.5,
+            "MaxCreationOnce": 10,
+            "MonsterInfos": [
+                [
+                    3101,
+                    2
+                ],
+                [
+                    3110,
+                    3
+                ],
+                [
+                    3121,
+                    1
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10204": {
+            "Id": 10204,
+            "Desc": "Atk",
+            "MonsterBehave": 0,
+            "DelayTime": 40.0,
+            "Interval": 10.0,
+            "MaxCreationOnce": 4,
+            "MonsterInfos": [
+                [
+                    8001,
+                    1
+                ],
+                [
+                    3110,
+                    3
+                ],
+                [
+                    3101,
+                    4
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10205": {
+            "Id": 10205,
+            "Desc": "Def",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.5,
+            "MaxCreationOnce": 10,
+            "MonsterInfos": [
+                [
+                    3121,
+                    5
+                ],
+                [
+                    3125,
+                    5
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10211": {
+            "Id": 10211,
+            "Desc": "Def",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 30.0,
+            "MaxCreationOnce": 7,
+            "MonsterInfos": [
+                [
+                    3101,
+                    2
+                ],
+                [
+                    3110,
+                    3
+                ],
+                [
+                    3101,
+                    2
+                ],
+                [
+                    3110,
+                    3
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10212": {
+            "Id": 10212,
+            "Desc": "Def",
+            "MonsterBehave": 0,
+            "DelayTime": 15.0,
+            "Interval": 30.0,
+            "MaxCreationOnce": 7,
+            "MonsterInfos": [
+                [
+                    3101,
+                    3
+                ],
+                [
+                    3110,
+                    4
+                ],
+                [
+                    3101,
+                    3
+                ],
+                [
+                    3110,
+                    4
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10213": {
+            "Id": 10213,
+            "Desc": "Def",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 3,
+            "MonsterInfos": [
+                [
+                    8001,
+                    1
+                ],
+                [
+                    8002,
+                    1
+                ],
+                [
+                    3001,
+                    6
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10301": {
+            "Id": 10301,
+            "Desc": "",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 30.0,
+            "MaxCreationOnce": 3,
+            "MonsterInfos": [
+                [
+                    8001,
+                    1
+                ],
+                [
+                    8002,
+                    1
+                ],
+                [
+                    8003,
+                    1
+                ],
+                [
+                    8001,
+                    1
+                ],
+                [
+                    3110,
+                    1
+                ],
+                [
+                    8003,
+                    1
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10302": {
+            "Id": 10302,
+            "Desc": "",
+            "MonsterBehave": 0,
+            "DelayTime": 45.0,
+            "Interval": 5.0,
+            "MaxCreationOnce": 3,
+            "MonsterInfos": [
+                [
+                    3110,
+                    3
+                ],
+                [
+                    3101,
+                    3
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10303": {
+            "Id": 10303,
+            "Desc": "",
+            "MonsterBehave": 0,
+            "DelayTime": 15.0,
+            "Interval": 10.0,
+            "MaxCreationOnce": 5,
+            "MonsterInfos": [
+                [
+                    8001,
+                    1
+                ],
+                [
+                    8002,
+                    1
+                ],
+                [
+                    8003,
+                    1
+                ],
+                [
+                    3125,
+                    4
+                ],
+                [
+                    8001,
+                    1
+                ],
+                [
+                    8003,
+                    1
+                ],
+                [
+                    3121,
+                    4
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10401": {
+            "Id": 10401,
+            "Desc": "战役关小怪-剑兵",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 5,
+            "MonsterInfos": [
+                [
+                    3025,
+                    5
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 3,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10402": {
+            "Id": 10402,
+            "Desc": "战役关小怪-弓兵",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 3,
+            "MonsterInfos": [
+                [
+                    3001,
+                    3
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 3,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10403": {
+            "Id": 10403,
+            "Desc": "战役关小怪-骑兵",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 4,
+            "MonsterInfos": [
+                [
+                    3010,
+                    4
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 3,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10404": {
+            "Id": 10404,
+            "Desc": "战役关小怪-关底",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 3,
+            "MonsterInfos": [
+                [
+                    8001,
+                    1
+                ],
+                [
+                    8002,
+                    1
+                ],
+                [
+                    8003,
+                    1
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 3,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10405": {
+            "Id": 10405,
+            "Desc": "战役关小怪-佣兵",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 2,
+            "MonsterInfos": [
+                [
+                    20001,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 2,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10406": {
+            "Id": 10406,
+            "Desc": "战役关小怪-车子",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 1,
+            "MonsterInfos": [
+                [
+                    8006,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 2,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "10407": {
+            "Id": 10407,
+            "Desc": "战役关小怪-打车",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 8.0,
+            "MaxCreationOnce": 5,
+            "MonsterInfos": [
+                [
+                    3025,
+                    3
+                ],
+                [
+                    3001,
+                    2
+                ],
+                [
+                    3025,
+                    3
+                ],
+                [
+                    3001,
+                    2
+                ],
+                [
+                    3025,
+                    3
+                ],
+                [
+                    3001,
+                    2
+                ],
+                [
+                    8003,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "11001": {
+            "Id": 11001,
+            "Desc": "塔防关",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 4.0,
+            "MaxCreationOnce": 3,
+            "MonsterInfos": [
+                [
+                    3001,
+                    4
+                ],
+                [
+                    3010,
+                    4
+                ],
+                [
+                    3001,
+                    4
+                ],
+                [
+                    8002,
+                    1
+                ],
+                [
+                    3024,
+                    4
+                ],
+                [
+                    3001,
+                    4
+                ],
+                [
+                    3025,
+                    4
+                ],
+                [
+                    3001,
+                    4
+                ],
+                [
+                    3010,
+                    4
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "11002": {
+            "Id": 11002,
+            "Desc": "塔防关",
+            "MonsterBehave": 0,
+            "DelayTime": 45.0,
+            "Interval": 5.0,
+            "MaxCreationOnce": 3,
+            "MonsterInfos": [
+                [
+                    3001,
+                    4
+                ],
+                [
+                    3010,
+                    4
+                ],
+                [
+                    3024,
+                    4
+                ],
+                [
+                    3025,
+                    4
+                ],
+                [
+                    8002,
+                    1
+                ],
+                [
+                    8001,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "90100": {
+            "Id": 90100,
+            "Desc": "战争A：20剑兵",
+            "MonsterBehave": 0,
+            "DelayTime": 0,
+            "Interval": 0,
+            "MaxCreationOnce": 0,
+            "MonsterInfos": [],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "90110": {
+            "Id": 90110,
+            "Desc": "战争A：BOSS1+BOSS2+BOSS3",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 3,
+            "MonsterInfos": [
+                [
+                    9501,
+                    1
+                ],
+                [
+                    9502,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 100,
+            "ExTags": []
+        },
+        "90112": {
+            "Id": 90112,
+            "Desc": "战争A：BOSS2",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 0,
+            "MonsterInfos": [],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "90113": {
+            "Id": 90113,
+            "Desc": "战争A：BOSS3",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 0,
+            "MonsterInfos": [],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "90010": {
+            "Id": 90010,
+            "Desc": "战争B：BOSS",
+            "MonsterBehave": 0,
+            "DelayTime": 3.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 1,
+            "MonsterInfos": [
+                [
+                    9001,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [
+                [
+                    9001002,
+                    1
+                ]
+            ],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "90011": {
+            "Id": 90011,
+            "Desc": "左墓碑",
+            "MonsterBehave": 0,
+            "DelayTime": 15.0,
+            "Interval": 60.0,
+            "MaxCreationOnce": 1,
+            "MonsterInfos": [
+                [
+                    90011,
+                    3
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "90012": {
+            "Id": 90012,
+            "Desc": "右墓碑",
+            "MonsterBehave": 0,
+            "DelayTime": 45.0,
+            "Interval": 60.0,
+            "MaxCreationOnce": 1,
+            "MonsterInfos": [
+                [
+                    90011,
+                    3
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "90013": {
+            "Id": 90013,
+            "Desc": "精英怪",
+            "MonsterBehave": 0,
+            "DelayTime": 30.0,
+            "Interval": 60.0,
+            "MaxCreationOnce": 1,
+            "MonsterInfos": [
+                [
+                    9502,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "100000": {
+            "Id": 100000,
+            "Desc": "肉鸽天团",
+            "MonsterBehave": 1,
+            "DelayTime": 0.0,
+            "Interval": 5.0,
+            "MaxCreationOnce": 10,
+            "MonsterInfos": [
+                [
+                    3010,
+                    10000
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [
+                [
+                    999101,
+                    1
+                ]
+            ],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "100001": {
+            "Id": 100001,
+            "Desc": "肉鸽远程",
+            "MonsterBehave": 1,
+            "DelayTime": 45.0,
+            "Interval": 20.0,
+            "MaxCreationOnce": 5,
+            "MonsterInfos": [
+                [
+                    3001,
+                    10000
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [
+                [
+                    999101,
+                    1
+                ]
+            ],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "100002": {
+            "Id": 100002,
+            "Desc": "肉鸽精英",
+            "MonsterBehave": 1,
+            "DelayTime": 60.0,
+            "Interval": 60.0,
+            "MaxCreationOnce": 1,
+            "MonsterInfos": [
+                [
+                    9502,
+                    10000
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    9001203,
+                    1
+                ]
+            ],
+            "ExSkills": [
+                [
+                    999101,
+                    1
+                ]
+            ],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "100003": {
+            "Id": 100003,
+            "Desc": "肉鸽BOSS",
+            "MonsterBehave": 1,
+            "DelayTime": 200.0,
+            "Interval": 60.0,
+            "MaxCreationOnce": 2,
+            "MonsterInfos": [
+                [
+                    9001,
+                    1
+                ],
+                [
+                    9502,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [
+                [
+                    999101,
+                    1
+                ]
+            ],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": [
+                100003
+            ]
+        },
+        "100004": {
+            "Id": 100004,
+            "Desc": "肉鸽杂兵",
+            "MonsterBehave": 1,
+            "DelayTime": 0.0,
+            "Interval": 5.0,
+            "MaxCreationOnce": 15,
+            "MonsterInfos": [
+                [
+                    3010,
+                    15
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [
+                [
+                    999101,
+                    1
+                ]
+            ],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "100005": {
+            "Id": 100005,
+            "Desc": "肉鸽远程",
+            "MonsterBehave": 1,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 10,
+            "MonsterInfos": [
+                [
+                    3001,
+                    10
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [
+                [
+                    999101,
+                    1
+                ]
+            ],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "100006": {
+            "Id": 100006,
+            "Desc": "肉鸽精英",
+            "MonsterBehave": 1,
+            "DelayTime": 0.0,
+            "Interval": 0.0,
+            "MaxCreationOnce": 1,
+            "MonsterInfos": [
+                [
+                    8002,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [
+                [
+                    999101,
+                    1
+                ]
+            ],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "91201": {
+            "Id": 91201,
+            "Desc": "剿匪2",
+            "MonsterBehave": 0,
+            "DelayTime": 0.5,
+            "Interval": 10.0,
+            "MaxCreationOnce": 7,
+            "MonsterInfos": [
+                [
+                    3001,
+                    3
+                ],
+                [
+                    3010,
+                    4
+                ],
+                [
+                    3001,
+                    3
+                ],
+                [
+                    3010,
+                    4
+                ]
+            ],
+            "ExBuffs": [
+                [
+                    110,
+                    1
+                ]
+            ],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "91301": {
+            "Id": 91301,
+            "Desc": "打敌人营地",
+            "MonsterBehave": 0,
+            "DelayTime": 30.0,
+            "Interval": 15.0,
+            "MaxCreationOnce": 3,
+            "MonsterInfos": [
+                [
+                    8001,
+                    1
+                ],
+                [
+                    3125,
+                    1
+                ],
+                [
+                    3121,
+                    1
+                ],
+                [
+                    8001,
+                    1
+                ],
+                [
+                    3125,
+                    1
+                ],
+                [
+                    3121,
+                    1
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        },
+        "91101": {
+            "Id": 91101,
+            "Desc": "刷野猪",
+            "MonsterBehave": 0,
+            "DelayTime": 0.0,
+            "Interval": 10.0,
+            "MaxCreationOnce": 6,
+            "MonsterInfos": [
+                [
+                    91101,
+                    18
+                ]
+            ],
+            "ExBuffs": [],
+            "ExSkills": [],
+            "FactionId": 0,
+            "LevelOverride": 0,
+            "ExTags": []
+        }
+    },
+    "TagTable": {
+        "1": {
+            "Id": 1,
+            "TagName": "战斗单位",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 0
+        },
+        "10": {
+            "Id": 10,
+            "TagName": "敌人类型",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 0
+        },
+        "11": {
+            "Id": 11,
+            "TagName": "玩家角色",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1
+        },
+        "12": {
+            "Id": 12,
+            "TagName": "部队单位",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1
+        },
+        "13": {
+            "Id": 13,
+            "TagName": "战斗建筑",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1
+        },
+        "60": {
+            "Id": 60,
+            "TagName": "普通怪物",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 10
+        },
+        "61": {
+            "Id": 61,
+            "TagName": "精英怪物",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 10
+        },
+        "62": {
+            "Id": 62,
+            "TagName": "Boss",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 61
+        },
+        "63": {
+            "Id": 63,
+            "TagName": "世界BOSS",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 62
+        },
+        "64": {
+            "Id": 64,
+            "TagName": "活动BOSS",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 62
+        },
+        "65": {
+            "Id": 65,
+            "TagName": "暗夜君王",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 62
+        },
+        "66": {
+            "Id": 66,
+            "TagName": "霸主",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 62
+        },
+        "70": {
+            "Id": 70,
+            "TagName": "种族",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 0
+        },
+        "71": {
+            "Id": 71,
+            "TagName": "人",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 70
+        },
+        "72": {
+            "Id": 72,
+            "TagName": "史莱姆",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 70
+        },
+        "73": {
+            "Id": 73,
+            "TagName": "狗头人",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 70
+        },
+        "74": {
+            "Id": 74,
+            "TagName": "牛头人",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 70
+        },
+        "80": {
+            "Id": 80,
+            "TagName": "机械",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 70
+        },
+        "81": {
+            "Id": 81,
+            "TagName": "坦克",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 80
+        },
+        "82": {
+            "Id": 82,
+            "TagName": "装甲车",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 80
+        },
+        "90": {
+            "Id": 90,
+            "TagName": "性别",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 0
+        },
+        "91": {
+            "Id": 91,
+            "TagName": "无性",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 90
+        },
+        "92": {
+            "Id": 92,
+            "TagName": "男性",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 90
+        },
+        "93": {
+            "Id": 93,
+            "TagName": "女性",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 90
+        },
+        "95": {
+            "Id": 95,
+            "TagName": "造物属性",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 0
+        },
+        "96": {
+            "Id": 96,
+            "TagName": "召唤物",
+            "TagString": "单位，该单位是召唤物",
+            "TagType": 1,
+            "ParentTag": 95
+        },
+        "97": {
+            "Id": 97,
+            "TagName": "虚拟体",
+            "TagString": "单位，该单位是虚拟体",
+            "TagType": 1,
+            "ParentTag": 95
+        },
+        "1000": {
+            "Id": 1000,
+            "TagName": "技能BDTag",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 0
+        },
+        "1001": {
+            "Id": 1001,
+            "TagName": "战斗技能",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1000
+        },
+        "1002": {
+            "Id": 1002,
+            "TagName": "基础技能",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1001
+        },
+        "1003": {
+            "Id": 1003,
+            "TagName": "核心技能",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1001
+        },
+        "1004": {
+            "Id": 1004,
+            "TagName": "次要技能",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1001
+        },
+        "1005": {
+            "Id": 1005,
+            "TagName": "被动技能",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1001
+        },
+        "1006": {
+            "Id": 1006,
+            "TagName": "终级技能",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1001
+        },
+        "1007": {
+            "Id": 1007,
+            "TagName": "自选技能",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1001
+        },
+        "1008": {
+            "Id": 1008,
+            "TagName": "占位",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1001
+        },
+        "1009": {
+            "Id": 1009,
+            "TagName": "占位",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1001
+        },
+        "1010": {
+            "Id": 1010,
+            "TagName": "攻击技能",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1000
+        },
+        "1011": {
+            "Id": 1011,
+            "TagName": "近战攻击技能",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1010
+        },
+        "101101": {
+            "Id": 101101,
+            "TagName": "斩击",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1011
+        },
+        "101102": {
+            "Id": 101102,
+            "TagName": "打击",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1011
+        },
+        "101103": {
+            "Id": 101103,
+            "TagName": "突刺",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1011
+        },
+        "1012": {
+            "Id": 1012,
+            "TagName": "远程攻击技能",
+            "TagString": "",
+            "TagType": 2,
+            "ParentTag": 1010
+        },
+        "101201": {
+            "Id": 101201,
+            "TagName": "投射物",
+            "TagString": "投射物技能，各种抛物线之类的",
+            "TagType": 2,
+            "ParentTag": 1012
+        },
+        "101202": {
+            "Id": 101202,
+            "TagName": "弹药型",
+            "TagString": "子类型，子弹、炮弹类技能",
+            "TagType": 2,
+            "ParentTag": 101201
+        },
+        "1020": {
+            "Id": 1020,
+            "TagName": "辅助技能",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1000
+        },
+        "1021": {
+            "Id": 1021,
+            "TagName": "治疗",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1020
+        },
+        "1022": {
+            "Id": 1022,
+            "TagName": "护盾",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1020
+        },
+        "1023": {
+            "Id": 1023,
+            "TagName": "净化",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1020
+        },
+        "1024": {
+            "Id": 1024,
+            "TagName": "增益技能",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1020
+        },
+        "1025": {
+            "Id": 1025,
+            "TagName": "减益技能",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1020
+        },
+        "1026": {
+            "Id": 1026,
+            "TagName": "强化",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1020
+        },
+        "1040": {
+            "Id": 1040,
+            "TagName": "释放方式",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1000
+        },
+        "1041": {
+            "Id": 1041,
+            "TagName": "蓄力",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1040
+        },
+        "1042": {
+            "Id": 1042,
+            "TagName": "充能",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1040
+        },
+        "1043": {
+            "Id": 1043,
+            "TagName": "引导",
+            "TagString": "角色一定时间内持续释放",
+            "TagType": 0,
+            "ParentTag": 1040
+        },
+        "1044": {
+            "Id": 1044,
+            "TagName": "触发式技能",
+            "TagString": "被动触发型的技能",
+            "TagType": 0,
+            "ParentTag": 1040
+        },
+        "1045": {
+            "Id": 1045,
+            "TagName": "直线技能",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1040
+        },
+        "1046": {
+            "Id": 1046,
+            "TagName": "方向技能",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1040
+        },
+        "1047": {
+            "Id": 1047,
+            "TagName": "位置技能",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1040
+        },
+        "1048": {
+            "Id": 1048,
+            "TagName": "目标技能",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1040
+        },
+        "1050": {
+            "Id": 1050,
+            "TagName": "其他",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1000
+        },
+        "1051": {
+            "Id": 1051,
+            "TagName": "机动",
+            "TagString": "快速移动一段距离或跨越空间",
+            "TagType": 0,
+            "ParentTag": 1050
+        },
+        "1052": {
+            "Id": 1052,
+            "TagName": "召唤",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1050
+        },
+        "1053": {
+            "Id": 1053,
+            "TagName": "造物",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1050
+        },
+        "1054": {
+            "Id": 1054,
+            "TagName": "陷阱",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1053
+        },
+        "1055": {
+            "Id": 1055,
+            "TagName": "图腾",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1053
+        },
+        "1056": {
+            "Id": 1056,
+            "TagName": "侍从",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1050
+        },
+        "1057": {
+            "Id": 1057,
+            "TagName": "印记",
+            "TagString": "为目标施加强力效果，并且有特殊标记作用用来判定",
+            "TagType": 0,
+            "ParentTag": 1050
+        },
+        "1058": {
+            "Id": 1058,
+            "TagName": "变形",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1050
+        },
+        "1059": {
+            "Id": 1059,
+            "TagName": "免疫",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1050
+        },
+        "1060": {
+            "Id": 1060,
+            "TagName": "范围",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1050
+        },
+        "1061": {
+            "Id": 1061,
+            "TagName": "光环",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1050
+        },
+        "1062": {
+            "Id": 1062,
+            "TagName": "压制",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1050
+        },
+        "1100": {
+            "Id": 1100,
+            "TagName": "技能属性",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 1000
+        },
+        "1101": {
+            "Id": 1101,
+            "TagName": "力量",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1100
+        },
+        "1102": {
+            "Id": 1102,
+            "TagName": "敏捷",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1100
+        },
+        "1103": {
+            "Id": 1103,
+            "TagName": "智力",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1100
+        },
+        "1104": {
+            "Id": 1104,
+            "TagName": "占位",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1100
+        },
+        "1105": {
+            "Id": 1105,
+            "TagName": "占位",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1100
+        },
+        "1150": {
+            "Id": 1150,
+            "TagName": "元素力",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1000
+        },
+        "1151": {
+            "Id": 1151,
+            "TagName": "物理",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1150
+        },
+        "1152": {
+            "Id": 1152,
+            "TagName": "元素力",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1150
+        },
+        "1153": {
+            "Id": 1153,
+            "TagName": "水",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1151
+        },
+        "1154": {
+            "Id": 1154,
+            "TagName": "火",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1151
+        },
+        "1155": {
+            "Id": 1155,
+            "TagName": "风",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1151
+        },
+        "1156": {
+            "Id": 1156,
+            "TagName": "土",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1151
+        },
+        "1157": {
+            "Id": 1157,
+            "TagName": "时",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1151
+        },
+        "1158": {
+            "Id": 1158,
+            "TagName": "空",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1151
+        },
+        "1159": {
+            "Id": 1159,
+            "TagName": "幻",
+            "TagString": "",
+            "TagType": 1,
+            "ParentTag": 1151
+        },
+        "2000": {
+            "Id": 2000,
+            "TagName": "效果",
+            "TagString": "各种效果的tag",
+            "TagType": 0,
+            "ParentTag": 0
+        },
+        "2001": {
+            "Id": 2001,
+            "TagName": "增益",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2000
+        },
+        "200101": {
+            "Id": 200101,
+            "TagName": "加速",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2001
+        },
+        "2002": {
+            "Id": 2002,
+            "TagName": "减益",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2000
+        },
+        "200201": {
+            "Id": 200201,
+            "TagName": "减速",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2002
+        },
+        "200202": {
+            "Id": 200202,
+            "TagName": "流血",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2002
+        },
+        "200203": {
+            "Id": 200203,
+            "TagName": "燃烧",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2002
+        },
+        "200204": {
+            "Id": 200204,
+            "TagName": "感电",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2002
+        },
+        "2003": {
+            "Id": 2003,
+            "TagName": "一般异常",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2000
+        },
+        "200301": {
+            "Id": 200301,
+            "TagName": "沉默",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2003
+        },
+        "200302": {
+            "Id": 200302,
+            "TagName": "眩晕",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2003
+        },
+        "2004": {
+            "Id": 2004,
+            "TagName": "元素异常",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2000
+        },
+        "200401": {
+            "Id": 200401,
+            "TagName": "时属性异常",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2004
+        },
+        "200402": {
+            "Id": 200402,
+            "TagName": "空属性异常",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2004
+        },
+        "200403": {
+            "Id": 200403,
+            "TagName": "幻属性异常",
+            "TagString": "",
+            "TagType": 0,
+            "ParentTag": 2004
+        }
+    }
+}

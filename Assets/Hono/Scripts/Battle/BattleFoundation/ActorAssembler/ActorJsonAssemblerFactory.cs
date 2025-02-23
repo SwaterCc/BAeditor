@@ -32,11 +32,16 @@ namespace Hono.Scripts.Battle
         public override async UniTask AsyncLoad()
         {
             var jsons = await Addressables.LoadAssetsAsync<TextAsset>("aJson").ToUniTask();
-            foreach (var textAsset in jsons) {
-	           var info = ActorAssembleInfo.Parser.Parse(textAsset.text);
-	           if (info != null) {
-		           _actorAssembleInfos.Add(info.JsonName, info);
-	           }
+            
+            foreach (var jsonTextAsset in jsons)
+            {
+                foreach (var jProperty in JObject.Parse(jsonTextAsset.text).Properties())
+                {
+                    var info = ActorAssembleInfo.Parser.Parse(jProperty);
+                    if (info != null) {
+                        _actorAssembleInfos.Add(info.JsonName, info);
+                    }
+                }
             }
         }
         

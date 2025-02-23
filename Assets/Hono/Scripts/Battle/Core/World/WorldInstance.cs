@@ -113,7 +113,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 数据配置
         /// </summary>
-        private readonly BattleSceneTable.BattleSceneRow _sceneRow;
+        private readonly BattleSceneTableRow _sceneRow;
 
         /// <summary>
         /// 正在运行的Unit列表
@@ -169,7 +169,7 @@ namespace Hono.Scripts.Battle.Core
             register(MessageManager.Instance);
             register(VFXManager.Instance);
 
-            _sceneRow = ConfigDataBase.Table<BattleSceneTable>().Get(sceneTableId);
+            _sceneRow = ConfigDataBase.Table<BattleSceneTable>().GetRow(sceneTableId);
 
             _worldStates = new Dictionary<EWorldState, WorldState>()
             {

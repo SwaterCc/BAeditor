@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle {
 		/// <summary>
 		/// model表数据
 		/// </summary>
-		private ModelTable.ModelRow _modelRow;
+		private ModelTableRow _modelRow;
 
 		/// <summary>
 		/// 绑定Unit
@@ -60,7 +60,7 @@ namespace Hono.Scripts.Battle {
 		public void BindUnit(Unit unit) {
 			Unit = unit;
 			int modelId = Unit.GetAttr(EAttrType.AttrModelId);
-			if (!ConfigDataBase.Table<ModelTable>().TryGet(modelId, out _modelRow)) {
+			if (!ConfigDataBase.Table<ModelTable>().TryGetRow(modelId, out _modelRow)) {
 				throw new Exception("找不到Model配置");
 			}
 		}

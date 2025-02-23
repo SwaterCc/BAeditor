@@ -16,8 +16,8 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// model表配置
         /// </summary>
-        private ModelTable.ModelRow _modelRow;
-        public ModelTable.ModelRow ModelRow => _modelRow;
+        private ModelTableRow _modelRow;
+        public ModelTableRow ModelRow => _modelRow;
 
         /// <summary>
         /// Actor新的流程，构造流程
@@ -30,7 +30,7 @@ namespace Hono.Scripts.Battle.Core
             Attrs.Init(assembleInfo.BaseAttrTableId);
            
             if (assembleInfo.ModelId > 0 &&
-                ConfigDataBase.Table<ModelTable>().TryGet(assembleInfo.ModelId, out _modelRow))
+                ConfigDataBase.Table<ModelTable>().TryGetRow(assembleInfo.ModelId, out _modelRow))
             {
                 SetAttr(EAttrType.AttrResReplTplBaseId, _modelRow.ResReplTplId);
                 SetAttr(EAttrType.AttrModelId,          assembleInfo.ModelId);
