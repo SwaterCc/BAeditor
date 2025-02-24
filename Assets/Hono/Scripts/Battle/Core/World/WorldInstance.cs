@@ -5,6 +5,7 @@ using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Profiling;
 using ListExtensions = Unity.Collections.ListExtensions;
 
 namespace Hono.Scripts.Battle.Core
@@ -113,7 +114,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 数据配置
         /// </summary>
-        private readonly BattleSceneTable.BattleSceneRow _sceneRow;
+        private readonly BattleSceneTableRow _sceneRow;
 
         /// <summary>
         /// 正在运行的Unit列表
@@ -133,7 +134,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 待删除列表
         /// </summary>
-        private readonly List<Unit> _removeList = new(16);
+        private readonly List<Unit> _removeList = new(100);
 
         /// <summary>
         /// 当前玩家控制的单位
@@ -169,7 +170,7 @@ namespace Hono.Scripts.Battle.Core
             register(MessageManager.Instance);
             register(VFXManager.Instance);
 
-            _sceneRow = ConfigDataBase.Table<BattleSceneTable>().Get(sceneTableId);
+            _sceneRow = ConfigDataBase.Table<BattleSceneTable>().GetRow(sceneTableId);
 
             _worldStates = new Dictionary<EWorldState, WorldState>()
             {
@@ -280,7 +281,7 @@ namespace Hono.Scripts.Battle.Core
             }
 
             _loadingFinishList.Clear();
-
+           
             i = 0;
             while (i < _runningActorList.Count)
             {

@@ -15,7 +15,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 模型路径
         /// </summary>
-        //[PrefabPath]
+        [PrefabPath]
         public string model;
  
         /// <summary>

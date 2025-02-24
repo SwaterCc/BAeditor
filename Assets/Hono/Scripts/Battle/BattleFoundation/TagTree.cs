@@ -72,7 +72,7 @@ namespace Hono.Scripts.Battle.BattleFoundation {
 
 		public void BuildTree() {
 			var tags = new List<Tag>();
-			foreach (var tagRow in ConfigDataBase.Table<TagTable>().GetTable().Values) {
+			foreach (var tagRow in ConfigDataBase.Table<TagTable>().GetAllRows()) {
 				tags.Add(new Tag(this) {
 					Id = tagRow.Id,
 					ParentTagId = tagRow.ParentTag,

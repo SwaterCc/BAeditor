@@ -8,6 +8,7 @@ using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Message;
 using Hono.Scripts.Battle.ObjectPool;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Hono.Scripts.Battle.Core {
 	/// <summary>
@@ -239,12 +240,12 @@ namespace Hono.Scripts.Battle.Core {
 				_firstTick = false;
 				return;
 			}
+          
 			UnitTransform.Calc();
 			BeforeTickCallBack?.Invoke(this, dt);
 			foreach (var component in _components) {
 				component.Value.Tick(dt);
 			}
-
 			_abilityDriver.Tick(dt);
 			_evtListenerCollection.Tick(dt);
 			_messageCollection.Tick(dt);

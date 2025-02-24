@@ -43,8 +43,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - aSerializableData
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c1105ce11baa1e746a0f1e9c6bf9317d
-    m_Address: Assets/BattleData/Json
+  - m_GUID: ad2078b1050bec5488196737b7ab79f9
+    m_Address: Assets/BattleData/Json/ActorAssemble
     m_ReadOnly: 0
     m_SerializedLabels:
     - aJson

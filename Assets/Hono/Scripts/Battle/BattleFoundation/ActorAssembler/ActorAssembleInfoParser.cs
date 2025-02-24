@@ -34,21 +34,19 @@ namespace Hono.Scripts.Battle.Core
             /// <summary>
             /// 解析 JSON 数据并生成 ActorAssembleInfo 对象
             /// </summary>
-            /// <param name="jsonContext">JSON 字符串</param>
+            /// <param name="aProperty">actor Json对象</param>
             /// <returns>解析后的 ActorAssembleInfo 对象</returns>
-            public static ActorAssembleInfo Parse(string jsonContext)
+            public static ActorAssembleInfo Parse(JProperty aProperty)
             {
-                var jsonObject = JObject.Parse(jsonContext);
-                string dynamicPropertyName = jsonObject.Properties().First().Name;
-                var actorData = jsonObject[dynamicPropertyName] as JObject;
+                var actorData = aProperty.Value as JObject; 
                 if (actorData == null)
                 {
-                    Debug.LogError("JSON格式错误：缺少'actor'节点");
+                    Debug.LogError("JSON格式错误");
                     return null;
                 }
 
                 var assembleInfo = new ActorAssembleInfo();
-                assembleInfo.JsonName = dynamicPropertyName;
+                assembleInfo.JsonName = aProperty.Name;
                 // 解析基础属性
                 assembleInfo.ActorType = ParseEnum<EActorType>(actorData["ActorType"]?.ToString());
                 assembleInfo.BaseAttrTableId = (int)(actorData["BaseAttrTableId"] ?? 0);

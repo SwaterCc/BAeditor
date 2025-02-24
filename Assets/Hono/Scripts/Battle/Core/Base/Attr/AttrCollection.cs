@@ -29,7 +29,7 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         public void Init(int attrTableConfigId)
         {
-            if (!ConfigDataBase.Table<EntityAttrBaseTable>().TryGet(attrTableConfigId, out var attrRow))
+            if (!ConfigDataBase.Table<EntityAttrBaseTable>().TryGetRow(attrTableConfigId, out var attrRow))
             {
                 Debug.LogError($"AttrTable找不到指定Id:{attrTableConfigId}");
                 return;
