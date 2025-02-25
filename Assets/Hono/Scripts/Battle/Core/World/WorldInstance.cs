@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Hono.Scripts.Battle.Core.Base;
+using Hono.Scripts.Battle.Core.DerivedLevel;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Hono.Scripts.Battle.Core
 {
@@ -62,6 +65,11 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         public readonly WorldQuery Query;
 
+        /// <summary>
+        /// 当前关卡
+        /// </summary>
+        public readonly Level Level;
+
         //世界的构成
         //静态网格地图数据（可行区域，地图网格对应坐标区域）
         //运行时动态网格数据（网格上的单位数据，寻路数据，单位坐标更新（最后帧））
@@ -78,67 +86,45 @@ namespace Hono.Scripts.Battle.Core
         /// Id生成器
         /// </summary>
         private readonly CommonUtility.IdGenerator _idGenerator = new();
-
-        /// <summary>
-        /// 当前世界流程
-        /// </summary>
-        private EWorldState _currentState;
-
-        /// <summary>
-        /// 下一个世界流程
-        /// </summary>
-        private EWorldState _nextState;
-
-        /// <summary>
-        /// 状态集合
-        /// </summary>
-        private readonly Dictionary<EWorldState, WorldState> _worldStates;
-
-        /// <summary>
-        /// 场景数据Id(场景id，静态地图网格)
-        /// </summary>
-        private int _worldSceneKey;
-
-        /// <summary>
-        /// 世界对象数据（触发器，场景对象，场景事件，场景流程）
-        /// </summary>
-        private int _worldInfoKey;
-
         /// <summary>
         /// 世界时间缩放系数
         /// </summary>
         private float _worldTimeScale;
-
         /// <summary>
         /// 数据配置
         /// </summary>
         private readonly BattleSceneTable.BattleSceneRow _sceneRow;
-
         /// <summary>
         /// 正在运行的Unit列表
         /// </summary>
         private readonly List<Unit> _runningActorList = new(2048);
-
         /// <summary>
         /// Actor待加载列表
         /// </summary>
         private readonly List<Unit> _loadingCaches = new(1024);
-
         /// <summary>
         /// 加载结束接口
         /// </summary>
         private readonly List<Unit> _loadingFinishList = new(1024);
-
         /// <summary>
         /// 待删除列表
         /// </summary>
         private readonly List<Unit> _removeList = new(16);
 
         /// <summary>
+        /// 异步加载场景
+        /// </summary>
+        private AsyncOperation _asyncOperation;
+        /// <summary>
+        /// 是否加载完成
+        /// </summary>
+        private bool _isLoadFinish;
+
+        /// <summary>
         /// 当前玩家控制的单位
         /// </summary>
         public Unit PlayerControlUnit { get; private set; }
-        
+
         /// <summary>
         /// 世界自运行后的持续时长
         /// </summary>
@@ -147,16 +133,15 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 一帧时长
         /// </summary>
-        public float OnceTickTime { 
-	        get;
-	        private set; }
+        public float OnceTickTime { get; private set; }
 
         /// <summary>
         /// 世界时间缩放值
         /// </summary>
-        public float WorldTimeScale {
-	        get => _worldTimeScale;
-	        set => _worldTimeScale = Mathf.Max(0, value);
+        public float WorldTimeScale
+        {
+            get => _worldTimeScale;
+            set => _worldTimeScale = Mathf.Max(0, value);
         }
 
         #region 周期
@@ -170,19 +155,26 @@ namespace Hono.Scripts.Battle.Core
 
             _sceneRow = ConfigDataBase.Table<BattleSceneTable>().Get(sceneTableId);
 
-            _worldStates = new Dictionary<EWorldState, WorldState>()
-            {
-                { EWorldState.Empty, new EmptyState(this) },
-                { EWorldState.Loading, new LoadingState(this) },
-                { EWorldState.Ready, new ReadyState(this) },
-                { EWorldState.Gaming, new GamingState(this) },
-                { EWorldState.StrategicMap, new StrategicMapState(this) },
-                { EWorldState.Score, new ScoreState(this) },
-            };
-
-            _currentState = _nextState = EWorldState.Empty;
+            WorldTimeScale = 1;
+            RealWorldTimeSinceStart = 0;
 
             Query = new WorldQuery(this);
+            switch ((ELevelType)_sceneRow.BattleType)
+            {
+                case ELevelType.Normal:
+                    Level = new NormalLevel();
+                    break;
+                case ELevelType.War:
+                    Level = new WarLevel();
+                    break;
+                default:
+#if UNITY_EDITOR
+                    Level = new DebugLevel();
+#else
+                    Level = new EmptyLevel();
+#endif
+                    break;
+            }
         }
 
         private void register(IWorldSystem system)
@@ -208,46 +200,82 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         public void Enter()
         {
+            //设置单例
+            World.SetWorld(this);
+
             //主动GC一下
             GC.Collect();
 
             //特定池创建指定数量缓存
-
-            //设置单例
-            World.SetWorld(this);
 
             foreach (var system in _mgrsEnter)
             {
                 system.OnWorldEnter(this);
             }
 
-            //进入加载状态
-            _nextState = EWorldState.Loading;
+            //进入场景
+            EnterScene();
+        }
 
-            WorldTimeScale = 1;
-            RealWorldTimeSinceStart = 0;
+        private async void EnterScene()
+        {
+            try
+            {
+                //进入加载场景
+                await SceneManager.LoadSceneAsync("BattleLoading");
+
+                //异步加载游戏场景
+                _asyncOperation = SceneManager.LoadSceneAsync(_sceneRow.ScenePath);
+                if (_asyncOperation == null)
+                    throw new NullReferenceException($"加载场景{_sceneRow.ScenePath}失败");
+                _asyncOperation.allowSceneActivation = false;
+
+                //等待直到场景加载基本完成
+                await UniTask.WaitUntil(
+                    () => Mathf.Approximately(0.9f, _asyncOperation.progress) && !_asyncOperation.isDone);
+
+                //进入场景
+                _asyncOperation.allowSceneActivation = true;
+
+                //加载主UICanvas
+                await UIManager.Instance.LoadMainCanvas();
+
+                //创建世界原点
+                WorldRoot = new WorldRoot();
+                WorldRoot.SetAttr(EAttrType.AttrModelId, 1);
+                await UnityAdapter.Instance.CreateUnityObjectProxy(WorldRoot);
+                addUnitToWorld(WorldRoot);
+
+                //关卡加载
+                await Level.Load();
+
+                _isLoadFinish = true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                BattleManager.Instance.ExitWorld();
+            }
         }
 
         /// <summary>
         /// Tick入口
         /// </summary>
         /// <param name="dt"></param>
-        public void Tick(float dt) {
-	        
-	        //更新一帧时长
-	        OnceTickTime = dt * _worldTimeScale;
-	        //更新世界时长
-	        RealWorldTimeSinceStart += OnceTickTime;
-	        
-            //世界更新
-            if (_currentState != _nextState)
+        public void Tick(float dt)
+        {
+            //更新一帧时长
+            OnceTickTime = dt * _worldTimeScale;
+            //更新世界时长
+            RealWorldTimeSinceStart += OnceTickTime;
+
+            if (!_isLoadFinish)
             {
-                _worldStates[_currentState].Exit();
-                _worldStates[_nextState].Enter(_currentState);
-                _currentState = _nextState;
+                return;
             }
 
-            _worldStates[_currentState]?.Tick(dt);
+            //关卡更新
+            Level.Tick();
 
             //系统更新
             foreach (var system in _mgrsTick)
@@ -255,6 +283,18 @@ namespace Hono.Scripts.Battle.Core
                 system.OnWorldTick(dt);
             }
 
+            //Unit更新
+            UnitsTick();
+
+            //Unit同步
+            UnityAdapter.Instance.SyncProxiesTransform();
+        }
+
+        /// <summary>
+        /// 单位更新
+        /// </summary>
+        private void UnitsTick()
+        {
             //单位更新
             int i = 0;
             while (i < _loadingCaches.Count)
@@ -284,24 +324,23 @@ namespace Hono.Scripts.Battle.Core
             while (i < _runningActorList.Count)
             {
                 Unit unit = _runningActorList[i++];
-                unit.Tick(dt);
+                unit.Tick(OnceTickTime);
             }
 
-            if (_removeList is { Count: > 0 }) {
-	            foreach (var unit in _removeList)
-	            {
-		            //回收
-		            unit.Recycle();
-		            //父类清理
-		            unit.BaseClear();
-		            //从运行队列删除
-		            _runningActorList.RemoveSwapBack(unit);
-	            }
+            if (_removeList is { Count: > 0 })
+            {
+                foreach (var unit in _removeList)
+                {
+                    //回收
+                    unit.Recycle();
+                    //父类清理
+                    unit.BaseClear();
+                    //从运行队列删除
+                    _runningActorList.RemoveSwapBack(unit);
+                }
 
-	            _removeList.Clear();
+                _removeList.Clear();
             }
-            
-            UnityAdapter.Instance.SyncProxiesTransform();
         }
 
         /// <summary>
@@ -359,7 +398,7 @@ namespace Hono.Scripts.Battle.Core
             {
                 throw new Exception("UID重复！！！！！");
             }
-            
+
             _runningActorList.Add(unit);
         }
 
@@ -576,7 +615,7 @@ namespace Hono.Scripts.Battle.Core
             //立刻从速查索引中移除
             Query.RemoveUnitLookup(unit);
             //从四叉树中叉出去
-            
+
             //立刻清理其身上的特效
             VFXSystem.Instance.RemoveUnitAllVFX(unit);
             //回收其坐标
@@ -619,22 +658,6 @@ namespace Hono.Scripts.Battle.Core
             PlayerControlUnit?.SetAttr(EAttrType.AttrIsPlayerCtrl, 0);
             unit.SetAttr(EAttrType.AttrIsPlayerCtrl, 1);
             PlayerControlUnit = unit;
-        }
-
-        public void OpenStrategicMap()
-        {
-            if (_currentState == EWorldState.Gaming && (EBattleModeType)_sceneRow.BattleType == EBattleModeType.War)
-            {
-                _nextState = EWorldState.StrategicMap;
-            }
-        }
-
-        public void CloseStrategicMap()
-        {
-            if (_currentState == EWorldState.StrategicMap)
-            {
-                _nextState = EWorldState.Gaming;
-            }
         }
     }
 

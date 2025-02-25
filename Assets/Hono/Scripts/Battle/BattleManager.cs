@@ -156,6 +156,9 @@ namespace Hono.Scripts.Battle
         {
             Debug.Log("[BattleManager] ExitBattle");
             _currentWorldInstance.Exit();
+            _currentWorldInstance = null;
+            //回到之前的场景中
+            SceneManager.LoadScene(_formScene);
         }
         #endregion
     }

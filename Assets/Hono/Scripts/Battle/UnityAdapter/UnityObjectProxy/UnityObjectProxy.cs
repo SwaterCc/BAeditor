@@ -164,7 +164,7 @@ namespace Hono.Scripts.Battle {
 			_vfxCache.Add(vfxInfo.Uid, new VFXGameObject() { VFXInfo = vfxInfo, GameObject = vfx });
 		}
 
-		public async void AddVFXToUnit(VFXInfo vfxInfo, string bindBond, bool notfollowParentRot) {
+		public async void AddVFXToUnit(VFXInfo vfxInfo, string bindBond, bool notFollowParentRot) {
 			if (string.IsNullOrEmpty(vfxInfo.Path)) {
 				return;
 			}
@@ -182,7 +182,7 @@ namespace Hono.Scripts.Battle {
 
 			if (vfx == null) return;
 
-			if (notfollowParentRot) {
+			if (notFollowParentRot) {
 				vfx.transform.rotation = vfxInfo.Rot;
 			}
 

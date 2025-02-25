@@ -100,11 +100,6 @@ namespace Hono.Scripts.Battle
 	            unitTransform.Pos = characterController.transform.localPosition;
                 return;
             }
-
-            if (rigidbody != null)
-            {
-                collider.transform.localPosition = unitTransform.Pos;
-            }
         }
     }
 }

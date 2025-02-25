@@ -177,8 +177,8 @@
     <Compile Include="Library\PackageCache\com.unity.purchasing\Runtime\Stores\Android\UDP\UDPImpl.cs" />
     <Compile Include="Library\PackageCache\com.unity.purchasing\Runtime\Stores\Android\GooglePlay\AAR\Interfaces\IGooglePurchaseBuilder.cs" />
     <Compile Include="Library\PackageCache\com.unity.purchasing\Runtime\Stores\Android\GooglePlay\AAR\Interfaces\IGoogleBillingClient.cs" />
-    <Compile Include="Library\PackageCache\com.unity.purchasing\Runtime\Stores\Android\GooglePlay\AAR\Interfaces\IProductDetailsResponseConsolidator.cs" />
     <Compile Include="Library\PackageCache\com.unity.purchasing\Runtime\Stores\Android\GooglePlay\AAR\Models\GoogleBillingConnectionState.cs" />
+    <Compile Include="Library\PackageCache\com.unity.purchasing\Runtime\Stores\Android\GooglePlay\AAR\Interfaces\IProductDetailsResponseConsolidator.cs" />
     <Compile Include="Library\PackageCache\com.unity.purchasing\Runtime\Stores\Android\AmazonAppStore\IAmazonConfiguration.cs" />
     <Compile Include="Library\PackageCache\com.unity.purchasing\Runtime\Stores\FakeStore\UIFakeStore.cs" />
     <Compile Include="Library\PackageCache\com.unity.purchasing\Runtime\Stores\Android\GooglePlay\Services\GooglePlayStorePurchaseService.cs" />

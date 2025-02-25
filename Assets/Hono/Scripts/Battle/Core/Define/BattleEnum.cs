@@ -41,8 +41,9 @@ namespace Hono.Scripts.Battle
     /// <summary>
     /// 战斗模式
     /// </summary>
-    public enum EBattleModeType
+    public enum ELevelType
     {
+        Debug = 0,
         Normal = 1,
         War = 2,
         Rogue = 3,
