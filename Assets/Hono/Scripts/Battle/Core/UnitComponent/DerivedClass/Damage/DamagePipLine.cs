@@ -14,7 +14,7 @@ namespace Hono.Scripts.Battle.Core
     public struct HitInfo
     {
         public Unit Attacker;
-        public DamageTableRow DamageRow;
+        public DamageTable.DamageRow DamageRow;
         public EDamageSourceType DamageSourceType;
         public int SourceAbilityId;
         public int HitCount;
@@ -90,7 +90,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 本次伤害配置
         /// </summary>
-        private DamageTableRow _damageRow;
+        private DamageTable.DamageRow _damageRow;
 
         /// <summary>
         /// 伤害结果
@@ -125,7 +125,7 @@ namespace Hono.Scripts.Battle.Core
 
             foreach (var addiId in _damageRow.AdditiveId)
             {
-                var damageAddi = ConfigDataBase.Table<DamageAdditiveTable>().GetRow(addiId);
+                var damageAddi = ConfigDataBase.Table<DamageAdditiveTable>().Get(addiId);
                 var funcInfo = GPool<DamageFuncInfo>.Pool.Rent();
                 funcInfo.ValueFuncName = damageAddi.ApplyFuncName;
                 funcInfo.ConditionIds = damageAddi.ConditionIds;
@@ -136,7 +136,7 @@ namespace Hono.Scripts.Battle.Core
 
             foreach (var multiId in _damageRow.MultiplyId)
             {
-                var damageMultiply = ConfigDataBase.Table<DamageMultiplyTable>().GetRow(multiId);
+                var damageMultiply = ConfigDataBase.Table<DamageMultiplyTable>().Get(multiId);
                 var funcInfo = GPool<DamageFuncInfo>.Pool.Rent();
                 funcInfo.ValueFuncName = damageMultiply.ApplyFuncName;
                 funcInfo.ConditionIds = damageMultiply.ConditionIds;

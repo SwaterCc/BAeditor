@@ -23,11 +23,15 @@ namespace Hono.Scripts.Battle.Core {
 		private EMoveControllerType _moveControllerType = EMoveControllerType.Human;
 		private MoveControllor _controllor;
 		private Dictionary<EMoveControllerType, MoveControllor> _moveControllors;
-		
-		public override void Init() {
+
+		public MoveComp() {
 			_moveControllors = new Dictionary<EMoveControllerType, MoveControllor>() {
 				{ EMoveControllerType.Human, new HumanMoveControllor(this) }, { EMoveControllerType.Building, new BuildingMoveControllor(this) },
 			};
+		}
+		
+		public override void Init() {
+			
 			_controllor = _moveControllors[_moveControllerType];
 			_controllor.Init();
 		}

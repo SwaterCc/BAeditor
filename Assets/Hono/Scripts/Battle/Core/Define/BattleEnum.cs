@@ -215,9 +215,17 @@ namespace Hono.Scripts.Battle
         Function,
         Variable,
         Attr,
-        ListenerInfo,
     }
 
+    /// <summary>
+    /// 位移类型
+    /// </summary>
+    public enum EMotionType {
+	    Liner,
+	    MoveToTarget,
+	    MoveToPosition,
+    }
+    
     /// <summary>
     /// Tag查询范围
     /// </summary>

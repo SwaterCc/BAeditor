@@ -1,0 +1,199 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+
+namespace Hono.Scripts.Battle
+{
+    public partial class ActorTable : ITableHelper
+    {
+        private readonly Dictionary<int, ActorRow> _tableData = new();
+
+        public bool LoadCSV(string csvFile)
+        {
+            try
+            {
+                using (StringReader  reader = new StringReader (csvFile))
+                {
+                    int lineCount = 0;
+                    while (reader.ReadLine() is { } line)
+                    {
+                        if (++lineCount <= 3)
+                        {
+                            continue;
+                        }
+                        var row = Activator.CreateInstance<ActorRow>();
+                        row.Parser.Parse(line);
+                        addRow(row.Id, row);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                return false;
+            }
+
+            return true;
+        }
+
+        public TableRow GetTableRow(int id)
+        {
+            if (TryGet(id, out var row))
+            {
+                return row;
+            }
+
+            return null;
+        }
+
+        private void addRow(int id, ActorRow row)
+        {
+            if (!_tableData.TryAdd(id, row))
+            {
+                Debug.LogError($"{typeof(ActorRow)} TryAdd {id} id重复");
+            }
+        }
+
+        public ActorRow Get(int id)
+        {
+            return _tableData[id];
+        }
+
+        public bool TryGet(int id, out ActorRow data)
+        {
+            return _tableData.TryGetValue(id, out data);
+        }
+
+         public Dictionary<int, ActorRow> GetTable()
+         {
+             return _tableData;
+         }
+    }
+
+    public partial class ActorTable
+    {
+        public class ActorRow : TableRow
+        {
+           
+            /// <summary>
+            /// 角色名字
+            /// </summary>
+            public string Name { get; private set; }
+            
+            /// <summary>
+            /// 描述
+            /// </summary>
+            public string Desc { get; private set; }
+            
+            /// <summary>
+            /// 角色逻辑原型
+            /// </summary>
+            public string PrototypeJsonName { get; private set; }
+            
+            /// <summary>
+            /// 模型表Id
+            /// </summary>
+            public int ModelId { get; private set; }
+            
+            /// <summary>
+            /// ActorType
+            /// </summary>
+            public int ActorType { get; private set; }
+            
+            /// <summary>
+            /// 角色头像
+            /// </summary>
+            public string RPGIcon { get; private set; }
+            
+            /// <summary>
+            /// 索敌半径
+            /// </summary>
+            public float SearchRadiu { get; private set; }
+            
+            /// <summary>
+            /// 初始阵营
+            /// </summary>
+            public int Faction { get; private set; }
+            
+            /// <summary>
+            /// 初始标签
+            /// </summary>
+            public IntArray TagList { get; private set; }
+            
+            /// <summary>
+            /// 初始化属性模板Id
+            /// </summary>
+            public int AttrTemplateId { get; private set; }
+            
+            /// <summary>
+            /// 拥有技能
+            /// </summary>
+            public IntTable OwnerSkills { get; private set; }
+            
+            /// <summary>
+            /// 拥有Buff
+            /// </summary>
+            public IntTable OwnerBuffs { get; private set; }
+            
+            /// <summary>
+            /// 拥有的其他Ability (id = 是否执行)
+            /// </summary>
+            public IntTable ownerOtherAbility { get; private set; }
+            
+            /// <summary>
+            /// 不吃位移控制
+            /// </summary>
+            public int IgnoreOtherMotion { get; private set; }
+            
+
+            public ActorRow()
+            {
+                Parser = new ActorRowCSVParser(this);
+            }
+
+            private class ActorRowCSVParser : CSVParser
+            {
+                private ActorRow _row;
+
+                public ActorRowCSVParser(ActorRow row) : base(row)
+                {
+                    _row = (ActorRow)base._row;
+                }
+
+                protected override void onParse(string[] line)
+                {
+                    
+                    _row.Name = parseString(line[1]);
+            
+                    _row.Desc = parseString(line[2]);
+            
+                    _row.PrototypeJsonName = parseString(line[3]);
+            
+                    _row.ModelId = parseInt(line[4]);
+            
+                    _row.ActorType = parseInt(line[5]);
+            
+                    _row.RPGIcon = parseString(line[6]);
+            
+                    _row.SearchRadiu = parseNumber(line[7]);
+            
+                    _row.Faction = parseInt(line[8]);
+            
+                    _row.TagList = parseIntArray(line[9]);
+            
+                    _row.AttrTemplateId = parseInt(line[10]);
+            
+                    _row.OwnerSkills = parseIntTable(line[11]);
+            
+                    _row.OwnerBuffs = parseIntTable(line[12]);
+            
+                    _row.ownerOtherAbility = parseIntTable(line[13]);
+            
+                    _row.IgnoreOtherMotion = parseInt(line[14]);
+            
+                }
+            }
+        }
+    }
+}

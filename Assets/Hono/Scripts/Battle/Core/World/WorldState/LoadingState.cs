@@ -24,8 +24,7 @@ namespace Hono.Scripts.Battle.Core
             /// <summary>
             /// 是否正在加载主ui
             /// </summary>
-            private bool _isDoLoadMainUINow;
-           
+            private  bool _isDoLoadMainUINow;
             
             private AsyncOperation _asyncOperation;
            

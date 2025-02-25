@@ -1,0 +1,244 @@
+﻿{
+  "actor":{
+    "ActorType":"Character",
+    "BaseAttrTableId":1,
+    "ModelId":2,
+    "Tags":[
+      101101,
+      222
+    ],
+    
+    "ComponentList":[
+      "HpComp",
+      "ElementComp",
+      "BuffComp",
+      "CombatComp",
+      "MoveComp",
+      "HateComp"
+    ],
+    
+    "ComponentCtor":{
+      "CombatComp":{
+        "SkillList":[1001,1002],
+        "CombatEnergyIds": [1]
+      }
+    },
+
+    "GrowCurves":[
+      {
+        "attrType": "AttrMaxHpTotal",
+        "growCurve": "GROW_CURVE_线性"
+      },
+      {
+        "attrType": "AttrAttackTotal",
+        "growCurve": "GROW_CURVE_边际效应递增"
+      },
+      {
+        "attrType": "AttrDefenseTotal",
+        "growCurve": "GROW_CURVE_边际效应递减"
+      }]
+  },
+  "chr_1001_lord":{
+    "ActorType":"Character",
+    "BaseAttrTableId":1,
+    "ModelId":1001,
+    "Tags":[
+      123,
+      222
+    ],
+    
+    "ComponentList":[
+      "HpComp",
+      "ElementComp",
+      "BuffComp",
+      "CombatComp",
+      "MoveComp"
+    ],
+    
+    "ComponentCtor":{
+      "CombatComp":{
+        "SkillList":[1001,1002],
+        "CombatEnergyIds": [1]
+      }
+    },
+
+    "GrowCurves":[
+      {
+      }
+    ]
+  },
+  "chr_1002_feiya":{
+    "ActorType":"Character",
+    "BaseAttrTableId":1,
+    "ModelId":1002,
+    "Tags":[
+      123,
+      222
+    ],
+    
+    "ComponentList":[
+      "HpComp",
+      "ElementComp",
+      "BuffComp",
+      "CombatComp",
+      "MoveComp"
+    ],
+    
+    "ComponentCtor":{
+      "CombatComp":{
+        "SkillList":[1001,1002],
+        "CombatEnergyIds": [1]
+      }
+    },
+
+    "GrowCurves":[
+      {
+      }
+    ]
+  },
+  "chr_1003_dragonSister":{
+    "ActorType":"Character",
+    "BaseAttrTableId":1,
+    "ModelId":1003,
+    "Tags":[
+      123,
+      222
+    ],
+    
+    "ComponentList":[
+      "HpComp",
+      "ElementComp",
+      "BuffComp",
+      "CombatComp",
+      "MoveComp"
+    ],
+    
+    "ComponentCtor":{
+      "CombatComp":{
+        "SkillList":[1001,1002],
+        "CombatEnergyIds": [1]
+      }
+    },
+
+    "GrowCurves":[
+      {
+      }
+    ]
+  },
+  "chr_1004_priestess":{
+    "ActorType":"Character",
+    "BaseAttrTableId":1,
+    "ModelId":1004,
+    "Tags":[
+      123,
+      222
+    ],
+    
+    "ComponentList":[
+      "HpComp",
+      "ElementComp",
+      "BuffComp",
+      "CombatComp",
+      "MoveComp"
+    ],
+    
+    "ComponentCtor":{
+      "CombatComp":{
+        "SkillList":[1001,1002],
+        "CombatEnergyIds": [1]
+      }
+    },
+
+    "GrowCurves":[
+      {
+      }
+    ]
+  },
+  "chr_1005_knight":{
+    "ActorType":"Character",
+    "BaseAttrTableId":1,
+    "ModelId":1005,
+    "Tags":[
+      123,
+      222
+    ],
+    
+    "ComponentList":[
+      "HpComp",
+      "ElementComp",
+      "BuffComp",
+      "CombatComp",
+      "MoveComp"
+    ],
+    
+    "ComponentCtor":{
+      "CombatComp":{
+        "SkillList":[1001,1002],
+        "CombatEnergyIds": [1]
+      }
+    },
+
+    "GrowCurves":[
+      {
+      }
+    ]
+  },
+  "chr_1006_maid":{
+    "ActorType":"Character",
+    "BaseAttrTableId":1,
+    "ModelId":1006,
+    "Tags":[
+      123,
+      222
+    ],
+    
+    "ComponentList":[
+      "HpComp",
+      "ElementComp",
+      "BuffComp",
+      "CombatComp",
+      "MoveComp"
+    ],
+    
+    "ComponentCtor":{
+      "CombatComp":{
+        "SkillList":[1001,1002],
+        "CombatEnergyIds": [1]
+      }
+    },
+
+    "GrowCurves":[
+      {
+      }
+    ]
+  },
+  "chr_1007_mage":{
+    "ActorType":"Character",
+    "BaseAttrTableId":1,
+    "ModelId":1007,
+    "Tags":[
+      123,
+      222
+    ],
+    
+    "ComponentList":[
+      "HpComp",
+      "ElementComp",
+      "BuffComp",
+      "CombatComp",
+      "MoveComp"
+    ],
+    
+    "ComponentCtor":{
+      "CombatComp":{
+        "SkillList":[1001,1002],
+        "CombatEnergyIds": [1]
+      }
+    },
+
+    "GrowCurves":[
+      {
+      }
+    ]
+  }
+}

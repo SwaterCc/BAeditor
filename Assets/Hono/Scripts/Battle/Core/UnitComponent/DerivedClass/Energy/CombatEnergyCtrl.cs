@@ -71,7 +71,7 @@ namespace Hono.Scripts.Battle.Core
             public void AddEnergyType(int energyTypeId)
             {
                 //读表设置初始值
-                if (!ConfigDataBase.Table<CombatEnergyTable>().TryGetRow(energyTypeId, out var energyRow))
+                if (!ConfigDataBase.Table<CombatEnergyTable>().TryGet(energyTypeId, out var energyRow))
                 {
                     Debug.LogError($"找不到对应的资源类型{energyTypeId}");
                     return;

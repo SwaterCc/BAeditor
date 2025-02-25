@@ -139,8 +139,7 @@ namespace Hono.Scripts.Battle.Core
                     return key;
                 }
 
-                throw new KeyNotFoundException(
-                    $"未知组件名称: {configName}。已注册组件: {string.Join(", ", ComponentNameToKeyMap.Keys)}");
+                return EUnitComponentKey.None;
             }
         }
     }

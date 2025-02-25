@@ -16,8 +16,9 @@ namespace Hono.Scripts.Battle.Core
         MoveComp = 1 << 2,
         HpComp = 1 << 3,
         ElementComp = 1 << 4,
-        BuffComp = 1 << 5,
-    }
+        BuffComp = 1 << 5,   
+		VehicleComp = 1 << 6,
+	}
 
     public static class EUnitComponentKeyHelper
     {

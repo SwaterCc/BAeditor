@@ -63,7 +63,7 @@ namespace Hono.Scripts.Battle
             register(AssetManager.Instance);
             register(LuaBridge.Instance);
             register(ActorJsonAssemblerFactory.Instance);
-            register(ResReplTplDateBase.Instance);
+            register(SkinTemplateDateBase.Instance);
         }
 
         /// <summary>

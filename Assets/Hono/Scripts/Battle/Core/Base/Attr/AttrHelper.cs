@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle.Base
             /// </summary>
             private int _finalUpper;
 
-            public bool Init(AttrTableRow attrRow)
+            public bool Init(AttrTable.AttrRow attrRow)
             {
                 if (!setField(ref _final, attrRow.AttrFinal))
                 {
@@ -119,21 +119,21 @@ namespace Hono.Scripts.Battle.Base
         public void Init()
         {
             //初始化属性关联
-            foreach (var attrRow in ConfigDataBase.Table<AttrTable>().GetAllRows())
+            foreach (var attrRow in ConfigDataBase.Table<AttrTable>().GetTable())
             {
-                if (!Enum.IsDefined(typeof(EAttrType), attrRow.Id))
+                if (!Enum.IsDefined(typeof(EAttrType), attrRow.Key))
                 {
-                    Debug.LogError($"attrTable id {attrRow.Id} 该属性不存在");
+                    Debug.LogError($"attrTable id {attrRow.Key} 该属性不存在");
                     continue;
                 }
 
                 var link = new AttrLink();
-                if (!link.Init(attrRow))
+                if (!link.Init(attrRow.Value))
                 {
                     continue;
                 }
 
-                AttrLinks.Add((EAttrType)attrRow.Id, link);
+                AttrLinks.Add((EAttrType)attrRow.Key, link);
             }
         }
 
@@ -142,7 +142,7 @@ namespace Hono.Scripts.Battle.Base
             return AttrLinks.TryGetValue(attrType, out link);
         }
 
-        public void InitByTableRow(AttrCollection collection, EntityAttrBaseTableRow attrRow)
+        public void InitByTableRow(AttrCollection collection, EntityAttrBaseTable.EntityAttrBaseRow attrRow)
         {
             collection.SetAttr(EAttrType.AttrUnitLevel,                attrRow.AttrEntityLevel,              false);
             collection.SetAttr(EAttrType.AttrMoveSpeedPCTAdd,          attrRow.AttrMoveSpeedPCTAdd,          false);

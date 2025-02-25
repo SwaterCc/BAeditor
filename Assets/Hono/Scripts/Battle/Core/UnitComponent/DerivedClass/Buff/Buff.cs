@@ -45,5 +45,16 @@
         {
             return !(a == b);
         }
+
+        public BuffSnapshot GetSnapshot()
+        {
+            var snapshot = new BuffSnapshot
+            {
+                Uid = Uid,
+                BuffLayer = LayerCount,
+                SourceUid = SourceUnitUid
+            };
+            return snapshot;
+        }
     }
 }

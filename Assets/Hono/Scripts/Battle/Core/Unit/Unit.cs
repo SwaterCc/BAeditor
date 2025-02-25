@@ -6,9 +6,8 @@ using Hono.Scripts.Battle.AbilityFramework;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Message;
-using Hono.Scripts.Battle.ObjectPool;
+using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace Hono.Scripts.Battle.Core {
 	/// <summary>
@@ -106,6 +105,11 @@ namespace Hono.Scripts.Battle.Core {
 		public event Action<Unit> RecycleCallBack;
 
 		/// <summary>
+		/// 基础皮肤模板
+		/// </summary>
+		protected string _baseSkinTemplate;
+		
+		/// <summary>
 		/// 是否第一次Tick
 		/// </summary>
 		private bool _firstTick = true;
@@ -124,7 +128,10 @@ namespace Hono.Scripts.Battle.Core {
 		/// 加载任务列表
 		/// </summary>
 		private readonly List<UniTask> _loadTasks = new(5);
-
+		
+		//强制位移，坐标更新（地图网格更新）
+		//仅位移相关是否可以由
+		//碰撞检测
 		protected Unit() {
 			UnitTransform = new UnitTransform();
 			Attrs = new AttrCollection(this);
@@ -240,12 +247,12 @@ namespace Hono.Scripts.Battle.Core {
 				_firstTick = false;
 				return;
 			}
-          
 			UnitTransform.Calc();
 			BeforeTickCallBack?.Invoke(this, dt);
 			foreach (var component in _components) {
 				component.Value.Tick(dt);
 			}
+
 			_abilityDriver.Tick(dt);
 			_evtListenerCollection.Tick(dt);
 			_messageCollection.Tick(dt);
@@ -460,13 +467,15 @@ namespace Hono.Scripts.Battle.Core {
 		/// <param name="key"></param>
 		/// <returns></returns>
 		public string GetVFXPathByKey(string key) {
-			int tplId = GetAttr(EAttrType.AttrResReplTplOverrideId) == 0
-				? GetAttr(EAttrType.AttrResReplTplBaseId)
-				: GetAttr(EAttrType.AttrResReplTplOverrideId);
-
-			return ResReplTplDateBase.Instance.GetVFXPath(tplId, key);
+			return SkinTemplateDateBase.Instance.GetVFXPath(_baseSkinTemplate, key);
 		}
 
+		/// <summary>
+		/// 获取模型
+		/// </summary>
+		public string GetModelPathByKey() {
+			return SkinTemplateDateBase.Instance.GetModelPath(_baseSkinTemplate);
+		}
 		#endregion
 	}
 }

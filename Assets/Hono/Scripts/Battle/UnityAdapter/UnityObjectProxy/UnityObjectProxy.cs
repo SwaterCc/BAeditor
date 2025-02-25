@@ -51,7 +51,7 @@ namespace Hono.Scripts.Battle {
 		/// <summary>
 		/// model表数据
 		/// </summary>
-		private ModelTableRow _modelRow;
+		private ModelTable.ModelRow _modelRow;
 
 		/// <summary>
 		/// 绑定Unit
@@ -60,7 +60,7 @@ namespace Hono.Scripts.Battle {
 		public void BindUnit(Unit unit) {
 			Unit = unit;
 			int modelId = Unit.GetAttr(EAttrType.AttrModelId);
-			if (!ConfigDataBase.Table<ModelTable>().TryGetRow(modelId, out _modelRow)) {
+			if (!ConfigDataBase.Table<ModelTable>().TryGet(modelId, out _modelRow)) {
 				throw new Exception("找不到Model配置");
 			}
 		}
@@ -95,7 +95,9 @@ namespace Hono.Scripts.Battle {
 				}
 			}
 
-			await loadActorModel();
+			_actorModelPath = Unit.GetModelPathByKey();
+			if(!string.IsNullOrEmpty(_actorModelPath))
+				await loadActorModel();
 		}
 
 		/// <summary>
@@ -127,42 +129,24 @@ namespace Hono.Scripts.Battle {
 		}
 
 		private async UniTask loadActorModel() {
-			var baseId = Unit.GetAttr(EAttrType.AttrResReplTplBaseId);
-			var overrideId = Unit.GetAttr(EAttrType.AttrResReplTplBaseId);
-
-			if (baseId + overrideId == 0) {
-				return;
-			}
-
-			var baseModelPath = ResReplTplDateBase.Instance.GetModelPath(baseId);
-			var overrideModelPath = ResReplTplDateBase.Instance.GetModelPath(overrideId);
-
 			GameObject model = null;
+			
+			model = await UGameObjectPool.Instance.Get(_actorModelPath, _proxy.transform, Vector3.zero,
+				Unit.MainCancelToken);
 
-			_actorModelPath = string.IsNullOrEmpty(overrideModelPath) ? baseModelPath : overrideModelPath;
-
-			if (!string.IsNullOrEmpty(_actorModelPath)) {
-				model = await UGameObjectPool.Instance.Get(_actorModelPath, _proxy.transform, Vector3.zero,
-					Unit.MainCancelToken);
-			}
-			else {
-				Debug.LogError($"Unit:{Unit} 加载ActorModel失败 ");
-			}
-
-			if (model == null || !model.TryGetComponent(out _actorModelHandler)) {
+			if (!model.TryGetComponent(out _actorModelHandler)) {
 				Debug.LogError($"Unit:{Unit} 加载ActorModelHandel 失败 ");
 			}
 		}
 
 		public void SyncTransform() {
-			/*if (_physicsHandler != null) {
+			if (_physicsHandler != null) {
 				//使用物理组件前进，
 				_physicsHandler.Move(Unit.UnitTransform);
 			}
 			else {
-				
-			}*/
-            _proxy.transform.localPosition = Unit.UnitTransform.Pos;
+				_proxy.transform.localPosition = Unit.UnitTransform.Pos;
+			}
 			_proxy.transform.localRotation = Unit.UnitTransform.Rot;
 		}
 

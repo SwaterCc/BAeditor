@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Hono.Scripts.Battle.Tools;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 
 namespace Hono.Scripts.Battle.Core {
@@ -135,7 +134,7 @@ namespace Hono.Scripts.Battle.Core {
 
 			_attacker.RecycleCallBack += onAttackerRemove;
 
-			//Debug.Log($"[Bullet] Bullet Create Uid {Uid} sourceUnit {_attacker} ability {_attacker}");
+			Debug.Log($"[Bullet] Bullet Create Uid {Uid} sourceUnit {_attacker} ability {_attacker}");
 			SetAttr(EAttrType.AttrUid,             Uid);
 			SetAttr(EAttrType.AttrModelId,         3);
 			SetAttr(EAttrType.AttrMoveSpeedPCTAdd, (int)(_bulletData.speed * 10000));
@@ -166,7 +165,7 @@ namespace Hono.Scripts.Battle.Core {
 				path = _bulletData.flyVFXStr;
 			}
 
-			VFXManager.Instance.AddVFXToUnit(Uid, path, -1, Vector3.zero, Vector3.zero);
+			VFXSystem.Instance.AddVFXToUnit(Uid, path, -1, Vector3.zero, Vector3.zero);
 
 			ExecuteAbility(_bulletData.id);
 		}
@@ -175,7 +174,7 @@ namespace Hono.Scripts.Battle.Core {
 			if (_attacker == null) {
 				return;
 			}
-         
+
 			_duration += dt;
 
 			move(dt);
@@ -183,7 +182,6 @@ namespace Hono.Scripts.Battle.Core {
 			if (_duration > _bulletData.lifeTime) {
 				dead();
 			}
-          
 		}
 
 		private void move(float dt) {
@@ -263,7 +261,7 @@ namespace Hono.Scripts.Battle.Core {
 						path = _bulletData.hitVFXStr;
 					}
 
-					VFXManager.Instance.AddVFXToWorld(path, 1, UnitTransform.Pos, Vector3.zero);
+					VFXSystem.Instance.AddVFXToWorld(path, 1, UnitTransform.Pos, Vector3.zero);
 
 					++_curHitNumber;
 					if (_curHitNumber >= _bulletData.maxHitCount) {
@@ -297,7 +295,7 @@ namespace Hono.Scripts.Battle.Core {
 				path = _bulletData.deadVFXStr;
 			}
 
-			VFXManager.Instance.AddVFXToWorld(path, 1, UnitTransform.Pos, Vector3.zero);
+			VFXSystem.Instance.AddVFXToWorld(path, 1, UnitTransform.Pos, Vector3.zero);
 
 
 			World.Current.RemoveUnit(this);

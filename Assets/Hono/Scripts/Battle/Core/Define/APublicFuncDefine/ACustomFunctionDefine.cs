@@ -365,7 +365,7 @@ namespace Hono.Scripts.Battle.AbilityFramework {
 				return -1;
 			}
 
-			return VFXManager.Instance.AddVFXToWorld(path, vfxDuration, position, rot);
+			return VFXSystem.Instance.AddVFXToWorld(path, vfxDuration, position, rot);
 		}
 
 		[AbilityFunction("VFX")]
@@ -374,7 +374,7 @@ namespace Hono.Scripts.Battle.AbilityFramework {
 				return -1;
 			}
 
-			return VFXManager.Instance.AddVFXToWorld(path, vfxDuration, position, rot);
+			return VFXSystem.Instance.AddVFXToWorld(path, vfxDuration, position, rot);
 		}
 
 		[AbilityFunction("VFX")]
@@ -392,7 +392,7 @@ namespace Hono.Scripts.Battle.AbilityFramework {
 				return -1;
 			}
 
-			return VFXManager.Instance.AddVFXToUnit(target.Uid, path, duration, position, eulerAngle, bindBond);
+			return VFXSystem.Instance.AddVFXToUnit(target.Uid, path, duration, position, eulerAngle, bindBond);
 		}
 
 
@@ -406,13 +406,13 @@ namespace Hono.Scripts.Battle.AbilityFramework {
 				return -1;
 			}
 
-			return VFXManager.Instance.AddVFXToUnit(target.Uid, path, duration, position, eulerAngle, bindBond);
+			return VFXSystem.Instance.AddVFXToUnit(target.Uid, path, duration, position, eulerAngle, bindBond);
 		}
 
 
 		[AbilityFunction("VFX")]
 		public void RemoveVFX(int vfxUid) {
-			VFXManager.Instance.RemoveVFXByUid(vfxUid);
+			VFXSystem.Instance.RemoveVFXByUid(vfxUid);
 		}
 
 		#endregion

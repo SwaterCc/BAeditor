@@ -1,0 +1,62 @@
+{
+  "level": {
+    "scene": "",
+    "mapObjects": {
+      "曹操护送点": {
+        "type": "trggerBox",
+        "params": {
+            "filterTags":["曹操"] 
+        },
+        "pos": [
+          12,
+          23,
+          55
+        ],
+        "rot": [
+          0,
+          54,
+          64
+        ]
+      },
+      "1001": {
+        "type": "Actor",
+        "pos": [
+          12,
+          23,
+          55
+        ],
+        "rot": [
+          0,
+          54,
+          64
+        ],
+        "params": {
+          "jsonName": "asd",
+          "faction": 0,
+          "dynamicName": "",
+          "tags": []
+        }
+      },
+      "1002": {
+        "type": "Actor",
+        "pos": [
+          12,
+          23,
+          55
+        ],
+        "rot": [
+          0,
+          54,
+          64
+        ],
+        "params": {
+          "jsonName": "asd",
+          "modelId": 2,
+          "faction": 0,
+          "dynamicName": "",
+          "tags": []
+        }
+      }
+    }
+  }
+}

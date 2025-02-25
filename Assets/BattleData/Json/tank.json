@@ -1,0 +1,47 @@
+﻿{
+  "tank":{
+    "ActorType":"Character",
+    "BaseAttrTableId":1,
+    "ModelId":100,
+    "Tags":[
+      123,
+      222
+    ],
+    
+    "ComponentList":[
+      "HpComp",
+      "ElementComp",
+      "BuffComp", 
+      "CombatComp",
+      "VehicleComp",
+      "MoveComp"
+    ],
+    
+    "ComponentCtor":{
+      "VehicleComp":{  //车辆组件
+        "VehicleType":1, //马、坦克、防空炮
+        "Rarity":1, //品质
+        "ControlType":"在MOVECOMP中控制",
+        "InheritFormula":"骑上去时执行一次属性继承逻辑"
+      },
+      "CombatComp":{
+        "SkillList":[1001,1002],
+        "CombatEnergyIds":[1]
+      }
+    },
+
+    "GrowCurves":[
+      {
+        "attrType": "AttrMaxHpTotal",
+        "growCurve": "GROW_CURVE_线性"
+      },
+      {
+        "attrType": "AttrAttackTotal",
+        "growCurve": "GROW_CURVE_边际效应递增"
+      },
+      {
+        "attrType": "AttrDefenseTotal",
+        "growCurve": "GROW_CURVE_边际效应递减"
+      }]
+  }
+}

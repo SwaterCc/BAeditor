@@ -5,8 +5,6 @@ using Hono.Scripts.Battle.Event;
 using Hono.Scripts.Battle.Tools;
 using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Profiling;
-using ListExtensions = Unity.Collections.ListExtensions;
 
 namespace Hono.Scripts.Battle.Core
 {
@@ -114,7 +112,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 数据配置
         /// </summary>
-        private readonly BattleSceneTableRow _sceneRow;
+        private readonly BattleSceneTable.BattleSceneRow _sceneRow;
 
         /// <summary>
         /// 正在运行的Unit列表
@@ -134,7 +132,7 @@ namespace Hono.Scripts.Battle.Core
         /// <summary>
         /// 待删除列表
         /// </summary>
-        private readonly List<Unit> _removeList = new(100);
+        private readonly List<Unit> _removeList = new(16);
 
         /// <summary>
         /// 当前玩家控制的单位
@@ -168,9 +166,9 @@ namespace Hono.Scripts.Battle.Core
             register(GPoolManager.Instance);
             register(EventManager.Instance);
             register(MessageManager.Instance);
-            register(VFXManager.Instance);
+            register(VFXSystem.Instance);
 
-            _sceneRow = ConfigDataBase.Table<BattleSceneTable>().GetRow(sceneTableId);
+            _sceneRow = ConfigDataBase.Table<BattleSceneTable>().Get(sceneTableId);
 
             _worldStates = new Dictionary<EWorldState, WorldState>()
             {
@@ -281,7 +279,7 @@ namespace Hono.Scripts.Battle.Core
             }
 
             _loadingFinishList.Clear();
-           
+
             i = 0;
             while (i < _runningActorList.Count)
             {
@@ -575,10 +573,14 @@ namespace Hono.Scripts.Battle.Core
                 return;
             //加入删除队列
             _removeList.Add(unit);
-            //立刻从搜索队列中移除
+            //立刻从速查索引中移除
             Query.RemoveUnitLookup(unit);
+            //从四叉树中叉出去
+            
             //立刻清理其身上的特效
-            VFXManager.Instance.RemoveUnitAllVFX(unit);
+            VFXSystem.Instance.RemoveUnitAllVFX(unit);
+            //回收其坐标
+            //回收其位移
         }
 
         /// <summary>

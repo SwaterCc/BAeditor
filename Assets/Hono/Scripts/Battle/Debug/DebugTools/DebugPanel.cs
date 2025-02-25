@@ -48,11 +48,8 @@ namespace Hono.Scripts.Battle
                     {
                         // 获取地面坐标
                         Vector3 groundPosition = hit.point;
-                        for (int i = 0; i < 500; i++)
-                        {
-                            World.Current.CreateActor(createInputField.text, 1, groundPosition, Quaternion.identity);
-                        }
-                        
+                        World.Current.CreateActor(createInputField.text, 1, groundPosition, Quaternion.identity);
+
                         // 关闭监听
                         _isListener = false;
                     }

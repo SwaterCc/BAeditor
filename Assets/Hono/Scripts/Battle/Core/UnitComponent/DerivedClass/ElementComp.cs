@@ -36,7 +36,7 @@ namespace Hono.Scripts.Battle.Core
         }
         
         
-        public void CumulativeElementValue(Unit attacker, DamageTableRow damageRow)
+        public void CumulativeElementValue(Unit attacker, DamageTable.DamageRow damageRow)
         {
             //无元素类型不处理
             if (damageRow.ElementsDamage.Count != 2)

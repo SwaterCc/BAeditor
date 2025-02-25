@@ -45,7 +45,7 @@ namespace Hono.Scripts.Battle.Core {
 				//死亡特效播放
 				string path = Unit.GetVFXPathByKey("death");
 				if (!string.IsNullOrEmpty(path)) {
-					VFXManager.Instance.AddVFXToWorld(path, 2, Unit.UnitTransform.Pos, Vector3.zero);
+					VFXSystem.Instance.AddVFXToWorld(path, 2, Unit.UnitTransform.Pos, Vector3.zero);
 				}
 			}
 		}
@@ -181,7 +181,7 @@ namespace Hono.Scripts.Battle.Core {
 				return;
 			}
 
-			VFXManager.Instance.AddVFXToUnit(Unit.Uid, vfxPath, 1, new Vector3(0, 1, 0), Vector3.zero, "", 1, true);
+			VFXSystem.Instance.AddVFXToUnit(Unit.Uid, vfxPath, 1, new Vector3(0, 1, 0), Vector3.zero, "", 1, true);
 		}
 
 		public void OnRecycle() {
