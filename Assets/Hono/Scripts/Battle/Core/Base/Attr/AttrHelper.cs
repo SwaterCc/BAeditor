@@ -132,8 +132,12 @@ namespace Hono.Scripts.Battle.Base
                 {
                     continue;
                 }
-
-                AttrLinks.Add((EAttrType)attrRow.Key, link);
+                
+                AttrLinks.Add((EAttrType)attrRow.Value.AttrAdd, link);
+                AttrLinks.Add((EAttrType)attrRow.Value.AttrPer, link);
+                AttrLinks.Add((EAttrType)attrRow.Value.AttrExAdd, link);
+                AttrLinks.Add((EAttrType)attrRow.Value.AttrExPer, link);
+                AttrLinks.Add((EAttrType)attrRow.Value.AttrTotal, link);
             }
         }
 

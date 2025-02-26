@@ -1,43 +1,48 @@
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using Unity.Collections;
 
-namespace Hono.Scripts.Battle.Core {
+namespace Hono.Scripts.Battle.Core
+{
     /// <summary>
     /// 关卡模式
     /// </summary>
-    public interface ILevelMode {
+    public interface ILevelMode
+    {
         public void Start();
         public void Tick();
         public void Exit();
     }
-
-    /// <summary>
-    /// 关卡对象
-    /// </summary>
-    public interface ILevelObject
-    {
-        public int LevelId { get; set; }
-    }
     
-	public abstract class Level {
-		/// <summary>
-		/// 任务控制器
-		/// </summary>
-		public QuestController QuestController { get; }
-
+    public abstract class Level
+    {
+        /// <summary>
+        /// 任务控制器
+        /// </summary>
+        protected readonly QuestSystem QuestSystem;
         /// <summary>
         /// 场景对象
         /// </summary>
-        private Dictionary<int, ILevelObject> _levelObjects;
+        protected Dictionary<int, LevelObject> LevelObjects;
+        /// <summary>
+        /// 在运行中的监测器
+        /// </summary>
+        private readonly List<LevelConditionMonitor> _conditionMonitors;
         /// <summary>
         /// 当前状态
         /// </summary>
         private ILevelMode _curMode;
+        /// <summary>
+        /// 上一次更新事件
+        /// </summary>
+        private float _beforeClearTime;
 
-        protected Level() {
-			_curMode = null;
-			QuestController = new QuestController(this);
-            _levelObjects = new Dictionary<int, ILevelObject>();
+        protected Level()
+        {
+            _curMode = null;
+            QuestSystem = new QuestSystem(this);
+            LevelObjects = new Dictionary<int, LevelObject>();
+            _conditionMonitors = new List<LevelConditionMonitor>(20);
         }
 
         /// <summary>
@@ -46,21 +51,48 @@ namespace Hono.Scripts.Battle.Core {
         /// <returns></returns>
         public abstract UniTask Load();
 
-		/// <summary>
-		/// tick
-		/// </summary>
-		public void Tick() {
-			_curMode?.Tick();
-		}
+        /// <summary>
+        /// tick
+        /// </summary>
+        public void Tick()
+        {
+            _curMode?.Tick();
 
-		/// <summary>
-		/// 切换状态
-		/// </summary>
-		/// <param name="mode"></param>
-		protected void SwitchState(ILevelMode mode) {
-			_curMode?.Exit();
-			_curMode = mode;
-			_curMode?.Start();
-		}
-	}
+            if (World.Current.RealWorldTimeSinceStart - _beforeClearTime < 0.5f)
+            {
+                return;
+            }
+
+            _beforeClearTime = World.Current.RealWorldTimeSinceStart;
+            for (var index = 0; index < _conditionMonitors.Count; index++)
+            {
+                LevelConditionMonitor monitor = _conditionMonitors[index];
+                if (!monitor.IsPass) continue;
+                //相当于失效了
+                _conditionMonitors.RemoveSwapBack(monitor);
+                --index;
+            }
+        }
+
+        /// <summary>
+        /// 添加检测器
+        /// </summary>
+        /// <param name="monitor"></param>
+        public void AddMonitor(LevelConditionMonitor monitor)
+        {
+            monitor.OnMonitorExecute();
+            _conditionMonitors.Add(monitor);
+        }
+
+        /// <summary>
+        /// 切换状态
+        /// </summary>
+        /// <param name="mode"></param>
+        protected void SwitchState(ILevelMode mode)
+        {
+            _curMode?.Exit();
+            _curMode = mode;
+            _curMode?.Start();
+        }
+    }
 }
