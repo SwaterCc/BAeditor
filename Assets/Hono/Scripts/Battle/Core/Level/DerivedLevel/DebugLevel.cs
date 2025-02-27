@@ -4,23 +4,6 @@ using UnityEngine.AddressableAssets;
 
 namespace Hono.Scripts.Battle.Core
 {
-    public enum ELevelObjectType
-    {
-        //区域触发器（关心某个目标进出区域)
-        TriggerBox,
-        //刷怪器
-        MonsterGen,
-        //要塞（有阵营的一片区域，在这片区域内可以产生一些效果）逻辑固定
-        Fortress,
-        //据点（出兵口）逻辑固定
-        Base,
-        //可交互物(一个宝箱，一个大门)
-        LevelObject,
-        //游戏对象(未创建，存活，死亡)
-        LevelActor,
-        //游戏对象组
-        LevelActorGroup,
-    }
     //要塞据点  参数：初始状态：未被占领，被某阵营占领 ；
     //             自动流转：兵长死亡时被占领，兵长死亡时被消灭）
     //        功能（可配置）:（产生特殊兵种，产生场地效果，产生世界效果），

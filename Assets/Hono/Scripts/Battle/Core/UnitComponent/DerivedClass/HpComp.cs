@@ -38,16 +38,7 @@ namespace Hono.Scripts.Battle.Core {
 		}
 
 		protected override void onTick(float dt) {
-			if (CurrentHp <= 0) {
-				//单位死亡,从父节点删除
-				EventManager.Instance.FireWorldEvent(EEventType.OnDead);
-				World.Current.RemoveUnit(Unit);
-				//死亡特效播放
-				string path = Unit.GetVFXPathByKey("death");
-				if (!string.IsNullOrEmpty(path)) {
-					VFXSystem.Instance.AddVFXToWorld(path, 2, Unit.UnitTransform.Pos, Vector3.zero);
-				}
-			}
+			
 		}
 
 		public override void Recycle() {
@@ -137,10 +128,6 @@ namespace Hono.Scripts.Battle.Core {
 		/// <param name="damageValue"></param>
 		/// <param name="damageType"></param>
 		private void beHurt(int damageValue, EDamageType damageType) {
-			//伤害是负值
-			//回血是正值
-
-			//FIX:目前还是反的
 			var curShield = Unit.GetAttr(EAttrType.AttrShield);
 			switch (damageType) {
 				case EDamageType.Normal:
@@ -172,6 +159,22 @@ namespace Hono.Scripts.Battle.Core {
 
 			Unit.SetAttr(EAttrType.AttrShield, curShield);
 			Debug.Log($"当前血量{Unit.GetAttr(EAttrType.AttrHp)}");
+            
+            if (CurrentHp <= 0) {
+                var board = GPool<VariableBoard>.Pool.Rent();
+                board.SetEvtField(DeadEventInfoKey.DeadUnitUid, Unit.Uid);
+                EventManager.Instance.FireWorldEvent(EEventType.OnDead,board);
+                GPool<VariableBoard>.Pool.Recycle(board);
+              
+                //单位死亡,从父节点删除
+                World.Current.RemoveUnit(Unit);
+                
+                //死亡特效播放
+                string path = Unit.GetVFXPathByKey("death");
+                if (!string.IsNullOrEmpty(path)) {
+                    VFXSystem.Instance.AddVFXToWorld(path, 2, Unit.UnitTransform.Pos, Vector3.zero);
+                }
+            }
 		}
 
 		private void playHurtVFX(string key) {

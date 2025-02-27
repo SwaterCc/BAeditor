@@ -101,7 +101,10 @@ namespace Hono.Scripts.Battle.Core
 
         private void Update()
         {
-            _mainCamera = Camera.main;
+            if (_mainCamera == null)
+            {
+                _mainCamera = Camera.main;
+            }
             if (_isActive)
             {
                 transform.position = _user.UnitTransform.Pos;
@@ -161,7 +164,6 @@ namespace Hono.Scripts.Battle.Core
             {
                 switch (_curIndicatorType)
                 {
-                  
                     case IndicatorType.Front:
                     case IndicatorType.Direction:
                         _skill.SelectYAxisAngle = directionIndicator.transform.rotation.eulerAngles.y;

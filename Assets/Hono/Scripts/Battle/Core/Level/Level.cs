@@ -29,6 +29,10 @@ namespace Hono.Scripts.Battle.Core
         /// </summary>
         private readonly List<LevelConditionMonitor> _conditionMonitors;
         /// <summary>
+        /// 需要tick的监控器
+        /// </summary>
+        private readonly List<IMonitorTickEnable> _monitorTick;
+        /// <summary>
         /// 当前状态
         /// </summary>
         private ILevelMode _curMode;
@@ -58,11 +62,16 @@ namespace Hono.Scripts.Battle.Core
         {
             _curMode?.Tick();
 
+            foreach (var tickEnable in _monitorTick)
+            {
+                tickEnable.Tick(World.Current.OnceTickTime);
+            }
+            
             if (World.Current.RealWorldTimeSinceStart - _beforeClearTime < 0.5f)
             {
                 return;
             }
-
+            
             _beforeClearTime = World.Current.RealWorldTimeSinceStart;
             for (var index = 0; index < _conditionMonitors.Count; index++)
             {
@@ -80,7 +89,6 @@ namespace Hono.Scripts.Battle.Core
         /// <param name="monitor"></param>
         public void AddMonitor(LevelConditionMonitor monitor)
         {
-            monitor.OnMonitorExecute();
             _conditionMonitors.Add(monitor);
         }
 

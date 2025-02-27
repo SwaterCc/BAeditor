@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Hono.Scripts.Battle.Base;
 using Hono.Scripts.Battle.Event;
 using UnityEngine;
@@ -78,13 +79,7 @@ namespace Hono.Scripts.Battle.Core
 
         public int GetAttr(EAttrType attrType)
         {
-            if (!_attrs.TryGetValue(attrType, out Attr attr))
-            {
-                attr = GPool<Attr>.Pool.Rent();
-                _attrs.Add(attrType, attr);
-            }
-
-            return attr;
+            return !_attrs.TryGetValue(attrType, out Attr attr) ? Int32.MinValue : attr;
         }
 
         /// <summary>

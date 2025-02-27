@@ -30,8 +30,8 @@ private class __Gen_AFuncWrap_GetSkillEventChecker : IReturnRef
 {
     public object CallFunc(Ability caller, ANode node, List<AParams> @params)
     {
-        var p0 = node.ParseInt(@params[0]);
-        return caller._functionDefine.GetSkillEventChecker(p0);
+        var p0 = node.ParseInt(@params[0]); var p1 = node.ParseInt(@params[1]);
+        return caller._functionDefine.GetSkillEventChecker(p0,p1);
     }
 }
 

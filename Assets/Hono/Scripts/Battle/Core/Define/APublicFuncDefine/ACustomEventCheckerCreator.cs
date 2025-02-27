@@ -15,10 +15,10 @@ namespace Hono.Scripts.Battle.AbilityFramework
         }
 
         [AbilityFunction(false)]
-        public SkillEventChecker GetSkillEventChecker(int skillId)
+        public SkillEventChecker GetSkillEventChecker(int casterUid,int skillId)
         {
             var checker = GPool<SkillEventChecker>.Pool.Rent();
-            checker.OnRent(skillId);
+            checker.OnRent(casterUid,skillId);
             return checker;
         }
 
